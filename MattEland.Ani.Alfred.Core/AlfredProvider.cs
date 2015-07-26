@@ -1,8 +1,8 @@
 ﻿namespace MattEland.Ani.Alfred.Core
 {
     /// <summary>
-    ///     Coordinates providing personal assistance to a user interface and receiving settings and queries back from the user
-    ///     interface.
+    /// Coordinates providing personal assistance to a user interface and receiving settings and queries back from the user
+    /// interface.
     /// </summary>
     public class AlfredProvider
     {
@@ -24,15 +24,30 @@
         public void Initialize()
         {
 
-            // Build out log header
-            var nerdyVersionString = NameAndVersionString.Replace(' ', '_');
-            var logHeader = $"[{nerdyVersionString}].Initialize";
+            const string LogHeader = "Alfred.Initialize";
 
-            Console?.Log(logHeader, "Initializing System...");
+            Console?.Log(LogHeader, "Initializing...");
 
             // TODO: Set things up here
 
-            Console?.Log(logHeader, "Initilization Completed.");
+            Console?.Log(LogHeader, "Initilization Completed.");
+
+        }
+
+        /// <summary>
+        /// Tells Alfred to go ahead and shut down.
+        /// </summary>
+        public void Shutdown()
+        {
+
+            const string LogHeader = "Alfred.Shutdown";
+
+            Console?.Log(LogHeader, "Shutting down...");
+
+            // TODO: Tear things down
+
+            Console?.Log(LogHeader, "Shut down completed.");
+
         }
     }
 }

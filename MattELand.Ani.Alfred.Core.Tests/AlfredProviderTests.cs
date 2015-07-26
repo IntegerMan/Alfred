@@ -49,7 +49,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         [Test]
         public void LogToConsole()
         {
-            int numEvents = _alfred.Console.Events.Count;
+            var numEvents = _alfred.Console.Events.Count;
 
             _alfred.Console.Log("Alfred Test Framework", "Testing logging to Alfred");
 
@@ -59,9 +59,21 @@ namespace MattEland.Ani.Alfred.Core.Tests
         [Test]
         public void InitializeCreatesEventsInLog()
         {
+            var numEvents = _alfred.Console.Events.Count;
+
             _alfred.Initialize();
 
-            Assert.Greater(_alfred.Console.Events.Count, 0, "Initializing Alfred did not create any log entries.");
+            Assert.Greater(_alfred.Console.Events.Count, numEvents, "Initializing Alfred did not create any log entries.");
+        }
+
+        [Test]
+        public void ShutdownCreatesEventsInLog()
+        {
+            var numEvents = _alfred.Console.Events.Count;
+
+            _alfred.Shutdown();
+
+            Assert.Greater(_alfred.Console.Events.Count, numEvents, "Shutting Alfred down did not create any log entries.");
         }
 
         [Test]
