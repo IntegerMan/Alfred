@@ -8,7 +8,7 @@
       <Event Name="PropertyChanged" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AECAAAAEAAAAAQAAIAAAAQAQgCAAAAAAAAAQAAAAAAA=</HashCode>
+      <HashCode>AESCAAAEAAAAAQAAIAAAAQAQgCAAAAAAAAAQAAAAAAA=</HashCode>
       <FileName>AlfredProvider.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -52,7 +52,7 @@
       <Event Name="PropertyChanged" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AEAAAAAEAAAAAQAAIAAAAAAAgCAAQAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AEQAAAEEAAABAQAAIAAAAQAAgCAAQAAAAAAAAAAAAAA=</HashCode>
       <FileName>Modules\AlfredModule.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -62,7 +62,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="MattEland.Ani.Alfred.Core.Modules.AlfredTimeModule" Collapsed="true">
-    <Position X="14.25" Y="5" Width="1.5" />
+    <Position X="16.5" Y="3.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Modules\AlfredTimeModule.cs</FileName>

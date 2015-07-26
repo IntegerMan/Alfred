@@ -173,7 +173,7 @@ namespace MattEland.Ani.Alfred.Core
                 throw new InvalidOperationException("Alfred must be offline in order to add modules.");
             }
 
-            OnPropertyChanged(nameof(Modules));
+            Modules.Add(new AlfredTimeModule());
         }
 
         #region Notify Property Changed
