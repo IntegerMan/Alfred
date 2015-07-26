@@ -3,7 +3,7 @@
   <Class Name="MattEland.Ani.Alfred.Core.AlfredProvider">
     <Position X="7.5" Y="1.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AACAAAAEAAAAAQAAAAAQAQAQAAAAAAAAAAAQAAAAAAA=</HashCode>
+      <HashCode>AACAAAAEAAAAAQAAIAAQAQAQgAAAAAAAAAAQAAAAAAA=</HashCode>
       <FileName>AlfredProvider.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -12,6 +12,7 @@
     <ShowAsCollectionAssociation>
       <Property Name="Modules" />
     </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="MattEland.Ani.Alfred.Core.Console.ConsoleEvent">
     <Position X="10.25" Y="4" Width="1.5" />

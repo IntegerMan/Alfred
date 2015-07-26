@@ -10,11 +10,27 @@
         Closing="OnWindowClosing"
         d:DataContext="{d:DesignInstance core:AlfredProvider}">
     <DockPanel>
+
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
                 <MenuItem Header="E_xit" Click="OnExitClicked" />
             </MenuItem>
+            <MenuItem Header="_Alfred">
+                <MenuItem Header="_Initialize" Click="OnInitializeClicked" />
+                <MenuItem Header="_Shutdown" Click="OnShutdownClicked" />
+            </MenuItem>
         </Menu>
+
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding NameAndVersionString}" />
+                    <TextBlock Text="Status:" />
+                    <TextBlock Text="{Binding Path=Status}" Margin="8,0" FontWeight="Bold" />
+                </StackPanel>
+            </StatusBarItem>
+        </StatusBar>
+
         <DockPanel DockPanel.Dock="Left" Width="300" Margin="8">
             <TextBlock DockPanel.Dock="Top">Console Events</TextBlock>
             <ListBox x:Name="EventsList" ItemsSource="{Binding Path=Console.Events}">
@@ -36,8 +52,10 @@
                 </ListBox.ItemTemplate>
             </ListBox>
         </DockPanel>
+
         <StackPanel>
             <TextBlock>This area will hold widgets</TextBlock>
         </StackPanel>
+
     </DockPanel>
 </Window>

@@ -10,6 +10,9 @@ namespace MattEland.Ani.Alfred.WPF
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        // TODO: We need some error handling here
+
         private readonly AlfredProvider _alfred;
 
         /// <summary>
@@ -41,8 +44,9 @@ namespace MattEland.Ani.Alfred.WPF
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void OnWindowLoaded(object sender, RoutedEventArgs e)
         {
-            // Tell Alfred that everything is configured and ready to go. Doing this after window loaded (vs in constructor) will help reduce UI latency
-            _alfred.Initialize();
+
+            // No longer doing anything. We might want to have Alfred auto-initialize here...
+
         }
 
         /// <summary>
@@ -63,6 +67,27 @@ namespace MattEland.Ani.Alfred.WPF
         /// <param name="e">The <see cref="CancelEventArgs"/> instance containing the event data.</param>
         private void OnWindowClosing(object sender, CancelEventArgs e)
         {
+            // Make sure we clean up Alfred
+            if (_alfred.Status != AlfredStatus.Offline && _alfred.Status != AlfredStatus.ShuttingDown)
+            {
+                _alfred.Shutdown();
+            }
+        }
+
+        /// <summary>
+        /// Handles the <see cref="E:InitializeClicked" /> event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
+        private void OnInitializeClicked(object sender, RoutedEventArgs e)
+        {
+            // TODO: A command model would be better here.
+            _alfred.Initialize();
+        }
+
+        private void OnShutdownClicked(object sender, RoutedEventArgs e)
+        {
+            // TODO: A command model would be better here.
             _alfred.Shutdown();
         }
     }

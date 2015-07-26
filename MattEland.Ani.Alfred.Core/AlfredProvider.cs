@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 
 using JetBrains.Annotations;
 
@@ -12,8 +12,10 @@ namespace MattEland.Ani.Alfred.Core
     /// Coordinates providing personal assistance to a user interface and receiving settings and queries back from the user
     /// interface.
     /// </summary>
-    public class AlfredProvider
+    public class AlfredProvider : INotifyPropertyChanged
     {
+        private AlfredStatus _status;
+
         /// <summary>
         /// Gets or sets the console provider. This can be null.
         /// </summary>
@@ -34,7 +36,23 @@ namespace MattEland.Ani.Alfred.Core
         [NotNull]
         public ICollection<AlfredModule> Modules { get; } = new HashSet<AlfredModule>();
 
-        public AlfredStatus Status { get; private set; }
+        /// <summary>
+        /// Gets the status.
+        /// </summary>
+        /// <value>The status.</value>
+        public AlfredStatus Status
+        {
+            get { return _status; }
+            private set
+            {
+                if (value == _status)
+                {
+                    return;
+                }
+                _status = value;
+                OnPropertyChanged(nameof(Status));
+            }
+        }
 
         /// <summary>
         /// Tells Alfred it's okay to start itself up and begin operating.
@@ -69,9 +87,27 @@ namespace MattEland.Ani.Alfred.Core
             Console?.Log(LogHeader, "Shut down completed.");
         }
 
+        /// <summary>
+        /// Adds the standard internal modules to Alfred.
+        /// </summary>
         public void AddStandardModules()
         {
             Modules.Add(new AlfredTimeModule());
+        }
+
+        /// <summary>
+        /// Occurs when a property changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Called when a property changes to support the property changed notifications.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
