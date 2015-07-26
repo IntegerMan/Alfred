@@ -16,7 +16,7 @@
         /// Gets or sets the name and version string for display purposes.
         /// </summary>
         /// <value>The name and version string.</value>
-        public string NameAndVersionString => "Alfred 0.1 Alpha";
+        public static string NameAndVersionString => "Alfred 0.1 Alpha";
 
         /// <summary>
         /// Tells Alfred it's okay to start itself up and begin operating.
