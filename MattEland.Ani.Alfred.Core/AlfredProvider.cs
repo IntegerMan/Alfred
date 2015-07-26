@@ -107,7 +107,13 @@ namespace MattEland.Ani.Alfred.Core
 
             Console?.Log(LogHeader, "Shutting down...");
 
-            // TODO: Tear things down
+            // Shut down modules and decouple them from Alfred
+            foreach (var module in Modules)
+            {
+                Console?.Log(LogHeader, $"Shutting down {module.NameAndVersion}");
+                module.Shutdown();
+                Console?.Log(LogHeader, $"{module.NameAndVersion} is now offline.");
+            }
 
             // We're done here. Tell the world.
             Status = AlfredStatus.Offline;

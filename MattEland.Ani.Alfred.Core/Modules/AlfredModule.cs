@@ -12,7 +12,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
     {
         private AlfredStatus _status;
 
-        [NotNull]
+        [CanBeNull]
         protected AlfredProvider Alfred { get; private set; }
 
         /// <summary>
@@ -41,12 +41,12 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        /// Initializes the specified module.
+        /// Initializes the module.
         /// </summary>
         /// <param name="alfred">The provider.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
         /// <exception cref="System.InvalidOperationException">Already online when told to initialize.</exception>
-        public virtual void Initialize([NotNull] AlfredProvider alfred)
+        public void Initialize([NotNull] AlfredProvider alfred)
         {
             if (alfred == null)
             {
@@ -59,6 +59,8 @@ namespace MattEland.Ani.Alfred.Core.Modules
             }
 
             Alfred = alfred;
+
+            this.InitializeProtected();
 
             Status = AlfredStatus.Online;
         }
@@ -73,6 +75,41 @@ namespace MattEland.Ani.Alfred.Core.Modules
         protected virtual void OnPropertyChanged([CanBeNull] string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        /// <summary>
+        /// Shuts down the module and decouples it from Alfred.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="System.InvalidOperationException">Already offline when told to shut down.</exception>
+        public void Shutdown()
+        {
+            if (Status == AlfredStatus.Offline)
+            {
+                throw new InvalidOperationException($"{NameAndVersion} was already offline when told to shut down.");
+            }
+
+            this.ShutdownProtected();
+
+            Alfred = null;
+
+            Status = AlfredStatus.Offline;
+        }
+
+        /// <summary>
+        /// Handles module shutdown events
+        /// </summary>
+        protected virtual void ShutdownProtected()
+        {
+            // Handled by modules as needed
+        }
+
+        /// <summary>
+        /// Handles module initialization events
+        /// </summary>
+        protected virtual void InitializeProtected()
+        {
+            // Handled by modules as needed
         }
     }
 }

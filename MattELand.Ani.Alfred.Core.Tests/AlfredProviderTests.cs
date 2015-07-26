@@ -203,6 +203,20 @@ namespace MattEland.Ani.Alfred.Core.Tests
             }
         }
 
+        [Test]
+        public void ShuttingDownShutsDownModules()
+        {
+            _alfred.AddStandardModules();
+
+            _alfred.Initialize();
+            _alfred.Shutdown();
+
+            foreach (var module in _alfred.Modules)
+            {
+                Assert.AreEqual(AlfredStatus.Offline, module.Status, $"Module {module.NameAndVersion} was not shut down during alfred shut down.");
+            }
+        }
+
         #endregion Modules
 
     }
