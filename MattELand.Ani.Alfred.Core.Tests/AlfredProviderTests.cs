@@ -37,5 +37,13 @@ namespace MattELand.Ani.Alfred.Core.Tests
             Assert.IsNull(_alfred.Console, "Could not remove Alfred's console");
         }
 
-}
+        [Test]
+        public void SetConsole()
+        {
+            _alfred.Console = new TestConsole();
+
+            Assert.IsNotNull(_alfred.Console, "Could not set Alfred's console");
+        }
+
+    }
 }

@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AlfredProvider.cs" />
+    <Compile Include="ConsoleEvent.cs" />
     <Compile Include="IConsole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -10,5 +10,11 @@ namespace MattEland.Ani.Alfred.Core
     /// </summary>
     public interface IConsole
     {
+        /// <summary>
+        /// Adds the event to the console.
+        /// </summary>
+        /// <param name="consoleEvent">The console event.</param>
+        void AddEvent(ConsoleEvent consoleEvent);
+
     }
 }
