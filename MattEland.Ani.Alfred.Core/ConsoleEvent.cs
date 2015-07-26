@@ -46,5 +46,10 @@ namespace MattEland.Ani.Alfred.Core
         /// <value>The message.</value>
         public string Message { get; set; }
 
+        /// <summary>
+        /// Gets or sets the time in local system time.
+        /// </summary>
+        /// <value>The time.</value>
+        public DateTime Time => UtcTime.ToLocalTime();
     }
 }

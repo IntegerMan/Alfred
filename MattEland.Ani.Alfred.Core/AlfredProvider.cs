@@ -13,18 +13,26 @@
         public IConsole Console { get; set; }
 
         /// <summary>
+        /// Gets or sets the name and version string for display purposes.
+        /// </summary>
+        /// <value>The name and version string.</value>
+        public string NameAndVersionString => "Alfred 0.1 Alpha";
+
+        /// <summary>
         /// Tells Alfred it's okay to start itself up and begin operating.
         /// </summary>
         public void Initialize()
         {
-            const string LogHeader = "Alfred.Initialize";
-            var console = Console;
 
-            console?.Log(LogHeader, "Initializing System...");
+            // Build out log header
+            var nerdyVersionString = NameAndVersionString.Replace(' ', '_');
+            var logHeader = $"[{nerdyVersionString}].Initialize";
+
+            Console?.Log(logHeader, "Initializing System...");
 
             // TODO: Set things up here
 
-            console?.Log(LogHeader, "Initilization Completed.");
+            Console?.Log(logHeader, "Initilization Completed.");
         }
     }
 }

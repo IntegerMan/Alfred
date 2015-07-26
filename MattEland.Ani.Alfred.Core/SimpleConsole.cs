@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
+using MattEland.Ani.Alfred.Core.Annotations;
 
 namespace MattEland.Ani.Alfred.Core
 {
     /// <summary>
-    /// A simple console used for unit testing purposes
+    /// A simple console used for unit testing and designer window purposes
     /// </summary>
-    public class TestConsole : IConsole
+    public sealed class SimpleConsole : IConsole, INotifyPropertyChanged
     {
         /// <summary>
         /// Logs the specified message to the console.
@@ -19,6 +21,7 @@ namespace MattEland.Ani.Alfred.Core
             var evt = new ConsoleEvent(title, body);
 
             _events.Add(evt);
+            OnPropertyChanged(nameof(Events));
         }
 
         private readonly List<ConsoleEvent> _events = new List<ConsoleEvent>();
@@ -28,5 +31,13 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <value>The console events.</value>
         public IList<ConsoleEvent> Events => _events;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        private void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

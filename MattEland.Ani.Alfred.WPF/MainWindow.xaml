@@ -3,9 +3,23 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:core="clr-namespace:MattEland.Ani.Alfred.Core;assembly=MattEland.Ani.Alfred.Core"
         mc:Ignorable="d"
-        Title="Alfred" Height="600" Width="800">
+        Loaded="OnWindowLoaded"
+        Title="{Binding Path=NameAndVersionString}" Height="600" Width="800" 
+        d:DataContext="{d:DesignInstance core:AlfredProvider}">
     <DockPanel>
-        
+        <TextBlock DockPanel.Dock="Top">Console Events</TextBlock>
+        <ListBox x:Name="EventsList" ItemsSource="{Binding Path=Console.Events}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Time}" Width="150" HorizontalAlignment="Right" />
+                        <TextBlock Text="{Binding Title}" Width="150" HorizontalAlignment="Right" />
+                        <TextBlock Text="{Binding Message}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </DockPanel>
 </Window>

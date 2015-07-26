@@ -19,7 +19,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         {
             _alfred = new AlfredProvider
             {
-                Console = new TestConsole()
+                Console = new SimpleConsole()
             };
         }
 

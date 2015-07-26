@@ -8,7 +8,6 @@ namespace MattEland.Ani.Alfred.WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-
         private readonly AlfredProvider _alfred;
 
         /// <summary>
@@ -18,7 +17,17 @@ namespace MattEland.Ani.Alfred.WPF
         {
             InitializeComponent();
 
-            _alfred = new AlfredProvider();
+            _alfred = new AlfredProvider
+            {
+                Console = new SimpleConsole()
+            };
+
+            this.DataContext = _alfred;
+        }
+
+        private void OnWindowLoaded(object sender, RoutedEventArgs e)
+        {
+            _alfred.Initialize();
         }
     }
 }
