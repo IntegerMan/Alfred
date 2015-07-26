@@ -1,17 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MattEland.Ani.Alfred.Core;
+﻿using MattEland.Ani.Alfred.Core;
 using NUnit.Framework;
 
 namespace MattELand.Ani.Alfred.Core.Tests
 {
+    /// <summary>
+    /// Tests AlfredProvider
+    /// </summary>
     [TestFixture]
-    public class AlfredTests
+    public class AlfredProviderTests
     {
 
+        /// <summary>
+        /// Tests initialization of Alfred
+        /// </summary>
         [Test]
         public void InitializeAlfred()
         {
