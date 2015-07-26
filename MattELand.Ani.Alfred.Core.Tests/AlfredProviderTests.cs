@@ -74,6 +74,25 @@ namespace MattEland.Ani.Alfred.Core.Tests
             Assert.AreEqual(_alfred.Status, AlfredStatus.Online);
         }
 
+        [Test]
+        public void ShutdownWhileOfflineErrors()
+        {
+            try
+            {
+                _alfred.Shutdown();
+
+                Assert.Fail("Expected an InvalidOperationException since Alfred was already offline.");
+
+            }
+            catch (InvalidOperationException)
+            {
+                // No action
+            }
+
+            // Assert that we're still online.
+            Assert.AreEqual(_alfred.Status, AlfredStatus.Offline);
+        }
+
         #endregion
 
         #region Console
@@ -121,6 +140,9 @@ namespace MattEland.Ani.Alfred.Core.Tests
         [Test]
         public void ShutdownCreatesEventsInLog()
         {
+            // We need to be online to shut down or else we'll get errors
+            _alfred.Initialize();
+
             var console = _alfred.Console;
             Assert.NotNull(console, "Console was not present");
 

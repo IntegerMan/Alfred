@@ -65,10 +65,10 @@ namespace MattEland.Ani.Alfred.Core
             // Handle case on initialize but already initializing or online
             if (Status == AlfredStatus.Online)
             {
-                var message = "Instructed to initialize but system is already online";
-                Console?.Log(LogHeader, message);
+                const string Message = "Instructed to initialize but system is already online";
+                Console?.Log(LogHeader, Message);
 
-                throw new InvalidOperationException(message);
+                throw new InvalidOperationException(Message);
             }
 
             Console?.Log(LogHeader, "Initializing...");
@@ -86,6 +86,15 @@ namespace MattEland.Ani.Alfred.Core
         public void Shutdown()
         {
             const string LogHeader = "Alfred.Shutdown";
+
+            // Handle case on shutdown but already offline
+            if (Status == AlfredStatus.Offline)
+            {
+                const string Message = "Instructed to shut down but system is already offline";
+                Console?.Log(LogHeader, Message);
+
+                throw new InvalidOperationException(Message);
+            }
 
             Console?.Log(LogHeader, "Shutting down...");
 
