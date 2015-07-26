@@ -132,5 +132,11 @@ namespace MattEland.Ani.Alfred.Core.Modules
         {
             // Handled by modules as needed
         }
+
+        /// <summary>
+        /// Gets the user interface text displayed as a widget.
+        /// </summary>
+        /// <value>The user interface text.</value>
+        public virtual string UserInterfaceText => null;
     }
 }

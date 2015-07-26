@@ -1,4 +1,6 @@
-﻿using MattEland.Ani.Alfred.Core.Modules;
+﻿using System;
+
+using MattEland.Ani.Alfred.Core.Modules;
 
 using NUnit.Framework;
 
@@ -30,6 +32,37 @@ namespace MattEland.Ani.Alfred.Core.Tests
             _alfred.Initialize();
 
             Assert.AreEqual(AlfredStatus.Online, _module.Status);
+        }
+
+        [Test]
+        public void ModuleReturnsCorrectTime()
+        {
+            _alfred.Initialize();
+
+            var currentTimeString = DateTime.Now.ToShortTimeString();
+            _alfred.Update();
+
+            var displayed = _module.UserInterfaceText;
+            Assert.IsNotNull(displayed, "Displayed time was null");
+            Assert.IsTrue(displayed.Contains(currentTimeString), $"The time is displaying {displayed} when current time is {currentTimeString}");
+        }
+
+        [Test]
+        public void DisplayTextIsNullBeforeUpdate()
+        {
+            _alfred.Initialize();
+
+            Assert.IsNull(_module.UserInterfaceText, "UI text was not null prior to update");
+        }
+
+        [Test]
+        public void DisplayTextIsNullAfterShutdown()
+        {
+            _alfred.Initialize();
+            _alfred.Update();
+            _alfred.Shutdown();
+
+            Assert.IsNull(_module.UserInterfaceText, "UI text was not null after shutdown");
         }
 
     }
