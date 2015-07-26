@@ -18,5 +18,14 @@ namespace MattELand.Ani.Alfred.Core.Tests
         {
             var alfred = new AlfredProvider();
         }
-    }
+
+        [Test]
+        public void RemoveAlfredConsole()
+        {
+            var alfred = new AlfredProvider();
+
+            alfred.Console = null;
+        }
+
+}
 }
