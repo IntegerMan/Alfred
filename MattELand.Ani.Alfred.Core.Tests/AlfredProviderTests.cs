@@ -1,6 +1,8 @@
 ﻿using NUnit.Framework;
 using System.Linq;
 
+using MattEland.Ani.Alfred.Core.Console;
+
 namespace MattEland.Ani.Alfred.Core.Tests
 {
     /// <summary>

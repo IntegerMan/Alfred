@@ -21,14 +21,14 @@ namespace MattEland.Ani.Alfred.WPF
 
             // Create the console first to log what we're doing
             var console = new WinClientConsole();
-            console.Log("Client", "Console is now online.");
+            console.Log("WinClient.Initialize", "Console is now online.");
 
             // Create Alfred. It won't be online and running yet, but create it.
             _alfred = new AlfredProvider
             {
                 Console = console
             };
-            console.Log("Client", "Alfred instantiated");
+            console.Log("WinClient.Initialize", "Alfred instantiated");
 
             // Data bindings in the UI rely on Alfred
             this.DataContext = _alfred;
@@ -45,15 +45,25 @@ namespace MattEland.Ani.Alfred.WPF
             _alfred.Initialize();
         }
 
+        /// <summary>
+        /// Handles the <see cref="E:ExitClicked" /> event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void OnExitClicked(object sender, RoutedEventArgs e)
         {
             // TODO: A command based model would be better
             this.Close();
         }
 
+        /// <summary>
+        /// Handles the <see cref="E:WindowClosing" /> event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="CancelEventArgs"/> instance containing the event data.</param>
         private void OnWindowClosing(object sender, CancelEventArgs e)
         {
-            // TODO: Shut down Alfred
+            _alfred.Shutdown();
         }
     }
 }

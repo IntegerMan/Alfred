@@ -3,7 +3,7 @@
   <Class Name="MattEland.Ani.Alfred.Core.AlfredProvider">
     <Position X="7.5" Y="1.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AACAAAAAAAAAAQAAAAAQAQAQAAAAAAAAAAAQAAAAAAA=</HashCode>
+      <HashCode>AACAAAAEAAAAAQAAAAAQAQAQAAAAAAAAAAAQAAAAAAA=</HashCode>
       <FileName>AlfredProvider.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -13,14 +13,14 @@
       <Property Name="Modules" />
     </ShowAsCollectionAssociation>
   </Class>
-  <Class Name="MattEland.Ani.Alfred.Core.ConsoleEvent">
+  <Class Name="MattEland.Ani.Alfred.Core.Console.ConsoleEvent">
     <Position X="10.25" Y="4" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAIAAEAAAAAAAAAAAAAAAAAAAAAAIAAAAQA=</HashCode>
-      <FileName>ConsoleEvent.cs</FileName>
+      <FileName>Console\ConsoleEvent.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="MattEland.Ani.Alfred.Core.SimpleConsole">
+  <Class Name="MattEland.Ani.Alfred.Core.Console.SimpleConsole">
     <Position X="13.25" Y="1.5" Width="1.5" />
     <Members>
       <Field Name="_events" Hidden="true" />
@@ -30,7 +30,7 @@
     </Compartments>
     <TypeIdentifier>
       <HashCode>AEAAAAAAAAAAAAAAAAAAAAAAAggAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>SimpleConsole.cs</FileName>
+      <FileName>Console\SimpleConsole.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
       <Property Name="Events" />
@@ -51,11 +51,11 @@
       <FileName>Modules\AlfredTimeModule.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Interface Name="MattEland.Ani.Alfred.Core.IConsole">
+  <Interface Name="MattEland.Ani.Alfred.Core.Console.IConsole">
     <Position X="10.25" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAggAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>IConsole.cs</FileName>
+      <FileName>Console\IConsole.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
       <Property Name="Events" />

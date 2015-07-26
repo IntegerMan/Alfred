@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MattEland.Ani.Alfred.Core
+namespace MattEland.Ani.Alfred.Core.Console
 {
     public class ConsoleEvent
     {

@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.Core.Console;
 
 namespace MattEland.Ani.Alfred.WPF
 {

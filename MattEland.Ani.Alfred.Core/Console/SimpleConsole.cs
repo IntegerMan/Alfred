@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Linq.Expressions;
 
 using JetBrains.Annotations;
 
-namespace MattEland.Ani.Alfred.Core
+namespace MattEland.Ani.Alfred.Core.Console
 {
     /// <summary>
     /// A simple console used for unit testing and designer window purposes

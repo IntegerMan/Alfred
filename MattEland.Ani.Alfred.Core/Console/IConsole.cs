@@ -2,7 +2,7 @@
 
 using JetBrains.Annotations;
 
-namespace MattEland.Ani.Alfred.Core
+namespace MattEland.Ani.Alfred.Core.Console
 {
     /// <summary>
     /// An interface describing the display console Alfred can interact with
