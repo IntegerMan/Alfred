@@ -190,6 +190,19 @@ namespace MattEland.Ani.Alfred.Core.Tests
             Assert.Greater(_alfred.Modules.Count, 0, "Alfred did not have any modules after calling add standard modules.");
         }
 
+        [Test]
+        public void InitializingInitializesModules()
+        {
+            _alfred.AddStandardModules();
+
+            _alfred.Initialize();
+
+            foreach (var module in _alfred.Modules)
+            {
+                Assert.AreEqual(AlfredStatus.Online, module.Status, $"Module {module.NameAndVersion} was not initialized during initialization.");
+            }
+        }
+
         #endregion Modules
 
     }

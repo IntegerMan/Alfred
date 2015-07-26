@@ -6,7 +6,7 @@
         xmlns:core="clr-namespace:MattEland.Ani.Alfred.Core;assembly=MattEland.Ani.Alfred.Core"
         mc:Ignorable="d"
         Loaded="OnWindowLoaded"
-        Title="{Binding Path=NameAndVersionString}" Height="600" Width="800" 
+        Title="{Binding Path=NameAndVersion}" Height="600" Width="800" 
         Closing="OnWindowClosing"
         d:DataContext="{d:DesignInstance core:AlfredProvider}">
     <DockPanel>
@@ -24,7 +24,7 @@
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding NameAndVersionString}" />
+                    <TextBlock Text="{Binding NameAndVersion}" />
                     <TextBlock Text="Status:" />
                     <TextBlock Text="{Binding Path=Status}" Margin="8,0" FontWeight="Bold" />
                 </StackPanel>

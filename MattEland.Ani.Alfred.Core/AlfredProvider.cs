@@ -25,10 +25,11 @@ namespace MattEland.Ani.Alfred.Core
         public IConsole Console { get; set; }
 
         /// <summary>
-        /// Gets the name and version string for display purposes.
+        /// Gets the name and version of Alfred.
         /// </summary>
-        /// <value>The name and version string.</value>
-        public static string NameAndVersionString => "Alfred 0.1 Alpha";
+        /// <value>The name and version.</value>
+        [NotNull]
+        public static string NameAndVersion => "Alfred 0.1 Alpha";
 
         /// <summary>
         /// Gets the modules.
@@ -74,7 +75,13 @@ namespace MattEland.Ani.Alfred.Core
 
             Console?.Log(LogHeader, "Initializing...");
 
-            // TODO: Set things up here
+            // Boot up Modules and give them a provider
+            foreach (var module in Modules)
+            {
+                Console?.Log(LogHeader, $"Initializing {module.NameAndVersion}");
+                module.Initialize(this);
+                Console?.Log(LogHeader, $"{module.NameAndVersion} is now initialized.");
+            }
 
             // We're done. Let the world know.
             Status = AlfredStatus.Online;
@@ -127,7 +134,7 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged(string propertyName)
+        protected virtual void OnPropertyChanged([CanBeNull] string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
