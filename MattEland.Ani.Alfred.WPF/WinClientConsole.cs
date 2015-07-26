@@ -40,6 +40,6 @@ namespace MattEland.Ani.Alfred.WPF
         /// <value>The events.</value>
         [ItemNotNull]
         [NotNull]
-        public IList<ConsoleEvent> Events => _events;
+        public IEnumerable<ConsoleEvent> Events => _events;
     }
 }

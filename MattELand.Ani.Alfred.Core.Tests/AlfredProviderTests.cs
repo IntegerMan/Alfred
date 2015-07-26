@@ -1,5 +1,5 @@
-﻿using MattEland.Ani.Alfred.Core;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using System.Linq;
 
 namespace MattEland.Ani.Alfred.Core.Tests
 {
@@ -32,6 +32,8 @@ namespace MattEland.Ani.Alfred.Core.Tests
             Assert.NotNull(_alfred, "Alfred was not initialized");
         }
 
+        #region Console
+
         [Test]
         public void RemoveAlfredConsole()
         {
@@ -49,31 +51,40 @@ namespace MattEland.Ani.Alfred.Core.Tests
         [Test]
         public void LogToConsole()
         {
-            var numEvents = _alfred.Console.Events.Count;
+            var console = _alfred.Console;
+            Assert.NotNull(console, "Console was not present");
 
-            _alfred.Console.Log("Alfred Test Framework", "Testing logging to Alfred");
+            var numEvents = console.Events.Count();
 
-            Assert.AreEqual(numEvents + 1, _alfred.Console.Events.Count, "Event count did not increase after logging.");
+            console.Log("Alfred Test Framework", "Testing logging to Alfred");
+
+            Assert.AreEqual(numEvents + 1, console.Events.Count(), "Event count did not increase after logging.");
         }
 
         [Test]
         public void InitializeCreatesEventsInLog()
         {
-            var numEvents = _alfred.Console.Events.Count;
+            var console = _alfred.Console;
+            Assert.NotNull(console, "Console was not present");
+
+            var numEvents = console.Events.Count();
 
             _alfred.Initialize();
 
-            Assert.Greater(_alfred.Console.Events.Count, numEvents, "Initializing Alfred did not create any log entries.");
+            Assert.Greater(console.Events.Count(), numEvents, "Initializing Alfred did not create any log entries.");
         }
 
         [Test]
         public void ShutdownCreatesEventsInLog()
         {
-            var numEvents = _alfred.Console.Events.Count;
+            var console = _alfred.Console;
+            Assert.NotNull(console, "Console was not present");
+
+            var numEvents = console.Events.Count();
 
             _alfred.Shutdown();
 
-            Assert.Greater(_alfred.Console.Events.Count, numEvents, "Shutting Alfred down did not create any log entries.");
+            Assert.Greater(console.Events.Count(), numEvents, "Shutting Alfred down did not create any log entries.");
         }
 
         [Test]
@@ -85,6 +96,8 @@ namespace MattEland.Ani.Alfred.Core.Tests
 
             // Nothing to assert here - I'm looking for errors encountered
         }
+
+        #endregion Console
 
         #region Modules
 

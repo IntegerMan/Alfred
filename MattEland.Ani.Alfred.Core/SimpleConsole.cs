@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
+
+using JetBrains.Annotations;
 
 namespace MattEland.Ani.Alfred.Core
 {
@@ -15,8 +18,18 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <param name="title">The title.</param>
         /// <param name="body">The body.</param>
-        public void Log(string title, string body)
+        public void Log([NotNull] string title, [NotNull] string body)
         {
+            if (title == null)
+            {
+                throw new ArgumentNullException(nameof(title));
+            }
+
+            if (body == null)
+            {
+                throw new ArgumentNullException(nameof(body));
+            }
+
             var evt = new ConsoleEvent(title, body);
 
             _events.Add(evt);
@@ -28,6 +41,8 @@ namespace MattEland.Ani.Alfred.Core
         /// Gets the console events.
         /// </summary>
         /// <value>The console events.</value>
-        public IList<ConsoleEvent> Events => _events;
+        [NotNull]
+        [ItemNotNull]
+        public IEnumerable<ConsoleEvent> Events => _events;
     }
 }

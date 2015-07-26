@@ -20,6 +20,8 @@ namespace MattEland.Ani.Alfred.Core
         /// Gets the console events.
         /// </summary>
         /// <value>The console events.</value>
-        IList<ConsoleEvent> Events { get; }
+        [NotNull]
+        [ItemNotNull]
+        IEnumerable<ConsoleEvent> Events { get; }
     }
 }
