@@ -49,7 +49,11 @@ namespace MattEland.Ani.Alfred.Core.Tests
         [Test]
         public void LogToConsole()
         {
+            int numEvents = _alfred.Console.Events.Count;
+
             _alfred.Console.Log("Alfred Test Framework", "Testing logging to Alfred");
+
+            Assert.AreEqual(numEvents + 1, _alfred.Console.Events.Count, "Event count did not increase after logging.");
         }
     }
 }

@@ -16,5 +16,11 @@ namespace MattEland.Ani.Alfred.Core
         /// <param name="title">The title.</param>
         /// <param name="body">The body.</param>
         void Log(string title, string body);
+
+        /// <summary>
+        /// Gets the console events.
+        /// </summary>
+        /// <value>The console events.</value>
+        IList<ConsoleEvent> Events { get; }
     }
 }
