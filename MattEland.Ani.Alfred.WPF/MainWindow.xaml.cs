@@ -21,7 +21,7 @@ namespace MattEland.Ani.Alfred.WPF
 
             _alfred = new AlfredProvider
             {
-                Console = new SimpleConsole()
+                Console = new WinClientConsole()
             };
 
             this.DataContext = _alfred;

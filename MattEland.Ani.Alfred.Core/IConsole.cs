@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
+
+using JetBrains.Annotations;
 
 namespace MattEland.Ani.Alfred.Core
 {
@@ -15,7 +14,7 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <param name="title">The title.</param>
         /// <param name="body">The body.</param>
-        void Log(string title, string body);
+        void Log([NotNull] string title, [NotNull] string body);
 
         /// <summary>
         /// Gets the console events.

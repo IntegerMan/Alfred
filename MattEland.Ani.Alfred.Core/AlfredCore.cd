@@ -3,7 +3,7 @@
   <Class Name="MattEland.Ani.Alfred.Core.AlfredProvider">
     <Position X="7.5" Y="1.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AACAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AACAAAAAAAAAAQAAAAAQAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>AlfredProvider.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -13,9 +13,26 @@
   <Class Name="MattEland.Ani.Alfred.Core.ConsoleEvent">
     <Position X="10.25" Y="4" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAIAAEAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAIAAEAAAAAAAAAAAAAAAAAAAAAAIAAAAQA=</HashCode>
       <FileName>ConsoleEvent.cs</FileName>
     </TypeIdentifier>
+  </Class>
+  <Class Name="MattEland.Ani.Alfred.Core.SimpleConsole">
+    <Position X="13.25" Y="1.5" Width="1.5" />
+    <Members>
+      <Field Name="_events" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAAAAAAAAAAAggAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SimpleConsole.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Events" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
   </Class>
   <Interface Name="MattEland.Ani.Alfred.Core.IConsole">
     <Position X="10.25" Y="1.5" Width="1.5" />
