@@ -113,6 +113,8 @@ namespace MattEland.Ani.Alfred.Core
             Modules.Add(new AlfredTimeModule());
         }
 
+        #region Notify Property Changed
+
         /// <summary>
         /// Occurs when a property changes.
         /// </summary>
@@ -127,5 +129,7 @@ namespace MattEland.Ani.Alfred.Core
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        #endregion
     }
 }
