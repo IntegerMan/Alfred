@@ -62,8 +62,10 @@
                             <StackPanel Orientation="Vertical">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="{Binding Path=NameAndVersion}" />
+                                    <TextBlock Text="-" Margin="4,0" />
+                                    <TextBlock Text="{Binding Path=Status}" FontWeight="Bold" />
                                 </StackPanel>
-                                <!-- Module Text goes here... -->
+                                <TextBlock Text="{Binding UserInterfaceText}"></TextBlock>
                             </StackPanel>
                         </Border>
                     </DataTemplate>

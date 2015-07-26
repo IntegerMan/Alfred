@@ -21,6 +21,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         protected override void UpdateProtected()
         {
             _timeString = $"The time is now {DateTime.Now.ToString("t")}";
+            OnPropertyChanged(nameof(UserInterfaceText));
         }
 
         /// <summary>
@@ -32,6 +33,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         protected override void ShutdownProtected()
         {
             _timeString = null;
+            OnPropertyChanged(nameof(UserInterfaceText));
         }
     }
 }
