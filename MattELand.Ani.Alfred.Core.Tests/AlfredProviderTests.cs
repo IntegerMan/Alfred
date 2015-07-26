@@ -55,5 +55,13 @@ namespace MattEland.Ani.Alfred.Core.Tests
 
             Assert.AreEqual(numEvents + 1, _alfred.Console.Events.Count, "Event count did not increase after logging.");
         }
+
+        [Test]
+        public void InitializeCreatesEventsInLog()
+        {
+            _alfred.Initialize();
+
+            Assert.Greater(_alfred.Console.Events.Count, 0, "Initializing Alfred did not create any log entries.");
+        }
     }
 }

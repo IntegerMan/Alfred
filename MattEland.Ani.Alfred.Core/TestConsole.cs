@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace MattEland.Ani.Alfred.Core
 {
@@ -7,8 +9,6 @@ namespace MattEland.Ani.Alfred.Core
     /// </summary>
     public class TestConsole : IConsole
     {
-        private List<ConsoleEvent> _events = new List<ConsoleEvent>();
-
         /// <summary>
         /// Logs the specified message to the console.
         /// </summary>
@@ -20,5 +20,13 @@ namespace MattEland.Ani.Alfred.Core
 
             _events.Add(evt);
         }
+
+        private readonly List<ConsoleEvent> _events = new List<ConsoleEvent>();
+
+        /// <summary>
+        /// Gets the console events.
+        /// </summary>
+        /// <value>The console events.</value>
+        public IList<ConsoleEvent> Events => _events;
     }
 }
