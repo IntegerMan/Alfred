@@ -1,11 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="MattEland.Ani.Alfred.Core.AlfredProvider" Collapsed="true">
+  <Class Name="MattEland.Ani.Alfred.Core.AlfredProvider">
     <Position X="7.5" Y="1.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>AlfredProvider.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Console" />
+    </ShowAsAssociation>
   </Class>
+  <Interface Name="MattEland.Ani.Alfred.Core.IConsole" Collapsed="true">
+    <Position X="10.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IConsole.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>
