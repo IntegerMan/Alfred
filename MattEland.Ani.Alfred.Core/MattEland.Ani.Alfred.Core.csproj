@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AlfredStatus.cs" />
+    <Compile Include="ICollectionProvider.cs" />
     <Compile Include="Modules\AlfredTimeModule.cs" />
     <Compile Include="Modules\AlfredModule.cs" />
     <Compile Include="AlfredProvider.cs" />
@@ -48,6 +49,7 @@
     <Compile Include="Console\IConsole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Console\SimpleConsole.cs" />
+    <Compile Include="SimpleCollectionProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="JetBrains.Annotations.PCL328, Version=9.1.1.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">

@@ -53,9 +53,23 @@
             </ListBox>
         </DockPanel>
 
-        <StackPanel>
-            <TextBlock>This area will hold widgets</TextBlock>
-        </StackPanel>
+        <DockPanel Margin="8">
+            <TextBlock Text="Modules" DockPanel.Dock="Top" />
+            <ListBox ItemsSource="{Binding Modules}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderThickness="1" Margin="8,4,8,0">
+                            <StackPanel Orientation="Vertical">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Path=NameAndVersion}" />
+                                </StackPanel>
+                                <!-- Module Text goes here... -->
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </DockPanel>
 
     </DockPanel>
 </Window>

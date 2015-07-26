@@ -1,10 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
-
-using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core;
 
@@ -15,10 +12,6 @@ namespace MattEland.Ani.Alfred.WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        [NotNull]
-        private DispatcherTimer _timer;
-
-        // TODO: We need some error handling here
 
         private readonly AlfredProvider _alfred;
 
@@ -34,19 +27,22 @@ namespace MattEland.Ani.Alfred.WPF
             console.Log("WinClient.Initialize", "Console is now online.");
 
             // Create Alfred. It won't be online and running yet, but create it.
-            _alfred = new AlfredProvider
+            _alfred = new AlfredProvider(new WinClientCollectionProvider())
             {
                 Console = console
             };
+
+            _alfred.AddStandardModules();
+
             console.Log("WinClient.Initialize", "Alfred instantiated");
 
             // Data bindings in the UI rely on Alfred
             this.DataContext = _alfred;
 
             // Set up the update timer
-            _timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
-            _timer.Tick += OnTimerTick;
-            _timer.Start();
+            var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+            timer.Tick += OnTimerTick;
+            timer.Start();
 
         }
 

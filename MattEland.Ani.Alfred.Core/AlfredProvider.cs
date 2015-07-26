@@ -16,6 +16,29 @@ namespace MattEland.Ani.Alfred.Core
     public class AlfredProvider : INotifyPropertyChanged
     {
         private AlfredStatus _status;
+        private ICollectionProvider _provider;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AlfredProvider"/> class.
+        /// </summary>
+        /// <param name="provider">The collection provider.</param>
+        public AlfredProvider([NotNull] ICollectionProvider provider)
+        {
+            if (provider == null)
+            {
+                throw new ArgumentNullException(nameof(provider));
+            }
+
+            _provider = provider;
+            Modules = provider.GenerateCollection<AlfredModule>();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AlfredProvider"/> class.
+        /// </summary>
+        public AlfredProvider() : this(new SimpleCollectionProvider())
+        {
+        }
 
         /// <summary>
         /// Gets or sets the console provider. This can be null.
@@ -36,7 +59,7 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <value>The modules.</value>
         [NotNull]
-        public ICollection<AlfredModule> Modules { get; } = new HashSet<AlfredModule>();
+        public ICollection<AlfredModule> Modules { get; private set; }
 
         /// <summary>
         /// Gets the status.
@@ -150,7 +173,7 @@ namespace MattEland.Ani.Alfred.Core
                 throw new InvalidOperationException("Alfred must be offline in order to add modules.");
             }
 
-            Modules.Add(new AlfredTimeModule());
+            OnPropertyChanged(nameof(Modules));
         }
 
         #region Notify Property Changed
