@@ -42,7 +42,6 @@
     <Compile Include="AlfredProvider.cs" />
     <Compile Include="ConsoleEvent.cs" />
     <Compile Include="IConsole.cs" />
-    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleConsole.cs" />
   </ItemGroup>

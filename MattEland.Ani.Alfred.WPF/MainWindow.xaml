@@ -7,19 +7,37 @@
         mc:Ignorable="d"
         Loaded="OnWindowLoaded"
         Title="{Binding Path=NameAndVersionString}" Height="600" Width="800" 
+        Closing="OnWindowClosing"
         d:DataContext="{d:DesignInstance core:AlfredProvider}">
     <DockPanel>
-        <TextBlock DockPanel.Dock="Top">Console Events</TextBlock>
-        <ListBox x:Name="EventsList" ItemsSource="{Binding Path=Console.Events}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Time}" Width="150" HorizontalAlignment="Right" />
-                        <TextBlock Text="{Binding Title}" Width="150" HorizontalAlignment="Right" />
-                        <TextBlock Text="{Binding Message}" />
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="E_xit" Click="OnExitClicked" />
+            </MenuItem>
+        </Menu>
+        <DockPanel DockPanel.Dock="Left" Width="400" Margin="8">
+            <TextBlock DockPanel.Dock="Top">Console Events</TextBlock>
+            <ListBox x:Name="EventsList" ItemsSource="{Binding Path=Console.Events}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderThickness="1" Margin="8">
+                            <StackPanel Orientation="Vertical">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Path=Time, StringFormat=T}" />
+                                    <TextBlock Text="-" Margin="4,0" />
+                                    <TextBlock Text="{Binding Path=Title}" />
+                                </StackPanel>
+                                <StackPanel Margin="8">
+                                    <TextBlock Text="{Binding Message}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </DockPanel>
+        <StackPanel>
+            <TextBlock>This area will hold widgets</TextBlock>
+        </StackPanel>
     </DockPanel>
 </Window>
