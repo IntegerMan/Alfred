@@ -1,6 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Threading;
 using System.Windows;
+using System.Windows.Threading;
+
+using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core;
 
@@ -11,6 +15,8 @@ namespace MattEland.Ani.Alfred.WPF
     /// </summary>
     public partial class MainWindow : Window
     {
+        [NotNull]
+        private DispatcherTimer _timer;
 
         // TODO: We need some error handling here
 
@@ -36,6 +42,26 @@ namespace MattEland.Ani.Alfred.WPF
 
             // Data bindings in the UI rely on Alfred
             this.DataContext = _alfred;
+
+            // Set up the update timer
+            _timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+            _timer.Tick += OnTimerTick;
+            _timer.Start();
+
+        }
+
+        /// <summary>
+        /// Handles the <see cref="E:TimerTick" /> event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void OnTimerTick(object sender, EventArgs e)
+        {
+            // If Alfred is online, ask it to update its modules
+            if (_alfred.Status == AlfredStatus.Online)
+            {
+                _alfred.Update();
+            }
         }
 
         /// <summary>
