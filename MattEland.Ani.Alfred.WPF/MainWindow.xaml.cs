@@ -8,7 +8,8 @@ namespace MattEland.Ani.Alfred.WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        private AlfredProvider _alfred;
+
+        private readonly AlfredProvider _alfred;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow"/> class.
