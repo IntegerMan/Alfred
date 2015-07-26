@@ -3,7 +3,7 @@
   <Class Name="MattEland.Ani.Alfred.Core.AlfredProvider">
     <Position X="7.5" Y="1.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AACAAAAAAAAAAQAAAAAQAQAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AACAAAAAAAAAAQAAAAAQAQAQAAAAAAAAAAAQAAAAAAA=</HashCode>
       <FileName>AlfredProvider.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -37,11 +37,18 @@
     </ShowAsCollectionAssociation>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="MattEland.Ani.Alfred.Core.AlfredModule" Collapsed="true">
+  <Class Name="MattEland.Ani.Alfred.Core.Modules.AlfredModule" Collapsed="true">
     <Position X="4.5" Y="3" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>AlfredModule.cs</FileName>
+      <FileName>Modules\AlfredModule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MattEland.Ani.Alfred.Core.Modules.AlfredTimeModule" Collapsed="true">
+    <Position X="2.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Modules\AlfredTimeModule.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Interface Name="MattEland.Ani.Alfred.Core.IConsole">

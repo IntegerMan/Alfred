@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Modules;
+
 namespace MattEland.Ani.Alfred.Core
 {
     /// <summary>
@@ -57,6 +59,11 @@ namespace MattEland.Ani.Alfred.Core
             // TODO: Tear things down
 
             Console?.Log(LogHeader, "Shut down completed.");
+        }
+
+        public void AddStandardModules()
+        {
+            Modules.Add(new AlfredTimeModule());
         }
     }
 }

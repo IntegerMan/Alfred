@@ -94,6 +94,14 @@ namespace MattEland.Ani.Alfred.Core.Tests
             Assert.AreEqual(0, _alfred.Modules.Count, "Alfred started with modules when none were expected.");
         }
 
+        [Test]
+        public void AddingStandardModulesAddsModules()
+        {
+            _alfred.AddStandardModules();
+
+            Assert.Greater(_alfred.Modules.Count, 0, "Alfred did not have any modules after calling add standard modules.");
+        }
+
         #endregion Modules
 
     }
