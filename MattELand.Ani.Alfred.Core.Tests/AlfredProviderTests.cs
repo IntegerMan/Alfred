@@ -217,6 +217,22 @@ namespace MattEland.Ani.Alfred.Core.Tests
             }
         }
 
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void ModulesCannotUpdateWhileOffline()
+        {
+            _alfred.AddStandardModules();
+
+            _alfred.Update();
+        }
+
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void UpdateWithNoModulesWhileOfflineStillGeneratesError()
+        {
+            _alfred.Update();
+        }
+
         #endregion Modules
 
     }

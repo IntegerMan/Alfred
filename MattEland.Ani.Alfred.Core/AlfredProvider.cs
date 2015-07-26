@@ -121,10 +121,35 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
+        /// Tells modules to take a look at their content and update as needed.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Thrown if Alfred is not Online</exception>
+        public void Update()
+        {
+
+            // Error check
+            if (Status != AlfredStatus.Online)
+            {
+                throw new InvalidOperationException("Alfred must be online in order to update modules.");
+            }
+
+            foreach (var module in Modules)
+            {
+                module.Update();
+            }
+        }
+
+        /// <summary>
         /// Adds the standard internal modules to Alfred.
         /// </summary>
+        /// <exception cref="InvalidOperationException">Thrown if Alfred is not Offline</exception>
         public void AddStandardModules()
         {
+            if (Status != AlfredStatus.Offline)
+            {
+                throw new InvalidOperationException("Alfred must be offline in order to add modules.");
+            }
+
             Modules.Add(new AlfredTimeModule());
         }
 

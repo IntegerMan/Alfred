@@ -111,5 +111,26 @@ namespace MattEland.Ani.Alfred.Core.Modules
         {
             // Handled by modules as needed
         }
+
+        /// <summary>
+        /// Handles updating the module as needed
+        /// </summary>
+        public void Update()
+        {
+            if (Status == AlfredStatus.Offline)
+            {
+                throw new InvalidOperationException($"{NameAndVersion} was offline when told to update.");
+            }
+
+            this.UpdateProtected();
+        }
+
+        /// <summary>
+        /// Handles updating the module as needed
+        /// </summary>
+        protected virtual void UpdateProtected()
+        {
+            // Handled by modules as needed
+        }
     }
 }
