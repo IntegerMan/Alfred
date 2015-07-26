@@ -54,6 +54,15 @@ namespace MattEland.Ani.Alfred.Core.Tests
         }
 
         [Test]
+        public void InitializeAndShutdownResultsInShutdown()
+        {
+            _alfred.Initialize();
+            _alfred.Shutdown();
+
+            Assert.AreEqual(_alfred.Status, AlfredStatus.Offline);
+        }
+
+        [Test]
         public void InitializeWhileOnlineErrors()
         {
             _alfred.Initialize();
@@ -89,7 +98,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
                 // No action
             }
 
-            // Assert that we're still online.
+            // Assert that we're now offline.
             Assert.AreEqual(_alfred.Status, AlfredStatus.Offline);
         }
 

@@ -100,6 +100,8 @@ namespace MattEland.Ani.Alfred.Core
 
             // TODO: Tear things down
 
+            // We're done here. Tell the world.
+            Status = AlfredStatus.Offline;
             Console?.Log(LogHeader, "Shut down completed.");
         }
 
