@@ -58,6 +58,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <summary>
         /// Tells Alfred it's okay to start itself up and begin operating.
         /// </summary>
+        /// <exception cref="InvalidOperationException">Thrown if Alfred is already Online</exception>
         public void Initialize()
         {
             const string LogHeader = "Alfred.Initialize";
@@ -83,6 +84,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <summary>
         /// Tells Alfred to go ahead and shut down.
         /// </summary>
+        /// <exception cref="InvalidOperationException">Thrown if Alfred is already Offline</exception>
         public void Shutdown()
         {
             const string LogHeader = "Alfred.Shutdown";
