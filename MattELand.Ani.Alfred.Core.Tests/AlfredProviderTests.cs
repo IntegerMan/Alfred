@@ -23,6 +23,9 @@ namespace MattEland.Ani.Alfred.Core.Tests
             };
         }
 
+
+        #region Initialization / Statuses
+
         /// <summary>
         /// Tests initialization of Alfred
         /// </summary>
@@ -31,6 +34,22 @@ namespace MattEland.Ani.Alfred.Core.Tests
         {
             Assert.NotNull(_alfred, "Alfred was not initialized");
         }
+
+        [Test]
+        public void AlfredStartsOffline()
+        {
+            Assert.AreEqual(_alfred.Status, AlfredStatus.Offline);
+        }
+
+        [Test]
+        public void AfterInitializationAlfredIsOnline()
+        {
+            _alfred.Initialize();
+
+            Assert.AreEqual(_alfred.Status, AlfredStatus.Online);
+        }
+
+        #endregion
 
         #region Console
 

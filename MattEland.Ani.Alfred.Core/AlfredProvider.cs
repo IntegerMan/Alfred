@@ -33,17 +33,24 @@ namespace MattEland.Ani.Alfred.Core
         [NotNull]
         public ICollection<AlfredModule> Modules { get; } = new HashSet<AlfredModule>();
 
+        public AlfredStatus Status { get; private set; }
+
         /// <summary>
         /// Tells Alfred it's okay to start itself up and begin operating.
         /// </summary>
         public void Initialize()
         {
+            // Tell folks we're initializing
+            Status = AlfredStatus.Initializing;
+
             const string LogHeader = "Alfred.Initialize";
 
             Console?.Log(LogHeader, "Initializing...");
 
             // TODO: Set things up here
 
+            // We're done. Let the world know.
+            Status = AlfredStatus.Online;
             Console?.Log(LogHeader, "Initilization Completed.");
         }
 
