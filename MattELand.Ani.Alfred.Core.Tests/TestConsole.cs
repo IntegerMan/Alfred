@@ -1,12 +1,18 @@
-﻿using MattEland.Ani.Alfred.Core;
+﻿using System.Collections.Generic;
+using MattEland.Ani.Alfred.Core;
+using NUnit.Framework;
 
 namespace MattELand.Ani.Alfred.Core.Tests 
 {
     public class TestConsole : IConsole
     {
-        public void AddEvent(ConsoleEvent consoleEvent)
+        private List<ConsoleEvent> _events = new List<ConsoleEvent>();
+
+        public void Log(string title, string body)
         {
-            // TODO: Implement me
+            var e = new ConsoleEvent(title, body);
+
+            _events.Add(e);
         }
     }
 }

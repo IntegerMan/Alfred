@@ -17,7 +17,10 @@ namespace MattELand.Ani.Alfred.Core.Tests
         [SetUp]
         public void SetupAlfredProviderTests()
         {
-            _alfred = new AlfredProvider();
+            _alfred = new AlfredProvider
+            {
+                Console = new TestConsole()
+            };
         }
 
         /// <summary>
@@ -40,10 +43,13 @@ namespace MattELand.Ani.Alfred.Core.Tests
         [Test]
         public void SetConsole()
         {
-            _alfred.Console = new TestConsole();
-
-            Assert.IsNotNull(_alfred.Console, "Could not set Alfred's console");
+            Assert.IsNotNull(_alfred.Console, "Alfred's console was null after creation");
         }
 
+        [Test]
+        public void LogToConsole()
+        {
+            _alfred.Console.Log("Alfred Test Framework", "Testing logging to Alfred");
+        }
     }
 }

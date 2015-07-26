@@ -11,10 +11,10 @@ namespace MattEland.Ani.Alfred.Core
     public interface IConsole
     {
         /// <summary>
-        /// Adds the event to the console.
+        /// Logs the specified message to the console.
         /// </summary>
-        /// <param name="consoleEvent">The console event.</param>
-        void AddEvent(ConsoleEvent consoleEvent);
-
+        /// <param name="title">The title.</param>
+        /// <param name="body">The body.</param>
+        void Log(string title, string body);
     }
 }
