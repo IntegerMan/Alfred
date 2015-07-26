@@ -20,11 +20,11 @@
             const string LogHeader = "Alfred.Initialize";
             var console = Console;
 
-            console?.Log(LogHeader, "Initializing Alfred system...");
+            console?.Log(LogHeader, "Initializing System...");
 
             // TODO: Set things up here
 
-            console?.Log(LogHeader, "Alfred Initilization Completed.");
+            console?.Log(LogHeader, "Initilization Completed.");
         }
     }
 }

@@ -63,5 +63,15 @@ namespace MattEland.Ani.Alfred.Core.Tests
 
             Assert.Greater(_alfred.Console.Events.Count, 0, "Initializing Alfred did not create any log entries.");
         }
+
+        [Test]
+        public void InitializationWithoutConsoleWorks()
+        {
+            _alfred.Console = null;
+
+            _alfred.Initialize();
+
+            // Nothing to assert here - I'm looking for errors encountered
+        }
     }
 }
