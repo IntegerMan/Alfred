@@ -7,8 +7,8 @@
     <ProjectGuid>{1E642C50-D294-4003-80AC-3D92CA92DBE3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MattELand.Ani.Alfred.Core.Tests</RootNamespace>
-    <AssemblyName>MattELand.Ani.Alfred.Core.Tests</AssemblyName>
+    <RootNamespace>MattEland.Ani.Alfred.Core.Tests</RootNamespace>
+    <AssemblyName>MattEland.Ani.Alfred.Core.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -49,7 +49,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TestConsole.cs" />
     <Compile Include="AlfredProviderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

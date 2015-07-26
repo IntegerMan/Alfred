@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{4B2AB3
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MattEland.Ani.Alfred.Core", "MattEland.Ani.Alfred.Core\MattEland.Ani.Alfred.Core.csproj", "{549F22E5-1F66-4420-89BF-9460603F9516}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MattELand.Ani.Alfred.Core.Tests", "MattELand.Ani.Alfred.Core.Tests\MattELand.Ani.Alfred.Core.Tests.csproj", "{1E642C50-D294-4003-80AC-3D92CA92DBE3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MattEland.Ani.Alfred.Core.Tests", "MattELand.Ani.Alfred.Core.Tests\MattEland.Ani.Alfred.Core.Tests.csproj", "{1E642C50-D294-4003-80AC-3D92CA92DBE3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{19C5600C-235A-4B95-B57D-8EC061FF44D7}"
 EndProject

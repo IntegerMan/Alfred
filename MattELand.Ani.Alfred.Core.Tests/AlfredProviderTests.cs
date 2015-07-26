@@ -1,7 +1,7 @@
 ﻿using MattEland.Ani.Alfred.Core;
 using NUnit.Framework;
 
-namespace MattELand.Ani.Alfred.Core.Tests
+namespace MattEland.Ani.Alfred.Core.Tests
 {
     /// <summary>
     /// Tests AlfredProvider
