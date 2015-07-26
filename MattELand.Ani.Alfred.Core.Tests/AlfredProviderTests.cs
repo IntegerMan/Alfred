@@ -228,6 +228,14 @@ namespace MattEland.Ani.Alfred.Core.Tests
 
         [Test]
         [ExpectedException(typeof(InvalidOperationException))]
+        public void ModulesCannotBeAddedWhileOnline()
+        {
+            _alfred.Initialize();
+            _alfred.AddStandardModules();
+        }
+
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void UpdateWithNoModulesWhileOfflineStillGeneratesError()
         {
             _alfred.Update();
