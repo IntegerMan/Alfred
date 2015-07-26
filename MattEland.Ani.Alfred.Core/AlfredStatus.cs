@@ -11,18 +11,8 @@
         Offline,
 
         /// <summary>
-        /// Indicates Alfred is currently initializing
-        /// </summary>
-        Initializing,
-
-        /// <summary>
         /// Indicating Alfred is currently online
         /// </summary>
-        Online,
-
-        /// <summary>
-        /// Indicates Alfred is shutting down
-        /// </summary>
-        ShuttingDown
+        Online
     }
 }

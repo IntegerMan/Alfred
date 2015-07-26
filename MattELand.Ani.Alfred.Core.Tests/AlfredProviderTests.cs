@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using System;
+
+using NUnit.Framework;
 using System.Linq;
 
 using MattEland.Ani.Alfred.Core.Console;
@@ -48,6 +50,27 @@ namespace MattEland.Ani.Alfred.Core.Tests
         {
             _alfred.Initialize();
 
+            Assert.AreEqual(_alfred.Status, AlfredStatus.Online);
+        }
+
+        [Test]
+        public void InitializeWhileOnlineErrors()
+        {
+            _alfred.Initialize();
+
+            try
+            {
+                _alfred.Initialize();
+
+                Assert.Fail("Expected an InvalidOperationException since Alfred was already initialized.");
+
+            }
+            catch (InvalidOperationException)
+            {
+                // No action
+            }
+
+            // Assert that we're still online.
             Assert.AreEqual(_alfred.Status, AlfredStatus.Online);
         }
 

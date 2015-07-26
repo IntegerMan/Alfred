@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 using JetBrains.Annotations;
@@ -59,10 +60,16 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         public void Initialize()
         {
-            // Tell folks we're initializing
-            Status = AlfredStatus.Initializing;
-
             const string LogHeader = "Alfred.Initialize";
+
+            // Handle case on initialize but already initializing or online
+            if (Status == AlfredStatus.Online)
+            {
+                var message = "Instructed to initialize but system is already online";
+                Console?.Log(LogHeader, message);
+
+                throw new InvalidOperationException(message);
+            }
 
             Console?.Log(LogHeader, "Initializing...");
 

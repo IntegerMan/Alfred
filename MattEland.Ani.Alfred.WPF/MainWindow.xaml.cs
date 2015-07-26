@@ -68,7 +68,7 @@ namespace MattEland.Ani.Alfred.WPF
         private void OnWindowClosing(object sender, CancelEventArgs e)
         {
             // Make sure we clean up Alfred
-            if (_alfred.Status != AlfredStatus.Offline && _alfred.Status != AlfredStatus.ShuttingDown)
+            if (_alfred.Status != AlfredStatus.Offline)
             {
                 _alfred.Shutdown();
             }
