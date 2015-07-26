@@ -40,6 +40,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlfredModule.cs" />
     <Compile Include="AlfredProvider.cs" />
     <Compile Include="ConsoleEvent.cs" />
     <Compile Include="IConsole.cs" />

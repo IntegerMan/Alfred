@@ -85,5 +85,15 @@ namespace MattEland.Ani.Alfred.Core.Tests
 
             // Nothing to assert here - I'm looking for errors encountered
         }
+
+        #region Modules
+
+        public void AlfredStartsWithNoModules()
+        {
+            Assert.AreEqual(0, _alfred.Modules.Count, "Alfred started with modules when none were expected.");
+        }
+
+        #endregion Modules
+
     }
 }

@@ -3,12 +3,15 @@
   <Class Name="MattEland.Ani.Alfred.Core.AlfredProvider">
     <Position X="7.5" Y="1.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AACAAAAAAAAAAQAAAAAQAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AACAAAAAAAAAAQAAAAAQAQAQAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>AlfredProvider.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="Console" />
     </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Modules" />
+    </ShowAsCollectionAssociation>
   </Class>
   <Class Name="MattEland.Ani.Alfred.Core.ConsoleEvent">
     <Position X="10.25" Y="4" Width="1.5" />
@@ -33,6 +36,13 @@
       <Property Name="Events" />
     </ShowAsCollectionAssociation>
     <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="MattEland.Ani.Alfred.Core.AlfredModule" Collapsed="true">
+    <Position X="4.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AlfredModule.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Interface Name="MattEland.Ani.Alfred.Core.IConsole">
     <Position X="10.25" Y="1.5" Width="1.5" />
