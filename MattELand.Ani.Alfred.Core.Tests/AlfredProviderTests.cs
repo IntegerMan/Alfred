@@ -9,6 +9,16 @@ namespace MattELand.Ani.Alfred.Core.Tests
     [TestFixture]
     public class AlfredProviderTests
     {
+        private AlfredProvider _alfred;
+
+        /// <summary>
+        /// Sets up the alfred provider's tests.
+        /// </summary>
+        [SetUp]
+        public void SetupAlfredProviderTests()
+        {
+            _alfred = new AlfredProvider();
+        }
 
         /// <summary>
         /// Tests initialization of Alfred
@@ -16,15 +26,15 @@ namespace MattELand.Ani.Alfred.Core.Tests
         [Test]
         public void InitializeAlfred()
         {
-            var alfred = new AlfredProvider();
+            Assert.NotNull(_alfred, "Alfred was not initialized");
         }
 
         [Test]
         public void RemoveAlfredConsole()
         {
-            var alfred = new AlfredProvider();
+            _alfred.Console = null;
 
-            alfred.Console = null;
+            Assert.IsNull(_alfred.Console, "Could not remove Alfred's console");
         }
 
 }
