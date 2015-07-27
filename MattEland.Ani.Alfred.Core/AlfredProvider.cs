@@ -16,7 +16,6 @@ namespace MattEland.Ani.Alfred.Core
     public class AlfredProvider : INotifyPropertyChanged
     {
         private AlfredStatus _status;
-        private ICollectionProvider _provider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AlfredProvider"/> class.
@@ -29,8 +28,8 @@ namespace MattEland.Ani.Alfred.Core
                 throw new ArgumentNullException(nameof(provider));
             }
 
-            _provider = provider;
-            Modules = provider.GenerateCollection<AlfredModule>();
+            CollectionProvider = provider;
+            Modules = provider.CreateCollection<AlfredModule>();
         }
 
         /// <summary>
@@ -78,6 +77,12 @@ namespace MattEland.Ani.Alfred.Core
                 OnPropertyChanged(nameof(Status));
             }
         }
+
+        /// <summary>
+        /// Gets the collection provider used for cross platform portability.
+        /// </summary>
+        /// <value>The collection provider.</value>
+        public ICollectionProvider CollectionProvider { get; }
 
         /// <summary>
         /// Tells Alfred it's okay to start itself up and begin operating.

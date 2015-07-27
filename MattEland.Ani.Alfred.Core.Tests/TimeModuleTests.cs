@@ -65,5 +65,25 @@ namespace MattEland.Ani.Alfred.Core.Tests
             Assert.IsNull(_module.UserInterfaceText, "UI text was not null after shutdown");
         }
 
+        [Test]
+        public void TimeModuleHasWidgets()
+        {
+            _alfred.Initialize();
+
+            Assert.IsNotNull(_module.Widgets);
+            Assert.Greater(_module.Widgets.Count, 0, "The time module did not have any Widgets");
+        }
+
+        [Test]
+        public void TimeModuleHasNoWidgetsWhenOffline()
+        {
+            Assert.IsNull(_module.Widgets);
+
+            _alfred.Initialize();
+            _alfred.Shutdown();
+
+            Assert.IsNull(_module.Widgets);
+        }
+
     }
 }

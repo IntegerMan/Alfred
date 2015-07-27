@@ -8,7 +8,7 @@ namespace MattEland.Ani.Alfred.Core
 {
     public class SimpleCollectionProvider : ICollectionProvider
     {
-        public ICollection<T> GenerateCollection<T>()
+        public ICollection<T> CreateCollection<T>()
         {
             return new Collection<T>();
         }

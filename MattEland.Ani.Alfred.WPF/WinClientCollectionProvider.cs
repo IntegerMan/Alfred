@@ -10,7 +10,7 @@ namespace MattEland.Ani.Alfred.WPF
     /// </summary>
     public class WinClientCollectionProvider : ICollectionProvider
     {
-        public ICollection<T> GenerateCollection<T>()
+        public ICollection<T> CreateCollection<T>()
         {
             return new ObservableCollection<T>();
         }

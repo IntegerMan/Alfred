@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 using JetBrains.Annotations;
@@ -12,6 +13,17 @@ namespace MattEland.Ani.Alfred.Core.Modules
     {
         private AlfredStatus _status;
 
+        /// <summary>
+        /// Gets the user interface widgets for the module.
+        /// </summary>
+        /// <value>The user interface widgets.</value>
+        [CanBeNull]
+        public ICollection<AlfredWidget> Widgets { get; private set; }
+
+        /// <summary>
+        /// Gets the alfred provider reference
+        /// </summary>
+        /// <value>The alfred provider reference.</value>
         [CanBeNull]
         protected AlfredProvider Alfred { get; private set; }
 
@@ -60,7 +72,9 @@ namespace MattEland.Ani.Alfred.Core.Modules
 
             Alfred = alfred;
 
-            this.InitializeProtected();
+            Widgets = alfred.CollectionProvider.CreateCollection<AlfredWidget>();
+
+            InitializeProtected();
 
             Status = AlfredStatus.Online;
         }
@@ -89,9 +103,10 @@ namespace MattEland.Ani.Alfred.Core.Modules
                 throw new InvalidOperationException($"{NameAndVersion} was already offline when told to shut down.");
             }
 
-            this.ShutdownProtected();
+            ShutdownProtected();
 
             Alfred = null;
+            Widgets = null;
 
             Status = AlfredStatus.Offline;
         }
