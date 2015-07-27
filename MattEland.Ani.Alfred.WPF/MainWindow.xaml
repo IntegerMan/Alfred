@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:win="clr-namespace:MattEland.Ani.Alfred.WPF"
         xmlns:core="clr-namespace:MattEland.Ani.Alfred.Core;assembly=MattEland.Ani.Alfred.Core"
         mc:Ignorable="d"
         Loaded="OnWindowLoaded"
@@ -15,11 +16,12 @@
             <MenuItem Header="_File">
                 <MenuItem Header="E_xit" Click="OnExitClicked" />
             </MenuItem>
-            <MenuItem Header="_Alfred">
-                <MenuItem Header="_Initialize" Click="OnInitializeClicked" />
-                <MenuItem Header="_Shutdown" Click="OnShutdownClicked" />
-            </MenuItem>
         </Menu>
+
+        <ToolBar DockPanel.Dock="Top">
+            <Button Margin="0,0,8,0" Click="OnInitializeClicked">Initialize</Button>
+            <Button Margin="0,0,8,0" Click="OnShutdownClicked">Shutdown</Button>
+        </ToolBar>
 
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
@@ -31,9 +33,11 @@
             </StatusBarItem>
         </StatusBar>
 
-        <DockPanel DockPanel.Dock="Left" Width="300" Margin="8">
+        <DockPanel DockPanel.Dock="Left" Width="300" Margin="8" 
+                   DataContext="{Binding Path=Console}"
+                   d:DataContext="{d:DesignInstance win:WinClientConsole}">
             <TextBlock DockPanel.Dock="Top">Console Events</TextBlock>
-            <ListBox x:Name="EventsList" ItemsSource="{Binding Path=Console.Events}">
+            <ListBox ItemsSource="{Binding Path=Events}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Border BorderThickness="1" Margin="8,4,8,0">
@@ -56,6 +60,11 @@
         <DockPanel Margin="8">
             <TextBlock Text="Modules" DockPanel.Dock="Top" />
             <ListBox ItemsSource="{Binding Modules}">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Border BorderThickness="1" Margin="8,4,8,0">
