@@ -47,11 +47,9 @@ namespace MattEland.Ani.Alfred.Core.Modules
 
         protected override void ShutdownProtected()
         {
-
             _timeWidget.Text = null;
 
             OnPropertyChanged(nameof(UserInterfaceText));
-
         }
     }
 }
