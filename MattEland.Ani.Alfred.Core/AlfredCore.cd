@@ -72,11 +72,10 @@
   <Class Name="MattEland.Ani.Alfred.Core.Modules.AlfredTimeModule">
     <Position X="16.5" Y="3.75" Width="1.5" />
     <Members>
-      <Field Name="_timeString" Hidden="true" />
       <Field Name="_timeWidget" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AIAAAAEAAAABAAAAAAAEAAAAACAAQAAAAAAAAAAQAAA=</HashCode>
+      <HashCode>AIAAAAEAAAABAAAAAAAAAAAAACAAQAAAAAAAAAAQAAA=</HashCode>
       <FileName>Modules\AlfredTimeModule.cs</FileName>
     </TypeIdentifier>
   </Class>

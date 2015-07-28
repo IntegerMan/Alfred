@@ -13,8 +13,6 @@ namespace MattEland.Ani.Alfred.Core.Modules
     public class AlfredTimeModule : AlfredModule
     {
 
-        private string _timeString;
-
         [NotNull]
         private readonly TextWidget _timeWidget;
 
@@ -37,7 +35,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
 
         protected override void UpdateProtected()
         {
-            _timeString = $"The time is now {DateTime.Now.ToString("t")}";
+            _timeWidget.Text = $"The time is now {DateTime.Now.ToString("t")}";
             OnPropertyChanged(nameof(UserInterfaceText));
         }
 
@@ -45,12 +43,15 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// Gets the user interface text.
         /// </summary>
         /// <value>The user interface text.</value>
-        public override string UserInterfaceText => _timeString;
+        public override string UserInterfaceText => _timeWidget.Text;
 
         protected override void ShutdownProtected()
         {
-            _timeString = null;
+
+            _timeWidget.Text = null;
+
             OnPropertyChanged(nameof(UserInterfaceText));
+
         }
     }
 }
