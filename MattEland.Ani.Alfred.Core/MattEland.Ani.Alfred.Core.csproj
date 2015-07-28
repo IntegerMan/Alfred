@@ -47,7 +47,8 @@
     <Compile Include="AlfredProvider.cs" />
     <Compile Include="Console\ConsoleEvent.cs" />
     <Compile Include="Console\IConsole.cs" />
-    <Compile Include="Modules\AlfredWidget.cs" />
+    <Compile Include="Widgets\AlfredWidget.cs" />
+    <Compile Include="Widgets\TextWidget.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Console\SimpleConsole.cs" />
     <Compile Include="SimpleCollectionProvider.cs" />

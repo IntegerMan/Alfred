@@ -71,11 +71,18 @@
       <FileName>Modules\AlfredTimeModule.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="MattEland.Ani.Alfred.Core.Modules.AlfredWidget" Collapsed="true">
+  <Class Name="MattEland.Ani.Alfred.Core.Widgets.AlfredWidget" Collapsed="true">
     <Position X="14.25" Y="6" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Modules\AlfredWidget.cs</FileName>
+      <FileName>Widgets\AlfredWidget.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MattEland.Ani.Alfred.Core.Widgets.TextWidget" Collapsed="true">
+    <Position X="14.25" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Widgets\TextWidget.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Interface Name="MattEland.Ani.Alfred.Core.Console.IConsole">

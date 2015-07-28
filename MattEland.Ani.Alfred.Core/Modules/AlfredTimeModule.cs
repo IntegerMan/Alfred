@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Widgets;
+
 namespace MattEland.Ani.Alfred.Core.Modules
 {
     /// <summary>
@@ -10,7 +12,21 @@ namespace MattEland.Ani.Alfred.Core.Modules
     /// </summary>
     public class AlfredTimeModule : AlfredModule
     {
+
         private string _timeString;
+
+        [NotNull]
+        private readonly TextWidget _timeWidget;
+
+        public AlfredTimeModule()
+        {
+            _timeWidget = new TextWidget();
+        }
+
+        protected override void InitializeProtected()
+        {
+            RegisterWidget(_timeWidget);
+        }
 
         /// <summary>
         /// Gets the name and version of the module.

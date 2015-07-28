@@ -4,6 +4,8 @@ using System.ComponentModel;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Widgets;
+
 namespace MattEland.Ani.Alfred.Core.Modules
 {
     /// <summary>
@@ -72,11 +74,21 @@ namespace MattEland.Ani.Alfred.Core.Modules
 
             Alfred = alfred;
 
-            Widgets = alfred.CollectionProvider.CreateCollection<AlfredWidget>();
+            EnsureWidgetsCollection();
 
             InitializeProtected();
 
             Status = AlfredStatus.Online;
+        }
+
+        private void EnsureWidgetsCollection()
+        {
+            if (Alfred == null)
+            {
+                throw new InvalidOperationException("Alfred is not provided. Cannot create widgets collection.");
+            }
+
+            Widgets = Alfred.CollectionProvider.CreateCollection<AlfredWidget>();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -106,6 +118,8 @@ namespace MattEland.Ani.Alfred.Core.Modules
             ShutdownProtected();
 
             Alfred = null;
+
+            Widgets?.Clear();
             Widgets = null;
 
             Status = AlfredStatus.Offline;
@@ -153,5 +167,22 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         /// <value>The user interface text.</value>
         public virtual string UserInterfaceText => null;
+
+        /// <summary>
+        /// Registers a widget for the module.
+        /// </summary>
+        /// <param name="widget">The widget.</param>
+        protected void RegisterWidget([NotNull] AlfredWidget widget)
+        {
+            if (widget == null)
+            {
+                throw new ArgumentNullException(nameof(widget));
+            }
+
+            EnsureWidgetsCollection();
+
+            // ReSharper disable once PossibleNullReferenceException
+            Widgets.Add(widget);
+        }
     }
 }
