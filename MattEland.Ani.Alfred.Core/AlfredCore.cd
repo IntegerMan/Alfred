@@ -52,7 +52,7 @@
       <Event Name="PropertyChanged" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AEQAAAEEAAABIQAAIAAAAQAAgCAAQAAAAAAAAAAQAAA=</HashCode>
+      <HashCode>AEQAAAEEAAABIQAAIAAAAQAAgCAAQBAAAAQAAAAQAAA=</HashCode>
       <FileName>Modules\AlfredModule.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -67,21 +67,22 @@
   <Class Name="MattEland.Ani.Alfred.Core.Modules.AlfredTimeModule" Collapsed="true">
     <Position X="16.5" Y="3.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAABAAAAAAAEAAAAACAAQAAAAAAAAAAQAAA=</HashCode>
+      <HashCode>AIAAAAEAAAABAAAAAAAEAAAAACAAQAAAAAAAAAAQAAA=</HashCode>
       <FileName>Modules\AlfredTimeModule.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MattEland.Ani.Alfred.Core.Widgets.AlfredWidget" Collapsed="true">
     <Position X="14.25" Y="6" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Widgets\AlfredWidget.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="MattEland.Ani.Alfred.Core.Widgets.TextWidget" Collapsed="true">
     <Position X="14.25" Y="7" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAACAAAAAA=</HashCode>
       <FileName>Widgets\TextWidget.cs</FileName>
     </TypeIdentifier>
   </Class>
