@@ -51,6 +51,11 @@
       <Method Name="OnPropertyChanged" Hidden="true" />
       <Event Name="PropertyChanged" Hidden="true" />
     </Members>
+    <AssociationLine Name="Widgets" Type="MattEland.Ani.Alfred.Core.Widgets.AlfredWidget">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.1" Y="0.331" />
+      </MemberNameLabel>
+    </AssociationLine>
     <TypeIdentifier>
       <HashCode>AEQAAAEEAAABIQAAIAAAAQAAgCAAQBAAAAQAAAAQAAA=</HashCode>
       <FileName>Modules\AlfredModule.cs</FileName>
@@ -64,23 +69,30 @@
     </ShowAsCollectionAssociation>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="MattEland.Ani.Alfred.Core.Modules.AlfredTimeModule" Collapsed="true">
+  <Class Name="MattEland.Ani.Alfred.Core.Modules.AlfredTimeModule">
     <Position X="16.5" Y="3.75" Width="1.5" />
+    <Members>
+      <Field Name="_timeString" Hidden="true" />
+      <Field Name="_timeWidget" Hidden="true" />
+    </Members>
     <TypeIdentifier>
       <HashCode>AIAAAAEAAAABAAAAAAAEAAAAACAAQAAAAAAAAAAQAAA=</HashCode>
       <FileName>Modules\AlfredTimeModule.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MattEland.Ani.Alfred.Core.Widgets.AlfredWidget" Collapsed="true">
-    <Position X="14.25" Y="6" Width="1.5" />
+    <Position X="14.25" Y="6.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Widgets\AlfredWidget.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="MattEland.Ani.Alfred.Core.Widgets.TextWidget" Collapsed="true">
-    <Position X="14.25" Y="7" Width="1.5" />
+  <Class Name="MattEland.Ani.Alfred.Core.Widgets.TextWidget">
+    <Position X="14.25" Y="7.5" Width="1.5" />
+    <Members>
+      <Field Name="_text" Hidden="true" />
+    </Members>
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAACAAAAAA=</HashCode>
       <FileName>Widgets\TextWidget.cs</FileName>

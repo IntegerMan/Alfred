@@ -16,19 +16,22 @@ namespace MattEland.Ani.Alfred.Core.Tests
     [TestFixture]
     public class TextWidgetTests
     {
-
-        [Test]
-        public void CanInstantiateTextWidget()
-        {
-            var widget = new TextWidget();
-        }
+        private const string TestString = "This is a test";
 
         [Test]
         public void TextWidgetTextTests()
         {
-            var widget = new TextWidget { Text = "This is a test" };
+            var widget = new TextWidget { Text = TestString };
 
-            Assert.AreEqual("This is a test", widget.Text);
+            Assert.AreEqual(TestString, widget.Text);
+        }
+
+        [Test]
+        public void TextWidgetConstructorTextTests()
+        {
+            var widget = new TextWidget(TestString);
+
+            Assert.AreEqual(TestString, widget.Text);
         }
 
     }
