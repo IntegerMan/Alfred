@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 using JetBrains.Annotations;
 
@@ -36,20 +35,11 @@ namespace MattEland.Ani.Alfred.Core.Modules
         protected override void UpdateProtected()
         {
             _timeWidget.Text = $"The time is now {DateTime.Now.ToString("t")}";
-            OnPropertyChanged(nameof(UserInterfaceText));
         }
-
-        /// <summary>
-        /// Gets the user interface text.
-        /// </summary>
-        /// <value>The user interface text.</value>
-        public override string UserInterfaceText => _timeWidget.Text;
 
         protected override void ShutdownProtected()
         {
             _timeWidget.Text = null;
-
-            OnPropertyChanged(nameof(UserInterfaceText));
         }
     }
 }

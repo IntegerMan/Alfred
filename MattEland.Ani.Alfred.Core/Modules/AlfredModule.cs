@@ -164,7 +164,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
                 throw new InvalidOperationException($"{NameAndVersion} was offline when told to update.");
             }
 
-            this.UpdateProtected();
+            UpdateProtected();
         }
 
         /// <summary>
@@ -174,12 +174,6 @@ namespace MattEland.Ani.Alfred.Core.Modules
         {
             // Handled by modules as needed
         }
-
-        /// <summary>
-        /// Gets the user interface text displayed as a widget.
-        /// </summary>
-        /// <value>The user interface text.</value>
-        public virtual string UserInterfaceText => null;
 
         /// <summary>
         /// Registers a widget for the module.
