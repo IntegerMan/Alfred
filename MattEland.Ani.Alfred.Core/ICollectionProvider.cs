@@ -13,6 +13,7 @@ namespace MattEland.Ani.Alfred.Core
         /// Generates a collection of the specified type.
         /// </summary>
         /// <returns>The collection.</returns>
+        [NotNull]
         ICollection<T> CreateCollection<T>();
     }
 }

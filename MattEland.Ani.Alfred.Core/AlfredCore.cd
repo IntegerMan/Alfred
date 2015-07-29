@@ -57,11 +57,10 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AEQAAAEEAAABIQAAIAAAAQAAgCAAQBAAAAQAAAAQAAA=</HashCode>
+      <HashCode>AEQAAAEEAAABIQAAIAAAAQAAgCAAQRAAAAQABAAAAAA=</HashCode>
       <FileName>Modules\AlfredModule.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="Alfred" />
       <Property Name="Status" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
@@ -75,7 +74,7 @@
       <Field Name="_timeWidget" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AIAAAAEAAAABAAAAAAAAAAAAACAAQAAAAAAAAAAQAAA=</HashCode>
+      <HashCode>AIAAAAEAAAABAAAAAAAAAAAAACAAQAAAAAAAAAAAAAA=</HashCode>
       <FileName>Modules\AlfredTimeModule.cs</FileName>
     </TypeIdentifier>
   </Class>

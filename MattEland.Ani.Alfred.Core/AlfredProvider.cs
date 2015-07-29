@@ -13,7 +13,7 @@ namespace MattEland.Ani.Alfred.Core
     /// Coordinates providing personal assistance to a user interface and receiving settings and queries back from the user
     /// interface.
     /// </summary>
-    public class AlfredProvider : INotifyPropertyChanged
+    public sealed class AlfredProvider : INotifyPropertyChanged
     {
         private AlfredStatus _status;
 
@@ -58,7 +58,8 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <value>The modules.</value>
         [NotNull]
-        public ICollection<AlfredModule> Modules { get; private set; }
+        [ItemNotNull]
+        public ICollection<AlfredModule> Modules { get; }
 
         /// <summary>
         /// Gets the status.
@@ -82,6 +83,7 @@ namespace MattEland.Ani.Alfred.Core
         /// Gets the collection provider used for cross platform portability.
         /// </summary>
         /// <value>The collection provider.</value>
+        [NotNull]
         public ICollectionProvider CollectionProvider { get; }
 
         /// <summary>
@@ -178,7 +180,7 @@ namespace MattEland.Ani.Alfred.Core
                 throw new InvalidOperationException("Alfred must be offline in order to add modules.");
             }
 
-            Modules.Add(new AlfredTimeModule());
+            Modules.Add(new AlfredTimeModule(CollectionProvider));
         }
 
         #region Notify Property Changed
@@ -193,7 +195,7 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CanBeNull] string propertyName)
+        private void OnPropertyChanged([CanBeNull] string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

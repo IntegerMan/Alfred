@@ -15,7 +15,11 @@ namespace MattEland.Ani.Alfred.Core.Modules
         [NotNull]
         private readonly TextWidget _timeWidget;
 
-        public AlfredTimeModule()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AlfredModule" /> class.
+        /// </summary>
+        /// <param name="collectionProvider">The collection provider.</param>
+        public AlfredTimeModule([NotNull] ICollectionProvider collectionProvider) : base(collectionProvider)
         {
             _timeWidget = new TextWidget();
         }

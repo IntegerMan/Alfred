@@ -9,15 +9,32 @@ using MattEland.Ani.Alfred.Core.Widgets;
 namespace MattEland.Ani.Alfred.Core.Modules
 {
     /// <summary>
-    /// Represents a module within Alfred. Modules contain different bits of information to present to the user.
+    ///     Represents a module within Alfred. Modules contain different bits of information to present to the user.
     /// </summary>
     public abstract class AlfredModule : INotifyPropertyChanged
     {
+        [NotNull]
+        private readonly ICollectionProvider _collectionProvider;
         private AlfredStatus _status;
         private ICollection<AlfredWidget> _widgets;
 
         /// <summary>
-        /// Gets the user interface widgets for the module.
+        /// Initializes a new instance of the <see cref="AlfredModule"/> class.
+        /// </summary>
+        /// <param name="collectionProvider">The collection provider.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        protected AlfredModule([NotNull] ICollectionProvider collectionProvider)
+        {
+            if (collectionProvider == null)
+            {
+                throw new ArgumentNullException(nameof(collectionProvider));
+            }
+
+            _collectionProvider = collectionProvider;
+        }
+
+        /// <summary>
+        ///     Gets the user interface widgets for the module.
         /// </summary>
         /// <value>The user interface widgets.</value>
         [CanBeNull]
@@ -36,21 +53,14 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        /// Gets the alfred provider reference
-        /// </summary>
-        /// <value>The alfred provider reference.</value>
-        [CanBeNull]
-        protected AlfredProvider Alfred { get; private set; }
-
-        /// <summary>
-        /// Gets the name and version of the Module.
+        ///     Gets the name and version of the Module.
         /// </summary>
         /// <value>The name and version.</value>
         [NotNull]
         public abstract string NameAndVersion { get; }
 
         /// <summary>
-        /// Gets the status of the Module.
+        ///     Gets the status of the Module.
         /// </summary>
         /// <value>The status.</value>
         public AlfredStatus Status
@@ -67,12 +77,22 @@ namespace MattEland.Ani.Alfred.Core.Modules
             }
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         /// <summary>
-        /// Initializes the module.
+        ///     Initializes the module.
         /// </summary>
-        /// <param name="alfred">The provider.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        /// <exception cref="System.InvalidOperationException">Already online when told to initialize.</exception>
+        /// <param
+        ///     name="alfred">
+        ///     The provider.
+        /// </param>
+        /// <exception
+        ///     cref="System.ArgumentNullException">
+        /// </exception>
+        /// <exception
+        ///     cref="System.InvalidOperationException">
+        ///     Already online when told to initialize.
+        /// </exception>
         public void Initialize([NotNull] AlfredProvider alfred)
         {
             if (alfred == null)
@@ -85,8 +105,6 @@ namespace MattEland.Ani.Alfred.Core.Modules
                 throw new InvalidOperationException($"{NameAndVersion} was already online when told to initialize.");
             }
 
-            Alfred = alfred;
-
             EnsureWidgetsCollection();
 
             InitializeProtected();
@@ -96,20 +114,16 @@ namespace MattEland.Ani.Alfred.Core.Modules
 
         private void EnsureWidgetsCollection()
         {
-            if (Alfred == null)
-            {
-                throw new InvalidOperationException("Alfred is not provided. Cannot create widgets collection.");
-            }
-
-            Widgets = Alfred.CollectionProvider.CreateCollection<AlfredWidget>();
+            Widgets = _collectionProvider.CreateCollection<AlfredWidget>();
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         /// <summary>
-        /// Called when a property changes.
+        ///     Called when a property changes.
         /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
+        /// <param
+        ///     name="propertyName">
+        ///     Name of the property.
+        /// </param>
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CanBeNull] string propertyName)
         {
@@ -117,10 +131,15 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        /// Shuts down the module and decouples it from Alfred.
+        ///     Shuts down the module and decouples it from Alfred.
         /// </summary>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        /// <exception cref="System.InvalidOperationException">Already offline when told to shut down.</exception>
+        /// <exception
+        ///     cref="System.ArgumentNullException">
+        /// </exception>
+        /// <exception
+        ///     cref="System.InvalidOperationException">
+        ///     Already offline when told to shut down.
+        /// </exception>
         public void Shutdown()
         {
             if (Status == AlfredStatus.Offline)
@@ -130,8 +149,6 @@ namespace MattEland.Ani.Alfred.Core.Modules
 
             ShutdownProtected();
 
-            Alfred = null;
-
             Widgets?.Clear();
             Widgets = null;
 
@@ -139,7 +156,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        /// Handles module shutdown events
+        ///     Handles module shutdown events
         /// </summary>
         protected virtual void ShutdownProtected()
         {
@@ -147,7 +164,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        /// Handles module initialization events
+        ///     Handles module initialization events
         /// </summary>
         protected virtual void InitializeProtected()
         {
@@ -155,7 +172,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        /// Handles updating the module as needed
+        ///     Handles updating the module as needed
         /// </summary>
         public void Update()
         {
@@ -168,7 +185,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        /// Handles updating the module as needed
+        ///     Handles updating the module as needed
         /// </summary>
         protected virtual void UpdateProtected()
         {
@@ -176,9 +193,12 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        /// Registers a widget for the module.
+        ///     Registers a widget for the module.
         /// </summary>
-        /// <param name="widget">The widget.</param>
+        /// <param
+        ///     name="widget">
+        ///     The widget.
+        /// </param>
         protected void RegisterWidget([NotNull] AlfredWidget widget)
         {
             if (widget == null)
