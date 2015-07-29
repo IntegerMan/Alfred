@@ -3,7 +3,10 @@
 using NUnit.Framework;
 using System.Linq;
 
+using JetBrains.Annotations;
+
 using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Core.Modules;
 
 namespace MattEland.Ani.Alfred.Core.Tests
 {
@@ -13,7 +16,16 @@ namespace MattEland.Ani.Alfred.Core.Tests
     [TestFixture]
     public class AlfredProviderTests
     {
+        [NotNull]
         private AlfredProvider _alfred;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// </summary>
+        public AlfredProviderTests()
+        {
+            _alfred = new AlfredProvider();
+        }
 
         /// <summary>
         /// Sets up the alfred provider's tests.
@@ -185,7 +197,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         [Test]
         public void AddingStandardModulesAddsModules()
         {
-            _alfred.AddStandardModules();
+            StandardModuleProvider.AddStandardModules(_alfred);
 
             Assert.Greater(_alfred.Modules.Count, 0, "Alfred did not have any modules after calling add standard modules.");
         }
@@ -193,7 +205,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         [Test]
         public void InitializingInitializesModules()
         {
-            _alfred.AddStandardModules();
+            StandardModuleProvider.AddStandardModules(_alfred);
 
             _alfred.Initialize();
 
@@ -206,7 +218,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         [Test]
         public void ShuttingDownShutsDownModules()
         {
-            _alfred.AddStandardModules();
+            StandardModuleProvider.AddStandardModules(_alfred);
 
             _alfred.Initialize();
             _alfred.Shutdown();
@@ -221,7 +233,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         [ExpectedException(typeof(InvalidOperationException))]
         public void ModulesCannotUpdateWhileOffline()
         {
-            _alfred.AddStandardModules();
+            StandardModuleProvider.AddStandardModules(_alfred);
 
             _alfred.Update();
         }
@@ -231,7 +243,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         public void ModulesCannotBeAddedWhileOnline()
         {
             _alfred.Initialize();
-            _alfred.AddStandardModules();
+            StandardModuleProvider.AddStandardModules(_alfred);
         }
 
         [Test]

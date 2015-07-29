@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 
+using JetBrains.Annotations;
+
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Widgets;
 
@@ -11,7 +13,10 @@ namespace MattEland.Ani.Alfred.Core.Tests
     [TestFixture]
     public class TimeModuleTests
     {
+        [NotNull]
         private AlfredProvider _alfred;
+
+        [NotNull]
         private AlfredTimeModule _module;
 
         [SetUp]
@@ -57,7 +62,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
                 return null;
             }
 
-            var widget = (TextWidget)_module.Widgets.First();
+            var widget = _module.CurrentTimeWidget;
 
             var displayed = widget.Text;
             return displayed;

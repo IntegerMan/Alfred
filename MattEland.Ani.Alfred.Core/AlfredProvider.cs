@@ -170,17 +170,22 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        /// Adds the standard internal modules to Alfred.
+        /// Adds a module to alfred.
         /// </summary>
         /// <exception cref="InvalidOperationException">Thrown if Alfred is not Offline</exception>
-        public void AddStandardModules()
+        public void AddModule([NotNull] AlfredModule module)
         {
+            if (module == null)
+            {
+                throw new ArgumentNullException(nameof(module));
+            }
+
             if (Status != AlfredStatus.Offline)
             {
                 throw new InvalidOperationException("Alfred must be offline in order to add modules.");
             }
 
-            Modules.Add(new AlfredTimeModule(CollectionProvider));
+            Modules.Add(module);
         }
 
         #region Notify Property Changed

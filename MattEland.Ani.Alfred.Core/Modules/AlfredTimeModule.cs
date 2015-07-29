@@ -11,22 +11,18 @@ namespace MattEland.Ani.Alfred.Core.Modules
     /// </summary>
     public class AlfredTimeModule : AlfredModule
     {
-
-        [NotNull]
-        private readonly TextWidget _timeWidget;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="AlfredModule" /> class.
         /// </summary>
         /// <param name="collectionProvider">The collection provider.</param>
         public AlfredTimeModule([NotNull] ICollectionProvider collectionProvider) : base(collectionProvider)
         {
-            _timeWidget = new TextWidget();
+            CurrentTimeWidget = new TextWidget();
         }
 
         protected override void InitializeProtected()
         {
-            RegisterWidget(_timeWidget);
+            RegisterWidget(CurrentTimeWidget);
         }
 
         /// <summary>
@@ -36,14 +32,21 @@ namespace MattEland.Ani.Alfred.Core.Modules
         [NotNull]
         public override string NameAndVersion => "Time 0.1 Alpha";
 
+        /// <summary>
+        /// Gets the current time user interface widget.
+        /// </summary>
+        /// <value>The current time user interface widget.</value>
+        [NotNull]
+        public TextWidget CurrentTimeWidget { get; }
+
         protected override void UpdateProtected()
         {
-            _timeWidget.Text = $"The time is now {DateTime.Now.ToString("t")}";
+            CurrentTimeWidget.Text = $"The time is now {DateTime.Now.ToString("t")}";
         }
 
         protected override void ShutdownProtected()
         {
-            _timeWidget.Text = null;
+            CurrentTimeWidget.Text = null;
         }
     }
 }

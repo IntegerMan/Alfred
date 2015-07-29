@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Widgets;
 
-namespace MattEland.Ani.Alfred.Core.Modules
+namespace MattEland.Ani.Alfred.Core
 {
     /// <summary>
     ///     Represents a module within Alfred. Modules contain different bits of information to present to the user.
@@ -15,14 +15,23 @@ namespace MattEland.Ani.Alfred.Core.Modules
     {
         [NotNull]
         private readonly ICollectionProvider _collectionProvider;
+
         private AlfredStatus _status;
         private ICollection<AlfredWidget> _widgets;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlfredModule"/> class.
+        ///     Initializes a new instance of the
+        ///     <see
+        ///         cref="AlfredModule" />
+        ///     class.
         /// </summary>
-        /// <param name="collectionProvider">The collection provider.</param>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <param
+        ///     name="collectionProvider">
+        ///     The collection provider.
+        /// </param>
+        /// <exception
+        ///     cref="ArgumentNullException">
+        /// </exception>
         protected AlfredModule([NotNull] ICollectionProvider collectionProvider)
         {
             if (collectionProvider == null)
