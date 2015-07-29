@@ -13,6 +13,8 @@ namespace MattEland.Ani.Alfred.WPF
     public partial class MainWindow : Window
     {
 
+        private const bool AutoInitialize = true;
+
         private readonly AlfredProvider _alfred;
         private readonly WinClientConsole _console = new WinClientConsole();
 
@@ -43,6 +45,11 @@ namespace MattEland.Ani.Alfred.WPF
             var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
             timer.Tick += OnTimerTick;
             timer.Start();
+
+            if (AutoInitialize)
+            {
+                _alfred.Initialize();
+            }
 
         }
 

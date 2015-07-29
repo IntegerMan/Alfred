@@ -14,13 +14,26 @@ namespace MattEland.Ani.Alfred.Core.Modules
     public abstract class AlfredModule : INotifyPropertyChanged
     {
         private AlfredStatus _status;
+        private ICollection<AlfredWidget> _widgets;
 
         /// <summary>
         /// Gets the user interface widgets for the module.
         /// </summary>
         /// <value>The user interface widgets.</value>
         [CanBeNull]
-        public ICollection<AlfredWidget> Widgets { get; private set; }
+        public ICollection<AlfredWidget> Widgets
+        {
+            get { return _widgets; }
+            private set
+            {
+                if (Equals(value, _widgets))
+                {
+                    return;
+                }
+                _widgets = value;
+                OnPropertyChanged(nameof(Widgets));
+            }
+        }
 
         /// <summary>
         /// Gets the alfred provider reference

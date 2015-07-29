@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:win="clr-namespace:MattEland.Ani.Alfred.WPF"
         xmlns:core="clr-namespace:MattEland.Ani.Alfred.Core;assembly=MattEland.Ani.Alfred.Core"
+        xmlns:widgets="clr-namespace:MattEland.Ani.Alfred.Core.Widgets;assembly=MattEland.Ani.Alfred.Core"
         mc:Ignorable="d"
         Loaded="OnWindowLoaded"
         Title="{Binding Path=NameAndVersion}" Height="600" Width="800" 
@@ -74,7 +75,8 @@
                                     <TextBlock Text="-" Margin="4,0" />
                                     <TextBlock Text="{Binding Path=Status}" FontWeight="Bold" />
                                 </StackPanel>
-                                <TextBlock Text="{Binding UserInterfaceText}"></TextBlock>
+                                <ItemsControl ItemsSource="{Binding Widgets}">
+                                </ItemsControl>
                             </StackPanel>
                         </Border>
                     </DataTemplate>

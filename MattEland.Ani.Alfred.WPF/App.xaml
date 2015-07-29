@@ -2,9 +2,17 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              DispatcherUnhandledException="OnUnhandledException"
-             xmlns:local="clr-namespace:MattEland.Ani.Alfred.WPF"
+             xmlns:widgets="clr-namespace:MattEland.Ani.Alfred.Core.Widgets;assembly=MattEland.Ani.Alfred.Core"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        
+        <DataTemplate DataType="{x:Type widgets:TextWidget}">
+            <TextBlock Text="{Binding Text}" />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type widgets:AlfredWidget}">
+            <TextBlock Text="This is an unknown type of Widget" />
+        </DataTemplate>
+
     </Application.Resources>
 </Application>
