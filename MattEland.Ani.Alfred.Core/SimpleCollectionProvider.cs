@@ -6,7 +6,7 @@ using System.Text;
 
 namespace MattEland.Ani.Alfred.Core
 {
-    public class SimpleCollectionProvider : ICollectionProvider
+    public sealed class SimpleCollectionProvider : ICollectionProvider
     {
         public ICollection<T> CreateCollection<T>()
         {

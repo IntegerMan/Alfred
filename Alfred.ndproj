@@ -6176,7 +6176,7 @@ select a
 // members so that the widest possible audience can access all the functionality 
 // of your assembly.
 //</HowToFix>]]></Query>
-        <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Mark assemblies with ComVisible</Name>
+        <Query Active="False" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Mark assemblies with ComVisible</Name>
 warnif count > 0 from a in Application.Assemblies where 
   !a.HasAttribute ("System.Runtime.InteropServices.ComVisibleAttribute".AllowNoMatch())
 select a

@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace MattEland.Ani.Alfred.Core.Console
 {
-    public class ConsoleEvent
+    public sealed class ConsoleEvent
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ConsoleEvent"/> class using the current utcTime.

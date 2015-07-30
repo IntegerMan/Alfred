@@ -8,7 +8,7 @@ namespace MattEland.Ani.Alfred.WPF
     /// <summary>
     /// A collection provider that provides WPF preferred Observable Collections
     /// </summary>
-    public class WinClientCollectionProvider : ICollectionProvider
+    public sealed class WinClientCollectionProvider : ICollectionProvider
     {
         public ICollection<T> CreateCollection<T>()
         {

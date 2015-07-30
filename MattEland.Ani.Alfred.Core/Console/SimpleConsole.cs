@@ -9,7 +9,7 @@ namespace MattEland.Ani.Alfred.Core.Console
     /// <summary>
     /// A simple console used for unit testing and designer window purposes
     /// </summary>
-    public class SimpleConsole : IConsole
+    public sealed class SimpleConsole : IConsole
     {
         /// <summary>
         /// Logs the specified message to the console.

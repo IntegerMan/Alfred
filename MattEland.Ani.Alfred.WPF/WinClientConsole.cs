@@ -8,7 +8,7 @@ using MattEland.Ani.Alfred.Core.Console;
 
 namespace MattEland.Ani.Alfred.WPF
 {
-    public class WinClientConsole : IConsole
+    public sealed class WinClientConsole : IConsole
     {
         private readonly ObservableCollection<ConsoleEvent> _events = new ObservableCollection<ConsoleEvent>();
 

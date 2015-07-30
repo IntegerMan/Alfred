@@ -14,7 +14,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
     /// Tests AlfredProvider
     /// </summary>
     [TestFixture]
-    public class AlfredProviderTests
+    public sealed class AlfredProviderTests
     {
         [NotNull]
         private AlfredProvider _alfred;

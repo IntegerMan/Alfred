@@ -5,7 +5,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
     /// <summary>
     /// Represents a simple textual display on the user interface.
     /// </summary>
-    public class TextWidget : AlfredWidget
+    public sealed class TextWidget : AlfredWidget
     {
         [CanBeNull]
         private string _text;

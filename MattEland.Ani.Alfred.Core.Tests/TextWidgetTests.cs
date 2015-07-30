@@ -14,7 +14,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
     /// Contains tests related to <see cref="TextWidget"/>
     /// </summary>
     [TestFixture]
-    public class TextWidgetTests
+    public sealed class TextWidgetTests
     {
         private const string TestString = "This is a test";
 
