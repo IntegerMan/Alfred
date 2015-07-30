@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace MattEland.Ani.Alfred.Core.Tests
 {
     [TestFixture]
-    public class TimeModuleTests
+    public sealed class TimeModuleTests
     {
         [NotNull]
         private AlfredProvider _alfred;

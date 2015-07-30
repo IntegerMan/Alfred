@@ -10,7 +10,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
     /// Contains a suite of tests oriented around the <see cref="WarningWidget">WarningWidget</see> class.
     /// </summary>
     [TestFixture]
-    public class WarningWidgetTests
+    public sealed class WarningWidgetTests
     {
 
         [Test]
