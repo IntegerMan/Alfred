@@ -1795,7 +1795,7 @@ select new { t.ClassConstructor,
     <Group Name="Design" Active="True" ShownInReport="False">
       <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Avoid custom delegates</Name>
 warnif count > 0 
-from t in Application.Types where t.IsDelegate
+from t in Application.Types where t.IsDelegate && !t.ParentNamespace.NameLike("_XamlTypeInfo")
 
 let invokeMethod = (from m in t.Methods where m.SimpleName == "Invoke" select m).Single()
 let signature1 = invokeMethod.Name.Substring(
@@ -1938,6 +1938,7 @@ warnif count > 0 from t in JustMyCode.Types where
   t.IsClass &&
  !t.IsGeneratedByCompiler &&
  !t.IsStatic &&
+ !t.ParentNamespace.NameLike(".Test") &&
   t.SizeOfInst > 0 &&
   t.SizeOfInst <= 16 &&   // Structure instance must not be too big, 
                           // else it degrades performance.
@@ -2010,7 +2011,8 @@ warnif count > 0 from n in JustMyCode.Namespaces
 where n.Name.Length > 0 // Don't match anonymous namespaces
 let types = n.ChildTypes.Where(t => !t.IsGeneratedByCompiler)
 where 
-  types.Count() < 5 
+  types.Count() < 5 && !n.NameLike(".Properties") && !n.NameLike(".Tests")
+
   orderby types.Count() ascending
 select new { n, types } 
 
@@ -2430,7 +2432,7 @@ from assembly in Application.Assemblies
 
 // Optimization: restraint namespaces set
 // A namespace involved in a cycle necessarily have a null Level.
-let namespacesSuspect = assembly.ChildNamespaces.Where(n => n.Level == null)
+let namespacesSuspect = assembly.ChildNamespaces.Where(n => n.Level == null && !n.NameLike("_XamlTypeInfo"))
 
 // hashset is used to avoid iterating again on namespaces already caught in a cycle.
 let hashset = new HashSet<INamespace>()
@@ -3718,6 +3720,7 @@ select new { m, m.PercentageCoverage, m.NbLinesOfCode,
 warnif count > 0
 from m in Application.Methods where 
   m.PercentageCoverage < 30 && 
+  !m.ParentNamespace.Name.Contains("_XamlTypeInfo") &&
   m.CodeWasChanged() 
   orderby m.NbLinesOfCode descending, 
            m.NbLinesOfCodeNotCovered ,
@@ -3753,6 +3756,7 @@ select new { m, m.PercentageCoverage, m.NbLinesOfCode,
       <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Method added poorly covered</Name>
 warnif count > 0
 from m in Application.Methods where
+ !m.ParentType.Name.Contains("<>") && // Exclude autogen stuff
   m.NbLinesOfCode > 0 &&
   m.PercentageCoverage < 30 && 
   m.WasAdded() 
@@ -3827,6 +3831,7 @@ select new { t, t.PercentageCoverage, t.NbLinesOfCode,
       <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Namespaces 95% to 99% covered</Name>
 warnif count > 0
 from n in Application.Namespaces where 
+ !n.Name.Contains("Tests") &&
   n.PercentageCoverage >= 95 && 
   n.PercentageCoverage <= 99 
 
@@ -3861,7 +3866,7 @@ select new { n, n.PercentageCoverage, n.NbLinesOfCode,
 // If you find some *hard-to-test code*, it is certainly a sign that this code
 // is not *well designed* and hence, needs refactoring.
 //</HowToFix>]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Types tagged with FullCoveredAttribute should be 100% covered</Name>
+      <Query Active="False" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Types tagged with FullCoveredAttribute should be 100% covered</Name>
 warnif count > 0 
 from t in Application.Types where
   t.HasAttribute ("NDepend.Attributes.FullCoveredAttribute".AllowNoMatch()) &&
@@ -3907,7 +3912,7 @@ select new { t, t.PercentageCoverage, t.NbLinesOfCodeNotCovered, notFullCoveredM
 // If you find some *hard-to-test code*, it is certainly a sign that this code
 // is not *well designed* and hence, needs refactoring.
 //</HowToFix>]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Types 100% covered should be tagged with FullCoveredAttribute</Name>
+      <Query Active="False" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Types 100% covered should be tagged with FullCoveredAttribute</Name>
         
 warnif count > 0 from t in JustMyCode.Types where
  !t.HasAttribute ("NDepend.Attributes.FullCoveredAttribute".AllowNoMatch()) &&
@@ -4371,6 +4376,7 @@ select new { tAttr, types , methods, fields }
       <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Methods that could have a lower visibility</Name>
 warnif count > 0 from m in JustMyCode.Methods where 
   m.Visibility != m.OptimalVisibility &&
+  !m.ParentNamespace.NameLike(".Test") &&
   !m.HasAttribute("NDepend.Attributes.CannotDecreaseVisibilityAttribute".AllowNoMatch()) &&
   !m.HasAttribute("NDepend.Attributes.IsNotDeadCodeAttribute".AllowNoMatch()) &&
   // If you don't want to link NDepend.API.dll, you can use your own attributes 
@@ -4484,6 +4490,7 @@ select new {
       <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Fields that could have a lower visibility</Name>
 warnif count > 0 from f in JustMyCode.Fields where 
   f.Visibility != f.OptimalVisibility &&
+ !f.NameLike("<>") &&
  !f.HasAttribute("NDepend.Attributes.CannotDecreaseVisibilityAttribute".AllowNoMatch()) &&
  !f.HasAttribute("NDepend.Attributes.IsNotDeadCodeAttribute".AllowNoMatch()) &&
   // If you don't want to link NDepend.API.dll, you can use your own attributes
@@ -4535,6 +4542,7 @@ where !t.IsGeneratedByCompiler &&
       !t.IsNested &&
       !t.IsPubliclyVisible &&
       !t.IsEnumeration &&
+      !t.ParentNamespace.NameLike("_XamlTypeInfo") &&
        // Only one type user…
        t.TypesUsingMe.Count() == 1 
 let couldBeNestedIn = t.TypesUsingMe.Single()
@@ -4607,7 +4615,8 @@ warnif count > 0 from f in Application.Fields where
  !f.IsSpecialName && 
  !f.IsInitOnly && 
  !f.IsLiteral && 
- !f.IsEnumValue
+ !f.IsEnumValue &&
+ !f.NameLike("<>")
 
 // A non-private field assigned from outside its class,
 // usually leads to complicated field state management.
@@ -4808,6 +4817,7 @@ warnif count > 0
 from m in Application.Methods where 
   !m.IsPrivate &&
   !m.IsGeneratedByCompiler &&
+  !m.ParentType.NameLike("<>") &&
 
    // A method is considered as an event handler if…
    m.NbParameters == 2 &&          // … it has two parameters …
@@ -4993,6 +5003,7 @@ from f in JustMyCode.Fields.Where(f =>
       (f.IsInternal || f.IsPublic) && 
       !f.IsGeneratedByCompiler && 
       !f.IsImmutable && 
+      !f.Name.Contains("<>") && // Filter out some XAML autogen stuff
       !f.IsEnumValue)
 
 let methodsAssignerOutsideOfMyType = f.MethodsAssigningMe.Where(
@@ -5843,7 +5854,7 @@ let lookup = Application.Types.Where(t =>
                                // except nested types and types generated by compilers!
                                !t.IsGeneratedByCompiler &&                              
                                !t.IsNested &&
-                                JustMyCode.Types.Contains(t))                                
+                               !t.SourceDecls.Where(d => d.SourceFile.FileName.Contains(".g")).Any())                                
                          // It could make sense to not apply this rule for enumerations.
                          // && !t.IsEnumeration)
 

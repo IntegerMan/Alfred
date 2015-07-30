@@ -7,6 +7,14 @@
       <Method Name="OnPropertyChanged" Hidden="true" />
       <Event Name="PropertyChanged" Hidden="true" />
     </Members>
+    <AssociationLine Name="CollectionProvider" Type="MattEland.Ani.Alfred.Core.ICollectionProvider" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="11.25" Y="2.875" />
+        <Point X="10.875" Y="2.875" />
+        <Point X="10.875" Y="1.438" />
+        <Point X="10" Y="1.438" />
+      </Path>
+    </AssociationLine>
     <TypeIdentifier>
       <HashCode>AESAAAAEAAAAARAAIAAAAQAQgCBAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>AlfredProvider.cs</FileName>
@@ -14,18 +22,15 @@
     <ShowAsAssociation>
       <Property Name="Console" />
       <Property Name="Status" />
+      <Property Name="CollectionProvider" />
     </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Modules" />
+    </ShowAsCollectionAssociation>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="MattEland.Ani.Alfred.Core.Console.ConsoleEvent">
-    <Position X="5.25" Y="2.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAIAAEAAAAAAAAAAAAAAAAAAAAAAIAAAAQA=</HashCode>
-      <FileName>Console\ConsoleEvent.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="MattEland.Ani.Alfred.Core.Console.SimpleConsole">
-    <Position X="2.25" Y="3" Width="1.5" />
+    <Position X="8.25" Y="4.75" Width="1.5" />
     <Members>
       <Field Name="_events" Hidden="true" />
     </Members>
@@ -68,16 +73,29 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="MattEland.Ani.Alfred.Core.Modules.AlfredTimeModule">
-    <Position X="16.5" Y="3.75" Width="2" />
+    <Position X="10.25" Y="6" Width="2" />
+    <InheritanceLine Type="MattEland.Ani.Alfred.Core.AlfredModule" FixedFromPoint="true">
+      <Path>
+        <Point X="14.25" Y="5.438" />
+        <Point X="11.25" Y="5.438" />
+        <Point X="11.25" Y="6" />
+      </Path>
+    </InheritanceLine>
     <AssociationLine Name="CurrentTimeWidget" Type="MattEland.Ani.Alfred.Core.Widgets.TextWidget" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="17.375" Y="6.011" />
-        <Point X="17.375" Y="8.305" />
-        <Point X="15.083" Y="8.305" Type="JumpStart" />
-        <Point X="14.917" Y="8.305" Type="JumpEnd" />
-        <Point X="12.25" Y="8.305" />
-        <Point X="12.25" Y="7.733" />
+        <Point X="11.125" Y="8.261" />
+        <Point X="11.125" Y="10.358" />
+        <Point X="17.25" Y="10.358" />
+        <Point X="17.25" Y="9.983" />
       </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.374" Y="0.096" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="BedtimeAlertWidget" Type="MattEland.Ani.Alfred.Core.Widgets.WarningWidget">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.729" Y="0.623" />
+      </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
       <HashCode>AAAAAAEAAAABAAAAAAACAAAAACAAQAAAAAAAAAAAAAg=</HashCode>
@@ -97,7 +115,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="MattEland.Ani.Alfred.Core.Widgets.TextWidget">
-    <Position X="11.5" Y="6.5" Width="1.5" />
+    <Position X="16.5" Y="8.75" Width="1.5" />
     <Members>
       <Field Name="_text" Hidden="true" />
       <Method Name="TextWidget" Hidden="true" />
@@ -111,7 +129,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="MattEland.Ani.Alfred.Core.SimpleCollectionProvider">
-    <Position X="2.25" Y="6.75" Width="2" />
+    <Position X="5.5" Y="1" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>SimpleCollectionProvider.cs</FileName>
@@ -119,19 +137,29 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="MattEland.Ani.Alfred.Core.Modules.StandardModuleProvider" Collapsed="true">
-    <Position X="16.75" Y="1.25" Width="1.5" />
+    <Position X="16" Y="1.25" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAA=</HashCode>
       <FileName>Modules\StandardModuleProvider.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MattEland.Ani.Alfred.Core.Widgets.WarningWidget" Collapsed="true">
-    <Position X="11.5" Y="8.75" Width="1.5" />
+    <Position X="12.5" Y="9.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Widgets\WarningWidget.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Struct Name="MattEland.Ani.Alfred.Core.Console.ConsoleEvent">
+    <Position X="5.75" Y="3" Width="1.5" />
+    <Members>
+      <Method Name="ConsoleEvent" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAEAAAAAAAAAAAAAAAAAAAAAAIAAAAQA=</HashCode>
+      <FileName>Console\ConsoleEvent.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
   <Interface Name="MattEland.Ani.Alfred.Core.Console.IConsole">
     <Position X="8.25" Y="3" Width="1.5" />
     <TypeIdentifier>
@@ -143,7 +171,7 @@
     </ShowAsCollectionAssociation>
   </Interface>
   <Interface Name="MattEland.Ani.Alfred.Core.ICollectionProvider">
-    <Position X="2.25" Y="5" Width="1.75" />
+    <Position X="8.25" Y="1" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>ICollectionProvider.cs</FileName>

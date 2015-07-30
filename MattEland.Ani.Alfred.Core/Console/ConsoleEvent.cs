@@ -3,7 +3,7 @@
 
 namespace MattEland.Ani.Alfred.Core.Console
 {
-    public sealed class ConsoleEvent
+    public struct ConsoleEvent
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ConsoleEvent"/> class using the current utcTime.
