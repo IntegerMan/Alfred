@@ -72,17 +72,20 @@
     <AssociationLine Name="CurrentTimeWidget" Type="MattEland.Ani.Alfred.Core.Widgets.TextWidget" FixedFromPoint="true" FixedToPoint="true">
       <Path>
         <Point X="17.375" Y="6.011" />
-        <Point X="17.375" Y="8.367" />
-        <Point X="12.25" Y="8.367" />
-        <Point X="12.25" Y="7.992" />
+        <Point X="17.375" Y="8.305" />
+        <Point X="15.083" Y="8.305" Type="JumpStart" />
+        <Point X="14.917" Y="8.305" Type="JumpEnd" />
+        <Point X="12.25" Y="8.305" />
+        <Point X="12.25" Y="7.733" />
       </Path>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAEAAAABAAAAAAAAAAAAACAAQAAAAAAAAAAAAAg=</HashCode>
+      <HashCode>AAAAAAEAAAABAAAAAAACAAAAACAAQAAAAAAAAAAAAAg=</HashCode>
       <FileName>Modules\AlfredTimeModule.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="CurrentTimeWidget" />
+      <Property Name="BedtimeAlertWidget" />
     </ShowAsAssociation>
   </Class>
   <Class Name="MattEland.Ani.Alfred.Core.Widgets.AlfredWidget">
@@ -97,6 +100,7 @@
     <Position X="11.5" Y="6.5" Width="1.5" />
     <Members>
       <Field Name="_text" Hidden="true" />
+      <Method Name="TextWidget" Hidden="true" />
     </Members>
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
@@ -119,6 +123,13 @@
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAA=</HashCode>
       <FileName>Modules\StandardModuleProvider.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MattEland.Ani.Alfred.Core.Widgets.WarningWidget" Collapsed="true">
+    <Position X="11.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Widgets\WarningWidget.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Interface Name="MattEland.Ani.Alfred.Core.Console.IConsole">

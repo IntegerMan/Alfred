@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 
 using JetBrains.Annotations;
 
@@ -103,6 +104,20 @@ namespace MattEland.Ani.Alfred.Core.Tests
 
             Assert.IsNull(_module.Widgets);
         }
+
+        /// <summary>
+        /// Tests that the bedtime alert widget is in the object structure.
+        /// This doesn't determine whether or not it's visible.
+        /// </summary>
+        [Test]
+        public void TimeModuleHasCautionWidget()
+        {
+            _alfred.Initialize();
+
+            Assert.IsNotNull(_module.BedtimeAlertWidget, "The Bedtime alert widget was not present");
+            Assert.Contains(_module.BedtimeAlertWidget, _module.Widgets as ICollection, "The module did not contain a registered bedtime alert widget.");
+        }
+
 
     }
 }
