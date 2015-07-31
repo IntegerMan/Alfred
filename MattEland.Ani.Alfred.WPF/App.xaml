@@ -5,13 +5,33 @@
              xmlns:widgets="clr-namespace:MattEland.Ani.Alfred.Core.Widgets;assembly=MattEland.Ani.Alfred.Core"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        
+
+        <!-- Converters -->
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
+        <!-- TODO: Add common colors here -->
+
+        <!-- Widget DataTemplates -->
+
+        <!-- TextWidget Template -->
         <DataTemplate DataType="{x:Type widgets:TextWidget}">
-            <TextBlock Text="{Binding Text}" />
+            <TextBlock 
+                Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
+                Text="{Binding Text}"
+                ToolTip="{Binding Text}"/>
         </DataTemplate>
 
+        <!-- TODO: Add one here for CautionTemplate -->
+
+        <!-- Fallback type of widget Template -->
         <DataTemplate DataType="{x:Type widgets:AlfredWidget}">
-            <TextBlock Text="This is an unknown type of Widget" />
+
+            <!-- TODO: Let's use some red styling to draw attention to the not implemented template -->
+
+            <TextBlock 
+                Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
+                Text="This is an unknown type of Widget" />
+
         </DataTemplate>
 
     </Application.Resources>

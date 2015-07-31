@@ -121,9 +121,15 @@ namespace MattEland.Ani.Alfred.Core
             Status = AlfredStatus.Online;
         }
 
+        /// <summary>
+        /// Ensures the widgets collection exists, creating a new collection as needed.
+        /// </summary>
         private void EnsureWidgetsCollection()
         {
-            Widgets = _collectionProvider.CreateCollection<AlfredWidget>();
+            if (Widgets == null)
+            {
+                Widgets = _collectionProvider.CreateCollection<AlfredWidget>();
+            }
         }
 
         /// <summary>
