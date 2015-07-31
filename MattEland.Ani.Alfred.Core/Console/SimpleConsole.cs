@@ -33,6 +33,7 @@ namespace MattEland.Ani.Alfred.Core.Console
             _events.Add(evt);
         }
 
+        [NotNull]
         private readonly List<ConsoleEvent> _events = new List<ConsoleEvent>();
 
         /// <summary>
@@ -41,6 +42,9 @@ namespace MattEland.Ani.Alfred.Core.Console
         /// <value>The console events.</value>
         [NotNull]
         [ItemNotNull]
-        public IEnumerable<ConsoleEvent> Events => _events;
+        public IEnumerable<ConsoleEvent> Events
+        {
+            get { return _events; }
+        }
     }
 }

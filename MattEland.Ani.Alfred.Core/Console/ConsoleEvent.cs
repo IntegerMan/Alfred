@@ -49,6 +49,9 @@ namespace MattEland.Ani.Alfred.Core.Console
         /// Gets or sets the time in local system time.
         /// </summary>
         /// <value>The time.</value>
-        public DateTime Time => UtcTime.ToLocalTime();
+        public DateTime Time
+        {
+            get { return UtcTime.ToLocalTime(); }
+        }
     }
 }

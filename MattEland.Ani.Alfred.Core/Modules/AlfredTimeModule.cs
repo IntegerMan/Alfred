@@ -32,7 +32,10 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         /// <value>The name and version.</value>
         [NotNull]
-        public override string NameAndVersion => "Time 0.1 Alpha";
+        public override string NameAndVersion
+        {
+            get { return "Time 0.1 Alpha"; }
+        }
 
         /// <summary>
         ///     Gets the current time user interface widget.
@@ -98,6 +101,22 @@ namespace MattEland.Ani.Alfred.Core.Modules
                 alertVisible = true;
             }
 
+            // The alert is good for a few hours and the alert should be visible during that time.
+            var bedtimeAlertEndHour = BedtimeHour + AlertDurationInHours;
+
+            // Ensure we have a representable hour if we wrapped over to the next day.
+            if (bedtimeAlertEndHour >= 24)
+            {
+                bedtimeAlertEndHour -= 24;
+            }
+
+            // Support scenarios of a 9 PM bedtime but it's 12:30 AM.
+            if (time.Hour <= bedtimeAlertEndHour)
+            {
+                alertVisible = true;
+            }
+
+            // Finally stick the value in the widget
             BedtimeAlertWidget.IsVisible = alertVisible;
         }
 
@@ -105,13 +124,19 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// Gets or sets the bedtime hour.
         /// </summary>
         /// <value>The bedtime hour.</value>
-        public int BedtimeHour { get; set; } = 19;
+        public int BedtimeHour { get; set; } = 21;
 
         /// <summary>
         /// Gets or sets the bedtime minute.
         /// </summary>
         /// <value>The bedtime minute.</value>
         public int BedtimeMinute { get; set; } = 30;
+
+        /// <summary>
+        /// Gets or sets the alert duration in hours.
+        /// </summary>
+        /// <value>The alert duration in hours.</value>
+        public int AlertDurationInHours { get; set; } = 4;
 
         /// <summary>
         ///     Handles module shutdown events

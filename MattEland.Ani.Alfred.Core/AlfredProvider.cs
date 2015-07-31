@@ -49,7 +49,10 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <value>The name and version.</value>
         [NotNull]
-        public static string NameAndVersion => "Alfred 0.1 Alpha";
+        public static string NameAndVersion
+        {
+            get { return "Alfred 0.1 Alpha"; }
+        }
 
         /// <summary>
         /// Gets the modules.

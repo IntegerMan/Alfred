@@ -81,7 +81,7 @@
     </InheritanceLine>
     <AssociationLine Name="CurrentTimeWidget" Type="MattEland.Ani.Alfred.Core.Widgets.TextWidget" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="11.125" Y="9.03" />
+        <Point X="11.125" Y="9.222" />
         <Point X="11.125" Y="10.358" />
         <Point X="17.25" Y="10.358" />
         <Point X="17.25" Y="9.983" />
@@ -96,7 +96,7 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>ABQAAAEAAAABAAAAAAACAAQAACAAQAAAAAAEAAAAAAg=</HashCode>
+      <HashCode>ABQAAAEAAAABAAAABAACAAQAACAAQAAAAAAEAAAAAAg=</HashCode>
       <FileName>Modules\AlfredTimeModule.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
