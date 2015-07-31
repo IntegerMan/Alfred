@@ -49,9 +49,15 @@
       <Field Name="_status" Hidden="true" />
       <Field Name="_widgets" Hidden="true" />
     </Members>
-    <AssociationLine Name="Widgets" Type="MattEland.Ani.Alfred.Core.Widgets.AlfredWidget">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="0.1" Y="0.331" />
+    <AssociationLine Name="Widgets" Type="MattEland.Ani.Alfred.Core.Widgets.AlfredWidget" ManuallyRouted="true">
+      <Path>
+        <Point X="15.75" Y="5.625" />
+        <Point X="16.06" Y="5.625" />
+        <Point X="16.06" Y="6.75" />
+        <Point X="15.75" Y="6.75" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="0.439" Y="0.555" Height="0.182" Width="0.803" />
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
@@ -75,7 +81,7 @@
     </InheritanceLine>
     <AssociationLine Name="CurrentTimeWidget" Type="MattEland.Ani.Alfred.Core.Widgets.TextWidget" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="11.125" Y="8.261" />
+        <Point X="11.125" Y="9.03" />
         <Point X="11.125" Y="10.358" />
         <Point X="17.25" Y="10.358" />
         <Point X="17.25" Y="9.983" />
@@ -85,12 +91,12 @@
       </MemberNameLabel>
     </AssociationLine>
     <AssociationLine Name="BedtimeAlertWidget" Type="MattEland.Ani.Alfred.Core.Widgets.WarningWidget">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="-0.729" Y="0.623" />
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-0.705" Y="0.395" Height="0.182" Width="1.421" />
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAEAAAABAAAAAAACAAAAACAAQAAAAAAAAAAAAAg=</HashCode>
+      <HashCode>ABQAAAEAAAABAAAAAAACAAQAACAAQAAAAAAEAAAAAAg=</HashCode>
       <FileName>Modules\AlfredTimeModule.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>

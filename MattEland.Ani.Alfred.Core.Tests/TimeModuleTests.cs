@@ -131,9 +131,75 @@ namespace MattEland.Ani.Alfred.Core.Tests
         }
 
         [Test]
-        public void TimeModuleCautionWidgetIsHiddenDuringTheDay()
+        public void TimeModuleCautionWidgetIsVisibleAtNoon()
         {
-            Assert.Inconclusive("Not implemented yet");
+            _alfred.Initialize();
+
+            // Feed in a time in the afternoon for testability purposes
+            var noon = new DateTime(1980, 9, 10, 12, 0, 0);
+            _module.Update(noon);
+
+            Assert.IsFalse(_module.BedtimeAlertWidget.IsVisible, "It's noon but the module is alerting that we're near bedtime.");
+        }
+
+        [Test]
+        public void TimeModuleCautionWidgetIsHiddenDuringTheAfternoon()
+        {
+            _alfred.Initialize();
+
+            // Feed in a time in the afternoon for testability purposes
+            var oneThirtyPm = new DateTime(1980, 9, 10, 13, 30, 0);
+            _module.Update(oneThirtyPm);
+
+            Assert.IsFalse(_module.BedtimeAlertWidget.IsVisible, "It's the afternoon but the module is alerting that we're near bedtime.");
+        }
+
+        [Test]
+        public void TimeModuleCautionWidgetIsHiddenDuringTheMorning()
+        {
+            _alfred.Initialize();
+
+            // Feed in a time in the morning for testability purposes
+            var nineThirtyAm = new DateTime(1980, 9, 10, 9, 30, 0);
+            _module.Update(nineThirtyAm);
+
+            Assert.IsFalse(_module.BedtimeAlertWidget.IsVisible, "It's morning but the module is alerting that we're near bedtime.");
+        }
+
+        [Test]
+        public void TimeModuleCautionWidgetIsVisibleDuringTheEarlyMorning()
+        {
+            _alfred.Initialize();
+
+            // Feed in a time in the morning for testability purposes
+            var oneThirtyAm = new DateTime(1980, 9, 10, 1, 30, 0);
+            _module.Update(oneThirtyAm);
+
+            Assert.IsTrue(_module.BedtimeAlertWidget.IsVisible, "It's early morning but the module isn't alerting that we need to be in bed.");
+        }
+
+        [Test]
+        public void TimeModuleCautionWidgetIsVisibleDuringTheNight()
+        {
+            _alfred.Initialize();
+
+            // Feed in a time in the late evening for testability purposes
+            var elevenThirtyPm = new DateTime(1980, 9, 10, 23, 30, 0);
+            _module.Update(elevenThirtyPm);
+
+            Assert.IsTrue(_module.BedtimeAlertWidget.IsVisible, "It's nearly midnight but the module isn't alerting that we need to be in bed.");
+        }
+
+        [Test]
+        public void TimeModuleCautionWidgetIsVisibleAtMidnight()
+        {
+            _alfred.Initialize();
+
+            // Feed in exactly midnight for testing purposes
+            var midnight = new DateTime(1980, 9, 10, 0, 0, 0);
+            _module.Update(midnight);
+
+            Assert.IsTrue(_module.BedtimeAlertWidget.IsVisible, "It's midnight but the module isn't alerting that we need to be in bed.");
         }
 
     }

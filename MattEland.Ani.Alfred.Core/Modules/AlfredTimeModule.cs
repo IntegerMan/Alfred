@@ -61,10 +61,57 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         protected override void UpdateProtected()
         {
-            CurrentTimeWidget.Text = $"The time is now {DateTime.Now.ToString("t")}";
-
-            // TODO: Update the visible status of the alert widget
+            // Call a new method with the current time. This helps this module be testable
+            Update(DateTime.Now);
         }
+
+        /// <summary>
+        /// Updates the module given the specified time.
+        /// </summary>
+        /// <param name="time">The time. Date portions of this will be ignored.</param>
+        public void Update(DateTime time)
+        {
+            // Always update the time
+            CurrentTimeWidget.Text = $"The time is now {time.ToString("t")}";
+
+            // Update the visibility of the alert widget based on time of day
+            UpdateBedtimeAlertVisbility(time);
+        }
+
+        /// <summary>
+        /// Updates the bedtime alert visibility based on the given time.
+        /// </summary>
+        /// <param name="time">The time.</param>
+        private void UpdateBedtimeAlertVisbility(DateTime time)
+        {
+            var alertVisible = false;
+
+            if (time.Hour == BedtimeHour)
+            {
+                if (time.Minute >= BedtimeMinute)
+                {
+                    alertVisible = true;
+                }
+            }
+            else if (time.Hour > BedtimeHour)
+            {
+                alertVisible = true;
+            }
+
+            BedtimeAlertWidget.IsVisible = alertVisible;
+        }
+
+        /// <summary>
+        /// Gets or sets the bedtime hour.
+        /// </summary>
+        /// <value>The bedtime hour.</value>
+        public int BedtimeHour { get; set; } = 19;
+
+        /// <summary>
+        /// Gets or sets the bedtime minute.
+        /// </summary>
+        /// <value>The bedtime minute.</value>
+        public int BedtimeMinute { get; set; } = 30;
 
         /// <summary>
         ///     Handles module shutdown events
@@ -73,5 +120,6 @@ namespace MattEland.Ani.Alfred.Core.Modules
         {
             CurrentTimeWidget.Text = null;
         }
+
     }
 }
