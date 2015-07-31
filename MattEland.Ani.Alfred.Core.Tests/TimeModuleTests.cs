@@ -119,5 +119,22 @@ namespace MattEland.Ani.Alfred.Core.Tests
         }
 
 
+        /// <summary>
+        /// The time module must always be visible.
+        /// </summary>
+        [Test]
+        public void TimeModuleHasTimeAlwaysVisible()
+        {
+            _alfred.Initialize();
+
+            Assert.IsTrue(_module.CurrentTimeWidget.IsVisible, "The time widget was hidden.");
+        }
+
+        [Test]
+        public void TimeModuleCautionWidgetIsHiddenDuringTheDay()
+        {
+            Assert.Inconclusive("Not implemented yet");
+        }
+
     }
 }

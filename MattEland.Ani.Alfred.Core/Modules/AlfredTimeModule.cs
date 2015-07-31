@@ -24,7 +24,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         public AlfredTimeModule([NotNull] ICollectionProvider collectionProvider) : base(collectionProvider)
         {
             CurrentTimeWidget = new TextWidget();
-            BedtimeAlertWidget = new WarningWidget();
+            BedtimeAlertWidget = new WarningWidget { IsVisible = false };
         }
 
         /// <summary>
@@ -56,11 +56,19 @@ namespace MattEland.Ani.Alfred.Core.Modules
             RegisterWidget(BedtimeAlertWidget);
         }
 
+        /// <summary>
+        ///     Handles updating the module
+        /// </summary>
         protected override void UpdateProtected()
         {
             CurrentTimeWidget.Text = $"The time is now {DateTime.Now.ToString("t")}";
+
+            // TODO: Update the visible status of the alert widget
         }
 
+        /// <summary>
+        ///     Handles module shutdown events
+        /// </summary>
         protected override void ShutdownProtected()
         {
             CurrentTimeWidget.Text = null;

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Root CoveredStatements="369" TotalStatements="988" CoveragePercent="37" ReportType="NDependXML" DotCoverVersion="3.1.3">
-  <Assembly Name="MattEland.Ani.Alfred.Core" CoveredStatements="194" TotalStatements="233" CoveragePercent="83">
+<Root CoveredStatements="383" TotalStatements="1005" CoveragePercent="38" ReportType="NDependXML" DotCoverVersion="3.1.3">
+  <Assembly Name="MattEland.Ani.Alfred.Core" CoveredStatements="202" TotalStatements="243" CoveragePercent="83">
     <Namespace Name="MattEland.Ani.Alfred.Core" CoveredStatements="132" TotalStatements="161" CoveragePercent="82">
       <Type Name="AlfredModule" CoveredStatements="50" TotalStatements="72" CoveragePercent="69">
         <Method Name=".ctor(ICollectionProvider)" CoveredStatements="5" TotalStatements="7" CoveragePercent="71" FirstStatementLine="35" />
@@ -38,10 +38,10 @@
         <Method Name="CreateCollection&lt;T&gt;()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="12" />
       </Type>
     </Namespace>
-    <Namespace Name="MattEland.Ani.Alfred.Core.Console" CoveredStatements="20" TotalStatements="28" CoveragePercent="71">
-      <Type Name="ConsoleEvent" CoveredStatements="12" TotalStatements="16" CoveragePercent="75">
+    <Namespace Name="MattEland.Ani.Alfred.Core.Console" CoveredStatements="19" TotalStatements="27" CoveragePercent="70">
+      <Type Name="ConsoleEvent" CoveredStatements="11" TotalStatements="15" CoveragePercent="73">
         <Method Name=".ctor(String,String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="13" />
-        <Method Name=".ctor(String,String,DateTime)" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="23" />
+        <Method Name=".ctor(String,String,DateTime)" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="24" />
         <Method Name="get_Message()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="46" />
         <Method Name="get_Time()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="52" />
         <Method Name="get_Title()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="40" />
@@ -63,16 +63,19 @@
         <Method Name="get_CurrentTimeWidget()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="42" />
         <Method Name="get_NameAndVersion()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="35" />
         <Method Name="InitializeProtected()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="54" />
-        <Method Name="ShutdownProtected()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="65" />
-        <Method Name="UpdateProtected()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="60" />
+        <Method Name="ShutdownProtected()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="73" />
+        <Method Name="UpdateProtected()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="63" />
       </Type>
       <Type Name="StandardModuleProvider" CoveredStatements="4" TotalStatements="6" CoveragePercent="67">
         <Method Name="AddStandardModules(AlfredProvider)" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="18" />
       </Type>
     </Namespace>
-    <Namespace Name="MattEland.Ani.Alfred.Core.Widgets" CoveredStatements="20" TotalStatements="20" CoveragePercent="100">
-      <Type Name="AlfredWidget" CoveredStatements="3" TotalStatements="3" CoveragePercent="100">
-        <Method Name="OnPropertyChanged(String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="26" />
+    <Namespace Name="MattEland.Ani.Alfred.Core.Widgets" CoveredStatements="29" TotalStatements="31" CoveragePercent="94">
+      <Type Name="AlfredWidget" CoveredStatements="12" TotalStatements="14" CoveragePercent="86">
+        <Method Name=".ctor()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="20" />
+        <Method Name="get_IsVisible()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="28" />
+        <Method Name="OnPropertyChanged(String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="46" />
+        <Method Name="set_IsVisible(Boolean)" CoveredStatements="5" TotalStatements="7" CoveragePercent="71" FirstStatementLine="30" />
       </Type>
       <Type Name="TextWidget" CoveredStatements="17" TotalStatements="17" CoveragePercent="100">
         <Method Name=".ctor()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="16" />
@@ -83,8 +86,8 @@
       <Type Name="WarningWidget" CoveredStatements="0" TotalStatements="0" CoveragePercent="0" />
     </Namespace>
   </Assembly>
-  <Assembly Name="MattEland.Ani.Alfred.Core.Tests" CoveredStatements="175" TotalStatements="182" CoveragePercent="96">
-    <Namespace Name="MattEland.Ani.Alfred.Core.Tests" CoveredStatements="175" TotalStatements="182" CoveragePercent="96">
+  <Assembly Name="MattEland.Ani.Alfred.Core.Tests" CoveredStatements="181" TotalStatements="189" CoveragePercent="96">
+    <Namespace Name="MattEland.Ani.Alfred.Core.Tests" CoveredStatements="181" TotalStatements="189" CoveragePercent="96">
       <Type Name="AlfredProviderTests" CoveredStatements="110" TotalStatements="117" CoveragePercent="94">
         <Method Name=".ctor()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="25" />
         <Method Name="AddingStandardModulesAddsModules()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="199" />
@@ -112,15 +115,17 @@
         <Method Name="TextWidgetConstructorTextTests()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="31" />
         <Method Name="TextWidgetTextTests()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="23" />
       </Type>
-      <Type Name="TimeModuleTests" CoveredStatements="54" TotalStatements="54" CoveragePercent="100">
+      <Type Name="TimeModuleTests" CoveredStatements="60" TotalStatements="61" CoveragePercent="98">
         <Method Name="DisplayTextIsNullAfterShutdown()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="80" />
         <Method Name="DisplayTextIsNullBeforeUpdate()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="72" />
         <Method Name="GetTimeText()" CoveredStatements="8" TotalStatements="8" CoveragePercent="100" FirstStatementLine="58" />
         <Method Name="ModuleIsOnlineAfterStartup()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="37" />
         <Method Name="ModuleReturnsCorrectTime()" CoveredStatements="8" TotalStatements="8" CoveragePercent="100" FirstStatementLine="45" />
         <Method Name="OnStartup()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="23" />
+        <Method Name="TimeModuleCautionWidgetIsHiddenDuringTheDay()" CoveredStatements="2" TotalStatements="3" CoveragePercent="67" FirstStatementLine="135" />
         <Method Name="TimeModuleHasCautionWidget()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="114" />
         <Method Name="TimeModuleHasNoWidgetsWhenOffline()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="99" />
+        <Method Name="TimeModuleHasTimeAlwaysVisible()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="127" />
         <Method Name="TimeModuleHasWidgets()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="90" />
         <Method Name="TimeModuleStartsOffline()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="31" />
       </Type>
