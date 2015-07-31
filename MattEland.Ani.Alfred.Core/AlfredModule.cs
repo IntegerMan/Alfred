@@ -11,7 +11,7 @@ namespace MattEland.Ani.Alfred.Core
     /// <summary>
     ///     Represents a module within Alfred. Modules contain different bits of information to present to the user.
     /// </summary>
-    public abstract class AlfredModule : INotifyPropertyChanged
+    public abstract class AlfredModule : NotifyPropertyChangedBase
     {
         [NotNull]
         private readonly ICollectionProvider _collectionProvider;
@@ -86,8 +86,6 @@ namespace MattEland.Ani.Alfred.Core
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         /// <summary>
         ///     Initializes the module.
         /// </summary>
@@ -130,19 +128,6 @@ namespace MattEland.Ani.Alfred.Core
             {
                 Widgets = _collectionProvider.CreateCollection<AlfredWidget>();
             }
-        }
-
-        /// <summary>
-        ///     Called when a property changes.
-        /// </summary>
-        /// <param
-        ///     name="propertyName">
-        ///     Name of the property.
-        /// </param>
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CanBeNull] string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         /// <summary>

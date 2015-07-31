@@ -48,6 +48,7 @@
     <Compile Include="Console\ConsoleEvent.cs" />
     <Compile Include="Console\IConsole.cs" />
     <Compile Include="Modules\StandardModuleProvider.cs" />
+    <Compile Include="NotifyPropertyChangedBase.cs" />
     <Compile Include="Widgets\AlfredWidget.cs" />
     <Compile Include="Widgets\TextWidget.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

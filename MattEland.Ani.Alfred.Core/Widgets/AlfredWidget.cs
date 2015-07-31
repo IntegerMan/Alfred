@@ -1,8 +1,4 @@
-﻿using System.ComponentModel;
-
-using JetBrains.Annotations;
-
-namespace MattEland.Ani.Alfred.Core.Widgets
+﻿namespace MattEland.Ani.Alfred.Core.Widgets
 {
     /// <summary>
     /// Any sort of user interface widget for representing a module. 
@@ -10,12 +6,8 @@ namespace MattEland.Ani.Alfred.Core.Widgets
     /// Widgets do not contain user interface elements but tell the
     /// client what user interface elements to create.
     /// </summary>
-    public abstract class AlfredWidget : INotifyPropertyChanged
+    public abstract class AlfredWidget : NotifyPropertyChangedBase
     {
-        /// <summary>
-        /// Occurs when a property changes.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
 
         private bool _isVisible = true;
 
@@ -35,16 +27,6 @@ namespace MattEland.Ani.Alfred.Core.Widgets
                 _isVisible = value;
                 OnPropertyChanged(nameof(IsVisible));
             }
-        }
-
-        /// <summary>
-        /// Called when a property changes.
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        [NotifyPropertyChangedInvocator]
-        protected void OnPropertyChanged([CanBeNull] string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

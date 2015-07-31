@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
-using MattEland.Ani.Alfred.Core.Modules;
 
 namespace MattEland.Ani.Alfred.Core
 {
@@ -13,7 +11,7 @@ namespace MattEland.Ani.Alfred.Core
     /// Coordinates providing personal assistance to a user interface and receiving settings and queries back from the user
     /// interface.
     /// </summary>
-    public sealed class AlfredProvider : INotifyPropertyChanged
+    public sealed class AlfredProvider : NotifyPropertyChangedBase
     {
         private AlfredStatus _status;
 
@@ -188,23 +186,5 @@ namespace MattEland.Ani.Alfred.Core
             Modules.Add(module);
         }
 
-        #region Notify Property Changed
-
-        /// <summary>
-        /// Occurs when a property changes.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// Called when a property changes to support the property changed notifications.
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CanBeNull] string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion
     }
 }
