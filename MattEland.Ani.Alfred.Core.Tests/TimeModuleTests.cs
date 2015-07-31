@@ -202,5 +202,20 @@ namespace MattEland.Ani.Alfred.Core.Tests
             Assert.IsTrue(_module.BedtimeAlertWidget.IsVisible, "It's midnight but the module isn't alerting that we need to be in bed.");
         }
 
+        [Test]
+        public void TimeModuleCautionWidgetIsHiddenLateAtNightForNoonBedtimes()
+        {
+            _module.BedtimeHour = 12;
+            _module.BedtimeMinute = 0;
+            _module.AlertDurationInHours = 2;
+
+            _alfred.Initialize();
+
+            var evening = new DateTime(1980, 9, 10, 22, 0, 0);
+            _module.Update(evening);
+
+            Assert.IsFalse(_module.BedtimeAlertWidget.IsVisible, "It's late in the evening with a noon bedtime but the alert is still showing.");
+        }
+
     }
 }

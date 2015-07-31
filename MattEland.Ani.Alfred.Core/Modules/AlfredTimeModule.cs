@@ -87,6 +87,11 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <param name="time">The time.</param>
         private void UpdateBedtimeAlertVisbility(DateTime time)
         {
+
+            // Figure out when the alarm display should end. Accept values >= 24 for now.
+            // We'll adjust this in a few blocks when checking for early morning circumstances.
+            var bedtimeAlertEndHour = BedtimeHour + AlertDurationInHours;
+
             var alertVisible = false;
 
             if (time.Hour == BedtimeHour)
@@ -98,13 +103,20 @@ namespace MattEland.Ani.Alfred.Core.Modules
             }
             else if (time.Hour > BedtimeHour)
             {
-                alertVisible = true;
+
+                // Check for when we're on the hour the alert will expire
+                if (time.Hour == bedtimeAlertEndHour && time.Minute < BedtimeMinute)
+                {
+                    alertVisible = true;
+                }
+                else if (time.Hour < bedtimeAlertEndHour)
+                {
+                    alertVisible = true;
+                }
             }
 
-            // The alert is good for a few hours and the alert should be visible during that time.
-            var bedtimeAlertEndHour = BedtimeHour + AlertDurationInHours;
-
-            // Ensure we have a representable hour if we wrapped over to the next day.
+            // Next we'll check early morning carry over for late alerts so 
+            // make sure the end hour is representable on a 24 hour clock.
             if (bedtimeAlertEndHour >= 24)
             {
                 bedtimeAlertEndHour -= 24;
@@ -121,13 +133,13 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        /// Gets or sets the bedtime hour.
+        /// Gets or sets the bedtime hour.  Defaults to 9 PM
         /// </summary>
         /// <value>The bedtime hour.</value>
         public int BedtimeHour { get; set; } = 21;
 
         /// <summary>
-        /// Gets or sets the bedtime minute.
+        /// Gets or sets the bedtime minute. Defaults to 30 minutes past the hour.
         /// </summary>
         /// <value>The bedtime minute.</value>
         public int BedtimeMinute { get; set; } = 30;
