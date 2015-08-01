@@ -16,12 +16,26 @@
         <!-- TextWidget Template -->
         <DataTemplate DataType="{x:Type widgets:TextWidget}">
             <TextBlock 
+                Margin="0, 8"
                 Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
                 Text="{Binding Text}"
                 ToolTip="{Binding Text}"/>
         </DataTemplate>
 
-        <!-- TODO: Add one here for CautionTemplate -->
+        <!-- AlertWidget Template -->
+        <DataTemplate DataType="{x:Type widgets:WarningWidget}">
+            <Border 
+                Padding="8" 
+                HorizontalAlignment="Stretch"
+                Background="BlanchedAlmond" 
+                BorderThickness="1" 
+                BorderBrush="DarkGoldenrod"
+                Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
+                
+                <TextBlock Text="{Binding Text}" ToolTip="{Binding Text}"/>
+                
+            </Border>
+        </DataTemplate>
 
         <!-- Fallback type of widget Template -->
         <DataTemplate DataType="{x:Type widgets:AlfredWidget}">

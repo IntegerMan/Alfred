@@ -193,6 +193,20 @@ namespace MattEland.Ani.Alfred.Core.Tests
         }
 
         [Test]
+        public void TimeModuleCautionWidgetHasText()
+        {
+            _module.IsAlertEnabled = false;
+
+            _alfred.Initialize();
+
+            // Feed in a time in the morning for testability purposes
+            var oneThirtyAm = new DateTime(1980, 9, 10, 1, 30, 0);
+            _module.Update(oneThirtyAm);
+
+            Assert.IsFalse(string.IsNullOrWhiteSpace(_module.BedtimeAlertWidget.Text), "Alert text is not set when alert is visible.");
+        }
+
+        [Test]
         public void TimeModuleCautionWidgetIsVisibleDuringTheNight()
         {
             _alfred.Initialize();

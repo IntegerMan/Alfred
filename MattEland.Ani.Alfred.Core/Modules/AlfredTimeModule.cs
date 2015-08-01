@@ -24,7 +24,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         public AlfredTimeModule([NotNull] ICollectionProvider collectionProvider) : base(collectionProvider)
         {
             CurrentTimeWidget = new TextWidget();
-            BedtimeAlertWidget = new WarningWidget { IsVisible = false };
+            BedtimeAlertWidget = new WarningWidget { IsVisible = false, Text = "Shouldn't we be heading to bed soon?" };
             BedtimeHour = 21;
             BedtimeMinute = 30;
             AlertDurationInHours = 4;

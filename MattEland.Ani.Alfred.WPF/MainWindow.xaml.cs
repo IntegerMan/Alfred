@@ -35,7 +35,13 @@ namespace MattEland.Ani.Alfred.WPF
                 Console = _console
             };
 
-            StandardModuleProvider.AddStandardModules(_alfred);
+            var timeModule = new AlfredTimeModule(_alfred.CollectionProvider)
+            {
+                BedtimeHour = 0,
+                BedtimeMinute = 0
+            };
+
+            _alfred.AddModule(timeModule);
 
             _console.Log("WinClient.Initialize", "Alfred instantiated");
 
