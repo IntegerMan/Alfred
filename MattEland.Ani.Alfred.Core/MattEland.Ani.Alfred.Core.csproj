@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AlfredStatus.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="ICollectionProvider.cs" />
     <Compile Include="Modules\AlfredTimeModule.cs" />
     <Compile Include="AlfredModule.cs" />

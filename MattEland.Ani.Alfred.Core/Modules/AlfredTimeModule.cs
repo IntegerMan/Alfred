@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 using JetBrains.Annotations;
 
@@ -23,6 +24,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </param>
         public AlfredTimeModule([NotNull] ICollectionProvider collectionProvider) : base(collectionProvider)
         {
+            CurrentDateWidget = new TextWidget();
             CurrentTimeWidget = new TextWidget();
             BedtimeAlertWidget = new WarningWidget { IsVisible = false, Text = "Shouldn't we be heading to bed soon?" };
             BedtimeHour = 21;
@@ -48,6 +50,14 @@ namespace MattEland.Ani.Alfred.Core.Modules
         [NotNull]
         public TextWidget CurrentTimeWidget { get; }
 
+
+        /// <summary>
+        /// Gets the current date user interface widget.
+        /// </summary>
+        /// <value>The current date user interface widget.</value>
+        [NotNull]
+        public TextWidget CurrentDateWidget { get; }
+
         /// <summary>
         ///     Gets the bedtime alert widget.
         ///     This widget alerts users to go to bed after a certain time
@@ -59,6 +69,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
 
         protected override void InitializeProtected()
         {
+            RegisterWidget(CurrentDateWidget);
             RegisterWidget(CurrentTimeWidget);
             RegisterWidget(BedtimeAlertWidget);
         }
@@ -78,8 +89,11 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <param name="time">The time. Date portions of this will be ignored.</param>
         public void Update(DateTime time)
         {
+            // Always update the date
+            CurrentDateWidget.Text = time.ToString("D", CultureInfo.CurrentCulture); // Thursday April 10, 2008
+
             // Always update the time
-            CurrentTimeWidget.Text = $"The time is now {time.ToString("t")}";
+            CurrentTimeWidget.Text = $"The time is now {time.ToString("t", CultureInfo.CurrentCulture)}";
 
             // Update the visibility of the alert widget based on time of day
             UpdateBedtimeAlertVisbility(time);

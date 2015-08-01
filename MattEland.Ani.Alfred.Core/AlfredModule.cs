@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
 
@@ -94,12 +95,13 @@ namespace MattEland.Ani.Alfred.Core
         ///     The provider.
         /// </param>
         /// <exception
-        ///     cref="System.ArgumentNullException">
+        ///     cref="ArgumentNullException">
         /// </exception>
         /// <exception
-        ///     cref="System.InvalidOperationException">
+        ///     cref="InvalidOperationException">
         ///     Already online when told to initialize.
         /// </exception>
+        [SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", MessageId = "System.String.Format(System.String,System.Object[])")]
         public void Initialize([NotNull] AlfredProvider alfred)
         {
             if (alfred == null)
@@ -134,12 +136,13 @@ namespace MattEland.Ani.Alfred.Core
         ///     Shuts down the module and decouples it from Alfred.
         /// </summary>
         /// <exception
-        ///     cref="System.ArgumentNullException">
+        ///     cref="ArgumentNullException">
         /// </exception>
         /// <exception
-        ///     cref="System.InvalidOperationException">
+        ///     cref="InvalidOperationException">
         ///     Already offline when told to shut down.
         /// </exception>
+        [SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", MessageId = "System.String.Format(System.String,System.Object[])")]
         public void Shutdown()
         {
             if (Status == AlfredStatus.Offline)
@@ -174,6 +177,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <summary>
         ///     Handles updating the module as needed
         /// </summary>
+        [SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", MessageId = "System.String.Format(System.String,System.Object[])")]
         public void Update()
         {
             if (Status == AlfredStatus.Offline)

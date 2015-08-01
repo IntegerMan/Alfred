@@ -245,5 +245,30 @@ namespace MattEland.Ani.Alfred.Core.Tests
             Assert.IsFalse(_module.BedtimeAlertWidget.IsVisible, "It's late in the evening with a noon bedtime but the alert is still showing.");
         }
 
+        [Test]
+        public void TimeModuleShowsCurrentDate()
+        {
+            _alfred.Initialize();
+
+            var evening = new DateTime(1980, 9, 10, 22, 0, 0);
+            _module.Update(evening);
+
+            const string ExpectedDateString = "Wednesday, September 10, 1980";
+            var currentDateString = _module.CurrentTimeWidget.Text;
+
+            Assert.AreEqual(ExpectedDateString, _module.CurrentDateWidget.Text, $"Expected '{ExpectedDateString}' but was '{currentDateString}'");
+        }
+
+        [Test]
+        public void TimeModuleurrentDateIsVisible()
+        {
+            _alfred.Initialize();
+
+            var evening = new DateTime(1980, 9, 10, 22, 0, 0);
+            _module.Update(evening);
+
+            Assert.IsTrue(_module.CurrentDateWidget.IsVisible, "The current date was not visible");
+        }
+
     }
 }
