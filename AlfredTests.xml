@@ -1,81 +1,91 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Root CoveredStatements="383" TotalStatements="1005" CoveragePercent="38" ReportType="NDependXML" DotCoverVersion="3.1.3">
-  <Assembly Name="MattEland.Ani.Alfred.Core" CoveredStatements="202" TotalStatements="243" CoveragePercent="83">
-    <Namespace Name="MattEland.Ani.Alfred.Core" CoveredStatements="132" TotalStatements="161" CoveragePercent="82">
+<Root CoveredStatements="485" TotalStatements="1121" CoveragePercent="43" ReportType="NDependXML" DotCoverVersion="3.1.3">
+  <Assembly Name="MattEland.Ani.Alfred.Core" CoveredStatements="247" TotalStatements="300" CoveragePercent="82">
+    <Namespace Name="MattEland.Ani.Alfred.Core" CoveredStatements="132" TotalStatements="163" CoveragePercent="81">
       <Type Name="AlfredModule" CoveredStatements="50" TotalStatements="72" CoveragePercent="69">
         <Method Name=".ctor(ICollectionProvider)" CoveredStatements="5" TotalStatements="7" CoveragePercent="71" FirstStatementLine="35" />
-        <Method Name="EnsureWidgetsCollection()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="125" />
+        <Method Name="EnsureWidgetsCollection()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="126" />
         <Method Name="get_Status()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="77" />
         <Method Name="get_Widgets()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="52" />
-        <Method Name="Initialize(AlfredProvider)" CoveredStatements="7" TotalStatements="11" CoveragePercent="64" FirstStatementLine="106" />
-        <Method Name="InitializeProtected()" CoveredStatements="0" TotalStatements="2" CoveragePercent="0" FirstStatementLine="179" />
-        <Method Name="OnPropertyChanged(String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="138" />
-        <Method Name="RegisterWidget(AlfredWidget)" CoveredStatements="5" TotalStatements="7" CoveragePercent="71" FirstStatementLine="212" />
+        <Method Name="Initialize(AlfredProvider)" CoveredStatements="7" TotalStatements="11" CoveragePercent="64" FirstStatementLine="104" />
+        <Method Name="InitializeProtected()" CoveredStatements="0" TotalStatements="2" CoveragePercent="0" FirstStatementLine="170" />
+        <Method Name="RegisterWidget(AlfredWidget)" CoveredStatements="5" TotalStatements="7" CoveragePercent="71" FirstStatementLine="203" />
         <Method Name="set_Status(AlfredStatus)" CoveredStatements="5" TotalStatements="7" CoveragePercent="71" FirstStatementLine="79" />
         <Method Name="set_Widgets(ICollection&lt;AlfredWidget&gt;)" CoveredStatements="5" TotalStatements="7" CoveragePercent="71" FirstStatementLine="54" />
-        <Method Name="Shutdown()" CoveredStatements="7" TotalStatements="9" CoveragePercent="78" FirstStatementLine="153" />
-        <Method Name="ShutdownProtected()" CoveredStatements="0" TotalStatements="2" CoveragePercent="0" FirstStatementLine="171" />
-        <Method Name="Update()" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="187" />
-        <Method Name="UpdateProtected()" CoveredStatements="0" TotalStatements="2" CoveragePercent="0" FirstStatementLine="200" />
+        <Method Name="Shutdown()" CoveredStatements="7" TotalStatements="9" CoveragePercent="78" FirstStatementLine="144" />
+        <Method Name="ShutdownProtected()" CoveredStatements="0" TotalStatements="2" CoveragePercent="0" FirstStatementLine="162" />
+        <Method Name="Update()" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="178" />
+        <Method Name="UpdateProtected()" CoveredStatements="0" TotalStatements="2" CoveragePercent="0" FirstStatementLine="191" />
       </Type>
-      <Type Name="AlfredProvider" CoveredStatements="79" TotalStatements="86" CoveragePercent="92">
-        <Method Name=".ctor()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="38" />
-        <Method Name=".ctor(ICollectionProvider)" CoveredStatements="6" TotalStatements="8" CoveragePercent="75" FirstStatementLine="24" />
-        <Method Name="AddModule(AlfredModule)" CoveredStatements="7" TotalStatements="9" CoveragePercent="78" FirstStatementLine="177" />
-        <Method Name="get_CollectionProvider()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="87" />
-        <Method Name="get_Console()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="47" />
-        <Method Name="get_Modules()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="62" />
-        <Method Name="get_NameAndVersion()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="54" />
-        <Method Name="get_Status()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="70" />
-        <Method Name="Initialize()" CoveredStatements="18" TotalStatements="18" CoveragePercent="100" FirstStatementLine="94" />
-        <Method Name="OnPropertyChanged(String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="204" />
-        <Method Name="set_Console(IConsole)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="47" />
-        <Method Name="set_Status(AlfredStatus)" CoveredStatements="5" TotalStatements="7" CoveragePercent="71" FirstStatementLine="72" />
-        <Method Name="Shutdown()" CoveredStatements="18" TotalStatements="18" CoveragePercent="100" FirstStatementLine="126" />
-        <Method Name="Update()" CoveredStatements="12" TotalStatements="12" CoveragePercent="100" FirstStatementLine="158" />
+      <Type Name="AlfredProvider" CoveredStatements="76" TotalStatements="85" CoveragePercent="89">
+        <Method Name=".ctor()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="36" />
+        <Method Name=".ctor(ICollectionProvider)" CoveredStatements="6" TotalStatements="8" CoveragePercent="75" FirstStatementLine="22" />
+        <Method Name="AddModule(AlfredModule)" CoveredStatements="7" TotalStatements="9" CoveragePercent="78" FirstStatementLine="178" />
+        <Method Name="get_CollectionProvider()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="88" />
+        <Method Name="get_Console()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="45" />
+        <Method Name="get_Modules()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="63" />
+        <Method Name="get_NameAndVersion()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="54" />
+        <Method Name="get_Status()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="71" />
+        <Method Name="Initialize()" CoveredStatements="18" TotalStatements="18" CoveragePercent="100" FirstStatementLine="95" />
+        <Method Name="set_Console(IConsole)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="45" />
+        <Method Name="set_Status(AlfredStatus)" CoveredStatements="5" TotalStatements="7" CoveragePercent="71" FirstStatementLine="73" />
+        <Method Name="Shutdown()" CoveredStatements="18" TotalStatements="18" CoveragePercent="100" FirstStatementLine="127" />
+        <Method Name="Update()" CoveredStatements="12" TotalStatements="12" CoveragePercent="100" FirstStatementLine="159" />
+      </Type>
+      <Type Name="NotifyPropertyChangedBase" CoveredStatements="3" TotalStatements="3" CoveragePercent="100">
+        <Method Name="OnPropertyChanged(String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="23" />
       </Type>
       <Type Name="SimpleCollectionProvider" CoveredStatements="3" TotalStatements="3" CoveragePercent="100">
         <Method Name="CreateCollection&lt;T&gt;()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="12" />
       </Type>
     </Namespace>
-    <Namespace Name="MattEland.Ani.Alfred.Core.Console" CoveredStatements="19" TotalStatements="27" CoveragePercent="70">
-      <Type Name="ConsoleEvent" CoveredStatements="11" TotalStatements="15" CoveragePercent="73">
+    <Namespace Name="MattEland.Ani.Alfred.Core.Console" CoveredStatements="21" TotalStatements="31" CoveragePercent="68">
+      <Type Name="ConsoleEvent" CoveredStatements="11" TotalStatements="17" CoveragePercent="65">
         <Method Name=".ctor(String,String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="13" />
         <Method Name=".ctor(String,String,DateTime)" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="24" />
         <Method Name="get_Message()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="46" />
-        <Method Name="get_Time()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="52" />
+        <Method Name="get_Time()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="54" />
         <Method Name="get_Title()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="40" />
         <Method Name="get_UtcTime()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="34" />
         <Method Name="set_Message(String)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="46" />
         <Method Name="set_Title(String)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="40" />
         <Method Name="set_UtcTime(DateTime)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="34" />
       </Type>
-      <Type Name="SimpleConsole" CoveredStatements="8" TotalStatements="12" CoveragePercent="67">
-        <Method Name=".ctor()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="36" />
-        <Method Name="get_Events()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="44" />
+      <Type Name="SimpleConsole" CoveredStatements="10" TotalStatements="14" CoveragePercent="71">
+        <Method Name=".ctor()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="37" />
+        <Method Name="get_Events()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="47" />
         <Method Name="Log(String,String)" CoveredStatements="6" TotalStatements="10" CoveragePercent="60" FirstStatementLine="20" />
       </Type>
     </Namespace>
-    <Namespace Name="MattEland.Ani.Alfred.Core.Modules" CoveredStatements="22" TotalStatements="24" CoveragePercent="92">
-      <Type Name="AlfredTimeModule" CoveredStatements="18" TotalStatements="18" CoveragePercent="100">
-        <Method Name=".ctor(ICollectionProvider)" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="24" />
-        <Method Name="get_BedtimeAlertWidget()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="51" />
-        <Method Name="get_CurrentTimeWidget()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="42" />
-        <Method Name="get_NameAndVersion()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="35" />
-        <Method Name="InitializeProtected()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="54" />
-        <Method Name="ShutdownProtected()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="73" />
-        <Method Name="UpdateProtected()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="63" />
+    <Namespace Name="MattEland.Ani.Alfred.Core.Modules" CoveredStatements="64" TotalStatements="76" CoveragePercent="84">
+      <Type Name="AlfredTimeModule" CoveredStatements="60" TotalStatements="70" CoveragePercent="86">
+        <Method Name=".ctor(ICollectionProvider)" CoveredStatements="9" TotalStatements="9" CoveragePercent="100" FirstStatementLine="24" />
+        <Method Name="get_AlertDurationInHours()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="160" />
+        <Method Name="get_BedtimeAlertWidget()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="58" />
+        <Method Name="get_BedtimeHour()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="148" />
+        <Method Name="get_BedtimeMinute()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="154" />
+        <Method Name="get_CurrentTimeWidget()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="49" />
+        <Method Name="get_IsAlertEnabled()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="166" />
+        <Method Name="get_NameAndVersion()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="41" />
+        <Method Name="InitializeProtected()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="61" />
+        <Method Name="set_AlertDurationInHours(Int32)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="160" />
+        <Method Name="set_BedtimeHour(Int32)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="148" />
+        <Method Name="set_BedtimeMinute(Int32)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="154" />
+        <Method Name="set_IsAlertEnabled(Boolean)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="166" />
+        <Method Name="ShutdownProtected()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="172" />
+        <Method Name="Update(DateTime)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="80" />
+        <Method Name="UpdateBedtimeAlertVisbility(DateTime)" CoveredStatements="25" TotalStatements="34" CoveragePercent="74" FirstStatementLine="93" />
+        <Method Name="UpdateProtected()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="70" />
       </Type>
       <Type Name="StandardModuleProvider" CoveredStatements="4" TotalStatements="6" CoveragePercent="67">
         <Method Name="AddStandardModules(AlfredProvider)" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="18" />
       </Type>
     </Namespace>
-    <Namespace Name="MattEland.Ani.Alfred.Core.Widgets" CoveredStatements="29" TotalStatements="31" CoveragePercent="94">
-      <Type Name="AlfredWidget" CoveredStatements="12" TotalStatements="14" CoveragePercent="86">
-        <Method Name=".ctor()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="20" />
-        <Method Name="get_IsVisible()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="28" />
-        <Method Name="OnPropertyChanged(String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="46" />
-        <Method Name="set_IsVisible(Boolean)" CoveredStatements="5" TotalStatements="7" CoveragePercent="71" FirstStatementLine="30" />
+    <Namespace Name="MattEland.Ani.Alfred.Core.Widgets" CoveredStatements="30" TotalStatements="30" CoveragePercent="100">
+      <Type Name="AlfredWidget" CoveredStatements="11" TotalStatements="11" CoveragePercent="100">
+        <Method Name=".ctor()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="12" />
+        <Method Name="get_IsVisible()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="20" />
+        <Method Name="set_IsVisible(Boolean)" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="22" />
       </Type>
       <Type Name="TextWidget" CoveredStatements="17" TotalStatements="17" CoveragePercent="100">
         <Method Name=".ctor()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="16" />
@@ -83,11 +93,14 @@
         <Method Name="get_Text()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="36" />
         <Method Name="set_Text(String)" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="38" />
       </Type>
-      <Type Name="WarningWidget" CoveredStatements="0" TotalStatements="0" CoveragePercent="0" />
+      <Type Name="WarningWidget" CoveredStatements="2" TotalStatements="2" CoveragePercent="100">
+        <Method Name="get_Text()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="13" />
+        <Method Name="set_Text(String)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="13" />
+      </Type>
     </Namespace>
   </Assembly>
-  <Assembly Name="MattEland.Ani.Alfred.Core.Tests" CoveredStatements="181" TotalStatements="189" CoveragePercent="96">
-    <Namespace Name="MattEland.Ani.Alfred.Core.Tests" CoveredStatements="181" TotalStatements="189" CoveragePercent="96">
+  <Assembly Name="MattEland.Ani.Alfred.Core.Tests" CoveredStatements="238" TotalStatements="245" CoveragePercent="97">
+    <Namespace Name="MattEland.Ani.Alfred.Core.Tests" CoveredStatements="238" TotalStatements="245" CoveragePercent="97">
       <Type Name="AlfredProviderTests" CoveredStatements="110" TotalStatements="117" CoveragePercent="94">
         <Method Name=".ctor()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="25" />
         <Method Name="AddingStandardModulesAddsModules()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="199" />
@@ -115,14 +128,22 @@
         <Method Name="TextWidgetConstructorTextTests()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="31" />
         <Method Name="TextWidgetTextTests()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="23" />
       </Type>
-      <Type Name="TimeModuleTests" CoveredStatements="60" TotalStatements="61" CoveragePercent="98">
+      <Type Name="TimeModuleTests" CoveredStatements="117" TotalStatements="117" CoveragePercent="100">
         <Method Name="DisplayTextIsNullAfterShutdown()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="80" />
         <Method Name="DisplayTextIsNullBeforeUpdate()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="72" />
         <Method Name="GetTimeText()" CoveredStatements="8" TotalStatements="8" CoveragePercent="100" FirstStatementLine="58" />
         <Method Name="ModuleIsOnlineAfterStartup()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="37" />
         <Method Name="ModuleReturnsCorrectTime()" CoveredStatements="8" TotalStatements="8" CoveragePercent="100" FirstStatementLine="45" />
         <Method Name="OnStartup()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="23" />
-        <Method Name="TimeModuleCautionWidgetIsHiddenDuringTheDay()" CoveredStatements="2" TotalStatements="3" CoveragePercent="67" FirstStatementLine="135" />
+        <Method Name="TimeModuleCautionWidgetHasText()" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="197" />
+        <Method Name="TimeModuleCautionWidgetIsHiddenDuringTheAfternoon()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="147" />
+        <Method Name="TimeModuleCautionWidgetIsHiddenDuringTheMorning()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="159" />
+        <Method Name="TimeModuleCautionWidgetIsHiddenLateAtNightForNoonBedtimes()" CoveredStatements="9" TotalStatements="9" CoveragePercent="100" FirstStatementLine="235" />
+        <Method Name="TimeModuleCautionWidgetIsNotVisibleAtNoon()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="135" />
+        <Method Name="TimeModuleCautionWidgetIsNotVisibleWhenDisabled()" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="183" />
+        <Method Name="TimeModuleCautionWidgetIsVisibleAtMidnight()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="223" />
+        <Method Name="TimeModuleCautionWidgetIsVisibleDuringTheEarlyMorning()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="171" />
+        <Method Name="TimeModuleCautionWidgetIsVisibleDuringTheNight()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="211" />
         <Method Name="TimeModuleHasCautionWidget()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="114" />
         <Method Name="TimeModuleHasNoWidgetsWhenOffline()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="99" />
         <Method Name="TimeModuleHasTimeAlwaysVisible()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="127" />
@@ -263,29 +284,29 @@
       </Type>
     </Namespace>
   </Assembly>
-  <Assembly Name="MattEland.Ani.Alfred.WPF" CoveredStatements="0" TotalStatements="114" CoveragePercent="0">
-    <Namespace Name="MattEland.Ani.Alfred.WPF" CoveredStatements="0" TotalStatements="93" CoveragePercent="0">
+  <Assembly Name="MattEland.Ani.Alfred.WPF" CoveredStatements="0" TotalStatements="117" CoveragePercent="0">
+    <Namespace Name="MattEland.Ani.Alfred.WPF" CoveredStatements="0" TotalStatements="96" CoveragePercent="0">
       <Type Name="App" CoveredStatements="0" TotalStatements="15" CoveragePercent="0">
         <Method Name="InitializeComponent()" CoveredStatements="0" TotalStatements="8" CoveragePercent="0" FirstStatementLine="50" />
         <Method Name="OnUnhandledException(Object,DispatcherUnhandledExceptionEventArgs)" CoveredStatements="0" TotalStatements="7" CoveragePercent="0" FirstStatementLine="24" />
       </Type>
-      <Type Name="MainWindow" CoveredStatements="0" TotalStatements="64" CoveragePercent="0">
-        <Method Name=".ctor()" CoveredStatements="0" TotalStatements="17" CoveragePercent="0" FirstStatementLine="20" />
+      <Type Name="MainWindow" CoveredStatements="0" TotalStatements="65" CoveragePercent="0">
+        <Method Name=".ctor()" CoveredStatements="0" TotalStatements="18" CoveragePercent="0" FirstStatementLine="20" />
         <Method Name="InitializeComponent()" CoveredStatements="0" TotalStatements="7" CoveragePercent="0" FirstStatementLine="52" />
-        <Method Name="OnExitClicked(Object,RoutedEventArgs)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="89" />
-        <Method Name="OnInitializeClicked(Object,RoutedEventArgs)" CoveredStatements="0" TotalStatements="9" CoveragePercent="0" FirstStatementLine="114" />
-        <Method Name="OnShutdownClicked(Object,RoutedEventArgs)" CoveredStatements="0" TotalStatements="9" CoveragePercent="0" FirstStatementLine="140" />
-        <Method Name="OnTimerTick(Object,EventArgs)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="63" />
-        <Method Name="OnWindowClosing(Object,CancelEventArgs)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="100" />
-        <Method Name="OnWindowLoaded(Object,RoutedEventArgs)" CoveredStatements="0" TotalStatements="2" CoveragePercent="0" FirstStatementLine="77" />
+        <Method Name="OnExitClicked(Object,RoutedEventArgs)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="95" />
+        <Method Name="OnInitializeClicked(Object,RoutedEventArgs)" CoveredStatements="0" TotalStatements="9" CoveragePercent="0" FirstStatementLine="120" />
+        <Method Name="OnShutdownClicked(Object,RoutedEventArgs)" CoveredStatements="0" TotalStatements="9" CoveragePercent="0" FirstStatementLine="146" />
+        <Method Name="OnTimerTick(Object,EventArgs)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="69" />
+        <Method Name="OnWindowClosing(Object,CancelEventArgs)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="106" />
+        <Method Name="OnWindowLoaded(Object,RoutedEventArgs)" CoveredStatements="0" TotalStatements="2" CoveragePercent="0" FirstStatementLine="83" />
         <Method Name="System.Windows.Markup.IComponentConnector.Connect(Int32,Object)" CoveredStatements="0" TotalStatements="5" CoveragePercent="0" FirstStatementLine="10" />
       </Type>
       <Type Name="WinClientCollectionProvider" CoveredStatements="0" TotalStatements="3" CoveragePercent="0">
         <Method Name="CreateCollection&lt;T&gt;()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="14" />
       </Type>
-      <Type Name="WinClientConsole" CoveredStatements="0" TotalStatements="11" CoveragePercent="0">
+      <Type Name="WinClientConsole" CoveredStatements="0" TotalStatements="13" CoveragePercent="0">
         <Method Name=".ctor()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="13" />
-        <Method Name="get_Events()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="43" />
+        <Method Name="get_Events()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="45" />
         <Method Name="Log(String,String)" CoveredStatements="0" TotalStatements="9" CoveragePercent="0" FirstStatementLine="23" />
       </Type>
     </Namespace>

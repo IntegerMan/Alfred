@@ -9,7 +9,13 @@
         <!-- Converters -->
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
-        <!-- TODO: Add common colors here -->
+        <!-- Colors -->
+        <Color x:Key="CautionBackgroundColor">BlanchedAlmond</Color>
+        <Color x:Key="CautionBackgroundBorderColor">DarkGoldenrod</Color>
+
+        <!-- Brushes -->
+        <SolidColorBrush Color="{StaticResource CautionBackgroundColor}" x:Key="CautionBackgroundBrush" />
+        <SolidColorBrush Color="{StaticResource CautionBackgroundBorderColor}" x:Key="CautionBackgroundBorderBrush" />
 
         <!-- Widget DataTemplates -->
 
@@ -27,13 +33,13 @@
             <Border 
                 Padding="8" 
                 HorizontalAlignment="Stretch"
-                Background="BlanchedAlmond" 
+                Background="{StaticResource CautionBackgroundBrush}" 
+                BorderBrush="{StaticResource CautionBackgroundBorderBrush}"
                 BorderThickness="1" 
-                BorderBrush="DarkGoldenrod"
                 Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
-                
+
                 <TextBlock Text="{Binding Text}" ToolTip="{Binding Text}"/>
-                
+
             </Border>
         </DataTemplate>
 
