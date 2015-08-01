@@ -53,5 +53,39 @@ namespace MattEland.Ani.Alfred.Core.Console
         {
             get { return UtcTime.ToLocalTime(); }
         }
+
+
+        #region Equality Members
+
+        public bool Equals(ConsoleEvent other)
+        {
+            return UtcTime.Equals(other.UtcTime) && string.Equals(Title, other.Title) && string.Equals(Message, other.Message);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+            return obj is ConsoleEvent && Equals((ConsoleEvent)obj);
+        }
+
+        /// <summary>
+        /// Returns a hash code for this instance.
+        /// </summary>
+        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = UtcTime.GetHashCode();
+                hashCode = (hashCode * 397) ^ (Title?.GetHashCode() ?? 0);
+                hashCode = (hashCode * 397) ^ (Message?.GetHashCode() ?? 0);
+                return hashCode;
+            }
+        }
+
+        #endregion
     }
 }

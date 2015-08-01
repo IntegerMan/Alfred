@@ -31,3 +31,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
 [assembly: CLSCompliant(true)]
+
+// Because this is portable it cannot be marked as ComVisible
