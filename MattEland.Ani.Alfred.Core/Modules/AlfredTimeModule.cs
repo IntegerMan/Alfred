@@ -28,6 +28,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
             BedtimeHour = 21;
             BedtimeMinute = 30;
             AlertDurationInHours = 4;
+            IsAlertEnabled = true;
         }
 
         /// <summary>
@@ -91,44 +92,49 @@ namespace MattEland.Ani.Alfred.Core.Modules
         private void UpdateBedtimeAlertVisbility(DateTime time)
         {
 
-            // Figure out when the alarm display should end. Accept values >= 24 for now.
-            // We'll adjust this in a few blocks when checking for early morning circumstances.
-            var bedtimeAlertEndHour = BedtimeHour + AlertDurationInHours;
-
             var alertVisible = false;
 
-            if (time.Hour == BedtimeHour)
+            // Only do alert visibility calculations if the thing is even enabled.
+            if (IsAlertEnabled)
             {
-                if (time.Minute >= BedtimeMinute)
+
+                // Figure out when the alarm display should end. Accept values >= 24 for now.
+                // We'll adjust this in a few blocks when checking for early morning circumstances.
+                var bedtimeAlertEndHour = BedtimeHour + AlertDurationInHours;
+
+                if (time.Hour == BedtimeHour)
+                {
+                    if (time.Minute >= BedtimeMinute)
+                    {
+                        alertVisible = true;
+                    }
+                }
+                else if (time.Hour > BedtimeHour)
+                {
+
+                    // Check for when we're on the hour the alert will expire
+                    if (time.Hour == bedtimeAlertEndHour && time.Minute < BedtimeMinute)
+                    {
+                        alertVisible = true;
+                    }
+                    else if (time.Hour < bedtimeAlertEndHour)
+                    {
+                        alertVisible = true;
+                    }
+                }
+
+                // Next we'll check early morning carry over for late alerts so 
+                // make sure the end hour is representable on a 24 hour clock.
+                if (bedtimeAlertEndHour >= 24)
+                {
+                    bedtimeAlertEndHour -= 24;
+                }
+
+                // Support scenarios of a 9 PM bedtime but it's 12:30 AM.
+                if (time.Hour <= bedtimeAlertEndHour)
                 {
                     alertVisible = true;
                 }
-            }
-            else if (time.Hour > BedtimeHour)
-            {
-
-                // Check for when we're on the hour the alert will expire
-                if (time.Hour == bedtimeAlertEndHour && time.Minute < BedtimeMinute)
-                {
-                    alertVisible = true;
-                }
-                else if (time.Hour < bedtimeAlertEndHour)
-                {
-                    alertVisible = true;
-                }
-            }
-
-            // Next we'll check early morning carry over for late alerts so 
-            // make sure the end hour is representable on a 24 hour clock.
-            if (bedtimeAlertEndHour >= 24)
-            {
-                bedtimeAlertEndHour -= 24;
-            }
-
-            // Support scenarios of a 9 PM bedtime but it's 12:30 AM.
-            if (time.Hour <= bedtimeAlertEndHour)
-            {
-                alertVisible = true;
             }
 
             // Finally stick the value in the widget
@@ -152,6 +158,12 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         /// <value>The alert duration in hours.</value>
         public int AlertDurationInHours { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether the alert is enabled.
+        /// </summary>
+        /// <value>The alert is enabled.</value>
+        public bool IsAlertEnabled { get; set; }
 
         /// <summary>
         ///     Handles module shutdown events

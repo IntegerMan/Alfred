@@ -131,7 +131,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         }
 
         [Test]
-        public void TimeModuleCautionWidgetIsVisibleAtNoon()
+        public void TimeModuleCautionWidgetIsNotVisibleAtNoon()
         {
             _alfred.Initialize();
 
@@ -176,6 +176,20 @@ namespace MattEland.Ani.Alfred.Core.Tests
             _module.Update(oneThirtyAm);
 
             Assert.IsTrue(_module.BedtimeAlertWidget.IsVisible, "It's early morning but the module isn't alerting that we need to be in bed.");
+        }
+
+        [Test]
+        public void TimeModuleCautionWidgetIsNotVisibleWhenDisabled()
+        {
+            _module.IsAlertEnabled = false;
+
+            _alfred.Initialize();
+
+            // Feed in a time in the morning for testability purposes
+            var oneThirtyAm = new DateTime(1980, 9, 10, 1, 30, 0);
+            _module.Update(oneThirtyAm);
+
+            Assert.IsFalse(_module.BedtimeAlertWidget.IsVisible, "Alerts are disabled but the alert is still visible.");
         }
 
         [Test]
