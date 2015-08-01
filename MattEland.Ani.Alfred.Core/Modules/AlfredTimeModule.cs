@@ -25,6 +25,9 @@ namespace MattEland.Ani.Alfred.Core.Modules
         {
             CurrentTimeWidget = new TextWidget();
             BedtimeAlertWidget = new WarningWidget { IsVisible = false };
+            BedtimeHour = 21;
+            BedtimeMinute = 30;
+            AlertDurationInHours = 4;
         }
 
         /// <summary>
@@ -136,19 +139,19 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// Gets or sets the bedtime hour.  Defaults to 9 PM
         /// </summary>
         /// <value>The bedtime hour.</value>
-        public int BedtimeHour { get; set; } = 21;
+        public int BedtimeHour { get; set; }
 
         /// <summary>
         /// Gets or sets the bedtime minute. Defaults to 30 minutes past the hour.
         /// </summary>
         /// <value>The bedtime minute.</value>
-        public int BedtimeMinute { get; set; } = 30;
+        public int BedtimeMinute { get; set; }
 
         /// <summary>
         /// Gets or sets the alert duration in hours.
         /// </summary>
         /// <value>The alert duration in hours.</value>
-        public int AlertDurationInHours { get; set; } = 4;
+        public int AlertDurationInHours { get; set; }
 
         /// <summary>
         ///     Handles module shutdown events
