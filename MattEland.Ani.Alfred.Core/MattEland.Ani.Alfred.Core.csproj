@@ -49,6 +49,7 @@
     <Compile Include="AlfredProvider.cs" />
     <Compile Include="Console\ConsoleEvent.cs" />
     <Compile Include="Console\IConsole.cs" />
+    <Compile Include="Modules\AlfredCoreModule.cs" />
     <Compile Include="Modules\StandardModuleProvider.cs" />
     <Compile Include="NotifyPropertyChangedBase.cs" />
     <Compile Include="Widgets\AlfredWidget.cs" />
