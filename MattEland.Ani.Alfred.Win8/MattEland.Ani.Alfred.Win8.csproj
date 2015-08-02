@@ -113,10 +113,12 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BooleanToVisibilityConverter.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TypeNameDataTemplateSelector.cs" />
     <Compile Include="Win8ClientCollectionProvider.cs" />
     <Compile Include="Win8ClientConsole.cs" />
   </ItemGroup>

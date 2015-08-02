@@ -22,22 +22,19 @@ namespace MattEland.Ani.Alfred.Win8
         [NotNull]
         private readonly AlfredProvider _alfred;
 
-        [NotNull]
-        private readonly Win8ClientConsole _console;
-
         public MainPage()
         {
-            _console = new Win8ClientConsole();
 
             this.InitializeComponent();
 
             // Create the console first to log what we're doing
-            _console.Log("WinClient.Initialize", "Console is now online.");
+            var console = new Win8ClientConsole();
+            console.Log("MetroClient.Initialize", "Console is now online.");
 
             // Create Alfred. It won't be online and running yet, but create it.
             _alfred = new AlfredProvider(new Win8ClientCollectionProvider())
             {
-                Console = _console
+                Console = console
             };
 
             var timeModule = new AlfredTimeModule(_alfred.CollectionProvider)
@@ -48,7 +45,7 @@ namespace MattEland.Ani.Alfred.Win8
 
             _alfred.AddModule(timeModule);
 
-            _console.Log("WinClient.Initialize", "Alfred instantiated");
+            console.Log("MetroClient.Initialize", "Alfred instantiated");
 
             // Data bindings in the UI rely on Alfred
             this.DataContext = _alfred;
