@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
+
+using JetBrains.Annotations;
+
 using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.Core.Modules;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -23,13 +17,67 @@ namespace MattEland.Ani.Alfred.Win8
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private const bool AutoInitialize = true;
+
+        [NotNull]
         private readonly AlfredProvider _alfred;
+
+        [NotNull]
+        private readonly Win8ClientConsole _console;
 
         public MainPage()
         {
+            _console = new Win8ClientConsole();
+
             this.InitializeComponent();
 
-            _alfred = new AlfredProvider();
+            // Create the console first to log what we're doing
+            _console.Log("WinClient.Initialize", "Console is now online.");
+
+            // Create Alfred. It won't be online and running yet, but create it.
+            _alfred = new AlfredProvider(new Win8ClientCollectionProvider())
+            {
+                Console = _console
+            };
+
+            var timeModule = new AlfredTimeModule(_alfred.CollectionProvider)
+            {
+                BedtimeHour = 0,
+                BedtimeMinute = 0
+            };
+
+            _alfred.AddModule(timeModule);
+
+            _console.Log("WinClient.Initialize", "Alfred instantiated");
+
+            // Data bindings in the UI rely on Alfred
+            this.DataContext = _alfred;
+
+            // Set up the update timer
+            var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+            timer.Tick += OnTimerTick;
+            timer.Start();
+
+            if (AutoInitialize)
+            {
+                _alfred.Initialize();
+            }
+
         }
+
+        /// <summary>
+        /// Handles the <see cref="E:TimerTick" /> event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void OnTimerTick(object sender, object e)
+        {
+            // If Alfred is online, ask it to update its modules
+            if (_alfred.Status == AlfredStatus.Online)
+            {
+                _alfred.Update();
+            }
+        }
+
     }
 }

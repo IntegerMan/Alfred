@@ -6,9 +6,9 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
 
-namespace MattEland.Ani.Alfred.WPF
+namespace MattEland.Ani.Alfred.Win8
 {
-    public sealed class WinClientConsole : IConsole
+    public sealed class Win8ClientConsole : IConsole
     {
         [NotNull]
         private readonly ObservableCollection<ConsoleEvent> _events = new ObservableCollection<ConsoleEvent>();
