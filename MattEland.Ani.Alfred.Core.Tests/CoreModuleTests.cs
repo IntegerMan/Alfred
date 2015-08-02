@@ -24,7 +24,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
     public class CoreModuleTests
     {
         [NotNull]
-        private AlfredProvider _alfred = new AlfredProvider();
+        private AlfredProvider _alfred;
 
         [NotNull]
         private AlfredCoreModule _module;
@@ -35,6 +35,8 @@ namespace MattEland.Ani.Alfred.Core.Tests
         [SetUp]
         public void SetupTests()
         {
+            _alfred = new AlfredProvider();
+
             _module = new AlfredCoreModule(new SimpleCollectionProvider());
 
             _alfred.AddModule(_module);
@@ -47,11 +49,35 @@ namespace MattEland.Ani.Alfred.Core.Tests
         }
 
         [Test]
-        public void CoreModuleHasCurrentStatus()
+        public void CoreModuleDefaultsToNoAlfred()
         {
+            Assert.IsNull(_module.AlfredProvider, "Alfred Provider was unexpectedly set");
+        }
+
+        [Test]
+        public void CoreModuleHasCurrentStatusAfterSettingProvider()
+        {
+            _module.AlfredProvider = _alfred;
+
+            // Do not initialize or update yet - we should be offline
+
+            var text = _module.AlfredStatusWidget.Text;
+            Assert.IsNotNull(text, "Widget text was null");
+            Assert.IsTrue(text.EndsWith("Offline"), $"Module did not indicate that Alfred was offline. Instead indicated: {text}");
+        }
+
+        [Test]
+        public void CoreModuleHasCurrentStatusAfterInitializeAndUpdate()
+        {
+            _module.AlfredProvider = _alfred;
+
             _alfred.Initialize();
 
-            Assert.IsTrue(_module.AlfredStatusWidget.Text.EndsWith(": Online"), "Module did not indicate that Alfred was online after initialization");
+            _alfred.Update();
+
+            var text = _module.AlfredStatusWidget.Text;
+            Assert.IsNotNull(text, "Widget text was null");
+            Assert.IsTrue(text.EndsWith("Online"), $"Module did not indicate that Alfred was online after update. Instead indicated: {text}");
         }
     }
 }

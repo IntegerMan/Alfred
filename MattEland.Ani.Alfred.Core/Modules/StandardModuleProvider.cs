@@ -21,7 +21,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
                 throw new ArgumentNullException(nameof(alfred));
             }
 
-            alfred.AddModule(new AlfredCoreModule(alfred.CollectionProvider));
+            alfred.AddModule(new AlfredCoreModule(alfred.CollectionProvider, alfred));
             alfred.AddModule(new AlfredTimeModule(alfred.CollectionProvider));
         }
     }
