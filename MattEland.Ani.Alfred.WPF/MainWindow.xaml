@@ -60,13 +60,8 @@
 
         <DockPanel Margin="8">
             <TextBlock Text="Modules" DockPanel.Dock="Top" />
-            <ListBox ItemsSource="{Binding Modules}">
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel />
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-                <ListBox.ItemTemplate>
+            <ItemsControl ItemsSource="{Binding Modules}">
+                <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Border BorderThickness="1" Margin="8,4,8,0">
                             <StackPanel Orientation="Vertical">
@@ -80,8 +75,8 @@
                             </StackPanel>
                         </Border>
                     </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </DockPanel>
 
     </DockPanel>
