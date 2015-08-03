@@ -21,6 +21,9 @@ namespace MattEland.Ani.Alfred.Core
     /// </summary>
     public sealed class AlfredProvider : NotifyPropertyChangedBase
     {
+        [NotNull]
+        private readonly AlfredStatusController _statusController;
+
         private AlfredStatus _status;
 
         /// <summary>
@@ -39,6 +42,8 @@ namespace MattEland.Ani.Alfred.Core
             {
                 throw new ArgumentNullException(nameof(provider));
             }
+
+            _statusController = new AlfredStatusController(this);
 
             PlatformProvider = provider;
             Modules = provider.CreateCollection<AlfredModule>();
@@ -86,7 +91,7 @@ namespace MattEland.Ani.Alfred.Core
         public AlfredStatus Status
         {
             get { return _status; }
-            private set
+            internal set
             {
                 if (value == _status)
                 {
@@ -113,30 +118,8 @@ namespace MattEland.Ani.Alfred.Core
         /// </exception>
         public void Initialize()
         {
-            const string LogHeader = "Alfred.Initialize";
-
-            // Handle case on initialize but already initializing or online
-            if (Status == AlfredStatus.Online)
-            {
-                const string Message = "Instructed to initialize but system is already online";
-                Console?.Log(LogHeader, Message);
-
-                throw new InvalidOperationException(Message);
-            }
-
-            Console?.Log(LogHeader, "Initializing...");
-
-            // Boot up Modules and give them a provider
-            foreach (var module in Modules)
-            {
-                Console?.Log(LogHeader, $"Initializing {module.NameAndVersion}");
-                module.Initialize(this);
-                Console?.Log(LogHeader, $"{module.NameAndVersion} is now initialized.");
-            }
-
-            // We're done. Let the world know.
-            Status = AlfredStatus.Online;
-            Console?.Log(LogHeader, "Initilization Completed.");
+            // This logic is a bit lengthy, so we'll have the status controller take care of it
+            _statusController.Initialize();
         }
 
         /// <summary>
@@ -148,30 +131,8 @@ namespace MattEland.Ani.Alfred.Core
         /// </exception>
         public void Shutdown()
         {
-            const string LogHeader = "Alfred.Shutdown";
-
-            // Handle case on shutdown but already offline
-            if (Status == AlfredStatus.Offline)
-            {
-                const string Message = "Instructed to shut down but system is already offline";
-                Console?.Log(LogHeader, Message);
-
-                throw new InvalidOperationException(Message);
-            }
-
-            Console?.Log(LogHeader, "Shutting down...");
-
-            // Shut down modules and decouple them from Alfred
-            foreach (var module in Modules)
-            {
-                Console?.Log(LogHeader, $"Shutting down {module.NameAndVersion}");
-                module.Shutdown();
-                Console?.Log(LogHeader, $"{module.NameAndVersion} is now offline.");
-            }
-
-            // We're done here. Tell the world.
-            Status = AlfredStatus.Offline;
-            Console?.Log(LogHeader, "Shut down completed.");
+            // This process is a little lengthy so we'll have the status controller handle it
+            _statusController.Shutdown();
         }
 
         /// <summary>

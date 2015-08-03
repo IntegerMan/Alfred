@@ -6,7 +6,7 @@
       <Field Name="_status" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AESAAAAEAAAAAQAAAAAAAwAQACBAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AESAAAAEAAAAAQAAAAAAIwAQACBAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>AlfredProvider.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -64,9 +64,11 @@
     <InheritanceLine Type="MattEland.Ani.Alfred.Core.AlfredModule" FixedFromPoint="true">
       <Path>
         <Point X="14.25" Y="5.802" />
-        <Point X="13.583" Y="5.802" Type="JumpStart" />
-        <Point X="13.417" Y="5.802" Type="JumpEnd" />
-        <Point X="11.25" Y="5.802" />
+        <Point X="14.127" Y="5.802" />
+        <Point X="14.127" Y="5.877" />
+        <Point X="13.583" Y="5.877" Type="JumpStart" />
+        <Point X="13.417" Y="5.877" Type="JumpEnd" />
+        <Point X="11.25" Y="5.877" />
         <Point X="11.25" Y="6" />
       </Path>
     </InheritanceLine>

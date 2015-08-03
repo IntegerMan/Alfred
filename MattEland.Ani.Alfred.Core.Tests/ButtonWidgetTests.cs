@@ -83,5 +83,6 @@ namespace MattEland.Ani.Alfred.Core.Tests
 
             Assert.IsNull(button.Text, "Button's text was set to something other than null after instantiation.");
         }
+
     }
 }

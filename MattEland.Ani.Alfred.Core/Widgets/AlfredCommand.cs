@@ -2,7 +2,7 @@
 // AlfredCommand.cs
 // 
 // Created on:      08/03/2015 at 1:40 PM
-// Last Modified:   08/03/2015 at 2:31 PM
+// Last Modified:   08/03/2015 at 2:59 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -27,6 +27,11 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         /// </summary>
         [CanBeNull]
         private Action _executeAction;
+
+        /// <summary>
+        ///     Whether or not the command is enabled
+        /// </summary>
+        private bool _isEnabled = true;
 
         /// <summary>
         ///     Initializes a new instance of the
@@ -65,6 +70,23 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         }
 
         /// <summary>
+        ///     Gets or sets a value indicating whether this command is enabled.
+        /// </summary>
+        /// <value><c>true</c> if this command is enabled; otherwise, <c>false</c>.</value>
+        public bool IsEnabled
+        {
+            get { return _isEnabled; }
+            set
+            {
+                if (value != _isEnabled)
+                {
+                    _isEnabled = value;
+                    RaiseCanExecuteChanged();
+                }
+            }
+        }
+
+        /// <summary>
         ///     Defines the method that determines whether the command can execute in its current state.
         /// </summary>
         /// <returns>
@@ -74,9 +96,9 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         ///     name="parameter">
         ///     Data used by the command.  If the command does not require data to be passed, this object can be set to null.
         /// </param>
-        public virtual bool CanExecute([CanBeNull] object parameter)
+        public bool CanExecute([CanBeNull] object parameter)
         {
-            return true;
+            return IsEnabled;
         }
 
         /// <summary>
@@ -101,7 +123,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         /// <summary>
         ///     Raises the CanExecuteChanged event.
         /// </summary>
-        protected void RaiseCanExecuteChanged()
+        private void RaiseCanExecuteChanged()
         {
             CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }

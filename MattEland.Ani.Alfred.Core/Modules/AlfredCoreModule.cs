@@ -2,7 +2,7 @@
 // AlfredCoreModule.cs
 // 
 // Created on:      08/02/2015 at 4:56 PM
-// Last Modified:   08/03/2015 at 2:43 PM
+// Last Modified:   08/03/2015 at 3:01 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -173,6 +173,9 @@ namespace MattEland.Ani.Alfred.Core.Modules
         {
             // We're going to re-register the status widget since it's always present - even when the system is offline
             AddOfflineWidgets();
+
+            // We need to do this so that buttons render properly
+            UpdateAlfredProviderStatus();
         }
 
         /// <summary>
@@ -197,10 +200,36 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         private void UpdateAlfredProviderStatus()
         {
-            // If we don't have a provider, use a static message, otherwise display the provided status.
-            _statusWidget.Text = AlfredProvider == null
-                                     ? NoAlfredProviderMessage
-                                     : $"{AlfredProvider.NameAndVersion} is currently {AlfredProvider.Status}";
+            if (AlfredProvider == null)
+            {
+                // Update Text Message to a Nobody's Home sort of thing
+                _statusWidget.Text = NoAlfredProviderMessage;
+
+                // Update Button Visbilities to hidden
+                if (_shutdownButton.ClickCommand != null)
+                {
+                    _shutdownButton.ClickCommand.IsEnabled = false;
+                }
+                if (_initializeButton.ClickCommand != null)
+                {
+                    _initializeButton.ClickCommand.IsEnabled = false;
+                }
+            }
+            else
+            {
+                // Display the current status
+                _statusWidget.Text = $"{AlfredProvider.NameAndVersion} is currently {AlfredProvider.Status}";
+
+                // Show the shutdown button while online and initialize button while offline
+                if (_shutdownButton.ClickCommand != null)
+                {
+                    _shutdownButton.ClickCommand.IsEnabled = AlfredProvider.Status != AlfredStatus.Offline;
+                }
+                if (_initializeButton.ClickCommand != null)
+                {
+                    _initializeButton.ClickCommand.IsEnabled = AlfredProvider.Status != AlfredStatus.Online;
+                }
+            }
         }
     }
 }

@@ -7,6 +7,7 @@
 // ---------------------------------------------------------
 
 using System.Collections;
+using System.Diagnostics;
 
 using JetBrains.Annotations;
 
@@ -234,6 +235,27 @@ namespace MattEland.Ani.Alfred.Core.Tests
             _module.InitializeButton.Click();
 
             Assert.AreEqual(AlfredStatus.Online, _alfred.Status, "Alfred was not online after button click");
+        }
+
+        [Test]
+        public void WhenOfflineShutdownCannotExecute()
+        {
+            _module.AlfredProvider = _alfred;
+
+            Assert.IsNotNull(_module.ShutdownButton.ClickCommand, "_module.ShutdownButton.ClickCommand was null");
+            Assert.IsFalse(_module.ShutdownButton.ClickCommand.CanExecute(null), "Could click shutdown while offline");
+        }
+
+        [Test]
+        public void WhenOnlineInitializeCannotExecute()
+        {
+            _module.AlfredProvider = _alfred;
+
+            _alfred.Initialize();
+            _alfred.Update();
+
+            Assert.IsNotNull(_module.InitializeButton.ClickCommand, "_module.InitializeButton.ClickCommand was null");
+            Assert.IsFalse(_module.InitializeButton.ClickCommand.CanExecute(null), "Could click initialize while online");
         }
     }
 }
