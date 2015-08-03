@@ -34,8 +34,16 @@
         <DataTemplate x:Key="TextWidget">
             <TextBlock d:DataContext="{d:DesignInstance widgets:TextWidget}"
                 Margin="0, 8, 0, 0"
+                ToolTipService.ToolTip="{Binding Text}"
                 Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
                 Text="{Binding Text}" />
+        </DataTemplate>
+        
+        <!-- AlfredWidget Template - for display purposes -->
+        <DataTemplate x:Key="AlfredWidget">
+            <TextBlock
+                Margin="0, 8, 0, 0"
+                Text="This is sample text for an Alfred Widget" />
         </DataTemplate>
 
         <!-- AlertWidget Template -->
@@ -46,11 +54,25 @@
                 Background="{StaticResource CautionBackgroundBrush}" 
                 BorderBrush="{StaticResource CautionBackgroundBorderBrush}"
                 BorderThickness="1" 
+                ToolTipService.ToolTip="{Binding Text}"
                 Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
 
                 <TextBlock Text="{Binding Text}" />
 
             </Border>
+        </DataTemplate>
+        
+        <!-- ButtonWidget Template -->
+        <DataTemplate x:Key="ButtonWidget">
+            <Button d:DataContext="{d:DesignInstance widgets:ButtonWidget}"
+                Margin="0, 8, 0, 0"
+                Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
+                MinWidth="120"
+                HorizontalAlignment="Left"
+                HorizontalContentAlignment="Center"
+                Command="{Binding ClickCommand}"
+                Content="{Binding Text}"
+                ToolTipService.ToolTip="{Binding Text}" />
         </DataTemplate>
 
         <!-- Fallback type of widget Template -->
@@ -97,11 +119,14 @@
                                 <Border BorderThickness="1" Margin="8,4,8,0">
                                     <StackPanel Orientation="Vertical">
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="{Binding Path=NameAndVersion}" />
+                                            <TextBlock Text="{Binding Path=Name}" />
+                                            <!--
                                             <TextBlock Text="-" Margin="4,0" />
                                             <TextBlock Text="{Binding Path=Status}" FontWeight="Bold" />
+                                            -->
                                         </StackPanel>
                                         <ItemsControl 
+                                            Margin="20,8,0,0"
                                             ItemsSource="{Binding Widgets}"
                                             ItemTemplateSelector="{StaticResource TypedTemplateSelector}">
                                         </ItemsControl>

@@ -37,13 +37,7 @@ namespace MattEland.Ani.Alfred.Win8
                 Console = console
             };
 
-            var timeModule = new AlfredTimeModule(_alfred.PlatformProvider)
-            {
-                BedtimeHour = 0,
-                BedtimeMinute = 0
-            };
-
-            _alfred.AddModule(timeModule);
+            StandardModuleProvider.AddStandardModules(_alfred);
 
             console.Log("MetroClient.Initialize", "Alfred instantiated");
 
