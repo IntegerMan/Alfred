@@ -132,6 +132,8 @@ namespace MattEland.Ani.Alfred.Core
                 throw new InvalidOperationException($"{NameAndVersion} was already online when told to initialize.");
             }
 
+            Status = AlfredStatus.Initializing;
+
             // Don't allow any residual widgets now that we can display widgets while shut down
             Widgets?.Clear();
 
@@ -171,6 +173,8 @@ namespace MattEland.Ani.Alfred.Core
             {
                 throw new InvalidOperationException($"{NameAndVersion} was already offline when told to shut down.");
             }
+
+            Status = AlfredStatus.Terminating;
 
             // We want to clear out the list before shutdown is called so that modules can re-register components for display during shutdown mode as needed
             Widgets?.Clear();
@@ -265,6 +269,20 @@ namespace MattEland.Ani.Alfred.Core
                 // ReSharper disable once AssignNullToNotNullAttribute - for testing purposes we'll allow this
                 RegisterWidget(widget);
             }
+        }
+
+        /// <summary>
+        ///     A notification method that is invoked when initialization for Alfred is complete so the UI can be fully enabled or adjusted
+        /// </summary>
+        public virtual void OnInitializationCompleted()
+        {
+        }
+
+        /// <summary>
+        ///     A notification method that is invoked when shutdown for Alfred is complete so the UI can be fully enabled or adjusted
+        /// </summary>
+        public virtual void OnShutdownCompleted()
+        {
         }
     }
 }

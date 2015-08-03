@@ -13,6 +13,16 @@
         /// <summary>
         /// Indicating Alfred is currently online
         /// </summary>
-        Online
+        Online,
+
+        /// <summary>
+        /// Indicates Alfred is currently transitioning to Online mode
+        /// </summary>
+        Initializing,
+
+        /// <summary>
+        /// Indicates Alfred is currently transitioning to Offline mode
+        /// </summary>
+        Terminating
     }
 }

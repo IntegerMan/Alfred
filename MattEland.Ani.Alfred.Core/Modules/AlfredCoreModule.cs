@@ -223,13 +223,29 @@ namespace MattEland.Ani.Alfred.Core.Modules
                 // Show the shutdown button while online and initialize button while offline
                 if (_shutdownButton.ClickCommand != null)
                 {
-                    _shutdownButton.ClickCommand.IsEnabled = AlfredProvider.Status != AlfredStatus.Offline;
+                    _shutdownButton.ClickCommand.IsEnabled = AlfredProvider.Status == AlfredStatus.Online;
                 }
                 if (_initializeButton.ClickCommand != null)
                 {
-                    _initializeButton.ClickCommand.IsEnabled = AlfredProvider.Status != AlfredStatus.Online;
+                    _initializeButton.ClickCommand.IsEnabled = AlfredProvider.Status == AlfredStatus.Offline;
                 }
             }
+        }
+
+        /// <summary>
+        ///     A notification method that is invoked when initialization for Alfred is complete so the UI can be fully enabled or adjusted
+        /// </summary>
+        public override void OnInitializationCompleted()
+        {
+            UpdateAlfredProviderStatus();
+        }
+
+        /// <summary>
+        ///     A notification method that is invoked when shutdown for Alfred is complete so the UI can be fully enabled or adjusted
+        /// </summary>
+        public override void OnShutdownCompleted()
+        {
+            UpdateAlfredProviderStatus();
         }
     }
 }

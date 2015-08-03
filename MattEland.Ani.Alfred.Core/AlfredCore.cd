@@ -42,8 +42,8 @@
     </Members>
     <AssociationLine Name="Widgets" Type="MattEland.Ani.Alfred.Core.Widgets.AlfredWidget" ManuallyRouted="true">
       <Path>
-        <Point X="15.75" Y="5.977" />
-        <Point X="16.06" Y="5.977" />
+        <Point X="15.75" Y="6.329" />
+        <Point X="16.06" Y="6.329" />
         <Point X="16.06" Y="6.75" />
         <Point X="15.75" Y="6.75" />
       </Path>
@@ -52,7 +52,7 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>gEQAAAEEAAABIQAAAAAAAQQAACAAQRAAAAQAAAAAAAA=</HashCode>
+      <HashCode>gEQAAAEEAAABYQAAAAAAAQQAACAgQRAAAAQAAAAAAAA=</HashCode>
       <FileName>AlfredModule.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -63,13 +63,10 @@
     <Position X="10.25" Y="6" Width="2" />
     <InheritanceLine Type="MattEland.Ani.Alfred.Core.AlfredModule" FixedFromPoint="true">
       <Path>
-        <Point X="14.25" Y="5.802" />
-        <Point X="14.127" Y="5.802" />
-        <Point X="14.127" Y="5.877" />
-        <Point X="13.583" Y="5.877" Type="JumpStart" />
-        <Point X="13.417" Y="5.877" Type="JumpEnd" />
-        <Point X="11.25" Y="5.877" />
-        <Point X="11.25" Y="6" />
+        <Point X="14.25" Y="6.136" />
+        <Point X="13.583" Y="6.136" Type="JumpStart" />
+        <Point X="13.417" Y="6.136" Type="JumpEnd" />
+        <Point X="12.25" Y="6.136" />
       </Path>
     </InheritanceLine>
     <AssociationLine Name="CurrentTimeWidget" Type="MattEland.Ani.Alfred.Core.Widgets.TextWidget" FixedFromPoint="true" FixedToPoint="true">

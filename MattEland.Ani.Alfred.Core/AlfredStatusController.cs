@@ -59,9 +59,9 @@ namespace MattEland.Ani.Alfred.Core
                 throw new InvalidOperationException(Message);
             }
 
+            // Inform things that we're setting up right now
             console?.Log(LogHeader, "Initializing...");
-
-            Alfred.Status = AlfredStatus.Online;
+            Alfred.Status = AlfredStatus.Initializing;
 
             // Boot up Modules and give them a provider
             foreach (var module in Alfred.Modules)
@@ -73,7 +73,16 @@ namespace MattEland.Ani.Alfred.Core
 
             // We're done. Let the world know.
             Alfred.Status = AlfredStatus.Online;
-            console?.Log(LogHeader, "Initilization Completed.");
+            console?.Log(LogHeader, "Initilization Completed; notifying modules.");
+
+
+            // Notify each module that startup was completed
+            foreach (var module in Alfred.Modules)
+            {
+                module.OnInitializationCompleted();
+            }
+
+            console?.Log(LogHeader, "Alfred is now Online.");
 
         }
 
@@ -99,9 +108,18 @@ namespace MattEland.Ani.Alfred.Core
                 throw new InvalidOperationException(Message);
             }
 
-            console?.Log(LogHeader, "Shutting down...");
+            // Handle case on shutdown but already terminating
+            if (Alfred.Status == AlfredStatus.Terminating)
+            {
+                const string Message = "Instructed to shut down but system is already shutting down";
+                console?.Log(LogHeader, Message);
 
-            Alfred.Status = AlfredStatus.Offline;
+                throw new InvalidOperationException(Message);
+            }
+
+            // Indicate status so the UI can keep busy
+            console?.Log(LogHeader, "Shutting down...");
+            Alfred.Status = AlfredStatus.Terminating;
 
             // Shut down modules and decouple them from Alfred
             foreach (var module in Alfred.Modules)
@@ -114,6 +132,12 @@ namespace MattEland.Ani.Alfred.Core
             // We're done here. Tell the world.
             Alfred.Status = AlfredStatus.Offline;
             console?.Log(LogHeader, "Shut down completed.");
+
+            // Notify each module that shutdown was completed
+            foreach (var module in Alfred.Modules)
+            {
+                module.OnShutdownCompleted();
+            }
 
         }
     }
