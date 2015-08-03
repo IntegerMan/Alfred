@@ -7,6 +7,7 @@
 // ---------------------------------------------------------
 
 using System.Collections;
+using System.Diagnostics;
 
 using JetBrains.Annotations;
 
@@ -93,6 +94,88 @@ namespace MattEland.Ani.Alfred.Core.Tests
 
             Assert.IsNotNull(_module.Widgets, "Module removed all widgets after shutdown");
             Assert.Contains(_module.AlfredStatusWidget, _module.Widgets as ICollection, "The Status Widget was not present after shutdown");
+        }
+
+        [Test]
+        public void WhenOfflineTheInitializeButtonAppears()
+        {
+            _module.AlfredProvider = _alfred;
+
+            _alfred.Initialize();
+            _alfred.Update();
+            _alfred.Shutdown();
+
+            Assert.IsTrue(_module.InitializeButton.IsVisible, "Initialize button was not visible while offline.");
+            Assert.IsNotNull(_module.Widgets, "_module.Widgets was null");
+            Assert.IsTrue(_module.Widgets.Contains(_module.InitializeButton), "The Initialize button was not part of the UI while offline");
+        }
+
+        [Test]
+        public void WhenOnlineTheShutdownButtonAppears()
+        {
+            _module.AlfredProvider = _alfred;
+
+            _alfred.Initialize();
+
+            Assert.IsTrue(_module.ShutdownButton.IsVisible, "Shut down button was not visible while online.");
+            Assert.IsNotNull(_module.Widgets, "_module.Widgets was null");
+            Assert.IsTrue(_module.Widgets.Contains(_module.ShutdownButton), "The Shut Down button was not part of the UI while online");
+        }
+
+        [Test]
+        public void WheOnlineTheInitializeButtonDoesNotAppear()
+        {
+            _module.AlfredProvider = _alfred;
+
+            _alfred.Initialize();
+
+            Assert.IsNotNull(_module.Widgets, "_module.Widgets was null");
+            Assert.IsFalse(_module.Widgets.Contains(_module.InitializeButton), "The Initialize button was part of the UI while online");
+        }
+
+        [Test]
+        public void WhenOfflineTheShutdownButtonDoesNotAppear()
+        {
+            _module.AlfredProvider = _alfred;
+
+            _alfred.Initialize();
+            _alfred.Update();
+            _alfred.Shutdown();
+
+            Assert.IsNotNull(_module.Widgets, "_module.Widgets was null");
+            Assert.IsFalse(_module.Widgets.Contains(_module.ShutdownButton), "The Shut Down button was part of the UI while offline");
+        }
+
+        [Test]
+        public void AtInitialStateInitializeIsVisibleSetAlfredProviderFirst()
+        {
+            // Doing this again here to illustrate creation / configuration order more clearly
+            _alfred = new AlfredProvider();
+            _module = new AlfredCoreModule(new SimpleCollectionProvider());
+
+            // Set the provider first, then add it to Alfred's modules
+            _module.AlfredProvider = _alfred;
+            _alfred.AddModule(_module);
+
+            Assert.IsTrue(_module.InitializeButton.IsVisible, "Initialize button was not visible while offline.");
+            Assert.IsNotNull(_module.Widgets, "_module.Widgets was null");
+            Assert.IsTrue(_module.Widgets.Contains(_module.InitializeButton), "The Initialize button was not part of the UI while offline");
+        }
+
+        [Test]
+        public void AtInitialStateInitializeIsVisibleAddModuleFirst()
+        {
+            // Doing this again here to illustrate creation / configuration order more clearly
+            _alfred = new AlfredProvider();
+            _module = new AlfredCoreModule(new SimpleCollectionProvider());
+
+            // Add the module first, then set the provider
+            _alfred.AddModule(_module);
+            _module.AlfredProvider = _alfred;
+
+            Assert.IsTrue(_module.InitializeButton.IsVisible, "Initialize button was not visible while offline.");
+            Assert.IsNotNull(_module.Widgets, "_module.Widgets was null");
+            Assert.IsTrue(_module.Widgets.Contains(_module.InitializeButton), "The Initialize button was not part of the UI while offline");
         }
     }
 }

@@ -51,8 +51,8 @@
     </Members>
     <AssociationLine Name="Widgets" Type="MattEland.Ani.Alfred.Core.Widgets.AlfredWidget" ManuallyRouted="true">
       <Path>
-        <Point X="15.75" Y="5.801" />
-        <Point X="16.06" Y="5.801" />
+        <Point X="15.75" Y="5.977" />
+        <Point X="16.06" Y="5.977" />
         <Point X="16.06" Y="6.75" />
         <Point X="15.75" Y="6.75" />
       </Path>
@@ -61,7 +61,7 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AEQAAAEEAAABIQAAAAAAAQAAACAAQRAAAAQABAAAAAA=</HashCode>
+      <HashCode>AEQAAAEEAAABIQAAAAAAAQQAACAAQRAAAAQABAAAAAA=</HashCode>
       <FileName>AlfredModule.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -72,10 +72,10 @@
     <Position X="10.25" Y="6" Width="2" />
     <InheritanceLine Type="MattEland.Ani.Alfred.Core.AlfredModule" FixedFromPoint="true">
       <Path>
-        <Point X="14.25" Y="5.635" />
-        <Point X="13.583" Y="5.635" Type="JumpStart" />
-        <Point X="13.417" Y="5.635" Type="JumpEnd" />
-        <Point X="11.25" Y="5.635" />
+        <Point X="14.25" Y="5.802" />
+        <Point X="13.583" Y="5.802" Type="JumpStart" />
+        <Point X="13.417" Y="5.802" Type="JumpEnd" />
+        <Point X="11.25" Y="5.802" />
         <Point X="11.25" Y="6" />
       </Path>
     </InheritanceLine>
@@ -96,7 +96,7 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>ABQAAAEAAAABAAAABAASAAQAACAAQAAAAAAEAAAAAAg=</HashCode>
+      <HashCode>ABQAAAEAAAABAAAABAASAAQAAAAAQAAAAAAEAAAAAAg=</HashCode>
       <FileName>Modules\AlfredTimeModule.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>

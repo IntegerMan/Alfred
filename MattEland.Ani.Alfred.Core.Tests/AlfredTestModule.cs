@@ -46,10 +46,10 @@ namespace MattEland.Ani.Alfred.Core.Tests
         }
 
         /// <summary>
-        ///     Gets the name and version of the Module.
+        /// Gets the name of the module.
         /// </summary>
-        /// <value>The name and version.</value>
-        public override string NameAndVersion { get { return "TestModule"; } }
+        /// <value>The name of the module.</value>
+        public override string Name { get { return "Test"; } }
 
         /// <summary>
         /// Gets the widgets to register on initialize.

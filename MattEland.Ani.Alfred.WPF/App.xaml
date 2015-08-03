@@ -31,6 +31,7 @@
         <!-- AlertWidget Template -->
         <DataTemplate DataType="{x:Type widgets:WarningWidget}">
             <Border 
+                Margin="0, 8, 0, 0"
                 Padding="8" 
                 HorizontalAlignment="Stretch"
                 Background="{StaticResource CautionBackgroundBrush}" 
@@ -41,6 +42,18 @@
                 <TextBlock Text="{Binding Text}" ToolTip="{Binding Text}"/>
 
             </Border>
+        </DataTemplate>
+
+        <!-- ButtonWidget Template -->
+        <DataTemplate DataType="{x:Type widgets:ButtonWidget}">
+            <Button
+                Margin="0, 8, 0, 0"
+                Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
+                MinWidth="120"
+                HorizontalAlignment="Left"
+                HorizontalContentAlignment="Center"
+                Content="{Binding Text}"
+                ToolTip="{Binding Text}"/>
         </DataTemplate>
 
         <!-- Fallback type of widget Template -->

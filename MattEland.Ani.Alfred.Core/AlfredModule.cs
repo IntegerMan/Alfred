@@ -66,7 +66,7 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <value>The name and version.</value>
         [NotNull]
-        public abstract string NameAndVersion { get; }
+        public virtual string NameAndVersion { get { return $"{Name} 0.1 Alpha"; } }
 
         /// <summary>
         ///     Gets the status of the Module.
@@ -85,6 +85,13 @@ namespace MattEland.Ani.Alfred.Core
                 OnPropertyChanged(nameof(Status));
             }
         }
+
+        /// <summary>
+        /// Gets the name of the module.
+        /// </summary>
+        /// <value>The name of the module.</value>
+        [NotNull]
+        public abstract string Name { get; }
 
         /// <summary>
         ///     Initializes the module.

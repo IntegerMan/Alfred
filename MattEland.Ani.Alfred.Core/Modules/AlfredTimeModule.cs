@@ -34,14 +34,10 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        ///     Gets the name and version of the module.
+        /// Gets the name of the module.
         /// </summary>
-        /// <value>The name and version.</value>
-        [NotNull]
-        public override string NameAndVersion
-        {
-            get { return "Time 0.1 Alpha"; }
-        }
+        /// <value>The name of the module.</value>
+        public override string Name { get { return "Time Module"; } }
 
         /// <summary>
         ///     Gets the current time user interface widget.

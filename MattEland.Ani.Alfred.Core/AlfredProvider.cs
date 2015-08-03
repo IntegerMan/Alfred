@@ -51,7 +51,7 @@ namespace MattEland.Ani.Alfred.Core
         [NotNull]
         public static string NameAndVersion
         {
-            get { return "Alfred 0.1 Alpha"; }
+            get { return "Alfred [Dev]"; }
         }
 
         /// <summary>

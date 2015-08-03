@@ -2,7 +2,7 @@
 // AlfredCoreModule.cs
 // 
 // Created on:      08/02/2015 at 4:56 PM
-// Last Modified:   08/02/2015 at 5:50 PM
+// Last Modified:   08/03/2015 at 1:25 AM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -21,6 +21,12 @@ namespace MattEland.Ani.Alfred.Core.Modules
     {
         [NotNull]
         public const string NoAlfredProviderMessage = "Alfred Provider has not been set";
+
+        [NotNull]
+        private readonly ButtonWidget _initializeButton;
+
+        [NotNull]
+        private readonly ButtonWidget _shutdownButton;
 
         [NotNull]
         private readonly TextWidget _statusWidget;
@@ -44,6 +50,8 @@ namespace MattEland.Ani.Alfred.Core.Modules
         public AlfredCoreModule([NotNull] ICollectionProvider collectionProvider) : base(collectionProvider)
         {
             _statusWidget = new TextWidget(NoAlfredProviderMessage);
+            _initializeButton = new ButtonWidget("Initialize");
+            _shutdownButton = new ButtonWidget("Shut Down");
         }
 
         /// <summary>
@@ -68,14 +76,11 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        ///     Gets the name and version of the Module.
+        /// Gets the name of the module.
         /// </summary>
-        /// <value>The name and version.</value>
+        /// <value>The name of the module.</value>
         [NotNull]
-        public override string NameAndVersion
-        {
-            get { return "Alfred Core 1.0"; }
-        }
+        public override string Name { get { return "Alfred Core"; } }
 
         /// <summary>
         ///     Gets the alfred status widget.
@@ -98,8 +103,45 @@ namespace MattEland.Ani.Alfred.Core.Modules
             set
             {
                 _alfredProvider = value;
+
                 UpdateAlfredProviderStatus();
+
+                if (value != null)
+                {
+                    // Just in case we're changing providers midstream or after shutdown, clear things out
+                    Widgets?.Clear();
+
+                    // Add the appropriate UI elements
+                    if (value.Status == AlfredStatus.Online)
+                    {
+                        AddOnlineWidgets();
+                    }
+                    else
+                    {
+                        AddOfflineWidgets();
+                    }
+                }
             }
+        }
+
+        /// <summary>
+        ///     Gets the initialize button.
+        /// </summary>
+        /// <value>The initialize button.</value>
+        [NotNull]
+        public ButtonWidget InitializeButton
+        {
+            get { return _initializeButton; }
+        }
+
+        /// <summary>
+        ///     Gets the shutdown button.
+        /// </summary>
+        /// <value>The shutdown button.</value>
+        [NotNull]
+        public ButtonWidget ShutdownButton
+        {
+            get { return _shutdownButton; }
         }
 
         /// <summary>
@@ -107,7 +149,16 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         protected override void InitializeProtected()
         {
+            AddOnlineWidgets();
+        }
+
+        /// <summary>
+        /// Adds the widgets used while in online mode.
+        /// </summary>
+        private void AddOnlineWidgets()
+        {
             RegisterWidget(_statusWidget);
+            RegisterWidget(ShutdownButton);
         }
 
         /// <summary>
@@ -116,7 +167,16 @@ namespace MattEland.Ani.Alfred.Core.Modules
         protected override void ShutdownProtected()
         {
             // We're going to re-register the status widget since it's always present - even when the system is offline
+            AddOfflineWidgets();
+        }
+
+        /// <summary>
+        /// Adds the widgets used in offline mode.
+        /// </summary>
+        private void AddOfflineWidgets()
+        {
             RegisterWidget(_statusWidget);
+            RegisterWidget(InitializeButton);
         }
 
         /// <summary>
