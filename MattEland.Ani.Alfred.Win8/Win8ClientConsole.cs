@@ -10,6 +10,9 @@ namespace MattEland.Ani.Alfred.Win8
 {
     public sealed class Win8ClientConsole : IConsole
     {
+
+        // TODO: It'd be great to be able to reuse the same one that WPF uses
+
         [NotNull]
         private readonly ObservableCollection<ConsoleEvent> _events = new ObservableCollection<ConsoleEvent>();
 
