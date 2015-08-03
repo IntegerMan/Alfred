@@ -24,12 +24,6 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         private AlfredCommand _clickCommand;
 
         /// <summary>
-        ///     The text of the button
-        /// </summary>
-        [CanBeNull]
-        private string _text;
-
-        /// <summary>
         ///     Initializes a new instance of the
         ///     <see
         ///         cref="ButtonWidget" />
