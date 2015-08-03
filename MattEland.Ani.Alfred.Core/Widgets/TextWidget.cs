@@ -36,12 +36,11 @@ namespace MattEland.Ani.Alfred.Core.Widgets
             get { return _text; }
             set
             {
-                if (value == _text)
+                if (value != _text)
                 {
-                    return;
+                    _text = value;
+                    OnPropertyChanged(nameof(Text));
                 }
-                _text = value;
-                OnPropertyChanged(nameof(Text));
             }
         }
     }

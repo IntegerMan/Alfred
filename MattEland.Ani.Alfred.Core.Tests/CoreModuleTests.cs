@@ -187,7 +187,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         }
 
         [Test]
-        public void WheOnlineTheInitializeButtonDoesNotAppear()
+        public void WhenOnlineTheInitializeButtonDoesNotAppear()
         {
             _module.AlfredProvider = _alfred;
 
@@ -197,6 +197,43 @@ namespace MattEland.Ani.Alfred.Core.Tests
             Assert.IsFalse(
                            _module.Widgets.Contains(_module.InitializeButton),
                            "The Initialize button was part of the UI while online");
+        }
+
+        [Test]
+        public void ClickingTheInitializeButtonInitializesAlfredWhileOffline()
+        {
+            _module.AlfredProvider = _alfred;
+
+            _module.InitializeButton.Click();
+
+            Assert.AreEqual(AlfredStatus.Online, _alfred.Status, "Alfred was not online after button click");
+        }
+
+        [Test]
+        public void ClickingTheShutdownButtonShutsDownAlfredWhileOnline()
+        {
+            _module.AlfredProvider = _alfred;
+
+            _alfred.Initialize();
+            _alfred.Update();
+
+            _module.ShutdownButton.Click();
+
+            Assert.AreEqual(AlfredStatus.Offline, _alfred.Status, "Alfred was not offline after button click");
+        }
+
+        [Test]
+        public void ClickingTheInitializeButtonReinitializesAlfredWhileOfflineAfterShutdown()
+        {
+            _module.AlfredProvider = _alfred;
+
+            _alfred.Initialize();
+            _alfred.Update();
+            _alfred.Shutdown();
+
+            _module.InitializeButton.Click();
+
+            Assert.AreEqual(AlfredStatus.Online, _alfred.Status, "Alfred was not online after button click");
         }
     }
 }

@@ -2,11 +2,9 @@
 // AlfredCoreModule.cs
 // 
 // Created on:      08/02/2015 at 4:56 PM
-// Last Modified:   08/03/2015 at 1:56 PM
+// Last Modified:   08/03/2015 at 2:41 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
-
-using System;
 
 using JetBrains.Annotations;
 
@@ -41,7 +39,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         ///     class.
         /// </summary>
         /// <exception
-        ///     cref="ArgumentNullException">
+        ///     cref="System.ArgumentNullException">
         /// </exception>
         /// <param
         ///     name="platformProvider">
@@ -50,8 +48,12 @@ namespace MattEland.Ani.Alfred.Core.Modules
         public AlfredCoreModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
         {
             _statusWidget = new TextWidget(NoAlfredProviderMessage);
-            _initializeButton = new ButtonWidget("Initialize");
-            _shutdownButton = new ButtonWidget("Shut Down");
+
+            var initializeCommand = platformProvider.CreateCommand(() => { _alfredProvider?.Initialize(); });
+            _initializeButton = new ButtonWidget("Initialize", initializeCommand);
+
+            var shutdownCommand = platformProvider.CreateCommand(() => { _alfredProvider?.Shutdown(); });
+            _shutdownButton = new ButtonWidget("Shut Down", shutdownCommand);
         }
 
         /// <summary>
