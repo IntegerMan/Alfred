@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
@@ -114,6 +113,9 @@ namespace MattEland.Ani.Alfred.Core
                 throw new InvalidOperationException($"{NameAndVersion} was already online when told to initialize.");
             }
 
+            // Don't allow any residual widgets now that we can display widgets while shut down
+            Widgets?.Clear();
+
             EnsureWidgetsCollection();
 
             InitializeProtected();
@@ -150,10 +152,11 @@ namespace MattEland.Ani.Alfred.Core
                 throw new InvalidOperationException($"{NameAndVersion} was already offline when told to shut down.");
             }
 
-            ShutdownProtected();
-
+            // We want to clear out the list before shutdown is called so that modules can re-register components for display during shutdown mode as needed
             Widgets?.Clear();
-            Widgets = null;
+
+            // Tell the derived module that it's now time to do any special logic (e.g. registering widgets, shutting down resources, stopping timers, etc.)
+            ShutdownProtected();
 
             Status = AlfredStatus.Offline;
         }
@@ -210,10 +213,34 @@ namespace MattEland.Ani.Alfred.Core
                 throw new ArgumentNullException(nameof(widget));
             }
 
+            // This shouldn't happen, but I want to check to make sure
+            if (Widgets != null && Widgets.Contains(widget))
+            {
+                throw new InvalidOperationException("The specified widget was already part of the collection");
+            }
+
             EnsureWidgetsCollection();
 
             // ReSharper disable once PossibleNullReferenceException
             Widgets.Add(widget);
+        }
+
+        /// <summary>
+        /// Registers multiple widgets at once.
+        /// </summary>
+        /// <param name="widgets">The widgets.</param>
+        protected void RegisterWidgets([NotNull] IEnumerable<AlfredWidget> widgets)
+        {
+            if (widgets == null)
+            {
+                throw new ArgumentNullException(nameof(widgets));
+            }
+
+            foreach (var widget in widgets)
+            {
+                // ReSharper disable once AssignNullToNotNullAttribute - for testing purposes we'll allow this
+                RegisterWidget(widget);
+            }
         }
     }
 }

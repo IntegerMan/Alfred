@@ -115,6 +115,8 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         protected override void ShutdownProtected()
         {
+            // We're going to re-register the status widget since it's always present - even when the system is offline
+            RegisterWidget(_statusWidget);
         }
 
         /// <summary>

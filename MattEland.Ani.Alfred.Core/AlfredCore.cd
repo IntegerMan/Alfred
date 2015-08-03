@@ -51,8 +51,8 @@
     </Members>
     <AssociationLine Name="Widgets" Type="MattEland.Ani.Alfred.Core.Widgets.AlfredWidget" ManuallyRouted="true">
       <Path>
-        <Point X="15.75" Y="5.625" />
-        <Point X="16.06" Y="5.625" />
+        <Point X="15.75" Y="5.801" />
+        <Point X="16.06" Y="5.801" />
         <Point X="16.06" Y="6.75" />
         <Point X="15.75" Y="6.75" />
       </Path>
@@ -72,10 +72,10 @@
     <Position X="10.25" Y="6" Width="2" />
     <InheritanceLine Type="MattEland.Ani.Alfred.Core.AlfredModule" FixedFromPoint="true">
       <Path>
-        <Point X="14.25" Y="5.468" />
-        <Point X="13.583" Y="5.468" Type="JumpStart" />
-        <Point X="13.417" Y="5.468" Type="JumpEnd" />
-        <Point X="11.25" Y="5.468" />
+        <Point X="14.25" Y="5.635" />
+        <Point X="13.583" Y="5.635" Type="JumpStart" />
+        <Point X="13.417" Y="5.635" Type="JumpEnd" />
+        <Point X="11.25" Y="5.635" />
         <Point X="11.25" Y="6" />
       </Path>
     </InheritanceLine>
@@ -161,7 +161,7 @@
       <Method Name="ConsoleEvent" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAIAAEAAAAAAAAAAAAAAAAAAAAAAIAAAAQA=</HashCode>
+      <HashCode>AAAAAAAAAAIAAEAAgAAAAAAAAAAAAIAAAAAAIAAAAQA=</HashCode>
       <FileName>Console\ConsoleEvent.cs</FileName>
     </TypeIdentifier>
   </Struct>

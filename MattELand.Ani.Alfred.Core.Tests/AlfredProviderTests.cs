@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Diagnostics;
 
 using NUnit.Framework;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Modules;
+using MattEland.Ani.Alfred.Core.Widgets;
 
 namespace MattEland.Ani.Alfred.Core.Tests
 {
@@ -253,7 +256,45 @@ namespace MattEland.Ani.Alfred.Core.Tests
             _alfred.Update();
         }
 
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void RegisteringAWidgetMultipleTimesThrowsAnException()
+        {
+            var testModule = new AlfredTestModule();
+
+            var textWidget = new TextWidget();
+            testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
+            testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
+
+            _alfred.AddModule(testModule);
+
+            _alfred.Initialize();
+        }
+
+        [Test]
+        public void RegisteringWidgetAtInitializeAndShutdownLeavesOneCopyInListAtReinitialize()
+        {
+            var testModule = new AlfredTestModule();
+
+            var textWidget = new TextWidget();
+            testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
+            testModule.WidgetsToRegisterOnShutdown.Add(textWidget);
+
+            _alfred.AddModule(testModule);
+
+            _alfred.Initialize();
+            _alfred.Update();
+            _alfred.Shutdown();
+            _alfred.Initialize();
+            _alfred.Update();
+
+            Assert.IsNotNull(testModule.Widgets, "testModule.Widgets was null");
+            Assert.AreEqual(1, testModule.Widgets.Count, "Widgets were not properly cleared from list after re-initialize");
+
+        }
+
         #endregion Modules
+
 
     }
 }

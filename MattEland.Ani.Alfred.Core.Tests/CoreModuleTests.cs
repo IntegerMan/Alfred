@@ -6,6 +6,8 @@
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
+using System.Collections;
+
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Modules;
@@ -78,6 +80,19 @@ namespace MattEland.Ani.Alfred.Core.Tests
             var text = _module.AlfredStatusWidget.Text;
             Assert.IsNotNull(text, "Widget text was null");
             Assert.IsTrue(text.EndsWith("Online"), $"Module did not indicate that Alfred was online after update. Instead indicated: {text}");
+        }
+
+        [Test]
+        public void AfterShutdownSystemWidgetIsStillPresentInModule()
+        {
+            _module.AlfredProvider = _alfred;
+
+            _alfred.Initialize();
+            _alfred.Update();
+            _alfred.Shutdown();
+
+            Assert.IsNotNull(_module.Widgets, "Module removed all widgets after shutdown");
+            Assert.Contains(_module.AlfredStatusWidget, _module.Widgets as ICollection, "The Status Widget was not present after shutdown");
         }
     }
 }

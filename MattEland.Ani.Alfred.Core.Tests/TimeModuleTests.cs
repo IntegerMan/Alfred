@@ -102,7 +102,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
             _alfred.Initialize();
             _alfred.Shutdown();
 
-            Assert.IsNull(_module.Widgets);
+            Assert.IsTrue(_module.Widgets == null || _module.Widgets.Count == 0, "Widgets were left over after shutdown");
         }
 
         /// <summary>
