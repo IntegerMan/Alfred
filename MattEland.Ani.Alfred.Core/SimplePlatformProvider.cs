@@ -6,6 +6,7 @@
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -42,6 +43,17 @@ namespace MattEland.Ani.Alfred.Core
         public AlfredCommand CreateCommand()
         {
             return new AlfredCommand();
+        }
+
+        /// <summary>
+        /// Creates a platform-friendly version of an AlfredCommand with a pre-defined action.
+        /// </summary>
+        /// <param name="executeAction">The action a button click should execute.</param>
+        /// <returns>An AlfredCommand.</returns>
+        [NotNull]
+        public AlfredCommand CreateCommand([CanBeNull] Action executeAction)
+        {
+            return new AlfredCommand(executeAction);
         }
     }
 }

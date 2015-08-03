@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -28,6 +29,16 @@ namespace MattEland.Ani.Alfred.WPF
         public AlfredCommand CreateCommand()
         {
             return new WinClientCommand();
+        }
+
+        /// <summary>
+        /// Creates a platform-friendly version of an AlfredCommand with a pre-defined action.
+        /// </summary>
+        /// <param name="executeAction">The action a button click should execute.</param>
+        /// <returns>An AlfredCommand.</returns>
+        public AlfredCommand CreateCommand(Action executeAction)
+        {
+            return new WinClientCommand(executeAction);
         }
     }
 }

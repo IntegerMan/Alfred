@@ -2,9 +2,11 @@
 // ButtonWidget.cs
 // 
 // Created on:      08/03/2015 at 1:10 AM
-// Last Modified:   08/03/2015 at 1:51 PM
+// Last Modified:   08/03/2015 at 2:16 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
+
+using System;
 
 using JetBrains.Annotations;
 
@@ -22,7 +24,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         private AlfredCommand _clickCommand;
 
         /// <summary>
-        /// The text of the button
+        ///     The text of the button
         /// </summary>
         [CanBeNull]
         private string _text;
@@ -33,22 +35,26 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         ///         cref="ButtonWidget" />
         ///     class.
         /// </summary>
-        public ButtonWidget()
+        public ButtonWidget() : this(null)
         {
         }
 
         /// <summary>
-        ///     Initializes a new instance of the
-        ///     <see
-        ///         cref="ButtonWidget" />
-        ///     class.
+        /// Initializes a new instance of the <see cref="ButtonWidget"/> class.
         /// </summary>
-        /// <param
-        ///     name="text">
-        ///     The button's text.
-        /// </param>
-        public ButtonWidget([CanBeNull] string text) : this()
+        /// <param name="clickCommand">The command.</param>
+        public ButtonWidget([CanBeNull] AlfredCommand clickCommand) : this(null, clickCommand)
         {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ButtonWidget"/> class.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="clickCommand">The click command.</param>
+        public ButtonWidget([CanBeNull] string text, [CanBeNull] AlfredCommand clickCommand = null)
+        {
+            _clickCommand = clickCommand;
             _text = text;
         }
 
@@ -85,6 +91,27 @@ namespace MattEland.Ani.Alfred.Core.Widgets
                     _clickCommand = value;
                     OnPropertyChanged(nameof(ClickCommand));
                 }
+            }
+        }
+
+        /// <summary>
+        ///     Simulates a button click
+        /// </summary>
+        /// <exception
+        ///     cref="System.InvalidOperationException">
+        ///     Tried to click the button when CanExecute on ClickCommand returned false.
+        /// </exception>
+        public void Click()
+        {
+            if (ClickCommand != null)
+            {
+                if (!ClickCommand.CanExecute(this))
+                {
+                    throw new InvalidOperationException(
+                        "Tried to click the button when CanExecute on ClickCommand returned false.");
+                }
+
+                ClickCommand.Execute(this);
             }
         }
     }

@@ -6,6 +6,7 @@
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Windows.Input;
 
 using MattEland.Ani.Alfred.Core.Widgets;
@@ -19,5 +20,19 @@ namespace MattEland.Ani.Alfred.WPF
     /// </summary>
     public class WinClientCommand : AlfredCommand, ICommand
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WinClientCommand"/> class.
+        /// </summary>
+        public WinClientCommand() : this(null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WinClientCommand"/> class.
+        /// </summary>
+        /// <param name="executeAction">The execute action.</param>
+        public WinClientCommand(Action executeAction) : base(executeAction)
+        {
+        }
     }
 }
