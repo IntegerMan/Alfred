@@ -2,11 +2,12 @@
 // StandardModuleProvider.cs
 // 
 // Created on:      07/29/2015 at 3:01 PM
-// Last Modified:   08/03/2015 at 1:58 PM
+// Last Modified:   08/03/2015 at 6:45 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 
 using JetBrains.Annotations;
 
@@ -34,8 +35,15 @@ namespace MattEland.Ani.Alfred.Core.Modules
                 throw new ArgumentNullException(nameof(alfred));
             }
 
-            alfred.AddModule(new AlfredCoreModule(alfred.PlatformProvider, alfred));
-            alfred.AddModule(new AlfredTimeModule(alfred.PlatformProvider));
+            // Define our modules
+            var modules = new List<AlfredModule>
+                          {
+                              new AlfredCoreModule(alfred.PlatformProvider, alfred),
+                              new AlfredTimeModule(alfred.PlatformProvider)
+                          };
+
+            // Add lots of modules in bulk
+            alfred.AddModules(modules);
         }
     }
 }

@@ -2,12 +2,13 @@
 // AlfredProvider.cs
 // 
 // Created on:      07/25/2015 at 11:30 PM
-// Last Modified:   08/03/2015 at 3:50 PM
+// Last Modified:   08/03/2015 at 6:51 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using JetBrains.Annotations;
 
@@ -28,13 +29,13 @@ namespace MattEland.Ani.Alfred.Core
         private readonly IPlatformProvider _platformProvider;
 
         /// <summary>
-        /// The status controller
+        ///     The status controller
         /// </summary>
         [NotNull]
         private readonly AlfredStatusController _statusController;
 
         /// <summary>
-        /// The status
+        ///     The status
         /// </summary>
         private AlfredStatus _status;
 
@@ -186,12 +187,56 @@ namespace MattEland.Ani.Alfred.Core
                 throw new ArgumentNullException(nameof(module));
             }
 
+            AssertMustBeOffline();
+
+            Modules.Add(module);
+        }
+
+        /// <summary>
+        ///     Adds modules to Alfred in bulk.
+        /// </summary>
+        /// <param
+        ///     name="modules">
+        ///     The modules to add.
+        /// </param>
+        /// <exception
+        ///     cref="System.ArgumentNullException">
+        ///     Modules may not be null or contain null entries.
+        /// </exception>
+        public void AddModules([NotNull] IEnumerable<AlfredModule> modules)
+        {
+            // Standard validation
+            if (modules == null)
+            {
+                throw new ArgumentNullException(nameof(modules));
+            }
+
+            AssertMustBeOffline();
+
+            // Ad each module using the standard AddModule function for now. This will make it easier to modify the process of registering a module
+            foreach (var module in modules)
+            {
+                if (module == null)
+                {
+                    throw new ArgumentNullException(nameof(modules), "Modules may not contain null entries.");
+                }
+                AddModule(module);
+            }
+        }
+
+        /// <summary>
+        ///     Checks that Alfred must be offline and throws an exception if it isn't.
+        /// </summary>
+        /// <exception
+        ///     cref="System.InvalidOperationException">
+        ///     Alfred must be offline in order to add modules.
+        /// </exception>
+        private void AssertMustBeOffline()
+        {
             if (Status != AlfredStatus.Offline)
             {
                 throw new InvalidOperationException("Alfred must be offline in order to add modules.");
             }
-
-            Modules.Add(module);
         }
     }
 }
