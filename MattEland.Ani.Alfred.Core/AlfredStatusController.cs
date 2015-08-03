@@ -61,6 +61,8 @@ namespace MattEland.Ani.Alfred.Core
 
             console?.Log(LogHeader, "Initializing...");
 
+            Alfred.Status = AlfredStatus.Online;
+
             // Boot up Modules and give them a provider
             foreach (var module in Alfred.Modules)
             {
@@ -98,6 +100,8 @@ namespace MattEland.Ani.Alfred.Core
             }
 
             console?.Log(LogHeader, "Shutting down...");
+
+            Alfred.Status = AlfredStatus.Offline;
 
             // Shut down modules and decouple them from Alfred
             foreach (var module in Alfred.Modules)
