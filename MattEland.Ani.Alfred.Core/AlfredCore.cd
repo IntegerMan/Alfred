@@ -6,7 +6,7 @@
       <Field Name="_status" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AESAAAAEAAAAAQAAAAAAIwAQACBAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>gESAAAAEAAAAAQAAAAAAIwAQACBAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>AlfredProvider.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>

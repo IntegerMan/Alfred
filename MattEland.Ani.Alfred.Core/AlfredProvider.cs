@@ -2,7 +2,7 @@
 // AlfredProvider.cs
 // 
 // Created on:      07/25/2015 at 11:30 PM
-// Last Modified:   08/03/2015 at 1:57 PM
+// Last Modified:   08/03/2015 at 3:50 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -21,9 +21,21 @@ namespace MattEland.Ani.Alfred.Core
     /// </summary>
     public sealed class AlfredProvider : NotifyPropertyChangedBase
     {
+        /// <summary>
+        ///     The platform provider
+        /// </summary>
+        [NotNull]
+        private readonly IPlatformProvider _platformProvider;
+
+        /// <summary>
+        /// The status controller
+        /// </summary>
         [NotNull]
         private readonly AlfredStatusController _statusController;
 
+        /// <summary>
+        /// The status
+        /// </summary>
         private AlfredStatus _status;
 
         /// <summary>
@@ -45,7 +57,8 @@ namespace MattEland.Ani.Alfred.Core
 
             _statusController = new AlfredStatusController(this);
 
-            PlatformProvider = provider;
+            _platformProvider = provider;
+
             Modules = provider.CreateCollection<AlfredModule>();
         }
 
@@ -107,7 +120,10 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <value>The collection provider.</value>
         [NotNull]
-        public IPlatformProvider PlatformProvider { get; }
+        public IPlatformProvider PlatformProvider
+        {
+            get { return _platformProvider; }
+        }
 
         /// <summary>
         ///     Tells Alfred it's okay to start itself up and begin operating.
