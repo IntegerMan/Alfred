@@ -73,9 +73,9 @@
     <AssociationLine Name="CurrentTimeWidget" Type="MattEland.Ani.Alfred.Core.Widgets.TextWidget" FixedFromPoint="true" FixedToPoint="true">
       <Path>
         <Point X="11.125" Y="9.607" />
-        <Point X="11.125" Y="10.358" />
-        <Point X="17.25" Y="10.358" />
-        <Point X="17.25" Y="9.983" />
+        <Point X="11.125" Y="10.122" />
+        <Point X="17.25" Y="10.122" />
+        <Point X="17.25" Y="9.748" />
       </Path>
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="0.374" Y="0.096" />
@@ -105,21 +105,20 @@
   <Class Name="MattEland.Ani.Alfred.Core.Widgets.TextWidget">
     <Position X="16.5" Y="8.75" Width="1.5" />
     <Members>
-      <Field Name="_text" Hidden="true" />
       <Method Name="TextWidget" Hidden="true" />
     </Members>
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAACAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Widgets\TextWidget.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MattEland.Ani.Alfred.Core.SimplePlatformProvider">
     <Position X="5.5" Y="1" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAQAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>SimplePlatformProvider.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -134,7 +133,7 @@
   <Class Name="MattEland.Ani.Alfred.Core.Widgets.WarningWidget" Collapsed="true">
     <Position X="12.5" Y="9.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Widgets\WarningWidget.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -169,7 +168,7 @@
   <Interface Name="MattEland.Ani.Alfred.Core.IPlatformProvider">
     <Position X="8.25" Y="1" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAQAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>IPlatformProvider.cs</FileName>
     </TypeIdentifier>
   </Interface>

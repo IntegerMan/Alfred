@@ -5,11 +5,8 @@ namespace MattEland.Ani.Alfred.Core.Widgets
     /// <summary>
     /// Represents a simple textual display on the user interface.
     /// </summary>
-    public sealed class TextWidget : AlfredWidget
+    public sealed class TextWidget : AlfredTextWidget
     {
-        [CanBeNull]
-        private string _text;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="TextWidget"/> class.
         /// </summary>
@@ -23,25 +20,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         /// <param name="text">The text for the widget.</param>
         public TextWidget([CanBeNull] string text)
         {
-            _text = text;
-        }
-
-        /// <summary>
-        /// Gets or sets the text of the widget.
-        /// </summary>
-        /// <value>The text.</value>
-        [CanBeNull]
-        public string Text
-        {
-            get { return _text; }
-            set
-            {
-                if (value != _text)
-                {
-                    _text = value;
-                    OnPropertyChanged(nameof(Text));
-                }
-            }
+            Text = text;
         }
     }
 }

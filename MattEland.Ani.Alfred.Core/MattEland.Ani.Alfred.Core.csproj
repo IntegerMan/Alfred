@@ -52,6 +52,7 @@
     <Compile Include="Modules\AlfredCoreModule.cs" />
     <Compile Include="Modules\StandardModuleProvider.cs" />
     <Compile Include="NotifyPropertyChangedBase.cs" />
+    <Compile Include="Widgets\AlfredTextWidget.cs" />
     <Compile Include="Widgets\AlfredWidget.cs" />
     <Compile Include="Widgets\ButtonWidget.cs" />
     <Compile Include="Widgets\AlfredCommand.cs" />

@@ -15,7 +15,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
     /// <summary>
     ///     Represents a button that's clickable in the user interface.
     /// </summary>
-    public sealed class ButtonWidget : AlfredWidget
+    public sealed class ButtonWidget : AlfredTextWidget
     {
         /// <summary>
         ///     The command that is executed when the button is clicked.
@@ -54,26 +54,8 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         /// <param name="clickCommand">The click command.</param>
         public ButtonWidget([CanBeNull] string text, [CanBeNull] AlfredCommand clickCommand = null)
         {
-            _clickCommand = clickCommand;
-            _text = text;
-        }
-
-        /// <summary>
-        ///     Gets or sets the text of the button.
-        /// </summary>
-        /// <value>The text.</value>
-        [CanBeNull]
-        public string Text
-        {
-            get { return _text; }
-            set
-            {
-                if (value != _text)
-                {
-                    _text = value;
-                    OnPropertyChanged(nameof(Text));
-                }
-            }
+            ClickCommand = clickCommand;
+            Text = text;
         }
 
         /// <summary>
