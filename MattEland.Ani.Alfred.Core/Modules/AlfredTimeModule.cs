@@ -1,4 +1,12 @@
-﻿using System;
+﻿// ---------------------------------------------------------
+// AlfredTimeModule.cs
+// 
+// Created on:      07/26/2015 at 1:46 PM
+// Last Modified:   08/03/2015 at 1:56 PM
+// Original author: Matt Eland
+// ---------------------------------------------------------
+
+using System;
 using System.Globalization;
 
 using JetBrains.Annotations;
@@ -19,10 +27,10 @@ namespace MattEland.Ani.Alfred.Core.Modules
         ///     class.
         /// </summary>
         /// <param
-        ///     name="collectionProvider">
-        ///     The collection provider.
+        ///     name="platformProvider">
+        ///     The platform provider.
         /// </param>
-        public AlfredTimeModule([NotNull] ICollectionProvider collectionProvider) : base(collectionProvider)
+        public AlfredTimeModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
         {
             CurrentDateWidget = new TextWidget();
             CurrentTimeWidget = new TextWidget();
@@ -34,10 +42,13 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        /// Gets the name of the module.
+        ///     Gets the name of the module.
         /// </summary>
         /// <value>The name of the module.</value>
-        public override string Name { get { return "Time Module"; } }
+        public override string Name
+        {
+            get { return "Time Module"; }
+        }
 
         /// <summary>
         ///     Gets the current time user interface widget.
@@ -46,9 +57,8 @@ namespace MattEland.Ani.Alfred.Core.Modules
         [NotNull]
         public TextWidget CurrentTimeWidget { get; }
 
-
         /// <summary>
-        /// Gets the current date user interface widget.
+        ///     Gets the current date user interface widget.
         /// </summary>
         /// <value>The current date user interface widget.</value>
         [NotNull]
@@ -62,6 +72,30 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <value>The bedtime alert widget.</value>
         [NotNull]
         public WarningWidget BedtimeAlertWidget { get; }
+
+        /// <summary>
+        ///     Gets or sets the bedtime hour.  Defaults to 9 PM
+        /// </summary>
+        /// <value>The bedtime hour.</value>
+        public int BedtimeHour { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the bedtime minute. Defaults to 30 minutes past the hour.
+        /// </summary>
+        /// <value>The bedtime minute.</value>
+        public int BedtimeMinute { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the alert duration in hours.
+        /// </summary>
+        /// <value>The alert duration in hours.</value>
+        public int AlertDurationInHours { get; set; }
+
+        /// <summary>
+        ///     Gets or sets whether the alert is enabled.
+        /// </summary>
+        /// <value>The alert is enabled.</value>
+        public bool IsAlertEnabled { get; set; }
 
         protected override void InitializeProtected()
         {
@@ -80,9 +114,12 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        /// Updates the module given the specified time.
+        ///     Updates the module given the specified time.
         /// </summary>
-        /// <param name="time">The time. Date portions of this will be ignored.</param>
+        /// <param
+        ///     name="time">
+        ///     The time. Date portions of this will be ignored.
+        /// </param>
         public void Update(DateTime time)
         {
             // Always update the date
@@ -96,18 +133,19 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        /// Updates the bedtime alert visibility based on the given time.
+        ///     Updates the bedtime alert visibility based on the given time.
         /// </summary>
-        /// <param name="time">The time.</param>
+        /// <param
+        ///     name="time">
+        ///     The time.
+        /// </param>
         private void UpdateBedtimeAlertVisbility(DateTime time)
         {
-
             var alertVisible = false;
 
             // Only do alert visibility calculations if the thing is even enabled.
             if (IsAlertEnabled)
             {
-
                 // Figure out when the alarm display should end. Accept values >= 24 for now.
                 // We'll adjust this in a few blocks when checking for early morning circumstances.
                 var bedtimeAlertEndHour = BedtimeHour + AlertDurationInHours;
@@ -121,7 +159,6 @@ namespace MattEland.Ani.Alfred.Core.Modules
                 }
                 else if (time.Hour > BedtimeHour)
                 {
-
                     // Check for when we're on the hour the alert will expire
                     if (time.Hour == bedtimeAlertEndHour && time.Minute < BedtimeMinute)
                     {
@@ -152,36 +189,11 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        /// Gets or sets the bedtime hour.  Defaults to 9 PM
-        /// </summary>
-        /// <value>The bedtime hour.</value>
-        public int BedtimeHour { get; set; }
-
-        /// <summary>
-        /// Gets or sets the bedtime minute. Defaults to 30 minutes past the hour.
-        /// </summary>
-        /// <value>The bedtime minute.</value>
-        public int BedtimeMinute { get; set; }
-
-        /// <summary>
-        /// Gets or sets the alert duration in hours.
-        /// </summary>
-        /// <value>The alert duration in hours.</value>
-        public int AlertDurationInHours { get; set; }
-
-        /// <summary>
-        /// Gets or sets whether the alert is enabled.
-        /// </summary>
-        /// <value>The alert is enabled.</value>
-        public bool IsAlertEnabled { get; set; }
-
-        /// <summary>
         ///     Handles module shutdown events
         /// </summary>
         protected override void ShutdownProtected()
         {
             CurrentTimeWidget.Text = null;
         }
-
     }
 }

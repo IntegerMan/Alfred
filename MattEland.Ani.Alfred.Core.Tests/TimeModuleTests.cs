@@ -22,7 +22,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         public void OnStartup()
         {
             _alfred = new AlfredProvider();
-            _module = new AlfredTimeModule(_alfred.CollectionProvider);
+            _module = new AlfredTimeModule(_alfred.PlatformProvider);
             _alfred.Modules.Add(_module);
         }
 

@@ -1,4 +1,12 @@
-﻿using System;
+﻿// ---------------------------------------------------------
+// AlfredModule.cs
+// 
+// Created on:      07/29/2015 at 3:01 PM
+// Last Modified:   08/03/2015 at 1:57 PM
+// Original author: Matt Eland
+// ---------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
@@ -14,7 +22,7 @@ namespace MattEland.Ani.Alfred.Core
     public abstract class AlfredModule : NotifyPropertyChangedBase
     {
         [NotNull]
-        private readonly ICollectionProvider _collectionProvider;
+        private readonly IPlatformProvider _platformProvider;
 
         private AlfredStatus _status;
         private ICollection<AlfredWidget> _widgets;
@@ -26,20 +34,20 @@ namespace MattEland.Ani.Alfred.Core
         ///     class.
         /// </summary>
         /// <param
-        ///     name="collectionProvider">
-        ///     The collection provider.
+        ///     name="platformProvider">
+        ///     The platform provider.
         /// </param>
         /// <exception
         ///     cref="ArgumentNullException">
         /// </exception>
-        protected AlfredModule([NotNull] ICollectionProvider collectionProvider)
+        protected AlfredModule([NotNull] IPlatformProvider platformProvider)
         {
-            if (collectionProvider == null)
+            if (platformProvider == null)
             {
-                throw new ArgumentNullException(nameof(collectionProvider));
+                throw new ArgumentNullException(nameof(platformProvider));
             }
 
-            _collectionProvider = collectionProvider;
+            _platformProvider = platformProvider;
         }
 
         /// <summary>
@@ -66,7 +74,10 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <value>The name and version.</value>
         [NotNull]
-        public virtual string NameAndVersion { get { return $"{Name} 0.1 Alpha"; } }
+        public virtual string NameAndVersion
+        {
+            get { return $"{Name} 0.1 Alpha"; }
+        }
 
         /// <summary>
         ///     Gets the status of the Module.
@@ -87,7 +98,7 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        /// Gets the name of the module.
+        ///     Gets the name of the module.
         /// </summary>
         /// <value>The name of the module.</value>
         [NotNull]
@@ -107,7 +118,8 @@ namespace MattEland.Ani.Alfred.Core
         ///     cref="InvalidOperationException">
         ///     Already online when told to initialize.
         /// </exception>
-        [SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", MessageId = "System.String.Format(System.String,System.Object[])")]
+        [SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider",
+            MessageId = "System.String.Format(System.String,System.Object[])")]
         public void Initialize([NotNull] AlfredProvider alfred)
         {
             if (alfred == null)
@@ -131,13 +143,13 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        /// Ensures the widgets collection exists, creating a new collection as needed.
+        ///     Ensures the widgets collection exists, creating a new collection as needed.
         /// </summary>
         private void EnsureWidgetsCollection()
         {
             if (Widgets == null)
             {
-                Widgets = _collectionProvider.CreateCollection<AlfredWidget>();
+                Widgets = _platformProvider.CreateCollection<AlfredWidget>();
             }
         }
 
@@ -151,7 +163,8 @@ namespace MattEland.Ani.Alfred.Core
         ///     cref="InvalidOperationException">
         ///     Already offline when told to shut down.
         /// </exception>
-        [SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", MessageId = "System.String.Format(System.String,System.Object[])")]
+        [SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider",
+            MessageId = "System.String.Format(System.String,System.Object[])")]
         public void Shutdown()
         {
             if (Status == AlfredStatus.Offline)
@@ -187,7 +200,8 @@ namespace MattEland.Ani.Alfred.Core
         /// <summary>
         ///     Handles updating the module as needed
         /// </summary>
-        [SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", MessageId = "System.String.Format(System.String,System.Object[])")]
+        [SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider",
+            MessageId = "System.String.Format(System.String,System.Object[])")]
         public void Update()
         {
             if (Status == AlfredStatus.Offline)
@@ -233,9 +247,12 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        /// Registers multiple widgets at once.
+        ///     Registers multiple widgets at once.
         /// </summary>
-        /// <param name="widgets">The widgets.</param>
+        /// <param
+        ///     name="widgets">
+        ///     The widgets.
+        /// </param>
         protected void RegisterWidgets([NotNull] IEnumerable<AlfredWidget> widgets)
         {
             if (widgets == null)

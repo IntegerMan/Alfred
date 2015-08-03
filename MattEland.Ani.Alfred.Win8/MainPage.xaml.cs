@@ -32,12 +32,12 @@ namespace MattEland.Ani.Alfred.Win8
             console.Log("MetroClient.Initialize", "Console is now online.");
 
             // Create Alfred. It won't be online and running yet, but create it.
-            _alfred = new AlfredProvider(new Win8ClientCollectionProvider())
+            _alfred = new AlfredProvider(new Win8ClientPlatformProvider())
             {
                 Console = console
             };
 
-            var timeModule = new AlfredTimeModule(_alfred.CollectionProvider)
+            var timeModule = new AlfredTimeModule(_alfred.PlatformProvider)
             {
                 BedtimeHour = 0,
                 BedtimeMinute = 0

@@ -2,7 +2,7 @@
 // AlfredCoreModule.cs
 // 
 // Created on:      08/02/2015 at 4:56 PM
-// Last Modified:   08/03/2015 at 1:25 AM
+// Last Modified:   08/03/2015 at 1:56 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -44,10 +44,10 @@ namespace MattEland.Ani.Alfred.Core.Modules
         ///     cref="ArgumentNullException">
         /// </exception>
         /// <param
-        ///     name="collectionProvider">
-        ///     The collection provider.
+        ///     name="platformProvider">
+        ///     The platform provider.
         /// </param>
-        public AlfredCoreModule([NotNull] ICollectionProvider collectionProvider) : base(collectionProvider)
+        public AlfredCoreModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
         {
             _statusWidget = new TextWidget(NoAlfredProviderMessage);
             _initializeButton = new ButtonWidget("Initialize");
@@ -61,7 +61,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         ///     class.
         /// </summary>
         /// <param
-        ///     name="collectionProvider">
+        ///     name="platformProvider">
         ///     The collection provider.
         /// </param>
         /// <param
@@ -69,18 +69,21 @@ namespace MattEland.Ani.Alfred.Core.Modules
         ///     The alfred provider.
         /// </param>
         public AlfredCoreModule(
-            [NotNull] ICollectionProvider collectionProvider,
-            [CanBeNull] AlfredProvider alfredProvider) : this(collectionProvider)
+            [NotNull] IPlatformProvider platformProvider,
+            [CanBeNull] AlfredProvider alfredProvider) : this(platformProvider)
         {
             AlfredProvider = alfredProvider;
         }
 
         /// <summary>
-        /// Gets the name of the module.
+        ///     Gets the name of the module.
         /// </summary>
         /// <value>The name of the module.</value>
         [NotNull]
-        public override string Name { get { return "Alfred Core"; } }
+        public override string Name
+        {
+            get { return "Alfred Core"; }
+        }
 
         /// <summary>
         ///     Gets the alfred status widget.
@@ -153,7 +156,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        /// Adds the widgets used while in online mode.
+        ///     Adds the widgets used while in online mode.
         /// </summary>
         private void AddOnlineWidgets()
         {
@@ -171,7 +174,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        /// Adds the widgets used in offline mode.
+        ///     Adds the widgets used in offline mode.
         /// </summary>
         private void AddOfflineWidgets()
         {

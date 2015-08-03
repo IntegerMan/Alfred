@@ -119,7 +119,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TypeNameDataTemplateSelector.cs" />
-    <Compile Include="Win8ClientCollectionProvider.cs" />
+    <Compile Include="Win8ClientPlatformProvider.cs" />
     <Compile Include="Win8ClientConsole.cs" />
   </ItemGroup>
   <ItemGroup>

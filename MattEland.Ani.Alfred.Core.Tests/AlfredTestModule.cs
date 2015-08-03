@@ -24,7 +24,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         ///         cref="AlfredTestModule" />
         ///     class.
         /// </summary>
-        internal AlfredTestModule() : this(new SimpleCollectionProvider())
+        internal AlfredTestModule() : this(new SimplePlatformProvider())
         {
         }
 
@@ -35,13 +35,13 @@ namespace MattEland.Ani.Alfred.Core.Tests
         ///     class.
         /// </summary>
         /// <param
-        ///     name="collectionProvider">
+        ///     name="platformProvider">
         ///     The collection provider.
         /// </param>
         /// <exception
         ///     cref="ArgumentNullException">
         /// </exception>
-        private AlfredTestModule([NotNull] ICollectionProvider collectionProvider) : base(collectionProvider)
+        private AlfredTestModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
         {
         }
 

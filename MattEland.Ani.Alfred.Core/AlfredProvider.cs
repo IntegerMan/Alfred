@@ -1,4 +1,12 @@
-﻿using System;
+﻿// ---------------------------------------------------------
+// AlfredProvider.cs
+// 
+// Created on:      07/25/2015 at 11:30 PM
+// Last Modified:   08/03/2015 at 1:57 PM
+// Original author: Matt Eland
+// ---------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 
 using JetBrains.Annotations;
@@ -8,44 +16,53 @@ using MattEland.Ani.Alfred.Core.Console;
 namespace MattEland.Ani.Alfred.Core
 {
     /// <summary>
-    /// Coordinates providing personal assistance to a user interface and receiving settings and queries back from the user
-    /// interface.
+    ///     Coordinates providing personal assistance to a user interface and receiving settings and queries back from the user
+    ///     interface.
     /// </summary>
     public sealed class AlfredProvider : NotifyPropertyChangedBase
     {
         private AlfredStatus _status;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlfredProvider"/> class.
+        ///     Initializes a new instance of the
+        ///     <see
+        ///         cref="AlfredProvider" />
+        ///     class.
         /// </summary>
-        /// <param name="provider">The collection provider.</param>
-        public AlfredProvider([NotNull] ICollectionProvider provider)
+        /// <param
+        ///     name="provider">
+        ///     The platform provider.
+        /// </param>
+        public AlfredProvider([NotNull] IPlatformProvider provider)
         {
             if (provider == null)
             {
                 throw new ArgumentNullException(nameof(provider));
             }
 
-            CollectionProvider = provider;
+            PlatformProvider = provider;
             Modules = provider.CreateCollection<AlfredModule>();
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlfredProvider"/> class.
+        ///     Initializes a new instance of the
+        ///     <see
+        ///         cref="AlfredProvider" />
+        ///     class.
         /// </summary>
-        public AlfredProvider() : this(new SimpleCollectionProvider())
+        public AlfredProvider() : this(new SimplePlatformProvider())
         {
         }
 
         /// <summary>
-        /// Gets or sets the console provider. This can be null.
+        ///     Gets or sets the console provider. This can be null.
         /// </summary>
         /// <value>The console.</value>
         [CanBeNull]
         public IConsole Console { get; set; }
 
         /// <summary>
-        /// Gets the name and version of Alfred.
+        ///     Gets the name and version of Alfred.
         /// </summary>
         /// <value>The name and version.</value>
         [NotNull]
@@ -55,7 +72,7 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        /// Gets the modules.
+        ///     Gets the modules.
         /// </summary>
         /// <value>The modules.</value>
         [NotNull]
@@ -63,7 +80,7 @@ namespace MattEland.Ani.Alfred.Core
         public ICollection<AlfredModule> Modules { get; }
 
         /// <summary>
-        /// Gets the status.
+        ///     Gets the status.
         /// </summary>
         /// <value>The status.</value>
         public AlfredStatus Status
@@ -81,16 +98,19 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        /// Gets the collection provider used for cross platform portability.
+        ///     Gets the collection provider used for cross platform portability.
         /// </summary>
         /// <value>The collection provider.</value>
         [NotNull]
-        public ICollectionProvider CollectionProvider { get; }
+        public IPlatformProvider PlatformProvider { get; }
 
         /// <summary>
-        /// Tells Alfred it's okay to start itself up and begin operating.
+        ///     Tells Alfred it's okay to start itself up and begin operating.
         /// </summary>
-        /// <exception cref="InvalidOperationException">Thrown if Alfred is already Online</exception>
+        /// <exception
+        ///     cref="InvalidOperationException">
+        ///     Thrown if Alfred is already Online
+        /// </exception>
         public void Initialize()
         {
             const string LogHeader = "Alfred.Initialize";
@@ -120,9 +140,12 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        /// Tells Alfred to go ahead and shut down.
+        ///     Tells Alfred to go ahead and shut down.
         /// </summary>
-        /// <exception cref="InvalidOperationException">Thrown if Alfred is already Offline</exception>
+        /// <exception
+        ///     cref="InvalidOperationException">
+        ///     Thrown if Alfred is already Offline
+        /// </exception>
         public void Shutdown()
         {
             const string LogHeader = "Alfred.Shutdown";
@@ -152,12 +175,14 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        /// Tells modules to take a look at their content and update as needed.
+        ///     Tells modules to take a look at their content and update as needed.
         /// </summary>
-        /// <exception cref="InvalidOperationException">Thrown if Alfred is not Online</exception>
+        /// <exception
+        ///     cref="InvalidOperationException">
+        ///     Thrown if Alfred is not Online
+        /// </exception>
         public void Update()
         {
-
             // Error check
             if (Status != AlfredStatus.Online)
             {
@@ -171,9 +196,12 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        /// Adds a module to alfred.
+        ///     Adds a module to alfred.
         /// </summary>
-        /// <exception cref="InvalidOperationException">Thrown if Alfred is not Offline</exception>
+        /// <exception
+        ///     cref="InvalidOperationException">
+        ///     Thrown if Alfred is not Offline
+        /// </exception>
         public void AddModule([NotNull] AlfredModule module)
         {
             if (module == null)
@@ -188,6 +216,5 @@ namespace MattEland.Ani.Alfred.Core
 
             Modules.Add(module);
         }
-
     }
 }

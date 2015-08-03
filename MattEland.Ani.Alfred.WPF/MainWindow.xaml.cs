@@ -30,7 +30,7 @@ namespace MattEland.Ani.Alfred.WPF
             _console.Log("WinClient.Initialize", "Console is now online.");
 
             // Create Alfred. It won't be online and running yet, but create it.
-            _alfred = new AlfredProvider(new WinClientCollectionProvider())
+            _alfred = new AlfredProvider(new WinClientPlatformProvider())
             {
                 Console = _console
             };

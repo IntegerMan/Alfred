@@ -5,21 +5,12 @@
     <Members>
       <Field Name="_status" Hidden="true" />
     </Members>
-    <AssociationLine Name="CollectionProvider" Type="MattEland.Ani.Alfred.Core.ICollectionProvider" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="11.25" Y="2.927" />
-        <Point X="10.875" Y="2.927" />
-        <Point X="10.875" Y="1.438" />
-        <Point X="10" Y="1.438" />
-      </Path>
-    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AESAAAAEAAAAARAAAAAAAQAQACBAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AESAAAAEAAAAAQAAAAAAAwAQACBAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>AlfredProvider.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="Console" />
-      <Property Name="CollectionProvider" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Property Name="Modules" />
@@ -45,7 +36,7 @@
   <Class Name="MattEland.Ani.Alfred.Core.AlfredModule">
     <Position X="14.25" Y="2.5" Width="1.5" />
     <Members>
-      <Field Name="_collectionProvider" Hidden="true" />
+      <Field Name="_platformProvider" Hidden="true" />
       <Field Name="_status" Hidden="true" />
       <Field Name="_widgets" Hidden="true" />
     </Members>
@@ -61,7 +52,7 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AEQAAAEEAAABIQAAAAAAAQQAACAAQRAAAAQABAAAAAA=</HashCode>
+      <HashCode>gEQAAAEEAAABIQAAAAAAAQQAACAAQRAAAAQAAAAAAAA=</HashCode>
       <FileName>AlfredModule.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -125,11 +116,11 @@
       <FileName>Widgets\TextWidget.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="MattEland.Ani.Alfred.Core.SimpleCollectionProvider">
+  <Class Name="MattEland.Ani.Alfred.Core.SimplePlatformProvider">
     <Position X="5.5" Y="1" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>SimpleCollectionProvider.cs</FileName>
+      <FileName>SimplePlatformProvider.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
@@ -175,11 +166,11 @@
       <Property Name="Events" />
     </ShowAsCollectionAssociation>
   </Interface>
-  <Interface Name="MattEland.Ani.Alfred.Core.ICollectionProvider">
+  <Interface Name="MattEland.Ani.Alfred.Core.IPlatformProvider">
     <Position X="8.25" Y="1" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>ICollectionProvider.cs</FileName>
+      <FileName>IPlatformProvider.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Font Name="Segoe UI" Size="9" />
