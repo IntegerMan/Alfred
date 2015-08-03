@@ -19,21 +19,6 @@
             </MenuItem>
         </Menu>
 
-        <ToolBar DockPanel.Dock="Top">
-            <Button Margin="0,0,8,0" Click="OnInitializeClicked">Initialize</Button>
-            <Button Margin="0,0,8,0" Click="OnShutdownClicked">Shutdown</Button>
-        </ToolBar>
-
-        <StatusBar DockPanel.Dock="Bottom">
-            <StatusBarItem>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding NameAndVersion}" />
-                    <TextBlock Text="Status:" />
-                    <TextBlock Text="{Binding Path=Status}" Margin="8,0" FontWeight="Bold" />
-                </StackPanel>
-            </StatusBarItem>
-        </StatusBar>
-
         <DockPanel DockPanel.Dock="Left" Width="300" Margin="8" 
                    DataContext="{Binding Path=Console}"
                    d:DataContext="{d:DesignInstance win:WinClientConsole}">

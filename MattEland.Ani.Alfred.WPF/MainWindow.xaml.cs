@@ -104,58 +104,5 @@ namespace MattEland.Ani.Alfred.WPF
                 _alfred.Shutdown();
             }
         }
-
-        /// <summary>
-        /// Handles the <see cref="E:InitializeClicked" /> event.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
-        private void OnInitializeClicked(object sender, RoutedEventArgs e)
-        {
-            // TODO: A command model would be better here.
-
-            try
-            {
-                _alfred.Initialize();
-            }
-            catch (InvalidOperationException ex)
-            {
-
-                // This happens if Alfred is online already.
-
-                MessageBox.Show(
-                    ex.Message,
-                    "Could not Initialize Alfred",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Exclamation);
-            }
-        }
-
-        /// <summary>
-        /// Handles the <see cref="E:ShutdownClicked" /> event.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
-        private void OnShutdownClicked(object sender, RoutedEventArgs e)
-        {
-            // TODO: A command model would be better here.
-
-            try
-            {
-                _alfred.Shutdown();
-            }
-            catch (InvalidOperationException ex)
-            {
-
-                // This happens if Alfred is offline already.
-
-                MessageBox.Show(
-                    ex.Message,
-                    "Could not Shut Down Alfred",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Exclamation);
-            }
-
-        }
     }
 }
