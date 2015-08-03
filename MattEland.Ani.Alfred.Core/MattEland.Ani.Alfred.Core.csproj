@@ -53,6 +53,7 @@
     <Compile Include="Modules\StandardModuleProvider.cs" />
     <Compile Include="NotifyPropertyChangedBase.cs" />
     <Compile Include="Widgets\AlfredWidget.cs" />
+    <Compile Include="Widgets\ButtonWidget.cs" />
     <Compile Include="Widgets\TextWidget.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Console\SimpleConsole.cs" />

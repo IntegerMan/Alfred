@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="AlfredProviderTests.cs" />
     <Compile Include="AlfredTestModule.cs" />
+    <Compile Include="ButtonWidgetTests.cs" />
     <Compile Include="CoreModuleTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TextWidgetTests.cs" />
