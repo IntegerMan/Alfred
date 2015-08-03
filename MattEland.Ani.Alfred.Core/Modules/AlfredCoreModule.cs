@@ -49,10 +49,10 @@ namespace MattEland.Ani.Alfred.Core.Modules
         {
             _statusWidget = new TextWidget(NoAlfredProviderMessage);
 
-            var initializeCommand = platformProvider.CreateCommand(() => { _alfredProvider?.Initialize(); });
+            var initializeCommand = platformProvider.CreateCommand(() => _alfredProvider?.Initialize());
             _initializeButton = new ButtonWidget("Initialize", initializeCommand);
 
-            var shutdownCommand = platformProvider.CreateCommand(() => { _alfredProvider?.Shutdown(); });
+            var shutdownCommand = platformProvider.CreateCommand(() => _alfredProvider?.Shutdown());
             _shutdownButton = new ButtonWidget("Shut Down", shutdownCommand);
         }
 
