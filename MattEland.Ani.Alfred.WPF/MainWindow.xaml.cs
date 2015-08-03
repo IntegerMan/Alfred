@@ -14,7 +14,7 @@ namespace MattEland.Ani.Alfred.WPF
     public sealed partial class MainWindow : Window
     {
 
-        private const bool AutoInitialize = true;
+        private const bool AutoInitialize = false;
 
         private readonly AlfredProvider _alfred;
         private readonly WinClientConsole _console = new WinClientConsole();

@@ -112,11 +112,12 @@
                         Style="{StaticResource SubtitleTextBlockStyle}" />
 
                     <ItemsControl
+                        Margin="0,4,0,0"
                         ItemsSource="{Binding Modules}">
                         
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border BorderThickness="1" Margin="8,4,8,0">
+                                <Border BorderThickness="1" Margin="8,0,8,4">
                                     <StackPanel Orientation="Vertical">
                                         <StackPanel Orientation="Horizontal">
                                             <TextBlock Text="{Binding Path=Name}" />
@@ -126,7 +127,7 @@
                                             -->
                                         </StackPanel>
                                         <ItemsControl 
-                                            Margin="20,8,0,0"
+                                            Margin="20,0,0,0"
                                             ItemsSource="{Binding Widgets}"
                                             ItemTemplateSelector="{StaticResource TypedTemplateSelector}">
                                         </ItemsControl>
@@ -149,18 +150,19 @@
                         Style="{StaticResource SubtitleTextBlockStyle}" />
 
                     <ItemsControl
+                        Margin="0,4,0,0"
                         ItemsSource="{Binding Path=Console.Events}">
                         
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border BorderThickness="1" Margin="8,4,8,0">
+                                <Border BorderThickness="1" Margin="8,0,8,0">
                                     <StackPanel Orientation="Vertical">
                                         <StackPanel Orientation="Horizontal">
                                             <TextBlock Text="{Binding Path=Time}" />
                                             <TextBlock Text="-" Margin="4,0" />
                                             <TextBlock Text="{Binding Path=Title}" />
                                         </StackPanel>
-                                        <StackPanel Margin="8, 4">
+                                        <StackPanel Margin="8, 2">
                                             <TextBlock Text="{Binding Message}" />
                                         </StackPanel>
                                     </StackPanel>

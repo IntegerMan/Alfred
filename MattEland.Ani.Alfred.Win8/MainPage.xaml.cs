@@ -17,7 +17,7 @@ namespace MattEland.Ani.Alfred.Win8
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private const bool AutoInitialize = true;
+        private const bool AutoInitialize = false;
 
         [NotNull]
         private readonly AlfredProvider _alfred;
