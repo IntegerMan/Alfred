@@ -52,6 +52,7 @@
                 MinWidth="120"
                 HorizontalAlignment="Left"
                 HorizontalContentAlignment="Center"
+                Command="{Binding ClickCommand}"
                 Content="{Binding Text}"
                 ToolTip="{Binding Text}"/>
         </DataTemplate>
