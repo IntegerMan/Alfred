@@ -37,5 +37,13 @@ namespace MattEland.Ani.Alfred.Core.Tests
             Assert.IsNull(button.Text, "Button's text was set to something other than null after instantiation.");
         }
 
+        [Test]
+        public void ButtonCommandDefaultsToNull()
+        {
+            var button = new ButtonWidget();
+
+            Assert.IsNull(button.ClickCommand);
+        }
+
     }
 }

@@ -62,6 +62,7 @@
     </ApplicationDefinition>
     <Compile Include="WinClientCollectionProvider.cs" />
     <Compile Include="WinClientConsole.cs" />
+    <Compile Include="WinClientCommand.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
