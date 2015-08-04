@@ -2,7 +2,7 @@
 // SystemMonitorModule.cs
 // 
 // Created on:      08/03/2015 at 8:51 PM
-// Last Modified:   08/04/2015 at 1:34 AM
+// Last Modified:   08/04/2015 at 2:37 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 
 using JetBrains.Annotations;
 
@@ -37,10 +36,6 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         private readonly List<PerformanceCounter> _processorCounters =
             new List<PerformanceCounter>();
 
-        [NotNull]
-        [ItemNotNull]
-        private string[] _cpuInstanceNames;
-
         /// <summary>
         ///     Initializes a new instance of the
         ///     <see
@@ -58,10 +53,10 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         {
             var cpuCategory = new PerformanceCounterCategory(CpuCategoryName);
 
-            _cpuInstanceNames = cpuCategory.GetInstanceNames();
+            var cpuInstanceNames = cpuCategory.GetInstanceNames();
 
             // Add counters for each CPU instance we're using
-            foreach (var instance in _cpuInstanceNames)
+            foreach (var instance in cpuInstanceNames)
             {
                 _processorCounters.Add(
                                        new PerformanceCounter(
@@ -135,10 +130,14 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         }
 
         /// <summary>
-        /// Gets a processor utilization string as a percentage for a given performance counter, safely handling all documented exceptions
-        /// for getting the next value.
+        ///     Gets a processor utilization string as a percentage for a given performance counter, safely handling all documented
+        ///     exceptions
+        ///     for getting the next value.
         /// </summary>
-        /// <param name="counter">The counter.</param>
+        /// <param
+        ///     name="counter">
+        ///     The counter.
+        /// </param>
         /// <returns>System.String.</returns>
         [NotNull]
         private static string GetCpuPercentString([NotNull] PerformanceCounter counter)
@@ -169,7 +168,6 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             {
                 return ex.Message;
             }
-
         }
     }
 }
