@@ -38,6 +38,8 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         private readonly List<PerformanceCounter> _processorCounters =
             new List<PerformanceCounter>();
 
+        private static readonly CultureInfo Culture = CultureInfo.CurrentCulture;
+
         /// <summary>
         ///     Initializes a new instance of the
         ///     <see cref="AlfredModule" />
@@ -142,11 +144,10 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             [CanBeNull] PerformanceCounter counter,
             [CanBeNull] string label)
         {
-            const string NotFoundMessage = "Error - Not Found";
 
             widget.Text = counter != null
-                              ? $"{label}: {GetCpuPercentString(counter)}"
-                              : $"{label}: {NotFoundMessage}";
+                              ? string.Format(Culture, "{0}: {1}", label, GetCpuPercentString(counter))
+                              : string.Format(Culture, "{0}: " + Resources.SystemMonitorModule_UpdateCpuWidget_ErrorCounterNotFound, label);
         }
 
         /// <summary>
