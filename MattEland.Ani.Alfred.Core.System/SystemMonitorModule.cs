@@ -83,7 +83,12 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
                     continue;
                 }
 
-                var widget = new TextWidget("CPU " + counter.InstanceName + ": Initializing...");
+                // Create a widget for the counter
+                var widget = new TextWidget();
+
+                // Get the first value of the widget and have the label applied to the widget
+                UpdateCpuWidget(widget, counter, counter.InstanceName);
+
                 _cpuWidgets.Add(widget);
 
                 RegisterWidget(widget);
