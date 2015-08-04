@@ -1,7 +1,6 @@
 ﻿using System;
 
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 
 using JetBrains.Annotations;
 
@@ -15,17 +14,15 @@ namespace MattEland.Ani.Alfred.Win8
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage
     {
-        private const bool AutoInitialize = false;
-
         [NotNull]
         private readonly AlfredProvider _alfred;
 
         public MainPage()
         {
 
-            this.InitializeComponent();
+            InitializeComponent();
 
             // Create the console first to log what we're doing
             var console = new Win8ClientConsole();
@@ -42,17 +39,14 @@ namespace MattEland.Ani.Alfred.Win8
             console.Log("MetroClient.Initialize", "Alfred instantiated");
 
             // Data bindings in the UI rely on Alfred
-            this.DataContext = _alfred;
+            DataContext = _alfred;
 
             // Set up the update timer
             var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
             timer.Tick += OnTimerTick;
             timer.Start();
 
-            if (AutoInitialize)
-            {
-                _alfred.Initialize();
-            }
+            // TODO: Support Auto-Start
 
         }
 

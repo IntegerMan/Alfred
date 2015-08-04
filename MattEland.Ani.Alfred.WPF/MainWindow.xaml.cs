@@ -3,9 +3,12 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Threading;
 
+using JetBrains.Annotations;
+
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
+using MattEland.Ani.Alfred.WPF.Properties;
 
 namespace MattEland.Ani.Alfred.WPF
 {
@@ -15,9 +18,15 @@ namespace MattEland.Ani.Alfred.WPF
     public sealed partial class MainWindow
     {
 
-        private const bool AutoInitialize = false;
-
+        /// <summary>
+        /// The Alfred Provider that makes the application possible
+        /// </summary>
+        [NotNull]
         private readonly AlfredProvider _alfred;
+
+        [NotNull]
+        // ReSharper disable once AssignNullToNotNullAttribute
+        private static readonly Settings Settings = Settings.Default;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow"/> class.
@@ -43,14 +52,15 @@ namespace MattEland.Ani.Alfred.WPF
             console.Log("WinClient.Initialize", "Alfred instantiated");
 
             // Data bindings in the UI rely on Alfred
-            this.DataContext = _alfred;
+            DataContext = _alfred;
 
             // Set up the update timer
             var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
             timer.Tick += OnTimerTick;
             timer.Start();
 
-            if (AutoInitialize)
+            // Determine whether to auto-start or not based off of settings
+            if (Settings.AutoStartAlfred)
             {
                 _alfred.Initialize();
             }
@@ -91,7 +101,7 @@ namespace MattEland.Ani.Alfred.WPF
         private void OnExitClicked(object sender, RoutedEventArgs e)
         {
             // TODO: A command based model would be better
-            this.Close();
+            Close();
         }
 
         /// <summary>

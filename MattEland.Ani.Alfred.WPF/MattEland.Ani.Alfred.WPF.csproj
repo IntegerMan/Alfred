@@ -61,6 +61,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="WinClientPlatformProvider.cs" />
     <Compile Include="WinClientConsole.cs" />
     <Compile Include="WinClientCommand.cs" />
@@ -94,6 +95,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="AlfredWPF.cd" />
     <None Include="packages.config" />

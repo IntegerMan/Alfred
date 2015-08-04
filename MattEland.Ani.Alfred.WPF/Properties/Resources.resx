@@ -114,4 +114,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="App_OnUnhandledException_Unhandled_Error" xml:space="preserve">
+    <value>Unhandled Error</value>
+    <comment>Caption for error message for application errors</comment>
+  </data>
+  <data name="App_OnUnhandledException_Message" xml:space="preserve">
+    <value>An unhandled exception occurred:
+
+{0}
+
+Do you want to continue running this application?</value>
+    <comment>Message box body for application error.
+
+{0} The error message details</comment>
+  </data>
 </root>
