@@ -5,6 +5,7 @@ using System.Windows.Threading;
 
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Modules;
+using MattEland.Ani.Alfred.Core.System;
 
 namespace MattEland.Ani.Alfred.WPF
 {
@@ -36,6 +37,8 @@ namespace MattEland.Ani.Alfred.WPF
             };
 
             StandardModuleProvider.AddStandardModules(_alfred);
+
+            _alfred.AddModule(new SystemMonitorModule(_alfred.PlatformProvider));
 
             _console.Log("WinClient.Initialize", "Alfred instantiated");
 
