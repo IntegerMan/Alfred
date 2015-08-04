@@ -174,7 +174,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             try // Catch each exception thrown by counter.NextValue() instead of catching Exception.
             {
                 // If you try to interpret it as a % in the format string the value will be multiplied * 100.
-                return counter.NextValue().ToString("0.00", CultureInfo.CurrentCulture) + " %";
+                return counter.NextValue().ToString("F2", CultureInfo.CurrentCulture) + " %";
             }
             catch (Win32Exception ex)
             {
