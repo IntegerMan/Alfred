@@ -1,26 +1,36 @@
+// ---------------------------------------------------------
+// TextWidget.cs
+// 
+// Created on:      07/28/2015 at 12:18 PM
+// Last Modified:   08/04/2015 at 3:03 PM
+// Original author: Matt Eland
+// ---------------------------------------------------------
+
 using JetBrains.Annotations;
 
 namespace MattEland.Ani.Alfred.Core.Widgets
 {
     /// <summary>
-    /// Represents a simple textual display on the user interface.
+    ///     Represents a simple textual display on the user interface.
     /// </summary>
     public sealed class TextWidget : AlfredTextWidget
     {
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="TextWidget"/> class.
+        ///     Initializes a new instance of the <see cref="TextWidget" /> class.
         /// </summary>
         public TextWidget() : this(null)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TextWidget"/> class.
+        ///     Initializes a new instance of the <see cref="TextWidget" /> class.
         /// </summary>
         /// <param name="text">The text for the widget.</param>
         public TextWidget([CanBeNull] string text)
         {
             Text = text;
         }
+
     }
 }

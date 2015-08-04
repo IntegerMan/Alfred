@@ -1,9 +1,17 @@
+// ---------------------------------------------------------
+// AlfredTextWidget.cs
+// 
+// Created on:      08/03/2015 at 2:46 PM
+// Last Modified:   08/04/2015 at 3:04 PM
+// Original author: Matt Eland
+// ---------------------------------------------------------
+
 using JetBrains.Annotations;
 
 namespace MattEland.Ani.Alfred.Core.Widgets
 {
     /// <summary>
-    /// Represents a widget that operates off of a Text field to present its contents.
+    ///     Represents a widget that operates off of a Text field to present its contents.
     /// </summary>
     public abstract class AlfredTextWidget : AlfredWidget
     {
@@ -13,7 +21,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         private string _text;
 
         /// <summary>
-        /// Gets or sets the text of the widget.
+        ///     Gets or sets the text of the widget.
         /// </summary>
         /// <value>The text.</value>
         [CanBeNull]

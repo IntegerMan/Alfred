@@ -2,7 +2,7 @@
 // SystemMonitorModule.cs
 // 
 // Created on:      08/03/2015 at 8:51 PM
-// Last Modified:   08/04/2015 at 2:53 PM
+// Last Modified:   08/04/2015 at 3:20 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 
 using JetBrains.Annotations;
 
@@ -18,12 +19,15 @@ using MattEland.Ani.Alfred.Core.Widgets;
 
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
-    /// <summary> A module that displays information on the system </summary>
+    /// <summary>
+    ///     A module that displays information on the system
+    /// </summary>
     public class SystemMonitorModule : AlfredModule
     {
         private const string CpuCategoryName = "Processor";
         private const string CpuUsageCounterName = "% Processor Time";
         private const string TotalInstanceName = "_Total";
+        private const string CpuMonitorLabel = "CPU {0}";
 
         [NotNull]
         [ItemNotNull]
@@ -34,9 +38,11 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         private readonly List<PerformanceCounter> _processorCounters =
             new List<PerformanceCounter>();
 
-        /// <summary> Initializes a new instance of the
+        /// <summary>
+        ///     Initializes a new instance of the
         ///     <see cref="AlfredModule" />
-        ///     class. </summary>
+        ///     class.
+        /// </summary>
         /// <param name="platformProvider"> The platform provider. </param>
         /// <exception cref="ArgumentNullException"> </exception>
         public SystemMonitorModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
@@ -68,46 +74,59 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         protected override void ShutdownProtected()
         {
             _cpuWidgets.Clear();
+
+            // _processorCounters is not cleared since it's only populated at startup and its values are used during initialize.
         }
 
-        /// <summary> Handles module initialization events </summary>
+        /// <summary>
+        ///     Handles module initialization events
+        /// </summary>
         protected override void InitializeProtected()
         {
             _cpuWidgets.Clear();
 
-            foreach (var counter in _processorCounters)
+            var core = 1;
+
+            foreach (var counter in _processorCounters.OrderBy(c => c.InstanceName))
             {
                 // Don't add a core indicator for the total
+                Debug.Assert(counter != null);
                 if (counter.InstanceName == TotalInstanceName)
                 {
                     continue;
                 }
 
                 // Create a widget for the counter
-                var widget = new TextWidget();
+                // Store the counter as the widget's data context for easier updating later on
+                var widget = new TextWidget { DataContext = counter };
 
                 // Get the first value of the widget and have the label applied to the widget
-                UpdateCpuWidget(widget, counter, counter.InstanceName);
+                var label = string.Format(CultureInfo.CurrentCulture, CpuMonitorLabel, core);
+                UpdateCpuWidget(widget, counter, label);
 
                 _cpuWidgets.Add(widget);
 
                 RegisterWidget(widget);
+
+                core++;
             }
         }
 
-        /// <summary> Handles updating the module as needed </summary>
+        /// <summary>
+        ///     Handles updating the module as needed
+        /// </summary>
         protected override void UpdateProtected()
         {
-            var cpuIndex = 0;
+            var core = 1;
             foreach (var widget in _cpuWidgets)
             {
-                var counter = _processorCounters[cpuIndex];
+                var counter = widget.DataContext as PerformanceCounter;
 
-                // Increment now for ease of use in display
-                cpuIndex++;
+                // Update the widget using our arbitrary number instead of the instance name
+                var label = string.Format(CultureInfo.CurrentCulture, CpuMonitorLabel, core);
+                UpdateCpuWidget(widget, counter, label);
 
-                // Display counter value or an error if we somehow didn't have a counter
-                UpdateCpuWidget(widget, counter, cpuIndex.ToString());
+                core++;
             }
         }
 
@@ -117,17 +136,17 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// </summary>
         /// <param name="widget"> The display widget. </param>
         /// <param name="counter"> The performance counter. </param>
-        /// <param name="instance"> The instance name. </param>
+        /// <param name="label"> The label to add before the counter value. </param>
         private static void UpdateCpuWidget(
             [NotNull] AlfredTextWidget widget,
             [CanBeNull] PerformanceCounter counter,
-            [CanBeNull] string instance)
+            [CanBeNull] string label)
         {
             const string NotFoundMessage = "Error - Not Found";
 
             widget.Text = counter != null
-                              ? $"CPU {instance}: {GetCpuPercentString(counter)}"
-                              : $"CPU {instance}: {NotFoundMessage}";
+                              ? $"{label}: {GetCpuPercentString(counter)}"
+                              : $"{label}: {NotFoundMessage}";
         }
 
         /// <summary>
