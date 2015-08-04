@@ -12,7 +12,7 @@ namespace MattEland.Ani.Alfred.WPF
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public sealed partial class MainWindow : Window
+    public sealed partial class MainWindow
     {
 
         private const bool AutoInitialize = false;
