@@ -17,7 +17,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Widgets;
 
-namespace MattEland.Ani.Alfred.Core.System
+namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
     /// <summary>
     ///     A module that displays information on the system
@@ -41,9 +41,6 @@ namespace MattEland.Ani.Alfred.Core.System
         [ItemNotNull]
         private string[] _cpuInstanceNames;
 
-        [NotNull]
-        private PerformanceCounter _processorTotalCounter;
-
         /// <summary>
         ///     Initializes a new instance of the
         ///     <see
@@ -55,7 +52,7 @@ namespace MattEland.Ani.Alfred.Core.System
         ///     The platform provider.
         /// </param>
         /// <exception
-        ///     cref="System.ArgumentNullException">
+        ///     cref="ArgumentNullException">
         /// </exception>
         public SystemMonitorModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
         {

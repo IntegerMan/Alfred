@@ -7,8 +7,8 @@
     <ProjectGuid>{85194081-752D-48FC-A240-82C9974353D4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MattEland.Ani.Alfred.Core.System</RootNamespace>
-    <AssemblyName>MattEland.Ani.Alfred.Core.System</AssemblyName>
+    <RootNamespace>MattEland.Ani.Alfred.Core.Modules.SysMonitor</RootNamespace>
+    <AssemblyName>MattEland.Ani.Alfred.Core.Modules.SysMonitor</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -20,6 +20,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>

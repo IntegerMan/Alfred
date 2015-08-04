@@ -5,7 +5,7 @@ using System.Windows.Threading;
 
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Modules;
-using MattEland.Ani.Alfred.Core.System;
+using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 
 namespace MattEland.Ani.Alfred.WPF
 {
