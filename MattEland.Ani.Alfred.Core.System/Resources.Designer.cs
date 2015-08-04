@@ -61,6 +61,24 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CPU {0}.
+        /// </summary>
+        internal static string SystemMonitorModule_Cpu_Label_Format {
+            get {
+                return ResourceManager.GetString("SystemMonitorModule_Cpu_Label_Format", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to System Monitor.
+        /// </summary>
+        internal static string SystemMonitorModule_Name_System_Monitor {
+            get {
+                return ResourceManager.GetString("SystemMonitorModule_Name_System_Monitor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error - Not Found.
         /// </summary>
         internal static string SystemMonitorModule_UpdateCpuWidget_ErrorCounterNotFound {

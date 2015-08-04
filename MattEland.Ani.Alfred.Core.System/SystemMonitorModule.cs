@@ -2,7 +2,7 @@
 // SystemMonitorModule.cs
 // 
 // Created on:      08/03/2015 at 8:51 PM
-// Last Modified:   08/04/2015 at 3:20 PM
+// Last Modified:   08/04/2015 at 3:31 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -27,7 +27,11 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         private const string CpuCategoryName = "Processor";
         private const string CpuUsageCounterName = "% Processor Time";
         private const string TotalInstanceName = "_Total";
-        private const string CpuMonitorLabel = "CPU {0}";
+        private static readonly CultureInfo Culture = CultureInfo.CurrentCulture;
+
+        // ReSharper disable once AssignNullToNotNullAttribute
+        [NotNull]
+        private readonly string _cpuMonitorLabel = Resources.SystemMonitorModule_Cpu_Label_Format;
 
         [NotNull]
         [ItemNotNull]
@@ -37,8 +41,6 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         [ItemNotNull]
         private readonly List<PerformanceCounter> _processorCounters =
             new List<PerformanceCounter>();
-
-        private static readonly CultureInfo Culture = CultureInfo.CurrentCulture;
 
         /// <summary>
         ///     Initializes a new instance of the
@@ -69,7 +71,8 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <value> The name of the module. </value>
         public override string Name
         {
-            get { return "System Monitor"; }
+            // ReSharper disable once AssignNullToNotNullAttribute
+            get { return Resources.SystemMonitorModule_Name_System_Monitor; }
         }
 
         /// <summary> Handles module shutdown events </summary>
@@ -103,7 +106,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
                 var widget = new TextWidget { DataContext = counter };
 
                 // Get the first value of the widget and have the label applied to the widget
-                var label = string.Format(CultureInfo.CurrentCulture, CpuMonitorLabel, core);
+                var label = string.Format(CultureInfo.CurrentCulture, _cpuMonitorLabel, core);
                 UpdateCpuWidget(widget, counter, label);
 
                 _cpuWidgets.Add(widget);
@@ -125,7 +128,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
                 var counter = widget.DataContext as PerformanceCounter;
 
                 // Update the widget using our arbitrary number instead of the instance name
-                var label = string.Format(CultureInfo.CurrentCulture, CpuMonitorLabel, core);
+                var label = string.Format(CultureInfo.CurrentCulture, _cpuMonitorLabel, core);
                 UpdateCpuWidget(widget, counter, label);
 
                 core++;
@@ -147,7 +150,11 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 
             widget.Text = counter != null
                               ? string.Format(Culture, "{0}: {1}", label, GetCpuPercentString(counter))
-                              : string.Format(Culture, "{0}: " + Resources.SystemMonitorModule_UpdateCpuWidget_ErrorCounterNotFound, label);
+                              : string.Format(
+                                              Culture,
+                                              "{0}: " +
+                                              Resources.SystemMonitorModule_UpdateCpuWidget_ErrorCounterNotFound,
+                                              label);
         }
 
         /// <summary>
