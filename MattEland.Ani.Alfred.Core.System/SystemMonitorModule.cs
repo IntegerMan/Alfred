@@ -2,7 +2,7 @@
 // SystemMonitorModule.cs
 // 
 // Created on:      08/03/2015 at 8:51 PM
-// Last Modified:   08/04/2015 at 3:31 PM
+// Last Modified:   08/04/2015 at 3:42 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -35,7 +35,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 
         [NotNull]
         [ItemNotNull]
-        private readonly List<TextWidget> _cpuWidgets = new List<TextWidget>();
+        private readonly List<AlfredProgressBarWidget> _cpuWidgets = new List<AlfredProgressBarWidget>();
 
         [NotNull]
         [ItemNotNull]
@@ -103,7 +103,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 
                 // Create a widget for the counter
                 // Store the counter as the widget's data context for easier updating later on
-                var widget = new TextWidget { DataContext = counter };
+                var widget = new AlfredProgressBarWidget() { DataContext = counter, Minimum = 0, Maximum = 100 };
 
                 // Get the first value of the widget and have the label applied to the widget
                 var label = string.Format(CultureInfo.CurrentCulture, _cpuMonitorLabel, core);
@@ -143,54 +143,44 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <param name="counter"> The performance counter. </param>
         /// <param name="label"> The label to add before the counter value. </param>
         private static void UpdateCpuWidget(
-            [NotNull] AlfredTextWidget widget,
+            [NotNull] AlfredProgressBarWidget widget,
             [CanBeNull] PerformanceCounter counter,
             [CanBeNull] string label)
         {
 
-            widget.Text = counter != null
-                              ? string.Format(Culture, "{0}: {1}", label, GetCpuPercentString(counter))
-                              : string.Format(
-                                              Culture,
-                                              "{0}: " +
-                                              Resources.SystemMonitorModule_UpdateCpuWidget_ErrorCounterNotFound,
-                                              label);
+            widget.Text = string.Format(Culture, "{0}:", label);
+
+            widget.Value = GetNextCounterValueSafe(counter, 0);
+            widget.ValueFormatString = "{0:F2} %";
         }
 
         /// <summary>
-        ///     Gets a processor utilization string as a percentage for a given performance counter, safely handling all
-        ///     documented exceptions for getting the next value.
+        /// Gets the next counter value safely, defaulting to the defaultValue on any error.
         /// </summary>
-        /// <param name="counter"> The counter. </param>
-        /// <returns> System.String. </returns>
-        [NotNull]
-        private static string GetCpuPercentString([NotNull] PerformanceCounter counter)
+        /// <param name="counter">The counter.</param>
+        /// <param name="defaultValue">The default value.</param>
+        /// <returns>The value returned from the counter</returns>
+        private static float GetNextCounterValueSafe([CanBeNull] PerformanceCounter counter, float defaultValue)
         {
-            if (counter == null)
+            try
             {
-                throw new ArgumentNullException(nameof(counter));
+                return counter?.NextValue() ?? 0;
             }
-
-            try // Catch each exception thrown by counter.NextValue() instead of catching Exception.
+            catch (Win32Exception)
             {
-                // If you try to interpret it as a % in the format string the value will be multiplied * 100.
-                return counter.NextValue().ToString("F2", CultureInfo.CurrentCulture) + " %";
+                return defaultValue;
             }
-            catch (Win32Exception ex)
+            catch (PlatformNotSupportedException)
             {
-                return ex.Message;
+                return defaultValue;
             }
-            catch (PlatformNotSupportedException ex)
+            catch (UnauthorizedAccessException)
             {
-                return ex.Message;
+                return defaultValue;
             }
-            catch (UnauthorizedAccessException ex)
+            catch (InvalidOperationException)
             {
-                return ex.Message;
-            }
-            catch (InvalidOperationException ex)
-            {
-                return ex.Message;
+                return defaultValue;
             }
         }
     }

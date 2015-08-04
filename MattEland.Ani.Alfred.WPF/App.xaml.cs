@@ -2,7 +2,7 @@
 // App.xaml.cs
 // 
 // Created on:      07/25/2015 at 11:55 PM
-// Last Modified:   08/04/2015 at 2:25 PM
+// Last Modified:   08/04/2015 at 3:54 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -18,22 +18,10 @@ namespace MattEland.Ani.Alfred.WPF
     public sealed partial class App
     {
         /// <summary>
-        ///     Handles the
-        ///     <see
-        ///         cref="E:UnhandledException" />
-        ///     event.
+        ///     Handles the <see cref="E:UnhandledException" /> event.
         /// </summary>
-        /// <param
-        ///     name="sender">
-        ///     The sender.
-        /// </param>
-        /// <param
-        ///     name="e">
-        ///     The
-        ///     <see
-        ///         cref="DispatcherUnhandledExceptionEventArgs" />
-        ///     instance containing the event data.
-        /// </param>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="DispatcherUnhandledExceptionEventArgs" /> instance containing the event data.</param>
         private void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             // Let the user know what happened and give them a chance to let the app crash or continue on.
@@ -43,12 +31,11 @@ namespace MattEland.Ani.Alfred.WPF
                 return;
             }
 
-            message = string.Format(CultureInfo.CurrentCulture, message, e.Exception.Message);
+            message = string.Format(CultureInfo.CurrentCulture, message, e.Exception.Message, e.Exception.InnerException?.Message);
 
             var caption = WPF.Properties.Resources.App_OnUnhandledException_Unhandled_Error;
 
-            var result = MessageBox.Show(
-                                         message,
+            var result = MessageBox.Show(message,
                                          caption,
                                          MessageBoxButton.YesNo,
                                          MessageBoxImage.Error);

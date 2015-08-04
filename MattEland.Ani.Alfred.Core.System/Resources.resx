@@ -117,11 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="SystemMonitorModule_UpdateCpuWidget_ErrorCounterNotFound" xml:space="preserve">
-    <value>Error - Not Found</value>
-    <comment>Used when a performance counter couldn't be retrieved for a widget.
-</comment>
-  </data>
   <data name="SystemMonitorModule_Name_System_Monitor" xml:space="preserve">
     <value>System Monitor</value>
     <comment>The name of the System Monitor module.</comment>

@@ -77,14 +77,5 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor {
                 return ResourceManager.GetString("SystemMonitorModule_Name_System_Monitor", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Error - Not Found.
-        /// </summary>
-        internal static string SystemMonitorModule_UpdateCpuWidget_ErrorCounterNotFound {
-            get {
-                return ResourceManager.GetString("SystemMonitorModule_UpdateCpuWidget_ErrorCounterNotFound", resourceCulture);
-            }
-        }
     }
 }

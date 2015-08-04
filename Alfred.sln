@@ -21,6 +21,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A47042C4-F451-4062-8025-59386DAA7BF0}"
 	ProjectSection(SolutionItems) = preProject
 		Alfred.EAP = Alfred.EAP
+		AlfredAppTestCertificate.snk = AlfredAppTestCertificate.snk
 		AlfredTests.dcvr = AlfredTests.dcvr
 	EndProjectSection
 EndProject
