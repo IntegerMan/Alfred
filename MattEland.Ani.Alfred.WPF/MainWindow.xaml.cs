@@ -18,7 +18,6 @@ namespace MattEland.Ani.Alfred.WPF
         private const bool AutoInitialize = false;
 
         private readonly AlfredProvider _alfred;
-        private readonly WinClientConsole _console = new WinClientConsole();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow"/> class.
@@ -28,19 +27,20 @@ namespace MattEland.Ani.Alfred.WPF
             InitializeComponent();
 
             // Create the console first to log what we're doing
-            _console.Log("WinClient.Initialize", "Console is now online.");
+            var console = new WinClientConsole();
+            console.Log("WinClient.Initialize", "Console is now online.");
 
             // Create Alfred. It won't be online and running yet, but create it.
             _alfred = new AlfredProvider(new WinClientPlatformProvider())
             {
-                Console = _console
+                Console = console
             };
 
             StandardModuleProvider.AddStandardModules(_alfred);
 
             _alfred.AddModule(new SystemMonitorModule(_alfred.PlatformProvider));
 
-            _console.Log("WinClient.Initialize", "Alfred instantiated");
+            console.Log("WinClient.Initialize", "Alfred instantiated");
 
             // Data bindings in the UI rely on Alfred
             this.DataContext = _alfred;
