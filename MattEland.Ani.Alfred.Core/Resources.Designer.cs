@@ -185,5 +185,32 @@ namespace MattEland.Ani.Alfred.Core {
                 return ResourceManager.GetString("AlfredStatusController_Shutdown_ShuttingDownModule", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shouldn&apos;t we be heading to bed soon?.
+        /// </summary>
+        internal static string AlfredTimeModule_AlfredTimeModule_BedtimeNagMessage {
+            get {
+                return ResourceManager.GetString("AlfredTimeModule_AlfredTimeModule_BedtimeNagMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time Module.
+        /// </summary>
+        internal static string AlfredTimeModule_Name {
+            get {
+                return ResourceManager.GetString("AlfredTimeModule_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The time is now {0:t}.
+        /// </summary>
+        internal static string AlfredTimeModule_Update_CurrentTimeDisplayString {
+            get {
+                return ResourceManager.GetString("AlfredTimeModule_Update_CurrentTimeDisplayString", resourceCulture);
+            }
+        }
     }
 }

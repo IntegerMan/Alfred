@@ -2,7 +2,7 @@
 // AlfredTimeModule.cs
 // 
 // Created on:      07/26/2015 at 1:46 PM
-// Last Modified:   08/03/2015 at 1:56 PM
+// Last Modified:   08/05/2015 at 2:57 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -22,19 +22,21 @@ namespace MattEland.Ani.Alfred.Core.Modules
     {
         /// <summary>
         ///     Initializes a new instance of the
-        ///     <see
-        ///         cref="AlfredModule" />
+        ///     <see cref="AlfredModule" />
         ///     class.
         /// </summary>
-        /// <param
-        ///     name="platformProvider">
+        /// <param name="platformProvider">
         ///     The platform provider.
         /// </param>
         public AlfredTimeModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
         {
             CurrentDateWidget = new TextWidget();
             CurrentTimeWidget = new TextWidget();
-            BedtimeAlertWidget = new WarningWidget { IsVisible = false, Text = "Shouldn't we be heading to bed soon?" };
+            BedtimeAlertWidget = new WarningWidget
+            {
+                IsVisible = false,
+                Text = Resources.AlfredTimeModule_AlfredTimeModule_BedtimeNagMessage
+            };
             BedtimeHour = 21;
             BedtimeMinute = 30;
             AlertDurationInHours = 4;
@@ -47,7 +49,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <value>The name of the module.</value>
         public override string Name
         {
-            get { return "Time Module"; }
+            get { return Resources.AlfredTimeModule_Name.NonNull(); }
         }
 
         /// <summary>
@@ -102,6 +104,9 @@ namespace MattEland.Ani.Alfred.Core.Modules
             RegisterWidget(CurrentDateWidget);
             RegisterWidget(CurrentTimeWidget);
             RegisterWidget(BedtimeAlertWidget);
+
+            // Ensure it has some initial values so it doesn't "blink" or lag on start
+            Update(DateTime.Now);
         }
 
         /// <summary>
@@ -116,8 +121,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <summary>
         ///     Updates the module given the specified time.
         /// </summary>
-        /// <param
-        ///     name="time">
+        /// <param name="time">
         ///     The time. Date portions of this will be ignored.
         /// </param>
         public void Update(DateTime time)
@@ -126,7 +130,8 @@ namespace MattEland.Ani.Alfred.Core.Modules
             CurrentDateWidget.Text = time.ToString("D", CultureInfo.CurrentCulture); // Thursday April 10, 2008
 
             // Always update the time
-            CurrentTimeWidget.Text = $"The time is now {time.ToString("t", CultureInfo.CurrentCulture)}";
+            var timeFormat = Resources.AlfredTimeModule_Update_CurrentTimeDisplayString.NonNull();
+            CurrentTimeWidget.Text = string.Format(CultureInfo.CurrentCulture, timeFormat, time);
 
             // Update the visibility of the alert widget based on time of day
             UpdateBedtimeAlertVisbility(time);
@@ -135,8 +140,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <summary>
         ///     Updates the bedtime alert visibility based on the given time.
         /// </summary>
-        /// <param
-        ///     name="time">
+        /// <param name="time">
         ///     The time.
         /// </param>
         private void UpdateBedtimeAlertVisbility(DateTime time)

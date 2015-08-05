@@ -154,4 +154,16 @@
     <value>Shut down completed.</value>
     <comment>Logged when shutting down a module completed.</comment>
   </data>
+  <data name="AlfredTimeModule_AlfredTimeModule_BedtimeNagMessage" xml:space="preserve">
+    <value>Shouldn't we be heading to bed soon?</value>
+    <comment>The nag message for going to bed soon.</comment>
+  </data>
+  <data name="AlfredTimeModule_Name" xml:space="preserve">
+    <value>Time Module</value>
+    <comment>The name of the time module.</comment>
+  </data>
+  <data name="AlfredTimeModule_Update_CurrentTimeDisplayString" xml:space="preserve">
+    <value>The time is now {0:t}</value>
+    <comment>The current time with {0} being the time DateTime.</comment>
+  </data>
 </root>
