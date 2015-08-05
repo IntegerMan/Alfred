@@ -49,7 +49,9 @@
                 <ItemsControl ItemsSource="{Binding Modules}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border BorderThickness="1" Margin="8,12,8,0">
+                            <Border BorderThickness="1" 
+                                    Margin="8,12,8,0"
+                                    Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
                                 <StackPanel Orientation="Vertical">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding Path=Name}" />

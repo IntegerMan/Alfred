@@ -9,6 +9,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 using JetBrains.Annotations;
 
@@ -25,6 +26,9 @@ namespace MattEland.Ani.Alfred.Core
         private readonly IPlatformProvider _platformProvider;
 
         private AlfredStatus _status;
+
+        [CanBeNull]
+        [ItemNotNull]
         private ICollection<AlfredWidget> _widgets;
 
         /// <summary>
@@ -191,6 +195,7 @@ namespace MattEland.Ani.Alfred.Core
         protected virtual void ShutdownProtected()
         {
             // Handled by modules as needed
+            OnPropertyChanged(nameof(IsVisible));
         }
 
         /// <summary>
@@ -199,6 +204,7 @@ namespace MattEland.Ani.Alfred.Core
         protected virtual void InitializeProtected()
         {
             // Handled by modules as needed
+            OnPropertyChanged(nameof(IsVisible));
         }
 
         /// <summary>
@@ -248,6 +254,8 @@ namespace MattEland.Ani.Alfred.Core
 
             // ReSharper disable once PossibleNullReferenceException
             Widgets.Add(widget);
+
+            OnPropertyChanged(nameof(IsVisible));
         }
 
         /// <summary>
@@ -283,6 +291,20 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         public virtual void OnShutdownCompleted()
         {
+            OnPropertyChanged(nameof(IsVisible));
+        }
+
+        /// <summary>
+        /// Gets whether or not the module is visible to the user interface.
+        /// </summary>
+        /// <value>Whether or not the module is visible.</value>
+        public bool IsVisible
+        {
+            get
+            {
+                // TODO: This could use some tests
+                return _widgets != null && _widgets.Any(w => w != null && w.IsVisible);
+            }
         }
     }
 }
