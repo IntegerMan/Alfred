@@ -29,7 +29,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         ///         cref="ButtonWidget" />
         ///     class.
         /// </summary>
-        public ButtonWidget() : this(null)
+        public ButtonWidget() : this(null, null)
         {
         }
 
@@ -45,8 +45,16 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         /// Initializes a new instance of the <see cref="ButtonWidget"/> class.
         /// </summary>
         /// <param name="text">The text.</param>
+        public ButtonWidget([CanBeNull] string text) : this(text, null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ButtonWidget"/> class.
+        /// </summary>
+        /// <param name="text">The text.</param>
         /// <param name="clickCommand">The click command.</param>
-        public ButtonWidget([CanBeNull] string text, [CanBeNull] AlfredCommand clickCommand = null)
+        public ButtonWidget([CanBeNull] string text, [CanBeNull] AlfredCommand clickCommand)
         {
             ClickCommand = clickCommand;
             Text = text;

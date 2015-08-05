@@ -17,7 +17,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
     /// <summary>
     ///     A module that displays information on the system's disk input / output operations
     /// </summary>
-    public class DiskMonitorModuke : SystemMonitorModule
+    public class DiskMonitorModule : SystemMonitorModule
     {
         private const string DiskCategoryName = "PhysicalDisk";
         private const string DiskReadCounterName = "% Disk Read Time";
@@ -39,7 +39,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         ///     Initializes a new instance of the <see cref="MemoryMonitorModule" /> class.
         /// </summary>
         /// <param name="platformProvider">The platform provider.</param>
-        public DiskMonitorModuke([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
+        public DiskMonitorModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
         {
             _diskReadCounter = new PerformanceCounter(DiskCategoryName, DiskReadCounterName, TotalInstanceName, true);
             _diskWriteCounter = new PerformanceCounter(DiskCategoryName, DiskWriteCounterName, TotalInstanceName, true);

@@ -2,11 +2,12 @@
 // AlfredCommand.cs
 // 
 // Created on:      08/03/2015 at 1:40 PM
-// Last Modified:   08/03/2015 at 2:59 PM
+// Last Modified:   08/05/2015 at 3:06 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
 
@@ -35,8 +36,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
 
         /// <summary>
         ///     Initializes a new instance of the
-        ///     <see
-        ///         cref="AlfredCommand" />
+        ///     <see cref="AlfredCommand" />
         ///     class.
         /// </summary>
         public AlfredCommand() : this(null)
@@ -45,12 +45,10 @@ namespace MattEland.Ani.Alfred.Core.Widgets
 
         /// <summary>
         ///     Initializes a new instance of the
-        ///     <see
-        ///         cref="AlfredCommand" />
+        ///     <see cref="AlfredCommand" />
         ///     class.
         /// </summary>
-        /// <param
-        ///     name="executeAction">
+        /// <param name="executeAction">
         ///     The execute action.
         /// </param>
         public AlfredCommand([CanBeNull] Action executeAction)
@@ -92,10 +90,11 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         /// <returns>
         ///     true if this command can be executed; otherwise, false.
         /// </returns>
-        /// <param
-        ///     name="parameter">
+        /// <param name="parameter">
         ///     Data used by the command.  If the command does not require data to be passed, this object can be set to null.
         /// </param>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "parameter",
+            Justification = "This matches the XAML ICommand interface which makes for ease of porting")]
         public bool CanExecute([CanBeNull] object parameter)
         {
             return IsEnabled;
@@ -104,8 +103,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         /// <summary>
         ///     Defines the method to be called when the command is invoked.
         /// </summary>
-        /// <param
-        ///     name="parameter">
+        /// <param name="parameter">
         ///     Data used by the command.  If the command does not require data to be passed, this object can be set to null.
         /// </param>
         public virtual void Execute([CanBeNull] object parameter)

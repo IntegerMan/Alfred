@@ -38,7 +38,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
                           {
                               new CpuMonitorModule(alfred.PlatformProvider),
                               new MemoryMonitorModule(alfred.PlatformProvider),
-                              new DiskMonitorModuke(alfred.PlatformProvider)
+                              new DiskMonitorModule(alfred.PlatformProvider)
                           };
 
             // Add lots of modules in bulk
