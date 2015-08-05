@@ -2,10 +2,11 @@
 // DiskMonitorModule.cs
 // 
 // Created on:      08/05/2015 at 1:03 AM
-// Last Modified:   08/05/2015 at 1:15 AM
+// Last Modified:   08/05/2015 at 3:10 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Diagnostics;
 
 using JetBrains.Annotations;
@@ -62,6 +63,17 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         {
             // ReSharper disable once AssignNullToNotNullAttribute
             get { return "Disk Monitor"; }
+        }
+
+        /// <summary>
+        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public override void Dispose()
+        {
+            base.Dispose();
+
+            _diskReadCounter.Dispose();
+            _diskWriteCounter.Dispose();
         }
 
         /// <summary>

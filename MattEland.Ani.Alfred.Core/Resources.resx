@@ -166,4 +166,16 @@
     <value>The time is now {0:t}</value>
     <comment>The current time with {0} being the time DateTime.</comment>
   </data>
+  <data name="AlfredProvider_AddModules_ErrorNullModule" xml:space="preserve">
+    <value>Modules may not contain null entries.</value>
+    <comment>Error when a provided module was null</comment>
+  </data>
+  <data name="AlfredProvider_AssertMustBeOffline_ErrorNotOffline" xml:space="preserve">
+    <value>Alfred must be offline in order to add modules.</value>
+    <comment>Occurs when alfred is required to be offline.</comment>
+  </data>
+  <data name="AlfredProvider_Name" xml:space="preserve">
+    <value>Alfred</value>
+    <comment>The name of the framework.</comment>
+  </data>
 </root>

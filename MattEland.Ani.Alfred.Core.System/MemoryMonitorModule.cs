@@ -6,6 +6,7 @@
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Diagnostics;
 
 using JetBrains.Annotations;
@@ -84,5 +85,14 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             _memWidget.Value = usedMemory;
         }
 
+        /// <summary>
+        /// Disposes this instance.
+        /// </summary>
+        public override void Dispose()
+        {
+            base.Dispose();
+
+            _memUsedBytesCounter.Dispose();
+        }
     }
 }

@@ -23,7 +23,7 @@ namespace MattEland.Ani.Alfred.Core
     /// <summary>
     ///     Represents a module within Alfred. Modules contain different bits of information to present to the user.
     /// </summary>
-    public abstract class AlfredModule : NotifyPropertyChangedBase
+    public abstract class AlfredModule : NotifyPropertyChangedBase, IDisposable
     {
         [NotNull]
         private readonly IPlatformProvider _platformProvider;
@@ -339,6 +339,14 @@ namespace MattEland.Ani.Alfred.Core
         public virtual void OnShutdownCompleted()
         {
             OnPropertyChanged(nameof(IsVisible));
+        }
+
+        /// <summary>
+        /// Dispose of anything that needs to be done. By default nothing needs to be disposed of, but some modules will
+        /// need to support this and should override Dispose.
+        /// </summary>
+        public virtual void Dispose()
+        {
         }
     }
 }

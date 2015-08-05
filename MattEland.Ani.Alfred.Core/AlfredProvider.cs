@@ -2,12 +2,13 @@
 // AlfredProvider.cs
 // 
 // Created on:      07/25/2015 at 11:30 PM
-// Last Modified:   08/03/2015 at 6:51 PM
+// Last Modified:   08/05/2015 at 3:20 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 using JetBrains.Annotations;
@@ -20,7 +21,7 @@ namespace MattEland.Ani.Alfred.Core
     ///     Coordinates providing personal assistance to a user interface and receiving settings and queries back from the user
     ///     interface.
     /// </summary>
-    public sealed class AlfredProvider : NotifyPropertyChangedBase
+    public sealed class AlfredProvider : NotifyPropertyChangedBase, IDisposable
     {
         /// <summary>
         ///     The platform provider
@@ -40,15 +41,10 @@ namespace MattEland.Ani.Alfred.Core
         private AlfredStatus _status;
 
         /// <summary>
-        ///     Initializes a new instance of the
-        ///     <see
-        ///         cref="AlfredProvider" />
-        ///     class.
+        ///     Initializes a new instance of the <see cref="AlfredProvider" /> class.
         /// </summary>
-        /// <param
-        ///     name="provider">
-        ///     The platform provider.
-        /// </param>
+        /// <param name="provider">The provider.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public AlfredProvider([NotNull] IPlatformProvider provider)
         {
             if (provider == null)
@@ -64,10 +60,7 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     Initializes a new instance of the
-        ///     <see
-        ///         cref="AlfredProvider" />
-        ///     class.
+        ///     Initializes a new instance of the <see cref="AlfredProvider" /> class.
         /// </summary>
         public AlfredProvider() : this(new SimplePlatformProvider())
         {
@@ -87,7 +80,31 @@ namespace MattEland.Ani.Alfred.Core
         [NotNull]
         public static string NameAndVersion
         {
-            get { return "Alfred [Dev]"; }
+            get { return string.Format(CultureInfo.CurrentCulture, "{0} {1}", Name, Version); }
+        }
+
+        /// <summary>
+        ///     Gets the name of the framework.
+        /// </summary>
+        /// <value>The name.</value>
+        [NotNull]
+        public static string Name
+        {
+            get { return Resources.AlfredProvider_Name.NonNull(); }
+        }
+
+        /// <summary>
+        ///     Gets the name of the framework.
+        /// </summary>
+        /// <value>The name.</value>
+        [NotNull]
+        public static string Version
+        {
+            get
+            {
+                // TODO: Grab the assembly version
+                return "0.1";
+            }
         }
 
         /// <summary>
@@ -107,12 +124,11 @@ namespace MattEland.Ani.Alfred.Core
             get { return _status; }
             internal set
             {
-                if (value == _status)
+                if (value != _status)
                 {
-                    return;
+                    _status = value;
+                    OnPropertyChanged(nameof(Status));
                 }
-                _status = value;
-                OnPropertyChanged(nameof(Status));
             }
         }
 
@@ -127,10 +143,20 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
+        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            foreach (var module in Modules)
+            {
+                module.Dispose();
+            }
+        }
+
+        /// <summary>
         ///     Tells Alfred it's okay to start itself up and begin operating.
         /// </summary>
-        /// <exception
-        ///     cref="InvalidOperationException">
+        /// <exception cref="InvalidOperationException">
         ///     Thrown if Alfred is already Online
         /// </exception>
         public void Initialize()
@@ -142,8 +168,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <summary>
         ///     Tells Alfred to go ahead and shut down.
         /// </summary>
-        /// <exception
-        ///     cref="InvalidOperationException">
+        /// <exception cref="InvalidOperationException">
         ///     Thrown if Alfred is already Offline
         /// </exception>
         public void Shutdown()
@@ -155,8 +180,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <summary>
         ///     Tells modules to take a look at their content and update as needed.
         /// </summary>
-        /// <exception
-        ///     cref="InvalidOperationException">
+        /// <exception cref="InvalidOperationException">
         ///     Thrown if Alfred is not Online
         /// </exception>
         public void Update()
@@ -176,8 +200,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <summary>
         ///     Adds a module to alfred.
         /// </summary>
-        /// <exception
-        ///     cref="InvalidOperationException">
+        /// <exception cref="InvalidOperationException">
         ///     Thrown if Alfred is not Offline
         /// </exception>
         public void AddModule([NotNull] AlfredModule module)
@@ -195,13 +218,9 @@ namespace MattEland.Ani.Alfred.Core
         /// <summary>
         ///     Adds modules to Alfred in bulk.
         /// </summary>
-        /// <param
-        ///     name="modules">
-        ///     The modules to add.
-        /// </param>
-        /// <exception
-        ///     cref="System.ArgumentNullException">
-        ///     Modules may not be null or contain null entries.
+        /// <param name="modules">The modules.</param>
+        /// <exception cref="System.ArgumentNullException">
+        ///     modules must be provided
         /// </exception>
         public void AddModules([NotNull] IEnumerable<AlfredModule> modules)
         {
@@ -218,7 +237,9 @@ namespace MattEland.Ani.Alfred.Core
             {
                 if (module == null)
                 {
-                    throw new ArgumentNullException(nameof(modules), "Modules may not contain null entries.");
+                    throw new ArgumentNullException(
+                        nameof(modules),
+                        Resources.AlfredProvider_AddModules_ErrorNullModule);
                 }
                 AddModule(module);
             }
@@ -227,15 +248,14 @@ namespace MattEland.Ani.Alfred.Core
         /// <summary>
         ///     Checks that Alfred must be offline and throws an exception if it isn't.
         /// </summary>
-        /// <exception
-        ///     cref="System.InvalidOperationException">
+        /// <exception cref="System.InvalidOperationException">
         ///     Alfred must be offline in order to add modules.
         /// </exception>
         private void AssertMustBeOffline()
         {
             if (Status != AlfredStatus.Offline)
             {
-                throw new InvalidOperationException("Alfred must be offline in order to add modules.");
+                throw new InvalidOperationException(Resources.AlfredProvider_AssertMustBeOffline_ErrorNotOffline);
             }
         }
     }

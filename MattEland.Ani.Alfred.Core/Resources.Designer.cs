@@ -61,6 +61,33 @@ namespace MattEland.Ani.Alfred.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Modules may not contain null entries..
+        /// </summary>
+        internal static string AlfredProvider_AddModules_ErrorNullModule {
+            get {
+                return ResourceManager.GetString("AlfredProvider_AddModules_ErrorNullModule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alfred must be offline in order to add modules..
+        /// </summary>
+        internal static string AlfredProvider_AssertMustBeOffline_ErrorNotOffline {
+            get {
+                return ResourceManager.GetString("AlfredProvider_AssertMustBeOffline_ErrorNotOffline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alfred.
+        /// </summary>
+        internal static string AlfredProvider_Name {
+            get {
+                return ResourceManager.GetString("AlfredProvider_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} is now initialized..
         /// </summary>
         internal static string AlfredStatusController_Initialize__ModuleInitialized {

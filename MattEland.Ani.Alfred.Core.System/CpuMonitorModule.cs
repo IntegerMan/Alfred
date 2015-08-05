@@ -6,6 +6,7 @@
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -79,7 +80,8 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         {
             _cpuWidgets.Clear();
 
-            // _processorCounters is not cleared since it's only populated at startup and its values are used during initialize.
+            // _processorCounters is not cleared since it's only populated at startup and its
+            // values are used during initialize. Fields will be disposed during Dispose.
         }
 
         /// <summary>
@@ -151,6 +153,19 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 
             widget.Value = GetNextCounterValueSafe(counter, 0);
             widget.ValueFormatString = "{0:F2} %";
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public override void Dispose()
+        {
+            base.Dispose();
+
+            foreach (var counter in _processorCounters)
+            {
+                counter.Dispose();
+            }
         }
     }
 }
