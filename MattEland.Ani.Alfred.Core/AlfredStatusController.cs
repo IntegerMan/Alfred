@@ -1,20 +1,28 @@
+// ---------------------------------------------------------
+// AlfredStatusController.cs
+// 
+// Created on:      08/03/2015 at 3:09 PM
+// Last Modified:   08/05/2015 at 2:35 PM
+// Original author: Matt Eland
+// ---------------------------------------------------------
+
 using System;
+using System.Globalization;
 
 using JetBrains.Annotations;
 
 namespace MattEland.Ani.Alfred.Core
 {
     /// <summary>
-    /// A utility class that helps control Alfred's status and monitors the initialization and shutdown processes.
+    ///     A utility class that helps control Alfred's status and monitors the initialization and shutdown processes.
     /// </summary>
     public sealed class AlfredStatusController
     {
-
         [NotNull]
         private readonly AlfredProvider _alfred;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlfredStatusController" /> class.
+        ///     Initializes a new instance of the <see cref="AlfredStatusController" /> class.
         /// </summary>
         /// <param name="alfred">The alfred provider.</param>
         public AlfredStatusController([NotNull] AlfredProvider alfred)
@@ -28,7 +36,7 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        /// Gets the alfred provider.
+        ///     Gets the alfred provider.
         /// </summary>
         /// <value>The alfred provider.</value>
         [NotNull]
@@ -40,41 +48,47 @@ namespace MattEland.Ani.Alfred.Core
         /// <summary>
         ///     Tells Alfred it's okay to start itself up and begin operating.
         /// </summary>
-        /// <exception
-        ///     cref="InvalidOperationException">
+        /// <exception cref="InvalidOperationException">
         ///     Thrown if Alfred is already Online
         /// </exception>
         public void Initialize()
         {
-            const string LogHeader = "Alfred.Initialize";
+            var header = Resources.AlfredStatusController_Initialize_LogHeader.NonNull();
+            var culture = CultureInfo.CurrentCulture;
 
             var console = Alfred.Console;
 
             // Handle case on initialize but already initializing or online
             if (Alfred.Status == AlfredStatus.Online)
             {
-                const string Message = "Instructed to initialize but system is already online";
-                console?.Log(LogHeader, Message);
+                var message = Resources.AlfredStatusController_Initialize_ErrorAlreadyOnline.NonNull();
+                console?.Log(header, message);
 
-                throw new InvalidOperationException(Message);
+                throw new InvalidOperationException(message);
             }
 
             // Inform things that we're setting up right now
-            console?.Log(LogHeader, "Initializing...");
+            console?.Log(header, Resources.AlfredStatusController_Initialize_Initializing.NonNull());
             Alfred.Status = AlfredStatus.Initializing;
 
             // Boot up Modules and give them a provider
             foreach (var module in Alfred.Modules)
             {
-                console?.Log(LogHeader, $"Initializing {module.NameAndVersion}");
+                // Log the initialization
+                var initLogFormat = Resources.AlfredStatusController_Initialize_InitializingModule.NonNull();
+                console?.Log(header, string.Format(culture, initLogFormat, module.NameAndVersion));
+
+                // Actually initialize the module
                 module.Initialize(Alfred);
-                console?.Log(LogHeader, $"{module.NameAndVersion} is now initialized.");
+
+                // Log the completion
+                var initializedLogFormat = Resources.AlfredStatusController_Initialize__ModuleInitialized.NonNull();
+                console?.Log(header, string.Format(culture, initializedLogFormat, module.NameAndVersion));
             }
 
             // We're done. Let the world know.
             Alfred.Status = AlfredStatus.Online;
-            console?.Log(LogHeader, "Initilization Completed; notifying modules.");
-
+            console?.Log(header, Resources.AlfredStatusController_Initialize_InitilizationCompleted.NonNull());
 
             // Notify each module that startup was completed
             foreach (var module in Alfred.Modules)
@@ -82,56 +96,59 @@ namespace MattEland.Ani.Alfred.Core
                 module.OnInitializationCompleted();
             }
 
-            console?.Log(LogHeader, "Alfred is now Online.");
-
+            // Log the completion
+            console?.Log(header, Resources.AlfredStatusController_Initialize_AlfredOnline.NonNull());
         }
 
         /// <summary>
         ///     Tells Alfred to go ahead and shut down.
         /// </summary>
-        /// <exception
-        ///     cref="InvalidOperationException">
+        /// <exception cref="InvalidOperationException">
         ///     Thrown if Alfred is already Offline
         /// </exception>
         public void Shutdown()
         {
-            const string LogHeader = "Alfred.Shutdown";
+            var header = Resources.AlfredStatusController_Shutdown_LogHeader.NonNull();
 
             var console = Alfred.Console;
 
-            // Handle case on shutdown but already offline
-            if (Alfred.Status == AlfredStatus.Offline)
+            // Handle cases where shutdown shouldn't be allowed
+            switch (Alfred.Status)
             {
-                const string Message = "Instructed to shut down but system is already offline";
-                console?.Log(LogHeader, Message);
+                case AlfredStatus.Offline:
+                    var offlineMessage = Resources.AlfredStatusController_Shutdown_ErrorAlreadyOffline.NonNull();
+                    console?.Log(header, offlineMessage);
 
-                throw new InvalidOperationException(Message);
-            }
+                    throw new InvalidOperationException(offlineMessage);
 
-            // Handle case on shutdown but already terminating
-            if (Alfred.Status == AlfredStatus.Terminating)
-            {
-                const string Message = "Instructed to shut down but system is already shutting down";
-                console?.Log(LogHeader, Message);
+                case AlfredStatus.Terminating:
+                    var terminatingMessage = Resources.AlfredStatusController_Shutdown_ErrorAlreadyTerminating.NonNull();
+                    console?.Log(header, terminatingMessage);
 
-                throw new InvalidOperationException(Message);
+                    throw new InvalidOperationException(terminatingMessage);
             }
 
             // Indicate status so the UI can keep busy
-            console?.Log(LogHeader, "Shutting down...");
+            console?.Log(header, Resources.AlfredStatusController_Shutdown_Shutting_down.NonNull());
             Alfred.Status = AlfredStatus.Terminating;
 
             // Shut down modules and decouple them from Alfred
             foreach (var module in Alfred.Modules)
             {
-                console?.Log(LogHeader, $"Shutting down {module.NameAndVersion}");
+                var culture = CultureInfo.CurrentCulture;
+
+                var shuttingDownMessage = Resources.AlfredStatusController_Shutdown_ShuttingDownModule.NonNull();
+                console?.Log(header, string.Format(culture, shuttingDownMessage, module.NameAndVersion));
+
                 module.Shutdown();
-                console?.Log(LogHeader, $"{module.NameAndVersion} is now offline.");
+
+                var shutDownMessage = Resources.AlfredStatusController_Shutdown_ModuleOffline.NonNull();
+                console?.Log(header, string.Format(culture, shutDownMessage, module.NameAndVersion));
             }
 
             // We're done here. Tell the world.
             Alfred.Status = AlfredStatus.Offline;
-            console?.Log(LogHeader, "Shut down completed.");
+            console?.Log(header, Resources.AlfredStatusController_Shutdown_Completed.NonNull());
 
             // Notify each module that shutdown was completed
             foreach (var module in Alfred.Modules)

@@ -2,14 +2,17 @@
 // AlfredModule.cs
 // 
 // Created on:      07/29/2015 at 3:01 PM
-// Last Modified:   08/05/2015 at 1:42 AM
+// Last Modified:   08/05/2015 at 2:03 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 
 using JetBrains.Annotations;
 
@@ -75,9 +78,25 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <value>The name and version.</value>
         [NotNull]
-        public virtual string NameAndVersion
+        public string NameAndVersion
         {
-            get { return $"{Name} 0.1 Alpha"; }
+            get { return string.Format(CultureInfo.CurrentCulture, "{0} {1}", Name, Version); }
+        }
+
+        /// <summary>
+        ///     Gets the version of the module.
+        /// </summary>
+        /// <value>The version.</value>
+        [CanBeNull]
+        public virtual string Version
+        {
+            get
+            {
+                // We'll base this off of the AssemblyVersion.
+                var version = GetAssemblyVersion();
+
+                return version?.ToString();
+            }
         }
 
         /// <summary>
@@ -115,6 +134,25 @@ namespace MattEland.Ani.Alfred.Core
             {
                 // TODO: This could use some tests
                 return _widgets != null && _widgets.Any(w => w != null && w.IsVisible);
+            }
+        }
+
+        /// <summary>
+        ///     Gets the Version of this module's assembly based on the AssemblyVersionAttribute.
+        /// </summary>
+        /// <returns>The Version of this module's assembly</returns>
+        [CanBeNull]
+        private Version GetAssemblyVersion()
+        {
+            try
+            {
+                var assembly = GetType().Assembly;
+                var assemblyName = new AssemblyName(assembly.FullName);
+                return assemblyName.Version;
+            }
+            catch (IOException)
+            {
+                return null;
             }
         }
 
@@ -221,7 +259,11 @@ namespace MattEland.Ani.Alfred.Core
         {
             if (Status == AlfredStatus.Offline)
             {
-                throw new InvalidOperationException($"{NameAndVersion} was offline when told to update.");
+                var message = string.Format(
+                                            CultureInfo.CurrentCulture,
+                                            "{0} was offline when told to update.",
+                                            NameAndVersion);
+                throw new InvalidOperationException(message);
             }
 
             UpdateProtected();
