@@ -58,12 +58,6 @@ namespace MattEland.Ani.Alfred.WPF
             timer.Tick += OnTimerTick;
             timer.Start();
 
-            // Determine whether to auto-start or not based off of settings
-            if (Settings.AutoStartAlfred)
-            {
-                _alfred.Initialize();
-            }
-
         }
 
         /// <summary>
@@ -87,20 +81,11 @@ namespace MattEland.Ani.Alfred.WPF
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void OnWindowLoaded(object sender, RoutedEventArgs e)
         {
-
-            // No longer doing anything. We might want to have Alfred auto-initialize here...
-
-        }
-
-        /// <summary>
-        /// Handles the <see cref="E:ExitClicked" /> event.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
-        private void OnExitClicked(object sender, RoutedEventArgs e)
-        {
-            // TODO: A command based model would be better
-            Close();
+            // Determine whether to auto-start or not based off of settings
+            if (Settings.AutoStartAlfred)
+            {
+                _alfred.Initialize();
+            }
         }
 
         /// <summary>
