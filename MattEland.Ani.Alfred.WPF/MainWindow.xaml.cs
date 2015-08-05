@@ -15,7 +15,7 @@ namespace MattEland.Ani.Alfred.WPF
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public sealed partial class MainWindow
+    public sealed partial class MainWindow : IDisposable
     {
 
         /// <summary>
@@ -35,16 +35,16 @@ namespace MattEland.Ani.Alfred.WPF
         {
             InitializeComponent();
 
-            // Create the console first to log what we're doing
+            // Create Alfred. It won't be online and running yet, but create it.
+            var platformProvider = new WinClientPlatformProvider();
+            _alfred = new AlfredProvider(platformProvider);
+
+            // Give Alfred a way to talk to the application
             var console = new WinClientConsole();
             console.Log("WinClient.Initialize", "Console is now online.");
+            _alfred.Console = console;
 
-            // Create Alfred. It won't be online and running yet, but create it.
-            _alfred = new AlfredProvider(new WinClientPlatformProvider())
-            {
-                Console = console
-            };
-
+            // Give Alfred some Content
             StandardModuleProvider.AddStandardModules(_alfred);
             SystemModuleProvider.AddStandardModules(_alfred);
 
@@ -115,6 +115,14 @@ namespace MattEland.Ani.Alfred.WPF
             {
                 _alfred.Shutdown();
             }
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            _alfred.Dispose();
         }
     }
 }
