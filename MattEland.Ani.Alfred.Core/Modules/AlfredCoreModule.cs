@@ -6,6 +6,8 @@
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
+using System.Globalization;
+
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Widgets;
@@ -84,7 +86,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         [NotNull]
         public override string Name
         {
-            get { return "Alfred Core"; }
+            get { return Resources.AlfredCoreModule_Name.NonNull(); }
         }
 
         /// <summary>
@@ -218,7 +220,8 @@ namespace MattEland.Ani.Alfred.Core.Modules
             else
             {
                 // Display the current status
-                _statusWidget.Text = $"{AlfredProvider.NameAndVersion} is currently {AlfredProvider.Status}";
+                var statusFormat = Resources.AlfredCoreModule_AlfredStatusText.NonNull();
+                _statusWidget.Text = string.Format(CultureInfo.CurrentCulture, statusFormat, AlfredProvider.Name, AlfredProvider.Status);
 
                 // Show the shutdown button while online and initialize button while offline
                 if (_shutdownButton.ClickCommand != null)

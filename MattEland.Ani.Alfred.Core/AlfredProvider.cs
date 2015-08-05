@@ -2,14 +2,13 @@
 // AlfredProvider.cs
 // 
 // Created on:      07/25/2015 at 11:30 PM
-// Last Modified:   08/05/2015 at 3:20 PM
+// Last Modified:   08/05/2015 at 3:28 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 
 using JetBrains.Annotations;
 
@@ -78,7 +77,7 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <value>The name and version.</value>
         [NotNull]
-        public static string NameAndVersion
+        public string NameAndVersion
         {
             get { return string.Format(CultureInfo.CurrentCulture, "{0} {1}", Name, Version); }
         }
@@ -88,7 +87,7 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <value>The name.</value>
         [NotNull]
-        public static string Name
+        public string Name
         {
             get { return Resources.AlfredProvider_Name.NonNull(); }
         }
@@ -98,12 +97,13 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <value>The name.</value>
         [NotNull]
-        public static string Version
+        public string Version
         {
             get
             {
-                // TODO: Grab the assembly version
-                return "0.1";
+                // We'll base this off of the AssemblyVersion.
+                var version = this.GetAssemblyVersion();
+                return version?.ToString() ?? string.Empty;
             }
         }
 
@@ -188,7 +188,7 @@ namespace MattEland.Ani.Alfred.Core
             // Error check
             if (Status != AlfredStatus.Online)
             {
-                throw new InvalidOperationException("Alfred must be online in order to update modules.");
+                throw new InvalidOperationException(Resources.AlfredProvider_Update_ErrorMustBeOnline);
             }
 
             foreach (var module in Modules)

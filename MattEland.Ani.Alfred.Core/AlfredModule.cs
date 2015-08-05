@@ -54,6 +54,7 @@ namespace MattEland.Ani.Alfred.Core
             _platformProvider = platformProvider;
         }
 
+
         /// <summary>
         ///     Gets the user interface widgets for the module.
         /// </summary>
@@ -93,9 +94,7 @@ namespace MattEland.Ani.Alfred.Core
             get
             {
                 // We'll base this off of the AssemblyVersion.
-                var version = GetAssemblyVersion();
-
-                return version?.ToString();
+                return this.GetAssemblyVersion()?.ToString();
             }
         }
 
@@ -134,25 +133,6 @@ namespace MattEland.Ani.Alfred.Core
             {
                 // TODO: This could use some tests
                 return _widgets != null && _widgets.Any(w => w != null && w.IsVisible);
-            }
-        }
-
-        /// <summary>
-        ///     Gets the Version of this module's assembly based on the AssemblyVersionAttribute.
-        /// </summary>
-        /// <returns>The Version of this module's assembly</returns>
-        [CanBeNull]
-        private Version GetAssemblyVersion()
-        {
-            try
-            {
-                var assembly = GetType().Assembly;
-                var assemblyName = new AssemblyName(assembly.FullName);
-                return assemblyName.Version;
-            }
-            catch (IOException)
-            {
-                return null;
             }
         }
 
