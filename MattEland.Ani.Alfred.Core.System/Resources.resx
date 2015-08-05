@@ -117,12 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="SystemMonitorModule_Name_System_Monitor" xml:space="preserve">
-    <value>System Monitor</value>
-    <comment>The name of the System Monitor module.</comment>
+  <data name="CpuMonitorModule_Name" xml:space="preserve">
+    <value>CPU Monitor</value>
+    <comment>The name of the CPU Monitor module.</comment>
   </data>
-  <data name="SystemMonitorModule_Cpu_Label_Format" xml:space="preserve">
+  <data name="CpuMonitorModule_Cpu_Label_Format" xml:space="preserve">
     <value>CPU {0}</value>
     <comment>The label used for CPU monitor widgets with {0} being the number of the CPU core.</comment>
+  </data>
+  <data name="MemoryMonitorModule_Name" xml:space="preserve">
+    <value>Memory Monitor</value>
+    <comment>The title of the memory monitor module</comment>
+  </data>
+  <data name="MemoryMonitorModule_LabelName" xml:space="preserve">
+    <value>Memory:</value>
+    <comment>The text for the memory utilization label.</comment>
   </data>
 </root>

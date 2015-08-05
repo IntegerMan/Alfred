@@ -1,166 +1,55 @@
-﻿// ---------------------------------------------------------
+// ---------------------------------------------------------
 // SystemMonitorModule.cs
 // 
-// Created on:      08/03/2015 at 8:51 PM
-// Last Modified:   08/04/2015 at 3:42 PM
+// Created on:      08/04/2015 at 10:04 PM
+// Last Modified:   08/04/2015 at 10:08 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 
 using JetBrains.Annotations;
-
-using MattEland.Ani.Alfred.Core.Widgets;
 
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
     /// <summary>
-    ///     A module that displays information on the system
+    ///     The SystemMonitorModule is an abstract class for modules commonly working with performance counters.
     /// </summary>
-    public class SystemMonitorModule : AlfredModule
+    public abstract class SystemMonitorModule : AlfredModule
     {
-        private const string CpuCategoryName = "Processor";
-        private const string CpuUsageCounterName = "% Processor Time";
-        private const string TotalInstanceName = "_Total";
-        private static readonly CultureInfo Culture = CultureInfo.CurrentCulture;
-
-        // ReSharper disable once AssignNullToNotNullAttribute
-        [NotNull]
-        private readonly string _cpuMonitorLabel = Resources.SystemMonitorModule_Cpu_Label_Format;
-
-        [NotNull]
-        [ItemNotNull]
-        private readonly List<AlfredProgressBarWidget> _cpuWidgets = new List<AlfredProgressBarWidget>();
-
-        [NotNull]
-        [ItemNotNull]
-        private readonly List<PerformanceCounter> _processorCounters =
-            new List<PerformanceCounter>();
-
         /// <summary>
-        ///     Initializes a new instance of the
-        ///     <see cref="AlfredModule" />
-        ///     class.
+        ///     The performance counter instance name for total results
         /// </summary>
-        /// <param name="platformProvider"> The platform provider. </param>
-        /// <exception cref="ArgumentNullException"> </exception>
-        public SystemMonitorModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
-        {
-            var cpuCategory = new PerformanceCounterCategory(CpuCategoryName);
-
-            var cpuInstanceNames = cpuCategory.GetInstanceNames();
-
-            // Add counters for each CPU instance we're using
-            foreach (var instance in cpuInstanceNames)
-            {
-                _processorCounters.Add(
-                                       new PerformanceCounter(
-                                           CpuCategoryName,
-                                           CpuUsageCounterName,
-                                           instance,
-                                           true));
-            }
-        }
-
-        /// <summary> Gets the name of the module. </summary>
-        /// <value> The name of the module. </value>
-        public override string Name
-        {
-            // ReSharper disable once AssignNullToNotNullAttribute
-            get { return Resources.SystemMonitorModule_Name_System_Monitor; }
-        }
-
-        /// <summary> Handles module shutdown events </summary>
-        protected override void ShutdownProtected()
-        {
-            _cpuWidgets.Clear();
-
-            // _processorCounters is not cleared since it's only populated at startup and its values are used during initialize.
-        }
+        public const string TotalInstanceName = "_Total";
 
         /// <summary>
-        ///     Handles module initialization events
+        ///     Initializes a new instance of the <see cref="SystemMonitorModule" /> class.
         /// </summary>
-        protected override void InitializeProtected()
+        /// <param name="platformProvider">The platform provider.</param>
+        protected SystemMonitorModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
         {
-            _cpuWidgets.Clear();
-
-            var core = 1;
-
-            foreach (var counter in _processorCounters.OrderBy(c => c.InstanceName))
-            {
-                // Don't add a core indicator for the total
-                Debug.Assert(counter != null);
-                if (counter.InstanceName == TotalInstanceName)
-                {
-                    continue;
-                }
-
-                // Create a widget for the counter
-                // Store the counter as the widget's data context for easier updating later on
-                var widget = new AlfredProgressBarWidget() { DataContext = counter, Minimum = 0, Maximum = 100 };
-
-                // Get the first value of the widget and have the label applied to the widget
-                var label = string.Format(CultureInfo.CurrentCulture, _cpuMonitorLabel, core);
-                UpdateCpuWidget(widget, counter, label);
-
-                _cpuWidgets.Add(widget);
-
-                RegisterWidget(widget);
-
-                core++;
-            }
         }
 
         /// <summary>
-        ///     Handles updating the module as needed
+        ///     Gets the next counter value safely, defaulting to 0 on any error.
         /// </summary>
-        protected override void UpdateProtected()
+        /// <param name="counter">The counter.</param>
+        /// <returns>The value returned from the counter</returns>
+        protected static float GetNextCounterValueSafe([CanBeNull] PerformanceCounter counter)
         {
-            var core = 1;
-            foreach (var widget in _cpuWidgets)
-            {
-                var counter = widget.DataContext as PerformanceCounter;
-
-                // Update the widget using our arbitrary number instead of the instance name
-                var label = string.Format(CultureInfo.CurrentCulture, _cpuMonitorLabel, core);
-                UpdateCpuWidget(widget, counter, label);
-
-                core++;
-            }
+            return GetNextCounterValueSafe(counter, 0);
         }
 
         /// <summary>
-        ///     Updates the cpu widget with the next value from its counter or an error message if no counter was provided or
-        ///     an error occurred reading the value.
-        /// </summary>
-        /// <param name="widget"> The display widget. </param>
-        /// <param name="counter"> The performance counter. </param>
-        /// <param name="label"> The label to add before the counter value. </param>
-        private static void UpdateCpuWidget(
-            [NotNull] AlfredProgressBarWidget widget,
-            [CanBeNull] PerformanceCounter counter,
-            [CanBeNull] string label)
-        {
-
-            widget.Text = string.Format(Culture, "{0}:", label);
-
-            widget.Value = GetNextCounterValueSafe(counter, 0);
-            widget.ValueFormatString = "{0:F2} %";
-        }
-
-        /// <summary>
-        /// Gets the next counter value safely, defaulting to the defaultValue on any error.
+        ///     Gets the next counter value safely, defaulting to the defaultValue on any error.
         /// </summary>
         /// <param name="counter">The counter.</param>
         /// <param name="defaultValue">The default value.</param>
         /// <returns>The value returned from the counter</returns>
-        private static float GetNextCounterValueSafe([CanBeNull] PerformanceCounter counter, float defaultValue)
+        protected static float GetNextCounterValueSafe([CanBeNull] PerformanceCounter counter, float defaultValue)
         {
             try
             {

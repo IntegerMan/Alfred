@@ -63,18 +63,36 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor {
         /// <summary>
         ///   Looks up a localized string similar to CPU {0}.
         /// </summary>
-        internal static string SystemMonitorModule_Cpu_Label_Format {
+        internal static string CpuMonitorModule_Cpu_Label_Format {
             get {
-                return ResourceManager.GetString("SystemMonitorModule_Cpu_Label_Format", resourceCulture);
+                return ResourceManager.GetString("CpuMonitorModule_Cpu_Label_Format", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to System Monitor.
+        ///   Looks up a localized string similar to CPU Monitor.
         /// </summary>
-        internal static string SystemMonitorModule_Name_System_Monitor {
+        internal static string CpuMonitorModule_Name {
             get {
-                return ResourceManager.GetString("SystemMonitorModule_Name_System_Monitor", resourceCulture);
+                return ResourceManager.GetString("CpuMonitorModule_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Memory:.
+        /// </summary>
+        internal static string MemoryMonitorModule_LabelName {
+            get {
+                return ResourceManager.GetString("MemoryMonitorModule_LabelName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Memory Monitor.
+        /// </summary>
+        internal static string MemoryMonitorModule_Name {
+            get {
+                return ResourceManager.GetString("MemoryMonitorModule_Name", resourceCulture);
             }
         }
     }

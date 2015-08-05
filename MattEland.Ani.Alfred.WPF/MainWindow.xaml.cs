@@ -47,7 +47,8 @@ namespace MattEland.Ani.Alfred.WPF
 
             StandardModuleProvider.AddStandardModules(_alfred);
 
-            _alfred.AddModule(new SystemMonitorModule(_alfred.PlatformProvider));
+            _alfred.AddModule(new CpuMonitorModule(_alfred.PlatformProvider));
+            _alfred.AddModule(new MemoryMonitorModule(_alfred.PlatformProvider));
 
             console.Log("WinClient.Initialize", "Alfred instantiated");
 
