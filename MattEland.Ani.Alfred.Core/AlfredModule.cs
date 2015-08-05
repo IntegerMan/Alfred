@@ -2,7 +2,7 @@
 // AlfredModule.cs
 // 
 // Created on:      07/29/2015 at 3:01 PM
-// Last Modified:   08/03/2015 at 1:57 PM
+// Last Modified:   08/05/2015 at 1:42 AM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -33,16 +33,13 @@ namespace MattEland.Ani.Alfred.Core
 
         /// <summary>
         ///     Initializes a new instance of the
-        ///     <see
-        ///         cref="AlfredModule" />
+        ///     <see cref="AlfredModule" />
         ///     class.
         /// </summary>
-        /// <param
-        ///     name="platformProvider">
+        /// <param name="platformProvider">
         ///     The platform provider.
         /// </param>
-        /// <exception
-        ///     cref="ArgumentNullException">
+        /// <exception cref="ArgumentNullException">
         /// </exception>
         protected AlfredModule([NotNull] IPlatformProvider platformProvider)
         {
@@ -109,17 +106,27 @@ namespace MattEland.Ani.Alfred.Core
         public abstract string Name { get; }
 
         /// <summary>
+        ///     Gets whether or not the module is visible to the user interface.
+        /// </summary>
+        /// <value>Whether or not the module is visible.</value>
+        public bool IsVisible
+        {
+            get
+            {
+                // TODO: This could use some tests
+                return _widgets != null && _widgets.Any(w => w != null && w.IsVisible);
+            }
+        }
+
+        /// <summary>
         ///     Initializes the module.
         /// </summary>
-        /// <param
-        ///     name="alfred">
+        /// <param name="alfred">
         ///     The provider.
         /// </param>
-        /// <exception
-        ///     cref="ArgumentNullException">
+        /// <exception cref="ArgumentNullException">
         /// </exception>
-        /// <exception
-        ///     cref="InvalidOperationException">
+        /// <exception cref="InvalidOperationException">
         ///     Already online when told to initialize.
         /// </exception>
         [SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider",
@@ -162,11 +169,9 @@ namespace MattEland.Ani.Alfred.Core
         /// <summary>
         ///     Shuts down the module and decouples it from Alfred.
         /// </summary>
-        /// <exception
-        ///     cref="ArgumentNullException">
+        /// <exception cref="ArgumentNullException">
         /// </exception>
-        /// <exception
-        ///     cref="InvalidOperationException">
+        /// <exception cref="InvalidOperationException">
         ///     Already offline when told to shut down.
         /// </exception>
         [SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider",
@@ -233,8 +238,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <summary>
         ///     Registers a widget for the module.
         /// </summary>
-        /// <param
-        ///     name="widget">
+        /// <param name="widget">
         ///     The widget.
         /// </param>
         protected void RegisterWidget([NotNull] AlfredWidget widget)
@@ -261,8 +265,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <summary>
         ///     Registers multiple widgets at once.
         /// </summary>
-        /// <param
-        ///     name="widgets">
+        /// <param name="widgets">
         ///     The widgets.
         /// </param>
         protected void RegisterWidgets([NotNull] IEnumerable<AlfredWidget> widgets)
@@ -280,31 +283,20 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     A notification method that is invoked when initialization for Alfred is complete so the UI can be fully enabled or adjusted
+        ///     A notification method that is invoked when initialization for Alfred is complete so the UI can be fully enabled or
+        ///     adjusted
         /// </summary>
         public virtual void OnInitializationCompleted()
         {
         }
 
         /// <summary>
-        ///     A notification method that is invoked when shutdown for Alfred is complete so the UI can be fully enabled or adjusted
+        ///     A notification method that is invoked when shutdown for Alfred is complete so the UI can be fully enabled or
+        ///     adjusted
         /// </summary>
         public virtual void OnShutdownCompleted()
         {
             OnPropertyChanged(nameof(IsVisible));
-        }
-
-        /// <summary>
-        /// Gets whether or not the module is visible to the user interface.
-        /// </summary>
-        /// <value>Whether or not the module is visible.</value>
-        public bool IsVisible
-        {
-            get
-            {
-                // TODO: This could use some tests
-                return _widgets != null && _widgets.Any(w => w != null && w.IsVisible);
-            }
         }
     }
 }
