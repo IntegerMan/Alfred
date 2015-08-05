@@ -7,6 +7,8 @@
         xmlns:core="clr-namespace:MattEland.Ani.Alfred.Core;assembly=MattEland.Ani.Alfred.Core"
         xmlns:widgets="clr-namespace:MattEland.Ani.Alfred.Core.Widgets;assembly=MattEland.Ani.Alfred.Core"
         mc:Ignorable="d"
+        Background="{StaticResource AppBackgroundBrush}"
+        Foreground="{StaticResource AppForegroundBrush}"
         Loaded="OnWindowLoaded"
         Title="{Binding Path=NameAndVersion}" Height="600" Width="800" 
         Closing="OnWindowClosing"
@@ -17,29 +19,35 @@
                    DataContext="{Binding Path=Console}"
                    d:DataContext="{d:DesignInstance win:WinClientConsole}">
             <TextBlock DockPanel.Dock="Top">Console Events</TextBlock>
-            <ListBox ItemsSource="{Binding Path=Events}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Border BorderThickness="1" Margin="8,4,8,0">
-                            <StackPanel Orientation="Vertical">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Path=Time, StringFormat=T}" />
-                                    <TextBlock Text="-" Margin="4,0" />
-                                    <TextBlock Text="{Binding Path=Title}" />
+            <ScrollViewer
+                VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding Path=Events}"
+                              FontSize="10">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderThickness="1" Margin="4,2,4,0">
+                                <StackPanel Orientation="Vertical">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Path=Time, StringFormat=T}" />
+                                        <TextBlock Text="-" Margin="4,0" />
+                                        <TextBlock Text="{Binding Path=Title}" />
+                                    </StackPanel>
+                                    <StackPanel Margin="8, 2, 0, 0">
+                                        <TextBlock Text="{Binding Message}" />
+                                    </StackPanel>
                                 </StackPanel>
-                                <StackPanel Margin="8, 4">
-                                    <TextBlock Text="{Binding Message}" />
-                                </StackPanel>
-                            </StackPanel>
-                        </Border>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
         </DockPanel>
 
         <DockPanel Margin="8">
             <TextBlock Text="Modules" DockPanel.Dock="Top" />
-            <ScrollViewer>
+            <ScrollViewer
+                VerticalScrollBarVisibility="Auto">
+                
                 <ItemsControl ItemsSource="{Binding Modules}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>

@@ -12,10 +12,14 @@
         <!-- Colors -->
         <Color x:Key="CautionBackgroundColor">BlanchedAlmond</Color>
         <Color x:Key="CautionBackgroundBorderColor">DarkGoldenrod</Color>
-
+        <Color x:Key="AppForegroundColor">#C6C6C6</Color>
+        <Color x:Key="AppBackgroundColor">#1E1E1E</Color>
+        
         <!-- Brushes -->
         <SolidColorBrush Color="{StaticResource CautionBackgroundColor}" x:Key="CautionBackgroundBrush" />
         <SolidColorBrush Color="{StaticResource CautionBackgroundBorderColor}" x:Key="CautionBackgroundBorderBrush" />
+        <SolidColorBrush Color="{StaticResource AppBackgroundColor}" x:Key="AppBackgroundBrush" />
+        <SolidColorBrush Color="{StaticResource AppForegroundColor}" x:Key="AppForegroundBrush" />
 
         <!-- Widget DataTemplates -->
 
