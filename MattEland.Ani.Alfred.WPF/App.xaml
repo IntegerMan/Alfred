@@ -78,7 +78,7 @@
                 </Grid.ToolTip>
 
                 <TextBlock Grid.Column="0"
-                           MinWidth="50"
+                           MinWidth="75"
                            Text="{Binding Text}"
                            HorizontalAlignment="Right"
                            TextAlignment="Right"

@@ -45,27 +45,29 @@
 
         <DockPanel Margin="8">
             <TextBlock Text="Modules" DockPanel.Dock="Top" />
-            <ItemsControl ItemsSource="{Binding Modules}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border BorderThickness="1" Margin="8,12,8,0">
-                            <StackPanel Orientation="Vertical">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Path=Name}" />
-                                    <!--
+            <ScrollViewer>
+                <ItemsControl ItemsSource="{Binding Modules}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderThickness="1" Margin="8,12,8,0">
+                                <StackPanel Orientation="Vertical">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Path=Name}" />
+                                        <!--
                                     <TextBlock Text="-" Margin="4,0" />
                                     <TextBlock Text="{Binding Path=Status}" FontWeight="Bold" />
                                     -->
-                                </StackPanel>
-                                <ItemsControl 
+                                    </StackPanel>
+                                    <ItemsControl 
                                     ItemsSource="{Binding Widgets}" 
                                     Margin="24, 0, 0, 0">
-                                </ItemsControl>
-                            </StackPanel>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
         </DockPanel>
 
     </DockPanel>
