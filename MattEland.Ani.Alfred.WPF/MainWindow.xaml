@@ -14,40 +14,61 @@
         Loaded="OnWindowLoaded"
         Closing="OnWindowClosing"
         d:DataContext="{d:DesignInstance core:AlfredProvider}">
-    
-    <Window.Resources>
-        
-    </Window.Resources>
+
     <DockPanel>
 
+        <!-- Header -->
+        <Border DockPanel.Dock="Top"
+                BorderThickness="0,0,0,1"
+                BorderBrush="{StaticResource AppBorderBrush}"
+                Background="{StaticResource MediumBackgroundBrush}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="250" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
 
-        <Border DataContext="{Binding Path=Console}"
-                DockPanel.Dock="Left">
-            <DockPanel d:DataContext="{d:DesignInstance win:WinClientConsole}"
-                       Margin="0,8,8,0"
-                       Width="250">
-                <TextBlock DockPanel.Dock="Top" 
-                           Margin="8,0,0,0">
+                <TextBlock Grid.Column="0"
+                       VerticalAlignment="Center"
+                       Margin="8">
                     Console Events
                 </TextBlock>
-                <ScrollViewer Background="{StaticResource LightBackgroundBrush}"                
-                                                  Margin="0,8,0,0"
-                              VerticalScrollBarVisibility="Auto">
-                    <ItemsControl ItemsSource="{Binding Path=Events}"                              
-                                  FontSize="{StaticResource FontSizeSmall}" />
-                </ScrollViewer>
-            </DockPanel>
+
+                <TextBlock Grid.Column="1"
+                       VerticalAlignment="Center"
+                       Margin="8">
+                    Modules
+                </TextBlock>
+
+            </Grid>
         </Border>
 
-        <DockPanel Margin="8">
-            <TextBlock Text="Modules" DockPanel.Dock="Top" />
-            <ScrollViewer
-                VerticalScrollBarVisibility="Auto">
+        <!-- Left Sidebar -->
+        <Border DataContext="{Binding Path=Console}"
+                BorderThickness="0,0,1,0"
+                BorderBrush="{StaticResource AppBorderBrush}"
+                DockPanel.Dock="Left"
+                Margin="0,0,8,0"
+                Width="250">
 
-                <ItemsControl ItemsSource="{Binding Modules}" />
-                
+            <ScrollViewer d:DataContext="{d:DesignInstance win:WinClientConsole}" 
+                            Background="{StaticResource LightBackgroundBrush}"                                    
+                            VerticalScrollBarVisibility="Auto">
+
+                <ItemsControl ItemsSource="{Binding Path=Events}"                              
+                                FontSize="{StaticResource FontSizeSmall}" />
+
             </ScrollViewer>
-        </DockPanel>
+
+        </Border>
+
+        <!-- Main Content Area -->
+        <Border>
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding Modules}" />
+            </ScrollViewer>
+        </Border>
+
     </DockPanel>
 
 </Window>

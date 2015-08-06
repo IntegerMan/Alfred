@@ -111,6 +111,7 @@
             <ProgressBar Grid.Column="1"
                              Foreground="{StaticResource ProgressBarNormalForegroundBrush}"
                              Background="{StaticResource LightBackgroundBrush}"
+                             BorderBrush="{StaticResource AppBorderBrush}"
                              Minimum="{Binding Minimum}"
                              Maximum="{Binding Maximum}"
                              Value="{Binding Value}"
