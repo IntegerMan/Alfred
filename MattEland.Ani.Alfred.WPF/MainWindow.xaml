@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:core="clr-namespace:MattEland.Ani.Alfred.Core;assembly=MattEland.Ani.Alfred.Core"
         xmlns:resources="clr-namespace:MattEland.Ani.Alfred.WPF.Properties"
-        xmlns:console="clr-namespace:MattEland.Ani.Alfred.Core.Console;assembly=MattEland.Ani.Alfred.Core"
         mc:Ignorable="d"
         Background="{StaticResource AppBackgroundBrush}"
         Foreground="{StaticResource AppForegroundBrush}"
@@ -18,65 +17,63 @@
 
     <DockPanel>
 
-        <!-- Header -->
+        <!-- Header Bar -->
         <Border DockPanel.Dock="Top"
+                Background="{StaticResource MediumBackgroundBrush}"
                 BorderThickness="0,0,0,1"
                 BorderBrush="{StaticResource AppBorderBrush}"
-                Background="{StaticResource MediumBackgroundBrush}">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="250" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
+                MinHeight="32">
 
-                <TextBlock Grid.Column="0"                       
-                           VerticalAlignment="Center"                       
-                           Margin="8" 
-                           Text="{x:Static resources:Resources.ConsoleHeader}" />
+            <StackPanel Orientation="Horizontal"    
+                        HorizontalAlignment="Center"                         
+                        VerticalAlignment="Center">
 
-                <TextBlock Grid.Column="1"                       
-                           VerticalAlignment="Center"                       
-                           Margin="8"                            
-                           Text="{x:Static resources:Resources.ModulesHeader}" />
+                <TextBlock Text="{Binding NameAndVersion}"  />
+                <TextBlock Text=" - " Margin="4,0,4,0" />
+                <TextBlock Text="{Binding Status}" 
+                           Foreground="{StaticResource AccentForegroundBrush}"/>
 
-            </Grid>
-        </Border>
-
-        <!-- Left Sidebar -->
-        <Border DataContext="{Binding Path=Console}"
-                Background="{StaticResource LightBackgroundBrush}"                                    
-                BorderThickness="0,0,1,0"
-                BorderBrush="{StaticResource AppBorderBrush}"
-                DockPanel.Dock="Left"
-                Width="250">
-
-            <ScrollViewer d:DataContext="{d:DesignInstance console:SimpleConsole}" 
-                          BorderThickness="0"
-                          VerticalScrollBarVisibility="Auto">
-
-                <ItemsControl ItemsSource="{Binding Path=Events}"                                                        
-                              BorderThickness="0"
-                              FontSize="{StaticResource FontSizeSmall}" />
-
-            </ScrollViewer>
+            </StackPanel>
 
         </Border>
 
-        <!-- Main Content Area -->
-        <Border BorderThickness="0">
-            <ScrollViewer VerticalScrollBarVisibility="Auto"
-                          BorderThickness="0"
-                          Padding="4">
-                <ItemsControl ItemsSource="{Binding Modules}" 
+        <!-- Tabbed Content Regions -->
+        <TabControl Margin="8, 16, 8, 8">
+
+            <!-- Modules -->
+            <TabItem Header="{x:Static resources:Resources.ModulesHeader}"
+                 DataContext="{Binding Path=Modules}">
+
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              Padding="8">
+                    <ItemsControl ItemsSource="{Binding}"                            
                               BorderThickness="0">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel Orientation="Horizontal" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
-            </ScrollViewer>
-        </Border>
+
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
+                    </ItemsControl>
+                </ScrollViewer>
+
+            </TabItem>
+
+            <!-- Console -->
+            <TabItem Header="{x:Static resources:Resources.ConsoleHeader}"
+                 DataContext="{Binding Path=Console}">
+
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              Padding="8">
+                    <ItemsControl ItemsSource="{Binding Path=Events}"                                                        
+                          BorderThickness="0"                          
+                          FontSize="{StaticResource FontSizeSmall}" />
+                </ScrollViewer>
+
+            </TabItem>
+
+        </TabControl>
 
     </DockPanel>
 

@@ -9,6 +9,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Dictionaries/DarkStyles.xaml" />
                 <ResourceDictionary Source="Dictionaries/Miscellaneous.xaml" />
+                <ResourceDictionary Source="Dictionaries/Styles.xaml" />
                 <ResourceDictionary Source="Dictionaries/Templates.xaml" />
             </ResourceDictionary.MergedDictionaries>
             

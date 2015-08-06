@@ -134,7 +134,7 @@ Do you want to continue running this application?</value>
     <comment>The header text for the modules area</comment>
   </data>
   <data name="ConsoleHeader" xml:space="preserve">
-    <value>Console Events</value>
+    <value>Event Log</value>
     <comment>Header for the console log area</comment>
   </data>
 </root>
