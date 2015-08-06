@@ -40,6 +40,7 @@
         
         <!-- TODO: The expand / collapse glyph sucks by default. Customize it -->
         <Expander Header="{Binding Path=Name}"
+                  Width="250"
                   IsExpanded="True"
                   Foreground="{StaticResource AccentForegroundBrush}"
                   Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
