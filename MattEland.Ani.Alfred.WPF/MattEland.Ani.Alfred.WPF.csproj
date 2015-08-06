@@ -87,6 +87,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Panes\ConsolePane.xaml.cs">
+      <DependentUpon>ConsolePane.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Panes\ModulesPane.xaml.cs">
+      <DependentUpon>ModulesPane.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WinClientPlatformProvider.cs" />
     <Compile Include="WinClientCommand.cs" />
     <Page Include="Dictionaries\Miscellaneous.xaml">
@@ -114,6 +120,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Dictionaries\Templates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Panes\ConsolePane.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Panes\ModulesPane.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

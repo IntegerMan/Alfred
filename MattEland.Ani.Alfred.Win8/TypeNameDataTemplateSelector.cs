@@ -23,6 +23,12 @@ namespace MattEland.Ani.Alfred.Win8
         /// </summary>
         public string DefaultTemplateKey { get; set; }
 
+        /// <summary>
+        /// Selects the data template to use.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <param name="container">The container.</param>
+        /// <returns>The data template.</returns>
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {
             // Grab the Type name

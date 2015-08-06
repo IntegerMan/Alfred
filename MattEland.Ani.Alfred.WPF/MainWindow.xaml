@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:core="clr-namespace:MattEland.Ani.Alfred.Core;assembly=MattEland.Ani.Alfred.Core"
         xmlns:resources="clr-namespace:MattEland.Ani.Alfred.WPF.Properties"
+        xmlns:panes="clr-namespace:MattEland.Ani.Alfred.WPF.Panes"
         mc:Ignorable="d"
         Background="{StaticResource AppBackgroundBrush}"
         Foreground="{StaticResource AppForegroundBrush}"
@@ -41,35 +42,16 @@
         <TabControl Margin="8, 16, 8, 8">
 
             <!-- Modules -->
-            <TabItem Header="{x:Static resources:Resources.ModulesHeader}"
-                 DataContext="{Binding Path=Modules}">
+            <TabItem Header="{x:Static resources:Resources.ModulesHeader}">
 
-                <ScrollViewer VerticalScrollBarVisibility="Auto"
-                              Padding="8">
-                    <ItemsControl ItemsSource="{Binding}"                            
-                              BorderThickness="0">
-
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel Orientation="Horizontal" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-
-                    </ItemsControl>
-                </ScrollViewer>
+                <panes:ModulesPane DataContext="{Binding}" />
 
             </TabItem>
 
             <!-- Console -->
-            <TabItem Header="{x:Static resources:Resources.ConsoleHeader}"
-                 DataContext="{Binding Path=Console}">
+            <TabItem Header="{x:Static resources:Resources.ConsoleHeader}">
 
-                <ScrollViewer VerticalScrollBarVisibility="Auto"
-                              Padding="8">
-                    <ItemsControl ItemsSource="{Binding Path=Events}"                                                        
-                          BorderThickness="0"                          
-                          FontSize="{StaticResource FontSizeSmall}" />
-                </ScrollViewer>
+                <panes:ConsolePane DataContext="{Binding Path=Console}" />
 
             </TabItem>
 

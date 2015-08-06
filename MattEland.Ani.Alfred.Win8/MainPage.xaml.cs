@@ -1,4 +1,12 @@
-﻿using System;
+﻿// ---------------------------------------------------------
+// MainPage.xaml.cs
+// 
+// Created on:      07/26/2015 at 12:07 AM
+// Last Modified:   08/06/2015 at 4:43 PM
+// Original author: Matt Eland
+// ---------------------------------------------------------
+
+using System;
 
 using Windows.UI.Xaml;
 
@@ -13,13 +21,16 @@ using MattEland.Ani.Alfred.Core.Modules;
 namespace MattEland.Ani.Alfred.Win8
 {
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    ///     An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class MainPage
     {
         [NotNull]
         private readonly AlfredProvider _alfred;
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="MainPage" /> class.
+        /// </summary>
         public MainPage()
         {
 
@@ -36,6 +47,7 @@ namespace MattEland.Ani.Alfred.Win8
 
             // Register Modules
             StandardModuleProvider.AddStandardModules(_alfred);
+
             // Win 8 app cannot reference the System Modules. It feels sadfaced.
 
             console.Log("MetroClient.Initialize", "Alfred instantiated");
@@ -53,10 +65,10 @@ namespace MattEland.Ani.Alfred.Win8
         }
 
         /// <summary>
-        /// Handles the <see cref="E:TimerTick" /> event.
+        ///     Handles the <see cref="E:TimerTick" /> event.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
         private void OnTimerTick(object sender, object e)
         {
             // If Alfred is online, ask it to update its modules
@@ -65,6 +77,5 @@ namespace MattEland.Ani.Alfred.Win8
                 _alfred.Update();
             }
         }
-
     }
 }
