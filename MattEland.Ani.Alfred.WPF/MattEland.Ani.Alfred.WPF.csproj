@@ -90,7 +90,7 @@
     <Compile Include="WinClientPlatformProvider.cs" />
     <Compile Include="WinClientConsole.cs" />
     <Compile Include="WinClientCommand.cs" />
-    <Page Include="Resources\Converters.xaml">
+    <Page Include="Resources\Miscellaneous.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

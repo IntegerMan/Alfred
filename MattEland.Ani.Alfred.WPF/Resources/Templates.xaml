@@ -1,7 +1,42 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:MattEland.Ani.Alfred.WPF"
-                    xmlns:widgets="clr-namespace:MattEland.Ani.Alfred.Core.Widgets;assembly=MattEland.Ani.Alfred.Core">
+                    xmlns:widgets="clr-namespace:MattEland.Ani.Alfred.Core.Widgets;assembly=MattEland.Ani.Alfred.Core"
+                    xmlns:console="clr-namespace:MattEland.Ani.Alfred.Core.Console;assembly=MattEland.Ani.Alfred.Core"
+                    xmlns:core="clr-namespace:MattEland.Ani.Alfred.Core;assembly=MattEland.Ani.Alfred.Core">
+
+    <!-- Logging Templates -->
+    <DataTemplate DataType="{x:Type console:ConsoleEvent}">
+        <Border BorderThickness="1" Margin="4,2,4,0">
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Path=Time, StringFormat=T}" />
+                    <TextBlock Text="-" Margin="4,0" />
+                    <TextBlock Text="{Binding Path=Title}" />
+                </StackPanel>
+                <Border Margin="8, 2, 0, 0">
+                    <TextBlock Text="{Binding Message}" />
+                </Border>
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+
+    <!-- Module DataTemplates -->
+
+    <DataTemplate DataType="{x:Type core:AlfredModule}">
+        <Border 
+            BorderThickness="1" 
+            Margin="8,12,8,0"                                    
+            Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+            
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="{Binding Path=Name}" />
+                <ItemsControl ItemsSource="{Binding Widgets}" 
+                              Margin="24, 0, 0, 0">
+                </ItemsControl>
+            </StackPanel>
+            
+        </Border>
+    </DataTemplate>
 
     <!-- Widget DataTemplates -->
 

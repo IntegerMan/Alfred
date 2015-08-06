@@ -5,74 +5,49 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:win="clr-namespace:MattEland.Ani.Alfred.WPF"
         xmlns:core="clr-namespace:MattEland.Ani.Alfred.Core;assembly=MattEland.Ani.Alfred.Core"
-        xmlns:widgets="clr-namespace:MattEland.Ani.Alfred.Core.Widgets;assembly=MattEland.Ani.Alfred.Core"
         mc:Ignorable="d"
         Background="{StaticResource AppBackgroundBrush}"
         Foreground="{StaticResource AppForegroundBrush}"
+        Title="{Binding Path=NameAndVersion}" 
+        Width="800" 
+        Height="600" 
         Loaded="OnWindowLoaded"
-        Title="{Binding Path=NameAndVersion}" Height="600" Width="800" 
         Closing="OnWindowClosing"
         d:DataContext="{d:DesignInstance core:AlfredProvider}">
+    
+    <Window.Resources>
+        
+    </Window.Resources>
     <DockPanel>
 
-        <DockPanel DockPanel.Dock="Left" Width="300" Margin="8" 
-                   DataContext="{Binding Path=Console}"
-                   d:DataContext="{d:DesignInstance win:WinClientConsole}">
-            <TextBlock DockPanel.Dock="Top">Console Events</TextBlock>
-            <ScrollViewer
-                VerticalScrollBarVisibility="Auto">
-                <ItemsControl ItemsSource="{Binding Path=Events}"
-                              FontSize="10">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border BorderThickness="1" Margin="4,2,4,0">
-                                <StackPanel Orientation="Vertical">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Path=Time, StringFormat=T}" />
-                                        <TextBlock Text="-" Margin="4,0" />
-                                        <TextBlock Text="{Binding Path=Title}" />
-                                    </StackPanel>
-                                    <StackPanel Margin="8, 2, 0, 0">
-                                        <TextBlock Text="{Binding Message}" />
-                                    </StackPanel>
-                                </StackPanel>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
-        </DockPanel>
+
+        <Border DataContext="{Binding Path=Console}"
+                DockPanel.Dock="Left">
+            <DockPanel d:DataContext="{d:DesignInstance win:WinClientConsole}"
+                       Margin="0,8,8,0"
+                       Width="250">
+                <TextBlock DockPanel.Dock="Top" 
+                           Margin="8,0,0,0">
+                    Console Events
+                </TextBlock>
+                <ScrollViewer Background="{StaticResource LightBackgroundBrush}"                
+                                                  Margin="0,8,0,0"
+                              VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding Path=Events}"                              
+                                  FontSize="{StaticResource FontSizeSmall}" />
+                </ScrollViewer>
+            </DockPanel>
+        </Border>
 
         <DockPanel Margin="8">
             <TextBlock Text="Modules" DockPanel.Dock="Top" />
             <ScrollViewer
                 VerticalScrollBarVisibility="Auto">
+
+                <ItemsControl ItemsSource="{Binding Modules}" />
                 
-                <ItemsControl ItemsSource="{Binding Modules}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border BorderThickness="1" 
-                                    Margin="8,12,8,0"
-                                    Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                <StackPanel Orientation="Vertical">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Path=Name}" />
-                                        <!--
-                                    <TextBlock Text="-" Margin="4,0" />
-                                    <TextBlock Text="{Binding Path=Status}" FontWeight="Bold" />
-                                    -->
-                                    </StackPanel>
-                                    <ItemsControl 
-                                    ItemsSource="{Binding Widgets}" 
-                                    Margin="24, 0, 0, 0">
-                                    </ItemsControl>
-                                </StackPanel>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
             </ScrollViewer>
         </DockPanel>
-
     </DockPanel>
+
 </Window>
