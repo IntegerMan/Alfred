@@ -8,12 +8,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MattEland.Ani.Alfred.WPF")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Alfred WPF")]
+[assembly: AssemblyDescription("Alfred for Windows")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("MattEland.Ani.Alfred.WPF")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyCompany("Matt Eland")]
+[assembly: AssemblyProduct("Alfred for Windows")]
+[assembly: AssemblyCopyright("Copyright © Matt Eland 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
