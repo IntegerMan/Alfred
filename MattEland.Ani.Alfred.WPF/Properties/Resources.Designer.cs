@@ -22,7 +22,7 @@ namespace MattEland.Ani.Alfred.WPF.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace MattEland.Ani.Alfred.WPF.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MattEland.Ani.Alfred.WPF.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace MattEland.Ani.Alfred.WPF.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,11 +63,11 @@ namespace MattEland.Ani.Alfred.WPF.Properties {
         /// <summary>
         ///   Looks up a localized string similar to An unhandled exception occurred:
         ///
-        ///{0}
+        ///{0} {1}
         ///
         ///Do you want to continue running this application?.
         /// </summary>
-        internal static string App_OnUnhandledException_Message {
+        public static string App_OnUnhandledException_Message {
             get {
                 return ResourceManager.GetString("App_OnUnhandledException_Message", resourceCulture);
             }
@@ -76,9 +76,27 @@ namespace MattEland.Ani.Alfred.WPF.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Unhandled Error.
         /// </summary>
-        internal static string App_OnUnhandledException_Unhandled_Error {
+        public static string App_OnUnhandledException_Unhandled_Error {
             get {
                 return ResourceManager.GetString("App_OnUnhandledException_Unhandled_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Console Events.
+        /// </summary>
+        public static string ConsoleHeader {
+            get {
+                return ResourceManager.GetString("ConsoleHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modules.
+        /// </summary>
+        public static string ModulesHeader {
+            get {
+                return ResourceManager.GetString("ModulesHeader", resourceCulture);
             }
         }
     }

@@ -13,12 +13,16 @@
     <Color x:Key="LightBackgroundColor">#3E3E42</Color>
     <Color x:Key="MediumBackgroundColor">#333337</Color>
 
+    <Color x:Key="AccentColor">#0079CD</Color>
+    
     <Color x:Key="GoodColor">#8CD189</Color>
 
     <!-- Brushes -->
     <SolidColorBrush Color="{StaticResource CautionBackgroundColor}" x:Key="CautionBackgroundBrush" />
     <SolidColorBrush Color="{StaticResource CautionBackgroundBorderColor}" x:Key="CautionBorderBrush" />
-    <SolidColorBrush Color="{StaticResource AppBackgroundColor}" x:Key="CautionTextBrush" />
+    <SolidColorBrush Color="{StaticResource AppBackgroundColor}" x:Key="CautionForegroundBrush" />
+    
+    <SolidColorBrush Color="{StaticResource AccentColor}" x:Key="AccentForegroundBrush" />
 
     <SolidColorBrush Color="{StaticResource AppBackgroundColor}" x:Key="AppBackgroundBrush" />
     <SolidColorBrush Color="{StaticResource AppForegroundColor}" x:Key="AppForegroundBrush" />

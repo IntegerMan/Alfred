@@ -3,8 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:win="clr-namespace:MattEland.Ani.Alfred.WPF"
         xmlns:core="clr-namespace:MattEland.Ani.Alfred.Core;assembly=MattEland.Ani.Alfred.Core"
+        xmlns:resources="clr-namespace:MattEland.Ani.Alfred.WPF.Properties"
+        xmlns:console="clr-namespace:MattEland.Ani.Alfred.Core.Console;assembly=MattEland.Ani.Alfred.Core"
         mc:Ignorable="d"
         Background="{StaticResource AppBackgroundBrush}"
         Foreground="{StaticResource AppForegroundBrush}"
@@ -28,44 +29,46 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0"
-                       VerticalAlignment="Center"
-                       Margin="8">
-                    Console Events
-                </TextBlock>
+                <TextBlock Grid.Column="0"                       
+                           VerticalAlignment="Center"                       
+                           Margin="8" 
+                           Text="{x:Static resources:Resources.ConsoleHeader}" />
 
-                <TextBlock Grid.Column="1"
-                       VerticalAlignment="Center"
-                       Margin="8">
-                    Modules
-                </TextBlock>
+                <TextBlock Grid.Column="1"                       
+                           VerticalAlignment="Center"                       
+                           Margin="8"                            
+                           Text="{x:Static resources:Resources.ModulesHeader}" />
 
             </Grid>
         </Border>
 
         <!-- Left Sidebar -->
         <Border DataContext="{Binding Path=Console}"
+                Background="{StaticResource LightBackgroundBrush}"                                    
                 BorderThickness="0,0,1,0"
                 BorderBrush="{StaticResource AppBorderBrush}"
                 DockPanel.Dock="Left"
-                Margin="0,0,8,0"
                 Width="250">
 
-            <ScrollViewer d:DataContext="{d:DesignInstance win:WinClientConsole}" 
-                            Background="{StaticResource LightBackgroundBrush}"                                    
-                            VerticalScrollBarVisibility="Auto">
+            <ScrollViewer d:DataContext="{d:DesignInstance console:SimpleConsole}" 
+                          BorderThickness="0"
+                          VerticalScrollBarVisibility="Auto">
 
-                <ItemsControl ItemsSource="{Binding Path=Events}"                              
-                                FontSize="{StaticResource FontSizeSmall}" />
+                <ItemsControl ItemsSource="{Binding Path=Events}"                                                        
+                              BorderThickness="0"
+                              FontSize="{StaticResource FontSizeSmall}" />
 
             </ScrollViewer>
 
         </Border>
 
         <!-- Main Content Area -->
-        <Border>
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <ItemsControl ItemsSource="{Binding Modules}" />
+        <Border BorderThickness="0">
+            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                          BorderThickness="0"
+                          Padding="4">
+                <ItemsControl ItemsSource="{Binding Modules}" 
+                              BorderThickness="0"/>
             </ScrollViewer>
         </Border>
 

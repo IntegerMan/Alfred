@@ -7,6 +7,19 @@
     <!-- Logging Templates -->
     <DataTemplate DataType="{x:Type console:ConsoleEvent}">
         <Border BorderThickness="1" Margin="4,2,4,0">
+            
+            <!-- Log Tooltip. Detailed since it's smaller content -->
+            <Border.ToolTip>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Path=Time, StringFormat=T}" />
+                    <TextBlock Text="-" Margin="4,0" />
+                    <TextBlock Text="{Binding Path=Title}" />
+                    <TextBlock Text=":" Margin="0,0,4,0" />
+                    <TextBlock Text="{Binding Message}" />
+                </StackPanel>
+            </Border.ToolTip>
+            
+            <!-- Log visual -->
             <StackPanel Orientation="Vertical">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding Path=Time, StringFormat=T}" />
@@ -17,25 +30,26 @@
                     <TextBlock Text="{Binding Message}" />
                 </Border>
             </StackPanel>
+            
         </Border>
     </DataTemplate>
 
     <!-- Module DataTemplates -->
 
     <DataTemplate DataType="{x:Type core:AlfredModule}">
-        <Border 
-            BorderThickness="1" 
-            Margin="8,12,8,0"                                    
-            Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+        
+        <!-- TODO: The expand / collapse glyph sucks by default. Customize it -->
+        <Expander Header="{Binding Path=Name}"
+                  IsExpanded="True"
+                  Foreground="{StaticResource AccentForegroundBrush}"
+                  Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
             
-            <StackPanel Orientation="Vertical">
-                <TextBlock Text="{Binding Path=Name}" />
-                <ItemsControl ItemsSource="{Binding Widgets}" 
-                              Margin="24, 0, 0, 0">
-                </ItemsControl>
-            </StackPanel>
+            <ItemsControl ItemsSource="{Binding Widgets}"                        
+                          Foreground="{StaticResource AppForegroundBrush}"
+                          Margin="24, 0, 0, 8" />
             
-        </Border>
+        </Expander>
+        
     </DataTemplate>
 
     <!-- Widget DataTemplates -->
@@ -61,7 +75,7 @@
                 Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
 
             <TextBlock Text="{Binding Text}"
-                           Foreground="{StaticResource CautionTextBrush}"
+                           Foreground="{StaticResource CautionForegroundBrush}"
                            ToolTip="{Binding Text}" />
 
         </Border>
