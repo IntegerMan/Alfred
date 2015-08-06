@@ -1,0 +1,98 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:MattEland.Ani.Alfred.WPF"
+                    xmlns:widgets="clr-namespace:MattEland.Ani.Alfred.Core.Widgets;assembly=MattEland.Ani.Alfred.Core">
+
+    <!-- Widget DataTemplates -->
+
+    <!-- TextWidget Template -->
+    <DataTemplate DataType="{x:Type widgets:TextWidget}">
+        <TextBlock
+                Margin="0, 8, 0, 0"
+                Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
+                Text="{Binding Text}"
+                ToolTip="{Binding Text}" />
+    </DataTemplate>
+
+    <!-- AlertWidget Template -->
+    <DataTemplate DataType="{x:Type widgets:WarningWidget}">
+        <Border
+                Margin="0, 8, 0, 0"
+                Padding="8"
+                HorizontalAlignment="Stretch"
+                Background="{StaticResource CautionBackgroundBrush}"
+                BorderBrush="{StaticResource CautionBorderBrush}"
+                BorderThickness="1"
+                Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
+
+            <TextBlock Text="{Binding Text}"
+                           Foreground="{StaticResource CautionTextBrush}"
+                           ToolTip="{Binding Text}" />
+
+        </Border>
+    </DataTemplate>
+
+    <!-- ButtonWidget Template -->
+    <DataTemplate DataType="{x:Type widgets:ButtonWidget}">
+        <Button
+                Margin="0, 8, 0, 0"
+                Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
+                MinWidth="120"
+                HorizontalAlignment="Left"
+                HorizontalContentAlignment="Center"
+                Command="{Binding ClickCommand}"
+                Content="{Binding Text}"
+                ToolTip="{Binding Text}" />
+    </DataTemplate>
+
+    <!-- AlfredProgressBarWidget Template -->
+    <DataTemplate DataType="{x:Type widgets:AlfredProgressBarWidget}">
+        <Grid
+                Margin="0, 8, 0, 0"
+                Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid.ToolTip>
+                <!-- Show the full value in the ToolTip with a label -->
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Text}" />
+                    <TextBlock Text="{Binding ValueText}"
+                                   Margin="4,0,0,0" />
+                </StackPanel>
+            </Grid.ToolTip>
+
+            <TextBlock Grid.Column="0"
+                           MinWidth="75"
+                           Text="{Binding Text}"
+                           HorizontalAlignment="Right"
+                           TextAlignment="Right"
+                           Margin="0,0,8,0"
+                           VerticalAlignment="Center" />
+
+            <ProgressBar Grid.Column="1"
+                             Foreground="{StaticResource ProgressBarNormalForegroundBrush}"
+                             Background="{StaticResource LightBackgroundBrush}"
+                             Minimum="{Binding Minimum}"
+                             Maximum="{Binding Maximum}"
+                             Value="{Binding Value}"
+                             HorizontalAlignment="Stretch"
+                             HorizontalContentAlignment="Center" />
+
+        </Grid>
+    </DataTemplate>
+
+    <!-- Fallback type of widget Template -->
+    <DataTemplate DataType="{x:Type widgets:AlfredWidget}">
+
+        <!-- TODO: Let's use some red styling to draw attention to the not implemented template -->
+
+        <TextBlock
+                Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
+                Text="This is an unknown type of Widget" />
+
+    </DataTemplate>
+</ResourceDictionary>
