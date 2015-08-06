@@ -8,6 +8,9 @@ using MattEland.Ani.Alfred.Core.Console;
 
 namespace MattEland.Ani.Alfred.WPF
 {
+    /// <summary>
+    /// A WPF Implementation of an IConsole
+    /// </summary>
     public sealed class WinClientConsole : IConsole
     {
         [NotNull]
