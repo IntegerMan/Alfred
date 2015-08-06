@@ -68,11 +68,16 @@ namespace MattEland.Ani.Alfred.Core.Tests
         }
 
         [Test]
-        public void DisplayTextIsNullBeforeUpdate()
+        public void DisplayTextIsCorrectBeforeUpdate()
         {
             _alfred.Initialize();
 
-            Assert.IsNull(GetTimeText(), "UI text was not null prior to update");
+            var currentTimeString = DateTime.Now.ToShortTimeString();
+
+            var displayed = GetTimeText();
+
+            Assert.IsNotNull(displayed, "Displayed time was null");
+            Assert.IsTrue(displayed.Contains(currentTimeString), $"The time is displaying {displayed} when current time is {currentTimeString}");
         }
 
         [Test]
@@ -260,7 +265,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         }
 
         [Test]
-        public void TimeModuleurrentDateIsVisible()
+        public void TimeModuleCurrentDateIsVisible()
         {
             _alfred.Initialize();
 
