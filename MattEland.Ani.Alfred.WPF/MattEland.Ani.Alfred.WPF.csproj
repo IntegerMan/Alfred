@@ -88,7 +88,6 @@
     </ApplicationDefinition>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="WinClientPlatformProvider.cs" />
-    <Compile Include="WinClientConsole.cs" />
     <Compile Include="WinClientCommand.cs" />
     <Page Include="Resources\Miscellaneous.xaml">
       <SubType>Designer</SubType>

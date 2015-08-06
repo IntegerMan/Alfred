@@ -5,6 +5,7 @@ using Windows.UI.Xaml;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Modules;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
@@ -24,17 +25,18 @@ namespace MattEland.Ani.Alfred.Win8
 
             InitializeComponent();
 
-            // Create the console first to log what we're doing
-            var console = new Win8ClientConsole();
-            console.Log("MetroClient.Initialize", "Console is now online.");
-
             // Create Alfred. It won't be online and running yet, but create it.
-            _alfred = new AlfredProvider(new Win8ClientPlatformProvider())
-            {
-                Console = console
-            };
+            var platformProvider = new Win8ClientPlatformProvider();
+            _alfred = new AlfredProvider(platformProvider);
 
+            // Create the console
+            var console = new SimpleConsole(platformProvider);
+            console.Log("MetroClient.Initialize", "Console is now online.");
+            _alfred.Console = console;
+
+            // Register Modules
             StandardModuleProvider.AddStandardModules(_alfred);
+            // Win 8 app cannot reference the System Modules. It feels sadfaced.
 
             console.Log("MetroClient.Initialize", "Alfred instantiated");
 

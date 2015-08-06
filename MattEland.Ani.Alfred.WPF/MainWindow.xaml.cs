@@ -6,6 +6,7 @@ using System.Windows.Threading;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Ani.Alfred.WPF.Properties;
@@ -40,7 +41,7 @@ namespace MattEland.Ani.Alfred.WPF
             _alfred = new AlfredProvider(platformProvider);
 
             // Give Alfred a way to talk to the application
-            var console = new WinClientConsole();
+            var console = new SimpleConsole(platformProvider);
             console.Log("WinClient.Initialize", "Console is now online.");
             _alfred.Console = console;
 

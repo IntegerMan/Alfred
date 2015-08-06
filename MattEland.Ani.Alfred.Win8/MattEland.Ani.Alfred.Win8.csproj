@@ -27,6 +27,7 @@
     <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>bin\Debug\MattEland.Ani.Alfred.Win8.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -121,7 +122,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TypeNameDataTemplateSelector.cs" />
     <Compile Include="Win8ClientPlatformProvider.cs" />
-    <Compile Include="Win8ClientConsole.cs" />
     <Compile Include="Win8ClientCommand.cs" />
   </ItemGroup>
   <ItemGroup>

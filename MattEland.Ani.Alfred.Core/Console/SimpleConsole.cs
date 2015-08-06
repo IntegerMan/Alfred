@@ -11,6 +11,29 @@ namespace MattEland.Ani.Alfred.Core.Console
     /// </summary>
     public sealed class SimpleConsole : IConsole
     {
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SimpleConsole"/> class.
+        /// </summary>
+        public SimpleConsole() : this(new SimplePlatformProvider())
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SimpleConsole"/> class.
+        /// </summary>
+        /// <param name="provider">The platform provider used to initialize the collection of events.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        public SimpleConsole([NotNull] IPlatformProvider provider)
+        {
+            if (provider == null)
+            {
+                throw new ArgumentNullException(nameof(provider));
+            }
+
+            _events = provider.CreateCollection<ConsoleEvent>();
+        }
+
         /// <summary>
         /// Logs the specified message to the console.
         /// </summary>
@@ -34,7 +57,7 @@ namespace MattEland.Ani.Alfred.Core.Console
         }
 
         [NotNull]
-        private readonly List<ConsoleEvent> _events = new List<ConsoleEvent>();
+        private readonly ICollection<ConsoleEvent> _events;
 
         /// <summary>
         /// Gets the console events.
