@@ -10,8 +10,8 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
         <!-- Colors -->
-        <Color x:Key="CautionBackgroundColor">BlanchedAlmond</Color>
-        <Color x:Key="CautionBackgroundBorderColor">DarkGoldenrod</Color>
+        <Color x:Key="CautionBackgroundColor">#DFDDAF</Color>
+        <Color x:Key="CautionBackgroundBorderColor">#FECB00</Color>
         <Color x:Key="AppForegroundColor">#C6C6C6</Color>
         <Color x:Key="AppBackgroundColor">#1E1E1E</Color>
         <Color x:Key="GoodColor">#8CD189</Color>
@@ -19,11 +19,14 @@
         
         <!-- Brushes -->
         <SolidColorBrush Color="{StaticResource CautionBackgroundColor}" x:Key="CautionBackgroundBrush" />
-        <SolidColorBrush Color="{StaticResource CautionBackgroundBorderColor}" x:Key="CautionBackgroundBorderBrush" />
+        <SolidColorBrush Color="{StaticResource CautionBackgroundBorderColor}" x:Key="CautionBorderBrush" />
+        <SolidColorBrush Color="{StaticResource AppBackgroundColor}" x:Key="CautionTextBrush" />
+        
         <SolidColorBrush Color="{StaticResource AppBackgroundColor}" x:Key="AppBackgroundBrush" />
-        <SolidColorBrush Color="{StaticResource AppForegroundColor}" x:Key="AppForegroundBrush" />
-        <SolidColorBrush Color="{StaticResource GoodColor}" x:Key="ProgressBarNormalForegroundBrush" />
         <SolidColorBrush Color="{StaticResource LightBackgroundColor}" x:Key="LightBackgroundBrush" />
+        <SolidColorBrush Color="{StaticResource AppForegroundColor}" x:Key="AppForegroundBrush" />
+        
+        <SolidColorBrush Color="{StaticResource GoodColor}" x:Key="ProgressBarNormalForegroundBrush" />
 
         <!-- Widget DataTemplates -->
 
@@ -43,12 +46,12 @@
                 Padding="8" 
                 HorizontalAlignment="Stretch"
                 Background="{StaticResource CautionBackgroundBrush}" 
-                BorderBrush="{StaticResource CautionBackgroundBorderBrush}"
+                BorderBrush="{StaticResource CautionBorderBrush}"
                 BorderThickness="1" 
                 Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
 
                 <TextBlock Text="{Binding Text}" 
-                           Foreground="{StaticResource CautionBackgroundBorderBrush}"
+                           Foreground="{StaticResource CautionTextBrush}"
                            ToolTip="{Binding Text}"/>
 
             </Border>
