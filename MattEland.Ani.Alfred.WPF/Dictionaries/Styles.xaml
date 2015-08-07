@@ -26,7 +26,9 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TabItem">
-                    <Border x:Name="Panel"                          
+                    <Border x:Name="Panel"       
+                            BorderBrush="{StaticResource AppBorderBrush}"
+                            BorderThickness="1,1,0,1"
                             Background="{StaticResource MediumBackgroundBrush}"
                             MinHeight="40">
                         <ContentPresenter x:Name="ContentSite"                                        

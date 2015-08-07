@@ -66,8 +66,7 @@
 
     <!-- AlertWidget Template -->
     <DataTemplate DataType="{x:Type widgets:WarningWidget}">
-        <Border
-                Margin="0, 8, 0, 0"
+        <Border Margin="0, 8, 0, 0"
                 Padding="8"
                 HorizontalAlignment="Stretch"
                 Background="{StaticResource CautionBackgroundBrush}"
@@ -84,8 +83,7 @@
 
     <!-- ButtonWidget Template -->
     <DataTemplate DataType="{x:Type widgets:ButtonWidget}">
-        <Button
-                Margin="0, 8, 0, 0"
+        <Button Margin="0, 8, 0, 0"
                 Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
                 MinWidth="120"
                 HorizontalAlignment="Left"
@@ -97,9 +95,8 @@
 
     <!-- AlfredProgressBarWidget Template -->
     <DataTemplate DataType="{x:Type widgets:AlfredProgressBarWidget}">
-        <Grid
-                Margin="0, 8, 0, 0"
-                Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
+        <Grid Margin="0, 8, 0, 0"
+              Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -146,4 +143,5 @@
                 Text="This is an unknown type of Widget" />
 
     </DataTemplate>
+    
 </ResourceDictionary>
