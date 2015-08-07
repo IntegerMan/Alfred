@@ -12,6 +12,9 @@ using JetBrains.Annotations;
 
 namespace MattEland.Ani.Alfred.Core.Widgets
 {
+    /// <summary>
+    /// A progress bar widget to be interpreted at the user interface layer
+    /// </summary>
     public class AlfredProgressBarWidget : AlfredTextWidget
     {
         private float _maximum = 100;
