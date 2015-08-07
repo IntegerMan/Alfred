@@ -69,6 +69,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="UserInterfacePage.cs" />
     <Compile Include="Widgets\AlfredProgressBarWidget.cs" />
     <Compile Include="Widgets\AlfredTextWidget.cs" />
     <Compile Include="Widgets\AlfredWidget.cs" />
