@@ -165,6 +165,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MattEland.Ani.Alfred.Core.Speech\MattEland.Ani.Alfred.Core.Speech.csproj">
+      <Project>{ab933947-863e-455f-aba9-a8866eac1894}</Project>
+      <Name>MattEland.Ani.Alfred.Core.Speech</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MattEland.Ani.Alfred.Core.System\MattEland.Ani.Alfred.Core.Modules.SysMonitor.csproj">
       <Project>{85194081-752D-48FC-A240-82C9974353D4}</Project>
       <Name>MattEland.Ani.Alfred.Core.Modules.SysMonitor</Name>

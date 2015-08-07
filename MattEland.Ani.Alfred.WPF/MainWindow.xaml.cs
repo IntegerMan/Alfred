@@ -2,13 +2,12 @@
 // MainWindow.xaml.cs
 // 
 // Created on:      07/25/2015 at 11:55 PM
-// Last Modified:   08/07/2015 at 12:42 AM
+// Last Modified:   08/07/2015 at 3:15 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
 using System.ComponentModel;
-using System.Speech.Synthesis;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -18,6 +17,7 @@ using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
+using MattEland.Ani.Alfred.Core.Speech;
 using MattEland.Ani.Alfred.WPF.Properties;
 
 namespace MattEland.Ani.Alfred.WPF
@@ -38,6 +38,9 @@ namespace MattEland.Ani.Alfred.WPF
         [NotNull]
         private readonly AlfredProvider _alfred;
 
+        [NotNull]
+        private readonly AlfredSpeechConsole _console;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="MainWindow" /> class.
         /// </summary>
@@ -50,21 +53,25 @@ namespace MattEland.Ani.Alfred.WPF
             _alfred = new AlfredProvider(platformProvider);
 
             // Give Alfred a way to talk to the application
-            var console = new SimpleConsole(platformProvider);
-            console.Log("WinClient.Initialize", "Console is now online.", LogLevel.Verbose);
-            _alfred.Console = console;
+            var baseConsole = new SimpleConsole(platformProvider);
+
+            // Give Alfred a voice
+            _console = new AlfredSpeechConsole(baseConsole);
+
+            _console.Log("WinClient.Initialize", "Console is now online.", LogLevel.Verbose);
+            _alfred.Console = _console;
 
             // Give Alfred some Content
             StandardModuleProvider.AddStandardModules(_alfred);
             SystemModuleProvider.AddStandardModules(_alfred);
 
-            console.Log("WinClient.Initialize", "Alfred instantiated", LogLevel.Verbose);
+            _console.Log("WinClient.Initialize", "Alfred instantiated", LogLevel.Verbose);
 
             // Data bindings in the UI rely on Alfred
             DataContext = _alfred;
 
             // Set up the update timer
-            var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+            var timer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(1)};
             timer.Tick += OnTimerTick;
             timer.Start();
         }
@@ -104,10 +111,7 @@ namespace MattEland.Ani.Alfred.WPF
                 _alfred.Initialize();
             }
 
-            // TODO: Remove this. This is for speech testing prior to integration into Alfred
-            var speech = new SpeechSynthesizer();
-            speech.SelectVoiceByHints(VoiceGender.Male, VoiceAge.Senior);
-            speech.SpeakAsync("Application Loaded");
+            _console.Log("WinClient.Loaded", "The application is now online", LogLevel.Info);
         }
 
         /// <summary>

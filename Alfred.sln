@@ -27,6 +27,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MattEland.Ani.Alfred.Core.Modules.SysMonitor", "MattEland.Ani.Alfred.Core.System\MattEland.Ani.Alfred.Core.Modules.SysMonitor.csproj", "{85194081-752D-48FC-A240-82C9974353D4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MattEland.Ani.Alfred.Core.Speech", "MattEland.Ani.Alfred.Core.Speech\MattEland.Ani.Alfred.Core.Speech.csproj", "{AB933947-863E-455F-ABA9-A8866EAC1894}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -127,6 +129,22 @@ Global
 		{85194081-752D-48FC-A240-82C9974353D4}.Release|x64.Build.0 = Release|Any CPU
 		{85194081-752D-48FC-A240-82C9974353D4}.Release|x86.ActiveCfg = Release|Any CPU
 		{85194081-752D-48FC-A240-82C9974353D4}.Release|x86.Build.0 = Release|Any CPU
+		{AB933947-863E-455F-ABA9-A8866EAC1894}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB933947-863E-455F-ABA9-A8866EAC1894}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB933947-863E-455F-ABA9-A8866EAC1894}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{AB933947-863E-455F-ABA9-A8866EAC1894}.Debug|ARM.Build.0 = Debug|Any CPU
+		{AB933947-863E-455F-ABA9-A8866EAC1894}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AB933947-863E-455F-ABA9-A8866EAC1894}.Debug|x64.Build.0 = Debug|Any CPU
+		{AB933947-863E-455F-ABA9-A8866EAC1894}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AB933947-863E-455F-ABA9-A8866EAC1894}.Debug|x86.Build.0 = Debug|Any CPU
+		{AB933947-863E-455F-ABA9-A8866EAC1894}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB933947-863E-455F-ABA9-A8866EAC1894}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB933947-863E-455F-ABA9-A8866EAC1894}.Release|ARM.ActiveCfg = Release|Any CPU
+		{AB933947-863E-455F-ABA9-A8866EAC1894}.Release|ARM.Build.0 = Release|Any CPU
+		{AB933947-863E-455F-ABA9-A8866EAC1894}.Release|x64.ActiveCfg = Release|Any CPU
+		{AB933947-863E-455F-ABA9-A8866EAC1894}.Release|x64.Build.0 = Release|Any CPU
+		{AB933947-863E-455F-ABA9-A8866EAC1894}.Release|x86.ActiveCfg = Release|Any CPU
+		{AB933947-863E-455F-ABA9-A8866EAC1894}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -137,5 +155,6 @@ Global
 		{E13E88B6-23C9-40EA-B10B-B8E52541B221} = {19C5600C-235A-4B95-B57D-8EC061FF44D7}
 		{4F51B1F7-E903-411A-9C58-E45760CFFB04} = {19C5600C-235A-4B95-B57D-8EC061FF44D7}
 		{85194081-752D-48FC-A240-82C9974353D4} = {4B2AB36C-F1B4-4CB3-B94C-966BBD61ED42}
+		{AB933947-863E-455F-ABA9-A8866EAC1894} = {4B2AB36C-F1B4-4CB3-B94C-966BBD61ED42}
 	EndGlobalSection
 EndGlobal

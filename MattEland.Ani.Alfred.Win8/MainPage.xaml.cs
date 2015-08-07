@@ -39,16 +39,16 @@ namespace MattEland.Ani.Alfred.Win8
             _alfred = new AlfredProvider(platformProvider);
 
             // Create the console
-            var console = new SimpleConsole(platformProvider);
-            console.Log("MetroClient.Initialize", "Console is now online.", LogLevel.Verbose);
-            _alfred.Console = console;
+            var baseConsole = new SimpleConsole(platformProvider);
+            baseConsole.Log("MetroClient.Initialize", "Console is now online.", LogLevel.Verbose);
+            _alfred.Console = baseConsole;
 
             // Register Modules
             StandardModuleProvider.AddStandardModules(_alfred);
 
             // Win 8 app cannot reference the System Modules
 
-            console.Log("MetroClient.Initialize", "Alfred instantiated", LogLevel.Verbose);
+            baseConsole.Log("MetroClient.Initialize", "Alfred instantiated", LogLevel.Verbose);
 
             // Data bindings in the UI rely on Alfred
             DataContext = _alfred;
