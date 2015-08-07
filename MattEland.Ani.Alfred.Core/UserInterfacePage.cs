@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
-// UserInterfacePage.cs
+// AlfredWidgetPage.cs
 // 
 // Created on:      08/07/2015 at 4:12 PM
-// Last Modified:   08/07/2015 at 4:17 PM
+// Last Modified:   08/07/2015 at 4:28 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -19,7 +19,7 @@ namespace MattEland.Ani.Alfred.Core
     /// <summary>
     ///     Represents a user interface page grouping multiple widgets together in a cohesive manner.
     /// </summary>
-    public class UserInterfacePage
+    public class UserInterfacePage : AlfredPage
     {
         [NotNull]
         [ItemNotNull]
@@ -46,7 +46,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <value>The widgets.</value>
         [NotNull]
         [ItemNotNull]
-        public IEnumerable<AlfredWidget> Widgets
+        public override IEnumerable<AlfredWidget> Widgets
         {
             [DebuggerStepThrough]
             get

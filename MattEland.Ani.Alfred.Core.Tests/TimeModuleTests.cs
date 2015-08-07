@@ -258,7 +258,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
 
             // This will error if 0 or > 1 events are logged
             Assert.IsFalse(
-                           console.Events.Any(e => e.Title == AlfredTimeModule.HourChangedEventTitle),
+                           console.Events.Any(e => e.Title == AlfredTimeModule.HourAlertEventTitle),
                            "Updating to times not in a new hour should not have logged");
         }
 
@@ -322,7 +322,24 @@ namespace MattEland.Ani.Alfred.Core.Tests
             _module.Update(new DateTime(1980, 9, 10, 9, 0, 0));
 
             // This will error if 0 or > 1 events are logged
-            var consoleEvent = console.Events.Single(e => e.Title == AlfredTimeModule.HourChangedEventTitle);
+            var consoleEvent = console.Events.Single(e => e.Title == AlfredTimeModule.HourAlertEventTitle);
+
+            //  We want to ensure it's an informational purposes
+            Assert.AreEqual(LogLevel.Info, consoleEvent.Level);
+        }
+
+        [Test]
+        public void TimeModuleLogsOnHalfHourChanges()
+        {
+            var console = new SimpleConsole();
+            _alfred.Console = console;
+            _alfred.Initialize();
+
+            _module.Update(new DateTime(1980, 9, 10, 9, 29, 0));
+            _module.Update(new DateTime(1980, 9, 10, 9, 30, 0));
+
+            // This will error if 0 or > 1 events are logged
+            var consoleEvent = console.Events.Single(e => e.Title == AlfredTimeModule.HalfHourAlertEventTitle);
 
             //  We want to ensure it's an informational purposes
             Assert.AreEqual(LogLevel.Info, consoleEvent.Level);

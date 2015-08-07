@@ -2,7 +2,7 @@
 // AlfredTimeModule.cs
 // 
 // Created on:      07/26/2015 at 1:46 PM
-// Last Modified:   08/07/2015 at 12:39 AM
+// Last Modified:   08/07/2015 at 7:34 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -24,7 +24,12 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <summary>
         ///     The hour changed event's title message used for logging purposes.
         /// </summary>
-        public const string HourChangedEventTitle = "Time.HourChanged";
+        public const string HourAlertEventTitle = "Time.HourAlert";
+
+        /// <summary>
+        ///     The half hour alert event title log message
+        /// </summary>
+        public const string HalfHourAlertEventTitle = "Time.HalfHourAlert";
 
         private DateTime _lastTime;
 
@@ -152,9 +157,18 @@ namespace MattEland.Ani.Alfred.Core.Modules
             UpdateBedtimeAlertVisibility(time);
 
             // Check to see if it's now a new hour and, if so, log it to the console
-            if (_lastTime > DateTime.MinValue && time.Minute == 0 && _lastTime.Hour != time.Hour)
+            if (_lastTime > DateTime.MinValue)
             {
-                Log(HourChangedEventTitle, timeText, LogLevel.Info);
+                if (time.Minute == 0 && _lastTime.Hour != time.Hour)
+                {
+                    // Let the user know it's now X
+                    Log(HourAlertEventTitle, timeText, LogLevel.Info);
+                }
+                else if (time.Minute == 30 && _lastTime.Minute != 30)
+                {
+                    // Let the user know it's now half after X
+                    Log(HalfHourAlertEventTitle, timeText, LogLevel.Info);
+                }
             }
 
             // Store the last time we processed so it can be referenced next iteration
@@ -226,11 +240,11 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        /// Clears the last time the module was run.
+        ///     Clears the last time the module was run.
         /// </summary>
         /// <remarks>
-        /// This is intended for use in time-sensitive unit testing
-        /// scenarios and is not intended for any normal usage
+        ///     This is intended for use in time-sensitive unit testing
+        ///     scenarios and is not intended for any normal usage
         /// </remarks>
         public void ClearLastTimeRun()
         {
