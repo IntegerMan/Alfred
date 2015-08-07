@@ -8,6 +8,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Speech.Synthesis;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -66,7 +67,6 @@ namespace MattEland.Ani.Alfred.WPF
             var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
             timer.Tick += OnTimerTick;
             timer.Start();
-
         }
 
         /// <summary>
@@ -103,6 +103,11 @@ namespace MattEland.Ani.Alfred.WPF
             {
                 _alfred.Initialize();
             }
+
+            // TODO: Remove this. This is for speech testing prior to integration into Alfred
+            var speech = new SpeechSynthesizer();
+            speech.SelectVoiceByHints(VoiceGender.Male, VoiceAge.Senior);
+            speech.SpeakAsync("Application Loaded");
         }
 
         /// <summary>

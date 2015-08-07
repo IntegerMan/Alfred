@@ -99,7 +99,7 @@ namespace MattEland.Ani.Alfred.Core
             }
 
             // Log the completion
-            console?.Log(header, Resources.AlfredStatusController_Initialize_AlfredOnline.NonNull(), LogLevel.Verbose);
+            console?.Log(header, Resources.AlfredStatusController_Initialize_AlfredOnline.NonNull(), LogLevel.Info);
         }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace MattEland.Ani.Alfred.Core
 
             // We're done here. Tell the world.
             Alfred.Status = AlfredStatus.Offline;
-            console?.Log(header, Resources.AlfredStatusController_Shutdown_Completed.NonNull(), LogLevel.Verbose);
+            console?.Log(header, Resources.AlfredStatusController_Shutdown_Completed.NonNull(), LogLevel.Info);
 
             // Notify each module that shutdown was completed
             foreach (var module in Alfred.Modules)
