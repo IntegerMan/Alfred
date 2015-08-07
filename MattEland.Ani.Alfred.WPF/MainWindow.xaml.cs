@@ -2,7 +2,7 @@
 // MainWindow.xaml.cs
 // 
 // Created on:      07/25/2015 at 11:55 PM
-// Last Modified:   08/07/2015 at 3:15 PM
+// Last Modified:   08/07/2015 at 3:27 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -27,6 +27,11 @@ namespace MattEland.Ani.Alfred.WPF
     /// </summary>
     public sealed partial class MainWindow : IDisposable
     {
+        /// <summary>
+        /// The update frequency in seconds for Alfred's update pump
+        /// </summary>
+        private const double UpdateFrequencyInSeconds = 0.25;
+
         [NotNull]
 
         // ReSharper disable once AssignNullToNotNullAttribute
@@ -46,34 +51,34 @@ namespace MattEland.Ani.Alfred.WPF
         /// </summary>
         public MainWindow()
         {
+
             InitializeComponent();
 
             // Create Alfred. It won't be online and running yet, but create it.
             var platformProvider = new WinClientPlatformProvider();
             _alfred = new AlfredProvider(platformProvider);
 
-            // Give Alfred a way to talk to the application
-            var baseConsole = new SimpleConsole(platformProvider);
-
-            // Give Alfred a voice
-            _console = new AlfredSpeechConsole(baseConsole);
-
-            _console.Log("WinClient.Initialize", "Console is now online.", LogLevel.Verbose);
-            _alfred.Console = _console;
-
-            // Give Alfred some Content
-            StandardModuleProvider.AddStandardModules(_alfred);
-            SystemModuleProvider.AddStandardModules(_alfred);
-
-            _console.Log("WinClient.Initialize", "Alfred instantiated", LogLevel.Verbose);
-
-            // Data bindings in the UI rely on Alfred
+            // DataBindings rely on Alfred presently as there hasn't been a need for a page ViewModel yet
             DataContext = _alfred;
 
+            // Give Alfred a way to talk to the user and the client a way to log events that are separate from Alfred
+            _console = InitializeConsole(platformProvider);
+
+            // Give Alfred some Content
+            InitializeAlfredModules();
+
             // Set up the update timer
-            var timer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(1)};
-            timer.Tick += OnTimerTick;
-            timer.Start();
+            InitializeUpdatePump();
+
+            _console.Log("WinClient.Initialize", "Initialization Complete", LogLevel.Verbose);
+        }
+
+        private void InitializeAlfredModules()
+        {
+
+            _console.Log("WinClient.Initialize", "Initializing Modules", LogLevel.Verbose);
+            StandardModuleProvider.AddStandardModules(_alfred);
+            SystemModuleProvider.AddStandardModules(_alfred);
         }
 
         /// <summary>
@@ -85,17 +90,47 @@ namespace MattEland.Ani.Alfred.WPF
         }
 
         /// <summary>
-        ///     Handles the <see cref="E:TimerTick" /> event.
+        /// Initializes the update pump that causes Alfred to update its modules.
         /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
-        private void OnTimerTick(object sender, EventArgs e)
+        private void InitializeUpdatePump()
         {
-            // If Alfred is online, ask it to update its modules
-            if (_alfred.Status == AlfredStatus.Online)
+            var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(UpdateFrequencyInSeconds) };
+            timer.Tick += delegate
+                          {
+                              // If Alfred is online, ask it to update its modules
+                              if (_alfred.Status == AlfredStatus.Online)
+                              {
+                                  _alfred.Update();
+                              }
+                          };
+
+            timer.Start();
+        }
+
+        /// <summary>
+        ///     Initializes the console for the application and returns the instantiated console.
+        /// </summary>
+        /// <param name="platformProvider">The platform provider.</param>
+        /// <returns>The instantiated console.</returns>
+        /// <exception cref="System.ArgumentNullException">platformProvider</exception>
+        [NotNull]
+        private AlfredSpeechConsole InitializeConsole([NotNull] IPlatformProvider platformProvider)
+        {
+            if (platformProvider == null)
             {
-                _alfred.Update();
+                throw new ArgumentNullException(nameof(platformProvider));
             }
+
+            // Give Alfred a way to talk to the application
+            var baseConsole = new SimpleConsole(platformProvider);
+
+            // Give Alfred a voice
+            var speechConsole = new AlfredSpeechConsole(baseConsole);
+
+            speechConsole.Log("WinClient.InitializeConsole", "Console is now online.", LogLevel.Verbose);
+            _alfred.Console = speechConsole;
+
+            return speechConsole;
         }
 
         /// <summary>

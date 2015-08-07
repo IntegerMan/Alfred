@@ -107,7 +107,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         public void CoreModuleDisplaysMessageWhenNoAlfredIsSet()
         {
             Assert.AreEqual(
-                            AlfredCoreModule.NoAlfredProviderMessage,
+                            "Alfred Provider has not been set",
                             _module.AlfredStatusWidget.Text,
                             "Module did not acknowledge that Alfred Provider wasn't set");
         }

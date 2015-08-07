@@ -190,4 +190,8 @@
     <value>Core</value>
     <comment>The name of the Core module</comment>
   </data>
+  <data name="AlfredCoreModule_AlfredNotSet" xml:space="preserve">
+    <value>Alfred Provider has not been set</value>
+    <comment>Widget message for when Alfred is not present</comment>
+  </data>
 </root>

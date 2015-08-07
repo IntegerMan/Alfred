@@ -61,6 +61,15 @@ namespace MattEland.Ani.Alfred.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Alfred Provider has not been set.
+        /// </summary>
+        internal static string AlfredCoreModule_AlfredNotSet {
+            get {
+                return ResourceManager.GetString("AlfredCoreModule_AlfredNotSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} is currently {1}.
         /// </summary>
         internal static string AlfredCoreModule_AlfredStatusText {
@@ -70,7 +79,7 @@ namespace MattEland.Ani.Alfred.Core {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Core Module.
+        ///   Looks up a localized string similar to Core.
         /// </summary>
         internal static string AlfredCoreModule_Name {
             get {
@@ -250,7 +259,7 @@ namespace MattEland.Ani.Alfred.Core {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Time Module.
+        ///   Looks up a localized string similar to Time and Date.
         /// </summary>
         internal static string AlfredTimeModule_Name {
             get {

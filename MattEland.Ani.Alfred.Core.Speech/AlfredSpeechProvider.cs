@@ -2,7 +2,7 @@
 // AlfredSpeechProvider.cs
 // 
 // Created on:      08/07/2015 at 2:00 PM
-// Last Modified:   08/07/2015 at 3:15 PM
+// Last Modified:   08/07/2015 at 3:41 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -51,19 +51,25 @@ namespace MattEland.Ani.Alfred.Core.Speech
             var greatBritainCulture = new CultureInfo("en-GB");
             _speech.SelectVoiceByHints(VoiceGender.Male, VoiceAge.Senior, 0, greatBritainCulture);
 
-            if (console != null)
+            // Everything else is just logging, so... gete out of here
+            if (console == null)
             {
-                var voice = _speech.Voice;
-                if (voice != null)
-                {
-                    console.Log(LogHeader, "Using voice: " + voice.Name, LogLevel.Verbose);
-                }
-                else
-                {
-                    console.Log(LogHeader,
-                                "Using unknown voice. Speech synthesis may not function properly.",
-                                LogLevel.Warning);
-                }
+                return;
+            }
+
+            // Log what voice we're using
+            var voice = _speech.Voice;
+            if (voice != null)
+            {
+                console.Log(LogHeader,
+                            string.Format(Resources.UsingVoiceLog.NonNull(), voice.Name),
+                            LogLevel.Verbose);
+            }
+            else
+            {
+                console.Log(LogHeader,
+                            Resources.UsingUnknownVoice.NonNull(),
+                            LogLevel.Warning);
             }
         }
 
@@ -79,9 +85,9 @@ namespace MattEland.Ani.Alfred.Core.Speech
             }
 
             const LogLevel Level = LogLevel.Verbose;
-            console.Log(LogHeader, "Searching for installed voice modules", Level);
+            console.Log(LogHeader, Resources.FindVoiceModules.NonNull(), Level);
 
-            var voices = _speech.GetInstalledVoices();
+            var voices = _speech.GetInstalledVoices(CultureInfo.CurrentCulture);
 
             foreach (var voice in voices)
             {
@@ -97,7 +103,7 @@ namespace MattEland.Ani.Alfred.Core.Speech
                 if (info != null)
                 {
                     var message = string.Format(CultureInfo.CurrentCulture,
-                                                "Found voice: {0} ({1} {2}) Enabled: {3}",
+                                                Resources.VoiceFoundList.NonNull(),
                                                 info.Name,
                                                 info.Gender,
                                                 info.Culture?.DisplayName,
@@ -107,7 +113,7 @@ namespace MattEland.Ani.Alfred.Core.Speech
                 }
                 else
                 {
-                    console.Log(LogHeader, "Found unknown voice with no voice information", LogLevel.Warning);
+                    console.Log(LogHeader, Resources.UnknownVoiceFound.NonNull(), LogLevel.Warning);
                 }
             }
         }

@@ -19,8 +19,6 @@ namespace MattEland.Ani.Alfred.Core.Modules
     /// </summary>
     public sealed class AlfredCoreModule : AlfredModule
     {
-        [NotNull]
-        public const string NoAlfredProviderMessage = "Alfred Provider has not been set";
 
         [NotNull]
         private readonly ButtonWidget _initializeButton;
@@ -49,7 +47,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </param>
         public AlfredCoreModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
         {
-            _statusWidget = new TextWidget(NoAlfredProviderMessage);
+            _statusWidget = new TextWidget(Resources.AlfredCoreModule_AlfredNotSet);
 
             var initializeCommand = platformProvider.CreateCommand(() => _alfredProvider?.Initialize());
             _initializeButton = new ButtonWidget("Initialize", initializeCommand);
@@ -205,7 +203,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
             if (AlfredProvider == null)
             {
                 // Update Text Message to a Nobody's Home sort of thing
-                _statusWidget.Text = NoAlfredProviderMessage;
+                _statusWidget.Text = "Alfred Provider has not been set";
 
                 // Update Button Visbilities to hidden
                 if (_shutdownButton.ClickCommand != null)
