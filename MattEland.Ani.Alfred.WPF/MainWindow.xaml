@@ -19,10 +19,8 @@
     <DockPanel>
 
         <!-- Header Bar -->
-        <Border DockPanel.Dock="Top"
-                Background="{StaticResource MediumBackgroundBrush}"
-                BorderThickness="0,0,0,1"
-                BorderBrush="{StaticResource AppBorderBrush}"
+        <Border DockPanel.Dock="Top" 
+                Style="{StaticResource HeaderBannerBorderStyle}"
                 MinHeight="32">
 
             <StackPanel Orientation="Horizontal"    
@@ -43,16 +41,12 @@
 
             <!-- Modules -->
             <TabItem Header="{x:Static resources:Resources.ModulesHeader}">
-
                 <panes:ModulesPane DataContext="{Binding}" />
-
             </TabItem>
 
             <!-- Console -->
             <TabItem Header="{x:Static resources:Resources.ConsoleHeader}">
-
                 <panes:ConsolePane DataContext="{Binding Path=Console}" />
-
             </TabItem>
 
         </TabControl>
