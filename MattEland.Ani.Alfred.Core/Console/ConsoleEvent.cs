@@ -2,7 +2,7 @@
 // ConsoleEvent.cs
 // 
 // Created on:      07/26/2015 at 2:23 PM
-// Last Modified:   08/05/2015 at 2:56 PM
+// Last Modified:   08/07/2015 at 12:24 AM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -24,7 +24,7 @@ namespace MattEland.Ani.Alfred.Core.Console
         /// </summary>
         /// <param name="title">The title.</param>
         /// <param name="message">The message.</param>
-        public ConsoleEvent(string title, string message) : this(title, message, DateTime.UtcNow)
+        public ConsoleEvent(string title, string message) : this(title, message, LogLevel.Verbose, DateTime.UtcNow)
         {
         }
 
@@ -33,12 +33,24 @@ namespace MattEland.Ani.Alfred.Core.Console
         /// </summary>
         /// <param name="title">The title.</param>
         /// <param name="message">The message.</param>
+        /// <param name="level">The logging level.</param>
+        public ConsoleEvent(string title, string message, LogLevel level) : this(title, message, level, DateTime.UtcNow)
+        {
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="ConsoleEvent" /> class.
+        /// </summary>
+        /// <param name="title">The title.</param>
+        /// <param name="message">The message.</param>
+        /// <param name="level">The logging level</param>
         /// <param name="utcTime">The utcTime in UTC.</param>
-        public ConsoleEvent(string title, string message, DateTime utcTime)
+        public ConsoleEvent(string title, string message, LogLevel level, DateTime utcTime)
         {
             UtcTime = utcTime;
             Title = title;
             Message = message;
+            Level = level;
         }
 
         /// <summary>
@@ -68,6 +80,12 @@ namespace MattEland.Ani.Alfred.Core.Console
             get { return UtcTime.ToLocalTime(); }
         }
 
+        /// <summary>
+        ///     Gets the logging level of the event. Defaults to Verbose.
+        /// </summary>
+        /// <value>The logging level.</value>
+        public LogLevel Level { get; }
+
         #region Equality Members
 
         /// <summary>
@@ -77,8 +95,10 @@ namespace MattEland.Ani.Alfred.Core.Console
         /// <returns><c>true</c> if the events are equivalent, <c>false</c> otherwise.</returns>
         public bool Equals(ConsoleEvent other)
         {
-            return UtcTime.Equals(other.UtcTime) && string.Equals(Title, other.Title) &&
-                   string.Equals(Message, other.Message);
+            return UtcTime.Equals(other.UtcTime) &&
+                   string.Equals(Title, other.Title) &&
+                   string.Equals(Message, other.Message) &&
+                   Level == other.Level;
         }
 
         /// <summary>
@@ -92,7 +112,7 @@ namespace MattEland.Ani.Alfred.Core.Console
             {
                 return false;
             }
-            return obj is ConsoleEvent && Equals((ConsoleEvent) obj);
+            return obj is ConsoleEvent && Equals((ConsoleEvent)obj);
         }
 
         /// <summary>
@@ -104,8 +124,9 @@ namespace MattEland.Ani.Alfred.Core.Console
             unchecked
             {
                 var hashCode = UtcTime.GetHashCode();
-                hashCode = (hashCode*397) ^ (Title?.GetHashCode() ?? 0);
-                hashCode = (hashCode*397) ^ (Message?.GetHashCode() ?? 0);
+                hashCode = (hashCode * 397) ^ (Title?.GetHashCode() ?? 0);
+                hashCode = (hashCode * 397) ^ (Message?.GetHashCode() ?? 0);
+                hashCode = (hashCode * 397) ^ (int)(Level);
                 return hashCode;
             }
         }
@@ -134,4 +155,5 @@ namespace MattEland.Ani.Alfred.Core.Console
 
         #endregion
     }
+
 }

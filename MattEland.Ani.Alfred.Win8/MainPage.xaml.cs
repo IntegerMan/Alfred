@@ -2,7 +2,7 @@
 // MainPage.xaml.cs
 // 
 // Created on:      07/26/2015 at 12:07 AM
-// Last Modified:   08/06/2015 at 4:43 PM
+// Last Modified:   08/07/2015 at 12:42 AM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -15,8 +15,6 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Modules;
-
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace MattEland.Ani.Alfred.Win8
 {
@@ -42,15 +40,15 @@ namespace MattEland.Ani.Alfred.Win8
 
             // Create the console
             var console = new SimpleConsole(platformProvider);
-            console.Log("MetroClient.Initialize", "Console is now online.");
+            console.Log("MetroClient.Initialize", "Console is now online.", LogLevel.Verbose);
             _alfred.Console = console;
 
             // Register Modules
             StandardModuleProvider.AddStandardModules(_alfred);
 
-            // Win 8 app cannot reference the System Modules. It feels sadfaced.
+            // Win 8 app cannot reference the System Modules
 
-            console.Log("MetroClient.Initialize", "Alfred instantiated");
+            console.Log("MetroClient.Initialize", "Alfred instantiated", LogLevel.Verbose);
 
             // Data bindings in the UI rely on Alfred
             DataContext = _alfred;

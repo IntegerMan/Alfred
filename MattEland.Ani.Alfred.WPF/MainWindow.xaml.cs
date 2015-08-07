@@ -1,4 +1,12 @@
-﻿using System;
+﻿// ---------------------------------------------------------
+// MainWindow.xaml.cs
+// 
+// Created on:      07/25/2015 at 11:55 PM
+// Last Modified:   08/07/2015 at 12:42 AM
+// Original author: Matt Eland
+// ---------------------------------------------------------
+
+using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Threading;
@@ -14,23 +22,23 @@ using MattEland.Ani.Alfred.WPF.Properties;
 namespace MattEland.Ani.Alfred.WPF
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    ///     Interaction logic for MainWindow.xaml
     /// </summary>
     public sealed partial class MainWindow : IDisposable
     {
-
-        /// <summary>
-        /// The Alfred Provider that makes the application possible
-        /// </summary>
         [NotNull]
-        private readonly AlfredProvider _alfred;
 
-        [NotNull]
         // ReSharper disable once AssignNullToNotNullAttribute
         private static readonly Settings Settings = Settings.Default;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MainWindow"/> class.
+        ///     The Alfred Provider that makes the application possible
+        /// </summary>
+        [NotNull]
+        private readonly AlfredProvider _alfred;
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="MainWindow" /> class.
         /// </summary>
         public MainWindow()
         {
@@ -42,14 +50,14 @@ namespace MattEland.Ani.Alfred.WPF
 
             // Give Alfred a way to talk to the application
             var console = new SimpleConsole(platformProvider);
-            console.Log("WinClient.Initialize", "Console is now online.");
+            console.Log("WinClient.Initialize", "Console is now online.", LogLevel.Verbose);
             _alfred.Console = console;
 
             // Give Alfred some Content
             StandardModuleProvider.AddStandardModules(_alfred);
             SystemModuleProvider.AddStandardModules(_alfred);
 
-            console.Log("WinClient.Initialize", "Alfred instantiated");
+            console.Log("WinClient.Initialize", "Alfred instantiated", LogLevel.Verbose);
 
             // Data bindings in the UI rely on Alfred
             DataContext = _alfred;
@@ -62,10 +70,18 @@ namespace MattEland.Ani.Alfred.WPF
         }
 
         /// <summary>
-        /// Handles the <see cref="E:TimerTick" /> event.
+        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            _alfred.Dispose();
+        }
+
+        /// <summary>
+        ///     Handles the <see cref="E:TimerTick" /> event.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
         private void OnTimerTick(object sender, EventArgs e)
         {
             // If Alfred is online, ask it to update its modules
@@ -76,10 +92,10 @@ namespace MattEland.Ani.Alfred.WPF
         }
 
         /// <summary>
-        /// Handles the <see cref="E:WindowLoaded" /> event.
+        ///     Handles the <see cref="E:WindowLoaded" /> event.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs" /> instance containing the event data.</param>
         private void OnWindowLoaded(object sender, RoutedEventArgs e)
         {
             // Determine whether to auto-start or not based off of settings
@@ -90,10 +106,10 @@ namespace MattEland.Ani.Alfred.WPF
         }
 
         /// <summary>
-        /// Handles the <see cref="E:WindowClosing" /> event.
+        ///     Handles the <see cref="E:WindowClosing" /> event.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="CancelEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="CancelEventArgs" /> instance containing the event data.</param>
         private void OnWindowClosing(object sender, CancelEventArgs e)
         {
             // Make sure we clean up Alfred
@@ -101,14 +117,6 @@ namespace MattEland.Ani.Alfred.WPF
             {
                 _alfred.Shutdown();
             }
-        }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-            _alfred.Dispose();
         }
     }
 }

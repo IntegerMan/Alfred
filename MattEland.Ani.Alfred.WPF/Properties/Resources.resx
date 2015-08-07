@@ -124,7 +124,7 @@
 {0} {1}
 
 Do you want to continue running this application?</value>
-    <comment>Message box body for application error.
+    <comment>Message box message for application error.
 
 {0} The error message details
 {1} The inner exception message details (if an inner exception is present)</comment>

@@ -10,12 +10,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Widgets;
 
 namespace MattEland.Ani.Alfred.Core
@@ -33,6 +32,9 @@ namespace MattEland.Ani.Alfred.Core
         [CanBeNull]
         [ItemNotNull]
         private ICollection<AlfredWidget> _widgets;
+
+        [NotNull]
+        private AlfredProvider _alfred;
 
         /// <summary>
         ///     Initializes a new instance of the
@@ -160,6 +162,8 @@ namespace MattEland.Ani.Alfred.Core
             {
                 throw new InvalidOperationException($"{NameAndVersion} was already online when told to initialize.");
             }
+
+            _alfred = alfred;
 
             Status = AlfredStatus.Initializing;
 
@@ -327,6 +331,31 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         public virtual void Dispose()
         {
+        }
+
+        /// <summary>
+        /// Logs an event to the console if a console was provided
+        /// </summary>
+        /// <param name="title">The title of the message.</param>
+        /// <param name="message">The message body.</param>
+        /// <param name="level">The logging level.</param>
+        protected void Log([NotNull] string title, [NotNull] string message, LogLevel level)
+        {
+            if (title == null)
+            {
+                throw new ArgumentNullException(nameof(title));
+            }
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            // Grab the console as Alfred may not have had the console object set during this module's construction
+            var console = _alfred.Console;
+
+            // Send it on to the console, if we have one. It'll figure it out from there
+            console?.Log(title, message, level);
+
         }
     }
 }

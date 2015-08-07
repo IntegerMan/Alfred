@@ -2,7 +2,7 @@
 // AlfredTimeModule.cs
 // 
 // Created on:      07/26/2015 at 1:46 PM
-// Last Modified:   08/05/2015 at 2:57 PM
+// Last Modified:   08/07/2015 at 12:39 AM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -11,6 +11,7 @@ using System.Globalization;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Widgets;
 
 namespace MattEland.Ani.Alfred.Core.Modules
@@ -20,6 +21,13 @@ namespace MattEland.Ani.Alfred.Core.Modules
     /// </summary>
     public sealed class AlfredTimeModule : AlfredModule
     {
+        /// <summary>
+        ///     The hour changed event's title message used for logging purposes.
+        /// </summary>
+        public const string HourChangedEventTitle = "Time.HourChanged";
+
+        private DateTime _lastTime;
+
         /// <summary>
         ///     Initializes a new instance of the
         ///     <see cref="AlfredModule" />
@@ -41,6 +49,8 @@ namespace MattEland.Ani.Alfred.Core.Modules
             BedtimeMinute = 30;
             AlertDurationInHours = 4;
             IsAlertEnabled = true;
+
+            _lastTime = DateTime.MinValue;
         }
 
         /// <summary>
@@ -99,6 +109,9 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <value>The alert is enabled.</value>
         public bool IsAlertEnabled { get; set; }
 
+        /// <summary>
+        ///     Handles module initialization events
+        /// </summary>
         protected override void InitializeProtected()
         {
             RegisterWidget(CurrentDateWidget);
@@ -106,6 +119,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
             RegisterWidget(BedtimeAlertWidget);
 
             // Ensure it has some initial values so it doesn't "blink" or lag on start
+            _lastTime = DateTime.MinValue;
             Update(DateTime.Now);
         }
 
@@ -131,10 +145,20 @@ namespace MattEland.Ani.Alfred.Core.Modules
 
             // Always update the time
             var timeFormat = Resources.AlfredTimeModule_Update_CurrentTimeDisplayString.NonNull();
-            CurrentTimeWidget.Text = string.Format(CultureInfo.CurrentCulture, timeFormat, time);
+            var timeText = string.Format(CultureInfo.CurrentCulture, timeFormat, time);
+            CurrentTimeWidget.Text = timeText;
 
             // Update the visibility of the alert widget based on time of day
-            UpdateBedtimeAlertVisbility(time);
+            UpdateBedtimeAlertVisibility(time);
+
+            // Check to see if it's now a new hour and, if so, log it to the console
+            if (_lastTime > DateTime.MinValue && time.Minute == 0 && _lastTime.Hour != time.Hour)
+            {
+                Log(HourChangedEventTitle, timeText, LogLevel.Info);
+            }
+
+            // Store the last time we processed so it can be referenced next iteration
+            _lastTime = time;
         }
 
         /// <summary>
@@ -143,7 +167,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <param name="time">
         ///     The time.
         /// </param>
-        private void UpdateBedtimeAlertVisbility(DateTime time)
+        private void UpdateBedtimeAlertVisibility(DateTime time)
         {
             var alertVisible = false;
 
@@ -198,6 +222,19 @@ namespace MattEland.Ani.Alfred.Core.Modules
         protected override void ShutdownProtected()
         {
             CurrentTimeWidget.Text = null;
+            _lastTime = DateTime.MinValue;
+        }
+
+        /// <summary>
+        /// Clears the last time the module was run.
+        /// </summary>
+        /// <remarks>
+        /// This is intended for use in time-sensitive unit testing
+        /// scenarios and is not intended for any normal usage
+        /// </remarks>
+        public void ClearLastTimeRun()
+        {
+            _lastTime = DateTime.MinValue;
         }
     }
 }

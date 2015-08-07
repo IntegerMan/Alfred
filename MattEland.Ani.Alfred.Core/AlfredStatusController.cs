@@ -11,6 +11,8 @@ using System.Globalization;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Console;
+
 namespace MattEland.Ani.Alfred.Core
 {
     /// <summary>
@@ -62,13 +64,13 @@ namespace MattEland.Ani.Alfred.Core
             if (Alfred.Status == AlfredStatus.Online)
             {
                 var message = Resources.AlfredStatusController_Initialize_ErrorAlreadyOnline.NonNull();
-                console?.Log(header, message);
+                console?.Log(header, message, LogLevel.Verbose);
 
                 throw new InvalidOperationException(message);
             }
 
             // Inform things that we're setting up right now
-            console?.Log(header, Resources.AlfredStatusController_Initialize_Initializing.NonNull());
+            console?.Log(header, Resources.AlfredStatusController_Initialize_Initializing.NonNull(), LogLevel.Verbose);
             Alfred.Status = AlfredStatus.Initializing;
 
             // Boot up Modules and give them a provider
@@ -76,19 +78,19 @@ namespace MattEland.Ani.Alfred.Core
             {
                 // Log the initialization
                 var initLogFormat = Resources.AlfredStatusController_Initialize_InitializingModule.NonNull();
-                console?.Log(header, string.Format(culture, initLogFormat, module.NameAndVersion));
+                console?.Log(header, string.Format(culture, initLogFormat, module.NameAndVersion), LogLevel.Verbose);
 
                 // Actually initialize the module
                 module.Initialize(Alfred);
 
                 // Log the completion
                 var initializedLogFormat = Resources.AlfredStatusController_Initialize__ModuleInitialized.NonNull();
-                console?.Log(header, string.Format(culture, initializedLogFormat, module.NameAndVersion));
+                console?.Log(header, string.Format(culture, initializedLogFormat, module.NameAndVersion), LogLevel.Verbose);
             }
 
             // We're done. Let the world know.
             Alfred.Status = AlfredStatus.Online;
-            console?.Log(header, Resources.AlfredStatusController_Initialize_InitilizationCompleted.NonNull());
+            console?.Log(header, Resources.AlfredStatusController_Initialize_InitilizationCompleted.NonNull(), LogLevel.Verbose);
 
             // Notify each module that startup was completed
             foreach (var module in Alfred.Modules)
@@ -97,7 +99,7 @@ namespace MattEland.Ani.Alfred.Core
             }
 
             // Log the completion
-            console?.Log(header, Resources.AlfredStatusController_Initialize_AlfredOnline.NonNull());
+            console?.Log(header, Resources.AlfredStatusController_Initialize_AlfredOnline.NonNull(), LogLevel.Verbose);
         }
 
         /// <summary>
@@ -117,19 +119,19 @@ namespace MattEland.Ani.Alfred.Core
             {
                 case AlfredStatus.Offline:
                     var offlineMessage = Resources.AlfredStatusController_Shutdown_ErrorAlreadyOffline.NonNull();
-                    console?.Log(header, offlineMessage);
+                    console?.Log(header, offlineMessage, LogLevel.Verbose);
 
                     throw new InvalidOperationException(offlineMessage);
 
                 case AlfredStatus.Terminating:
                     var terminatingMessage = Resources.AlfredStatusController_Shutdown_ErrorAlreadyTerminating.NonNull();
-                    console?.Log(header, terminatingMessage);
+                    console?.Log(header, terminatingMessage, LogLevel.Verbose);
 
                     throw new InvalidOperationException(terminatingMessage);
             }
 
             // Indicate status so the UI can keep busy
-            console?.Log(header, Resources.AlfredStatusController_Shutdown_Shutting_down.NonNull());
+            console?.Log(header, Resources.AlfredStatusController_Shutdown_Shutting_down.NonNull(), LogLevel.Verbose);
             Alfred.Status = AlfredStatus.Terminating;
 
             // Shut down modules and decouple them from Alfred
@@ -138,17 +140,17 @@ namespace MattEland.Ani.Alfred.Core
                 var culture = CultureInfo.CurrentCulture;
 
                 var shuttingDownMessage = Resources.AlfredStatusController_Shutdown_ShuttingDownModule.NonNull();
-                console?.Log(header, string.Format(culture, shuttingDownMessage, module.NameAndVersion));
+                console?.Log(header, string.Format(culture, shuttingDownMessage, module.NameAndVersion), LogLevel.Verbose);
 
                 module.Shutdown();
 
                 var shutDownMessage = Resources.AlfredStatusController_Shutdown_ModuleOffline.NonNull();
-                console?.Log(header, string.Format(culture, shutDownMessage, module.NameAndVersion));
+                console?.Log(header, string.Format(culture, shutDownMessage, module.NameAndVersion), LogLevel.Verbose);
             }
 
             // We're done here. Tell the world.
             Alfred.Status = AlfredStatus.Offline;
-            console?.Log(header, Resources.AlfredStatusController_Shutdown_Completed.NonNull());
+            console?.Log(header, Resources.AlfredStatusController_Shutdown_Completed.NonNull(), LogLevel.Verbose);
 
             // Notify each module that shutdown was completed
             foreach (var module in Alfred.Modules)

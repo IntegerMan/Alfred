@@ -143,7 +143,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
 
             var numEvents = console.Events.Count();
 
-            console.Log("Alfred Test Framework", "Testing logging to Alfred");
+            console.Log("Alfred Test Framework", "Testing logging to Alfred", LogLevel.Verbose);
 
             Assert.AreEqual(numEvents + 1, console.Events.Count(), "Event count did not increase after logging.");
         }
