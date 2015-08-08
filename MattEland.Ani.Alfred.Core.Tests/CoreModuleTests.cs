@@ -21,7 +21,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
     /// <summary>
     ///     Tests for the
     ///     <see
-    ///         cref="AlfredCoreModule" />
+    ///         cref="AlfredPowerModule" />
     ///     module.
     /// </summary>
     [TestFixture]
@@ -35,7 +35,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         {
             _alfred = new AlfredProvider();
 
-            _module = new AlfredCoreModule(new SimplePlatformProvider());
+            _module = new AlfredPowerModule(new SimplePlatformProvider());
 
             _alfred.AddModule(_module);
         }
@@ -44,7 +44,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         private AlfredProvider _alfred;
 
         [NotNull]
-        private AlfredCoreModule _module;
+        private AlfredPowerModule _module;
 
         [Test]
         public void AfterShutdownSystemWidgetIsStillPresentInModule()
@@ -67,7 +67,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         {
             // Doing this again here to illustrate creation / configuration order more clearly
             _alfred = new AlfredProvider();
-            _module = new AlfredCoreModule(new SimplePlatformProvider());
+            _module = new AlfredPowerModule(new SimplePlatformProvider());
 
             // Add the module first, then set the provider
             _alfred.AddModule(_module);
@@ -85,7 +85,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         {
             // Doing this again here to illustrate creation / configuration order more clearly
             _alfred = new AlfredProvider();
-            _module = new AlfredCoreModule(new SimplePlatformProvider());
+            _module = new AlfredPowerModule(new SimplePlatformProvider());
 
             // Set the provider first, then add it to Alfred's modules
             _module.AlfredProvider = _alfred;

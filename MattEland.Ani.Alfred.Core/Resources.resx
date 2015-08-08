@@ -187,7 +187,7 @@
     <comment>UI text for displaying Alfred's status with {0} being Alfred's Name and {1} being the current Status.</comment>
   </data>
   <data name="AlfredCoreModule_Name" xml:space="preserve">
-    <value>Core</value>
+    <value>System Power</value>
     <comment>The name of the Core module</comment>
   </data>
   <data name="AlfredCoreModule_AlfredNotSet" xml:space="preserve">

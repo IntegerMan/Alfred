@@ -1,8 +1,8 @@
 // ---------------------------------------------------------
-// AlfredCoreModule.cs
+// AlfredPowerModule.cs
 // 
 // Created on:      08/02/2015 at 4:56 PM
-// Last Modified:   08/03/2015 at 3:01 PM
+// Last Modified:   08/07/2015 at 11:55 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -15,11 +15,10 @@ using MattEland.Ani.Alfred.Core.Widgets;
 namespace MattEland.Ani.Alfred.Core.Modules
 {
     /// <summary>
-    ///     A module intended for the control and monitoring of Alfred
+    ///     A module intended for the control and monitoring of Alfred's status
     /// </summary>
-    public sealed class AlfredCoreModule : AlfredModule
+    public sealed class AlfredPowerModule : AlfredModule
     {
-
         [NotNull]
         private readonly ButtonWidget _initializeButton;
 
@@ -34,18 +33,15 @@ namespace MattEland.Ani.Alfred.Core.Modules
 
         /// <summary>
         ///     Initializes a new instance of the
-        ///     <see
-        ///         cref="AlfredCoreModule" />
+        ///     <see cref="AlfredPowerModule" />
         ///     class.
         /// </summary>
-        /// <exception
-        ///     cref="System.ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// </exception>
-        /// <param
-        ///     name="platformProvider">
+        /// <param name="platformProvider">
         ///     The platform provider.
         /// </param>
-        public AlfredCoreModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
+        public AlfredPowerModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
         {
             _statusWidget = new TextWidget(Resources.AlfredCoreModule_AlfredNotSet);
 
@@ -57,20 +53,11 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        ///     Initializes a new instance of the
-        ///     <see
-        ///         cref="AlfredCoreModule" />
-        ///     class.
+        ///     Initializes a new instance of the <see cref="AlfredPowerModule" /> class.
         /// </summary>
-        /// <param
-        ///     name="platformProvider">
-        ///     The collection provider.
-        /// </param>
-        /// <param
-        ///     name="alfredProvider">
-        ///     The alfred provider.
-        /// </param>
-        public AlfredCoreModule(
+        /// <param name="platformProvider">The platform provider.</param>
+        /// <param name="alfredProvider">The alfred provider.</param>
+        public AlfredPowerModule(
             [NotNull] IPlatformProvider platformProvider,
             [CanBeNull] AlfredProvider alfredProvider) : this(platformProvider)
         {
@@ -216,7 +203,10 @@ namespace MattEland.Ani.Alfred.Core.Modules
             {
                 // Display the current status
                 var statusFormat = Resources.AlfredCoreModule_AlfredStatusText.NonNull();
-                _statusWidget.Text = string.Format(CultureInfo.CurrentCulture, statusFormat, AlfredProvider.Name, AlfredProvider.Status);
+                _statusWidget.Text = string.Format(CultureInfo.CurrentCulture,
+                                                   statusFormat,
+                                                   AlfredProvider.Name,
+                                                   AlfredProvider.Status);
 
                 // Show the shutdown button while online and initialize button while offline
                 if (_shutdownButton.ClickCommand != null)
@@ -231,7 +221,8 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        ///     A notification method that is invoked when initialization for Alfred is complete so the UI can be fully enabled or adjusted
+        ///     A notification method that is invoked when initialization for Alfred is complete so the UI can be fully enabled or
+        ///     adjusted
         /// </summary>
         public override void OnInitializationCompleted()
         {
@@ -239,7 +230,8 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        ///     A notification method that is invoked when shutdown for Alfred is complete so the UI can be fully enabled or adjusted
+        ///     A notification method that is invoked when shutdown for Alfred is complete so the UI can be fully enabled or
+        ///     adjusted
         /// </summary>
         public override void OnShutdownCompleted()
         {
