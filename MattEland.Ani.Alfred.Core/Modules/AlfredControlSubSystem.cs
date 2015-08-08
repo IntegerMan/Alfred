@@ -38,20 +38,18 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <exception cref="System.ArgumentNullException"></exception>
         public AlfredControlSubSystem([NotNull] IPlatformProvider provider) : base(provider)
         {
-            _controlPage = new AlfredModuleListPage(provider) { Name = ControlPageName };
-
+            // Instantiate the modules
             var power = new AlfredPowerModule(provider);
-            _controlPage.Register(power);
-
             var time = new AlfredTimeModule(provider);
-            _controlPage.Register(time);
-
             var systems = new AlfredSubSystemListModule(provider);
-            _controlPage.Register(systems);
-
             var pages = new AlfredPagesListModule(provider);
-            _controlPage.Register(pages);
 
+            // Build out our control page
+            _controlPage = new AlfredModuleListPage(provider) { Name = ControlPageName };
+            _controlPage.Register(power);
+            _controlPage.Register(time);
+            _controlPage.Register(systems);
+            _controlPage.Register(pages);
         }
 
         /// <summary>
@@ -96,8 +94,10 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <param name="alfred"></param>
         protected override void InitializeProtected(AlfredProvider alfred)
         {
+            // Add a basic control page
             Register(_controlPage);
 
+            // Don't include the event log page if there are no events
             if (alfred?.Console != null)
             {
                 _eventLogPage = new AlfredEventLogPage(alfred.Console) { Name = EventLogPageName };
