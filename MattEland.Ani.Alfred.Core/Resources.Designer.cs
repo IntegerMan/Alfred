@@ -22,7 +22,7 @@ namespace MattEland.Ani.Alfred.Core {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace MattEland.Ani.Alfred.Core {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MattEland.Ani.Alfred.Core.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace MattEland.Ani.Alfred.Core {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace MattEland.Ani.Alfred.Core {
         /// <summary>
         ///   Looks up a localized string similar to {0} was already offline when told to shut down..
         /// </summary>
-        internal static string AlfredComponent_ShutdownAlreadyOffline {
+        public static string AlfredComponent_ShutdownAlreadyOffline {
             get {
                 return ResourceManager.GetString("AlfredComponent_ShutdownAlreadyOffline", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace MattEland.Ani.Alfred.Core {
         /// <summary>
         ///   Looks up a localized string similar to Alfred Control.
         /// </summary>
-        internal static string AlfredControlSubSystem_Name {
+        public static string AlfredControlSubSystem_Name {
             get {
                 return ResourceManager.GetString("AlfredControlSubSystem_Name", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace MattEland.Ani.Alfred.Core {
         /// <summary>
         ///   Looks up a localized string similar to Alfred Provider has not been set.
         /// </summary>
-        internal static string AlfredCoreModule_AlfredNotSet {
+        public static string AlfredCoreModule_AlfredNotSet {
             get {
                 return ResourceManager.GetString("AlfredCoreModule_AlfredNotSet", resourceCulture);
             }
@@ -90,7 +90,7 @@ namespace MattEland.Ani.Alfred.Core {
         /// <summary>
         ///   Looks up a localized string similar to {0} is currently {1}.
         /// </summary>
-        internal static string AlfredCoreModule_AlfredStatusText {
+        public static string AlfredCoreModule_AlfredStatusText {
             get {
                 return ResourceManager.GetString("AlfredCoreModule_AlfredStatusText", resourceCulture);
             }
@@ -99,7 +99,7 @@ namespace MattEland.Ani.Alfred.Core {
         /// <summary>
         ///   Looks up a localized string similar to System Power.
         /// </summary>
-        internal static string AlfredCoreModule_Name {
+        public static string AlfredCoreModule_Name {
             get {
                 return ResourceManager.GetString("AlfredCoreModule_Name", resourceCulture);
             }
@@ -108,7 +108,7 @@ namespace MattEland.Ani.Alfred.Core {
         /// <summary>
         ///   Looks up a localized string similar to {0} was offline when told to update..
         /// </summary>
-        internal static string AlfredItemOfflineButToldToUpdate {
+        public static string AlfredItemOfflineButToldToUpdate {
             get {
                 return ResourceManager.GetString("AlfredItemOfflineButToldToUpdate", resourceCulture);
             }
@@ -117,7 +117,7 @@ namespace MattEland.Ani.Alfred.Core {
         /// <summary>
         ///   Looks up a localized string similar to {0} was already online when told to initialize..
         /// </summary>
-        internal static string AlfredModule_InitializeAlreadyOnline {
+        public static string AlfredModule_InitializeAlreadyOnline {
             get {
                 return ResourceManager.GetString("AlfredModule_InitializeAlreadyOnline", resourceCulture);
             }
@@ -126,7 +126,7 @@ namespace MattEland.Ani.Alfred.Core {
         /// <summary>
         ///   Looks up a localized string similar to Modules may not contain null entries..
         /// </summary>
-        internal static string AlfredProvider_AddModules_ErrorNullModule {
+        public static string AlfredProvider_AddModules_ErrorNullModule {
             get {
                 return ResourceManager.GetString("AlfredProvider_AddModules_ErrorNullModule", resourceCulture);
             }
@@ -135,7 +135,7 @@ namespace MattEland.Ani.Alfred.Core {
         /// <summary>
         ///   Looks up a localized string similar to Alfred must be offline in order to add components..
         /// </summary>
-        internal static string AlfredProvider_AssertMustBeOffline_ErrorNotOffline {
+        public static string AlfredProvider_AssertMustBeOffline_ErrorNotOffline {
             get {
                 return ResourceManager.GetString("AlfredProvider_AssertMustBeOffline_ErrorNotOffline", resourceCulture);
             }
@@ -144,7 +144,7 @@ namespace MattEland.Ani.Alfred.Core {
         /// <summary>
         ///   Looks up a localized string similar to Alfred.
         /// </summary>
-        internal static string AlfredProvider_Name {
+        public static string AlfredProvider_Name {
             get {
                 return ResourceManager.GetString("AlfredProvider_Name", resourceCulture);
             }
@@ -153,7 +153,7 @@ namespace MattEland.Ani.Alfred.Core {
         /// <summary>
         ///   Looks up a localized string similar to Alfred must be online in order to update modules..
         /// </summary>
-        internal static string AlfredProvider_Update_ErrorMustBeOnline {
+        public static string AlfredProvider_Update_ErrorMustBeOnline {
             get {
                 return ResourceManager.GetString("AlfredProvider_Update_ErrorMustBeOnline", resourceCulture);
             }
@@ -162,7 +162,7 @@ namespace MattEland.Ani.Alfred.Core {
         /// <summary>
         ///   Looks up a localized string similar to {0} is now offline..
         /// </summary>
-        internal static string AlfredStatusController_ComponentOffline {
+        public static string AlfredStatusController_ComponentOffline {
             get {
                 return ResourceManager.GetString("AlfredStatusController_ComponentOffline", resourceCulture);
             }
@@ -171,7 +171,7 @@ namespace MattEland.Ani.Alfred.Core {
         /// <summary>
         ///   Looks up a localized string similar to Alfred is now Online..
         /// </summary>
-        internal static string AlfredStatusController_Initialize_AlfredOnline {
+        public static string AlfredStatusController_Initialize_AlfredOnline {
             get {
                 return ResourceManager.GetString("AlfredStatusController_Initialize_AlfredOnline", resourceCulture);
             }
@@ -180,7 +180,7 @@ namespace MattEland.Ani.Alfred.Core {
         /// <summary>
         ///   Looks up a localized string similar to Instructed to initialize but system is already online.
         /// </summary>
-        internal static string AlfredStatusController_Initialize_ErrorAlreadyOnline {
+        public static string AlfredStatusController_Initialize_ErrorAlreadyOnline {
             get {
                 return ResourceManager.GetString("AlfredStatusController_Initialize_ErrorAlreadyOnline", resourceCulture);
             }
@@ -189,7 +189,7 @@ namespace MattEland.Ani.Alfred.Core {
         /// <summary>
         ///   Looks up a localized string similar to Initializing subsystems and modules....
         /// </summary>
-        internal static string AlfredStatusController_Initialize_Initializing {
+        public static string AlfredStatusController_Initialize_Initializing {
             get {
                 return ResourceManager.GetString("AlfredStatusController_Initialize_Initializing", resourceCulture);
             }
@@ -198,7 +198,7 @@ namespace MattEland.Ani.Alfred.Core {
         /// <summary>
         ///   Looks up a localized string similar to Initilization Completed; notifying modules and subsystems..
         /// </summary>
-        internal static string AlfredStatusController_Initialize_InitilizationCompleted {
+        public static string AlfredStatusController_Initialize_InitilizationCompleted {
             get {
                 return ResourceManager.GetString("AlfredStatusController_Initialize_InitilizationCompleted", resourceCulture);
             }
@@ -207,7 +207,7 @@ namespace MattEland.Ani.Alfred.Core {
         /// <summary>
         ///   Looks up a localized string similar to Alfred.Initialize.
         /// </summary>
-        internal static string AlfredStatusController_Initialize_LogHeader {
+        public static string AlfredStatusController_Initialize_LogHeader {
             get {
                 return ResourceManager.GetString("AlfredStatusController_Initialize_LogHeader", resourceCulture);
             }
@@ -216,7 +216,7 @@ namespace MattEland.Ani.Alfred.Core {
         /// <summary>
         ///   Looks up a localized string similar to {0} is now initialized..
         /// </summary>
-        internal static string AlfredStatusController_InitializeComponentInitialized {
+        public static string AlfredStatusController_InitializeComponentInitialized {
             get {
                 return ResourceManager.GetString("AlfredStatusController_InitializeComponentInitialized", resourceCulture);
             }
@@ -225,7 +225,7 @@ namespace MattEland.Ani.Alfred.Core {
         /// <summary>
         ///   Looks up a localized string similar to Initializing {0}.
         /// </summary>
-        internal static string AlfredStatusController_InitializingComponent {
+        public static string AlfredStatusController_InitializingComponent {
             get {
                 return ResourceManager.GetString("AlfredStatusController_InitializingComponent", resourceCulture);
             }
@@ -234,7 +234,7 @@ namespace MattEland.Ani.Alfred.Core {
         /// <summary>
         ///   Looks up a localized string similar to Shut down completed..
         /// </summary>
-        internal static string AlfredStatusController_Shutdown_Completed {
+        public static string AlfredStatusController_Shutdown_Completed {
             get {
                 return ResourceManager.GetString("AlfredStatusController_Shutdown_Completed", resourceCulture);
             }
@@ -243,7 +243,7 @@ namespace MattEland.Ani.Alfred.Core {
         /// <summary>
         ///   Looks up a localized string similar to Instructed to shut down but system is already offline.
         /// </summary>
-        internal static string AlfredStatusController_Shutdown_ErrorAlreadyOffline {
+        public static string AlfredStatusController_Shutdown_ErrorAlreadyOffline {
             get {
                 return ResourceManager.GetString("AlfredStatusController_Shutdown_ErrorAlreadyOffline", resourceCulture);
             }
@@ -252,7 +252,7 @@ namespace MattEland.Ani.Alfred.Core {
         /// <summary>
         ///   Looks up a localized string similar to Instructed to shut down but system is already shutting down.
         /// </summary>
-        internal static string AlfredStatusController_Shutdown_ErrorAlreadyTerminating {
+        public static string AlfredStatusController_Shutdown_ErrorAlreadyTerminating {
             get {
                 return ResourceManager.GetString("AlfredStatusController_Shutdown_ErrorAlreadyTerminating", resourceCulture);
             }
@@ -261,7 +261,7 @@ namespace MattEland.Ani.Alfred.Core {
         /// <summary>
         ///   Looks up a localized string similar to Alfred.Shutdown.
         /// </summary>
-        internal static string AlfredStatusController_Shutdown_LogHeader {
+        public static string AlfredStatusController_Shutdown_LogHeader {
             get {
                 return ResourceManager.GetString("AlfredStatusController_Shutdown_LogHeader", resourceCulture);
             }
@@ -270,7 +270,7 @@ namespace MattEland.Ani.Alfred.Core {
         /// <summary>
         ///   Looks up a localized string similar to Shutting down....
         /// </summary>
-        internal static string AlfredStatusController_Shutdown_Shutting_down {
+        public static string AlfredStatusController_Shutdown_Shutting_down {
             get {
                 return ResourceManager.GetString("AlfredStatusController_Shutdown_Shutting_down", resourceCulture);
             }
@@ -279,7 +279,7 @@ namespace MattEland.Ani.Alfred.Core {
         /// <summary>
         ///   Looks up a localized string similar to Shutting down {0}.
         /// </summary>
-        internal static string AlfredStatusController_ShuttingDownComponent {
+        public static string AlfredStatusController_ShuttingDownComponent {
             get {
                 return ResourceManager.GetString("AlfredStatusController_ShuttingDownComponent", resourceCulture);
             }
@@ -288,7 +288,7 @@ namespace MattEland.Ani.Alfred.Core {
         /// <summary>
         ///   Looks up a localized string similar to No Subsystems Detected.
         /// </summary>
-        internal static string AlfredSubSystemListModule_NoSubsystemsDetected {
+        public static string AlfredSubSystemListModule_NoSubsystemsDetected {
             get {
                 return ResourceManager.GetString("AlfredSubSystemListModule_NoSubsystemsDetected", resourceCulture);
             }
@@ -297,7 +297,7 @@ namespace MattEland.Ani.Alfred.Core {
         /// <summary>
         ///   Looks up a localized string similar to Shouldn&apos;t we be heading to bed soon?.
         /// </summary>
-        internal static string AlfredTimeModule_AlfredTimeModule_BedtimeNagMessage {
+        public static string AlfredTimeModule_AlfredTimeModule_BedtimeNagMessage {
             get {
                 return ResourceManager.GetString("AlfredTimeModule_AlfredTimeModule_BedtimeNagMessage", resourceCulture);
             }
@@ -306,7 +306,7 @@ namespace MattEland.Ani.Alfred.Core {
         /// <summary>
         ///   Looks up a localized string similar to Time and Date.
         /// </summary>
-        internal static string AlfredTimeModule_Name {
+        public static string AlfredTimeModule_Name {
             get {
                 return ResourceManager.GetString("AlfredTimeModule_Name", resourceCulture);
             }
@@ -315,7 +315,7 @@ namespace MattEland.Ani.Alfred.Core {
         /// <summary>
         ///   Looks up a localized string similar to The time is now {0:t}.
         /// </summary>
-        internal static string AlfredTimeModule_Update_CurrentTimeDisplayString {
+        public static string AlfredTimeModule_Update_CurrentTimeDisplayString {
             get {
                 return ResourceManager.GetString("AlfredTimeModule_Update_CurrentTimeDisplayString", resourceCulture);
             }

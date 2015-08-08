@@ -2,7 +2,7 @@
 // AlfredCoreSubSystemTests.cs
 // 
 // Created on:      08/08/2015 at 6:17 PM
-// Last Modified:   08/08/2015 at 6:42 PM
+// Last Modified:   08/08/2015 at 7:02 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -22,18 +22,18 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public class AlfredCoreSubSystemTests
     {
-        [NotNull]
-        private AlfredControlSubSystem _subsystem;
-
-        [NotNull]
-        private AlfredProvider _alfred;
-
         [SetUp]
         public void SetUp()
         {
             _subsystem = new AlfredControlSubSystem();
             _alfred = new AlfredProvider();
         }
+
+        [NotNull]
+        private AlfredControlSubSystem _subsystem;
+
+        [NotNull]
+        private AlfredProvider _alfred;
 
         [Test]
         public void AlfredContainsAPageAfterRegistration()
@@ -43,7 +43,29 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
             _alfred.Register(_subsystem);
             _alfred.Initialize();
 
-            Assert.AreEqual(pages + 1, _alfred.RootPages.Count());
+            Assert.Greater(_alfred.RootPages.Count(), pages);
+        }
+
+        [Test]
+        public void ControlPageIsPresentInAlfredAfterInitialization()
+        {
+            _alfred.Register(_subsystem);
+            _alfred.Initialize();
+            _alfred.Update();
+
+            Assert.IsTrue(_alfred.RootPages.Any(p => p.Name == AlfredControlSubSystem.ControlPageName),
+                          "Control Page was not found");
+        }
+
+        [Test]
+        public void EventLogPageIsPresentInAlfredAfterInitialization()
+        {
+            _alfred.Register(_subsystem);
+            _alfred.Initialize();
+            _alfred.Update();
+
+            Assert.IsTrue(_alfred.RootPages.Any(p => p.Name == AlfredControlSubSystem.EventLogPageName),
+                          "Event Log Page was not found");
         }
 
         [Test]
@@ -65,17 +87,15 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
             _alfred.Register(_subsystem);
             _alfred.Initialize();
 
-            Assert.AreEqual(1, _subsystem.Pages.Count());
+            Assert.GreaterOrEqual(_subsystem.Pages.Count(), 1);
         }
 
         [Test]
         public void SubsystemContainsModules()
         {
             Assert.IsTrue(_subsystem.Modules.Any(m => m is AlfredTimeModule), "Time Module not found");
-            Assert.IsTrue(_subsystem.Modules.Any(m => m is AlfredPowerModule),
-                          "Power Module not found");
-            Assert.IsTrue(_subsystem.Modules.Any(m => m is AlfredSubSystemListModule),
-                          "Subsystem List Module not found");
+            Assert.IsTrue(_subsystem.Modules.Any(m => m is AlfredPowerModule), "Power Module not found");
+            Assert.IsTrue(_subsystem.Modules.Any(m => m is AlfredSubSystemListModule), "Subsystem List Module not found");
         }
     }
 }

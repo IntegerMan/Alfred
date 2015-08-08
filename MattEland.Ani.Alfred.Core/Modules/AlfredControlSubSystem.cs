@@ -2,11 +2,9 @@
 // AlfredControlSubSystem.cs
 // 
 // Created on:      08/08/2015 at 6:12 PM
-// Last Modified:   08/08/2015 at 6:24 PM
+// Last Modified:   08/08/2015 at 6:58 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
-
-using System;
 
 using JetBrains.Annotations;
 
@@ -19,7 +17,10 @@ namespace MattEland.Ani.Alfred.Core.Modules
     public class AlfredControlSubSystem : AlfredSubSystem
     {
         [NotNull]
-        private readonly UserInterfacePage _page;
+        private readonly UserInterfacePage _controlPage;
+
+        [NotNull]
+        private readonly UserInterfacePage _eventLogPage;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubSystem" /> class.
@@ -44,8 +45,30 @@ namespace MattEland.Ani.Alfred.Core.Modules
             var systems = new AlfredSubSystemListModule(provider);
             Register(systems);
 
-            _page = new UserInterfacePage(provider);
+            _controlPage = new UserInterfacePage(provider) { Name = ControlPageName };
 
+            _eventLogPage = new UserInterfacePage(provider) { Name = EventLogPageName };
+
+        }
+
+        /// <summary>
+        ///     Gets the name of the control page.
+        /// </summary>
+        /// <value>The name of the control page.</value>
+        [NotNull]
+        public static string ControlPageName
+        {
+            get { return "Alfred Core"; }
+        }
+
+        /// <summary>
+        ///     Gets the name of the event log page.
+        /// </summary>
+        /// <value>The name of the event log page.</value>
+        [NotNull]
+        public static string EventLogPageName
+        {
+            get { return "Event Log"; }
         }
 
         /// <summary>
@@ -70,7 +93,8 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <param name="alfred"></param>
         protected override void InitializeProtected(AlfredProvider alfred)
         {
-            Register(_page);
+            Register(_controlPage);
+            Register(_eventLogPage);
         }
 
         /// <summary>
