@@ -72,7 +72,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// </summary>
         protected override void InitializeProtected()
         {
-            RegisterWidget(_memWidget);
+            Register(_memWidget);
         }
 
         /// <summary>

@@ -146,8 +146,8 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         private void AddOnlineWidgets()
         {
-            RegisterWidget(_statusWidget);
-            RegisterWidget(ShutdownButton);
+            Register(_statusWidget);
+            Register(ShutdownButton);
         }
 
         /// <summary>
@@ -167,8 +167,8 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         private void AddOfflineWidgets()
         {
-            RegisterWidget(_statusWidget);
-            RegisterWidget(InitializeButton);
+            Register(_statusWidget);
+            Register(InitializeButton);
         }
 
         /// <summary>

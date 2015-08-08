@@ -66,7 +66,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Mocks
         /// </summary>
         protected override void InitializeProtected()
         {
-            RegisterWidgets(WidgetsToRegisterOnInitialize);
+            Register(WidgetsToRegisterOnInitialize);
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Mocks
         /// </summary>
         protected override void ShutdownProtected()
         {
-            RegisterWidgets(WidgetsToRegisterOnShutdown);
+            Register(WidgetsToRegisterOnShutdown);
         }
     }
 }

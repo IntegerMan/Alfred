@@ -119,7 +119,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
 
                     _widgets.Add(widget);
 
-                    RegisterWidget(widget);
+                    Register(widget);
                 }
             }
 
@@ -133,7 +133,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
                 var widget = new TextWidget(noSubsystemsDetected);
                 _widgets.Add(widget);
 
-                RegisterWidget(widget);
+                Register(widget);
             }
         }
 

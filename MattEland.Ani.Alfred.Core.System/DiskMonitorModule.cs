@@ -107,8 +107,8 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// </summary>
         protected override void InitializeProtected()
         {
-            RegisterWidget(_diskReadWidget);
-            RegisterWidget(_diskWriteWidget);
+            Register(_diskReadWidget);
+            Register(_diskWriteWidget);
         }
 
         /// <summary>

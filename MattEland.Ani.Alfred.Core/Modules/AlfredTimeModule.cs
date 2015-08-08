@@ -119,9 +119,9 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         protected override void InitializeProtected()
         {
-            RegisterWidget(CurrentDateWidget);
-            RegisterWidget(CurrentTimeWidget);
-            RegisterWidget(BedtimeAlertWidget);
+            Register(CurrentDateWidget);
+            Register(CurrentTimeWidget);
+            Register(BedtimeAlertWidget);
 
             // Ensure it has some initial values so it doesn't "blink" or lag on start
             _lastTime = DateTime.MinValue;

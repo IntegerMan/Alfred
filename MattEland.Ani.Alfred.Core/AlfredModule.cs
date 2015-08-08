@@ -112,20 +112,9 @@ namespace MattEland.Ani.Alfred.Core
         /// <param name="widget">
         ///     The widget.
         /// </param>
-        protected void RegisterWidget([NotNull] AlfredWidget widget)
+        protected void Register([NotNull] AlfredWidget widget)
         {
-            if (widget == null)
-            {
-                throw new ArgumentNullException(nameof(widget));
-            }
-
-            // This shouldn't happen, but I want to check to make sure
-            if (Widgets.Contains(widget))
-            {
-                throw new InvalidOperationException("The specified widget was already part of the collection");
-            }
-
-            _widgets.Add(widget);
+            AddToCollectionSafe(widget, _widgets);
 
             OnPropertyChanged(nameof(IsVisible));
         }
@@ -136,7 +125,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <param name="widgets">
         ///     The widgets.
         /// </param>
-        protected void RegisterWidgets([NotNull] IEnumerable<AlfredWidget> widgets)
+        protected void Register([NotNull] IEnumerable<AlfredWidget> widgets)
         {
             if (widgets == null)
             {
@@ -146,7 +135,7 @@ namespace MattEland.Ani.Alfred.Core
             foreach (var widget in widgets)
             {
                 // ReSharper disable once AssignNullToNotNullAttribute - for testing purposes we'll allow this
-                RegisterWidget(widget);
+                Register(widget);
             }
         }
     }

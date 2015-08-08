@@ -112,7 +112,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 
                 _cpuWidgets.Add(widget);
 
-                RegisterWidget(widget);
+                Register(widget);
 
                 core++;
             }
