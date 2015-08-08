@@ -8,6 +8,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 
 using JetBrains.Annotations;
@@ -25,6 +26,18 @@ namespace MattEland.Ani.Alfred.Core
         private AlfredProvider _alfred;
 
         private AlfredStatus _status;
+
+        /// <summary>
+        /// Gets the alfred instance associated with this component.
+        /// </summary>
+        /// <value>The alfred instance.</value>
+        [CanBeNull]
+        protected internal AlfredProvider AlfredInstance
+        {
+            [DebuggerStepThrough]
+            get
+            { return _alfred; }
+        }
 
         /// <summary>
         ///     Gets the name and version of the Module.

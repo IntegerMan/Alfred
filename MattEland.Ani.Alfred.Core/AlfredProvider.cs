@@ -9,6 +9,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 using JetBrains.Annotations;
 
@@ -201,7 +202,11 @@ namespace MattEland.Ani.Alfred.Core
         [ItemNotNull]
         public IEnumerable<AlfredPage> RootPages
         {
-            get { return _rootPages; }
+            get
+            {
+                // Give me all pages in subsystems that are root level pages
+                return from subSystem in SubSystems from page in subSystem.Pages where page.IsRootLevel select page;
+            }
         }
 
         /// <summary>

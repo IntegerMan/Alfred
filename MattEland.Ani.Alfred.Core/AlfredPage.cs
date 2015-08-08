@@ -45,5 +45,14 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <value>The widgets.</value>
         public abstract IEnumerable<AlfredWidget> Widgets { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether this is a root level page that should show on the navigator.
+        /// </summary>
+        /// <value><c>true</c> if this page is root level; otherwise, <c>false</c>.</value>
+        public bool IsRootLevel
+        {
+            get { return true; }
+        }
     }
 }
