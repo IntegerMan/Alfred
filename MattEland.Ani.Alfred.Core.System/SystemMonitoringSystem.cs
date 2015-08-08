@@ -48,7 +48,8 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <summary>
         ///     Handles initialization events
         /// </summary>
-        protected override void InitializeProtected()
+        /// <param name="alfred"></param>
+        protected override void InitializeProtected(AlfredProvider alfred)
         {
             Register(_page);
         }

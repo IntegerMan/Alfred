@@ -103,7 +103,7 @@ namespace MattEland.Ani.Alfred.Core
 
             _alfred = alfred;
 
-            InitializeProtected();
+            InitializeProtected(alfred);
 
             Status = AlfredStatus.Online;
 
@@ -185,7 +185,8 @@ namespace MattEland.Ani.Alfred.Core
         /// <summary>
         ///     Handles initialization events
         /// </summary>
-        protected virtual void InitializeProtected()
+        /// <param name="alfred"></param>
+        protected virtual void InitializeProtected(AlfredProvider alfred)
         {
         }
 

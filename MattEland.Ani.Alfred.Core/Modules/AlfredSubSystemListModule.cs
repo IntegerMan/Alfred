@@ -105,7 +105,8 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <summary>
         ///     Handles initialization events
         /// </summary>
-        protected override void InitializeProtected()
+        /// <param name="alfred"></param>
+        protected override void InitializeProtected(AlfredProvider alfred)
         {
             _widgets.Clear();
 

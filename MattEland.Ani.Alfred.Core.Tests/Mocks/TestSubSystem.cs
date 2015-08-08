@@ -89,7 +89,8 @@ namespace MattEland.Ani.Alfred.Core.Tests.Mocks
         /// <summary>
         ///     Handles initialization events
         /// </summary>
-        protected override void InitializeProtected()
+        /// <param name="alfred"></param>
+        protected override void InitializeProtected(AlfredProvider alfred)
         {
             LastInitialized = DateTime.Now;
 
