@@ -8,6 +8,8 @@
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Pages;
+
 namespace MattEland.Ani.Alfred.Core.Modules
 {
     /// <summary>
@@ -17,10 +19,10 @@ namespace MattEland.Ani.Alfred.Core.Modules
     public class AlfredControlSubSystem : AlfredSubSystem
     {
         [NotNull]
-        private readonly UserInterfacePage _controlPage;
+        private readonly AlfredModuleListPage _controlPage;
 
-        [NotNull]
-        private readonly UserInterfacePage _eventLogPage;
+        [CanBeNull]
+        private AlfredEventLogPage _eventLogPage;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubSystem" /> class.
@@ -36,18 +38,16 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <exception cref="System.ArgumentNullException"></exception>
         public AlfredControlSubSystem([NotNull] IPlatformProvider provider) : base(provider)
         {
+            _controlPage = new AlfredModuleListPage(provider) { Name = ControlPageName };
+
             var power = new AlfredPowerModule(provider);
-            Register(power);
+            _controlPage.Register(power);
 
             var time = new AlfredTimeModule(provider);
-            Register(time);
+            _controlPage.Register(time);
 
             var systems = new AlfredSubSystemListModule(provider);
-            Register(systems);
-
-            _controlPage = new UserInterfacePage(provider) { Name = ControlPageName };
-
-            _eventLogPage = new UserInterfacePage(provider) { Name = EventLogPageName };
+            _controlPage.Register(systems);
 
         }
 
@@ -94,7 +94,12 @@ namespace MattEland.Ani.Alfred.Core.Modules
         protected override void InitializeProtected(AlfredProvider alfred)
         {
             Register(_controlPage);
-            Register(_eventLogPage);
+
+            if (alfred?.Console != null)
+            {
+                _eventLogPage = new AlfredEventLogPage(alfred.Console) { Name = EventLogPageName };
+                Register(_eventLogPage);
+            }
         }
 
         /// <summary>
@@ -102,6 +107,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         protected override void ShutdownProtected()
         {
+            _eventLogPage = null;
         }
 
         /// <summary>

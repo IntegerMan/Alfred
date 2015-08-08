@@ -81,7 +81,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <param name="module">The module.</param>
         protected void Register([NotNull] AlfredModule module)
         {
-            AddToCollectionSafe(module, _modules);
+            _modules.AddSafe(module);
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <param name="page">The page.</param>
         protected void Register([NotNull] AlfredPage page)
         {
-            AddToCollectionSafe(page, _pages);
+            _pages.AddSafe(page);
         }
     }
 }

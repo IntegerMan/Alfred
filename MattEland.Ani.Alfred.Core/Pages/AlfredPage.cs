@@ -6,6 +6,7 @@
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 
 using JetBrains.Annotations;
@@ -41,12 +42,6 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     Gets the widgets on the page.
-        /// </summary>
-        /// <value>The widgets.</value>
-        public abstract IEnumerable<AlfredWidget> Widgets { get; }
-
-        /// <summary>
         /// Gets a value indicating whether this is a root level page that should show on the navigator.
         /// </summary>
         /// <value><c>true</c> if this page is root level; otherwise, <c>false</c>.</value>
@@ -54,5 +49,7 @@ namespace MattEland.Ani.Alfred.Core
         {
             get { return true; }
         }
+
     }
+
 }

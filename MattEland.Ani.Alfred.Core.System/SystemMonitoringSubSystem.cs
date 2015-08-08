@@ -8,6 +8,8 @@
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Pages;
+
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
     /// <summary>
@@ -17,7 +19,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
     public class SystemMonitoringSubSystem : AlfredSubSystem
     {
         [NotNull]
-        private readonly UserInterfacePage _page;
+        private readonly AlfredWidgetListPage _page;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubSystem" /> class.
@@ -42,7 +44,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             var disk = new DiskMonitorModule(provider);
             Register(disk);
 
-            _page = new UserInterfacePage(provider);
+            _page = new AlfredWidgetListPage(provider);
         }
 
         /// <summary>

@@ -50,15 +50,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AlfredComponent.cs" />
-    <Compile Include="AlfredPage.cs" />
+    <Compile Include="Pages\AlfredEventLogPage.cs" />
+    <Compile Include="Pages\AlfredModuleListPage.cs" />
+    <Compile Include="Pages\AlfredPage.cs" />
     <Compile Include="AlfredStatus.cs" />
     <Compile Include="AlfredStatusController.cs" />
-    <Compile Include="AlfredStringExtensions.cs" />
+    <Compile Include="AlfredExtensions.cs" />
     <Compile Include="AlfredSubSystem.cs" />
     <Compile Include="Console\LogLevel.cs" />
     <Compile Include="Modules\AlfredControlSubSystem.cs" />
     <Compile Include="Modules\AlfredSubSystemListModule.cs" />
-    <Compile Include="ObjectExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IPlatformProvider.cs" />
     <Compile Include="Modules\AlfredTimeModule.cs" />
@@ -74,7 +75,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="UserInterfacePage.cs" />
+    <Compile Include="Pages\AlfredWidgetListPage.cs" />
     <Compile Include="Widgets\AlfredProgressBarWidget.cs" />
     <Compile Include="Widgets\AlfredTextWidget.cs" />
     <Compile Include="Widgets\AlfredWidget.cs" />

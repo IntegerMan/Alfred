@@ -114,7 +114,7 @@ namespace MattEland.Ani.Alfred.Core
         /// </param>
         protected void Register([NotNull] AlfredWidget widget)
         {
-            AddToCollectionSafe(widget, _widgets);
+            _widgets.AddSafe(widget);
 
             OnPropertyChanged(nameof(IsVisible));
         }

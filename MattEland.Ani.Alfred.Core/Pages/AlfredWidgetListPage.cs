@@ -14,23 +14,23 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Widgets;
 
-namespace MattEland.Ani.Alfred.Core
+namespace MattEland.Ani.Alfred.Core.Pages
 {
     /// <summary>
-    ///     Represents a user interface page grouping multiple widgets together in a cohesive manner.
+    ///     Represents a page grouping multiple widgets together without any module organization.
     /// </summary>
-    public class UserInterfacePage : AlfredPage
+    public class AlfredWidgetListPage : AlfredPage
     {
         [NotNull]
         [ItemNotNull]
         private readonly ICollection<AlfredWidget> _widgets;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="UserInterfacePage" /> class.
+        ///     Initializes a new instance of the <see cref="AlfredWidgetListPage" /> class.
         /// </summary>
         /// <param name="provider">The provider.</param>
         /// <exception cref="System.ArgumentNullException">provider</exception>
-        public UserInterfacePage([NotNull] IPlatformProvider provider)
+        public AlfredWidgetListPage([NotNull] IPlatformProvider provider)
         {
             if (provider == null)
             {
@@ -46,7 +46,8 @@ namespace MattEland.Ani.Alfred.Core
         /// <value>The widgets.</value>
         [NotNull]
         [ItemNotNull]
-        public override IEnumerable<AlfredWidget> Widgets
+        [UsedImplicitly]
+        public IEnumerable<AlfredWidget> Widgets
         {
             [DebuggerStepThrough]
             get
@@ -58,14 +59,9 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <param name="widget">The widget.</param>
         /// <exception cref="System.ArgumentNullException">widget</exception>
-        public void AddWidget([NotNull] AlfredWidget widget)
+        public void Register([NotNull] AlfredWidget widget)
         {
-            if (widget == null)
-            {
-                throw new ArgumentNullException(nameof(widget));
-            }
-
-            _widgets.Add(widget);
+            _widgets.AddSafe(widget);
         }
 
         /// <summary>
