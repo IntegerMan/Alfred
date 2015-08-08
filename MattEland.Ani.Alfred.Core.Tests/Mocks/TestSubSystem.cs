@@ -94,7 +94,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Mocks
         {
             LastInitialized = DateTime.Now;
 
-            base.InitializeProtected();
+            base.InitializeProtected(alfred);
         }
 
         /// <summary>
