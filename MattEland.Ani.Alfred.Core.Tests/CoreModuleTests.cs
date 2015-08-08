@@ -37,7 +37,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
 
             _module = new AlfredPowerModule(new SimplePlatformProvider());
 
-            _alfred.AddModule(_module);
+            _alfred.RegisterModule(_module);
         }
 
         [NotNull]
@@ -70,7 +70,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
             _module = new AlfredPowerModule(new SimplePlatformProvider());
 
             // Add the module first, then set the provider
-            _alfred.AddModule(_module);
+            _alfred.RegisterModule(_module);
             _module.AlfredProvider = _alfred;
 
             Assert.IsTrue(_module.InitializeButton.IsVisible, "Initialize button was not visible while offline.");
@@ -89,7 +89,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
 
             // Set the provider first, then add it to Alfred's modules
             _module.AlfredProvider = _alfred;
-            _alfred.AddModule(_module);
+            _alfred.RegisterModule(_module);
 
             Assert.IsTrue(_module.InitializeButton.IsVisible, "Initialize button was not visible while offline.");
             Assert.IsNotNull(_module.Widgets, "_module.Widgets was null");

@@ -222,7 +222,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
             testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
             testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
 
-            _alfred.AddModule(testModule);
+            _alfred.RegisterModule(testModule);
 
             _alfred.Initialize();
         }
@@ -243,7 +243,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
             testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
             testModule.WidgetsToRegisterOnShutdown.Add(textWidget);
 
-            _alfred.AddModule(testModule);
+            _alfred.RegisterModule(testModule);
 
             _alfred.Initialize();
             _alfred.Update();

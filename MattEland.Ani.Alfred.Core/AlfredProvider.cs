@@ -250,7 +250,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <exception cref="InvalidOperationException">
         ///     Thrown if Alfred is not Offline
         /// </exception>
-        public void AddModule([NotNull] AlfredModule module)
+        public void RegisterModule([NotNull] AlfredModule module)
         {
             if (module == null)
             {
@@ -269,7 +269,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <exception cref="System.ArgumentNullException">
         ///     modules must be provided
         /// </exception>
-        public void AddModules([NotNull] IEnumerable<AlfredModule> modules)
+        public void RegisterModules([NotNull] IEnumerable<AlfredModule> modules)
         {
             // Standard validation
             if (modules == null)
@@ -279,7 +279,7 @@ namespace MattEland.Ani.Alfred.Core
 
             AssertMustBeOffline();
 
-            // Ad each module using the standard AddModule function for now. This will make it easier to modify the process of registering a module
+            // Ad each module using the standard RegisterModule function for now. This will make it easier to modify the process of registering a module
             foreach (var module in modules)
             {
                 if (module == null)
@@ -288,7 +288,7 @@ namespace MattEland.Ani.Alfred.Core
                         nameof(modules),
                         Resources.AlfredProvider_AddModules_ErrorNullModule);
                 }
-                AddModule(module);
+                RegisterModule(module);
             }
         }
 

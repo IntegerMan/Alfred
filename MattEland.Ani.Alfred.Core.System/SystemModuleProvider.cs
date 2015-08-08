@@ -42,7 +42,9 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
                           };
 
             // Add lots of modules in bulk
-            alfred.AddModules(modules);
+            alfred.RegisterModules(modules);
+
+            alfred.RegisterSubSystem(new SystemMonitoringSystem(alfred.PlatformProvider));
         }
     }
 }

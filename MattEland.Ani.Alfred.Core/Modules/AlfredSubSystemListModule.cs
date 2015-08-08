@@ -155,7 +155,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
                 throw new ArgumentNullException(nameof(component));
             }
 
-            widget.Text = string.Format(CultureInfo.CurrentCulture, "{0}:\t{1}", component.NameAndVersion, component.Status);
+            widget.Text = string.Format(CultureInfo.CurrentCulture, "{0}: {1}", component.NameAndVersion, component.Status);
         }
     }
 }
