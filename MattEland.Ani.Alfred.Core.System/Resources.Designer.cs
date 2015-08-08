@@ -95,5 +95,14 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor {
                 return ResourceManager.GetString("MemoryMonitorModule_Name", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to System.
+        /// </summary>
+        internal static string SystemMonitoringSystem_Name {
+            get {
+                return ResourceManager.GetString("SystemMonitoringSystem_Name", resourceCulture);
+            }
+        }
     }
 }

@@ -53,6 +53,7 @@
     <Compile Include="AlfredStatus.cs" />
     <Compile Include="AlfredStatusController.cs" />
     <Compile Include="AlfredStringExtensions.cs" />
+    <Compile Include="AlfredSubSystem.cs" />
     <Compile Include="AlfredWidgetProvider.cs" />
     <Compile Include="CompositeWidgetProvider.cs" />
     <Compile Include="Console\LogLevel.cs" />

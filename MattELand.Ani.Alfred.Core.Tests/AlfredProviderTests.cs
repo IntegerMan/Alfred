@@ -9,6 +9,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Modules;
+using MattEland.Ani.Alfred.Core.Tests.Mocks;
 using MattEland.Ani.Alfred.Core.Widgets;
 
 namespace MattEland.Ani.Alfred.Core.Tests
@@ -295,6 +296,12 @@ namespace MattEland.Ani.Alfred.Core.Tests
 
         #endregion Modules
 
+        [Test]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void RegisteringNullSubsystemGeneratesNullRef()
+        {
+            _alfred.RegisterSubSystem(null);
+        }
 
     }
 }

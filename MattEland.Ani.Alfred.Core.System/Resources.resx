@@ -133,4 +133,8 @@
     <value>Memory:</value>
     <comment>The text for the memory utilization label.</comment>
   </data>
+  <data name="SystemMonitoringSystem_Name" xml:space="preserve">
+    <value>System</value>
+    <comment>The name of the subsystem</comment>
+  </data>
 </root>

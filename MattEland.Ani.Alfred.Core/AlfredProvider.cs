@@ -2,7 +2,7 @@
 // AlfredProvider.cs
 // 
 // Created on:      07/25/2015 at 11:30 PM
-// Last Modified:   08/05/2015 at 3:28 PM
+// Last Modified:   08/07/2015 at 10:29 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -22,6 +22,10 @@ namespace MattEland.Ani.Alfred.Core
     /// </summary>
     public sealed class AlfredProvider : NotifyPropertyChangedBase, IDisposable
     {
+        [NotNull]
+        [ItemNotNull]
+        private readonly ICollection<AlfredModule> _modules;
+
         /// <summary>
         ///     The platform provider
         /// </summary>
@@ -33,6 +37,9 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         [NotNull]
         private readonly AlfredStatusController _statusController;
+
+        [NotNull]
+        private readonly ICollection<AlfredSubSystem> _subsystems;
 
         /// <summary>
         ///     The status
@@ -55,7 +62,9 @@ namespace MattEland.Ani.Alfred.Core
 
             _platformProvider = provider;
 
-            Modules = provider.CreateCollection<AlfredModule>();
+            _modules = provider.CreateCollection<AlfredModule>();
+
+            _subsystems = provider.CreateCollection<AlfredSubSystem>();
         }
 
         /// <summary>
@@ -113,7 +122,10 @@ namespace MattEland.Ani.Alfred.Core
         /// <value>The modules.</value>
         [NotNull]
         [ItemNotNull]
-        public ICollection<AlfredModule> Modules { get; }
+        public ICollection<AlfredModule> Modules
+        {
+            get { return _modules; }
+        }
 
         /// <summary>
         ///     Gets the status.
@@ -140,6 +152,17 @@ namespace MattEland.Ani.Alfred.Core
         public IPlatformProvider PlatformProvider
         {
             get { return _platformProvider; }
+        }
+
+        /// <summary>
+        ///     Gets the sub systems associated wih Alfred.
+        /// </summary>
+        /// <value>The sub systems.</value>
+        [NotNull]
+        [ItemNotNull]
+        public IEnumerable<AlfredSubSystem> SubSystems
+        {
+            get { return _subsystems; }
         }
 
         /// <summary>
@@ -258,5 +281,20 @@ namespace MattEland.Ani.Alfred.Core
                 throw new InvalidOperationException(Resources.AlfredProvider_AssertMustBeOffline_ErrorNotOffline);
             }
         }
+
+        /// <summary>
+        ///     Registers a sub system with Alfred.
+        /// </summary>
+        /// <param name="subsystem">The subsystem.</param>
+        public void RegisterSubSystem([NotNull] AlfredSubSystem subsystem)
+        {
+            if (subsystem == null)
+            {
+                throw new ArgumentNullException(nameof(subsystem));
+            }
+
+            _subsystems.Add(subsystem);
+        }
     }
+
 }

@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Widgets;
 
-namespace MattEland.Ani.Alfred.Core.Tests
+namespace MattEland.Ani.Alfred.Core.Tests.Mocks
 {
     /// <summary>
     /// An AlfredModule used explicitly for testing purposes
