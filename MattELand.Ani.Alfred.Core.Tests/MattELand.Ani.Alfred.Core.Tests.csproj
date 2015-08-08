@@ -54,17 +54,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SubSystems\AlfredCoreSubSystemTests.cs" />
     <Compile Include="AlfredProviderTests.cs" />
     <Compile Include="Mocks\AlfredTestModule.cs" />
-    <Compile Include="ButtonWidgetTests.cs" />
-    <Compile Include="CoreModuleTests.cs" />
+    <Compile Include="Widgets\ButtonWidgetTests.cs" />
+    <Compile Include="Modules\AlfredPowerModuleTests.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SystemSubSystemTests.cs" />
+    <Compile Include="SubSystems\SystemSubSystemTests.cs" />
     <Compile Include="Mocks\TestSubSystem.cs" />
-    <Compile Include="TextWidgetTests.cs" />
-    <Compile Include="TimeModuleTests.cs" />
-    <Compile Include="WarningWidgetTests.cs" />
+    <Compile Include="Widgets\TextWidgetTests.cs" />
+    <Compile Include="Modules\TimeModuleTests.cs" />
+    <Compile Include="Widgets\WarningWidgetTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MattEland.Ani.Alfred.Core.System\MattEland.Ani.Alfred.Core.Modules.SysMonitor.csproj">

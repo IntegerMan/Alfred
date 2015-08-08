@@ -70,6 +70,15 @@ namespace MattEland.Ani.Alfred.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Alfred Control.
+        /// </summary>
+        internal static string AlfredControlSubSystem_Name {
+            get {
+                return ResourceManager.GetString("AlfredControlSubSystem_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Alfred Provider has not been set.
         /// </summary>
         internal static string AlfredCoreModule_AlfredNotSet {
@@ -124,7 +133,7 @@ namespace MattEland.Ani.Alfred.Core {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Alfred must be offline in order to add modules..
+        ///   Looks up a localized string similar to Alfred must be offline in order to add components..
         /// </summary>
         internal static string AlfredProvider_AssertMustBeOffline_ErrorNotOffline {
             get {
@@ -277,7 +286,7 @@ namespace MattEland.Ani.Alfred.Core {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No SubSystems Detected.
+        ///   Looks up a localized string similar to No Subsystems Detected.
         /// </summary>
         internal static string AlfredSubSystemListModule_NoSubsystemsDetected {
             get {

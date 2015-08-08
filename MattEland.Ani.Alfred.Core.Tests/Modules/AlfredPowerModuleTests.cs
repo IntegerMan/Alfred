@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------
-// CoreModuleTests.cs
+// AlfredPowerModuleTests.cs
 // 
 // Created on:      08/02/2015 at 5:22 PM
 // Last Modified:   08/03/2015 at 1:56 PM
@@ -7,7 +7,7 @@
 // ---------------------------------------------------------
 
 using System.Collections;
-using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 using JetBrains.Annotations;
@@ -16,7 +16,7 @@ using MattEland.Ani.Alfred.Core.Modules;
 
 using NUnit.Framework;
 
-namespace MattEland.Ani.Alfred.Core.Tests
+namespace MattEland.Ani.Alfred.Core.Tests.Modules
 {
     /// <summary>
     ///     Tests for the
@@ -25,7 +25,8 @@ namespace MattEland.Ani.Alfred.Core.Tests
     ///     module.
     /// </summary>
     [TestFixture]
-    public class CoreModuleTests
+    [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
+    public class AlfredPowerModuleTests
     {
         /// <summary>
         ///     Setups the tests.

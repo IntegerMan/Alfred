@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
 // ButtonWidgetTests.cs
 // 
-// Created on:      08/03/2015 at 1:15 AM
-// Last Modified:   08/03/2015 at 2:10 PM
+// Created on:      08/08/2015 at 6:18 PM
+// Last Modified:   08/08/2015 at 6:20 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -14,12 +14,11 @@ using MattEland.Ani.Alfred.Core.Widgets;
 
 using NUnit.Framework;
 
-namespace MattEland.Ani.Alfred.Core.Tests
+namespace MattEland.Ani.Alfred.Core.Tests.Widgets
 {
     /// <summary>
     ///     Tests testing the
-    ///     <see
-    ///         cref="ButtonWidget" />
+    ///     <see cref="ButtonWidget" />
     ///     class
     /// </summary>
     [TestFixture]
@@ -37,8 +36,8 @@ namespace MattEland.Ani.Alfred.Core.Tests
         }
 
         /// <summary>
-        /// Asserts that setting up a button and command but not clicking the button doesn't fire
-        /// the command. This is really an excuse to test different ways of setting up the commands.
+        ///     Asserts that setting up a button and command but not clicking the button doesn't fire
+        ///     the command. This is really an excuse to test different ways of setting up the commands.
         /// </summary>
         [Test]
         public void ButtonCommandsDoNotExecuteWhenButtonIsNotClicked()
@@ -83,6 +82,5 @@ namespace MattEland.Ani.Alfred.Core.Tests
 
             Assert.IsNull(button.Text, "Button's text was set to something other than null after instantiation.");
         }
-
     }
 }

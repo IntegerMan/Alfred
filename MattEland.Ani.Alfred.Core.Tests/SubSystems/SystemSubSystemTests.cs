@@ -6,8 +6,8 @@
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
-using System;
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 using JetBrains.Annotations;
@@ -16,12 +16,13 @@ using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 
 using NUnit.Framework;
 
-namespace MattEland.Ani.Alfred.Core.Tests
+namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
 {
     /// <summary>
     /// A series of tests related to the System Monitoring SubSystem
     /// </summary>
     [TestFixture]
+    [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public class SystemSubSystemTests
     {
         [NotNull]

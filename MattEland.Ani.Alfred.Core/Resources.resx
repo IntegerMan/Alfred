@@ -210,4 +210,8 @@
     <value>No Subsystems Detected</value>
     <comment>Displayed when no subsystems were installed.</comment>
   </data>
+  <data name="AlfredControlSubSystem_Name" xml:space="preserve">
+    <value>Alfred Control</value>
+    <comment>Display name for the Alfred Control subsystem</comment>
+  </data>
 </root>

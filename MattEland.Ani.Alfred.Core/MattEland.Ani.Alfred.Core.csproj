@@ -55,9 +55,8 @@
     <Compile Include="AlfredStatusController.cs" />
     <Compile Include="AlfredStringExtensions.cs" />
     <Compile Include="AlfredSubSystem.cs" />
-    <Compile Include="AlfredWidgetProvider.cs" />
-    <Compile Include="CompositeWidgetProvider.cs" />
     <Compile Include="Console\LogLevel.cs" />
+    <Compile Include="Modules\AlfredControlSubSystem.cs" />
     <Compile Include="Modules\AlfredSubSystemListModule.cs" />
     <Compile Include="ObjectExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
@@ -76,7 +75,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="UserInterfacePage.cs" />
-    <Compile Include="SimpleAlfredWidgetProvider.cs" />
     <Compile Include="Widgets\AlfredProgressBarWidget.cs" />
     <Compile Include="Widgets\AlfredTextWidget.cs" />
     <Compile Include="Widgets\AlfredWidget.cs" />

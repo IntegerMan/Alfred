@@ -1,13 +1,14 @@
 ﻿// ---------------------------------------------------------
 // TimeModuleTests.cs
 // 
-// Created on:      07/26/2015 at 4:48 PM
-// Last Modified:   08/07/2015 at 11:23 PM
+// Created on:      08/08/2015 at 6:19 PM
+// Last Modified:   08/08/2015 at 6:21 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 using JetBrains.Annotations;
@@ -17,9 +18,10 @@ using MattEland.Ani.Alfred.Core.Modules;
 
 using NUnit.Framework;
 
-namespace MattEland.Ani.Alfred.Core.Tests
+namespace MattEland.Ani.Alfred.Core.Tests.Modules
 {
     [TestFixture]
+    [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public sealed class TimeModuleTests
     {
         [SetUp]

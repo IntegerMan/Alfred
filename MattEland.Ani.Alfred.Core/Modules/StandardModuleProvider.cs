@@ -43,6 +43,9 @@ namespace MattEland.Ani.Alfred.Core.Modules
 
             // Add lots of modules in bulk
             alfred.Register(modules);
+
+            // Add the core subsystem to the mix
+            alfred.Register(new AlfredControlSubSystem(alfred.PlatformProvider));
         }
     }
 }
