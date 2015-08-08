@@ -61,6 +61,15 @@ namespace MattEland.Ani.Alfred.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} was already offline when told to shut down..
+        /// </summary>
+        internal static string AlfredComponent_ShutdownAlreadyOffline {
+            get {
+                return ResourceManager.GetString("AlfredComponent_ShutdownAlreadyOffline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Alfred Provider has not been set.
         /// </summary>
         internal static string AlfredCoreModule_AlfredNotSet {
@@ -84,6 +93,24 @@ namespace MattEland.Ani.Alfred.Core {
         internal static string AlfredCoreModule_Name {
             get {
                 return ResourceManager.GetString("AlfredCoreModule_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} was offline when told to update..
+        /// </summary>
+        internal static string AlfredItemOfflineButToldToUpdate {
+            get {
+                return ResourceManager.GetString("AlfredItemOfflineButToldToUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} was already online when told to initialize..
+        /// </summary>
+        internal static string AlfredModule_InitializeAlreadyOnline {
+            get {
+                return ResourceManager.GetString("AlfredModule_InitializeAlreadyOnline", resourceCulture);
             }
         }
         
@@ -124,11 +151,11 @@ namespace MattEland.Ani.Alfred.Core {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} is now initialized..
+        ///   Looks up a localized string similar to {0} is now offline..
         /// </summary>
-        internal static string AlfredStatusController_Initialize__ModuleInitialized {
+        internal static string AlfredStatusController_ComponentOffline {
             get {
-                return ResourceManager.GetString("AlfredStatusController_Initialize__ModuleInitialized", resourceCulture);
+                return ResourceManager.GetString("AlfredStatusController_ComponentOffline", resourceCulture);
             }
         }
         
@@ -151,7 +178,7 @@ namespace MattEland.Ani.Alfred.Core {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Initializing....
+        ///   Looks up a localized string similar to Initializing subsystems and modules....
         /// </summary>
         internal static string AlfredStatusController_Initialize_Initializing {
             get {
@@ -160,16 +187,7 @@ namespace MattEland.Ani.Alfred.Core {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Initializing {0}.
-        /// </summary>
-        internal static string AlfredStatusController_Initialize_InitializingModule {
-            get {
-                return ResourceManager.GetString("AlfredStatusController_Initialize_InitializingModule", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Initilization Completed; notifying modules..
+        ///   Looks up a localized string similar to Initilization Completed; notifying modules and subsystems..
         /// </summary>
         internal static string AlfredStatusController_Initialize_InitilizationCompleted {
             get {
@@ -183,6 +201,24 @@ namespace MattEland.Ani.Alfred.Core {
         internal static string AlfredStatusController_Initialize_LogHeader {
             get {
                 return ResourceManager.GetString("AlfredStatusController_Initialize_LogHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is now initialized..
+        /// </summary>
+        internal static string AlfredStatusController_InitializeComponentInitialized {
+            get {
+                return ResourceManager.GetString("AlfredStatusController_InitializeComponentInitialized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Initializing {0}.
+        /// </summary>
+        internal static string AlfredStatusController_InitializingComponent {
+            get {
+                return ResourceManager.GetString("AlfredStatusController_InitializingComponent", resourceCulture);
             }
         }
         
@@ -223,15 +259,6 @@ namespace MattEland.Ani.Alfred.Core {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} is now offline..
-        /// </summary>
-        internal static string AlfredStatusController_Shutdown_ModuleOffline {
-            get {
-                return ResourceManager.GetString("AlfredStatusController_Shutdown_ModuleOffline", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Shutting down....
         /// </summary>
         internal static string AlfredStatusController_Shutdown_Shutting_down {
@@ -243,9 +270,9 @@ namespace MattEland.Ani.Alfred.Core {
         /// <summary>
         ///   Looks up a localized string similar to Shutting down {0}.
         /// </summary>
-        internal static string AlfredStatusController_Shutdown_ShuttingDownModule {
+        internal static string AlfredStatusController_ShuttingDownComponent {
             get {
-                return ResourceManager.GetString("AlfredStatusController_Shutdown_ShuttingDownModule", resourceCulture);
+                return ResourceManager.GetString("AlfredStatusController_ShuttingDownComponent", resourceCulture);
             }
         }
         

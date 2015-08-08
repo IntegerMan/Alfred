@@ -113,9 +113,6 @@ namespace MattEland.Ani.Alfred.Core.Modules
 
                 if (value != null)
                 {
-                    // Just in case we're changing providers midstream or after shutdown, clear things out
-                    Widgets?.Clear();
-
                     // Add the appropriate UI elements
                     if (value.Status == AlfredStatus.Online)
                     {

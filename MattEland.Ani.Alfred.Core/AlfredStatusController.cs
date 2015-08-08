@@ -73,19 +73,19 @@ namespace MattEland.Ani.Alfred.Core
             console?.Log(header, Resources.AlfredStatusController_Initialize_Initializing.NonNull(), LogLevel.Verbose);
             Alfred.Status = AlfredStatus.Initializing;
 
-            // Boot up Modules and give them a provider
-            foreach (var module in Alfred.Modules)
+            // Boot up Modules / Subsystems and give them a provider
+            foreach (var component in Alfred.Components)
             {
                 // Log the initialization
-                var initLogFormat = Resources.AlfredStatusController_Initialize_InitializingModule.NonNull();
-                console?.Log(header, string.Format(culture, initLogFormat, module.NameAndVersion), LogLevel.Verbose);
+                var initLogFormat = Resources.AlfredStatusController_InitializingComponent.NonNull();
+                console?.Log(header, string.Format(culture, initLogFormat, component.NameAndVersion), LogLevel.Verbose);
 
-                // Actually initialize the module
-                module.Initialize(Alfred);
+                // Actually initialize the component
+                component.Initialize(Alfred);
 
                 // Log the completion
-                var initializedLogFormat = Resources.AlfredStatusController_Initialize__ModuleInitialized.NonNull();
-                console?.Log(header, string.Format(culture, initializedLogFormat, module.NameAndVersion), LogLevel.Verbose);
+                var initializedLogFormat = Resources.AlfredStatusController_InitializeComponentInitialized.NonNull();
+                console?.Log(header, string.Format(culture, initializedLogFormat, component.NameAndVersion), LogLevel.Verbose);
             }
 
             // We're done. Let the world know.
@@ -93,7 +93,7 @@ namespace MattEland.Ani.Alfred.Core
             console?.Log(header, Resources.AlfredStatusController_Initialize_InitilizationCompleted.NonNull(), LogLevel.Verbose);
 
             // Notify each module that startup was completed
-            foreach (var module in Alfred.Modules)
+            foreach (var module in Alfred.Components)
             {
                 module.OnInitializationCompleted();
             }
@@ -134,18 +134,18 @@ namespace MattEland.Ani.Alfred.Core
             console?.Log(header, Resources.AlfredStatusController_Shutdown_Shutting_down.NonNull(), LogLevel.Verbose);
             Alfred.Status = AlfredStatus.Terminating;
 
-            // Shut down modules and decouple them from Alfred
-            foreach (var module in Alfred.Modules)
+            // Shut down components and decouple them from Alfred
+            foreach (var component in Alfred.Components)
             {
                 var culture = CultureInfo.CurrentCulture;
 
-                var shuttingDownMessage = Resources.AlfredStatusController_Shutdown_ShuttingDownModule.NonNull();
-                console?.Log(header, string.Format(culture, shuttingDownMessage, module.NameAndVersion), LogLevel.Verbose);
+                var shuttingDownMessage = Resources.AlfredStatusController_ShuttingDownComponent.NonNull();
+                console?.Log(header, string.Format(culture, shuttingDownMessage, component.NameAndVersion), LogLevel.Verbose);
 
-                module.Shutdown();
+                component.Shutdown();
 
-                var shutDownMessage = Resources.AlfredStatusController_Shutdown_ModuleOffline.NonNull();
-                console?.Log(header, string.Format(culture, shutDownMessage, module.NameAndVersion), LogLevel.Verbose);
+                var shutDownMessage = Resources.AlfredStatusController_ComponentOffline.NonNull();
+                console?.Log(header, string.Format(culture, shutDownMessage, component.NameAndVersion), LogLevel.Verbose);
             }
 
             // We're done here. Tell the world.
@@ -153,7 +153,7 @@ namespace MattEland.Ani.Alfred.Core
             console?.Log(header, Resources.AlfredStatusController_Shutdown_Completed.NonNull(), LogLevel.Info);
 
             // Notify each module that shutdown was completed
-            foreach (var module in Alfred.Modules)
+            foreach (var module in Alfred.Components)
             {
                 module.OnShutdownCompleted();
             }

@@ -2,7 +2,7 @@
 // TimeModuleTests.cs
 // 
 // Created on:      07/26/2015 at 4:48 PM
-// Last Modified:   08/07/2015 at 12:46 AM
+// Last Modified:   08/07/2015 at 11:23 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -38,11 +38,6 @@ namespace MattEland.Ani.Alfred.Core.Tests
 
         private string GetTimeText()
         {
-            if (_module.Widgets == null)
-            {
-                return null;
-            }
-
             var widget = _module.CurrentTimeWidget;
 
             var displayed = widget.Text;
@@ -281,14 +276,10 @@ namespace MattEland.Ani.Alfred.Core.Tests
         [Test]
         public void TimeModuleHasNoWidgetsWhenOffline()
         {
-            Assert.IsNull(_module.Widgets);
-
             _alfred.Initialize();
             _alfred.Shutdown();
 
-            Assert.IsTrue(
-                          _module.Widgets == null || _module.Widgets.Count == 0,
-                          "Widgets were left over after shutdown");
+            Assert.IsTrue(!_module.Widgets.Any(), "Widgets were left over after shutdown");
         }
 
         /// <summary>
@@ -308,24 +299,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
             _alfred.Initialize();
 
             Assert.IsNotNull(_module.Widgets);
-            Assert.Greater(_module.Widgets.Count, 0, "The time module did not have any Widgets");
-        }
-
-        [Test]
-        public void TimeModuleLogsWhenTheHourChanges()
-        {
-            var console = new SimpleConsole();
-            _alfred.Console = console;
-            _alfred.Initialize();
-
-            _module.Update(new DateTime(1980, 9, 10, 8, 59, 0));
-            _module.Update(new DateTime(1980, 9, 10, 9, 0, 0));
-
-            // This will error if 0 or > 1 events are logged
-            var consoleEvent = console.Events.Single(e => e.Title == AlfredTimeModule.HourAlertEventTitle);
-
-            //  We want to ensure it's an informational purposes
-            Assert.AreEqual(LogLevel.Info, consoleEvent.Level);
+            Assert.Greater(_module.Widgets.Count(), 0, "The time module did not have any Widgets");
         }
 
         [Test]
@@ -340,6 +314,23 @@ namespace MattEland.Ani.Alfred.Core.Tests
 
             // This will error if 0 or > 1 events are logged
             var consoleEvent = console.Events.Single(e => e.Title == AlfredTimeModule.HalfHourAlertEventTitle);
+
+            //  We want to ensure it's an informational purposes
+            Assert.AreEqual(LogLevel.Info, consoleEvent.Level);
+        }
+
+        [Test]
+        public void TimeModuleLogsWhenTheHourChanges()
+        {
+            var console = new SimpleConsole();
+            _alfred.Console = console;
+            _alfred.Initialize();
+
+            _module.Update(new DateTime(1980, 9, 10, 8, 59, 0));
+            _module.Update(new DateTime(1980, 9, 10, 9, 0, 0));
+
+            // This will error if 0 or > 1 events are logged
+            var consoleEvent = console.Events.Single(e => e.Title == AlfredTimeModule.HourAlertEventTitle);
 
             //  We want to ensure it's an informational purposes
             Assert.AreEqual(LogLevel.Info, consoleEvent.Level);

@@ -46,5 +46,13 @@ namespace MattEland.Ani.Alfred.Core.Tests
             Assert.Contains(_subsystem, _alfred.SubSystems as ICollection, "The subsystem was not found in the collection");
         }
 
+        [Test]
+        public void SystemMonitoringSubsystemContainsModules()
+        {
+            Assert.IsTrue(_subsystem.Modules.Any(m => m.GetType() == typeof(CpuMonitorModule)), "CPU Monitor not found");
+            Assert.IsTrue(_subsystem.Modules.Any(m => m.GetType() == typeof(MemoryMonitorModule)), "Memory Monitor not found");
+            Assert.IsTrue(_subsystem.Modules.Any(m => m.GetType() == typeof(DiskMonitorModule)), "Disk Monitor not found");
+        }
+
     }
 }

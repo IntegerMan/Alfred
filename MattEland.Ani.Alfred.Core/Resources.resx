@@ -98,15 +98,15 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
-  <data name="AlfredStatusController_Initialize_InitializingModule" xml:space="preserve">
+  <data name="AlfredStatusController_InitializingComponent" xml:space="preserve">
     <value>Initializing {0}</value>
     <comment>Log message when initializing a module. {0} is the module's NameAndVersion</comment>
   </data>
   <data name="AlfredStatusController_Initialize_InitilizationCompleted" xml:space="preserve">
-    <value>Initilization Completed; notifying modules.</value>
+    <value>Initilization Completed; notifying modules and subsystems.</value>
     <comment>Log message after Alfred and modules are online before modules are notified.</comment>
   </data>
-  <data name="AlfredStatusController_Initialize__ModuleInitialized" xml:space="preserve">
+  <data name="AlfredStatusController_InitializeComponentInitialized" xml:space="preserve">
     <value>{0} is now initialized.</value>
     <comment>Log message for module initialized where {0} is module's NameAndVersion</comment>
   </data>
@@ -123,7 +123,7 @@
     <comment>Error message for when the system is already online.</comment>
   </data>
   <data name="AlfredStatusController_Initialize_Initializing" xml:space="preserve">
-    <value>Initializing...</value>
+    <value>Initializing subsystems and modules...</value>
     <comment>Logged as Alfred starts initialization</comment>
   </data>
   <data name="AlfredStatusController_Shutdown_LogHeader" xml:space="preserve">
@@ -142,11 +142,11 @@
     <value>Shutting down...</value>
     <comment>Log message for beginning the shut down process.</comment>
   </data>
-  <data name="AlfredStatusController_Shutdown_ShuttingDownModule" xml:space="preserve">
+  <data name="AlfredStatusController_ShuttingDownComponent" xml:space="preserve">
     <value>Shutting down {0}</value>
     <comment>Logged when shutting down a module where {0} is the module's NameAndVersion.</comment>
   </data>
-  <data name="AlfredStatusController_Shutdown_ModuleOffline" xml:space="preserve">
+  <data name="AlfredStatusController_ComponentOffline" xml:space="preserve">
     <value>{0} is now offline.</value>
     <comment>Logged when shutting down a module has completed where {0} is the module's NameAndVersion.</comment>
   </data>
@@ -193,5 +193,17 @@
   <data name="AlfredCoreModule_AlfredNotSet" xml:space="preserve">
     <value>Alfred Provider has not been set</value>
     <comment>Widget message for when Alfred is not present</comment>
+  </data>
+  <data name="AlfredItemOfflineButToldToUpdate" xml:space="preserve">
+    <value>{0} was offline when told to update.</value>
+    <comment>Occurs when a module or subsystem was offline but forced to update. {0} is the name of the offending item.</comment>
+  </data>
+  <data name="AlfredModule_InitializeAlreadyOnline" xml:space="preserve">
+    <value>{0} was already online when told to initialize.</value>
+    <comment>Occurs when the component named {0} was initialized while already initialized.</comment>
+  </data>
+  <data name="AlfredComponent_ShutdownAlreadyOffline" xml:space="preserve">
+    <value>{0} was already offline when told to shut down.</value>
+    <comment>When a component was offline and told to go offline. {0} is the name / version.</comment>
   </data>
 </root>

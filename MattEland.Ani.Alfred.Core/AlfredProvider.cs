@@ -7,6 +7,7 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -214,9 +215,32 @@ namespace MattEland.Ani.Alfred.Core
                 throw new InvalidOperationException(Resources.AlfredProvider_Update_ErrorMustBeOnline);
             }
 
-            foreach (var module in Modules)
+            // Update every component
+            foreach (var component in Components)
             {
-                module.Update();
+                component.Update();
+            }
+        }
+
+        /// <summary>
+        /// Gets the components - both Modules and SubSystems - registered with Alfred.
+        /// </summary>
+        /// <value>The components.</value>
+        [NotNull]
+        [ItemNotNull]
+        public IEnumerable<AlfredComponent> Components
+        {
+            get
+            {
+                foreach (var subSystem in _subsystems)
+                {
+                    yield return subSystem;
+                }
+
+                foreach (var module in _modules)
+                {
+                    yield return module;
+                }
             }
         }
 
