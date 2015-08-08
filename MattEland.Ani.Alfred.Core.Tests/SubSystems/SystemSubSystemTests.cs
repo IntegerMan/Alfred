@@ -26,7 +26,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
     public class SystemSubSystemTests
     {
         [NotNull]
-        private SystemMonitoringSystem _subsystem;
+        private SystemMonitoringSubSystem _subsystem;
 
         [NotNull]
         private AlfredProvider _alfred;
@@ -34,7 +34,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
         [SetUp]
         public void TestSetup()
         {
-            _subsystem = new SystemMonitoringSystem();
+            _subsystem = new SystemMonitoringSubSystem();
             _alfred = new AlfredProvider();
         }
 

@@ -64,7 +64,7 @@
     </Compile>
     <Compile Include="CpuMonitorModule.cs" />
     <Compile Include="SystemModuleProvider.cs" />
-    <Compile Include="SystemMonitoringSystem.cs" />
+    <Compile Include="SystemMonitoringSubSystem.cs" />
     <Compile Include="SystemMonitorModule.cs" />
   </ItemGroup>
   <ItemGroup>
