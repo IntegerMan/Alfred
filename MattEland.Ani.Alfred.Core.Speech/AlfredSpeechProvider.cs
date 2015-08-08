@@ -51,7 +51,10 @@ namespace MattEland.Ani.Alfred.Core.Speech
             var greatBritainCulture = new CultureInfo("en-GB");
             _speech.SelectVoiceByHints(VoiceGender.Male, VoiceAge.Senior, 0, greatBritainCulture);
 
-            // Everything else is just logging, so... gete out of here
+            // Set to slightly faster than normal
+            _speech.Rate = 2;
+
+            // Everything else is just logging, so... get out of here
             if (console == null)
             {
                 return;

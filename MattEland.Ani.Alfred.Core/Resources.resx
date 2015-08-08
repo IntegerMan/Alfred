@@ -206,4 +206,8 @@
     <value>{0} was already offline when told to shut down.</value>
     <comment>When a component was offline and told to go offline. {0} is the name / version.</comment>
   </data>
+  <data name="AlfredSubSystemListModule_NoSubsystemsDetected" xml:space="preserve">
+    <value>No Subsystems Detected</value>
+    <comment>Displayed when no subsystems were installed.</comment>
+  </data>
 </root>

@@ -58,6 +58,7 @@
     <Compile Include="AlfredWidgetProvider.cs" />
     <Compile Include="CompositeWidgetProvider.cs" />
     <Compile Include="Console\LogLevel.cs" />
+    <Compile Include="Modules\AlfredSubSystemListModule.cs" />
     <Compile Include="ObjectExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IPlatformProvider.cs" />

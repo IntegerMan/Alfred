@@ -88,7 +88,7 @@ namespace MattEland.Ani.Alfred.Core {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Core.
+        ///   Looks up a localized string similar to System Power.
         /// </summary>
         internal static string AlfredCoreModule_Name {
             get {
@@ -273,6 +273,15 @@ namespace MattEland.Ani.Alfred.Core {
         internal static string AlfredStatusController_ShuttingDownComponent {
             get {
                 return ResourceManager.GetString("AlfredStatusController_ShuttingDownComponent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No SubSystems Detected.
+        /// </summary>
+        internal static string AlfredSubSystemListModule_NoSubsystemsDetected {
+            get {
+                return ResourceManager.GetString("AlfredSubSystemListModule_NoSubsystemsDetected", resourceCulture);
             }
         }
         

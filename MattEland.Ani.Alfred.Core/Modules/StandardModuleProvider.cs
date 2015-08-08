@@ -37,7 +37,8 @@ namespace MattEland.Ani.Alfred.Core.Modules
             var modules = new List<AlfredModule>
                           {
                               new AlfredPowerModule(alfred.PlatformProvider, alfred),
-                              new AlfredTimeModule(alfred.PlatformProvider)
+                              new AlfredTimeModule(alfred.PlatformProvider),
+                              new AlfredSubSystemListModule(alfred.PlatformProvider)
                           };
 
             // Add lots of modules in bulk

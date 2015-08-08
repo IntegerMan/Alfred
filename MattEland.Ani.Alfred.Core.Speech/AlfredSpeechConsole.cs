@@ -8,6 +8,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 
 using JetBrains.Annotations;
 
@@ -88,6 +89,12 @@ namespace MattEland.Ani.Alfred.Core.Speech
             // If it's a significant message, tell the user via voice
             if (_speechEnabledLogLevels.Contains(level))
             {
+                // For more serious items, have Alfred say the status beforehand
+                if (level == LogLevel.Warning || level == LogLevel.Error)
+                {
+                    message = string.Format(CultureInfo.CurrentCulture, "{0}: {1}", level, message);
+                }
+
                 _speech.Say(message);
             }
         }
