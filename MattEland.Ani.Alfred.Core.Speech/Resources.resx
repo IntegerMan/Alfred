@@ -103,7 +103,7 @@
     <comment>Log message for finding modules</comment>
   </data>
   <data name="VoiceFoundList" xml:space="preserve">
-    <value>Found voice: {0} ({1} {2}) Enabled: {3}</value>
+    <value>Found voice: {0} - {1} {2} Enabled: {3}</value>
     <comment>Format string for enumerating detecting voices. {0} is the name, {1} is the gender, {2} is the culture's display name, {3} is whether or not the voice is enabled.</comment>
   </data>
   <data name="UnknownVoiceFound" xml:space="preserve">

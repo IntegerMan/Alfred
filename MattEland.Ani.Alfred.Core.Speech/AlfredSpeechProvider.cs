@@ -90,7 +90,7 @@ namespace MattEland.Ani.Alfred.Core.Speech
             const LogLevel Level = LogLevel.Verbose;
             console.Log(LogHeader, Resources.FindVoiceModules.NonNull(), Level);
 
-            var voices = _speech.GetInstalledVoices(CultureInfo.CurrentCulture);
+            var voices = _speech.GetInstalledVoices();
 
             foreach (var voice in voices)
             {
@@ -109,7 +109,7 @@ namespace MattEland.Ani.Alfred.Core.Speech
                                                 Resources.VoiceFoundList.NonNull(),
                                                 info.Name,
                                                 info.Gender,
-                                                info.Culture?.DisplayName,
+                                                info.Culture?.EnglishName,
                                                 voice.Enabled);
 
                     console.Log(LogHeader, message, Level);
