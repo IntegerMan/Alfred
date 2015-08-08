@@ -6,14 +6,9 @@
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core.Widgets;
-
-namespace MattEland.Ani.Alfred.Core
+namespace MattEland.Ani.Alfred.Core.Pages
 {
     /// <summary>
     ///     A page that can be used in Alfred
