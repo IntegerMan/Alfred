@@ -50,9 +50,9 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
         [Test]
         public void SystemMonitoringSubsystemContainsModules()
         {
-            Assert.IsTrue(_subsystem.Modules.Any(m => m.GetType() == typeof(CpuMonitorModule)), "CPU Monitor not found");
-            Assert.IsTrue(_subsystem.Modules.Any(m => m.GetType() == typeof(MemoryMonitorModule)), "Memory Monitor not found");
-            Assert.IsTrue(_subsystem.Modules.Any(m => m.GetType() == typeof(DiskMonitorModule)), "Disk Monitor not found");
+            Assert.IsTrue(_subsystem.Modules.Any(m => m is CpuMonitorModule), "CPU Monitor not found");
+            Assert.IsTrue(_subsystem.Modules.Any(m => m is MemoryMonitorModule), "Memory Monitor not found");
+            Assert.IsTrue(_subsystem.Modules.Any(m => m is DiskMonitorModule), "Disk Monitor not found");
         }
 
         [Test]

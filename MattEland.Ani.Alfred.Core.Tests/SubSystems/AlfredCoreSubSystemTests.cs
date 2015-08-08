@@ -71,10 +71,10 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
         [Test]
         public void SubsystemContainsModules()
         {
-            Assert.IsTrue(_subsystem.Modules.Any(m => m.GetType() == typeof(AlfredTimeModule)), "Time Module not found");
-            Assert.IsTrue(_subsystem.Modules.Any(m => m.GetType() == typeof(AlfredPowerModule)),
+            Assert.IsTrue(_subsystem.Modules.Any(m => m is AlfredTimeModule), "Time Module not found");
+            Assert.IsTrue(_subsystem.Modules.Any(m => m is AlfredPowerModule),
                           "Power Module not found");
-            Assert.IsTrue(_subsystem.Modules.Any(m => m.GetType() == typeof(AlfredSubSystemListModule)),
+            Assert.IsTrue(_subsystem.Modules.Any(m => m is AlfredSubSystemListModule),
                           "Subsystem List Module not found");
         }
     }
