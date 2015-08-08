@@ -88,14 +88,15 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Converters\LogLevelToBrushConverter.cs" />
     <Compile Include="Panes\ConsolePane.xaml.cs">
       <DependentUpon>ConsolePane.xaml</DependentUpon>
     </Compile>
     <Compile Include="Panes\ModulesPane.xaml.cs">
       <DependentUpon>ModulesPane.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WinClientPlatformProvider.cs" />
-    <Compile Include="WinClientCommand.cs" />
+    <Compile Include="Platform\WinClientPlatformProvider.cs" />
+    <Compile Include="Platform\WinClientCommand.cs" />
     <Page Include="Dictionaries\Miscellaneous.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

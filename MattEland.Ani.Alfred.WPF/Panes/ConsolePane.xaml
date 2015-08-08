@@ -10,7 +10,7 @@
              d:DataContext="{d:DesignInstance console:SimpleConsole}">
 
     <DockPanel>
-        
+
         <!-- Header -->
         <Border DockPanel.Dock="Top" Style="{StaticResource HeaderBannerBorderStyle}">
             <TextBlock Text="{x:Static resources:Resources.ConsoleHeader}" Style="{StaticResource HeaderBannerTextBlockStyle}" />
@@ -18,12 +18,11 @@
 
         <ScrollViewer VerticalScrollBarVisibility="Auto"                            
                   Padding="8">
-        
-        <ItemsControl ItemsSource="{Binding Path=Events}"                                                                
-                      BorderThickness="0"                                                
-                      FontSize="{StaticResource FontSizeSmall}" />
-        
-    </ScrollViewer>
-        </DockPanel>
-    
+
+            <ItemsControl ItemsSource="{Binding Path=Events}"                                                                
+                      BorderThickness="0" />
+
+        </ScrollViewer>
+    </DockPanel>
+
 </UserControl>

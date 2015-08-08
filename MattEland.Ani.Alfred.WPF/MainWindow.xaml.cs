@@ -2,7 +2,7 @@
 // MainWindow.xaml.cs
 // 
 // Created on:      07/25/2015 at 11:55 PM
-// Last Modified:   08/07/2015 at 3:27 PM
+// Last Modified:   08/08/2015 at 5:56 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -18,6 +18,7 @@ using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Ani.Alfred.Core.Speech;
+using MattEland.Ani.Alfred.WPF.Platform;
 using MattEland.Ani.Alfred.WPF.Properties;
 
 namespace MattEland.Ani.Alfred.WPF
@@ -28,7 +29,7 @@ namespace MattEland.Ani.Alfred.WPF
     public sealed partial class MainWindow : IDisposable
     {
         /// <summary>
-        /// The update frequency in seconds for Alfred's update pump
+        ///     The update frequency in seconds for Alfred's update pump
         /// </summary>
         private const double UpdateFrequencyInSeconds = 0.25;
 
@@ -73,6 +74,14 @@ namespace MattEland.Ani.Alfred.WPF
             _console.Log("WinClient.Initialize", "Initialization Complete", LogLevel.Verbose);
         }
 
+        /// <summary>
+        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            _alfred.Dispose();
+        }
+
         private void InitializeAlfredModules()
         {
 
@@ -82,15 +91,7 @@ namespace MattEland.Ani.Alfred.WPF
         }
 
         /// <summary>
-        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-            _alfred.Dispose();
-        }
-
-        /// <summary>
-        /// Initializes the update pump that causes Alfred to update its modules.
+        ///     Initializes the update pump that causes Alfred to update its modules.
         /// </summary>
         private void InitializeUpdatePump()
         {

@@ -5,6 +5,8 @@
     <!-- Colors -->
     <Color x:Key="CautionBackgroundColor">#DFDDAF</Color>
     <Color x:Key="CautionBackgroundBorderColor">#FECB00</Color>
+    <Color x:Key="ErrorBackgroundColor">IndianRed</Color>
+    <Color x:Key="ErrorForegroundColor">DarkRed</Color>
 
     <Color x:Key="AppForegroundColor">#C6C6C6</Color>
     <Color x:Key="AppBackgroundColor">#1E1E1E</Color>
@@ -20,7 +22,11 @@
     <!-- Brushes -->
     <SolidColorBrush Color="{StaticResource CautionBackgroundColor}" x:Key="CautionBackgroundBrush" />
     <SolidColorBrush Color="{StaticResource CautionBackgroundBorderColor}" x:Key="CautionBorderBrush" />
-    <SolidColorBrush Color="{StaticResource AppBackgroundColor}" x:Key="CautionForegroundBrush" />
+    <SolidColorBrush Color="{StaticResource CautionBackgroundBorderColor}" x:Key="CautionForegroundBrush" />
+    
+    <SolidColorBrush Color="{StaticResource ErrorForegroundColor}" x:Key="ErrorForegroundBrush" />
+    <SolidColorBrush Color="{StaticResource ErrorBackgroundColor}" x:Key="ErrorBackgroundBrush" />
+    <SolidColorBrush Color="{StaticResource ErrorForegroundColor}" x:Key="ErrorBorderBrush" />
     
     <SolidColorBrush Color="{StaticResource AccentColor}" x:Key="AccentForegroundBrush" />
 

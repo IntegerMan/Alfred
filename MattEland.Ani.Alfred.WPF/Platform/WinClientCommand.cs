@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
 // WinClientCommand.cs
 // 
-// Created on:      08/03/2015 at 1:43 PM
-// Last Modified:   08/05/2015 at 10:31 PM
+// Created on:      08/08/2015 at 5:55 PM
+// Last Modified:   08/08/2015 at 5:56 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -11,7 +11,7 @@ using System.Windows.Input;
 
 using MattEland.Ani.Alfred.Core.Widgets;
 
-namespace MattEland.Ani.Alfred.WPF
+namespace MattEland.Ani.Alfred.WPF.Platform
 {
     /// <summary>
     ///     A WPF compliant implementation of AlfredCommand.
