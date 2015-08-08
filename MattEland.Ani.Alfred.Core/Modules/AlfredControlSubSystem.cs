@@ -18,6 +18,9 @@ namespace MattEland.Ani.Alfred.Core.Modules
     /// </summary>
     public class AlfredControlSubSystem : AlfredSubSystem
     {
+        [NotNull]
+        private readonly UserInterfacePage _page;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubSystem" /> class.
         /// </summary>
@@ -32,6 +35,17 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <exception cref="System.ArgumentNullException"></exception>
         public AlfredControlSubSystem([NotNull] IPlatformProvider provider) : base(provider)
         {
+            var power = new AlfredPowerModule(provider);
+            Register(power);
+
+            var time = new AlfredTimeModule(provider);
+            Register(time);
+
+            var systems = new AlfredSubSystemListModule(provider);
+            Register(systems);
+
+            _page = new UserInterfacePage(provider);
+
         }
 
         /// <summary>
@@ -48,7 +62,6 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         protected override void UpdateProtected()
         {
-            base.UpdateProtected();
         }
 
         /// <summary>
@@ -57,7 +70,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <param name="alfred"></param>
         protected override void InitializeProtected(AlfredProvider alfred)
         {
-            base.InitializeProtected(alfred);
+            Register(_page);
         }
 
         /// <summary>
@@ -65,7 +78,6 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         protected override void ShutdownProtected()
         {
-            base.ShutdownProtected();
         }
 
         /// <summary>
@@ -74,7 +86,6 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         public override void OnShutdownCompleted()
         {
-            base.OnShutdownCompleted();
         }
 
         /// <summary>
@@ -83,30 +94,6 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         public override void OnInitializationCompleted()
         {
-            base.OnInitializationCompleted();
-        }
-
-        /// <summary>
-        ///     Shuts down the component.
-        /// </summary>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
-        /// <exception cref="InvalidOperationException">
-        ///     Already offline when told to shut down.
-        /// </exception>
-        public override void Shutdown()
-        {
-            base.Shutdown();
-        }
-
-        /// <summary>
-        ///     Initializes the component.
-        /// </summary>
-        /// <param name="alfred">The alfred framework.</param>
-        /// <exception cref="InvalidOperationException">Already online when told to initialize.</exception>
-        public override void Initialize(AlfredProvider alfred)
-        {
-            base.Initialize(alfred);
         }
     }
 }
