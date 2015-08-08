@@ -320,5 +320,14 @@ namespace MattEland.Ani.Alfred.Core {
                 return ResourceManager.GetString("AlfredTimeModule_Update_CurrentTimeDisplayString", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Pages Detected.
+        /// </summary>
+        public static string NoPagesDetected {
+            get {
+                return ResourceManager.GetString("NoPagesDetected", resourceCulture);
+            }
+        }
     }
 }

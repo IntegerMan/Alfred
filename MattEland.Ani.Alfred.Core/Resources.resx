@@ -214,4 +214,8 @@
     <value>Alfred Control</value>
     <comment>Display name for the Alfred Control subsystem</comment>
   </data>
+  <data name="NoPagesDetected" xml:space="preserve">
+    <value>No Pages Detected</value>
+    <comment>UI Label for no pages found on the pages list widget</comment>
+  </data>
 </root>

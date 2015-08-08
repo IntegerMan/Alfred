@@ -7,6 +7,7 @@
 // ---------------------------------------------------------
 
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
@@ -107,13 +108,13 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
         }
 
         [Test]
-        public void SubsystemContainsModules()
+        public void SubsystemModulesPropertyYieldsExpectedResults()
         {
             Assert.AreEqual(0, _subsystem.Modules.Count(), "Subsystem should not have any loose modules. Modules should be attached to pages.");
+
             /* I may want to come back to this approach...
-            Assert.IsTrue(_subsystem.Modules.Any(m => m is AlfredTimeModule), "Time Module not found");
-            Assert.IsTrue(_subsystem.Modules.Any(m => m is AlfredPowerModule), "Power Module not found");
-            Assert.IsTrue(_subsystem.Modules.Any(m => m is AlfredSubSystemListModule), "Subsystem List Module not found");
+
+            AssertExpectedModules(_subsystem.Modules);
             */
         }
 
@@ -129,9 +130,16 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
             var page = FindPage<AlfredModuleListPage>(pageName);
 
             // Ensure our expected modules are there
-            Assert.IsTrue(page.Modules.Any(m => m is AlfredTimeModule), "Time Module not found");
-            Assert.IsTrue(page.Modules.Any(m => m is AlfredPowerModule), "Power Module not found");
-            Assert.IsTrue(page.Modules.Any(m => m is AlfredSubSystemListModule), "Subsystem List Module not found");
+            AssertExpectedModules(page.Modules);
+        }
+
+        private static void AssertExpectedModules([NotNull] IEnumerable<AlfredModule> modules)
+        {
+            modules = modules.ToList();
+            Assert.IsTrue(modules.Any(m => m is AlfredTimeModule), "Time Module not found");
+            Assert.IsTrue(modules.Any(m => m is AlfredPowerModule), "Power Module not found");
+            Assert.IsTrue(modules.Any(m => m is AlfredSubSystemListModule), "Subsystem List Module not found");
+            Assert.IsTrue(modules.Any(m => m is AlfredPagesListModule), "Pages List Module not found");
         }
 
         /// <summary>
@@ -143,7 +151,6 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
         [NotNull]
         private T FindPage<T>(string pageName) where T : AlfredPage
         {
-
             var page = (T)_alfred.RootPages.First(p => p.Name == pageName);
             Assert.NotNull(page);
 

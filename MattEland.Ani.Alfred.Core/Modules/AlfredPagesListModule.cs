@@ -1,14 +1,13 @@
 ﻿// ---------------------------------------------------------
-// AlfredSubSystemListModule.cs
+// AlfredPagesListModule.cs
 // 
-// Created on:      08/07/2015 at 11:56 PM
-// Last Modified:   08/07/2015 at 11:56 PM
+// Created on:      08/08/2015 at 7:38 PM
+// Last Modified:   08/08/2015 at 7:43 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 
 using JetBrains.Annotations;
 
@@ -18,20 +17,20 @@ using MattEland.Ani.Alfred.Core.Widgets;
 namespace MattEland.Ani.Alfred.Core.Modules
 {
     /// <summary>
-    /// A module that lists installed subsystems
+    ///     A module that lists installed subsystems
     /// </summary>
-    public class AlfredSubSystemListModule : AlfredModule
+    public class AlfredPagesListModule : AlfredModule
     {
-
-        [NotNull, ItemNotNull]
+        [NotNull]
+        [ItemNotNull]
         private readonly ICollection<AlfredWidget> _widgets;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlfredSubSystemListModule"/> class.
+        ///     Initializes a new instance of the <see cref="AlfredPagesListModule" /> class.
         /// </summary>
         /// <param name="platformProvider">The platform provider.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public AlfredSubSystemListModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
+        public AlfredPagesListModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
         {
             _widgets = platformProvider.CreateCollection<AlfredWidget>();
         }
@@ -42,11 +41,11 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <value>The name of the module.</value>
         public override string Name
         {
-            get { return "Subsystems"; }
+            get { return "Pages"; }
         }
 
         /// <summary>
-        ///     Updates the component
+        ///     Updates the page
         /// </summary>
         protected override void UpdateProtected()
         {
@@ -59,16 +58,16 @@ namespace MattEland.Ani.Alfred.Core.Modules
                     continue;
                 }
 
-                // Interpret the DataContext and update its text if it's a component based on the
-                // component status. If no component context, it's assumed to be the no items label.
-                var component = widget.DataContext as AlfredComponent;
-                if (component != null)
+                // Interpret the DataContext and update its text if it's a page.
+                // If no page context, it's assumed to be the no items label.
+                var page = widget.DataContext as AlfredPage;
+                if (page != null)
                 {
-                    UpdateWidgetText(textWidget, component);
+                    UpdateWidgetText(textWidget, page);
                 }
                 else
                 {
-                    textWidget.Text = Resources.AlfredSubSystemListModule_NoSubsystemsDetected;
+                    textWidget.Text = Resources.NoPagesDetected;
                 }
             }
         }
@@ -89,13 +88,13 @@ namespace MattEland.Ani.Alfred.Core.Modules
         {
             _widgets.Clear();
 
-            // Read the subsystems from Alfred
+            // Read the pages from Alfred
             if (AlfredInstance != null)
             {
-                foreach (var subSystem in AlfredInstance.SubSystems)
+                foreach (var page in AlfredInstance.RootPages)
                 {
-                    var widget = new TextWidget { DataContext = subSystem };
-                    UpdateWidgetText(widget, subSystem);
+                    var widget = new TextWidget { DataContext = page };
+                    UpdateWidgetText(widget, page);
 
                     _widgets.Add(widget);
 
@@ -103,14 +102,14 @@ namespace MattEland.Ani.Alfred.Core.Modules
                 }
             }
 
-            // We'll want to display a fallback for no subsystems
+            // We'll want to display a fallback for no pages
             if (_widgets.Count == 0)
             {
-                var noSubsystemsDetected = Resources.AlfredSubSystemListModule_NoSubsystemsDetected.NonNull();
+                var noItemsDetected = Resources.NoPagesDetected.NonNull();
 
-                Log("SubSystems.Initialize", noSubsystemsDetected, LogLevel.Warning);
+                Log("Pages.Initialize", noItemsDetected, LogLevel.Warning);
 
-                var widget = new TextWidget(noSubsystemsDetected);
+                var widget = new TextWidget(noItemsDetected);
                 _widgets.Add(widget);
 
                 Register(widget);
@@ -118,24 +117,24 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        /// Updates the widget's text to that matching the detected component.
+        ///     Updates the widget's text to that matching the detected page.
         /// </summary>
         /// <param name="widget">The widget.</param>
-        /// <param name="component">The component.</param>
+        /// <param name="page">The page.</param>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
-        private static void UpdateWidgetText([NotNull] AlfredTextWidget widget, [NotNull] AlfredComponent component)
+        private static void UpdateWidgetText([NotNull] AlfredTextWidget widget, [NotNull] AlfredPage page)
         {
             if (widget == null)
             {
                 throw new ArgumentNullException(nameof(widget));
             }
-            if (component == null)
+            if (page == null)
             {
-                throw new ArgumentNullException(nameof(component));
+                throw new ArgumentNullException(nameof(page));
             }
 
-            widget.Text = string.Format(CultureInfo.CurrentCulture, "{0}: {1}", component.NameAndVersion, component.Status);
+            widget.Text = page.Name;
         }
     }
 }

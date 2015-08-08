@@ -49,6 +49,9 @@ namespace MattEland.Ani.Alfred.Core.Modules
             var systems = new AlfredSubSystemListModule(provider);
             _controlPage.Register(systems);
 
+            var pages = new AlfredPagesListModule(provider);
+            _controlPage.Register(pages);
+
         }
 
         /// <summary>
