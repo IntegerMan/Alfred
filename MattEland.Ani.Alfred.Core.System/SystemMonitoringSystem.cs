@@ -16,6 +16,9 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
     /// </summary>
     public class SystemMonitoringSystem : AlfredSubSystem
     {
+        [NotNull]
+        private readonly UserInterfacePage _page;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubSystem" /> class.
         /// </summary>
@@ -31,13 +34,23 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         public SystemMonitoringSystem([NotNull] IPlatformProvider provider) : base(provider)
         {
             var cpu = new CpuMonitorModule(provider);
-            RegisterModule(cpu);
+            Register(cpu);
 
             var memory = new MemoryMonitorModule(provider);
-            RegisterModule(memory);
+            Register(memory);
 
             var disk = new DiskMonitorModule(provider);
-            RegisterModule(disk);
+            Register(disk);
+
+            _page = new UserInterfacePage(provider);
+        }
+
+        /// <summary>
+        ///     Handles initialization events
+        /// </summary>
+        protected override void InitializeProtected()
+        {
+            Register(_page);
         }
 
         /// <summary>

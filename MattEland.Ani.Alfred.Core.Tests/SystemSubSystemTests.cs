@@ -40,7 +40,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         [Test]
         public void SystemMonitoringSubsystemCanBeRegisteredInAlfred()
         {
-            _alfred.RegisterSubSystem(_subsystem);
+            _alfred.Register(_subsystem);
 
             Assert.AreEqual(1, _alfred.SubSystems.Count(), "Subsystem was not registered");
             Assert.Contains(_subsystem, _alfred.SubSystems as ICollection, "The subsystem was not found in the collection");
@@ -54,5 +54,26 @@ namespace MattEland.Ani.Alfred.Core.Tests
             Assert.IsTrue(_subsystem.Modules.Any(m => m.GetType() == typeof(DiskMonitorModule)), "Disk Monitor not found");
         }
 
+        [Test]
+        public void SubSystemContainsAPageAfterRegistration()
+        {
+            Assert.AreEqual(0, _subsystem.Pages.Count());
+
+            _alfred.Register(_subsystem);
+            _alfred.Initialize();
+
+            Assert.AreEqual(1, _subsystem.Pages.Count());
+        }
+
+        [Test]
+        public void AlfredContainsAPageAfterRegistration()
+        {
+            var pages = _alfred.RootPages.Count();
+
+            _alfred.Register(_subsystem);
+            _alfred.Initialize();
+
+            Assert.AreEqual(pages + 1, _alfred.RootPages.Count());
+        }
     }
 }

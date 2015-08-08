@@ -7,6 +7,7 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 using JetBrains.Annotations;
@@ -211,6 +212,36 @@ namespace MattEland.Ani.Alfred.Core
             // Send it on to the console, if we have one. It'll figure it out from there
             console?.Log(title, message, level);
 
+        }
+
+        /// <summary>
+        /// Adds an item to a collection safely. This is a convenience method that does null and duplicate checking
+        /// based on the type of item / collection
+        /// </summary>
+        /// <typeparam name="T">The type of item</typeparam>
+        /// <param name="item">The item.</param>
+        /// <param name="collection">The collection.</param>
+        /// <exception cref="System.ArgumentNullException">item, collection
+        /// </exception>
+        /// <exception cref="System.InvalidOperationException">The specified item was already part of the collection</exception>
+        protected void AddToCollectionSafe<T>([NotNull] T item, [NotNull] ICollection<T> collection)
+        {
+            if (item == null)
+            {
+                throw new ArgumentNullException(nameof(item));
+            }
+            if (collection == null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            // This shouldn't happen, but I want to check to make sure
+            if (collection.Contains(item))
+            {
+                throw new InvalidOperationException("The specified item was already part of the collection");
+            }
+
+            collection.Add(item);
         }
     }
 }

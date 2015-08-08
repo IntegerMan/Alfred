@@ -112,7 +112,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         {
             var testSubsystem = new TestSubSystem();
 
-            _alfred.RegisterSubSystem(testSubsystem);
+            _alfred.Register(testSubsystem);
 
             _alfred.Initialize();
 
@@ -126,7 +126,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         {
             var testSubsystem = new TestSubSystem();
 
-            _alfred.RegisterSubSystem(testSubsystem);
+            _alfred.Register(testSubsystem);
 
             _alfred.Initialize();
 
@@ -222,7 +222,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
             testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
             testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
 
-            _alfred.RegisterModule(testModule);
+            _alfred.Register(testModule);
 
             _alfred.Initialize();
         }
@@ -231,7 +231,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         [ExpectedException(typeof(ArgumentNullException))]
         public void RegisteringNullSubsystemGeneratesNullRef()
         {
-            _alfred.RegisterSubSystem(null);
+            _alfred.Register((AlfredSubSystem) null);
         }
 
         [Test]
@@ -243,7 +243,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
             testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
             testModule.WidgetsToRegisterOnShutdown.Add(textWidget);
 
-            _alfred.RegisterModule(testModule);
+            _alfred.Register(testModule);
 
             _alfred.Initialize();
             _alfred.Update();
@@ -328,7 +328,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         {
             var testSubsystem = new TestSubSystem();
 
-            _alfred.RegisterSubSystem(testSubsystem);
+            _alfred.Register(testSubsystem);
 
             _alfred.Initialize();
             _alfred.Update();
@@ -341,7 +341,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         {
             var testSubsystem = new TestSubSystem();
 
-            _alfred.RegisterSubSystem(testSubsystem);
+            _alfred.Register(testSubsystem);
 
             _alfred.Initialize();
             _alfred.Update();
@@ -356,7 +356,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         {
             var testSubsystem = new TestSubSystem();
 
-            _alfred.RegisterSubSystem(testSubsystem);
+            _alfred.Register(testSubsystem);
 
             _alfred.Initialize();
             _alfred.Update();

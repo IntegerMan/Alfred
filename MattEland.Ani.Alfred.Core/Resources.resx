@@ -171,7 +171,7 @@
     <comment>Error when a provided module was null</comment>
   </data>
   <data name="AlfredProvider_AssertMustBeOffline_ErrorNotOffline" xml:space="preserve">
-    <value>Alfred must be offline in order to add modules.</value>
+    <value>Alfred must be offline in order to add components.</value>
     <comment>Occurs when alfred is required to be offline.</comment>
   </data>
   <data name="AlfredProvider_Name" xml:space="preserve">

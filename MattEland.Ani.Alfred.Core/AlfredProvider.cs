@@ -2,12 +2,11 @@
 // AlfredProvider.cs
 // 
 // Created on:      07/25/2015 at 11:30 PM
-// Last Modified:   08/07/2015 at 10:29 PM
+// Last Modified:   08/08/2015 at 1:24 AM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -32,6 +31,10 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         [NotNull]
         private readonly IPlatformProvider _platformProvider;
+
+        [NotNull]
+        [ItemNotNull]
+        private readonly ICollection<AlfredPage> _rootPages;
 
         /// <summary>
         ///     The status controller
@@ -66,6 +69,8 @@ namespace MattEland.Ani.Alfred.Core
             _modules = provider.CreateCollection<AlfredModule>();
 
             _subsystems = provider.CreateCollection<AlfredSubSystem>();
+
+            _rootPages = provider.CreateCollection<AlfredPage>();
         }
 
         /// <summary>
@@ -167,6 +172,39 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
+        ///     Gets the components - both Modules and SubSystems - registered with Alfred.
+        /// </summary>
+        /// <value>The components.</value>
+        [NotNull]
+        [ItemNotNull]
+        public IEnumerable<AlfredComponent> Components
+        {
+            get
+            {
+                foreach (var subSystem in _subsystems)
+                {
+                    yield return subSystem;
+                }
+
+                foreach (var module in _modules)
+                {
+                    yield return module;
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Gets the user interface pages registered to the Alfred Framework at root level.
+        /// </summary>
+        /// <value>The pages.</value>
+        [NotNull]
+        [ItemNotNull]
+        public IEnumerable<AlfredPage> RootPages
+        {
+            get { return _rootPages; }
+        }
+
+        /// <summary>
         ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public void Dispose()
@@ -223,34 +261,12 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        /// Gets the components - both Modules and SubSystems - registered with Alfred.
-        /// </summary>
-        /// <value>The components.</value>
-        [NotNull]
-        [ItemNotNull]
-        public IEnumerable<AlfredComponent> Components
-        {
-            get
-            {
-                foreach (var subSystem in _subsystems)
-                {
-                    yield return subSystem;
-                }
-
-                foreach (var module in _modules)
-                {
-                    yield return module;
-                }
-            }
-        }
-
-        /// <summary>
         ///     Adds a module to alfred.
         /// </summary>
         /// <exception cref="InvalidOperationException">
         ///     Thrown if Alfred is not Offline
         /// </exception>
-        public void RegisterModule([NotNull] AlfredModule module)
+        public void Register([NotNull] AlfredModule module)
         {
             if (module == null)
             {
@@ -269,7 +285,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <exception cref="System.ArgumentNullException">
         ///     modules must be provided
         /// </exception>
-        public void RegisterModules([NotNull] IEnumerable<AlfredModule> modules)
+        public void Register([NotNull] IEnumerable<AlfredModule> modules)
         {
             // Standard validation
             if (modules == null)
@@ -279,7 +295,7 @@ namespace MattEland.Ani.Alfred.Core
 
             AssertMustBeOffline();
 
-            // Ad each module using the standard RegisterModule function for now. This will make it easier to modify the process of registering a module
+            // Ad each module using the standard Register function for now. This will make it easier to modify the process of registering a module
             foreach (var module in modules)
             {
                 if (module == null)
@@ -288,7 +304,7 @@ namespace MattEland.Ani.Alfred.Core
                         nameof(modules),
                         Resources.AlfredProvider_AddModules_ErrorNullModule);
                 }
-                RegisterModule(module);
+                Register(module);
             }
         }
 
@@ -310,12 +326,14 @@ namespace MattEland.Ani.Alfred.Core
         ///     Registers a sub system with Alfred.
         /// </summary>
         /// <param name="subsystem">The subsystem.</param>
-        public void RegisterSubSystem([NotNull] AlfredSubSystem subsystem)
+        public void Register([NotNull] AlfredSubSystem subsystem)
         {
             if (subsystem == null)
             {
                 throw new ArgumentNullException(nameof(subsystem));
             }
+
+            AssertMustBeOffline();
 
             _subsystems.Add(subsystem);
         }

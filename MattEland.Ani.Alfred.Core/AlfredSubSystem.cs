@@ -2,18 +2,15 @@
 // AlfredSubSystem.cs
 // 
 // Created on:      08/07/2015 at 10:00 PM
-// Last Modified:   08/07/2015 at 10:35 PM
+// Last Modified:   08/08/2015 at 1:35 AM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 
 using JetBrains.Annotations;
-
-using MattEland.Ani.Alfred.Core.Console;
 
 namespace MattEland.Ani.Alfred.Core
 {
@@ -26,6 +23,10 @@ namespace MattEland.Ani.Alfred.Core
         [NotNull]
         [ItemNotNull]
         private readonly ICollection<AlfredModule> _modules;
+
+        [NotNull]
+        [ItemNotNull]
+        private readonly ICollection<AlfredPage> _pages;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubSystem" /> class.
@@ -40,6 +41,7 @@ namespace MattEland.Ani.Alfred.Core
             }
 
             _modules = provider.CreateCollection<AlfredModule>();
+            _pages = provider.CreateCollection<AlfredPage>();
         }
 
         /// <summary>
@@ -54,24 +56,14 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        /// Registers a module.
+        ///     Gets the pages associated with this subsystem
         /// </summary>
-        /// <param name="module">The module.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        protected void RegisterModule([NotNull] AlfredModule module)
+        /// <value>The pages.</value>
+        [NotNull]
+        [ItemNotNull]
+        public IEnumerable<AlfredPage> Pages
         {
-            if (module == null)
-            {
-                throw new ArgumentNullException(nameof(module));
-            }
-
-            // This shouldn't happen, but I want to check to make sure
-            if (Modules.Contains(module))
-            {
-                throw new InvalidOperationException("The specified module was already part of the collection");
-            }
-
-            _modules.Add(module);
+            get { return _pages; }
         }
 
         /// <summary>
@@ -81,6 +73,24 @@ namespace MattEland.Ani.Alfred.Core
         public override bool IsVisible
         {
             get { return true; }
+        }
+
+        /// <summary>
+        ///     Registers a module.
+        /// </summary>
+        /// <param name="module">The module.</param>
+        protected void Register([NotNull] AlfredModule module)
+        {
+            AddToCollectionSafe(module, _modules);
+        }
+
+        /// <summary>
+        ///     Registers a page.
+        /// </summary>
+        /// <param name="page">The page.</param>
+        protected void Register([NotNull] AlfredPage page)
+        {
+            AddToCollectionSafe(page, _pages);
         }
     }
 }
