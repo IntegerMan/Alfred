@@ -11,10 +11,21 @@
         Foreground="{StaticResource AppForegroundBrush}"
         Title="{Binding Path=NameAndVersion}" 
         Width="800" 
-        Height="600" 
+        Height="600"
+        Topmost="True"
         Loaded="OnWindowLoaded"
         Closing="OnWindowClosing"
-        d:DataContext="{d:DesignInstance core:AlfredProvider}">
+        d:DataContext="{d:DesignInstance core:AlfredProvider}" 
+        ShowInTaskbar="True" 
+        Icon="alfred.ico" 
+        WindowStartupLocation="CenterScreen">
+
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo Description="{Binding NameAndVersion}" 
+                         Overlay="{x:Null}" 
+                         ProgressValue="0"
+                         ProgressState="None" />
+    </Window.TaskbarItemInfo>
 
     <DockPanel>
 
