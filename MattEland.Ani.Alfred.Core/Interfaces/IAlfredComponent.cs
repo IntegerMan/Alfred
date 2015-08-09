@@ -1,16 +1,14 @@
 ﻿// ---------------------------------------------------------
 // IAlfredComponent.cs
 // 
-// Created on:      08/09/2015 at 6:02 PM
-// Last Modified:   08/09/2015 at 6:10 PM
+// Created on:      08/09/2015 at 6:25 PM
+// Last Modified:   08/09/2015 at 6:25 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core.Interfaces;
-
-namespace MattEland.Ani.Alfred.Core.Modules
+namespace MattEland.Ani.Alfred.Core.Interfaces
 {
     /// <summary>
     ///     An abstract component of Alfred
@@ -30,13 +28,6 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <value>The name and version.</value>
         [NotNull]
         string NameAndVersion { get; }
-
-        /// <summary>
-        ///     Gets the version of the component.
-        /// </summary>
-        /// <value>The version.</value>
-        [NotNull]
-        string Version { get; }
 
         /// <summary>
         ///     Gets the status of the component.
@@ -71,7 +62,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         void OnShutdownCompleted();
 
         /// <summary>
-        /// Called when a component is registered with an alfred instance.
+        ///     Called when a component is registered with an alfred instance.
         /// </summary>
         /// <param name="alfredInstance">The alfred instance.</param>
         void OnRegistered(IAlfred alfredInstance);

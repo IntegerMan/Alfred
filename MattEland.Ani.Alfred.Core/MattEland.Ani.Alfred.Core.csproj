@@ -57,7 +57,7 @@
     <Compile Include="Interfaces\IAlfredSubsystem.cs" />
     <Compile Include="Interfaces\IStatusController.cs" />
     <Compile Include="Modules\AlfredPagesListModule.cs" />
-    <Compile Include="Modules\IAlfredComponent.cs" />
+    <Compile Include="Interfaces\IAlfredComponent.cs" />
     <Compile Include="Pages\AlfredEventLogPage.cs" />
     <Compile Include="Pages\AlfredModuleListPage.cs" />
     <Compile Include="Pages\AlfredPage.cs" />
