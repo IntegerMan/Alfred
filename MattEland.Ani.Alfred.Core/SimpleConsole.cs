@@ -12,9 +12,10 @@ using System.Linq;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Interfaces;
 
-namespace MattEland.Ani.Alfred.Core.Console
+namespace MattEland.Ani.Alfred.Core
 {
     /// <summary>
     ///     A simple console used for unit testing and designer window purposes

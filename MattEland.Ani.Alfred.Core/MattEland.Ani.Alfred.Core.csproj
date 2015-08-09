@@ -90,7 +90,7 @@
     <Compile Include="Widgets\AlfredCommand.cs" />
     <Compile Include="Widgets\TextWidget.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Console\SimpleConsole.cs" />
+    <Compile Include="SimpleConsole.cs" />
     <Compile Include="SimplePlatformProvider.cs" />
     <Compile Include="Widgets\WarningWidget.cs" />
   </ItemGroup>
