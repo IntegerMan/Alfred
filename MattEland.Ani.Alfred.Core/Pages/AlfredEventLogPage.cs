@@ -57,7 +57,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <value>The events.</value>
         [NotNull, ItemNotNull]
         [UsedImplicitly]
-        public IEnumerable<ConsoleEvent> Events
+        public IEnumerable<IConsoleEvent> Events
         {
             get { return _console.Events; }
         }

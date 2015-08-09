@@ -13,6 +13,7 @@ using System.Globalization;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Core.Interfaces;
 
 namespace MattEland.Ani.Alfred.Core.Speech
 {
@@ -68,7 +69,7 @@ namespace MattEland.Ani.Alfred.Core.Speech
         ///     Gets the console events.
         /// </summary>
         /// <value>The console events.</value>
-        public IEnumerable<ConsoleEvent> Events
+        public IEnumerable<IConsoleEvent> Events
         {
             [DebuggerStepThrough]
             get

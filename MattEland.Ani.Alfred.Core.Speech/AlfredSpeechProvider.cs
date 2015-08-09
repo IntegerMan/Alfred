@@ -13,6 +13,7 @@ using System.Speech.Synthesis;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Core.Interfaces;
 
 namespace MattEland.Ani.Alfred.Core.Speech
 {

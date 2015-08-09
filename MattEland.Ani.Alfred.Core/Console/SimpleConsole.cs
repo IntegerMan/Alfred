@@ -22,7 +22,7 @@ namespace MattEland.Ani.Alfred.Core.Console
     public sealed class SimpleConsole : IConsole
     {
         [NotNull]
-        private readonly ICollection<ConsoleEvent> _events;
+        private readonly ICollection<IConsoleEvent> _events;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="SimpleConsole" /> class.
@@ -43,7 +43,7 @@ namespace MattEland.Ani.Alfred.Core.Console
                 throw new ArgumentNullException(nameof(provider));
             }
 
-            _events = provider.CreateCollection<ConsoleEvent>();
+            _events = provider.CreateCollection<IConsoleEvent>();
         }
 
         /// <summary>
@@ -66,7 +66,17 @@ namespace MattEland.Ani.Alfred.Core.Console
 
             var evt = new ConsoleEvent(title, message, level);
 
-            _events.Add(evt);
+            Log(evt);
+        }
+
+        private void Log([NotNull] IConsoleEvent consoleEvent)
+        {
+            if (consoleEvent == null)
+            {
+                throw new ArgumentNullException(nameof(consoleEvent));
+            }
+
+            _events.Add(consoleEvent);
         }
 
         /// <summary>
@@ -75,7 +85,7 @@ namespace MattEland.Ani.Alfred.Core.Console
         /// <value>The console events.</value>
         [NotNull]
         [ItemNotNull]
-        public IEnumerable<ConsoleEvent> Events
+        public IEnumerable<IConsoleEvent> Events
         {
             get { return _events; }
         }
