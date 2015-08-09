@@ -4,8 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:core="clr-namespace:MattEland.Ani.Alfred.Core;assembly=MattEland.Ani.Alfred.Core"
-        xmlns:resources="clr-namespace:MattEland.Ani.Alfred.WPF.Properties"
-        xmlns:panes="clr-namespace:MattEland.Ani.Alfred.WPF.Panes"
         mc:Ignorable="d"
         Background="{StaticResource AppBackgroundBrush}"
         Foreground="{StaticResource AppForegroundBrush}"

@@ -3,8 +3,7 @@
                     xmlns:widgets="clr-namespace:MattEland.Ani.Alfred.Core.Widgets;assembly=MattEland.Ani.Alfred.Core"
                     xmlns:console="clr-namespace:MattEland.Ani.Alfred.Core.Console;assembly=MattEland.Ani.Alfred.Core"
                     xmlns:core="clr-namespace:MattEland.Ani.Alfred.Core;assembly=MattEland.Ani.Alfred.Core"
-                    xmlns:pages="clr-namespace:MattEland.Ani.Alfred.Core.Pages;assembly=MattEland.Ani.Alfred.Core"
-                    xmlns:panes="clr-namespace:MattEland.Ani.Alfred.WPF.Panes">
+                    xmlns:pages="clr-namespace:MattEland.Ani.Alfred.Core.Pages;assembly=MattEland.Ani.Alfred.Core">
 
     <!-- Logging Templates -->
     <DataTemplate DataType="{x:Type console:ConsoleEvent}">
@@ -170,11 +169,21 @@
     <!-- Pages -->
     
     <DataTemplate DataType="{x:Type pages:AlfredModuleListPage}">
-        <panes:ModulesPane DataContext="{Binding}" />
+        <ItemsControl ItemsSource="{Binding Path=Modules}"                      
+                        BorderThickness="0">
+
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+        </ItemsControl>
     </DataTemplate>
     
     <DataTemplate DataType="{x:Type pages:AlfredEventLogPage}">
-        <panes:ConsolePane DataContext="{Binding}" />
+        <ItemsControl ItemsSource="{Binding Path=Events}"                                                                
+                      BorderThickness="0" />
     </DataTemplate>
 
 </ResourceDictionary>
