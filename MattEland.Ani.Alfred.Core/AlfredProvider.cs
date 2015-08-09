@@ -166,7 +166,16 @@ namespace MattEland.Ani.Alfred.Core
             get
             {
                 // Give me all pages in subsystems that are root level pages
-                return from subSystem in Subsystems from page in subSystem.Pages where page.IsRootLevel select page;
+                foreach (var subSystem in Subsystems)
+                {
+                    foreach (var page in subSystem.Pages)
+                    {
+                        if (page.IsRootLevel)
+                        {
+                            yield return page;
+                        }
+                    }
+                }
             }
         }
 
