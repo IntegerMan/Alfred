@@ -8,6 +8,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace MattEland.Ani.Alfred.Core
     /// <summary>
     ///     An abstract class containing most common shared functionality between Subsystems and Modules
     /// </summary>
-    public abstract class AlfredComponent : NotifyPropertyChangedBase
+    public abstract class AlfredComponent : INotifyPropertyChanged
     {
         [CanBeNull]
         private AlfredProvider _alfred;
@@ -316,6 +317,21 @@ namespace MattEland.Ani.Alfred.Core
             _alfred = alfred;
 
             RegisterControls();
+        }
+
+        /// <summary>
+        /// Occurs when a property changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Called when a property changes.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        [NotifyPropertyChangedInvocator]
+        protected void OnPropertyChanged([CanBeNull] string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

@@ -70,7 +70,6 @@
     <Compile Include="Console\ConsoleEvent.cs" />
     <Compile Include="Console\IConsole.cs" />
     <Compile Include="Modules\AlfredPowerModule.cs" />
-    <Compile Include="NotifyPropertyChangedBase.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

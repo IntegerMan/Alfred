@@ -8,6 +8,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 
@@ -22,7 +23,7 @@ namespace MattEland.Ani.Alfred.Core
     ///     Coordinates providing personal assistance to a user interface and receiving settings and queries back from the user
     ///     interface.
     /// </summary>
-    public sealed class AlfredProvider : NotifyPropertyChangedBase
+    public sealed class AlfredProvider : INotifyPropertyChanged
     {
         /// <summary>
         ///     The platform provider
@@ -250,6 +251,21 @@ namespace MattEland.Ani.Alfred.Core
 
             _subsystems.AddSafe(subsystem);
             subsystem.OnRegistered(this);
+        }
+
+        /// <summary>
+        /// Occurs when a property changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Called when a property changes.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        [NotifyPropertyChangedInvocator]
+        private void OnPropertyChanged([CanBeNull] string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 

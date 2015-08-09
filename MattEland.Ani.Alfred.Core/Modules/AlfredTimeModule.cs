@@ -31,7 +31,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         public const string HalfHourAlertEventTitle = "Time.HalfHourAlert";
 
-        private DateTime _lastTime;
+        private DateTime _time;
 
         /// <summary>
         ///     Initializes a new instance of the
@@ -55,7 +55,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
             AlertDurationInHours = 4;
             IsAlertEnabled = true;
 
-            _lastTime = DateTime.MinValue;
+            CurrentTime = DateTime.MinValue;
         }
 
         /// <summary>
@@ -115,6 +115,16 @@ namespace MattEland.Ani.Alfred.Core.Modules
         public bool IsAlertEnabled { get; set; }
 
         /// <summary>
+        /// Gets or sets the last time recorded
+        /// </summary>
+        /// <value>The current time.</value>
+        private DateTime CurrentTime
+        {
+            get { return _time; }
+            set { _time = value; }
+        }
+
+        /// <summary>
         ///     Handles module initialization events
         /// </summary>
         /// <param name="alfred"></param>
@@ -125,7 +135,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
             Register(BedtimeAlertWidget);
 
             // Ensure it has some initial values so it doesn't "blink" or lag on start
-            _lastTime = DateTime.MinValue;
+            ClearLastTimeRun();
             Update(DateTime.Now);
         }
 
@@ -158,14 +168,14 @@ namespace MattEland.Ani.Alfred.Core.Modules
             UpdateBedtimeAlertVisibility(time);
 
             // Check to see if it's now a new hour and, if so, log it to the console
-            if (_lastTime > DateTime.MinValue)
+            if (CurrentTime > DateTime.MinValue)
             {
-                if (time.Minute == 0 && _lastTime.Hour != time.Hour)
+                if (time.Minute == 0 && CurrentTime.Hour != time.Hour)
                 {
                     // Let the user know it's now X
                     Log(HourAlertEventTitle, timeText, LogLevel.Info);
                 }
-                else if (time.Minute == 30 && _lastTime.Minute != 30)
+                else if (time.Minute == 30 && CurrentTime.Minute != 30)
                 {
                     // Let the user know it's now half after X
                     Log(HalfHourAlertEventTitle, timeText, LogLevel.Info);
@@ -173,7 +183,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
             }
 
             // Store the last time we processed so it can be referenced next iteration
-            _lastTime = time;
+            CurrentTime = time;
         }
 
         /// <summary>
@@ -237,7 +247,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         protected override void ShutdownProtected()
         {
             CurrentTimeWidget.Text = null;
-            _lastTime = DateTime.MinValue;
+            ClearLastTimeRun();
         }
 
         /// <summary>
@@ -249,7 +259,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </remarks>
         public void ClearLastTimeRun()
         {
-            _lastTime = DateTime.MinValue;
+            CurrentTime = DateTime.MinValue;
         }
     }
 }
