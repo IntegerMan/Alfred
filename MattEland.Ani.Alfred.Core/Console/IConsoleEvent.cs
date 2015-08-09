@@ -8,9 +8,7 @@
 
 using System;
 
-using MattEland.Ani.Alfred.Core.Console;
-
-namespace MattEland.Ani.Alfred.Core.Interfaces
+namespace MattEland.Ani.Alfred.Core.Console
 {
     /// <summary>
     ///     Represents an event logged to the monitoring console

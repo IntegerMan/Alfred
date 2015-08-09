@@ -55,7 +55,7 @@
     <Compile Include="Interfaces\IAlfredModule.cs" />
     <Compile Include="Interfaces\IAlfredPage.cs" />
     <Compile Include="Interfaces\IAlfredSubsystem.cs" />
-    <Compile Include="Interfaces\IConsoleEvent.cs" />
+    <Compile Include="Console\IConsoleEvent.cs" />
     <Compile Include="Interfaces\IStatusController.cs" />
     <Compile Include="Modules\AlfredPagesListModule.cs" />
     <Compile Include="Interfaces\IAlfredComponent.cs" />
@@ -75,7 +75,7 @@
     <Compile Include="AlfredModule.cs" />
     <Compile Include="AlfredProvider.cs" />
     <Compile Include="Console\ConsoleEvent.cs" />
-    <Compile Include="Interfaces\IConsole.cs" />
+    <Compile Include="Console\IConsole.cs" />
     <Compile Include="Modules\AlfredPowerModule.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>

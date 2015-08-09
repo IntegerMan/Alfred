@@ -10,9 +10,7 @@ using System.Collections.Generic;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core.Console;
-
-namespace MattEland.Ani.Alfred.Core.Interfaces
+namespace MattEland.Ani.Alfred.Core.Console
 {
     /// <summary>
     ///     An interface describing the display console Alfred can interact with

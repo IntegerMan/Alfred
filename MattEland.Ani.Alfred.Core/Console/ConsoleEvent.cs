@@ -10,10 +10,6 @@ using System;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core.Interfaces;
-
-// ReSharper disable MemberCanBePrivate.Global
-
 namespace MattEland.Ani.Alfred.Core.Console
 {
 
