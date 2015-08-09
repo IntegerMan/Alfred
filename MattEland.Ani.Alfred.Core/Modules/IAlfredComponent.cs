@@ -1,0 +1,79 @@
+﻿// ---------------------------------------------------------
+// IAlfredComponent.cs
+// 
+// Created on:      08/09/2015 at 6:02 PM
+// Last Modified:   08/09/2015 at 6:10 PM
+// Original author: Matt Eland
+// ---------------------------------------------------------
+
+using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Core.Interfaces;
+
+namespace MattEland.Ani.Alfred.Core.Modules
+{
+    /// <summary>
+    ///     An abstract component of Alfred
+    /// </summary>
+    public interface IAlfredComponent
+    {
+        /// <summary>
+        ///     Gets the name of the component.
+        /// </summary>
+        /// <value>The name.</value>
+        [NotNull]
+        string Name { get; }
+
+        /// <summary>
+        ///     Gets the name and version of the component.
+        /// </summary>
+        /// <value>The name and version.</value>
+        [NotNull]
+        string NameAndVersion { get; }
+
+        /// <summary>
+        ///     Gets the version of the component.
+        /// </summary>
+        /// <value>The version.</value>
+        [NotNull]
+        string Version { get; }
+
+        /// <summary>
+        ///     Gets the status of the component.
+        /// </summary>
+        /// <value>The status.</value>
+        AlfredStatus Status { get; }
+
+        /// <summary>
+        ///     Updates this instance.
+        /// </summary>
+        void Update();
+
+        /// <summary>
+        ///     Initializes the component.
+        /// </summary>
+        /// <param name="alfred">The alfred framework.</param>
+        void Initialize([CanBeNull] IAlfred alfred);
+
+        /// <summary>
+        ///     Called when initialization completes.
+        /// </summary>
+        void OnInitializationCompleted();
+
+        /// <summary>
+        ///     Shuts down this instance.
+        /// </summary>
+        void Shutdown();
+
+        /// <summary>
+        ///     Called when shutdown completes.
+        /// </summary>
+        void OnShutdownCompleted();
+
+        /// <summary>
+        /// Called when a component is registered with an alfred instance.
+        /// </summary>
+        /// <param name="alfredInstance">The alfred instance.</param>
+        void OnRegistered(IAlfred alfredInstance);
+    }
+}

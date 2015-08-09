@@ -51,9 +51,13 @@
   <ItemGroup>
     <Compile Include="AlfredBootstrapper.cs" />
     <Compile Include="AlfredComponent.cs" />
-    <Compile Include="IAlfred.cs" />
-    <Compile Include="IStatusController.cs" />
+    <Compile Include="Interfaces\IAlfred.cs" />
+    <Compile Include="Interfaces\IAlfredModule.cs" />
+    <Compile Include="Interfaces\IAlfredPage.cs" />
+    <Compile Include="Interfaces\IAlfredSubsystem.cs" />
+    <Compile Include="Interfaces\IStatusController.cs" />
     <Compile Include="Modules\AlfredPagesListModule.cs" />
+    <Compile Include="Modules\IAlfredComponent.cs" />
     <Compile Include="Pages\AlfredEventLogPage.cs" />
     <Compile Include="Pages\AlfredModuleListPage.cs" />
     <Compile Include="Pages\AlfredPage.cs" />
@@ -65,7 +69,7 @@
     <Compile Include="Modules\AlfredControlSubSystem.cs" />
     <Compile Include="Modules\AlfredSubSystemListModule.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="IPlatformProvider.cs" />
+    <Compile Include="Interfaces\IPlatformProvider.cs" />
     <Compile Include="Modules\AlfredTimeModule.cs" />
     <Compile Include="AlfredModule.cs" />
     <Compile Include="AlfredProvider.cs" />

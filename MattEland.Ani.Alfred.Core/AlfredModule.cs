@@ -12,6 +12,8 @@ using System.Linq;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Interfaces;
+using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Widgets;
 
 namespace MattEland.Ani.Alfred.Core
@@ -20,7 +22,7 @@ namespace MattEland.Ani.Alfred.Core
     /// <summary>
     ///     Represents a module within Alfred. Modules contain different bits of information to present to the user.
     /// </summary>
-    public abstract class AlfredModule : AlfredComponent, IDisposable
+    public abstract class AlfredModule : AlfredComponent, IDisposable, IAlfredModule
     {
         [NotNull]
         [ItemNotNull]
@@ -121,7 +123,7 @@ namespace MattEland.Ani.Alfred.Core
         /// vary in their own types.
         /// </summary>
         /// <value>The children.</value>
-        public override IEnumerable<AlfredComponent> Children
+        public override IEnumerable<IAlfredComponent> Children
         {
             get { yield break; }
         }

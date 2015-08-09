@@ -12,6 +12,8 @@ using System.Diagnostics;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Interfaces;
+using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Widgets;
 
 namespace MattEland.Ani.Alfred.Core.Pages
@@ -79,7 +81,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// vary in their own types.
         /// </summary>
         /// <value>The children.</value>
-        public override IEnumerable<AlfredComponent> Children
+        public override IEnumerable<IAlfredComponent> Children
         {
             get
             {

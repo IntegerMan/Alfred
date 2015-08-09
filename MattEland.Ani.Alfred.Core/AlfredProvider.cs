@@ -15,7 +15,7 @@ using System.Linq;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
-using MattEland.Ani.Alfred.Core.Pages;
+using MattEland.Ani.Alfred.Core.Interfaces;
 
 namespace MattEland.Ani.Alfred.Core
 {
@@ -38,7 +38,7 @@ namespace MattEland.Ani.Alfred.Core
         private readonly IStatusController _statusController;
 
         [NotNull]
-        private readonly ICollection<AlfredSubsystem> _subsystems;
+        private readonly ICollection<IAlfredSubsystem> _subsystems;
 
         /// <summary>
         ///     The status
@@ -72,7 +72,7 @@ namespace MattEland.Ani.Alfred.Core
             _platformProvider = provider;
 
             // Build out sub-collections
-            _subsystems = provider.CreateCollection<AlfredSubsystem>();
+            _subsystems = provider.CreateCollection<IAlfredSubsystem>();
         }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <value>The sub systems.</value>
         [NotNull]
         [ItemNotNull]
-        public IEnumerable<AlfredSubsystem> Subsystems
+        public IEnumerable<IAlfredSubsystem> Subsystems
         {
             get { return _subsystems; }
         }
@@ -161,7 +161,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <value>The pages.</value>
         [NotNull]
         [ItemNotNull]
-        public IEnumerable<AlfredPage> RootPages
+        public IEnumerable<IAlfredPage> RootPages
         {
             get
             {

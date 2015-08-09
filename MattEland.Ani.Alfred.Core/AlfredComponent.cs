@@ -16,6 +16,8 @@ using System.Linq;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Core.Interfaces;
+using MattEland.Ani.Alfred.Core.Modules;
 
 namespace MattEland.Ani.Alfred.Core
 {
@@ -30,7 +32,7 @@ namespace MattEland.Ani.Alfred.Core
         private AlfredStatus _status;
 
         [CanBeNull, ItemNotNull]
-        private IEnumerable<AlfredComponent> _childrenOnShutdown;
+        private IEnumerable<IAlfredComponent> _childrenOnShutdown;
 
         /// <summary>
         /// Gets the alfred instance associated with this component.
@@ -238,7 +240,7 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         public virtual void OnShutdownCompleted()
         {
-            var notified = new HashSet<AlfredComponent>();
+            var notified = new HashSet<IAlfredComponent>();
 
             // Pass on the message to the children
             foreach (var child in Children)
@@ -304,7 +306,7 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <value>The children.</value>
         [NotNull, ItemNotNull]
-        public abstract IEnumerable<AlfredComponent> Children { get; }
+        public abstract IEnumerable<IAlfredComponent> Children { get; }
 
         /// <summary>
         /// Called when the component is registered.

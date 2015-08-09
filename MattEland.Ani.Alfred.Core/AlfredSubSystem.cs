@@ -12,6 +12,8 @@ using System.Linq;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Interfaces;
+using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Pages;
 
 namespace MattEland.Ani.Alfred.Core
@@ -20,15 +22,15 @@ namespace MattEland.Ani.Alfred.Core
     ///     Represents a subsystem on the Alfred Framework. Subsystems are ways of providing multiple related modules and
     ///     capabilities to Alfred.
     /// </summary>
-    public abstract class AlfredSubsystem : AlfredComponent
+    public abstract class AlfredSubsystem : AlfredComponent, IAlfredSubsystem
     {
         [NotNull]
         [ItemNotNull]
-        private readonly ICollection<AlfredModule> _modules;
+        private readonly ICollection<IAlfredModule> _modules;
 
         [NotNull]
         [ItemNotNull]
-        private readonly ICollection<AlfredPage> _pages;
+        private readonly ICollection<IAlfredPage> _pages;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
@@ -42,8 +44,8 @@ namespace MattEland.Ani.Alfred.Core
                 throw new ArgumentNullException(nameof(provider));
             }
 
-            _modules = provider.CreateCollection<AlfredModule>();
-            _pages = provider.CreateCollection<AlfredPage>();
+            _modules = provider.CreateCollection<IAlfredModule>();
+            _pages = provider.CreateCollection<IAlfredPage>();
         }
 
         /// <summary>
@@ -52,7 +54,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <value>The modules.</value>
         [NotNull]
         [ItemNotNull]
-        public IEnumerable<AlfredModule> Modules
+        public IEnumerable<IAlfredModule> Modules
         {
             get { return _modules; }
         }
@@ -63,7 +65,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <value>The pages.</value>
         [NotNull]
         [ItemNotNull]
-        public IEnumerable<AlfredPage> Pages
+        public IEnumerable<IAlfredPage> Pages
         {
             get { return _pages; }
         }
@@ -81,7 +83,7 @@ namespace MattEland.Ani.Alfred.Core
         ///     Registers a module.
         /// </summary>
         /// <param name="module">The module.</param>
-        protected void Register([NotNull] AlfredModule module)
+        protected void Register([NotNull] IAlfredModule module)
         {
             _modules.AddSafe(module);
             module.OnRegistered(AlfredInstance);
@@ -91,7 +93,7 @@ namespace MattEland.Ani.Alfred.Core
         ///     Registers a page.
         /// </summary>
         /// <param name="page">The page.</param>
-        protected void Register([NotNull] AlfredPage page)
+        protected void Register([NotNull] IAlfredPage page)
         {
             _pages.AddSafe(page);
             page.OnRegistered(AlfredInstance);
@@ -102,7 +104,7 @@ namespace MattEland.Ani.Alfred.Core
         /// vary in their own types.
         /// </summary>
         /// <value>The children.</value>
-        public override IEnumerable<AlfredComponent> Children
+        public override IEnumerable<IAlfredComponent> Children
         {
             get
             {
@@ -132,4 +134,5 @@ namespace MattEland.Ani.Alfred.Core
         }
 
     }
+
 }

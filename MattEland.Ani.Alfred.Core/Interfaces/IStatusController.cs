@@ -1,20 +1,26 @@
 // ---------------------------------------------------------
 // IStatusController.cs
 // 
-// Created on:      08/09/2015 at 4:34 PM
-// Last Modified:   08/09/2015 at 4:34 PM
+// Created on:      08/09/2015 at 6:17 PM
+// Last Modified:   08/09/2015 at 6:20 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
 
-namespace MattEland.Ani.Alfred.Core
+namespace MattEland.Ani.Alfred.Core.Interfaces
 {
     /// <summary>
-    /// The Status Controller provides a way to control Alfred's status
+    ///     The Status Controller provides a way to control Alfred's status
     /// </summary>
     public interface IStatusController
     {
+        /// <summary>
+        ///     Gets or sets the alfred framework.
+        /// </summary>
+        /// <value>The alfred framework.</value>
+        IAlfred Alfred { get; set; }
+
         /// <summary>
         ///     Tells Alfred it's okay to start itself up and begin operating.
         /// </summary>
@@ -30,11 +36,5 @@ namespace MattEland.Ani.Alfred.Core
         ///     Thrown if Alfred is already Offline
         /// </exception>
         void Shutdown();
-
-        /// <summary>
-        /// Gets or sets the alfred framework.
-        /// </summary>
-        /// <value>The alfred framework.</value>
-        IAlfred Alfred { get; set; }
     }
 }

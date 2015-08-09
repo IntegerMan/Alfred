@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Core.Interfaces;
 using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Ani.Alfred.Core.Widgets;
 
@@ -124,7 +125,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <param name="page">The page.</param>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
-        private static void UpdateWidgetText([NotNull] AlfredTextWidget widget, [NotNull] AlfredPage page)
+        private static void UpdateWidgetText([NotNull] AlfredTextWidget widget, [NotNull] IAlfredPage page)
         {
             if (widget == null)
             {

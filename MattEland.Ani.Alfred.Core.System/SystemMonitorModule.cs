@@ -13,6 +13,8 @@ using System.Globalization;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Interfaces;
+
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
     /// <summary>

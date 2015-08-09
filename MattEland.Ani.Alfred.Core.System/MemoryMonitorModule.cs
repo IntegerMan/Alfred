@@ -11,6 +11,7 @@ using System.Diagnostics;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Interfaces;
 using MattEland.Ani.Alfred.Core.Widgets;
 
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor

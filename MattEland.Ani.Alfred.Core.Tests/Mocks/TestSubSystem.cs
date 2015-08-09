@@ -11,6 +11,7 @@ using System.Collections.Generic;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Interfaces;
 using MattEland.Ani.Alfred.Core.Pages;
 
 namespace MattEland.Ani.Alfred.Core.Tests.Mocks

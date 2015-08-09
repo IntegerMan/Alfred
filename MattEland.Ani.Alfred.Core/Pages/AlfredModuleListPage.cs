@@ -11,6 +11,9 @@ using System.Collections.Generic;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Interfaces;
+using MattEland.Ani.Alfred.Core.Modules;
+
 namespace MattEland.Ani.Alfred.Core.Pages
 {
     /// <summary>
@@ -31,18 +34,18 @@ namespace MattEland.Ani.Alfred.Core.Pages
                 throw new ArgumentNullException(nameof(provider));
             }
 
-            _modules = provider.CreateCollection<AlfredModule>();
+            _modules = provider.CreateCollection<IAlfredModule>();
         }
 
         [NotNull, ItemNotNull]
-        private readonly ICollection<AlfredModule> _modules;
+        private readonly ICollection<IAlfredModule> _modules;
 
         /// <summary>
         /// Gets the modules.
         /// </summary>
         /// <value>The modules.</value>
         [NotNull, ItemNotNull]
-        public IEnumerable<AlfredModule> Modules
+        public IEnumerable<IAlfredModule> Modules
         {
             get { return _modules; }
         }
@@ -51,7 +54,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// Registers the specified module.
         /// </summary>
         /// <param name="module">The module.</param>
-        public void Register([NotNull] AlfredModule module)
+        public void Register([NotNull] IAlfredModule module)
         {
             _modules.AddSafe(module);
             module.OnRegistered(AlfredInstance);
@@ -63,7 +66,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// vary in their own types.
         /// </summary>
         /// <value>The children.</value>
-        public override IEnumerable<AlfredComponent> Children
+        public override IEnumerable<IAlfredComponent> Children
         {
             get
             {

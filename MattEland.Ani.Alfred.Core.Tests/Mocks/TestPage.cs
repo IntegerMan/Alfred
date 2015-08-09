@@ -9,6 +9,8 @@
 using System;
 using System.Collections.Generic;
 
+using MattEland.Ani.Alfred.Core.Interfaces;
+using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Pages;
 
 namespace MattEland.Ani.Alfred.Core.Tests.Mocks
@@ -114,7 +116,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Mocks
         /// vary in their own types.
         /// </summary>
         /// <value>The children.</value>
-        public override IEnumerable<AlfredComponent> Children
+        public override IEnumerable<IAlfredComponent> Children
         {
             get
             {

@@ -14,6 +14,7 @@ using System.Linq;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Core.Interfaces;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Pages;
 
@@ -135,7 +136,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
             AssertExpectedModules(page.Modules);
         }
 
-        private static void AssertExpectedModules([NotNull] IEnumerable<AlfredModule> modules)
+        private static void AssertExpectedModules([NotNull] IEnumerable<IAlfredModule> modules)
         {
             modules = modules.ToList();
             Assert.IsTrue(modules.Any(m => m is AlfredTimeModule), "Time Module not found");

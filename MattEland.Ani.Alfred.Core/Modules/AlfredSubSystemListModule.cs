@@ -13,6 +13,7 @@ using System.Globalization;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Core.Interfaces;
 using MattEland.Ani.Alfred.Core.Widgets;
 
 namespace MattEland.Ani.Alfred.Core.Modules
@@ -61,7 +62,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
 
                 // Interpret the DataContext and update its text if it's a component based on the
                 // component status. If no component context, it's assumed to be the no items label.
-                var component = widget.DataContext as AlfredComponent;
+                var component = widget.DataContext as IAlfredComponent;
                 if (component != null)
                 {
                     UpdateWidgetText(textWidget, component);
@@ -92,10 +93,10 @@ namespace MattEland.Ani.Alfred.Core.Modules
             // Read the subsystems from Alfred
             if (AlfredInstance != null)
             {
-                foreach (var subSystem in AlfredInstance.Subsystems)
+                foreach (var item in AlfredInstance.Subsystems)
                 {
-                    var widget = new TextWidget { DataContext = subSystem };
-                    UpdateWidgetText(widget, subSystem);
+                    var widget = new TextWidget { DataContext = item };
+                    UpdateWidgetText(widget, item);
 
                     _widgets.Add(widget);
 
@@ -124,7 +125,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <param name="component">The component.</param>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
-        private static void UpdateWidgetText([NotNull] AlfredTextWidget widget, [NotNull] AlfredComponent component)
+        private static void UpdateWidgetText([NotNull] AlfredTextWidget widget, [NotNull] IAlfredComponent component)
         {
             if (widget == null)
             {
@@ -138,4 +139,5 @@ namespace MattEland.Ani.Alfred.Core.Modules
             widget.Text = string.Format(CultureInfo.CurrentCulture, "{0}: {1}", component.NameAndVersion, component.Status);
         }
     }
+
 }
