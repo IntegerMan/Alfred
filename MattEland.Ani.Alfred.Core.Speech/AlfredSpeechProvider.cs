@@ -64,8 +64,9 @@ namespace MattEland.Ani.Alfred.Core.Speech
             var voice = _speech.Voice;
             if (voice != null)
             {
+                var message = string.Format(CultureInfo.CurrentCulture, Resources.UsingVoiceLog.NonNull(), voice.Name);
                 console.Log(LogHeader,
-                            string.Format(Resources.UsingVoiceLog.NonNull(), voice.Name),
+                            message.NonNull(),
                             LogLevel.Verbose);
             }
             else
