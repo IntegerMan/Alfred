@@ -34,10 +34,6 @@ namespace MattEland.Ani.Alfred.Core
         [NotNull]
         private readonly IPlatformProvider _platformProvider;
 
-        [NotNull]
-        [ItemNotNull]
-        private readonly ICollection<AlfredPage> _rootPages;
-
         /// <summary>
         ///     The status controller
         /// </summary>
@@ -71,8 +67,6 @@ namespace MattEland.Ani.Alfred.Core
             _modules = provider.CreateCollection<AlfredModule>();
 
             _subsystems = provider.CreateCollection<AlfredSubSystem>();
-
-            _rootPages = provider.CreateCollection<AlfredPage>();
         }
 
         /// <summary>
