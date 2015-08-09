@@ -125,18 +125,6 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     Gets the modules.
-        /// </summary>
-        /// <value>The modules.</value>
-        [NotNull]
-        [ItemNotNull]
-        [Obsolete("Alfred no longer needs modules at its root level")]
-        public ICollection<AlfredModule> Modules
-        {
-            get { return _modules; }
-        }
-
-        /// <summary>
         ///     Gets the status.
         /// </summary>
         /// <value>The status.</value>
@@ -259,26 +247,6 @@ namespace MattEland.Ani.Alfred.Core
             {
                 component.Update();
             }
-        }
-
-        /// <summary>
-        ///     Adds a module to alfred.
-        /// </summary>
-        /// <exception cref="InvalidOperationException">
-        ///     Thrown if Alfred is not Offline
-        /// </exception>
-        [Obsolete("Alfred no longer needs modules at its root level")]
-        public void Register([NotNull] AlfredModule module)
-        {
-            if (module == null)
-            {
-                throw new ArgumentNullException(nameof(module));
-            }
-
-            AssertMustBeOffline();
-
-            Modules.Add(module);
-            module.OnRegistered(this);
         }
 
         /// <summary>
