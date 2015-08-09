@@ -196,7 +196,7 @@ namespace MattEland.Ani.Alfred.Core {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Initilization Completed; notifying modules and subsystems..
+        ///   Looks up a localized string similar to Initialization Completed; notifying modules and subsystems..
         /// </summary>
         public static string AlfredStatusController_Initialize_InitilizationCompleted {
             get {
@@ -322,11 +322,38 @@ namespace MattEland.Ani.Alfred.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Initialize.
+        /// </summary>
+        public static string InitializeButtonText {
+            get {
+                return ResourceManager.GetString("InitializeButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alfred Provider has not been set.
+        /// </summary>
+        public static string NoAlfredText {
+            get {
+                return ResourceManager.GetString("NoAlfredText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No Pages Detected.
         /// </summary>
         public static string NoPagesDetected {
             get {
                 return ResourceManager.GetString("NoPagesDetected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shut Down.
+        /// </summary>
+        public static string ShutdownButtonText {
+            get {
+                return ResourceManager.GetString("ShutdownButtonText", resourceCulture);
             }
         }
     }

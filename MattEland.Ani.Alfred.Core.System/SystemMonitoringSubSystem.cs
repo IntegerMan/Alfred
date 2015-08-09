@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------
-// SystemMonitoringSubSystem.cs
+// SystemMonitoringSubsystem.cs
 // 
 // Created on:      08/07/2015 at 10:12 PM
 // Last Modified:   08/07/2015 at 10:36 PM
@@ -16,7 +16,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
     ///     This is a subsystem for the Alfred Framework that allows for monitoring system performance
     ///     and surfacing alerts on critical events.
     /// </summary>
-    public class SystemMonitoringSubSystem : AlfredSubSystem
+    public class SystemMonitoringSubsystem : AlfredSubsystem
     {
         [NotNull]
         private readonly AlfredModuleListPage _page;
@@ -31,18 +31,18 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         private readonly DiskMonitorModule _diskModule;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredSubSystem" /> class.
+        ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
-        public SystemMonitoringSubSystem() : this(new SimplePlatformProvider())
+        public SystemMonitoringSubsystem() : this(new SimplePlatformProvider())
         {
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredSubSystem" /> class.
+        ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
         /// <param name="provider">The provider.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public SystemMonitoringSubSystem([NotNull] IPlatformProvider provider) : base(provider)
+        public SystemMonitoringSubsystem([NotNull] IPlatformProvider provider) : base(provider)
         {
             _cpuModule = new CpuMonitorModule(provider);
             _memoryModule = new MemoryMonitorModule(provider);

@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------
-// TestSubSystem.cs
+// TestSubsystem.cs
 // 
 // Created on:      08/07/2015 at 11:07 PM
 // Last Modified:   08/08/2015 at 1:43 AM
@@ -15,19 +15,19 @@ using MattEland.Ani.Alfred.Core.Pages;
 
 namespace MattEland.Ani.Alfred.Core.Tests.Mocks
 {
-    public class TestSubSystem : AlfredSubSystem
+    public class TestSubsystem : AlfredSubsystem
     {
         [NotNull, ItemNotNull]
         private readonly ICollection<AlfredPage> _registerPages;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredSubSystem" /> class.
+        ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
-        public TestSubSystem() : this(new SimplePlatformProvider())
+        public TestSubsystem() : this(new SimplePlatformProvider())
         {
         }
 
-        public TestSubSystem([NotNull] IPlatformProvider provider) : base(provider)
+        public TestSubsystem([NotNull] IPlatformProvider provider) : base(provider)
         {
             if (provider == null)
             {

@@ -46,10 +46,10 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             _diskWriteCounter = new PerformanceCounter(DiskCategoryName, DiskWriteCounterName, TotalInstanceName, true);
 
             _diskReadWidget = CreatePercentWidget();
-            _diskReadWidget.Text = "Disk Read %:";
+            _diskReadWidget.Text = Resources.DiskReadLabel;
 
             _diskWriteWidget = CreatePercentWidget();
-            _diskWriteWidget.Text = "Disk Write %:";
+            _diskWriteWidget.Text = Resources.DiskWriteLabel;
 
         }
 
@@ -62,7 +62,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         public override string Name
         {
             // ReSharper disable once AssignNullToNotNullAttribute
-            get { return "Disk Monitor"; }
+            get { return Resources.DiskMonitorName; }
         }
 
         /// <summary>

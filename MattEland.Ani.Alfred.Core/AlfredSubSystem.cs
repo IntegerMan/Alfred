@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------
-// AlfredSubSystem.cs
+// AlfredSubsystem.cs
 // 
 // Created on:      08/07/2015 at 10:00 PM
 // Last Modified:   08/08/2015 at 1:35 AM
@@ -20,7 +20,7 @@ namespace MattEland.Ani.Alfred.Core
     ///     Represents a subsystem on the Alfred Framework. Subsystems are ways of providing multiple related modules and
     ///     capabilities to Alfred.
     /// </summary>
-    public abstract class AlfredSubSystem : AlfredComponent
+    public abstract class AlfredSubsystem : AlfredComponent
     {
         [NotNull]
         [ItemNotNull]
@@ -31,11 +31,11 @@ namespace MattEland.Ani.Alfred.Core
         private readonly ICollection<AlfredPage> _pages;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredSubSystem" /> class.
+        ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
         /// <param name="provider">The provider.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        protected AlfredSubSystem([NotNull] IPlatformProvider provider)
+        protected AlfredSubsystem([NotNull] IPlatformProvider provider)
         {
             if (provider == null)
             {

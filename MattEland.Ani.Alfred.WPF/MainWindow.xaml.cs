@@ -86,8 +86,8 @@ namespace MattEland.Ani.Alfred.WPF
 
             var provider = _alfred.PlatformProvider;
 
-            _alfred.Register(new AlfredControlSubSystem(provider));
-            _alfred.Register(new SystemMonitoringSubSystem(provider));
+            _alfred.Register(new AlfredControlSubsystem(provider));
+            _alfred.Register(new SystemMonitoringSubsystem(provider));
 
         }
 

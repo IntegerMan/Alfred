@@ -28,7 +28,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Pages
         public void Setup()
         {
             _alfred = new AlfredProvider();
-            _subsystem = new TestSubSystem();
+            _subsystem = new TestSubsystem();
             _page = new TestPage();
 
             _subsystem.AddAutoRegisterPage(_page);
@@ -42,7 +42,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Pages
         private TestPage _page;
 
         [NotNull]
-        private TestSubSystem _subsystem;
+        private TestSubsystem _subsystem;
 
         [Test]
         public void InitializeCausesPagesToGoOnline()

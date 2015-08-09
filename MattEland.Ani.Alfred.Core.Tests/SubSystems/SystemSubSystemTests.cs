@@ -27,7 +27,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
     public class SystemSubSystemTests
     {
         [NotNull]
-        private SystemMonitoringSubSystem _subsystem;
+        private SystemMonitoringSubsystem _subsystem;
 
         [NotNull]
         private AlfredProvider _alfred;
@@ -35,7 +35,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
         [SetUp]
         public void TestSetup()
         {
-            _subsystem = new SystemMonitoringSubSystem();
+            _subsystem = new SystemMonitoringSubsystem();
             _alfred = new AlfredProvider();
         }
 
@@ -44,8 +44,8 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
         {
             _alfred.Register(_subsystem);
 
-            Assert.AreEqual(1, _alfred.SubSystems.Count(), "Subsystem was not registered");
-            Assert.Contains(_subsystem, _alfred.SubSystems as ICollection, "The subsystem was not found in the collection");
+            Assert.AreEqual(1, _alfred.Subsystems.Count(), "Subsystem was not registered");
+            Assert.Contains(_subsystem, _alfred.Subsystems as ICollection, "The subsystem was not found in the collection");
         }
 
         [Test]

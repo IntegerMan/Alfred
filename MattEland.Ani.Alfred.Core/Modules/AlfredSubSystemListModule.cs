@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------
-// AlfredSubSystemListModule.cs
+// AlfredSubsystemListModule.cs
 // 
 // Created on:      08/07/2015 at 11:56 PM
 // Last Modified:   08/07/2015 at 11:56 PM
@@ -20,18 +20,18 @@ namespace MattEland.Ani.Alfred.Core.Modules
     /// <summary>
     /// A module that lists installed subsystems
     /// </summary>
-    public class AlfredSubSystemListModule : AlfredModule
+    public class AlfredSubsystemListModule : AlfredModule
     {
 
         [NotNull, ItemNotNull]
         private readonly ICollection<AlfredWidget> _widgets;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlfredSubSystemListModule"/> class.
+        /// Initializes a new instance of the <see cref="AlfredSubsystemListModule"/> class.
         /// </summary>
         /// <param name="platformProvider">The platform provider.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public AlfredSubSystemListModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
+        public AlfredSubsystemListModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
         {
             _widgets = platformProvider.CreateCollection<AlfredWidget>();
         }
@@ -92,7 +92,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
             // Read the subsystems from Alfred
             if (AlfredInstance != null)
             {
-                foreach (var subSystem in AlfredInstance.SubSystems)
+                foreach (var subSystem in AlfredInstance.Subsystems)
                 {
                     var widget = new TextWidget { DataContext = subSystem };
                     UpdateWidgetText(widget, subSystem);
@@ -108,7 +108,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
             {
                 var noSubsystemsDetected = Resources.AlfredSubSystemListModule_NoSubsystemsDetected.NonNull();
 
-                Log("SubSystems.Initialize", noSubsystemsDetected, LogLevel.Warning);
+                Log("Subsystems.Initialize", noSubsystemsDetected, LogLevel.Warning);
 
                 var widget = new TextWidget(noSubsystemsDetected);
                 _widgets.Add(widget);

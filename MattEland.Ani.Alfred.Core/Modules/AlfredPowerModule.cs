@@ -43,10 +43,10 @@ namespace MattEland.Ani.Alfred.Core.Modules
             _statusWidget = new TextWidget(Resources.AlfredCoreModule_AlfredNotSet);
 
             var initializeCommand = platformProvider.CreateCommand(() => AlfredInstance?.Initialize());
-            _initializeButton = new ButtonWidget("Initialize", initializeCommand);
+            _initializeButton = new ButtonWidget(Resources.InitializeButtonText, initializeCommand);
 
             var shutdownCommand = platformProvider.CreateCommand(() => AlfredInstance?.Shutdown());
-            _shutdownButton = new ButtonWidget("Shut Down", shutdownCommand);
+            _shutdownButton = new ButtonWidget(Resources.ShutdownButtonText, shutdownCommand);
         }
 
         /// <summary>
@@ -183,7 +183,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
             if (AlfredInstance == null)
             {
                 // Update Text Message to a Nobody's Home sort of thing
-                _statusWidget.Text = "Alfred Provider has not been set";
+                _statusWidget.Text = Resources.NoAlfredText;
 
                 // Update Button Visibilities to hidden
                 if (_shutdownButton.ClickCommand != null)

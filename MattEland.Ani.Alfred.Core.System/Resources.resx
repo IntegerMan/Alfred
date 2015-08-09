@@ -137,4 +137,17 @@
     <value>System Monitoring</value>
     <comment>The name of the subsystem</comment>
   </data>
+  <data name="DiskReadLabel" xml:space="preserve">
+    <value>Disk Read %:</value>
+    <comment>Label for the disk read progress bar</comment>
+  </data>
+  <data name="DiskWriteLabel" xml:space="preserve">
+    <value>Disk Write %:</value>
+    <comment>Label for the disk write progress bar
+</comment>
+  </data>
+  <data name="DiskMonitorName" xml:space="preserve">
+    <value>Disk Monitor</value>
+    <comment>Name of the disk monitor module.</comment>
+  </data>
 </root>

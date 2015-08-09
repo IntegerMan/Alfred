@@ -28,20 +28,20 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
         private AlfredProvider _alfred;
 
         [NotNull]
-        private TestSubSystem _subsystem;
+        private TestSubsystem _subsystem;
 
         [SetUp]
         public void Setup()
         {
             _alfred = new AlfredProvider();
-            _subsystem = new TestSubSystem();
+            _subsystem = new TestSubsystem();
         }
 
 
         [Test]
         public void InitializeCausesRegisteredSubSystemsToInitialize()
         {
-            var testSubsystem = new TestSubSystem();
+            var testSubsystem = new TestSubsystem();
 
             _alfred.Register(testSubsystem);
 
@@ -55,7 +55,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
         [Test]
         public void InitializeCausesSubSystemsToGoOnline()
         {
-            var testSubsystem = new TestSubSystem();
+            var testSubsystem = new TestSubsystem();
 
             _alfred.Register(testSubsystem);
 
@@ -67,7 +67,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
         [Test]
         public void UpdateCausesRegisteredSubSystemsToUpdate()
         {
-            var testSubsystem = new TestSubSystem();
+            var testSubsystem = new TestSubsystem();
 
             _alfred.Register(testSubsystem);
 
@@ -80,7 +80,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
         [Test]
         public void ShutdownCausesRegisteredSubSystemsToShutdown()
         {
-            var testSubsystem = new TestSubSystem();
+            var testSubsystem = new TestSubsystem();
 
             _alfred.Register(testSubsystem);
 
@@ -95,7 +95,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
         [Test]
         public void ShutdownCausesRegisteredSubSystemsToGoOffline()
         {
-            var testSubsystem = new TestSubSystem();
+            var testSubsystem = new TestSubsystem();
 
             _alfred.Register(testSubsystem);
 

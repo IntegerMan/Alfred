@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------
-// AlfredControlSubSystem.cs
+// AlfredControlSubsystem.cs
 // 
 // Created on:      08/08/2015 at 6:12 PM
 // Last Modified:   08/08/2015 at 6:58 PM
@@ -16,7 +16,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
     ///     The control subsystem provides essential monitoring and control functionality for Alfred such as the Alfred control
     ///     page, an event log page, etc.
     /// </summary>
-    public class AlfredControlSubSystem : AlfredSubSystem
+    public class AlfredControlSubsystem : AlfredSubsystem
     {
         [NotNull]
         private readonly AlfredModuleListPage _controlPage;
@@ -31,24 +31,24 @@ namespace MattEland.Ani.Alfred.Core.Modules
         private readonly AlfredTimeModule _timeModule;
 
         [NotNull]
-        private readonly AlfredSubSystemListModule _systemsModule;
+        private readonly AlfredSubsystemListModule _systemsModule;
 
         [NotNull]
         private readonly AlfredPagesListModule _pagesModule;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredSubSystem" /> class.
+        ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
-        public AlfredControlSubSystem() : this(new SimplePlatformProvider())
+        public AlfredControlSubsystem() : this(new SimplePlatformProvider())
         {
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredSubSystem" /> class.
+        ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
         /// <param name="provider">The provider.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public AlfredControlSubSystem([NotNull] IPlatformProvider provider) : base(provider)
+        public AlfredControlSubsystem([NotNull] IPlatformProvider provider) : base(provider)
         {
 
             _controlPage = new AlfredModuleListPage(provider, ControlPageName);
@@ -56,7 +56,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
             // Instantiate the modules
             _powerModule = new AlfredPowerModule(provider);
             _timeModule = new AlfredTimeModule(provider);
-            _systemsModule = new AlfredSubSystemListModule(provider);
+            _systemsModule = new AlfredSubsystemListModule(provider);
             _pagesModule = new AlfredPagesListModule(provider);
 
         }

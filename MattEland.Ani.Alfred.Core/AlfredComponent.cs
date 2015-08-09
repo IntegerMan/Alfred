@@ -19,7 +19,7 @@ using MattEland.Ani.Alfred.Core.Console;
 namespace MattEland.Ani.Alfred.Core
 {
     /// <summary>
-    ///     An abstract class containing most common shared functionality between SubSystems and Modules
+    ///     An abstract class containing most common shared functionality between Subsystems and Modules
     /// </summary>
     public abstract class AlfredComponent : NotifyPropertyChangedBase
     {

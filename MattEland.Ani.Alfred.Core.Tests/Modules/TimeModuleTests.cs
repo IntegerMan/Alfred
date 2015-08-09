@@ -34,7 +34,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
             _page = new AlfredModuleListPage(_alfred.PlatformProvider, "Test");
             _module = new AlfredTimeModule(_alfred.PlatformProvider);
             _page.Register(_module);
-            _subsystem = new TestSubSystem();
+            _subsystem = new TestSubsystem();
             _subsystem.AddAutoRegisterPage(_page);
 
             _alfred.Register(_subsystem);
@@ -47,7 +47,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
         private AlfredTimeModule _module;
 
         [NotNull]
-        private TestSubSystem _subsystem;
+        private TestSubsystem _subsystem;
 
         [NotNull]
         private AlfredModuleListPage _page;

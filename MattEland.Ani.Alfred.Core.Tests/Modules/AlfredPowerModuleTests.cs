@@ -61,7 +61,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
                 throw new ArgumentNullException(nameof(module));
             }
 
-            var subsystem = new TestSubSystem();
+            var subsystem = new TestSubsystem();
 
             var page = new AlfredModuleListPage(alfred.PlatformProvider, "Test Page");
             subsystem.AddAutoRegisterPage(page);

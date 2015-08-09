@@ -37,7 +37,7 @@ namespace MattEland.Ani.Alfred.Core
         private readonly AlfredStatusController _statusController;
 
         [NotNull]
-        private readonly ICollection<AlfredSubSystem> _subsystems;
+        private readonly ICollection<AlfredSubsystem> _subsystems;
 
         /// <summary>
         ///     The status
@@ -60,7 +60,7 @@ namespace MattEland.Ani.Alfred.Core
 
             _platformProvider = provider;
 
-            _subsystems = provider.CreateCollection<AlfredSubSystem>();
+            _subsystems = provider.CreateCollection<AlfredSubsystem>();
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <value>The sub systems.</value>
         [NotNull]
         [ItemNotNull]
-        public IEnumerable<AlfredSubSystem> SubSystems
+        public IEnumerable<AlfredSubsystem> Subsystems
         {
             get { return _subsystems; }
         }
@@ -160,7 +160,7 @@ namespace MattEland.Ani.Alfred.Core
         {
             get
             {
-                // TODO: Right now this is just subsystems. Unsure if this will continue this way or not. If so, it should be removed and SubSystems used instead.
+                // TODO: Right now this is just subsystems. Unsure if this will continue this way or not. If so, it should be removed and Subsystems used instead.
                 return _subsystems;
             }
         }
@@ -176,7 +176,7 @@ namespace MattEland.Ani.Alfred.Core
             get
             {
                 // Give me all pages in subsystems that are root level pages
-                return from subSystem in SubSystems from page in subSystem.Pages where page.IsRootLevel select page;
+                return from subSystem in Subsystems from page in subSystem.Pages where page.IsRootLevel select page;
             }
         }
 
@@ -243,7 +243,7 @@ namespace MattEland.Ani.Alfred.Core
         ///     Registers a sub system with Alfred.
         /// </summary>
         /// <param name="subsystem">The subsystem.</param>
-        public void Register([NotNull] AlfredSubSystem subsystem)
+        public void Register([NotNull] AlfredSubsystem subsystem)
         {
             AssertMustBeOffline();
 
