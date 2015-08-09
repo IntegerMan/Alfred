@@ -24,11 +24,12 @@ namespace MattEland.Ani.Alfred.Core.Pages
         private readonly IConsole _console;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlfredEventLogPage"/> class.
+        /// Initializes a new instance of the <see cref="AlfredEventLogPage" /> class.
         /// </summary>
         /// <param name="console">The console.</param>
+        /// <param name="name">The name.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public AlfredEventLogPage([NotNull] IConsole console)
+        public AlfredEventLogPage([NotNull] IConsole console, [NotNull] string name) : base(name)
         {
             if (console == null)
             {

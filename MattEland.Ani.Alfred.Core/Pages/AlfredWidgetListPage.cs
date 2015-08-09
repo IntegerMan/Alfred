@@ -26,11 +26,12 @@ namespace MattEland.Ani.Alfred.Core.Pages
         private readonly ICollection<AlfredWidget> _widgets;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredWidgetListPage" /> class.
+        /// Initializes a new instance of the <see cref="AlfredWidgetListPage" /> class.
         /// </summary>
         /// <param name="provider">The provider.</param>
+        /// <param name="name">The name.</param>
         /// <exception cref="System.ArgumentNullException">provider</exception>
-        public AlfredWidgetListPage([NotNull] IPlatformProvider provider)
+        public AlfredWidgetListPage([NotNull] IPlatformProvider provider, [NotNull] string name) : base(name)
         {
             if (provider == null)
             {

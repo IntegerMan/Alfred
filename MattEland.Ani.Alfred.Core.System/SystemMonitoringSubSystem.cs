@@ -44,7 +44,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             var disk = new DiskMonitorModule(provider);
             Register(disk);
 
-            _page = new AlfredWidgetListPage(provider);
+            _page = new AlfredWidgetListPage(provider, Resources.SystemMonitoringSystem_Name.NonNull());
         }
 
         /// <summary>

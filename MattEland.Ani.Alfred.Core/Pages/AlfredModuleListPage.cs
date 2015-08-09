@@ -19,11 +19,12 @@ namespace MattEland.Ani.Alfred.Core.Pages
     public class AlfredModuleListPage : AlfredPage
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlfredModuleListPage"/> class.
+        /// Initializes a new instance of the <see cref="AlfredModuleListPage" /> class.
         /// </summary>
         /// <param name="provider">The provider.</param>
+        /// <param name="name">The name.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public AlfredModuleListPage([NotNull] IPlatformProvider provider)
+        public AlfredModuleListPage([NotNull] IPlatformProvider provider, [NotNull] string name) : base(name)
         {
             if (provider == null)
             {

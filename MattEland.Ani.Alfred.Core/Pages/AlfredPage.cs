@@ -1,10 +1,12 @@
 ﻿// ---------------------------------------------------------
 // AlfredPage.cs
 // 
-// Created on:      08/07/2015 at 4:27 PM
-// Last Modified:   08/07/2015 at 4:30 PM
+// Created on:      08/08/2015 at 7:17 PM
+// Last Modified:   08/08/2015 at 7:55 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
+
+using System;
 
 using JetBrains.Annotations;
 
@@ -13,31 +15,37 @@ namespace MattEland.Ani.Alfred.Core.Pages
     /// <summary>
     ///     A page that can be used in Alfred
     /// </summary>
-    public abstract class AlfredPage : NotifyPropertyChangedBase
+    public abstract class AlfredPage : AlfredComponent
     {
         [NotNull]
-        private string _name;
+        private readonly string _name;
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="AlfredPage" /> class.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        protected AlfredPage([NotNull] string name)
+        {
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            _name = name;
+        }
 
         /// <summary>
         ///     Gets or sets the name of the page.
         /// </summary>
         /// <value>The name.</value>
         [NotNull]
-        public string Name
+        public override string Name
         {
             get { return _name; }
-            set
-            {
-                if (value != _name)
-                {
-                    _name = value;
-                    OnPropertyChanged(nameof(Name));
-                }
-            }
         }
 
         /// <summary>
-        /// Gets a value indicating whether this is a root level page that should show on the navigator.
+        ///     Gets a value indicating whether this is a root level page that should show on the navigator.
         /// </summary>
         /// <value><c>true</c> if this page is root level; otherwise, <c>false</c>.</value>
         public bool IsRootLevel
@@ -45,6 +53,14 @@ namespace MattEland.Ani.Alfred.Core.Pages
             get { return true; }
         }
 
+        /// <summary>
+        ///     Gets whether or not the component is visible to the user interface.
+        /// </summary>
+        /// <value>Whether or not the component is visible.</value>
+        public override bool IsVisible
+        {
+            get { return true; }
+        }
     }
 
 }

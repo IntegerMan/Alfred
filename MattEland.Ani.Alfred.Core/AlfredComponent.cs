@@ -7,7 +7,6 @@
 // ---------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 
@@ -81,15 +80,15 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     Gets the name of the module.
+        ///     Gets the name of the component.
         /// </summary>
-        /// <value>The name of the module.</value>
+        /// <value>The name of the component.</value>
         public abstract string Name { get; }
 
         /// <summary>
-        ///     Gets whether or not the module is visible to the user interface.
+        ///     Gets whether or not the component is visible to the user interface.
         /// </summary>
-        /// <value>Whether or not the module is visible.</value>
+        /// <value>Whether or not the component is visible.</value>
         public abstract bool IsVisible { get; }
 
         /// <summary>

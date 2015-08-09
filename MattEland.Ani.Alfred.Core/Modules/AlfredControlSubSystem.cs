@@ -45,7 +45,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
             var pages = new AlfredPagesListModule(provider);
 
             // Build out our control page
-            _controlPage = new AlfredModuleListPage(provider) { Name = ControlPageName };
+            _controlPage = new AlfredModuleListPage(provider, ControlPageName);
             _controlPage.Register(power);
             _controlPage.Register(time);
             _controlPage.Register(systems);
@@ -100,7 +100,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
             // Don't include the event log page if there are no events
             if (alfred?.Console != null)
             {
-                _eventLogPage = new AlfredEventLogPage(alfred.Console) { Name = EventLogPageName };
+                _eventLogPage = new AlfredEventLogPage(alfred.Console, EventLogPageName);
                 Register(_eventLogPage);
             }
         }
