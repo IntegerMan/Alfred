@@ -54,9 +54,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Mocks\TestPage.cs" />
+    <Compile Include="Pages\PageTests.cs" />
     <Compile Include="SubSystems\AlfredCoreSubSystemTests.cs" />
     <Compile Include="AlfredProviderTests.cs" />
     <Compile Include="Mocks\AlfredTestModule.cs" />
+    <Compile Include="SubSystems\SubSystemTests.cs" />
     <Compile Include="Widgets\ButtonWidgetTests.cs" />
     <Compile Include="Modules\AlfredPowerModuleTests.cs" />
     <Compile Include="GlobalSuppressions.cs" />
