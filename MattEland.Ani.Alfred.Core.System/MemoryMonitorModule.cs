@@ -71,7 +71,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         ///     Handles module initialization events
         /// </summary>
         /// <param name="alfred"></param>
-        protected override void InitializeProtected(AlfredProvider alfred)
+        protected override void InitializeProtected(IAlfred alfred)
         {
             Register(_memWidget);
         }

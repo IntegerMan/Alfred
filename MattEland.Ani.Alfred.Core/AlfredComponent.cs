@@ -25,7 +25,7 @@ namespace MattEland.Ani.Alfred.Core
     public abstract class AlfredComponent : INotifyPropertyChanged
     {
         [CanBeNull]
-        private AlfredProvider _alfred;
+        private IAlfred _alfred;
 
         private AlfredStatus _status;
 
@@ -37,7 +37,7 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <value>The alfred instance.</value>
         [CanBeNull]
-        public AlfredProvider AlfredInstance
+        public IAlfred AlfredInstance
         {
             [DebuggerStepThrough]
             get
@@ -102,7 +102,7 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <param name="alfred">The alfred framework.</param>
         /// <exception cref="InvalidOperationException">Already online when told to initialize.</exception>
-        public virtual void Initialize([NotNull] AlfredProvider alfred)
+        public virtual void Initialize([NotNull] IAlfred alfred)
         {
             if (alfred == null)
             {
@@ -266,10 +266,10 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     Handles initialization events
+        /// Handles initialization events
         /// </summary>
-        /// <param name="alfred"></param>
-        protected virtual void InitializeProtected(AlfredProvider alfred)
+        /// <param name="alfred">The alfred instance.</param>
+        protected virtual void InitializeProtected([CanBeNull] IAlfred alfred)
         {
         }
 
@@ -310,7 +310,7 @@ namespace MattEland.Ani.Alfred.Core
         /// Called when the component is registered.
         /// </summary>
         /// <param name="alfred">The alfred.</param>
-        public virtual void OnRegistered([CanBeNull] AlfredProvider alfred)
+        public virtual void OnRegistered([CanBeNull] IAlfred alfred)
         {
             // Hang on to the reference now so AlfredInstance doesn't lie and we can tell
             // our children who Alfred is before the whole update process happens

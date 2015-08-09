@@ -23,7 +23,7 @@ namespace MattEland.Ani.Alfred.Core
     ///     Coordinates providing personal assistance to a user interface and receiving settings and queries back from the user
     ///     interface.
     /// </summary>
-    public sealed class AlfredProvider : INotifyPropertyChanged
+    public sealed class AlfredProvider : INotifyPropertyChanged, IAlfred
     {
         /// <summary>
         ///     The platform provider
@@ -48,6 +48,9 @@ namespace MattEland.Ani.Alfred.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="AlfredProvider"/> class.
         /// </summary>
+        /// <remarks>
+        /// Initialization should come from AlfredBootstrapper
+        /// </remarks>
         /// <param name="provider">The provider.</param>
         /// <param name="controller">The controller.</param>
         /// <exception cref="System.ArgumentNullException">provider</exception>
@@ -121,7 +124,7 @@ namespace MattEland.Ani.Alfred.Core
         public AlfredStatus Status
         {
             get { return _status; }
-            internal set
+            set
             {
                 if (value != _status)
                 {

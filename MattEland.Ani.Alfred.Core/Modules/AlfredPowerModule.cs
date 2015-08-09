@@ -106,7 +106,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         ///     Handles module initialization events
         /// </summary>
         /// <param name="alfred"></param>
-        protected override void InitializeProtected(AlfredProvider alfred)
+        protected override void InitializeProtected(IAlfred alfred)
         {
             AddOnlineWidgets();
         }
@@ -155,7 +155,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// Called when the component is registered.
         /// </summary>
         /// <param name="alfred">The alfred.</param>
-        public override void OnRegistered(AlfredProvider alfred)
+        public override void OnRegistered(IAlfred alfred)
         {
             base.OnRegistered(alfred);
 

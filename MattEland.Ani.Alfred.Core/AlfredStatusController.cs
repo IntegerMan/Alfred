@@ -21,7 +21,7 @@ namespace MattEland.Ani.Alfred.Core
     public sealed class AlfredStatusController : IStatusController
     {
         [CanBeNull]
-        private AlfredProvider _alfred;
+        private IAlfred _alfred;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredStatusController" /> class.
@@ -34,7 +34,7 @@ namespace MattEland.Ani.Alfred.Core
         ///     Initializes a new instance of the <see cref="AlfredStatusController" /> class.
         /// </summary>
         /// <param name="alfred">The alfred provider.</param>
-        public AlfredStatusController([CanBeNull] AlfredProvider alfred)
+        public AlfredStatusController([CanBeNull] IAlfred alfred)
         {
             Alfred = alfred;
         }
@@ -43,7 +43,7 @@ namespace MattEland.Ani.Alfred.Core
         /// Gets or sets the alfred framework.
         /// </summary>
         /// <value>The alfred framework.</value>
-        public AlfredProvider Alfred
+        public IAlfred Alfred
         {
             get { return _alfred; }
             set { _alfred = value; }

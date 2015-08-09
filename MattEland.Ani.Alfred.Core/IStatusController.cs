@@ -35,6 +35,6 @@ namespace MattEland.Ani.Alfred.Core
         /// Gets or sets the alfred framework.
         /// </summary>
         /// <value>The alfred framework.</value>
-        AlfredProvider Alfred { get; set; }
+        IAlfred Alfred { get; set; }
     }
 }
