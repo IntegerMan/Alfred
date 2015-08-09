@@ -8,7 +8,7 @@
 
 using System;
 
-namespace MattEland.Ani.Alfred.Core.Interfaces
+namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>
     ///     The Status Controller provides a way to control Alfred's status

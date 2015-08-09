@@ -6,9 +6,7 @@
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
-using MattEland.Ani.Alfred.Core.Modules;
-
-namespace MattEland.Ani.Alfred.Core.Interfaces
+namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>
     ///     Defines an alfred page

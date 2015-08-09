@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
-using MattEland.Ani.Alfred.Core.Interfaces;
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
 
 namespace MattEland.Ani.Alfred.Core.Pages

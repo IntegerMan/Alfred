@@ -8,7 +8,7 @@
 
 using JetBrains.Annotations;
 
-namespace MattEland.Ani.Alfred.Core.Interfaces
+namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>
     ///     An abstract component of Alfred

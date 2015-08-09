@@ -13,7 +13,7 @@ using System.Linq;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
-using MattEland.Ani.Alfred.Core.Interfaces;
+using MattEland.Ani.Alfred.Core.Definitions;
 
 namespace MattEland.Ani.Alfred.Core
 {

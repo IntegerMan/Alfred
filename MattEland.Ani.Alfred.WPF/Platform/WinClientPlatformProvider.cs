@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 using MattEland.Ani.Alfred.Core;
-using MattEland.Ani.Alfred.Core.Interfaces;
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 
 namespace MattEland.Ani.Alfred.WPF.Platform

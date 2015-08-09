@@ -9,7 +9,7 @@
 using System;
 using System.Collections.Generic;
 
-using MattEland.Ani.Alfred.Core.Interfaces;
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Pages;
 

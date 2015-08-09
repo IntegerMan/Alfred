@@ -1,4 +1,4 @@
-﻿namespace MattEland.Ani.Alfred.Core
+﻿namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>
     /// An enumeration containing various statuses of the Alfred system

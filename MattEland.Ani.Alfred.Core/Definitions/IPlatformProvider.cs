@@ -13,7 +13,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Widgets;
 
-namespace MattEland.Ani.Alfred.Core.Interfaces
+namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>
     ///     An interface that promises the ability to build platform-specific implementations of commonly needed items.

@@ -6,9 +6,7 @@
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
-using MattEland.Ani.Alfred.Core.Modules;
-
-namespace MattEland.Ani.Alfred.Core.Interfaces
+namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>
     ///     Represents a module belonging to a page or subsystem in Alfred.

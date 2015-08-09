@@ -12,7 +12,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
 
-namespace MattEland.Ani.Alfred.Core.Interfaces
+namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>
     ///     An interface promising Alfred Framework style capabilities
