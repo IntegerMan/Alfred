@@ -13,6 +13,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Modules;
+using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Ani.Alfred.Core.Tests.Mocks;
 using MattEland.Ani.Alfred.Core.Widgets;
 
@@ -54,7 +55,24 @@ namespace MattEland.Ani.Alfred.Core.Tests
         {
             StandardModuleProvider.AddStandardModules(_alfred);
 
-            Assert.Greater(_alfred.Modules.Count,
+            var numModules = _alfred.Modules.Count();
+
+            foreach (var subsystem in _alfred.SubSystems)
+            {
+                numModules += subsystem.Modules.Count();
+
+                foreach (var page in subsystem.Pages)
+                {
+                    var modulePage = page as AlfredModuleListPage;
+
+                    if (modulePage != null)
+                    {
+                        numModules += modulePage.Modules.Count();
+                    }
+                }
+            }
+
+            Assert.Greater(numModules,
                            0,
                            "Alfred did not have any modules after calling add standard modules.");
         }
