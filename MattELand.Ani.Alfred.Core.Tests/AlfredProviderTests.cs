@@ -7,6 +7,7 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 using JetBrains.Annotations;
@@ -53,7 +54,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         [Test]
         public void AddingStandardModulesAddsModules()
         {
-            StandardModuleProvider.AddStandardModules(_alfred);
+            _alfred.Register(new AlfredControlSubSystem(_alfred.PlatformProvider));
 
             var numModules = _alfred.Modules.Count();
 
@@ -162,7 +163,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         [Test]
         public void InitializingInitializesModules()
         {
-            StandardModuleProvider.AddStandardModules(_alfred);
+            _alfred.Register(new AlfredControlSubSystem(_alfred.PlatformProvider));
 
             _alfred.Initialize();
 
@@ -192,14 +193,14 @@ namespace MattEland.Ani.Alfred.Core.Tests
         public void ModulesCannotBeAddedWhileOnline()
         {
             _alfred.Initialize();
-            StandardModuleProvider.AddStandardModules(_alfred);
+            _alfred.Register(new AlfredControlSubSystem(_alfred.PlatformProvider));
         }
 
         [Test]
         [ExpectedException(typeof(InvalidOperationException))]
         public void ModulesCannotUpdateWhileOffline()
         {
-            StandardModuleProvider.AddStandardModules(_alfred);
+            _alfred.Register(new AlfredControlSubSystem(_alfred.PlatformProvider));
 
             _alfred.Update();
         }
@@ -221,9 +222,11 @@ namespace MattEland.Ani.Alfred.Core.Tests
 
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
+        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public void RegisteringNullSubsystemGeneratesNullRef()
         {
-            _alfred.Register((AlfredSubSystem)null);
+            AlfredSubSystem system = null;
+            _alfred.Register(system);
         }
 
         [Test]
@@ -302,7 +305,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         [Test]
         public void ShuttingDownShutsDownModules()
         {
-            StandardModuleProvider.AddStandardModules(_alfred);
+            _alfred.Register(new AlfredControlSubSystem(_alfred.PlatformProvider));
 
             _alfred.Initialize();
             _alfred.Shutdown();

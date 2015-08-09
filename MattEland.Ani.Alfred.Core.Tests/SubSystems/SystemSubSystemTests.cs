@@ -13,6 +13,7 @@ using System.Linq;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
+using MattEland.Ani.Alfred.Core.Pages;
 
 using NUnit.Framework;
 
@@ -50,9 +51,14 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
         [Test]
         public void SystemMonitoringSubsystemContainsModules()
         {
-            Assert.IsTrue(_subsystem.Modules.Any(m => m is CpuMonitorModule), "CPU Monitor not found");
-            Assert.IsTrue(_subsystem.Modules.Any(m => m is MemoryMonitorModule), "Memory Monitor not found");
-            Assert.IsTrue(_subsystem.Modules.Any(m => m is DiskMonitorModule), "Disk Monitor not found");
+            _alfred.Register(_subsystem);
+
+            var page = _subsystem.Pages.First() as AlfredModuleListPage;
+            Assert.NotNull(page);
+
+            Assert.IsTrue(page.Modules.Any(m => m is CpuMonitorModule), "CPU Monitor not found");
+            Assert.IsTrue(page.Modules.Any(m => m is MemoryMonitorModule), "Memory Monitor not found");
+            Assert.IsTrue(page.Modules.Any(m => m is DiskMonitorModule), "Disk Monitor not found");
         }
 
         [Test]

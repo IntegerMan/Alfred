@@ -90,10 +90,13 @@ namespace MattEland.Ani.Alfred.WPF
 
         private void InitializeAlfredModules()
         {
-
             _console.Log("WinClient.Initialize", "Initializing Modules", LogLevel.Verbose);
-            StandardModuleProvider.AddStandardModules(_alfred);
-            SystemModuleProvider.AddStandardModules(_alfred);
+
+            var provider = _alfred.PlatformProvider;
+
+            _alfred.Register(new AlfredControlSubSystem(provider));
+            _alfred.Register(new SystemMonitoringSubSystem(provider));
+
         }
 
         /// <summary>
