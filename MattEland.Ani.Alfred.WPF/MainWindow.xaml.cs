@@ -56,23 +56,25 @@ namespace MattEland.Ani.Alfred.WPF
 
 #if DEBUG
             // Do not allow topmost window mode while debugging
-            this.Topmost = false;
+            Topmost = false;
 #endif
 
             InitializeComponent();
 
             // Create Alfred. It won't be online and running yet, but create it.
             var platformProvider = new WinClientPlatformProvider();
-            _alfred = new AlfredProvider(platformProvider);
-
-            // DataBindings rely on Alfred presently as there hasn't been a need for a page ViewModel yet
-            DataContext = _alfred;
+            var bootstrapper = new AlfredBootstrapper(platformProvider);
+            _alfred = bootstrapper.Create();
 
             // Give Alfred a way to talk to the user and the client a way to log events that are separate from Alfred
             _console = InitializeConsole(platformProvider);
 
             // Give Alfred some Content
             InitializeAlfredModules();
+
+            // DataBindings rely on Alfred presently as there hasn't been a need for a page ViewModel yet
+            DataContext = _alfred;
+
 
             // Set up the update timer
             InitializeUpdatePump();

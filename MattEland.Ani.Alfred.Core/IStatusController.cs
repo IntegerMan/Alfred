@@ -30,5 +30,11 @@ namespace MattEland.Ani.Alfred.Core
         ///     Thrown if Alfred is already Offline
         /// </exception>
         void Shutdown();
+
+        /// <summary>
+        /// Gets or sets the alfred framework.
+        /// </summary>
+        /// <value>The alfred framework.</value>
+        AlfredProvider Alfred { get; set; }
     }
 }

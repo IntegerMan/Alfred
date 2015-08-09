@@ -29,7 +29,9 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
         public void SetUp()
         {
             _subsystem = new AlfredControlSubsystem();
-            _alfred = new AlfredProvider();
+
+            var bootstrapper = new AlfredBootstrapper();
+            _alfred = bootstrapper.Create();
         }
 
         [NotNull]

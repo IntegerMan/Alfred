@@ -35,10 +35,9 @@ namespace MattEland.Ani.Alfred.Core.Tests
         [SetUp]
         public void SetupAlfredProviderTests()
         {
-            _alfred = new AlfredProvider
-            {
-                Console = new SimpleConsole()
-            };
+            var bootstrapper = new AlfredBootstrapper();
+            _alfred = bootstrapper.Create();
+            _alfred.Console = new SimpleConsole();
 
             _subsystem = new TestSubsystem(_alfred.PlatformProvider);
             _page = new AlfredModuleListPage(_alfred.PlatformProvider, "Test Page");

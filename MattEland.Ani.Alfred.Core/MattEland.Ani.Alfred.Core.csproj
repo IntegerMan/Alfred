@@ -49,6 +49,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlfredBootstrapper.cs" />
     <Compile Include="AlfredComponent.cs" />
     <Compile Include="IStatusController.cs" />
     <Compile Include="Modules\AlfredPagesListModule.cs" />

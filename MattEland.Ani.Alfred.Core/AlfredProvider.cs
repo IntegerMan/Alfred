@@ -46,21 +46,12 @@ namespace MattEland.Ani.Alfred.Core
         private AlfredStatus _status;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredProvider" /> class.
-        /// </summary>
-        /// <param name="provider">The provider.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        public AlfredProvider([NotNull] IPlatformProvider provider) : this(provider, null)
-        {
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="AlfredProvider"/> class.
         /// </summary>
         /// <param name="provider">The provider.</param>
         /// <param name="controller">The controller.</param>
         /// <exception cref="System.ArgumentNullException">provider</exception>
-        public AlfredProvider([NotNull] IPlatformProvider provider, [CanBeNull] IStatusController controller)
+        internal AlfredProvider([NotNull] IPlatformProvider provider, [CanBeNull] IStatusController controller)
         {
             // Set the controller
             if (controller == null)
@@ -68,6 +59,7 @@ namespace MattEland.Ani.Alfred.Core
                 controller = new AlfredStatusController(this);
             }
             _statusController = controller;
+            _statusController.Alfred = this;
 
             // Set the provider
             if (provider == null)
@@ -78,13 +70,6 @@ namespace MattEland.Ani.Alfred.Core
 
             // Build out sub-collections
             _subsystems = provider.CreateCollection<AlfredSubsystem>();
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredProvider" /> class.
-        /// </summary>
-        public AlfredProvider() : this(new SimplePlatformProvider())
-        {
         }
 
         /// <summary>

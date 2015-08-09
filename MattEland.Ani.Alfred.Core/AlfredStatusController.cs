@@ -20,21 +20,33 @@ namespace MattEland.Ani.Alfred.Core
     /// </summary>
     public sealed class AlfredStatusController : IStatusController
     {
-        [NotNull]
-        private readonly AlfredProvider _alfred;
+        [CanBeNull]
+        private AlfredProvider _alfred;
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="AlfredStatusController" /> class.
+        /// </summary>
+        public AlfredStatusController() : this(null)
+        {
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredStatusController" /> class.
         /// </summary>
         /// <param name="alfred">The alfred provider.</param>
-        public AlfredStatusController([NotNull] AlfredProvider alfred)
+        public AlfredStatusController([CanBeNull] AlfredProvider alfred)
         {
-            if (alfred == null)
-            {
-                throw new ArgumentNullException(nameof(alfred));
-            }
+            Alfred = alfred;
+        }
 
-            _alfred = alfred;
+        /// <summary>
+        /// Gets or sets the alfred framework.
+        /// </summary>
+        /// <value>The alfred framework.</value>
+        public AlfredProvider Alfred
+        {
+            get { return _alfred; }
+            set { _alfred = value; }
         }
 
         /// <summary>
@@ -45,13 +57,19 @@ namespace MattEland.Ani.Alfred.Core
         /// </exception>
         public void Initialize()
         {
+            var alfred = Alfred;
+            if (alfred == null)
+            {
+                throw new InvalidOperationException("Alfred is not set. Please set Alfred first");
+            }
+
             var header = Resources.AlfredStatusController_Initialize_LogHeader.NonNull();
             var culture = CultureInfo.CurrentCulture;
 
-            var console = _alfred.Console;
+            var console = alfred.Console;
 
             // Handle case on initialize but already initializing or online
-            if (_alfred.Status == AlfredStatus.Online)
+            if (alfred.Status == AlfredStatus.Online)
             {
                 var message = Resources.AlfredStatusController_Initialize_ErrorAlreadyOnline.NonNull();
                 console?.Log(header, message, LogLevel.Verbose);
@@ -61,17 +79,17 @@ namespace MattEland.Ani.Alfred.Core
 
             // Inform things that we're setting up right now
             console?.Log(header, Resources.AlfredStatusController_Initialize_Initializing.NonNull(), LogLevel.Verbose);
-            _alfred.Status = AlfredStatus.Initializing;
+            alfred.Status = AlfredStatus.Initializing;
 
             // Boot up items and give them a provider
-            foreach (var item in _alfred.Subsystems)
+            foreach (var item in alfred.Subsystems)
             {
                 // Log the initialization
                 var initLogFormat = Resources.AlfredStatusController_InitializingComponent.NonNull();
                 console?.Log(header, string.Format(culture, initLogFormat, item.NameAndVersion), LogLevel.Verbose);
 
                 // Actually initialize the component
-                item.Initialize(_alfred);
+                item.Initialize(alfred);
 
                 // Log the completion
                 var initializedLogFormat = Resources.AlfredStatusController_InitializeComponentInitialized.NonNull();
@@ -79,11 +97,11 @@ namespace MattEland.Ani.Alfred.Core
             }
 
             // We're done. Let the world know.
-            _alfred.Status = AlfredStatus.Online;
+            alfred.Status = AlfredStatus.Online;
             console?.Log(header, Resources.AlfredStatusController_Initialize_InitilizationCompleted.NonNull(), LogLevel.Verbose);
 
             // Notify each item that startup was completed
-            foreach (var item in _alfred.Subsystems)
+            foreach (var item in alfred.Subsystems)
             {
                 item.OnInitializationCompleted();
             }
@@ -100,12 +118,18 @@ namespace MattEland.Ani.Alfred.Core
         /// </exception>
         public void Shutdown()
         {
+            var alfred = Alfred;
+            if (alfred == null)
+            {
+                throw new InvalidOperationException("Alfred is not set. Please set Alfred first");
+            }
+
             var header = Resources.AlfredStatusController_Shutdown_LogHeader.NonNull();
 
-            var console = _alfred.Console;
+            var console = alfred.Console;
 
             // Handle cases where shutdown shouldn't be allowed
-            switch (_alfred.Status)
+            switch (alfred.Status)
             {
                 case AlfredStatus.Offline:
                     var offlineMessage = Resources.AlfredStatusController_Shutdown_ErrorAlreadyOffline.NonNull();
@@ -122,10 +146,10 @@ namespace MattEland.Ani.Alfred.Core
 
             // Indicate status so the UI can keep busy
             console?.Log(header, Resources.AlfredStatusController_Shutdown_Shutting_down.NonNull(), LogLevel.Verbose);
-            _alfred.Status = AlfredStatus.Terminating;
+            alfred.Status = AlfredStatus.Terminating;
 
             // Shut down items and decouple them from Alfred
-            foreach (var item in _alfred.Subsystems)
+            foreach (var item in alfred.Subsystems)
             {
                 var culture = CultureInfo.CurrentCulture;
 
@@ -139,11 +163,11 @@ namespace MattEland.Ani.Alfred.Core
             }
 
             // We're done here. Tell the world.
-            _alfred.Status = AlfredStatus.Offline;
+            alfred.Status = AlfredStatus.Offline;
             console?.Log(header, Resources.AlfredStatusController_Shutdown_Completed.NonNull(), LogLevel.Info);
 
             // Notify each item that shutdown was completed
-            foreach (var item in _alfred.Subsystems)
+            foreach (var item in alfred.Subsystems)
             {
                 item.OnShutdownCompleted();
             }
