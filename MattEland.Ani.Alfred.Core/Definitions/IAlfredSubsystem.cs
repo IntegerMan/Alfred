@@ -33,6 +33,13 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         [NotNull]
         [ItemNotNull]
         IEnumerable<IAlfredModule> Modules { get; }
+
+        /// <summary>
+        /// Gets the root-level pages provided by this subsystem.
+        /// </summary>
+        /// <value>The root-level pages.</value>
+        [NotNull, ItemNotNull]
+        IEnumerable<IAlfredPage> RootPages { get; }
     }
 
 }

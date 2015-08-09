@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
-// AlfredSubsystem.cs
+// AlfredSubSystem.cs
 // 
 // Created on:      08/07/2015 at 10:00 PM
-// Last Modified:   08/08/2015 at 1:35 AM
+// Last Modified:   08/09/2015 at 6:53 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -13,8 +13,6 @@ using System.Linq;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Modules;
-using MattEland.Ani.Alfred.Core.Pages;
 
 namespace MattEland.Ani.Alfred.Core
 {
@@ -49,10 +47,41 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
+        ///     Gets whether or not the module is visible to the user interface.
+        /// </summary>
+        /// <value>Whether or not the module is visible.</value>
+        public override bool IsVisible
+        {
+            get { return true; }
+        }
+
+        /// <summary>
+        ///     Gets the children of this component. Depending on the type of component this is, the children will
+        ///     vary in their own types.
+        /// </summary>
+        /// <value>The children.</value>
+        public override IEnumerable<IAlfredComponent> Children
+        {
+            get
+            {
+                // Pages are higher up in the hierarchy than modules so they come first
+                foreach (var page in _pages)
+                {
+                    yield return page;
+                }
+
+                // Return all modules
+                foreach (var module in _modules)
+                {
+                    yield return module;
+                }
+            }
+        }
+
+        /// <summary>
         ///     Gets the modules associated with this subsystem
         /// </summary>
         /// <value>The modules.</value>
-        [NotNull]
         [ItemNotNull]
         public IEnumerable<IAlfredModule> Modules
         {
@@ -60,23 +89,22 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
+        ///     Gets the root-level pages provided by this subsystem.
+        /// </summary>
+        /// <value>The root-level pages.</value>
+        public IEnumerable<IAlfredPage> RootPages
+        {
+            get { return _pages.Where(page => page.IsRootLevel); }
+        }
+
+        /// <summary>
         ///     Gets the pages associated with this subsystem
         /// </summary>
         /// <value>The pages.</value>
-        [NotNull]
         [ItemNotNull]
         public IEnumerable<IAlfredPage> Pages
         {
             get { return _pages; }
-        }
-
-        /// <summary>
-        ///     Gets whether or not the module is visible to the user interface.
-        /// </summary>
-        /// <value>Whether or not the module is visible.</value>
-        public override bool IsVisible
-        {
-            get { return true; }
         }
 
         /// <summary>
@@ -100,30 +128,7 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        /// Gets the children of this component. Depending on the type of component this is, the children will
-        /// vary in their own types.
-        /// </summary>
-        /// <value>The children.</value>
-        public override IEnumerable<IAlfredComponent> Children
-        {
-            get
-            {
-                // Pages are higher up in the hierarchy than modules so they come first
-                foreach (var page in _pages)
-                {
-                    yield return page;
-                }
-
-                // Return all modules
-                foreach (var module in _modules)
-                {
-                    yield return module;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Clears all child collections
+        ///     Clears all child collections
         /// </summary>
         protected override void ClearChildCollections()
         {
@@ -132,7 +137,6 @@ namespace MattEland.Ani.Alfred.Core
             _pages.Clear();
             _modules.Clear();
         }
-
     }
 
 }

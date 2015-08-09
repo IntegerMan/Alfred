@@ -9,6 +9,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 
@@ -161,21 +162,13 @@ namespace MattEland.Ani.Alfred.Core
         /// <value>The pages.</value>
         [NotNull]
         [ItemNotNull]
+        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public IEnumerable<IAlfredPage> RootPages
         {
             get
             {
                 // Give me all pages in subsystems that are root level pages
-                foreach (var subSystem in Subsystems)
-                {
-                    foreach (var page in subSystem.Pages)
-                    {
-                        if (page.IsRootLevel)
-                        {
-                            yield return page;
-                        }
-                    }
-                }
+                return Subsystems.SelectMany(subSystem => subSystem.RootPages);
             }
         }
 
