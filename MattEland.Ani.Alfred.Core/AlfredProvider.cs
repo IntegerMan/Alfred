@@ -2,7 +2,7 @@
 // AlfredProvider.cs
 // 
 // Created on:      07/25/2015 at 11:30 PM
-// Last Modified:   08/09/2015 at 1:06 AM
+// Last Modified:   08/09/2015 at 3:42 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -24,10 +24,6 @@ namespace MattEland.Ani.Alfred.Core
     /// </summary>
     public sealed class AlfredProvider : NotifyPropertyChangedBase
     {
-        [NotNull]
-        [ItemNotNull]
-        private readonly ICollection<AlfredModule> _modules;
-
         /// <summary>
         ///     The platform provider
         /// </summary>
@@ -63,8 +59,6 @@ namespace MattEland.Ani.Alfred.Core
             _statusController = new AlfredStatusController(this);
 
             _platformProvider = provider;
-
-            _modules = provider.CreateCollection<AlfredModule>();
 
             _subsystems = provider.CreateCollection<AlfredSubSystem>();
         }
@@ -157,7 +151,7 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     Gets the components - both Modules and SubSystems - registered with Alfred.
+        ///     Gets the components registered directly with Alfred.
         /// </summary>
         /// <value>The components.</value>
         [NotNull]
@@ -166,20 +160,8 @@ namespace MattEland.Ani.Alfred.Core
         {
             get
             {
-                // TODO: This is all smelly. Components should daisy chain things to their children instead of making Alfred
-                // talk directly to each child.
-
-                // Subsystems are most important - let's ask them first to update
-                foreach (var subSystem in _subsystems)
-                {
-                    yield return subSystem;
-                }
-
-                // Next talk to loose modules
-                foreach (var module in _modules)
-                {
-                    yield return module;
-                }
+                // TODO: Right now this is just subsystems. Unsure if this will continue this way or not. If so, it should be removed and SubSystems used instead.
+                return _subsystems;
             }
         }
 
@@ -268,7 +250,6 @@ namespace MattEland.Ani.Alfred.Core
             _subsystems.AddSafe(subsystem);
             subsystem.OnRegistered(this);
         }
-
     }
 
 }
