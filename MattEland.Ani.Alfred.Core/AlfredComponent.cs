@@ -123,6 +123,8 @@ namespace MattEland.Ani.Alfred.Core
             // Reset our children collections so that other collections can be registered during shutdown
             ClearChildCollections();
 
+            RegisterControls();
+
             InitializeProtected(alfred);
 
             // Pass on the message to the children
@@ -134,6 +136,13 @@ namespace MattEland.Ani.Alfred.Core
             Status = AlfredStatus.Online;
 
             OnPropertyChanged(nameof(IsVisible));
+        }
+
+        /// <summary>
+        /// Allows components to define controls
+        /// </summary>
+        protected virtual void RegisterControls()
+        {
         }
 
         /// <summary>
@@ -305,6 +314,8 @@ namespace MattEland.Ani.Alfred.Core
             // Hang on to the reference now so AlfredInstance doesn't lie and we can tell
             // our children who Alfred is before the whole update process happens
             _alfred = alfred;
+
+            RegisterControls();
         }
     }
 }

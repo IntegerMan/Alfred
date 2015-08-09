@@ -62,6 +62,28 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
+        /// Registers the controls for this component.
+        /// </summary>
+        protected override void RegisterControls()
+        {
+            Register(_controlPage);
+
+            // Build out our control page
+            _controlPage.ClearModules();
+            _controlPage.Register(_powerModule);
+            _controlPage.Register(_timeModule);
+            _controlPage.Register(_systemsModule);
+            _controlPage.Register(_pagesModule);
+
+            // Don't include the event log page if there are no events
+            if (AlfredInstance?.Console != null)
+            {
+                _eventLogPage = new AlfredEventLogPage(AlfredInstance.Console, EventLogPageName);
+                Register(_eventLogPage);
+            }
+        }
+
+        /// <summary>
         ///     Gets the name of the control page.
         /// </summary>
         /// <value>The name of the control page.</value>
@@ -90,78 +112,6 @@ namespace MattEland.Ani.Alfred.Core.Modules
             get { return Resources.AlfredControlSubSystem_Name; }
         }
 
-        /// <summary>
-        ///     Updates the component
-        /// </summary>
-        protected override void UpdateProtected()
-        {
-        }
 
-        /// <summary>
-        ///     Handles initialization events
-        /// </summary>
-        /// <param name="alfred"></param>
-        protected override void InitializeProtected(AlfredProvider alfred)
-        {
-            RegisterControls(AlfredInstance);
-        }
-
-        /// <summary>
-        /// Called when the component is registered.
-        /// </summary>
-        /// <param name="alfred">The alfred.</param>
-        public override void OnRegistered(AlfredProvider alfred)
-        {
-            base.OnRegistered(alfred);
-
-            RegisterControls(alfred);
-
-        }
-
-        private void RegisterControls(AlfredProvider alfred)
-        {
-
-            Register(_controlPage);
-
-            // Build out our control page
-            _controlPage.ClearModules();
-            _controlPage.Register(_powerModule);
-            _controlPage.Register(_timeModule);
-            _controlPage.Register(_systemsModule);
-            _controlPage.Register(_pagesModule);
-
-            // Don't include the event log page if there are no events
-            if (alfred?.Console != null)
-            {
-                _eventLogPage = new AlfredEventLogPage(alfred.Console, EventLogPageName);
-                Register(_eventLogPage);
-            }
-        }
-
-        /// <summary>
-        ///     Handles shutdown events
-        /// </summary>
-        protected override void ShutdownProtected()
-        {
-            _eventLogPage = null;
-        }
-
-        /// <summary>
-        ///     A notification method that is invoked when shutdown for Alfred is complete so the UI can be fully enabled or
-        ///     adjusted
-        /// </summary>
-        public override void OnShutdownCompleted()
-        {
-            base.OnShutdownCompleted();
-        }
-
-        /// <summary>
-        ///     A notification method that is invoked when initialization for Alfred is complete so the UI can be fully enabled or
-        ///     adjusted
-        /// </summary>
-        public override void OnInitializationCompleted()
-        {
-            base.OnInitializationCompleted();
-        }
     }
 }

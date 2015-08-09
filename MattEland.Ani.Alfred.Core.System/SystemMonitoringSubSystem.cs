@@ -19,7 +19,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
     public class SystemMonitoringSubSystem : AlfredSubSystem
     {
         [NotNull]
-        private readonly AlfredWidgetListPage _page;
+        private readonly AlfredModuleListPage _page;
 
         [NotNull]
         private readonly CpuMonitorModule _cpuModule;
@@ -48,41 +48,28 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             _memoryModule = new MemoryMonitorModule(provider);
             _diskModule = new DiskMonitorModule(provider);
 
-            _page = new AlfredWidgetListPage(provider, Resources.SystemMonitoringSystem_Name.NonNull());
-
-            RegisterModules();
+            _page = new AlfredModuleListPage(provider, Name);
         }
 
         /// <summary>
-        /// Called when the component is registered.
+        /// Registers the controls for this component.
         /// </summary>
-        /// <param name="alfred">The alfred.</param>
-        public override void OnRegistered(AlfredProvider alfred)
-        {
-            base.OnRegistered(alfred);
-        }
-
-        private void RegisterModules()
-        {
-            Register(_cpuModule);
-            Register(_memoryModule);
-            Register(_diskModule);
-        }
-
-        /// <summary>
-        ///     Handles initialization events
-        /// </summary>
-        /// <param name="alfred"></param>
-        protected override void InitializeProtected(AlfredProvider alfred)
+        protected override void RegisterControls()
         {
             Register(_page);
+
+            _page.ClearModules();
+            _page.Register(_cpuModule);
+            _page.Register(_memoryModule);
+            _page.Register(_diskModule);
         }
 
         /// <summary>
         ///     Gets the name of the subsystems.
         /// </summary>
         /// <value>The name.</value>
-        public override string Name
+        [NotNull]
+        public override sealed string Name
         {
             get { return Resources.SystemMonitoringSystem_Name.NonNull(); }
         }

@@ -47,6 +47,18 @@ namespace MattEland.Ani.Alfred.Core.Tests.Mocks
         }
 
         /// <summary>
+        /// Registers the controls for this component.
+        /// </summary>
+        protected override void RegisterControls()
+        {
+            // Live up to our promise and auto-register some pages
+            foreach (var page in _registerPages)
+            {
+                Register(page);
+            }
+        }
+
+        /// <summary>
         ///     Gets or sets the last time this module was updated.
         /// </summary>
         /// <value>The last time the module was updated.</value>
@@ -111,12 +123,6 @@ namespace MattEland.Ani.Alfred.Core.Tests.Mocks
         protected override void InitializeProtected(AlfredProvider alfred)
         {
             LastInitialized = DateTime.Now;
-
-            // Live up to our promise and auto-register some pages
-            foreach (var page in _registerPages)
-            {
-                Register(page);
-            }
 
             base.InitializeProtected(alfred);
         }
