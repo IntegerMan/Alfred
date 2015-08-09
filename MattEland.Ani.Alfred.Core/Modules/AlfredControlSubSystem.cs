@@ -119,6 +119,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         public override void OnShutdownCompleted()
         {
+            base.OnShutdownCompleted();
         }
 
         /// <summary>
@@ -127,6 +128,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         public override void OnInitializationCompleted()
         {
+            base.OnInitializationCompleted();
         }
     }
 }

@@ -7,8 +7,10 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 
 using JetBrains.Annotations;
 
@@ -25,6 +27,9 @@ namespace MattEland.Ani.Alfred.Core
         private AlfredProvider _alfred;
 
         private AlfredStatus _status;
+
+        [CanBeNull, ItemNotNull]
+        private IEnumerable<AlfredComponent> _childrenOnShutdown;
 
         /// <summary>
         /// Gets the alfred instance associated with this component.
@@ -115,7 +120,16 @@ namespace MattEland.Ani.Alfred.Core
 
             _alfred = alfred;
 
+            // Reset our children collections so that other collections can be registered during shutdown
+            ClearChildCollections();
+
             InitializeProtected(alfred);
+
+            // Pass on the message to the children
+            foreach (var child in Children)
+            {
+                child.Initialize(alfred);
+            }
 
             Status = AlfredStatus.Online;
 
@@ -140,12 +154,29 @@ namespace MattEland.Ani.Alfred.Core
 
             Status = AlfredStatus.Terminating;
 
+            // Pass on the message to the children
+            _childrenOnShutdown = Children.ToList();
+            foreach (var child in _childrenOnShutdown)
+            {
+                child?.Shutdown();
+            }
+
+            // Reset our children collections so that other collections can be registered during shutdown
+            ClearChildCollections();
+
             // Tell the derived module that it's now time to do any special logic (e.g. registering widgets, shutting down resources, stopping timers, etc.)
             ShutdownProtected();
 
             Status = AlfredStatus.Offline;
 
             OnPropertyChanged(nameof(IsVisible));
+        }
+
+        /// <summary>
+        /// Clears all child collections
+        /// </summary>
+        protected virtual void ClearChildCollections()
+        {
         }
 
         /// <summary>
@@ -162,6 +193,13 @@ namespace MattEland.Ani.Alfred.Core
             }
 
             UpdateProtected();
+
+            // Pass on the message to the children
+            foreach (var child in Children)
+            {
+                child.Update();
+            }
+
         }
 
         /// <summary>
@@ -177,6 +215,11 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         public virtual void OnInitializationCompleted()
         {
+            // Pass on the message to the children
+            foreach (var child in Children)
+            {
+                child.OnInitializationCompleted();
+            }
         }
 
         /// <summary>
@@ -185,6 +228,24 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         public virtual void OnShutdownCompleted()
         {
+            var notified = new HashSet<AlfredComponent>();
+
+            // Pass on the message to the children
+            foreach (var child in Children)
+            {
+                child.OnShutdownCompleted();
+                notified.Add(child);
+            }
+
+            // Tell our old expatriated children that things ended
+            if (_childrenOnShutdown != null)
+            {
+                foreach (var child in _childrenOnShutdown.Where(child => !notified.Contains(child)))
+                {
+                    child?.OnShutdownCompleted();
+                    notified.Add(child);
+                }
+            }
         }
 
         /// <summary>
@@ -226,6 +287,14 @@ namespace MattEland.Ani.Alfred.Core
             console?.Log(title, message, level);
 
         }
+
+        /// <summary>
+        /// Gets the children of this component. Depending on the type of component this is, the children will
+        /// vary in their own types.
+        /// </summary>
+        /// <value>The children.</value>
+        [NotNull, ItemNotNull]
+        public abstract IEnumerable<AlfredComponent> Children { get; }
 
     }
 }

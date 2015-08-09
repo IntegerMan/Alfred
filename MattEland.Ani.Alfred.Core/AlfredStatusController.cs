@@ -157,7 +157,6 @@ namespace MattEland.Ani.Alfred.Core
             {
                 module.OnShutdownCompleted();
             }
-
         }
     }
 }

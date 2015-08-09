@@ -28,8 +28,8 @@ namespace MattEland.Ani.Alfred.Core.Tests.Pages
         public void Setup()
         {
             _alfred = new AlfredProvider();
-            _page = new TestPage();
             _subsystem = new TestSubSystem();
+            _page = new TestPage();
 
             _subsystem.AddAutoRegisterPage(_page);
             _alfred.Register(_subsystem);

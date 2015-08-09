@@ -2,7 +2,7 @@
 // AlfredProvider.cs
 // 
 // Created on:      07/25/2015 at 11:30 PM
-// Last Modified:   08/08/2015 at 1:24 AM
+// Last Modified:   08/09/2015 at 1:06 AM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -183,11 +183,16 @@ namespace MattEland.Ani.Alfred.Core
         {
             get
             {
+                // TODO: This is all smelly. Components should daisy chain things to their children instead of making Alfred
+                // talk directly to each child.
+
+                // Subsystems are most important - let's ask them first to update
                 foreach (var subSystem in _subsystems)
                 {
                     yield return subSystem;
                 }
 
+                // Next talk to loose modules
                 foreach (var module in _modules)
                 {
                     yield return module;
@@ -334,15 +339,11 @@ namespace MattEland.Ani.Alfred.Core
         /// <param name="subsystem">The subsystem.</param>
         public void Register([NotNull] AlfredSubSystem subsystem)
         {
-            if (subsystem == null)
-            {
-                throw new ArgumentNullException(nameof(subsystem));
-            }
-
             AssertMustBeOffline();
 
-            _subsystems.Add(subsystem);
+            _subsystems.AddSafe(subsystem);
         }
+
     }
 
 }

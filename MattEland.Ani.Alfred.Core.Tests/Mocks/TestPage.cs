@@ -7,6 +7,7 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 
 using MattEland.Ani.Alfred.Core.Pages;
 
@@ -106,5 +107,20 @@ namespace MattEland.Ani.Alfred.Core.Tests.Mocks
 
             base.UpdateProtected();
         }
+
+
+        /// <summary>
+        /// Gets the children of this component. Depending on the type of component this is, the children will
+        /// vary in their own types.
+        /// </summary>
+        /// <value>The children.</value>
+        public override IEnumerable<AlfredComponent> Children
+        {
+            get
+            {
+                yield break;
+            }
+        }
+
     }
 }

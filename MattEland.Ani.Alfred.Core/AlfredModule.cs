@@ -72,38 +72,13 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     Initializes the module.
+        /// Clears all child collections
         /// </summary>
-        /// <param name="alfred">
-        ///     The provider.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
-        /// <exception cref="InvalidOperationException">
-        ///     Already online when told to initialize.
-        /// </exception>
-        public override void Initialize([NotNull] AlfredProvider alfred)
+        protected override void ClearChildCollections()
         {
-            // Don't allow any residual widgets now that we can display widgets while shut down
+            base.ClearChildCollections();
+
             _widgets.Clear();
-
-            base.Initialize(alfred);
-        }
-
-        /// <summary>
-        ///     Shuts down the module and decouples it from Alfred.
-        /// </summary>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
-        /// <exception cref="InvalidOperationException">
-        ///     Already offline when told to shut down.
-        /// </exception>
-        public override void Shutdown()
-        {
-            // We want to clear out the list before shutdown is called so that modules can re-register components for display during shutdown mode as needed
-            _widgets.Clear();
-
-            base.Shutdown();
         }
 
         /// <summary>
@@ -137,6 +112,16 @@ namespace MattEland.Ani.Alfred.Core
                 // ReSharper disable once AssignNullToNotNullAttribute - for testing purposes we'll allow this
                 Register(widget);
             }
+        }
+
+        /// <summary>
+        /// Gets the children of this component. Depending on the type of component this is, the children will
+        /// vary in their own types.
+        /// </summary>
+        /// <value>The children.</value>
+        public override IEnumerable<AlfredComponent> Children
+        {
+            get { yield break; }
         }
     }
 }

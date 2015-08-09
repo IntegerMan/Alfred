@@ -72,5 +72,20 @@ namespace MattEland.Ani.Alfred.Core.Pages
         {
             _widgets.Clear();
         }
+
+
+        /// <summary>
+        /// Gets the children of this component. Depending on the type of component this is, the children will
+        /// vary in their own types.
+        /// </summary>
+        /// <value>The children.</value>
+        public override IEnumerable<AlfredComponent> Children
+        {
+            get
+            {
+                yield break;
+            }
+        }
+
     }
 }

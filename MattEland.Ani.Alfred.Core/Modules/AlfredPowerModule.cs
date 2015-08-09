@@ -227,6 +227,8 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         public override void OnInitializationCompleted()
         {
+            base.OnInitializationCompleted();
+
             UpdateAlfredProviderStatus();
         }
 
@@ -236,6 +238,8 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         public override void OnShutdownCompleted()
         {
+            base.OnShutdownCompleted();
+
             UpdateAlfredProviderStatus();
         }
     }

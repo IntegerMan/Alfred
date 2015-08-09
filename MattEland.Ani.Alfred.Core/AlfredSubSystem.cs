@@ -94,5 +94,39 @@ namespace MattEland.Ani.Alfred.Core
         {
             _pages.AddSafe(page);
         }
+
+        /// <summary>
+        /// Gets the children of this component. Depending on the type of component this is, the children will
+        /// vary in their own types.
+        /// </summary>
+        /// <value>The children.</value>
+        public override IEnumerable<AlfredComponent> Children
+        {
+            get
+            {
+                // Pages are higher up in the hierarchy than modules so they come first
+                foreach (var page in _pages)
+                {
+                    yield return page;
+                }
+
+                // Return all modules
+                foreach (var module in _modules)
+                {
+                    yield return module;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Clears all child collections
+        /// </summary>
+        protected override void ClearChildCollections()
+        {
+            base.ClearChildCollections();
+
+            _pages.Clear();
+            _modules.Clear();
+        }
     }
 }
