@@ -36,7 +36,7 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <value>The alfred instance.</value>
         [CanBeNull]
-        protected internal AlfredProvider AlfredInstance
+        public AlfredProvider AlfredInstance
         {
             [DebuggerStepThrough]
             get

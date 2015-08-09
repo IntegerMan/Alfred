@@ -141,7 +141,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Mocks
         /// Adds a page to be automatically registered on initialization
         /// </summary>
         /// <param name="page">The page.</param>
-        public void AddAutoRegisterPage([NotNull] TestPage page)
+        public void AddAutoRegisterPage([NotNull] AlfredPage page)
         {
             if (page == null)
             {

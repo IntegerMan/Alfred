@@ -26,6 +26,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
     ///     Tests AlfredProvider
     /// </summary>
     [TestFixture]
+    [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public sealed class AlfredProviderTests
     {
         /// <summary>
@@ -38,25 +39,26 @@ namespace MattEland.Ani.Alfred.Core.Tests
             {
                 Console = new SimpleConsole()
             };
+
+            _subsystem = new TestSubSystem(_alfred.PlatformProvider);
+            _page = new AlfredModuleListPage(_alfred.PlatformProvider, "Test Page");
         }
 
         [NotNull]
         private AlfredProvider _alfred;
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
-        /// </summary>
-        public AlfredProviderTests()
-        {
-            _alfred = new AlfredProvider();
-        }
+        [NotNull]
+        private TestSubSystem _subsystem;
+
+        [NotNull]
+        private AlfredModuleListPage _page;
 
         [Test]
         public void AddingStandardModulesAddsModules()
         {
             _alfred.Register(new AlfredControlSubSystem(_alfred.PlatformProvider));
 
-            var numModules = _alfred.Modules.Count();
+            var numModules = 0;
 
             foreach (var subsystem in _alfred.SubSystems)
             {
@@ -93,9 +95,9 @@ namespace MattEland.Ani.Alfred.Core.Tests
         }
 
         [Test]
-        public void AlfredStartsWithNoModules()
+        public void AlfredStartsWithNoSubSystems()
         {
-            Assert.AreEqual(0, _alfred.Modules.Count, "Alfred started with modules when none were expected.");
+            Assert.AreEqual(0, _alfred.SubSystems.Count(), "Alfred started with subsystems when none were expected.");
         }
 
         [Test]
@@ -161,17 +163,17 @@ namespace MattEland.Ani.Alfred.Core.Tests
         }
 
         [Test]
-        public void InitializingInitializesModules()
+        public void InitializingInitializesComponents()
         {
             _alfred.Register(new AlfredControlSubSystem(_alfred.PlatformProvider));
 
             _alfred.Initialize();
 
-            foreach (var module in _alfred.Modules)
+            foreach (var component in _alfred.Components)
             {
                 Assert.AreEqual(AlfredStatus.Online,
-                                module.Status,
-                                $"Module {module.NameAndVersion} was not initialized during initialization.");
+                                component.Status,
+                                $"{component.NameAndVersion} was not initialized during initialization.");
             }
         }
 
@@ -215,7 +217,9 @@ namespace MattEland.Ani.Alfred.Core.Tests
             testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
             testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
 
-            _alfred.Register(testModule);
+            _alfred.Register(_subsystem);
+            _subsystem.AddAutoRegisterPage(_page);
+            _page.Register(testModule);
 
             _alfred.Initialize();
         }
@@ -238,7 +242,9 @@ namespace MattEland.Ani.Alfred.Core.Tests
             testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
             testModule.WidgetsToRegisterOnShutdown.Add(textWidget);
 
-            _alfred.Register(testModule);
+            _alfred.Register(_subsystem);
+            _subsystem.AddAutoRegisterPage(_page);
+            _page.Register(testModule);
 
             _alfred.Initialize();
             _alfred.Update();
@@ -303,18 +309,18 @@ namespace MattEland.Ani.Alfred.Core.Tests
         }
 
         [Test]
-        public void ShuttingDownShutsDownModules()
+        public void ShuttingDownShutsDownComponents()
         {
             _alfred.Register(new AlfredControlSubSystem(_alfred.PlatformProvider));
 
             _alfred.Initialize();
             _alfred.Shutdown();
 
-            foreach (var module in _alfred.Modules)
+            foreach (var component in _alfred.Components)
             {
                 Assert.AreEqual(AlfredStatus.Offline,
-                                module.Status,
-                                $"Module {module.NameAndVersion} was not shut down during alfred shut down.");
+                                component.Status,
+                                $"{component.NameAndVersion} was not shut down during alfred shut down.");
             }
         }
 

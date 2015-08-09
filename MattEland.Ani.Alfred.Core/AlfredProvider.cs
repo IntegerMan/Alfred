@@ -22,7 +22,7 @@ namespace MattEland.Ani.Alfred.Core
     ///     Coordinates providing personal assistance to a user interface and receiving settings and queries back from the user
     ///     interface.
     /// </summary>
-    public sealed class AlfredProvider : NotifyPropertyChangedBase, IDisposable
+    public sealed class AlfredProvider : NotifyPropertyChangedBase
     {
         [NotNull]
         [ItemNotNull]
@@ -217,17 +217,6 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-            foreach (var module in Modules)
-            {
-                module.Dispose();
-            }
-        }
-
-        /// <summary>
         ///     Tells Alfred it's okay to start itself up and begin operating.
         /// </summary>
         /// <exception cref="InvalidOperationException">
@@ -290,36 +279,6 @@ namespace MattEland.Ani.Alfred.Core
 
             Modules.Add(module);
             module.OnRegistered(this);
-        }
-
-        /// <summary>
-        ///     Adds modules to Alfred in bulk.
-        /// </summary>
-        /// <param name="modules">The modules.</param>
-        /// <exception cref="System.ArgumentNullException">
-        ///     modules must be provided
-        /// </exception>
-        public void Register([NotNull] IEnumerable<AlfredModule> modules)
-        {
-            // Standard validation
-            if (modules == null)
-            {
-                throw new ArgumentNullException(nameof(modules));
-            }
-
-            AssertMustBeOffline();
-
-            // Ad each module using the standard Register function for now. This will make it easier to modify the process of registering a module
-            foreach (var module in modules)
-            {
-                if (module == null)
-                {
-                    throw new ArgumentNullException(
-                        nameof(modules),
-                        Resources.AlfredProvider_AddModules_ErrorNullModule);
-                }
-                Register(module);
-            }
         }
 
         /// <summary>

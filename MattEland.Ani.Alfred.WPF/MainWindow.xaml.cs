@@ -27,7 +27,7 @@ namespace MattEland.Ani.Alfred.WPF
     /// <summary>
     ///     Interaction logic for MainWindow.xaml
     /// </summary>
-    public sealed partial class MainWindow : IDisposable
+    public sealed partial class MainWindow
     {
         /// <summary>
         ///     The update frequency in seconds for Alfred's update pump
@@ -78,14 +78,6 @@ namespace MattEland.Ani.Alfred.WPF
             InitializeUpdatePump();
 
             _console.Log("WinClient.Initialize", "Initialization Complete", LogLevel.Verbose);
-        }
-
-        /// <summary>
-        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-            _alfred.Dispose();
         }
 
         private void InitializeAlfredModules()
