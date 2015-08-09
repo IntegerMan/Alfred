@@ -4,7 +4,7 @@
 
     <!-- Colors -->
     <Color x:Key="CautionBackgroundColor">#DFDDAF</Color>
-    <Color x:Key="CautionBackgroundBorderColor">#FECB00</Color>
+    <Color x:Key="CautionBackgroundBorderColor">#937600</Color>
     <Color x:Key="ErrorBackgroundColor">IndianRed</Color>
     <Color x:Key="ErrorForegroundColor">DarkRed</Color>
 
