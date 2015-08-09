@@ -130,6 +130,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <value>The modules.</value>
         [NotNull]
         [ItemNotNull]
+        [Obsolete("Alfred no longer needs modules at its root level")]
         public ICollection<AlfredModule> Modules
         {
             get { return _modules; }
@@ -277,6 +278,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <exception cref="InvalidOperationException">
         ///     Thrown if Alfred is not Offline
         /// </exception>
+        [Obsolete("Alfred no longer needs modules at its root level")]
         public void Register([NotNull] AlfredModule module)
         {
             if (module == null)
