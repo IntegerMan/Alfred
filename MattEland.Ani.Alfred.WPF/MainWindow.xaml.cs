@@ -53,6 +53,11 @@ namespace MattEland.Ani.Alfred.WPF
         public MainWindow()
         {
 
+#if DEBUG
+            // Do not allow topmost window mode while debugging
+            this.Topmost = false;
+#endif
+
             InitializeComponent();
 
             // Create Alfred. It won't be online and running yet, but create it.
