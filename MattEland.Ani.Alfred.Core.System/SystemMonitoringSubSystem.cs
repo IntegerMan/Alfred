@@ -21,6 +21,15 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         [NotNull]
         private readonly AlfredWidgetListPage _page;
 
+        [NotNull]
+        private readonly CpuMonitorModule _cpuModule;
+
+        [NotNull]
+        private readonly MemoryMonitorModule _memoryModule;
+
+        [NotNull]
+        private readonly DiskMonitorModule _diskModule;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubSystem" /> class.
         /// </summary>
@@ -35,16 +44,29 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <exception cref="System.ArgumentNullException"></exception>
         public SystemMonitoringSubSystem([NotNull] IPlatformProvider provider) : base(provider)
         {
-            var cpu = new CpuMonitorModule(provider);
-            Register(cpu);
-
-            var memory = new MemoryMonitorModule(provider);
-            Register(memory);
-
-            var disk = new DiskMonitorModule(provider);
-            Register(disk);
+            _cpuModule = new CpuMonitorModule(provider);
+            _memoryModule = new MemoryMonitorModule(provider);
+            _diskModule = new DiskMonitorModule(provider);
 
             _page = new AlfredWidgetListPage(provider, Resources.SystemMonitoringSystem_Name.NonNull());
+
+            RegisterModules();
+        }
+
+        /// <summary>
+        /// Called when the component is registered.
+        /// </summary>
+        /// <param name="alfred">The alfred.</param>
+        public override void OnRegistered(AlfredProvider alfred)
+        {
+            base.OnRegistered(alfred);
+        }
+
+        private void RegisterModules()
+        {
+            Register(_cpuModule);
+            Register(_memoryModule);
+            Register(_diskModule);
         }
 
         /// <summary>

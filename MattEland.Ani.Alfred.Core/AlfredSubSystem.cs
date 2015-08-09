@@ -84,6 +84,7 @@ namespace MattEland.Ani.Alfred.Core
         protected void Register([NotNull] AlfredModule module)
         {
             _modules.AddSafe(module);
+            module.OnRegistered(AlfredInstance);
         }
 
         /// <summary>
@@ -93,6 +94,7 @@ namespace MattEland.Ani.Alfred.Core
         protected void Register([NotNull] AlfredPage page)
         {
             _pages.AddSafe(page);
+            page.OnRegistered(AlfredInstance);
         }
 
         /// <summary>
@@ -128,5 +130,6 @@ namespace MattEland.Ani.Alfred.Core
             _pages.Clear();
             _modules.Clear();
         }
+
     }
 }

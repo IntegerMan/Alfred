@@ -3,32 +3,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:core="clr-namespace:MattEland.Ani.Alfred.Core;assembly=MattEland.Ani.Alfred.Core"
-             xmlns:resources="clr-namespace:MattEland.Ani.Alfred.WPF.Properties"
+             xmlns:pages="clr-namespace:MattEland.Ani.Alfred.Core.Pages;assembly=MattEland.Ani.Alfred.Core"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300" 
-             d:DataContext="{d:DesignInstance core:AlfredProvider}">
+             d:DataContext="{d:DesignInstance pages:AlfredModuleListPage}">
 
-    <DockPanel>
 
-        <!-- Header -->
-        <Border DockPanel.Dock="Top" Style="{StaticResource HeaderBannerBorderStyle}">
-            <TextBlock Text="{x:Static resources:Resources.ModulesHeader}" Style="{StaticResource HeaderBannerTextBlockStyle}" />
-        </Border>
+        <ItemsControl ItemsSource="{Binding Path=Modules}"                      
+                        BorderThickness="0">
 
-        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="8">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
 
-            <ItemsControl ItemsSource="{Binding Path=Modules}"                      
-                          BorderThickness="0">
-
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-
-            </ItemsControl>
-        </ScrollViewer>
-    </DockPanel>
+        </ItemsControl>
 
 </UserControl>

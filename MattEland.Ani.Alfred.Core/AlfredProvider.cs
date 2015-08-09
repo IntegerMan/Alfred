@@ -287,6 +287,7 @@ namespace MattEland.Ani.Alfred.Core
             AssertMustBeOffline();
 
             Modules.Add(module);
+            module.OnRegistered(this);
         }
 
         /// <summary>
@@ -342,6 +343,7 @@ namespace MattEland.Ani.Alfred.Core
             AssertMustBeOffline();
 
             _subsystems.AddSafe(subsystem);
+            subsystem.OnRegistered(this);
         }
 
     }

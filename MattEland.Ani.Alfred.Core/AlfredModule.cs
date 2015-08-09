@@ -79,6 +79,7 @@ namespace MattEland.Ani.Alfred.Core
             base.ClearChildCollections();
 
             _widgets.Clear();
+            OnPropertyChanged(nameof(Widgets));
         }
 
         /// <summary>
@@ -92,6 +93,7 @@ namespace MattEland.Ani.Alfred.Core
             _widgets.AddSafe(widget);
 
             OnPropertyChanged(nameof(IsVisible));
+            OnPropertyChanged(nameof(Widgets));
         }
 
         /// <summary>

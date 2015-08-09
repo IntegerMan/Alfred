@@ -296,5 +296,15 @@ namespace MattEland.Ani.Alfred.Core
         [NotNull, ItemNotNull]
         public abstract IEnumerable<AlfredComponent> Children { get; }
 
+        /// <summary>
+        /// Called when the component is registered.
+        /// </summary>
+        /// <param name="alfred">The alfred.</param>
+        public virtual void OnRegistered([CanBeNull] AlfredProvider alfred)
+        {
+            // Hang on to the reference now so AlfredInstance doesn't lie and we can tell
+            // our children who Alfred is before the whole update process happens
+            _alfred = alfred;
+        }
     }
 }

@@ -2,7 +2,9 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:widgets="clr-namespace:MattEland.Ani.Alfred.Core.Widgets;assembly=MattEland.Ani.Alfred.Core"
                     xmlns:console="clr-namespace:MattEland.Ani.Alfred.Core.Console;assembly=MattEland.Ani.Alfred.Core"
-                    xmlns:core="clr-namespace:MattEland.Ani.Alfred.Core;assembly=MattEland.Ani.Alfred.Core">
+                    xmlns:core="clr-namespace:MattEland.Ani.Alfred.Core;assembly=MattEland.Ani.Alfred.Core"
+                    xmlns:pages="clr-namespace:MattEland.Ani.Alfred.Core.Pages;assembly=MattEland.Ani.Alfred.Core"
+                    xmlns:panes="clr-namespace:MattEland.Ani.Alfred.WPF.Panes">
 
     <!-- Logging Templates -->
     <DataTemplate DataType="{x:Type console:ConsoleEvent}">
@@ -163,6 +165,16 @@
                 Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
                 Text="This is an unknown type of Widget" />
 
+    </DataTemplate>
+    
+    <!-- Pages -->
+    
+    <DataTemplate DataType="{x:Type pages:AlfredModuleListPage}">
+        <panes:ModulesPane DataContext="{Binding}" />
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type pages:AlfredEventLogPage}">
+        <panes:ConsolePane DataContext="{Binding}" />
     </DataTemplate>
 
 </ResourceDictionary>

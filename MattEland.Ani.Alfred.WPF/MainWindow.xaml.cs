@@ -8,6 +8,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -149,10 +150,27 @@ namespace MattEland.Ani.Alfred.WPF
             // Determine whether to auto-start or not based off of settings
             if (Settings.AutoStartAlfred)
             {
+                _console.Log("WinClient.Loaded", "Automatically starting Alfred", LogLevel.Verbose);
                 _alfred.Initialize();
             }
 
+            // Auto-select the first tab; if any are present
+            AutoSelectFirstTab();
+
+            // Log that we're good to go
             _console.Log("WinClient.Loaded", "The application is now online", LogLevel.Info);
+        }
+
+        /// <summary>
+        /// Automatically selects the first tab if no tab is selected.
+        /// </summary>
+        private void AutoSelectFirstTab()
+        {
+            Debug.Assert(tabPages != null);
+            if (tabPages.SelectedItem == null && tabPages.HasItems)
+            {
+                tabPages.SelectedIndex = 0;
+            }
         }
 
         /// <summary>

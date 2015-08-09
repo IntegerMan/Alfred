@@ -24,6 +24,18 @@ namespace MattEland.Ani.Alfred.Core.Modules
         [CanBeNull]
         private AlfredEventLogPage _eventLogPage;
 
+        [NotNull]
+        private readonly AlfredPowerModule _powerModule;
+
+        [NotNull]
+        private readonly AlfredTimeModule _timeModule;
+
+        [NotNull]
+        private readonly AlfredSubSystemListModule _systemsModule;
+
+        [NotNull]
+        private readonly AlfredPagesListModule _pagesModule;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubSystem" /> class.
         /// </summary>
@@ -38,18 +50,15 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <exception cref="System.ArgumentNullException"></exception>
         public AlfredControlSubSystem([NotNull] IPlatformProvider provider) : base(provider)
         {
-            // Instantiate the modules
-            var power = new AlfredPowerModule(provider);
-            var time = new AlfredTimeModule(provider);
-            var systems = new AlfredSubSystemListModule(provider);
-            var pages = new AlfredPagesListModule(provider);
 
-            // Build out our control page
             _controlPage = new AlfredModuleListPage(provider, ControlPageName);
-            _controlPage.Register(power);
-            _controlPage.Register(time);
-            _controlPage.Register(systems);
-            _controlPage.Register(pages);
+
+            // Instantiate the modules
+            _powerModule = new AlfredPowerModule(provider);
+            _timeModule = new AlfredTimeModule(provider);
+            _systemsModule = new AlfredSubSystemListModule(provider);
+            _pagesModule = new AlfredPagesListModule(provider);
+
         }
 
         /// <summary>
@@ -94,8 +103,32 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <param name="alfred"></param>
         protected override void InitializeProtected(AlfredProvider alfred)
         {
-            // Add a basic control page
+            RegisterControls(AlfredInstance);
+        }
+
+        /// <summary>
+        /// Called when the component is registered.
+        /// </summary>
+        /// <param name="alfred">The alfred.</param>
+        public override void OnRegistered(AlfredProvider alfred)
+        {
+            base.OnRegistered(alfred);
+
+            RegisterControls(alfred);
+
+        }
+
+        private void RegisterControls(AlfredProvider alfred)
+        {
+
             Register(_controlPage);
+
+            // Build out our control page
+            _controlPage.ClearModules();
+            _controlPage.Register(_powerModule);
+            _controlPage.Register(_timeModule);
+            _controlPage.Register(_systemsModule);
+            _controlPage.Register(_pagesModule);
 
             // Don't include the event log page if there are no events
             if (alfred?.Console != null)

@@ -9,20 +9,21 @@
         mc:Ignorable="d"
         Background="{StaticResource AppBackgroundBrush}"
         Foreground="{StaticResource AppForegroundBrush}"
-        Title="{Binding Path=NameAndVersion}" 
-        Width="800" 
+        Title="{Binding Path=NameAndVersion}"
+        Width="800"
         Height="600"
         Topmost="True"
         Loaded="OnWindowLoaded"
         Closing="OnWindowClosing"
-        d:DataContext="{d:DesignInstance core:AlfredProvider}" 
-        ShowInTaskbar="True" 
-        Icon="alfred.ico" 
+        d:DataContext="{d:DesignInstance core:AlfredProvider}"
+        ShowInTaskbar="True"
+        Icon="alfred.ico"
         WindowStartupLocation="CenterScreen">
 
     <Window.TaskbarItemInfo>
-        <TaskbarItemInfo Description="{Binding NameAndVersion}" 
-                         Overlay="{x:Null}" 
+        <!-- TODO: Look into what I can do with this -->
+        <TaskbarItemInfo Description="{Binding NameAndVersion}"
+                         Overlay="{x:Null}"
                          ProgressValue="0"
                          ProgressState="None" />
     </Window.TaskbarItemInfo>
@@ -30,35 +31,54 @@
     <DockPanel>
 
         <!-- Header Bar -->
-        <Border DockPanel.Dock="Top" 
+        <Border DockPanel.Dock="Top"
                 Style="{StaticResource HeaderBannerBorderStyle}"
                 MinHeight="32">
 
-            <StackPanel Orientation="Horizontal"    
-                        HorizontalAlignment="Center"                         
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center"
                         VerticalAlignment="Center">
 
-                <TextBlock Text="{Binding NameAndVersion}"  />
+                <TextBlock Text="{Binding NameAndVersion}" />
                 <TextBlock Text=" - " Margin="4,0,4,0" />
-                <TextBlock Text="{Binding Status}" 
-                           Foreground="{StaticResource AccentForegroundBrush}"/>
+                <TextBlock Text="{Binding Status}"
+                           Foreground="{StaticResource AccentForegroundBrush}" />
 
             </StackPanel>
 
         </Border>
 
         <!-- Tabbed Content Regions -->
-        <TabControl Margin="8, 16, 8, 8">
+        <TabControl x:Name="tabPages"
+                    Margin="8, 16, 8, 8"
+                    ItemsSource="{Binding RootPages}">
 
-            <!-- Modules -->
-            <TabItem Header="{x:Static resources:Resources.ModulesHeader}">
-                <panes:ModulesPane DataContext="{Binding}" />
-            </TabItem>
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <!-- Tabs are pretty simple; just show the name -->
+                    <TextBlock Text="{Binding Name}" />
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <DockPanel>
 
-            <!-- Console -->
-            <TabItem Header="{x:Static resources:Resources.ConsoleHeader}">
-                <panes:ConsolePane DataContext="{Binding Path=Console}" />
-            </TabItem>
+                        <!-- Header -->
+                        <Border DockPanel.Dock="Top"
+                                Style="{StaticResource HeaderBannerBorderStyle}">
+                            <TextBlock Text="{Binding Name}"
+                                       Style="{StaticResource HeaderBannerTextBlockStyle}" />
+                        </Border>
+
+                        <!-- Present the content inside of an auto-scrolling region. 
+                             Let the data template for the type of content handle the presentation -->
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="8" Content="{Binding}" />
+
+                    </DockPanel>
+
+                </DataTemplate>
+            </TabControl.ContentTemplate>
 
         </TabControl>
 

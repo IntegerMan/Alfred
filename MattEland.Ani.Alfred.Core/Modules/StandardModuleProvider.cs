@@ -34,9 +34,10 @@ namespace MattEland.Ani.Alfred.Core.Modules
             }
 
             // Define our modules
+            /*
             var modules = new List<AlfredModule>
                           {
-                              new AlfredPowerModule(alfred.PlatformProvider, alfred),
+                              new AlfredPowerModule(alfred.PlatformProvider),
                               new AlfredTimeModule(alfred.PlatformProvider),
                               new AlfredSubSystemListModule(alfred.PlatformProvider),
                               new AlfredPagesListModule(alfred.PlatformProvider)
@@ -44,6 +45,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
 
             // Add lots of modules in bulk
             alfred.Register(modules);
+            */
 
             // Add the core subsystem to the mix
             alfred.Register(new AlfredControlSubSystem(alfred.PlatformProvider));

@@ -54,6 +54,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         public void Register([NotNull] AlfredModule module)
         {
             _modules.AddSafe(module);
+            module.OnRegistered(AlfredInstance);
         }
 
 
@@ -73,5 +74,12 @@ namespace MattEland.Ani.Alfred.Core.Pages
             }
         }
 
+        /// <summary>
+        /// Clears the modules list.
+        /// </summary>
+        public void ClearModules()
+        {
+            _modules.Clear();
+        }
     }
 }
