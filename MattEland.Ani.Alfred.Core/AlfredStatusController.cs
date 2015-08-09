@@ -18,7 +18,7 @@ namespace MattEland.Ani.Alfred.Core
     /// <summary>
     ///     A utility class that helps control Alfred's status and monitors the initialization and shutdown processes.
     /// </summary>
-    public sealed class AlfredStatusController
+    public sealed class AlfredStatusController : IStatusController
     {
         [NotNull]
         private readonly AlfredProvider _alfred;
@@ -38,16 +38,6 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     Gets the alfred provider.
-        /// </summary>
-        /// <value>The alfred provider.</value>
-        [NotNull]
-        public AlfredProvider Alfred
-        {
-            get { return _alfred; }
-        }
-
-        /// <summary>
         ///     Tells Alfred it's okay to start itself up and begin operating.
         /// </summary>
         /// <exception cref="InvalidOperationException">
@@ -58,10 +48,10 @@ namespace MattEland.Ani.Alfred.Core
             var header = Resources.AlfredStatusController_Initialize_LogHeader.NonNull();
             var culture = CultureInfo.CurrentCulture;
 
-            var console = Alfred.Console;
+            var console = _alfred.Console;
 
             // Handle case on initialize but already initializing or online
-            if (Alfred.Status == AlfredStatus.Online)
+            if (_alfred.Status == AlfredStatus.Online)
             {
                 var message = Resources.AlfredStatusController_Initialize_ErrorAlreadyOnline.NonNull();
                 console?.Log(header, message, LogLevel.Verbose);
@@ -71,31 +61,31 @@ namespace MattEland.Ani.Alfred.Core
 
             // Inform things that we're setting up right now
             console?.Log(header, Resources.AlfredStatusController_Initialize_Initializing.NonNull(), LogLevel.Verbose);
-            Alfred.Status = AlfredStatus.Initializing;
+            _alfred.Status = AlfredStatus.Initializing;
 
-            // Boot up Modules / Subsystems and give them a provider
-            foreach (var component in Alfred.Components)
+            // Boot up items and give them a provider
+            foreach (var item in _alfred.Subsystems)
             {
                 // Log the initialization
                 var initLogFormat = Resources.AlfredStatusController_InitializingComponent.NonNull();
-                console?.Log(header, string.Format(culture, initLogFormat, component.NameAndVersion), LogLevel.Verbose);
+                console?.Log(header, string.Format(culture, initLogFormat, item.NameAndVersion), LogLevel.Verbose);
 
                 // Actually initialize the component
-                component.Initialize(Alfred);
+                item.Initialize(_alfred);
 
                 // Log the completion
                 var initializedLogFormat = Resources.AlfredStatusController_InitializeComponentInitialized.NonNull();
-                console?.Log(header, string.Format(culture, initializedLogFormat, component.NameAndVersion), LogLevel.Verbose);
+                console?.Log(header, string.Format(culture, initializedLogFormat, item.NameAndVersion), LogLevel.Verbose);
             }
 
             // We're done. Let the world know.
-            Alfred.Status = AlfredStatus.Online;
+            _alfred.Status = AlfredStatus.Online;
             console?.Log(header, Resources.AlfredStatusController_Initialize_InitilizationCompleted.NonNull(), LogLevel.Verbose);
 
-            // Notify each module that startup was completed
-            foreach (var module in Alfred.Components)
+            // Notify each item that startup was completed
+            foreach (var item in _alfred.Subsystems)
             {
-                module.OnInitializationCompleted();
+                item.OnInitializationCompleted();
             }
 
             // Log the completion
@@ -112,10 +102,10 @@ namespace MattEland.Ani.Alfred.Core
         {
             var header = Resources.AlfredStatusController_Shutdown_LogHeader.NonNull();
 
-            var console = Alfred.Console;
+            var console = _alfred.Console;
 
             // Handle cases where shutdown shouldn't be allowed
-            switch (Alfred.Status)
+            switch (_alfred.Status)
             {
                 case AlfredStatus.Offline:
                     var offlineMessage = Resources.AlfredStatusController_Shutdown_ErrorAlreadyOffline.NonNull();
@@ -132,30 +122,30 @@ namespace MattEland.Ani.Alfred.Core
 
             // Indicate status so the UI can keep busy
             console?.Log(header, Resources.AlfredStatusController_Shutdown_Shutting_down.NonNull(), LogLevel.Verbose);
-            Alfred.Status = AlfredStatus.Terminating;
+            _alfred.Status = AlfredStatus.Terminating;
 
-            // Shut down components and decouple them from Alfred
-            foreach (var component in Alfred.Components)
+            // Shut down items and decouple them from Alfred
+            foreach (var item in _alfred.Subsystems)
             {
                 var culture = CultureInfo.CurrentCulture;
 
                 var shuttingDownMessage = Resources.AlfredStatusController_ShuttingDownComponent.NonNull();
-                console?.Log(header, string.Format(culture, shuttingDownMessage, component.NameAndVersion), LogLevel.Verbose);
+                console?.Log(header, string.Format(culture, shuttingDownMessage, item.NameAndVersion), LogLevel.Verbose);
 
-                component.Shutdown();
+                item.Shutdown();
 
                 var shutDownMessage = Resources.AlfredStatusController_ComponentOffline.NonNull();
-                console?.Log(header, string.Format(culture, shutDownMessage, component.NameAndVersion), LogLevel.Verbose);
+                console?.Log(header, string.Format(culture, shutDownMessage, item.NameAndVersion), LogLevel.Verbose);
             }
 
             // We're done here. Tell the world.
-            Alfred.Status = AlfredStatus.Offline;
+            _alfred.Status = AlfredStatus.Offline;
             console?.Log(header, Resources.AlfredStatusController_Shutdown_Completed.NonNull(), LogLevel.Info);
 
-            // Notify each module that shutdown was completed
-            foreach (var module in Alfred.Components)
+            // Notify each item that shutdown was completed
+            foreach (var item in _alfred.Subsystems)
             {
-                module.OnShutdownCompleted();
+                item.OnShutdownCompleted();
             }
         }
     }

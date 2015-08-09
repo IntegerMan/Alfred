@@ -137,5 +137,15 @@ namespace MattEland.Ani.Alfred.Core.Modules
 
             widget.Text = page.Name;
         }
+
+        /// <summary>
+        ///     A notification method that is invoked when initialization for Alfred is complete so the UI can be fully enabled or
+        ///     adjusted
+        /// </summary>
+        public override void OnInitializationCompleted()
+        {
+            // Re-initialize in case other pages popped up
+            InitializeProtected(AlfredInstance);
+        }
     }
 }

@@ -34,7 +34,7 @@ namespace MattEland.Ani.Alfred.Core
         ///     The status controller
         /// </summary>
         [NotNull]
-        private readonly AlfredStatusController _statusController;
+        private readonly IStatusController _statusController;
 
         [NotNull]
         private readonly ICollection<AlfredSubsystem> _subsystems;
@@ -49,17 +49,33 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <param name="provider">The provider.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public AlfredProvider([NotNull] IPlatformProvider provider)
+        public AlfredProvider([NotNull] IPlatformProvider provider) : this(provider, null)
         {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AlfredProvider"/> class.
+        /// </summary>
+        /// <param name="provider">The provider.</param>
+        /// <param name="controller">The controller.</param>
+        /// <exception cref="System.ArgumentNullException">provider</exception>
+        public AlfredProvider([NotNull] IPlatformProvider provider, [CanBeNull] IStatusController controller)
+        {
+            // Set the controller
+            if (controller == null)
+            {
+                controller = new AlfredStatusController(this);
+            }
+            _statusController = controller;
+
+            // Set the provider
             if (provider == null)
             {
                 throw new ArgumentNullException(nameof(provider));
             }
-
-            _statusController = new AlfredStatusController(this);
-
             _platformProvider = provider;
 
+            // Build out sub-collections
             _subsystems = provider.CreateCollection<AlfredSubsystem>();
         }
 
@@ -151,21 +167,6 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     Gets the components registered directly with Alfred.
-        /// </summary>
-        /// <value>The components.</value>
-        [NotNull]
-        [ItemNotNull]
-        public IEnumerable<AlfredComponent> Components
-        {
-            get
-            {
-                // TODO: Right now this is just subsystems. Unsure if this will continue this way or not. If so, it should be removed and Subsystems used instead.
-                return _subsystems;
-            }
-        }
-
-        /// <summary>
         ///     Gets the user interface pages registered to the Alfred Framework at root level.
         /// </summary>
         /// <value>The pages.</value>
@@ -218,10 +219,10 @@ namespace MattEland.Ani.Alfred.Core
                 throw new InvalidOperationException(Resources.AlfredProvider_Update_ErrorMustBeOnline);
             }
 
-            // Update every component
-            foreach (var component in Components)
+            // Update every system
+            foreach (var item in Subsystems)
             {
-                component.Update();
+                item.Update();
             }
         }
 

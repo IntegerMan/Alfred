@@ -143,7 +143,7 @@ namespace MattEland.Ani.Alfred.WPF.Converters
         }
 
         /// <summary>
-        ///     Converts a value.
+        ///     Converts a value to a brush where value is intended to be a LogLevel.
         /// </summary>
         /// <returns>
         ///     A converted value. If the method returns null, the valid null value is used.
@@ -170,6 +170,17 @@ namespace MattEland.Ani.Alfred.WPF.Converters
             {
                 return DefaultBrush;
             }
+
+            return GetBrushForLevel(level);
+        }
+
+        /// <summary>
+        /// Gets the brush for specific log level.
+        /// </summary>
+        /// <param name="level">The log level.</param>
+        /// <returns>The brush.</returns>
+        private Brush GetBrushForLevel(LogLevel level)
+        {
 
             // Grab the appropriate brush
             switch (level)

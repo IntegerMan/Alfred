@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AlfredComponent.cs" />
+    <Compile Include="IStatusController.cs" />
     <Compile Include="Modules\AlfredPagesListModule.cs" />
     <Compile Include="Pages\AlfredEventLogPage.cs" />
     <Compile Include="Pages\AlfredModuleListPage.cs" />

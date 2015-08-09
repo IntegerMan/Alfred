@@ -169,11 +169,11 @@ namespace MattEland.Ani.Alfred.Core.Tests
 
             _alfred.Initialize();
 
-            foreach (var component in _alfred.Components)
+            foreach (var item in _alfred.Subsystems)
             {
                 Assert.AreEqual(AlfredStatus.Online,
-                                component.Status,
-                                $"{component.NameAndVersion} was not initialized during initialization.");
+                                item.Status,
+                                $"{item.NameAndVersion} was not initialized during initialization.");
             }
         }
 
@@ -316,11 +316,11 @@ namespace MattEland.Ani.Alfred.Core.Tests
             _alfred.Initialize();
             _alfred.Shutdown();
 
-            foreach (var component in _alfred.Components)
+            foreach (var item in _alfred.Subsystems)
             {
                 Assert.AreEqual(AlfredStatus.Offline,
-                                component.Status,
-                                $"{component.NameAndVersion} was not shut down during alfred shut down.");
+                                item.Status,
+                                $"{item.NameAndVersion} was not shut down during alfred shut down.");
             }
         }
 
