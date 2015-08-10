@@ -8,7 +8,9 @@
 
     <converters:LogLevelToBrushConverter x:Key="LogLevelToBrushConverter"
                                   WarningBrush="{StaticResource CautionForegroundBrush}"
-                                  InfoBrush="{StaticResource AccentForegroundBrush}"
+                                  InfoBrush="{StaticResource AppBorderBrush}"
+                                  UserInputBrush="{StaticResource UserLogBrush}"
+                                  ChatResponseBrush="{StaticResource AlfredBrush}"
                                   VerboseBrush="{StaticResource AppForegroundBrush}"
                                   ErrorBrush="{StaticResource ErrorForegroundBrush}" />
 

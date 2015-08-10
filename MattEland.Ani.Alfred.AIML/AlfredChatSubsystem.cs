@@ -63,7 +63,7 @@ namespace MattEland.Ani.Alfred.Chat
         public override void OnInitializationCompleted()
         {
             // Say hi so Alfred greets the user
-            _chatHandler.HandleUserStatement(Res.InitialGreetingText.NonNull());
+            _chatHandler.DoInitialGreeting();
         }
 
         /// <summary>

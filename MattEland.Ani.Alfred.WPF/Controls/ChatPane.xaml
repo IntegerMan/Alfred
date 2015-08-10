@@ -10,19 +10,26 @@
              d:DataContext="{d:DesignInstance chat:AimlStatementHandler}">
     <StackPanel>
 
+        <!-- User's statement -->
+        <TextBlock Foreground="{StaticResource UserLogBrush}" 
+                Margin="0,4,0,12"
+                TextWrapping="Wrap"
+                ToolTip="{Binding Path=LastInput}"
+                Text="{Binding Path=LastInput}"/>
+
         <!-- Alfred's response to prior statement -->
         <StackPanel DataContext="{Binding Path=LastResponse}" 
                     x:Name="pnlResponse">
-            
-            <TextBlock Foreground="{StaticResource AppForegroundBrush}" 
-                   Text="Last Response:" />
 
-            <TextBlock Foreground="{StaticResource AccentForegroundBrush}" 
+            <TextBlock Foreground="{StaticResource AppForegroundBrush}" 
+                   Text="Alfred:" />
+
+            <TextBlock Foreground="{StaticResource AlfredBrush}" 
                    Margin="0,4,0,0"
                    TextWrapping="Wrap"
                    ToolTip="{Binding Path=ResponseText}"
                    Text="{Binding Path=ResponseText}"/>
-            
+
         </StackPanel>
 
         <!-- User Input area -->

@@ -135,8 +135,8 @@ namespace MattEland.Ani.Alfred.Chat
         /// <returns>The response to the user statement</returns>
         public UserStatementResponse HandleUserStatement(string userInput)
         {
-            // Log the input to the diagnostic log. Verbose should keep it from being spoken
-            _console?.Log("Chat.Input", userInput, LogLevel.Verbose);
+            // Log the input to the diagnostic log.
+            _console?.Log("Chat.Input", userInput, LogLevel.UserInput);
 
             // We're calling 3rd party code - be extremely careful
             Result result = null;
@@ -155,8 +155,8 @@ namespace MattEland.Ani.Alfred.Chat
                                ? new UserStatementResponse(userInput, Resources.DefaultFailureResponseText, false)
                                : new UserStatementResponse(userInput, result.RawOutput, true);
 
-            // Log the output to the diagnostic log. Info should make it spoken if speech is on.
-            _console?.Log("Chat.Output", response.ResponseText, LogLevel.Info);
+            // Log the output to the diagnostic log.
+            _console?.Log("Chat.Output", response.ResponseText, LogLevel.ChatResponse);
 
             // Update query properties
             LastResponse = response;
@@ -206,6 +206,19 @@ namespace MattEland.Ani.Alfred.Chat
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
+        }
+
+        /// <summary>
+        /// Performs an initial greeting by sending hi to the conversation system
+        /// and erasing it from the last input so the user sees Alfred greeting them.
+        /// </summary>
+        public void DoInitialGreeting()
+        {
+            // Send a "hi" into the system
+            HandleUserStatement(Resources.InitialGreetingText.NonNull());
+
+            // Clear out the input so it doesn't look like the user typed it
+            LastInput = string.Empty;
         }
     }
 }

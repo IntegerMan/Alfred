@@ -47,7 +47,7 @@ namespace MattEland.Ani.Alfred.Core.Speech
             _console = console;
 
             // Tell it what log levels we care about
-            _speechEnabledLogLevels = new HashSet<LogLevel> { LogLevel.Info, LogLevel.Warning, LogLevel.Error };
+            _speechEnabledLogLevels = new HashSet<LogLevel> { LogLevel.ChatResponse, LogLevel.Warning, LogLevel.Error };
 
             // Give the speech provider the existing console and not this console since it won't be online yet
             _speech = new AlfredSpeechProvider(console);

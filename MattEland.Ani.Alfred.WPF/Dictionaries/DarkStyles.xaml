@@ -17,6 +17,9 @@
 
     <Color x:Key="AccentColor">#0079CD</Color>
     
+    <Color x:Key="UserLogColor">PaleGoldenrod</Color>
+    <Color x:Key="AlfredColor">SteelBlue</Color>
+    
     <Color x:Key="GoodColor">#8CD189</Color>
 
     <!-- Brushes -->
@@ -29,6 +32,9 @@
     <SolidColorBrush Color="{StaticResource ErrorForegroundColor}" x:Key="ErrorBorderBrush" />
     
     <SolidColorBrush Color="{StaticResource AccentColor}" x:Key="AccentForegroundBrush" />
+    
+    <SolidColorBrush Color="{StaticResource UserLogColor}" x:Key="UserLogBrush" />
+    <SolidColorBrush Color="{StaticResource AccentColor}" x:Key="AlfredBrush" />
 
     <SolidColorBrush Color="{StaticResource AppBackgroundColor}" x:Key="AppBackgroundBrush" />
     <SolidColorBrush Color="{StaticResource AppForegroundColor}" x:Key="AppForegroundBrush" />
