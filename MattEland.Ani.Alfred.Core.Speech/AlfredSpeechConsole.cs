@@ -19,7 +19,7 @@ namespace MattEland.Ani.Alfred.Core.Speech
     /// <summary>
     ///     A speech-enabled console implementation that notifies the user of significant events
     /// </summary>
-    public class AlfredSpeechConsole : IConsole
+    public sealed class AlfredSpeechConsole : IConsole
     {
         [NotNull]
         private readonly IConsole _console;
@@ -95,7 +95,7 @@ namespace MattEland.Ani.Alfred.Core.Speech
                     message = string.Format(CultureInfo.CurrentCulture, "{0}: {1}", level, message);
                 }
 
-                _speech.Say(message);
+                _speech.Say(message.NonNull());
             }
         }
     }

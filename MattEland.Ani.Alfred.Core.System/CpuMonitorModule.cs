@@ -23,7 +23,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
     /// <summary>
     ///     A module that displays information on the system's processor utilization percentages
     /// </summary>
-    public class CpuMonitorModule : SystemMonitorModule
+    public sealed class CpuMonitorModule : SystemMonitorModule
     {
         private const string CpuCategoryName = "Processor";
         private const string CpuUsageCounterName = "% Processor Time";

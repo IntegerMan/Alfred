@@ -21,7 +21,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
     /// <summary>
     ///     A module that lists installed subsystems
     /// </summary>
-    public class AlfredPagesListModule : AlfredModule
+    public sealed class AlfredPagesListModule : AlfredModule
     {
         [NotNull]
         [ItemNotNull]

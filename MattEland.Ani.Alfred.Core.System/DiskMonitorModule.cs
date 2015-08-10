@@ -19,7 +19,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
     /// <summary>
     ///     A module that displays information on the system's disk input / output operations
     /// </summary>
-    public class DiskMonitorModule : SystemMonitorModule
+    public sealed class DiskMonitorModule : SystemMonitorModule
     {
         private const string DiskCategoryName = "PhysicalDisk";
         private const string DiskReadCounterName = "% Disk Read Time";

@@ -71,19 +71,6 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        ///     Gets whether or not the module is visible to the user interface.
-        /// </summary>
-        /// <value>Whether or not the module is visible.</value>
-        public override bool IsVisible
-        {
-            get
-            {
-                // The power module will always need to be visible
-                return true;
-            }
-        }
-
-        /// <summary>
         ///     Gets the initialize button.
         /// </summary>
         /// <value>The initialize button.</value>

@@ -21,7 +21,7 @@ namespace MattEland.Ani.Alfred.WPF.Converters
     /// <summary>
     ///     An IValueConverter that converts LogLevels to brushes
     /// </summary>
-    public class LogLevelToBrushConverter : IValueConverter
+    public sealed class LogLevelToBrushConverter : IValueConverter
     {
         [NotNull]
         private Brush _defaultBrush;

@@ -95,14 +95,20 @@ namespace MattEland.Ani.Alfred.Core.Speech
 
             foreach (var voice in voices)
             {
+                LogDetectedVoice(console, voice);
+            }
+        }
 
-                // Shouldn't happen, but just in case
-                if (voice == null)
-                {
-                    continue;
-                }
-
-                // We have a voice; log what we've found
+        /// <summary>
+        /// Logs the detected voice's information to the console.
+        /// </summary>
+        /// <param name="console">The console.</param>
+        /// <param name="voice">The voice.</param>
+        private static void LogDetectedVoice([NotNull] IConsole console, [CanBeNull] InstalledVoice voice)
+        {
+            // We have a voice; log what we've found
+            if (voice != null)
+            {
                 var info = voice.VoiceInfo;
                 if (info != null)
                 {
@@ -113,7 +119,7 @@ namespace MattEland.Ani.Alfred.Core.Speech
                                                 info.Culture?.EnglishName,
                                                 voice.Enabled);
 
-                    console.Log(LogHeader, message, Level);
+                    console.Log(LogHeader, message, LogLevel.Verbose);
                 }
                 else
                 {

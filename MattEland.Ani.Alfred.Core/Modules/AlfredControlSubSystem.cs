@@ -17,7 +17,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
     ///     The control subsystem provides essential monitoring and control functionality for Alfred such as the Alfred control
     ///     page, an event log page, etc.
     /// </summary>
-    public class AlfredControlSubsystem : AlfredSubsystem
+    public sealed class AlfredControlSubsystem : AlfredSubsystem
     {
         [NotNull]
         private readonly AlfredModuleListPage _controlPage;

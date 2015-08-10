@@ -16,7 +16,7 @@ namespace MattEland.Ani.Alfred.WPF.Platform
     /// <summary>
     ///     A WPF compliant implementation of AlfredCommand.
     /// </summary>
-    public class WinClientCommand : AlfredCommand, ICommand
+    public sealed class WinClientCommand : AlfredCommand, ICommand
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="WinClientCommand" /> class.

@@ -195,51 +195,60 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </param>
         private void UpdateBedtimeAlertVisibility(DateTime time)
         {
-            var alertVisible = false;
+            // Finally stick the value in the widget
+            BedtimeAlertWidget.IsVisible = CalculateAlertVisibility(time);
+        }
 
+        /// <summary>
+        /// Calculates the alert visibility based on the inputed time.
+        /// </summary>
+        /// <param name="time">The time.</param>
+        /// <returns><c>true</c> if the alert is visible, <c>false</c> otherwise.</returns>
+        private bool CalculateAlertVisibility(DateTime time)
+        {
             // Only do alert visibility calculations if the thing is even enabled.
-            if (IsAlertEnabled)
+            if (!IsAlertEnabled)
             {
-                // Figure out when the alarm display should end. Accept values >= 24 for now.
-                // We'll adjust this in a few blocks when checking for early morning circumstances.
-                var bedtimeAlertEndHour = BedtimeHour + AlertDurationInHours;
-
-                if (time.Hour == BedtimeHour)
-                {
-                    if (time.Minute >= BedtimeMinute)
-                    {
-                        alertVisible = true;
-                    }
-                }
-                else if (time.Hour > BedtimeHour)
-                {
-                    // Check for when we're on the hour the alert will expire
-                    if (time.Hour == bedtimeAlertEndHour && time.Minute < BedtimeMinute)
-                    {
-                        alertVisible = true;
-                    }
-                    else if (time.Hour < bedtimeAlertEndHour)
-                    {
-                        alertVisible = true;
-                    }
-                }
-
-                // Next we'll check early morning carry over for late alerts so 
-                // make sure the end hour is representable on a 24 hour clock.
-                if (bedtimeAlertEndHour >= 24)
-                {
-                    bedtimeAlertEndHour -= 24;
-                }
-
-                // Support scenarios of a 9 PM bedtime but it's 12:30 AM.
-                if (time.Hour <= bedtimeAlertEndHour)
-                {
-                    alertVisible = true;
-                }
+                return false;
             }
 
-            // Finally stick the value in the widget
-            BedtimeAlertWidget.IsVisible = alertVisible;
+            var hour = time.Hour;
+            var minute = time.Minute;
+            var bedHour = BedtimeHour;
+            var bedMinute = BedtimeMinute;
+
+            // Figure out when the alarm display should end. Accept values >= 24 for now.
+            // We'll adjust this in a few blocks when checking for early morning circumstances.
+            var alertDurationInHours = AlertDurationInHours;
+            var bedtimeAlertEndHour = bedHour + alertDurationInHours;
+
+            if (hour == bedHour)
+            {
+                return minute >= bedMinute;
+            }
+
+            if (hour > bedHour)
+            {
+                // Check for when we're on the hour the alert will expire
+                if (hour == bedtimeAlertEndHour && minute < bedMinute)
+                {
+                    return true;
+                }
+
+                return hour < bedtimeAlertEndHour;
+
+            }
+
+            // Next we'll check early morning carry over for late alerts so 
+            // make sure the end hour is representable on a 24 hour clock.
+            if (bedtimeAlertEndHour >= 24)
+            {
+                bedtimeAlertEndHour -= 24;
+            }
+
+            // Support scenarios of a 9 PM bedtime but it's 12:30 AM.
+            return hour <= bedtimeAlertEndHour;
+
         }
 
         /// <summary>

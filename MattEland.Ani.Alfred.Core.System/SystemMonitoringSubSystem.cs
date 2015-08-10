@@ -17,7 +17,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
     ///     This is a subsystem for the Alfred Framework that allows for monitoring system performance
     ///     and surfacing alerts on critical events.
     /// </summary>
-    public class SystemMonitoringSubsystem : AlfredSubsystem
+    public sealed class SystemMonitoringSubsystem : AlfredSubsystem
     {
         [NotNull]
         private readonly AlfredModuleListPage _page;
@@ -49,7 +49,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             _memoryModule = new MemoryMonitorModule(provider);
             _diskModule = new DiskMonitorModule(provider);
 
-            _page = new AlfredModuleListPage(provider, Name);
+            _page = new AlfredModuleListPage(provider, Resources.SystemMonitoringSystem_Name.NonNull());
         }
 
         /// <summary>
