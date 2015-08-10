@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace MattEland.Ani.Alfred.Chat
+namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>
     /// An interface defining a class that can attempt handle user input in text form

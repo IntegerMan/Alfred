@@ -12,6 +12,7 @@ using System.Linq;
 using System.Windows;
 
 using MattEland.Ani.Alfred.Chat;
+using MattEland.Ani.Alfred.Core.Definitions;
 
 namespace MattEland.Ani.Alfred.WPF.Controls
 {

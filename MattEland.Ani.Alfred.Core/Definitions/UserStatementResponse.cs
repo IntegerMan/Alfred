@@ -1,10 +1,6 @@
-﻿using System;
+﻿using JetBrains.Annotations;
 
-using JetBrains.Annotations;
-
-using MattEland.Ani.Alfred.Core;
-
-namespace MattEland.Ani.Alfred.Chat
+namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>
     /// A response to a user statement
