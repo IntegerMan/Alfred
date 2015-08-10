@@ -84,17 +84,12 @@ namespace MattEland.Ani.Alfred.WPF
         /// <summary>
         ///     Disposes of loose resources
         /// </summary>
-        [SuppressMessage("ReSharper", "UseNullPropagation")]
+        [SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_console")]
+        [SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_systemMonitoringSubsystem")]
         public void Dispose()
         {
-            if (_systemMonitoringSubsystem != null)
-            {
-                _systemMonitoringSubsystem?.Dispose();
-            }
-            if (_console != null)
-            {
-                _console?.Dispose();
-            }
+            _systemMonitoringSubsystem?.Dispose();
+            _console?.Dispose();
         }
 
         /// <summary>

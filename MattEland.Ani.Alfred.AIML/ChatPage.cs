@@ -60,7 +60,7 @@ namespace MattEland.Ani.Alfred.Chat
             {
                 if (value == null)
                 {
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException(nameof(value));
                 }
 
                 if (Equals(value, _response))
