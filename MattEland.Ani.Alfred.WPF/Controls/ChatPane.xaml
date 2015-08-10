@@ -10,13 +10,6 @@
              d:DataContext="{d:DesignInstance chat:AimlStatementHandler}">
     <StackPanel>
 
-        <!-- User's statement -->
-        <TextBlock Foreground="{StaticResource UserLogBrush}" 
-                Margin="0,4,0,12"
-                TextWrapping="Wrap"
-                ToolTip="{Binding Path=LastInput}"
-                Text="{Binding Path=LastInput}"/>
-
         <!-- Alfred's response to prior statement -->
         <StackPanel DataContext="{Binding Path=LastResponse}" 
                     x:Name="pnlResponse">
@@ -34,7 +27,7 @@
 
         <!-- User Input area -->
         <TextBlock Margin="0,32,0,4"
-                   Text="Your Response:"
+                   Text="Input:"
                    Foreground="{StaticResource AppForegroundBrush}" />
 
         <DockPanel>
@@ -49,6 +42,13 @@
                     ToolTip="Enter your statement here and click Submit once you're ready." />
 
         </DockPanel>
+
+        <!-- User's last statement -->
+        <TextBlock Foreground="{StaticResource UserLogBrush}" 
+                Margin="0,8"
+                TextWrapping="Wrap"
+                ToolTip="{Binding Path=LastInput}"
+                Text="{Binding Path=LastInput}"/>
 
     </StackPanel>
 </UserControl>
