@@ -331,6 +331,15 @@ namespace MattEland.Ani.Alfred.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chat.
+        /// </summary>
+        public static string ChatModuleName {
+            get {
+                return ResourceManager.GetString("ChatModuleName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Initialize.
         /// </summary>
         public static string InitializeButtonText {

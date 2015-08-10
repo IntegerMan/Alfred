@@ -252,4 +252,7 @@
   <data name="AppOnlineLogMessage" xml:space="preserve">
     <value>The application is now online</value>
   </data>
+  <data name="ChatModuleName" xml:space="preserve">
+    <value>Chat</value>
+  </data>
 </root>

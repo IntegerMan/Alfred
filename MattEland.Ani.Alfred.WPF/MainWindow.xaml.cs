@@ -15,6 +15,7 @@ using System.Windows.Threading;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Chat;
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
@@ -50,6 +51,7 @@ namespace MattEland.Ani.Alfred.WPF
         private SystemMonitoringSubsystem _systemMonitoringSubsystem;
         private AlfredControlSubsystem _alfredControlSubsystem;
         private AlfredSpeechConsole _console;
+        private AlfredChatSubsystem _chatSubsystem;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="MainWindow" /> class.
@@ -87,15 +89,17 @@ namespace MattEland.Ani.Alfred.WPF
 
         private void InitializeAlfredModules()
         {
-            _console.Log("WinClient.Initialize", Properties.Resources.InitializeModulesLogMessage.NonNull(), LogLevel.Verbose);
+            _console?.Log("WinClient.Initialize", Properties.Resources.InitializeModulesLogMessage.NonNull(), LogLevel.Verbose);
 
             var provider = _alfred.PlatformProvider;
 
             _alfredControlSubsystem = new AlfredControlSubsystem(provider);
             _systemMonitoringSubsystem = new SystemMonitoringSubsystem(provider);
+            _chatSubsystem = new AlfredChatSubsystem(provider);
 
             _alfred.Register(_alfredControlSubsystem);
             _alfred.Register(_systemMonitoringSubsystem);
+            _alfred.Register(_chatSubsystem);
 
         }
 
@@ -155,7 +159,7 @@ namespace MattEland.Ani.Alfred.WPF
             // Determine whether to auto-start or not based off of settings
             if (Settings.AutoStartAlfred)
             {
-                _console.Log(logHeader, Properties.Resources.AutoStartAlfredLogMessage.NonNull(), LogLevel.Verbose);
+                _console?.Log(logHeader, Properties.Resources.AutoStartAlfredLogMessage.NonNull(), LogLevel.Verbose);
                 _alfred.Initialize();
             }
 
@@ -163,7 +167,7 @@ namespace MattEland.Ani.Alfred.WPF
             AutoSelectFirstTab();
 
             // Log that we're good to go
-            _console.Log(logHeader, Properties.Resources.AppOnlineLogMessage.NonNull(), LogLevel.Info);
+            _console?.Log(logHeader, Properties.Resources.AppOnlineLogMessage.NonNull(), LogLevel.Info);
         }
 
         /// <summary>

@@ -152,6 +152,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MattEland.Ani.Alfred.AIML\MattEland.Ani.Alfred.Chat.csproj">
+      <Project>{3a25074a-351a-471e-aaf8-171a0e66f83a}</Project>
+      <Name>MattEland.Ani.Alfred.Chat</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MattEland.Ani.Alfred.Core.Speech\MattEland.Ani.Alfred.Core.Speech.csproj">
       <Project>{ab933947-863e-455f-aba9-a8866eac1894}</Project>
       <Name>MattEland.Ani.Alfred.Core.Speech</Name>
