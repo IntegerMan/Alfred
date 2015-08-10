@@ -23,6 +23,8 @@
   <item name="birthplace" value="Lewis Center, Ohio, USA"/>
   <item name="website" value="http://www.matteland.com"/>
   <item name="adminemail" value="matt.eland@gmail.com"/>
+  <item name="address" value="matt.eland@gmail.com"/>
+  <item name="phone-number" value="none of your concern"/>
   <item name="islogging" value="true"/>
   <item name="willcallhome" value="false"/>
   <item name="timeout" value="10000000"/>

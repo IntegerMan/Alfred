@@ -61,6 +61,9 @@
   <PropertyGroup>
     <ApplicationIcon>Alfred.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="JetBrains.Annotations, Version=9.1.1.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Annotations.9.1.1\lib\net20\JetBrains.Annotations.dll</HintPath>
@@ -148,19 +151,27 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Chat\aiml\AI.aiml" />
+    <None Include="Chat\aiml\animal.aiml" />
     <None Include="Chat\aiml\Atomic.aiml" />
     <None Include="Chat\aiml\Biography.aiml" />
     <None Include="Chat\aiml\Bot.aiml" />
     <None Include="Chat\aiml\Botmaster.aiml" />
+    <None Include="Chat\aiml\bot_profile.aiml" />
     <None Include="Chat\aiml\Client.aiml" />
+    <None Include="Chat\aiml\client_profile.aiml" />
     <None Include="Chat\aiml\Computers.aiml" />
+    <None Include="Chat\aiml\config.aiml" />
     <None Include="Chat\aiml\CustomTagTest.aiml" />
+    <None Include="Chat\aiml\date.aiml" />
     <None Include="Chat\aiml\Default.aiml" />
+    <None Include="Chat\aiml\dialog.aiml" />
     <None Include="Chat\aiml\Emotion.aiml" />
     <None Include="Chat\aiml\Food.aiml" />
     <None Include="Chat\aiml\Geography.aiml" />
     <None Include="Chat\aiml\History.aiml" />
+    <None Include="Chat\aiml\inappropriate.aiml" />
     <None Include="Chat\aiml\Inquiry.aiml" />
+    <None Include="Chat\aiml\insults.aiml" />
     <None Include="Chat\aiml\Interjection.aiml" />
     <None Include="Chat\aiml\IU.aiml" />
     <None Include="Chat\aiml\Knowledge.aiml" />
@@ -172,8 +183,13 @@
     <None Include="Chat\aiml\Philosophy.aiml" />
     <None Include="Chat\aiml\Pickup.aiml" />
     <None Include="Chat\aiml\Predicates.aiml" />
+    <None Include="Chat\aiml\profanity.aiml" />
     <None Include="Chat\aiml\Reduce.aiml" />
     <None Include="Chat\aiml\Reductions.aiml" />
+    <None Include="Chat\aiml\reductions1.aiml" />
+    <None Include="Chat\aiml\reductions2.aiml" />
+    <None Include="Chat\aiml\reductions_update.aiml" />
+    <None Include="Chat\aiml\roman.aiml" />
     <None Include="Chat\aiml\Salutations.aiml" />
     <None Include="Chat\aiml\Science.aiml" />
     <None Include="Chat\aiml\Stack.aiml" />
@@ -181,6 +197,8 @@
     <None Include="Chat\aiml\That.aiml" />
     <None Include="AlfredAppTestCertificate.snk" />
     <None Include="AlfredWPF.cd" />
+    <None Include="Chat\aiml\train.aiml" />
+    <None Include="Chat\aiml\udc.aiml" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
