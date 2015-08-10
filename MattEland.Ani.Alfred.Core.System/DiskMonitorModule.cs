@@ -19,7 +19,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
     /// <summary>
     ///     A module that displays information on the system's disk input / output operations
     /// </summary>
-    public sealed class DiskMonitorModule : SystemMonitorModule
+    public sealed class DiskMonitorModule : SystemMonitorModule, IDisposable
     {
         private const string DiskCategoryName = "PhysicalDisk";
         private const string DiskReadCounterName = "% Disk Read Time";
@@ -69,10 +69,8 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <summary>
         ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        public override void Dispose()
+        public void Dispose()
         {
-            base.Dispose();
-
             _diskReadCounter.Dispose();
             _diskWriteCounter.Dispose();
         }

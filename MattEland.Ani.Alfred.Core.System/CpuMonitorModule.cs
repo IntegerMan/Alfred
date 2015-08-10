@@ -23,7 +23,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
     /// <summary>
     ///     A module that displays information on the system's processor utilization percentages
     /// </summary>
-    public sealed class CpuMonitorModule : SystemMonitorModule
+    public sealed class CpuMonitorModule : SystemMonitorModule, IDisposable
     {
         private const string CpuCategoryName = "Processor";
         private const string CpuUsageCounterName = "% Processor Time";
@@ -160,10 +160,8 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        public override void Dispose()
+        public void Dispose()
         {
-            base.Dispose();
-
             foreach (var counter in _processorCounters)
             {
                 counter.Dispose();

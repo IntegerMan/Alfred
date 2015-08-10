@@ -123,8 +123,9 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         /// <param name="widget">The widget.</param>
         /// <param name="component">The component.</param>
-        /// <exception cref="System.ArgumentNullException">
+        /// <exception cref="ArgumentNullException">
         /// </exception>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "MattEland.Ani.Alfred.Core.Widgets.AlfredTextWidget.set_Text(System.String)")]
         private static void UpdateWidgetText([NotNull] AlfredTextWidget widget, [NotNull] IAlfredComponent component)
         {
             if (widget == null)

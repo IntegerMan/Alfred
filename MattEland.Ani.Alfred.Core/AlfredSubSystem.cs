@@ -111,6 +111,7 @@ namespace MattEland.Ani.Alfred.Core
         ///     Registers a module.
         /// </summary>
         /// <param name="module">The module.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0")]
         protected void Register([NotNull] IAlfredModule module)
         {
             _modules.AddSafe(module);
@@ -121,6 +122,7 @@ namespace MattEland.Ani.Alfred.Core
         ///     Registers a page.
         /// </summary>
         /// <param name="page">The page.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0")]
         protected void Register([NotNull] IAlfredPage page)
         {
             _pages.AddSafe(page);

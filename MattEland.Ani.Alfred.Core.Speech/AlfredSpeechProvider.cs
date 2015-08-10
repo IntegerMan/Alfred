@@ -20,7 +20,7 @@ namespace MattEland.Ani.Alfred.Core.Speech
     ///     Provides speech synthesis and speech recognition capabilities to the Alfred framework.
     ///     This class cannot be inherited.
     /// </summary>
-    public sealed class AlfredSpeechProvider
+    public sealed class AlfredSpeechProvider : IDisposable
     {
         /// <summary>
         ///     The log header used in speech related log entries
@@ -41,7 +41,7 @@ namespace MattEland.Ani.Alfred.Core.Speech
             // Let's get verbose with the console
             if (console != null)
             {
-                console.Log(LogHeader, "Initializing speech module...", LogLevel.Verbose);
+                console.Log(LogHeader, Resources.InitializingSpeechModule.NonNull(), LogLevel.Verbose);
 
                 // Enumerate all detected voices for diagnostic purposes
                 LogInstalledVoices(console);
@@ -142,6 +142,14 @@ namespace MattEland.Ani.Alfred.Core.Speech
 
             // Actually speak things
             _speech.SpeakAsync(phrase);
+        }
+
+        /// <summary>
+        /// Disposes of all allocated resources
+        /// </summary>
+        public void Dispose()
+        {
+            _speech.Dispose();
         }
     }
 }

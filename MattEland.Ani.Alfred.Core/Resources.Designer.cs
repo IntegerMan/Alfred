@@ -322,6 +322,15 @@ namespace MattEland.Ani.Alfred.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The application is now online.
+        /// </summary>
+        public static string AppOnlineLogMessage {
+            get {
+                return ResourceManager.GetString("AppOnlineLogMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Initialize.
         /// </summary>
         public static string InitializeButtonText {

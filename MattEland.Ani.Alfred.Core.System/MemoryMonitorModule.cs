@@ -19,7 +19,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
     /// <summary>
     ///     A module that displays information on the system's memory utilization percentage
     /// </summary>
-    public sealed class MemoryMonitorModule : SystemMonitorModule
+    public sealed class MemoryMonitorModule : SystemMonitorModule, IDisposable
     {
         private const string MemoryCategoryName = "Memory";
         private const string MemoryUtilizationBytesCounterName = "% Committed Bytes in Use";
@@ -90,10 +90,8 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <summary>
         /// Disposes this instance.
         /// </summary>
-        public override void Dispose()
+        public void Dispose()
         {
-            base.Dispose();
-
             _memUsedBytesCounter.Dispose();
         }
     }

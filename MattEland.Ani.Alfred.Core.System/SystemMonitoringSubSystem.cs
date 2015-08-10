@@ -6,6 +6,8 @@
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
+using System;
+
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
@@ -17,7 +19,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
     ///     This is a subsystem for the Alfred Framework that allows for monitoring system performance
     ///     and surfacing alerts on critical events.
     /// </summary>
-    public sealed class SystemMonitoringSubsystem : AlfredSubsystem
+    public sealed class SystemMonitoringSubsystem : AlfredSubsystem, IDisposable
     {
         [NotNull]
         private readonly AlfredModuleListPage _page;
@@ -73,6 +75,16 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         public override sealed string Name
         {
             get { return Resources.SystemMonitoringSystem_Name.NonNull(); }
+        }
+
+        /// <summary>
+        /// Disposes of allocated resources
+        /// </summary>
+        public void Dispose()
+        {
+            _cpuModule.Dispose();
+            _memoryModule.Dispose();
+            _diskModule.Dispose();
         }
     }
 }

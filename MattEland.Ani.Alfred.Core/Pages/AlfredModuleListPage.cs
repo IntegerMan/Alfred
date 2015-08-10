@@ -71,6 +71,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         ///     Registers the specified module.
         /// </summary>
         /// <param name="module">The module.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0")]
         public void Register([NotNull] IAlfredModule module)
         {
             _modules.AddSafe(module);

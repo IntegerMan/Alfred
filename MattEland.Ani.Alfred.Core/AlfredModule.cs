@@ -13,7 +13,6 @@ using System.Linq;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Widgets;
 
 namespace MattEland.Ani.Alfred.Core
@@ -22,7 +21,7 @@ namespace MattEland.Ani.Alfred.Core
     /// <summary>
     ///     Represents a module within Alfred. Modules contain different bits of information to present to the user.
     /// </summary>
-    public abstract class AlfredModule : AlfredComponent, IDisposable, IAlfredModule
+    public abstract class AlfredModule : AlfredComponent, IAlfredModule
     {
         [NotNull]
         [ItemNotNull]
@@ -63,14 +62,6 @@ namespace MattEland.Ani.Alfred.Core
             {
                 return _widgets.Any(w => w.IsVisible);
             }
-        }
-
-        /// <summary>
-        ///     Dispose of anything that needs to be done. By default nothing needs to be disposed of, but some modules will
-        ///     need to support this and should override Dispose.
-        /// </summary>
-        public virtual void Dispose()
-        {
         }
 
         /// <summary>

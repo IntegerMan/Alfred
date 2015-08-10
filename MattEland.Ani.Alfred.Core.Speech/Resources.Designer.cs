@@ -70,6 +70,15 @@ namespace MattEland.Ani.Alfred.Core.Speech {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Initializing speech module....
+        /// </summary>
+        internal static string InitializingSpeechModule {
+            get {
+                return ResourceManager.GetString("InitializingSpeechModule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Found unknown voice with no voice information.
         /// </summary>
         internal static string UnknownVoiceFound {
@@ -97,7 +106,7 @@ namespace MattEland.Ani.Alfred.Core.Speech {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Found voice: {0} ({1} {2}) Enabled: {3}.
+        ///   Looks up a localized string similar to Found voice: {0} - {1} {2} Enabled: {3}.
         /// </summary>
         internal static string VoiceFoundList {
             get {

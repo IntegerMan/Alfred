@@ -249,4 +249,7 @@
     <value>Alfred Provider has not been set</value>
     <comment>Text to display when Alfred Provider is not set.</comment>
   </data>
+  <data name="AppOnlineLogMessage" xml:space="preserve">
+    <value>The application is now online</value>
+  </data>
 </root>

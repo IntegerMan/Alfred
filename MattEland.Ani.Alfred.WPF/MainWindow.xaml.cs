@@ -9,6 +9,7 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -28,7 +29,7 @@ namespace MattEland.Ani.Alfred.WPF
     /// <summary>
     ///     Interaction logic for MainWindow.xaml
     /// </summary>
-    public sealed partial class MainWindow
+    public sealed partial class MainWindow : IDisposable
     {
         /// <summary>
         ///     The update frequency in seconds for Alfred's update pump
@@ -46,8 +47,9 @@ namespace MattEland.Ani.Alfred.WPF
         [NotNull]
         private readonly AlfredProvider _alfred;
 
-        [NotNull]
-        private readonly AlfredSpeechConsole _console;
+        private SystemMonitoringSubsystem _systemMonitoringSubsystem;
+        private AlfredControlSubsystem _alfredControlSubsystem;
+        private AlfredSpeechConsole _console;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="MainWindow" /> class.
@@ -80,17 +82,20 @@ namespace MattEland.Ani.Alfred.WPF
             // Set up the update timer
             InitializeUpdatePump();
 
-            _console.Log("WinClient.Initialize", "Initialization Complete", LogLevel.Verbose);
+            _console.Log("WinClient.Initialize", Properties.Resources.InitializationCompleteLogMessage.NonNull(), LogLevel.Verbose);
         }
 
         private void InitializeAlfredModules()
         {
-            _console.Log("WinClient.Initialize", "Initializing Modules", LogLevel.Verbose);
+            _console.Log("WinClient.Initialize", Properties.Resources.InitializeModulesLogMessage.NonNull(), LogLevel.Verbose);
 
             var provider = _alfred.PlatformProvider;
 
-            _alfred.Register(new AlfredControlSubsystem(provider));
-            _alfred.Register(new SystemMonitoringSubsystem(provider));
+            _alfredControlSubsystem = new AlfredControlSubsystem(provider);
+            _systemMonitoringSubsystem = new SystemMonitoringSubsystem(provider);
+
+            _alfred.Register(_alfredControlSubsystem);
+            _alfred.Register(_systemMonitoringSubsystem);
 
         }
 
@@ -130,12 +135,12 @@ namespace MattEland.Ani.Alfred.WPF
             var baseConsole = new SimpleConsole(platformProvider);
 
             // Give Alfred a voice
-            var speechConsole = new AlfredSpeechConsole(baseConsole);
+            _console = new AlfredSpeechConsole(baseConsole);
 
-            speechConsole.Log("WinClient.InitializeConsole", "Console is now online.", LogLevel.Verbose);
-            _alfred.Console = speechConsole;
+            _console.Log(Properties.Resources.InitializeConsoleLogHeader.NonNull(), Properties.Resources.ConsoleOnlineLogMessage.NonNull(), LogLevel.Verbose);
+            _alfred.Console = _console;
 
-            return speechConsole;
+            return _console;
         }
 
         /// <summary>
@@ -145,10 +150,12 @@ namespace MattEland.Ani.Alfred.WPF
         /// <param name="e">The <see cref="RoutedEventArgs" /> instance containing the event data.</param>
         private void OnWindowLoaded(object sender, RoutedEventArgs e)
         {
+            var logHeader = Properties.Resources.WinClientLoadedLogHeader.NonNull();
+
             // Determine whether to auto-start or not based off of settings
             if (Settings.AutoStartAlfred)
             {
-                _console.Log("WinClient.Loaded", "Automatically starting Alfred", LogLevel.Verbose);
+                _console.Log(logHeader, Properties.Resources.AutoStartAlfredLogMessage.NonNull(), LogLevel.Verbose);
                 _alfred.Initialize();
             }
 
@@ -156,7 +163,7 @@ namespace MattEland.Ani.Alfred.WPF
             AutoSelectFirstTab();
 
             // Log that we're good to go
-            _console.Log("WinClient.Loaded", "The application is now online", LogLevel.Info);
+            _console.Log(logHeader, Properties.Resources.AppOnlineLogMessage.NonNull(), LogLevel.Info);
         }
 
         /// <summary>
@@ -182,6 +189,23 @@ namespace MattEland.Ani.Alfred.WPF
             if (_alfred.Status != AlfredStatus.Offline)
             {
                 _alfred.Shutdown();
+            }
+        }
+
+        /// <summary>
+        /// Dispose of all allocated resources
+        /// </summary>
+        [SuppressMessage("ReSharper", "UseNullPropagation")]
+        public void Dispose()
+        {
+            if (_systemMonitoringSubsystem != null)
+            {
+                _systemMonitoringSubsystem.Dispose();
+            }
+
+            if (_console != null)
+            {
+                _console.Dispose();
             }
         }
     }
