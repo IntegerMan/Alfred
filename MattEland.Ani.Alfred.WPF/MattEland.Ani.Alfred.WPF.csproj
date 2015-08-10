@@ -150,77 +150,8 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="Chat\AimlBot\AI.aiml" />
-    <None Include="Chat\AimlBot\Atomic.aiml" />
-    <None Include="Chat\AimlBot\Biography.aiml" />
-    <None Include="Chat\AimlBot\Bot.aiml" />
-    <None Include="Chat\AimlBot\Botmaster.aiml" />
-    <None Include="Chat\AimlBot\Client.aiml" />
-    <None Include="Chat\AimlBot\Computers.aiml" />
-    <None Include="Chat\AimlBot\CustomTagTest.aiml" />
-    <None Include="Chat\AimlBot\Default.aiml" />
-    <None Include="Chat\AimlBot\Emotion.aiml" />
-    <None Include="Chat\AimlBot\Food.aiml" />
-    <None Include="Chat\AimlBot\Geography.aiml" />
-    <None Include="Chat\AimlBot\History.aiml" />
-    <None Include="Chat\AimlBot\Knowledge.aiml" />
-    <None Include="Chat\AimlBot\Money.aiml" />
-    <None Include="Chat\AimlBot\Movies.aiml" />
-    <None Include="Chat\AimlBot\Music.aiml" />
-    <None Include="Chat\AimlBot\Personality.aiml" />
-    <None Include="Chat\AimlBot\Philosophy.aiml" />
-    <None Include="Chat\AimlBot\Predicates.aiml" />
-    <None Include="Chat\AimlBot\Reduce.aiml" />
-    <None Include="Chat\AimlBot\Reductions.aiml" />
-    <None Include="Chat\AimlBot\Salutations.aiml" />
-    <None Include="Chat\AimlBot\Stack.aiml" />
-    <None Include="Chat\AimlBot\That.aiml" />
     <None Include="AlfredAppTestCertificate.snk" />
     <None Include="AlfredWPF.cd" />
-    <None Include="Chat\Alfred\animal.aiml" />
-    <None Include="Chat\Alfred\bot_profile.aiml" />
-    <None Include="Chat\Alfred\client_profile.aiml" />
-    <None Include="Chat\Alfred\config.aiml" />
-    <None Include="Chat\Alfred\date.aiml" />
-    <None Include="Chat\Alfred\default.aiml" />
-    <None Include="Chat\Alfred\dialog.aiml" />
-    <None Include="Chat\Alfred\inappropriate.aiml" />
-    <None Include="Chat\Alfred\inquiry.aiml" />
-    <None Include="Chat\Alfred\insults.aiml" />
-    <None Include="Chat\Alfred\knowledge.aiml" />
-    <None Include="Chat\Alfred\personality.aiml" />
-    <None Include="Chat\Alfred\profanity.aiml" />
-    <None Include="Chat\Alfred\reductions1.aiml" />
-    <None Include="Chat\Alfred\reductions2.aiml" />
-    <None Include="Chat\Alfred\reductions_update.aiml" />
-    <None Include="Chat\Alfred\roman.aiml" />
-    <None Include="Chat\Alfred\that.aiml" />
-    <None Include="Chat\Alfred\train.aiml" />
-    <None Include="Chat\Alfred\udc.aiml" />
-    <None Include="Chat\Alfred\utilities.aiml" />
-    <None Include="Chat\Alfred\z_update.aiml" />
-    <None Include="Chat\Rosie\animal.aiml" />
-    <None Include="Chat\Rosie\bot_profile.aiml" />
-    <None Include="Chat\Rosie\client_profile.aiml" />
-    <None Include="Chat\Rosie\config.aiml" />
-    <None Include="Chat\Rosie\date.aiml" />
-    <None Include="Chat\Rosie\default.aiml" />
-    <None Include="Chat\Rosie\dialog.aiml" />
-    <None Include="Chat\Rosie\inappropriate.aiml" />
-    <None Include="Chat\Rosie\inquiry.aiml" />
-    <None Include="Chat\Rosie\insults.aiml" />
-    <None Include="Chat\Rosie\knowledge.aiml" />
-    <None Include="Chat\Rosie\personality.aiml" />
-    <None Include="Chat\Rosie\profanity.aiml" />
-    <None Include="Chat\Rosie\reductions1.aiml" />
-    <None Include="Chat\Rosie\reductions2.aiml" />
-    <None Include="Chat\Rosie\reductions_update.aiml" />
-    <None Include="Chat\Rosie\roman.aiml" />
-    <None Include="Chat\Rosie\that.aiml" />
-    <None Include="Chat\Rosie\train.aiml" />
-    <None Include="Chat\Rosie\udc.aiml" />
-    <None Include="Chat\Rosie\utilities.aiml" />
-    <None Include="Chat\Rosie\z_update.aiml" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -264,18 +195,9 @@
   <ItemGroup>
     <Resource Include="alfred.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Chat\config\DefaultPredicates.xml" />
-    <None Include="Chat\config\GenderSubstitutions.xml" />
-    <None Include="Chat\config\Person2Substitutions.xml" />
-    <None Include="Chat\config\PersonSubstitutions.xml" />
-    <None Include="Chat\config\Settings.xml" />
-    <None Include="Chat\config\Splitters.xml" />
-    <None Include="Chat\config\Substitutions.xml" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(ProjectDir)Chat" "$(TargetDir)Chat" /e /y /i /r</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(SolutionDir)DataFiles\Chat" "$(TargetDir)Chat" /e /y /i /r</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

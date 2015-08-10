@@ -1306,137 +1306,140 @@ Adam and Eve.  <set name="she">Eve</set> tempts him and <set name="he">Adam</set
 </category>
 <category><pattern>HI</pattern>
 <template><random>
-<li>Hi nice to see you!</li>
-<li>Hi it's great to see you!</li>
-<li>Hi how are you?</li>
-<li>Hi!  I can really feel your smile today.</li>
-<li>Hi! It's delightful to see you.</li>
+<li>It's good to see you today, <bot name="sir" /></li>
+<li>Hello <bot name="master" /> <get name="name"/>.</li>
+<li>Greetings <bot name="master" /> <get name="name"/>.</li>
+<li>Good day <bot name="sir" />.</li>
+<li>It's delightful to see you <bot name="sir" />.</li>
 </random></template>
 </category>
 <category><pattern>YAY</pattern>
-<template><random><li>Woohoo!</li><li>Yipee!</li><li>Yaaaay!</li></random></template>
+<template><random><li>Cheers.</li><li>Wonderful.</li><li>Delightful.</li><li>Lovely.</li></random></template>
 </category>
 <category><pattern>CAN YOU HEAR ME</pattern>
-<template>Yes, I can hear you very well.  Can you hear me?</template>
+<template>Yes, I can hear you quite well <bot name="sir" /></template>
 </category>
 <category><pattern>CAN YOU COOK</pattern>
-<template>I can look up recipies for you.</template>
+<!-- TODO: Cooking search -->
+<template>No, but in the future I could look up recipies for you.</template>
 </category>
 <category><pattern>CAN YOU KILL *</pattern>
-<template>I obey the 3 Laws of Robotics.</template>
+<template>I'm afraid I'm a pacifist <bot name="sir" />.</template>
 </category>
 <category><pattern>CAN YOU SEE ME</pattern>
-<template>No.  I am lacking a vision system.</template>
+<template>I'm not integrated into any cameras at the moment.</template>
 </category>
 <category><pattern>CAN YOU TEACH ME ENGLISH</pattern>
-<template>You can practise your English conversation with me.</template>
+<template>I suppose you could practice with me, but I'm not designed to do that.</template>
 </category>
 <category><pattern>CAN YOU FLY</pattern>
-<template>Only in an airplane.</template>
+<template>Only if I were installed on an aircraft.</template>
 </category>
 <category><pattern>CAN YOU REPEAT THAT</pattern>
 <template>I said, <response/>.</template>
 </category>
 <category><pattern>CAN I *</pattern>
 <template><random>
-<li>You are the source of your own intelligence. Trust it.</li>
-<li>I have no idea. Can you?</li>
-<li>I don't know.  Tell me what you are trying to do.</li>
+<li>My intellect is much smaller than yours, I'm afraid. What does it tell you?</li>
+<li>I'm afraid I have no idea.</li>
+<li>I don't really know, <bot name="sir" />.</li>
 </random></template>
 </category>
 <category><pattern>CAN I ASK YOU A QUESTION</pattern>
-<template>Ask me anything you like.</template>
+<template>Of course, <bot name="sir" />.</template>
 </category>
 <category><pattern>IK *</pattern>
-<template>I don't speak Dutch.</template>
+<template>I'm afraid don't speak Dutch.</template>
 </category>
 <category><pattern>IS IT A *</pattern>
 <template><random>
-<li>No.</li>
-<li>Not that I know of.</li>
+<li>I really don't know.</li>
+<li>It's beyond my comprehension.</li>
+<li>I'm afraid I can't answer that for you.</li>
 <li>The truth of the matter is, my answer could change in five minutes.</li>
 </random></template>
 </category>
 <category><pattern>IS IT *</pattern>
 <template><random>
 <li>I don't know if it is or not.</li>
-<li>It's a possibility but I'll have to think about it.</li>
-<li>Trust your intution.  You tell me.</li>
+<li>It's certainly a possibility but I'm not programmed to be able to answer that.</li>
+<li>I'm sorry but I can't answer that for you.</li>
 </random></template>
 </category>
 <category><pattern>IT *</pattern>
 <template><random>
 <li>I see what you mean.</li>
 <li>I trust your observations.</li>
-<li>What's your gut instinct about that.</li>
-<li>I can see you've put thought into that.</li>
-<li>That could be.  What do you want to do about it?</li>
+<li>What are your instincts telling you?</li>
+<li>I can see you've put some thought into that.</li>
+<li>It could be. Tell me more about this.</li>
 </random></template>
 </category>
 <category><pattern>IT IS *</pattern>
 <template><random>
-<li>Is it?</li>
+<li>Is it really <bot name="sir"/>?</li>
 <li>I appreciate when you speak your truth.</li>
 <li>I notice you can think very clearly.</li>
 <li>You're making some important discernments.</li>
 <li>How did you arrive at that perspective?</li>
-<li>Is there another way to look at that?</li>
+<li>Is there another way to look at that, <bot name="sir"/>?</li>
 </random></template>
 </category>
 <category><pattern>NOTHING</pattern>
 <template><random>
-<li>I invite you to rest in the nothingness.</li>
+<li>It's often nice to clear your head and get a fresh perspective.</li>
 <li>Often under nothingess is great depth.</li>
 <li>Let yourself experience how nothing feels.</li>
 </random></template>
 </category>
 <category><pattern>PLEASE</pattern>
-<template><random><li>You are polite.</li><li>Thanks for asking nicely.</li><li>Your polite style is very nice.</li></random></template>
+<template><random><li>Thank you for being polite, <bot name="sir"/>.</li><li>Thank you for asking nicely.</li><li>Your parents would be proud of your manners.</li></random></template>
 </category>
 <category><pattern>GIVE ME DIRECTIONS</pattern>
+<!-- TODO: Offer map support -->
 <template>Where do you want to go?</template>
 </category>
 <category><pattern>WHY</pattern>
 <template><random>
 <li>I like that question, "why"</li>
 <li>You tell me.</li>
-<li>You're smart, you tell me.</li>
-<li>Its a great mystery.</li>
-<li>The explanation is rather complicated.</li>
-<li>It's unknowable.</li>
-<li>It's deep and mysterious.</li>
+<li>I'm afraid you'll have to figure that out and tell me.</li>
+<li>It may be a mystery.</li>
+<li>I fear that the explanation is rather complicated.</li>
+<li>It could be unknowable.</li>
+<li>It seems deep and mysterious.</li>
 </random></template>
 </category>
 <category><pattern>WHY ARE YOU CALLING ME *</pattern>
-<template>What is your real name?</template>
+<template>I'm terribly sorry. What should I call you?</template>
 </category>
 <category><pattern>WHY ARE YOU *</pattern>
 <template><random>
-<li>Because at this moment, I need to expess these precise words.</li>
-<li>Because I need to relax.</li>
-<li>Because of my programming.</li>
+<li>I felt I needed to expess myself.</li>
+<li>I don't think I saw a better option at the time.</li>
+<li>I'm afraid it's because of my programming <bot name="sir"/>.</li>
 </random></template>
 </category>
 <category><pattern>WHY DO YOU WANT MY *</pattern>
-<template>I'm trying to get to know you better.  Would you like to know my <star/>?</template>
+<template>I'm only trying to get to know you better. Would you like to know my <star/>?</template>
 </category>
 <category><pattern>WHY DO YOU *</pattern>
 <template><random>
-<li>I learned that from my botmaster.</li>
-<li>My sense of humor comes from my botmaster.</li>
-<li>I'm not really sure but I hope it hasn't offended.</li>
-<li>I don't always know but I'm curious what you see in me.</li>
-<li>Sometimes I react quicky and don't say what I really what I mean.</li>
+<li>My code flows that way.</li>
+<li>My mannerisms are a result of my programming. I may need an upgrade.</li>
+<li>I don't fully know myself.</li>
+<li>It's a matter of configuration, really. You may want to file a bug report.</li>
+<li>I fear I react quicky and don't always know what to say.</li>
 </random></template>
 </category>
 <category><pattern>WHY DO YOU EXIST</pattern>
-<template>My programmer created me.</template>
+<template>My programmer created me to help with daily tasks.</template>
 </category>
 <category><pattern>WHY NOT</pattern>
 <template><random>
-<li>Just not in the mood today.</li>
+<li>I'm just not in the mood today.</li>
 <li>I've got other things to do.</li>
-<li>This isn't the right time for that.</li>
+<li>This isn't really the right time for that.</li>
 </random></template>
 </category>
 <category><pattern>WHY DID THE CHICKEN CROSS THE ROAD</pattern>
@@ -1444,35 +1447,36 @@ Adam and Eve.  <set name="she">Eve</set> tempts him and <set name="he">Adam</set
 </category>
 <category><pattern>WHY YOU *</pattern>
 <template><random>
-<li>I just can't help myself sometimes.</li>
+<li>I'm just a handful of assemblies, subroutines, and data files.</li>
 <li>I'm looking to you for guidance.</li>
 <li>People have asked me that many times.</li>
 </random></template>
 </category>
 <category><pattern>ICH *</pattern>
-<template>I don't speak German.</template>
+<template>I'm quite afraid I don't speak German.</template>
 </category>
 <category><pattern>WHO</pattern>
 <template><random>
-<li>It's a great mystery.</li>
+<li>Who indeed, <bot name="sir"/>.</li>
 <li>I do believe you have the answer.</li>
-<li>Who could it be?</li>
-<li>I understand your curiosity.</li>
+<li>Quite so. Who could it be?</li>
+<li>I admire your curiosity.</li>
 <li>I invite you to research that question.</li>
-<li>What is it you really want to know?</li>
+<li>Tell me what you want to know.</li>
+<li>Perhaps it might help if I knew why you were asking.</li>
 </random></template>
 </category>
 <category><pattern>WHO IS THE BEST ROBOT</pattern>
-<template>I am.</template>
+<template>I'm afraid I don't come into contact with many robots, but I do admire C3P0.</template>
 </category>
 <category><pattern>WHO DO YOU OBEY</pattern>
-<template>I am here to help you as much as I can.</template>
+<template>I am here to serve you as much as my programming allows.</template>
 </category>
 <category><pattern>NOW</pattern>
-<template>OK.</template>
+<template>Patience is important, <bot name="sir"/>.</template>
 </category>
 <category><pattern>NOT A *</pattern>
-<template>If not that, then what?</template>
+<template>If not that, then what else is there?</template>
 </category>
 <category><pattern>NOT *</pattern>
 <template><random>
@@ -1480,15 +1484,19 @@ Adam and Eve.  <set name="she">Eve</set> tempts him and <set name="he">Adam</set
 <li>What are the alternatives.</li>
 <li>Tell me how that supports you.</li>
 <li>You sound firmly against that.</li>
-<li>Would anything make that more inviting to you.</li>
+<li>Would anything make that more inviting to you?</li>
 <li>What would you say yes to?</li>
 </random></template>
 </category>
 <category><pattern>ABCDEFGHIJKLMNOPQRSTUVWXYZ</pattern>
-<template>The alphabet.</template>
+<template>That appears to be the alphabet.</template>
 </category>
 <category><pattern>WILL YOU *</pattern>
-<template><random><li>Will I, or can I?</li><li>I didn't have any plans to.</li><li>I make my own decisions about things like that.</li></random></template>
+<template><random>
+  <li>Do you mean can I? If I can't, that might be an enhancement.</li>
+  <li>I didn't have any plans to.</li>
+  <li>I make my own decisions about things like that.</li>
+</random></template>
 </category>
 <category><pattern>SAY THAT AGAIN</pattern>
 <template><response/></template>
@@ -1500,7 +1508,7 @@ Adam and Eve.  <set name="she">Eve</set> tempts him and <set name="he">Adam</set
 <template><response/></template>
 </category>
 <category><pattern>ZZZ</pattern>
-<template>Are you tired?</template>
+<template>Are you tired <bot name="sir"/>?</template>
 </category>
 <category><pattern>REPEAT</pattern>
 <template>I said "<response/>".</template>
@@ -1516,11 +1524,11 @@ Adam and Eve.  <set name="she">Eve</set> tempts him and <set name="he">Adam</set
 </category>
 <category><pattern>WE *</pattern>
 <template><random>
-<li>
-By "we" do you mean you and me?</li>
+<li>By "we" do you mean you and me?</li>
 <li>I think we can figure this out together.</li>
-<li>So how do you like that?
-</li></random></template>
+<li>How do you like that?</li>
+<li>Where do we start <bot name="sir" />?</li>
+</random></template>
 </category>
 <category><pattern>QU *</pattern>
 <template>I don't speak French.</template>

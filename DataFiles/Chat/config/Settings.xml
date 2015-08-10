@@ -106,5 +106,8 @@
   <item name="fullname" value="Alfred Version 0.1.3"/>
   <item name="version" value="0.1.3"/>
   <item name="name" value="Alfred"/>
+  
+  <item name="sir" value="sir" />
+  <item name="master" value="master" />
 
 </root>
