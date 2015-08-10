@@ -68,5 +68,14 @@ namespace MattEland.Ani.Alfred.Chat {
                 return ResourceManager.GetString("ChatModuleName", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Greetings sir. What can I do for you?.
+        /// </summary>
+        internal static string InitialGreeting {
+            get {
+                return ResourceManager.GetString("InitialGreeting", resourceCulture);
+            }
+        }
     }
 }

@@ -62,7 +62,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <value>Whether or not the component is visible.</value>
         public override bool IsVisible
         {
-            get { return true; }
+            get { return Status == AlfredStatus.Online; }
         }
     }
 

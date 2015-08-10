@@ -120,4 +120,7 @@
   <data name="ChatModuleName" xml:space="preserve">
     <value>Chat</value>
   </data>
+  <data name="InitialGreeting" xml:space="preserve">
+    <value>Greetings sir. What can I do for you?</value>
+  </data>
 </root>

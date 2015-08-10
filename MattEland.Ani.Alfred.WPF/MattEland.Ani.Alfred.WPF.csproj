@@ -88,10 +88,17 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ApplicationManager.cs" />
+    <Compile Include="Controls\ChatPane.xaml.cs">
+      <DependentUpon>ChatPane.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Converters\LogLevelToBrushConverter.cs" />
     <Compile Include="Platform\WinClientPlatformProvider.cs" />
     <Compile Include="Platform\WinClientCommand.cs" />
+    <Page Include="Controls\ChatPane.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dictionaries\Miscellaneous.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

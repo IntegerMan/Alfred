@@ -8,6 +8,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using JetBrains.Annotations;
 
@@ -84,6 +85,15 @@ namespace MattEland.Ani.Alfred.Core.Pages
         public void ClearModules()
         {
             _modules.Clear();
+        }
+
+        /// <summary>
+        ///     Gets whether or not the component is visible to the user interface.
+        /// </summary>
+        /// <value>Whether or not the component is visible.</value>
+        public override bool IsVisible
+        {
+            get { return Modules.Any(m => m.Widgets.Any(w => w.IsVisible)); }
         }
     }
 }

@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="MattEland.Ani.Alfred.WPF.Controls.ChatPane"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:chat="clr-namespace:MattEland.Ani.Alfred.Chat;assembly=MattEland.Ani.Alfred.Chat"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" 
+             d:DesignWidth="300" 
+             d:DataContext="{d:DesignInstance chat:ChatPage}"
+             Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+    <StackPanel>
+
+        <!-- Alfred's response to prior statement -->
+        <StackPanel DataContext="{Binding Path=LastResponse}" 
+                    x:Name="pnlResponse">
+            
+            <TextBlock Foreground="{StaticResource AppForegroundBrush}" 
+                   Text="Last Response:" />
+
+            <TextBlock Foreground="{StaticResource AccentForegroundBrush}" 
+                   Margin="0,4,0,0"
+                   ToolTip="{Binding Path=ResponseText}"
+                   Text="{Binding Path=ResponseText}"/>
+            
+        </StackPanel>
+
+        <!-- User Input area -->
+        <TextBlock Margin="0,32,0,4"
+                   Text="Your Response:"
+                   Foreground="{StaticResource AppForegroundBrush}" />
+
+        <DockPanel>
+            <Button x:Name="btnSubmit" 
+                    Margin="8,0,0,0"
+                    IsDefault="True"
+                    Click="OnSubmitClicked"
+                    DockPanel.Dock="Right"
+                    Content="Submit" />
+            <TextBox x:Name="txtInput"
+                    ToolTip="Enter your statement here and click Submit once you're ready."
+                    Text="{Binding Path=UserInput, Mode=TwoWay}" />
+
+        </DockPanel>
+
+    </StackPanel>
+</UserControl>
