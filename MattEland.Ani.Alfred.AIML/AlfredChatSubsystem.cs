@@ -14,10 +14,13 @@ namespace MattEland.Ani.Alfred.Chat
     /// <summary>
     /// The Chat subsystem for Alfred. Presents a chatting mechanism using AIML powered conversation bots.
     /// </summary>
-    public class AlfredChatSubsystem : AlfredSubsystem, IUserStatementHandler
+    public class AlfredChatSubsystem : AlfredSubsystem
     {
         [NotNull]
         private readonly ChatPage _chatPage;
+
+        [NotNull]
+        private readonly AimlStatementHandler _chatHandler;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
@@ -33,7 +36,8 @@ namespace MattEland.Ani.Alfred.Chat
         /// <exception cref="System.ArgumentNullException"></exception>
         public AlfredChatSubsystem([NotNull] IPlatformProvider provider) : base(provider)
         {
-            _chatPage = new ChatPage(Res.ChatModuleName.NonNull(), this);
+            _chatHandler = new AimlStatementHandler();
+            _chatPage = new ChatPage(Res.ChatModuleName.NonNull(), _chatHandler);
         }
 
         /// <summary>
@@ -43,7 +47,13 @@ namespace MattEland.Ani.Alfred.Chat
         {
             base.RegisterControls();
 
+            // We don't have console until we're registered, so update it here
+            _chatHandler.Console = AlfredInstance?.Console;
+
+            // Register our chat page
             Register(_chatPage);
+
+            //? There may be some need to integrate this into AlfredProvider proper for voice handling, but not quite yet
         }
 
         /// <summary>
@@ -55,27 +65,6 @@ namespace MattEland.Ani.Alfred.Chat
             get { return Res.ChatModuleName.NonNull(); }
         }
 
-        /// <summary>
-        /// Handles a user statement.
-        /// </summary>
-        /// <param name="userInput">The user input.</param>
-        /// <returns>The response to the user statment</returns>
-        public UserStatementResponse HandleUserStatement(string userInput)
-        {
-            // Log the input to the diagnostic log. Verbose should keep it from being spoken
-            Log("Chat.Input", userInput, LogLevel.Verbose);
-
-            // TODO: Actually do some processing here
-
-            var response = new UserStatementResponse(userInput,
-                                                     "I'm afraid I don't know how to respond to that, sir.",
-                                                     true);
-
-            // Log the output to the diagnostic log. Info should make it spoken if speech is on.
-            Log("Chat.Output", response.ResponseText, LogLevel.Info);
-
-            return response;
-        }
     }
 
 }

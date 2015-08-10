@@ -70,11 +70,29 @@ namespace MattEland.Ani.Alfred.Chat {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to I&apos;m afraid I can&apos;t help you with that, sir..
+        /// </summary>
+        internal static string DefaultFailureResponseText {
+            get {
+                return ResourceManager.GetString("DefaultFailureResponseText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Greetings sir. What can I do for you?.
         /// </summary>
         internal static string InitialGreeting {
             get {
                 return ResourceManager.GetString("InitialGreeting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Empty path to a settings file.
+        /// </summary>
+        internal static string NoSettingsPathError {
+            get {
+                return ResourceManager.GetString("NoSettingsPathError", resourceCulture);
             }
         }
     }

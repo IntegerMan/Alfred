@@ -123,4 +123,11 @@
   <data name="InitialGreeting" xml:space="preserve">
     <value>Greetings sir. What can I do for you?</value>
   </data>
+  <data name="DefaultFailureResponseText" xml:space="preserve">
+    <value>I'm afraid I can't help you with that, sir.</value>
+    <comment>This is the default reply that Alfred outputs when the sentence couldn't be handled.</comment>
+  </data>
+  <data name="NoSettingsPathError" xml:space="preserve">
+    <value>Empty path to a settings file</value>
+  </data>
 </root>

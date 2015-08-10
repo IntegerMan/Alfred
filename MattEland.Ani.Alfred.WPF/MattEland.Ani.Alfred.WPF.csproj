@@ -53,7 +53,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>AlfredAppTestCertificate.snk</AssemblyOriginatorKeyFile>
@@ -147,6 +147,38 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="Chat\aiml\AI.aiml" />
+    <None Include="Chat\aiml\Atomic.aiml" />
+    <None Include="Chat\aiml\Biography.aiml" />
+    <None Include="Chat\aiml\Bot.aiml" />
+    <None Include="Chat\aiml\Botmaster.aiml" />
+    <None Include="Chat\aiml\Client.aiml" />
+    <None Include="Chat\aiml\Computers.aiml" />
+    <None Include="Chat\aiml\CustomTagTest.aiml" />
+    <None Include="Chat\aiml\Default.aiml" />
+    <None Include="Chat\aiml\Emotion.aiml" />
+    <None Include="Chat\aiml\Food.aiml" />
+    <None Include="Chat\aiml\Geography.aiml" />
+    <None Include="Chat\aiml\History.aiml" />
+    <None Include="Chat\aiml\Inquiry.aiml" />
+    <None Include="Chat\aiml\Interjection.aiml" />
+    <None Include="Chat\aiml\IU.aiml" />
+    <None Include="Chat\aiml\Knowledge.aiml" />
+    <None Include="Chat\aiml\Literature.aiml" />
+    <None Include="Chat\aiml\Money.aiml" />
+    <None Include="Chat\aiml\Movies.aiml" />
+    <None Include="Chat\aiml\Music.aiml" />
+    <None Include="Chat\aiml\Personality.aiml" />
+    <None Include="Chat\aiml\Philosophy.aiml" />
+    <None Include="Chat\aiml\Pickup.aiml" />
+    <None Include="Chat\aiml\Predicates.aiml" />
+    <None Include="Chat\aiml\Reduce.aiml" />
+    <None Include="Chat\aiml\Reductions.aiml" />
+    <None Include="Chat\aiml\Salutations.aiml" />
+    <None Include="Chat\aiml\Science.aiml" />
+    <None Include="Chat\aiml\Stack.aiml" />
+    <None Include="Chat\aiml\Stories.aiml" />
+    <None Include="Chat\aiml\That.aiml" />
     <None Include="AlfredAppTestCertificate.snk" />
     <None Include="AlfredWPF.cd" />
     <None Include="packages.config" />
@@ -192,7 +224,19 @@
   <ItemGroup>
     <Resource Include="alfred.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Chat\config\DefaultPredicates.xml" />
+    <None Include="Chat\config\GenderSubstitutions.xml" />
+    <None Include="Chat\config\Person2Substitutions.xml" />
+    <None Include="Chat\config\PersonSubstitutions.xml" />
+    <None Include="Chat\config\Settings.xml" />
+    <None Include="Chat\config\Splitters.xml" />
+    <None Include="Chat\config\Substitutions.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(ProjectDir)Chat" "$(TargetDir)Chat" /e /y /i /r</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -41,14 +41,11 @@ namespace MattEland.Ani.Alfred.WPF
         /// </summary>
         public MainWindow()
         {
-
+            InitializeComponent();
 #if DEBUG
             // Do not allow topmost window mode while debugging
             Topmost = false;
 #endif
-
-            InitializeComponent();
-
             _app = new ApplicationManager();
 
             // DataBindings rely on Alfred presently as there hasn't been a need for a page ViewModel yet
