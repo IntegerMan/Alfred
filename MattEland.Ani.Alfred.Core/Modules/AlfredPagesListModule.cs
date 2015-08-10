@@ -2,7 +2,7 @@
 // AlfredPagesListModule.cs
 // 
 // Created on:      08/08/2015 at 7:38 PM
-// Last Modified:   08/08/2015 at 7:43 PM
+// Last Modified:   08/09/2015 at 4:50 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Ani.Alfred.Core.Widgets;
 
@@ -20,7 +21,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
     /// <summary>
     ///     A module that lists installed subsystems
     /// </summary>
-    public class AlfredPagesListModule : AlfredModule
+    public sealed class AlfredPagesListModule : AlfredModule
     {
         [NotNull]
         [ItemNotNull]
@@ -85,7 +86,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         ///     Handles initialization events
         /// </summary>
         /// <param name="alfred"></param>
-        protected override void InitializeProtected(AlfredProvider alfred)
+        protected override void InitializeProtected(IAlfred alfred)
         {
             _widgets.Clear();
 
@@ -124,7 +125,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <param name="page">The page.</param>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
-        private static void UpdateWidgetText([NotNull] AlfredTextWidget widget, [NotNull] AlfredPage page)
+        private static void UpdateWidgetText([NotNull] AlfredTextWidget widget, [NotNull] IAlfredPage page)
         {
             if (widget == null)
             {
@@ -136,6 +137,16 @@ namespace MattEland.Ani.Alfred.Core.Modules
             }
 
             widget.Text = page.Name;
+        }
+
+        /// <summary>
+        ///     A notification method that is invoked when initialization for Alfred is complete so the UI can be fully enabled or
+        ///     adjusted
+        /// </summary>
+        public override void OnInitializationCompleted()
+        {
+            // Re-initialize in case other pages popped up
+            InitializeProtected(AlfredInstance);
         }
     }
 }

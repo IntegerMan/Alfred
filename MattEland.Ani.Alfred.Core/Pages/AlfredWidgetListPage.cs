@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
-// AlfredWidgetPage.cs
+// AlfredWidgetListPage.cs
 // 
-// Created on:      08/07/2015 at 4:12 PM
-// Last Modified:   08/07/2015 at 4:28 PM
+// Created on:      08/08/2015 at 7:17 PM
+// Last Modified:   08/09/2015 at 10:03 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -12,6 +12,7 @@ using System.Diagnostics;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 
 namespace MattEland.Ani.Alfred.Core.Pages
@@ -19,14 +20,14 @@ namespace MattEland.Ani.Alfred.Core.Pages
     /// <summary>
     ///     Represents a page grouping multiple widgets together without any module organization.
     /// </summary>
-    public class AlfredWidgetListPage : AlfredPage
+    public sealed class AlfredWidgetListPage : AlfredPage
     {
         [NotNull]
         [ItemNotNull]
         private readonly ICollection<AlfredWidget> _widgets;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlfredWidgetListPage" /> class.
+        ///     Initializes a new instance of the <see cref="AlfredWidgetListPage" /> class.
         /// </summary>
         /// <param name="provider">The provider.</param>
         /// <param name="name">The name.</param>
@@ -53,6 +54,16 @@ namespace MattEland.Ani.Alfred.Core.Pages
             [DebuggerStepThrough]
             get
             { return _widgets; }
+        }
+
+        /// <summary>
+        ///     Gets the children of this component. Depending on the type of component this is, the children will
+        ///     vary in their own types.
+        /// </summary>
+        /// <value>The children.</value>
+        public override IEnumerable<IAlfredComponent> Children
+        {
+            get { yield break; }
         }
 
         /// <summary>

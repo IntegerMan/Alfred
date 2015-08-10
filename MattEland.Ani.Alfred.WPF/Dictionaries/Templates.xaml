@@ -2,7 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:widgets="clr-namespace:MattEland.Ani.Alfred.Core.Widgets;assembly=MattEland.Ani.Alfred.Core"
                     xmlns:console="clr-namespace:MattEland.Ani.Alfred.Core.Console;assembly=MattEland.Ani.Alfred.Core"
-                    xmlns:core="clr-namespace:MattEland.Ani.Alfred.Core;assembly=MattEland.Ani.Alfred.Core">
+                    xmlns:core="clr-namespace:MattEland.Ani.Alfred.Core;assembly=MattEland.Ani.Alfred.Core"
+                    xmlns:pages="clr-namespace:MattEland.Ani.Alfred.Core.Pages;assembly=MattEland.Ani.Alfred.Core">
 
     <!-- Logging Templates -->
     <DataTemplate DataType="{x:Type console:ConsoleEvent}">
@@ -163,6 +164,26 @@
                 Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
                 Text="This is an unknown type of Widget" />
 
+    </DataTemplate>
+    
+    <!-- Pages -->
+    
+    <DataTemplate DataType="{x:Type pages:AlfredModuleListPage}">
+        <ItemsControl ItemsSource="{Binding Path=Modules}"                      
+                        BorderThickness="0">
+
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+        </ItemsControl>
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type pages:AlfredEventLogPage}">
+        <ItemsControl ItemsSource="{Binding Path=Events}"                                                                
+                      BorderThickness="0" />
     </DataTemplate>
 
 </ResourceDictionary>

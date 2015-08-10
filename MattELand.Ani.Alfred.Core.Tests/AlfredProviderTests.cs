@@ -7,12 +7,15 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
+using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Ani.Alfred.Core.Tests.Mocks;
 using MattEland.Ani.Alfred.Core.Widgets;
 
@@ -24,6 +27,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
     ///     Tests AlfredProvider
     /// </summary>
     [TestFixture]
+    [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public sealed class AlfredProviderTests
     {
         /// <summary>
@@ -32,29 +36,46 @@ namespace MattEland.Ani.Alfred.Core.Tests
         [SetUp]
         public void SetupAlfredProviderTests()
         {
-            _alfred = new AlfredProvider
-            {
-                Console = new SimpleConsole()
-            };
+            var bootstrapper = new AlfredBootstrapper();
+            _alfred = bootstrapper.Create();
+            _alfred.Console = new SimpleConsole();
+
+            _subsystem = new TestSubsystem(_alfred.PlatformProvider);
+            _page = new AlfredModuleListPage(_alfred.PlatformProvider, "Test Page");
         }
 
         [NotNull]
         private AlfredProvider _alfred;
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
-        /// </summary>
-        public AlfredProviderTests()
-        {
-            _alfred = new AlfredProvider();
-        }
+        [NotNull]
+        private TestSubsystem _subsystem;
+
+        [NotNull]
+        private AlfredModuleListPage _page;
 
         [Test]
         public void AddingStandardModulesAddsModules()
         {
-            StandardModuleProvider.AddStandardModules(_alfred);
+            _alfred.Register(new AlfredControlSubsystem(_alfred.PlatformProvider));
 
-            Assert.Greater(_alfred.Modules.Count,
+            var numModules = 0;
+
+            foreach (var subsystem in _alfred.Subsystems)
+            {
+                numModules += subsystem.Modules.Count();
+
+                foreach (var page in subsystem.Pages)
+                {
+                    var modulePage = page as AlfredModuleListPage;
+
+                    if (modulePage != null)
+                    {
+                        numModules += modulePage.Modules.Count();
+                    }
+                }
+            }
+
+            Assert.Greater(numModules,
                            0,
                            "Alfred did not have any modules after calling add standard modules.");
         }
@@ -74,9 +95,9 @@ namespace MattEland.Ani.Alfred.Core.Tests
         }
 
         [Test]
-        public void AlfredStartsWithNoModules()
+        public void AlfredStartsWithNoSubSystems()
         {
-            Assert.AreEqual(0, _alfred.Modules.Count, "Alfred started with modules when none were expected.");
+            Assert.AreEqual(0, _alfred.Subsystems.Count(), "Alfred started with subsystems when none were expected.");
         }
 
         [Test]
@@ -105,32 +126,6 @@ namespace MattEland.Ani.Alfred.Core.Tests
             _alfred.Shutdown();
 
             Assert.AreEqual(_alfred.Status, AlfredStatus.Offline);
-        }
-
-        [Test]
-        public void InitializeCausesRegisteredSubSystemsToInitialize()
-        {
-            var testSubsystem = new TestSubSystem();
-
-            _alfred.Register(testSubsystem);
-
-            _alfred.Initialize();
-
-            Assert.IsTrue(testSubsystem.LastInitialized > DateTime.MinValue, "Subsystem was not initialized");
-            Assert.IsTrue(testSubsystem.LastInitializationCompleted > DateTime.MinValue,
-                          "Subsystem was not notified initialized completed");
-        }
-
-        [Test]
-        public void InitializeCausesSubSystemsToGoOnline()
-        {
-            var testSubsystem = new TestSubSystem();
-
-            _alfred.Register(testSubsystem);
-
-            _alfred.Initialize();
-
-            Assert.AreEqual(AlfredStatus.Online, testSubsystem.Status);
         }
 
         [Test]
@@ -168,17 +163,17 @@ namespace MattEland.Ani.Alfred.Core.Tests
         }
 
         [Test]
-        public void InitializingInitializesModules()
+        public void InitializingInitializesComponents()
         {
-            StandardModuleProvider.AddStandardModules(_alfred);
+            _alfred.Register(new AlfredControlSubsystem(_alfred.PlatformProvider));
 
             _alfred.Initialize();
 
-            foreach (var module in _alfred.Modules)
+            foreach (var item in _alfred.Subsystems)
             {
                 Assert.AreEqual(AlfredStatus.Online,
-                                module.Status,
-                                $"Module {module.NameAndVersion} was not initialized during initialization.");
+                                item.Status,
+                                $"{item.NameAndVersion} was not initialized during initialization.");
             }
         }
 
@@ -200,14 +195,14 @@ namespace MattEland.Ani.Alfred.Core.Tests
         public void ModulesCannotBeAddedWhileOnline()
         {
             _alfred.Initialize();
-            StandardModuleProvider.AddStandardModules(_alfred);
+            _alfred.Register(new AlfredControlSubsystem(_alfred.PlatformProvider));
         }
 
         [Test]
         [ExpectedException(typeof(InvalidOperationException))]
         public void ModulesCannotUpdateWhileOffline()
         {
-            StandardModuleProvider.AddStandardModules(_alfred);
+            _alfred.Register(new AlfredControlSubsystem(_alfred.PlatformProvider));
 
             _alfred.Update();
         }
@@ -222,16 +217,20 @@ namespace MattEland.Ani.Alfred.Core.Tests
             testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
             testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
 
-            _alfred.Register(testModule);
+            _alfred.Register(_subsystem);
+            _subsystem.AddAutoRegisterPage(_page);
+            _page.Register(testModule);
 
             _alfred.Initialize();
         }
 
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
+        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public void RegisteringNullSubsystemGeneratesNullRef()
         {
-            _alfred.Register((AlfredSubSystem) null);
+            AlfredSubsystem system = null;
+            _alfred.Register(system);
         }
 
         [Test]
@@ -243,7 +242,9 @@ namespace MattEland.Ani.Alfred.Core.Tests
             testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
             testModule.WidgetsToRegisterOnShutdown.Add(textWidget);
 
-            _alfred.Register(testModule);
+            _alfred.Register(_subsystem);
+            _subsystem.AddAutoRegisterPage(_page);
+            _page.Register(testModule);
 
             _alfred.Initialize();
             _alfred.Update();
@@ -308,61 +309,19 @@ namespace MattEland.Ani.Alfred.Core.Tests
         }
 
         [Test]
-        public void ShuttingDownShutsDownModules()
+        public void ShuttingDownShutsDownComponents()
         {
-            StandardModuleProvider.AddStandardModules(_alfred);
+            _alfred.Register(new AlfredControlSubsystem(_alfred.PlatformProvider));
 
             _alfred.Initialize();
             _alfred.Shutdown();
 
-            foreach (var module in _alfred.Modules)
+            foreach (var item in _alfred.Subsystems)
             {
                 Assert.AreEqual(AlfredStatus.Offline,
-                                module.Status,
-                                $"Module {module.NameAndVersion} was not shut down during alfred shut down.");
+                                item.Status,
+                                $"{item.NameAndVersion} was not shut down during alfred shut down.");
             }
-        }
-
-        [Test]
-        public void UpdateCausesRegisteredSubSystemsToUpdate()
-        {
-            var testSubsystem = new TestSubSystem();
-
-            _alfred.Register(testSubsystem);
-
-            _alfred.Initialize();
-            _alfred.Update();
-
-            Assert.IsTrue(testSubsystem.LastUpdated > DateTime.MinValue, "Subsystem was not updated");
-        }
-
-        [Test]
-        public void ShutdownCausesRegisteredSubSystemsToShutdown()
-        {
-            var testSubsystem = new TestSubSystem();
-
-            _alfred.Register(testSubsystem);
-
-            _alfred.Initialize();
-            _alfred.Update();
-            _alfred.Shutdown();
-
-            Assert.IsTrue(testSubsystem.LastShutdown > DateTime.MinValue, "Subsystem was not shut down");
-            Assert.IsTrue(testSubsystem.LastShutdownCompleted > DateTime.MinValue, "Subsystem was not notified of shut down completion");
-        }
-
-        [Test]
-        public void ShutdownCausesRegisteredSubSystemsToGoOffline()
-        {
-            var testSubsystem = new TestSubSystem();
-
-            _alfred.Register(testSubsystem);
-
-            _alfred.Initialize();
-            _alfred.Update();
-            _alfred.Shutdown();
-
-            Assert.AreEqual(AlfredStatus.Offline, testSubsystem.Status);
         }
 
         [Test]

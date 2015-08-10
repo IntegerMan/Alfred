@@ -14,6 +14,7 @@ using System.Linq;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
@@ -22,7 +23,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
     /// <summary>
     ///     A module that displays information on the system's processor utilization percentages
     /// </summary>
-    public class CpuMonitorModule : SystemMonitorModule
+    public sealed class CpuMonitorModule : SystemMonitorModule, IDisposable
     {
         private const string CpuCategoryName = "Processor";
         private const string CpuUsageCounterName = "% Processor Time";
@@ -88,7 +89,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         ///     Handles module initialization events
         /// </summary>
         /// <param name="alfred"></param>
-        protected override void InitializeProtected(AlfredProvider alfred)
+        protected override void InitializeProtected(IAlfred alfred)
         {
             _cpuWidgets.Clear();
 
@@ -159,10 +160,8 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        public override void Dispose()
+        public void Dispose()
         {
-            base.Dispose();
-
             foreach (var counter in _processorCounters)
             {
                 counter.Dispose();

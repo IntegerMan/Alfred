@@ -2,7 +2,7 @@
 // AlfredEventLogPage.cs
 // 
 // Created on:      08/08/2015 at 7:23 PM
-// Last Modified:   08/08/2015 at 7:23 PM
+// Last Modified:   08/09/2015 at 10:03 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -12,19 +12,20 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Core.Definitions;
 
 namespace MattEland.Ani.Alfred.Core.Pages
 {
     /// <summary>
-    /// An event logging page. This will need a special client-side implementation to list out the details
+    ///     An event logging page. This will need a special client-side implementation to list out the details
     /// </summary>
-    public class AlfredEventLogPage : AlfredPage
+    public sealed class AlfredEventLogPage : AlfredPage
     {
         [NotNull]
         private readonly IConsole _console;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlfredEventLogPage" /> class.
+        ///     Initializes a new instance of the <see cref="AlfredEventLogPage" /> class.
         /// </summary>
         /// <param name="console">The console.</param>
         /// <param name="name">The name.</param>
@@ -39,7 +40,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         }
 
         /// <summary>
-        /// Gets the console.
+        ///     Gets the console.
         /// </summary>
         /// <value>The console.</value>
         [NotNull]
@@ -50,14 +51,25 @@ namespace MattEland.Ani.Alfred.Core.Pages
         }
 
         /// <summary>
-        /// Gets the console events.
+        ///     Gets the console events.
         /// </summary>
         /// <value>The events.</value>
-        [NotNull, ItemNotNull]
+        [NotNull]
+        [ItemNotNull]
         [UsedImplicitly]
-        public IEnumerable<ConsoleEvent> Events
+        public IEnumerable<IConsoleEvent> Events
         {
             get { return _console.Events; }
+        }
+
+        /// <summary>
+        ///     Gets the children of this component. Depending on the type of component this is, the children will
+        ///     vary in their own types.
+        /// </summary>
+        /// <value>The children.</value>
+        public override IEnumerable<IAlfredComponent> Children
+        {
+            get { yield break; }
         }
     }
 }

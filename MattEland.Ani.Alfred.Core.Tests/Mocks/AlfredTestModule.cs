@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 
 namespace MattEland.Ani.Alfred.Core.Tests.Mocks
@@ -65,7 +66,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Mocks
         ///     Handles module initialization events
         /// </summary>
         /// <param name="alfred"></param>
-        protected override void InitializeProtected(AlfredProvider alfred)
+        protected override void InitializeProtected(IAlfred alfred)
         {
             Register(WidgetsToRegisterOnInitialize);
         }

@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
 // IConsole.cs
 // 
-// Created on:      07/26/2015 at 2:23 PM
-// Last Modified:   08/07/2015 at 12:37 AM
+// Created on:      08/09/2015 at 6:30 PM
+// Last Modified:   08/09/2015 at 6:30 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -23,7 +23,7 @@ namespace MattEland.Ani.Alfred.Core.Console
         /// <value>The console events.</value>
         [NotNull]
         [ItemNotNull]
-        IEnumerable<ConsoleEvent> Events { get; }
+        IEnumerable<IConsoleEvent> Events { get; }
 
         /// <summary>
         ///     Logs the specified message to the console.

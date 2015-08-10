@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------
-// AlfredSubSystemListModule.cs
+// AlfredSubsystemListModule.cs
 // 
 // Created on:      08/07/2015 at 11:56 PM
 // Last Modified:   08/07/2015 at 11:56 PM
@@ -13,6 +13,7 @@ using System.Globalization;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 
 namespace MattEland.Ani.Alfred.Core.Modules
@@ -20,18 +21,18 @@ namespace MattEland.Ani.Alfred.Core.Modules
     /// <summary>
     /// A module that lists installed subsystems
     /// </summary>
-    public class AlfredSubSystemListModule : AlfredModule
+    public sealed class AlfredSubsystemListModule : AlfredModule
     {
 
         [NotNull, ItemNotNull]
         private readonly ICollection<AlfredWidget> _widgets;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlfredSubSystemListModule"/> class.
+        /// Initializes a new instance of the <see cref="AlfredSubsystemListModule"/> class.
         /// </summary>
         /// <param name="platformProvider">The platform provider.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public AlfredSubSystemListModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
+        public AlfredSubsystemListModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
         {
             _widgets = platformProvider.CreateCollection<AlfredWidget>();
         }
@@ -61,7 +62,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
 
                 // Interpret the DataContext and update its text if it's a component based on the
                 // component status. If no component context, it's assumed to be the no items label.
-                var component = widget.DataContext as AlfredComponent;
+                var component = widget.DataContext as IAlfredComponent;
                 if (component != null)
                 {
                     UpdateWidgetText(textWidget, component);
@@ -85,17 +86,17 @@ namespace MattEland.Ani.Alfred.Core.Modules
         ///     Handles initialization events
         /// </summary>
         /// <param name="alfred"></param>
-        protected override void InitializeProtected(AlfredProvider alfred)
+        protected override void InitializeProtected(IAlfred alfred)
         {
             _widgets.Clear();
 
             // Read the subsystems from Alfred
             if (AlfredInstance != null)
             {
-                foreach (var subSystem in AlfredInstance.SubSystems)
+                foreach (var item in AlfredInstance.Subsystems)
                 {
-                    var widget = new TextWidget { DataContext = subSystem };
-                    UpdateWidgetText(widget, subSystem);
+                    var widget = new TextWidget { DataContext = item };
+                    UpdateWidgetText(widget, item);
 
                     _widgets.Add(widget);
 
@@ -108,7 +109,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
             {
                 var noSubsystemsDetected = Resources.AlfredSubSystemListModule_NoSubsystemsDetected.NonNull();
 
-                Log("SubSystems.Initialize", noSubsystemsDetected, LogLevel.Warning);
+                Log("Subsystems.Initialize", noSubsystemsDetected, LogLevel.Warning);
 
                 var widget = new TextWidget(noSubsystemsDetected);
                 _widgets.Add(widget);
@@ -122,9 +123,10 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         /// <param name="widget">The widget.</param>
         /// <param name="component">The component.</param>
-        /// <exception cref="System.ArgumentNullException">
+        /// <exception cref="ArgumentNullException">
         /// </exception>
-        private static void UpdateWidgetText([NotNull] AlfredTextWidget widget, [NotNull] AlfredComponent component)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "MattEland.Ani.Alfred.Core.Widgets.AlfredTextWidget.set_Text(System.String)")]
+        private static void UpdateWidgetText([NotNull] AlfredTextWidget widget, [NotNull] IAlfredComponent component)
         {
             if (widget == null)
             {
@@ -138,4 +140,5 @@ namespace MattEland.Ani.Alfred.Core.Modules
             widget.Text = string.Format(CultureInfo.CurrentCulture, "{0}: {1}", component.NameAndVersion, component.Status);
         }
     }
+
 }

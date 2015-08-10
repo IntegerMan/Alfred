@@ -6,6 +6,7 @@
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -19,7 +20,7 @@ namespace MattEland.Ani.Alfred.Core.Speech
     /// <summary>
     ///     A speech-enabled console implementation that notifies the user of significant events
     /// </summary>
-    public class AlfredSpeechConsole : IConsole
+    public sealed class AlfredSpeechConsole : IConsole, IDisposable
     {
         [NotNull]
         private readonly IConsole _console;
@@ -68,7 +69,7 @@ namespace MattEland.Ani.Alfred.Core.Speech
         ///     Gets the console events.
         /// </summary>
         /// <value>The console events.</value>
-        public IEnumerable<ConsoleEvent> Events
+        public IEnumerable<IConsoleEvent> Events
         {
             [DebuggerStepThrough]
             get
@@ -83,6 +84,8 @@ namespace MattEland.Ani.Alfred.Core.Speech
         /// <param name="level">The logging level.</param>
         public void Log(string title, string message, LogLevel level)
         {
+            Debug.Assert(!string.IsNullOrWhiteSpace(message));
+
             // Always log things to the base logger
             _console.Log(title, message, level);
 
@@ -95,8 +98,16 @@ namespace MattEland.Ani.Alfred.Core.Speech
                     message = string.Format(CultureInfo.CurrentCulture, "{0}: {1}", level, message);
                 }
 
-                _speech.Say(message);
+                _speech.Say(message.NonNull());
             }
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            _speech.Dispose();
         }
     }
 }

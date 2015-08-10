@@ -3,35 +3,30 @@
   <OutputDir KeepXmlFiles="False">C:\Dev\Alfred\Alfred\NDependOut</OutputDir>
   <Assemblies>
     <Name>MattEland.Ani.Alfred.Core</Name>
-    <Name>MattEland.Ani.Alfred.Core.Tests</Name>
     <Name>MattEland.Ani.Alfred.WPF</Name>
-    <Name>MattEland.Ani.Alfred.Win8</Name>
+    <Name>MattEland.Ani.Alfred.Core.Modules.SysMonitor</Name>
+    <Name>MattEland.Ani.Alfred.Core.Speech</Name>
   </Assemblies>
   <FrameworkAssemblies>
     <Name>mscorlib</Name>
     <Name>System</Name>
-    <Name>nunit.framework</Name>
     <Name>System.Core</Name>
     <Name>PresentationFramework</Name>
     <Name>WindowsBase</Name>
     <Name>System.Xaml</Name>
     <Name>PresentationCore</Name>
-    <Name>System.Runtime</Name>
-    <Name>Windows</Name>
-    <Name>System.Diagnostics.Tools</Name>
-    <Name>System.Diagnostics.Debug</Name>
-    <Name>System.Collections</Name>
-    <Name>System.Runtime.InteropServices.WindowsRuntime</Name>
-    <Name>System.Runtime.Extensions</Name>
+    <Name>System.Speech</Name>
   </FrameworkAssemblies>
   <Dirs>
+    <Dir>C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319</Dir>
+    <Dir>C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319\WPF</Dir>
+    <Dir>C:\Program Files (x86)\Windows Kits\8.0\References\CommonConfiguration\Neutral</Dir>
     <Dir>C:\Dev\Alfred\Alfred\MattEland.Ani.Alfred.Core\bin\Debug</Dir>
     <Dir>C:\Dev\Alfred\Alfred\MattELand.Ani.Alfred.Core.Tests\bin\Debug</Dir>
     <Dir>C:\Dev\Alfred\Alfred\MattEland.Ani.Alfred.WPF\bin\Debug</Dir>
     <Dir>C:\Dev\Alfred\Alfred\MattEland.Ani.Alfred.Win8\bin\Debug</Dir>
-    <Dir>C:\Windows\Microsoft.NET\Framework\v4.0.30319</Dir>
-    <Dir>C:\Windows\Microsoft.NET\Framework\v4.0.30319\WPF</Dir>
-    <Dir>C:\Program Files (x86)\Windows Kits\8.0\References\CommonConfiguration\Neutral</Dir>
+    <Dir>c:\dev\Alfred\Alfred\MattEland.Ani.Alfred.Core.System\bin\Debug</Dir>
+    <Dir>c:\dev\Alfred\Alfred\MattEland.Ani.Alfred.Core.Speech\bin\Debug</Dir>
   </Dirs>
   <MergeCodeGeneratedByCompiler>True</MergeCodeGeneratedByCompiler>
   <Report Kind="0" SectionsEnabled="65535" XslPath="" Flags="261376" />
@@ -279,10 +274,10 @@ select new { m, m.NbLinesOfCode, m.NbILInstructions }
 // refactoring.
 //</HowToFix>]]></Query>
       <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Methods too complex</Name>
-warnif count > 0 from m in JustMyCode.Methods where 
+warnif count > 0 from m in JustMyCode.Methods where (
   m.CyclomaticComplexity > 20 ||
   m.ILCyclomaticComplexity > 40 ||
-  m.ILNestingDepth > 4
+  m.ILNestingDepth > 4) && m.CyclomaticComplexity > 3
   orderby m.CyclomaticComplexity descending,
           m.ILCyclomaticComplexity descending,
           m.ILNestingDepth descending
@@ -577,10 +572,10 @@ warnif count > 0 from m in JustMyCode.Methods where
  
 // Low Quality methods// Metrics' definitions
 (  m.NbLinesOfCode > 30 ||          // http://www.ndepend.com/docs/code-metrics#NbLinesOfCode
-   m.NbILInstructions > 200 ||      // http://www.ndepend.com/docs/code-metrics#NbILInstructions
+   m.NbILInstructions > 250 ||      // http://www.ndepend.com/docs/code-metrics#NbILInstructions
    m.CyclomaticComplexity > 20 ||   // http://www.ndepend.com/docs/code-metrics#CC
    m.ILCyclomaticComplexity > 50 || // http://www.ndepend.com/docs/code-metrics#ILCC
-   m.ILNestingDepth > 4 ||          // http://www.ndepend.com/docs/code-metrics#ILNestingDepth
+   m.ILNestingDepth > 5 ||          // http://www.ndepend.com/docs/code-metrics#ILNestingDepth
    m.NbParameters > 5 ||            // http://www.ndepend.com/docs/code-metrics#NbParameters
    m.NbVariables > 8 ||             // http://www.ndepend.com/docs/code-metrics#NbVariables
    m.NbOverloads > 6 )
@@ -691,7 +686,7 @@ select new { t, t.NbLinesOfCode,
 // certainly you'll have to split the type into several smaller types
 // that together, implement the same logic.
 //</HowToFix>]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>From now, all types added or refactored should be 100% covered by tests</Name>
+      <Query Active="False" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>From now, all types added or refactored should be 100% covered by tests</Name>
 warnif count > 0 from t in JustMyCode.Types where
 
   // *** Only match new or refactored types since Baseline for Comparison ***
@@ -1037,7 +1032,7 @@ select new {
 // certainly you'll have to split the type into several smaller types
 // that together, implement the same logic.
 //</HowToFix>]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[//<Name>Avoid transforming an immutable type into a mutable one</Name>
+      <Query Active="False" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[//<Name>Avoid transforming an immutable type into a mutable one</Name>
 
 warnif count > 0
 from t in Application.Types where
@@ -1183,7 +1178,7 @@ warnif count > 0 from t in JustMyCode.Types
 where t.IsClass
 let baseClasses = t.BaseClasses.ExceptThirdParty()
 
-where baseClasses.Count() >= 3
+where baseClasses.Count() >= 4
 
 select new { t, baseClasses, 
                 // The metric value DepthOfInheritance takes account
@@ -1458,6 +1453,7 @@ let methodsThatCanBeMadeStatic =
    // not using the this reference and also, not using
    // any of its class or base classes instance fields or instance methods.
    where !m.IsAbstract && !m.IsVirtual &&
+         !m.NameLike("On") &&
          !m.AccessThis && !m.IsExplicitInterfaceImpl &&
 
           // Optimization: Using FirstOrDefault() avoid to check all members, 
@@ -2136,7 +2132,7 @@ select m
 //</HowToFix>]]></Query>
       <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Instances size shouldn't be too big</Name>
 warnif count > 0 from t in JustMyCode.Types where 
-  t.SizeOfInst > 64 
+  t.SizeOfInst > 64 && !t.NameLike("Window") && !t.NameLike("App") && !t.NameLike("Page")
   orderby t.SizeOfInst descending
 select new { t, t.SizeOfInst, t.InstanceFields }
 
@@ -2873,7 +2869,7 @@ select new { n, concreteNamespacesUsed , abstractNamespacesUsed }
 // constraint your code structure *coupling / cohesion* ratio.
 //</HowToFix>]]></Query>
     </Group>
-    <Group Name="API Breaking Changes" Active="True" ShownInReport="True">
+    <Group Name="API Breaking Changes" Active="False" ShownInReport="True">
       <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="True"><![CDATA[// <Name>API Breaking Changes: Types</Name>
 
 warnif count > 0 from t in codeBase.OlderVersion().Application.Types
@@ -4963,7 +4959,7 @@ let fieldType = f.FieldType
 where fieldType != null && 
      !fieldType.IsThirdParty && 
      !fieldType.IsInterface && 
-     !fieldType.IsImmutable
+     !fieldType.IsImmutable && !f.NameLike("Settings")
 select new { 
    f, 
    mutableFieldType = fieldType , 
@@ -5320,7 +5316,7 @@ select new { m, m.NbLinesOfCode }
 //</HowToFix>]]></Query>
     </Group>
     <Group Name="Naming Conventions" Active="True" ShownInReport="False">
-      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Instance fields should be prefixed with a 'm_'</Name>
+      <Query Active="False" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Instance fields should be prefixed with a 'm_'</Name>
 warnif count > 0 from f in Application.Fields where 
   !f.NameLike(@"^m_") && 
   !f.IsStatic && 
@@ -5347,7 +5343,7 @@ select new { f, f.SizeOfInst }
 // Once the rule has been adapted to your own naming convention
 // make sure to name all matched instance fields adequately.
 //</HowToFix>]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Static fields should be prefixed with a 's_'</Name>
+      <Query Active="False" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Static fields should be prefixed with a 's_'</Name>
 warnif count > 0 from f in Application.Fields where 
   !f.NameLike (@"^s_") && 
    f.IsStatic && 
@@ -5890,7 +5886,7 @@ select new {
 //<HowToFix>
 // To fix a violation of this rule, create a source file for each type.
 //</HowToFix>]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Namespace name should correspond to file location</Name>
+      <Query Active="False" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Namespace name should correspond to file location</Name>
 
 warnif count > 0
 from n in Application.Namespaces 

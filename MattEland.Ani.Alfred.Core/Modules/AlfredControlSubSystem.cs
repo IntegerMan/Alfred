@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------
-// AlfredControlSubSystem.cs
+// AlfredControlSubsystem.cs
 // 
 // Created on:      08/08/2015 at 6:12 PM
 // Last Modified:   08/08/2015 at 6:58 PM
@@ -8,6 +8,7 @@
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Pages;
 
 namespace MattEland.Ani.Alfred.Core.Modules
@@ -16,7 +17,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
     ///     The control subsystem provides essential monitoring and control functionality for Alfred such as the Alfred control
     ///     page, an event log page, etc.
     /// </summary>
-    public class AlfredControlSubSystem : AlfredSubSystem
+    public sealed class AlfredControlSubsystem : AlfredSubsystem
     {
         [NotNull]
         private readonly AlfredModuleListPage _controlPage;
@@ -24,32 +25,63 @@ namespace MattEland.Ani.Alfred.Core.Modules
         [CanBeNull]
         private AlfredEventLogPage _eventLogPage;
 
+        [NotNull]
+        private readonly AlfredPowerModule _powerModule;
+
+        [NotNull]
+        private readonly AlfredTimeModule _timeModule;
+
+        [NotNull]
+        private readonly AlfredSubsystemListModule _systemsModule;
+
+        [NotNull]
+        private readonly AlfredPagesListModule _pagesModule;
+
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredSubSystem" /> class.
+        ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
-        public AlfredControlSubSystem() : this(new SimplePlatformProvider())
+        public AlfredControlSubsystem() : this(new SimplePlatformProvider())
         {
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredSubSystem" /> class.
+        ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
         /// <param name="provider">The provider.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public AlfredControlSubSystem([NotNull] IPlatformProvider provider) : base(provider)
+        public AlfredControlSubsystem([NotNull] IPlatformProvider provider) : base(provider)
         {
+
+            _controlPage = new AlfredModuleListPage(provider, ControlPageName);
+
             // Instantiate the modules
-            var power = new AlfredPowerModule(provider);
-            var time = new AlfredTimeModule(provider);
-            var systems = new AlfredSubSystemListModule(provider);
-            var pages = new AlfredPagesListModule(provider);
+            _powerModule = new AlfredPowerModule(provider);
+            _timeModule = new AlfredTimeModule(provider);
+            _systemsModule = new AlfredSubsystemListModule(provider);
+            _pagesModule = new AlfredPagesListModule(provider);
+
+        }
+
+        /// <summary>
+        /// Registers the controls for this component.
+        /// </summary>
+        protected override void RegisterControls()
+        {
+            Register(_controlPage);
 
             // Build out our control page
-            _controlPage = new AlfredModuleListPage(provider, ControlPageName);
-            _controlPage.Register(power);
-            _controlPage.Register(time);
-            _controlPage.Register(systems);
-            _controlPage.Register(pages);
+            _controlPage.ClearModules();
+            _controlPage.Register(_powerModule);
+            _controlPage.Register(_timeModule);
+            _controlPage.Register(_systemsModule);
+            _controlPage.Register(_pagesModule);
+
+            // Don't include the event log page if there are no events
+            if (AlfredInstance?.Console != null)
+            {
+                _eventLogPage = new AlfredEventLogPage(AlfredInstance.Console, EventLogPageName);
+                Register(_eventLogPage);
+            }
         }
 
         /// <summary>
@@ -81,52 +113,6 @@ namespace MattEland.Ani.Alfred.Core.Modules
             get { return Resources.AlfredControlSubSystem_Name; }
         }
 
-        /// <summary>
-        ///     Updates the component
-        /// </summary>
-        protected override void UpdateProtected()
-        {
-        }
 
-        /// <summary>
-        ///     Handles initialization events
-        /// </summary>
-        /// <param name="alfred"></param>
-        protected override void InitializeProtected(AlfredProvider alfred)
-        {
-            // Add a basic control page
-            Register(_controlPage);
-
-            // Don't include the event log page if there are no events
-            if (alfred?.Console != null)
-            {
-                _eventLogPage = new AlfredEventLogPage(alfred.Console, EventLogPageName);
-                Register(_eventLogPage);
-            }
-        }
-
-        /// <summary>
-        ///     Handles shutdown events
-        /// </summary>
-        protected override void ShutdownProtected()
-        {
-            _eventLogPage = null;
-        }
-
-        /// <summary>
-        ///     A notification method that is invoked when shutdown for Alfred is complete so the UI can be fully enabled or
-        ///     adjusted
-        /// </summary>
-        public override void OnShutdownCompleted()
-        {
-        }
-
-        /// <summary>
-        ///     A notification method that is invoked when initialization for Alfred is complete so the UI can be fully enabled or
-        ///     adjusted
-        /// </summary>
-        public override void OnInitializationCompleted()
-        {
-        }
     }
 }

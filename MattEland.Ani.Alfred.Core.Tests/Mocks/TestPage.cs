@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------
-// TestSubsystem.cs
+// TestSubSystem.cs
 // 
 // Created on:      08/07/2015 at 11:07 PM
 // Last Modified:   08/08/2015 at 1:43 AM
@@ -9,62 +9,34 @@
 using System;
 using System.Collections.Generic;
 
-using JetBrains.Annotations;
-
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Pages;
 
 namespace MattEland.Ani.Alfred.Core.Tests.Mocks
 {
-    public class TestSubsystem : AlfredSubsystem
+    /// <summary>
+    /// A test page for testing the AlfredPage update pumps
+    /// </summary>
+    public class TestPage : AlfredPage
     {
-        [NotNull, ItemNotNull]
-        private readonly ICollection<AlfredPage> _registerPages;
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
-        public TestSubsystem() : this(new SimplePlatformProvider())
+        public TestPage() : base("Test Page")
         {
-        }
-
-        public TestSubsystem([NotNull] IPlatformProvider provider) : base(provider)
-        {
-            if (provider == null)
-            {
-                throw new ArgumentNullException(nameof(provider));
-            }
-
-            _registerPages = provider.CreateCollection<AlfredPage>();
         }
 
         /// <summary>
-        ///     Gets the name of the subsystems.
-        /// </summary>
-        /// <value>The name.</value>
-        public override string Name
-        {
-            get { return "Test SubSystem"; }
-        }
-
-        /// <summary>
-        /// Registers the controls for this component.
-        /// </summary>
-        protected override void RegisterControls()
-        {
-            // Live up to our promise and auto-register some pages
-            foreach (var page in _registerPages)
-            {
-                Register(page);
-            }
-        }
-
-        /// <summary>
-        ///     Gets or sets the last time this module was updated.
+        ///     Gets or sets the last time this page was updated.
         /// </summary>
         /// <value>The last time the module was updated.</value>
         public DateTime LastUpdated { get; set; }
 
+        /// <summary>
+        /// Gets or sets the last time this page was notified initialization completed.
+        /// </summary>
+        /// <value>The last initialization completed.</value>
         public DateTime LastInitializationCompleted { get; set; }
 
         /// <summary>
@@ -138,18 +110,19 @@ namespace MattEland.Ani.Alfred.Core.Tests.Mocks
             base.UpdateProtected();
         }
 
-        /// <summary>
-        /// Adds a page to be automatically registered on initialization
-        /// </summary>
-        /// <param name="page">The page.</param>
-        public void AddAutoRegisterPage([NotNull] AlfredPage page)
-        {
-            if (page == null)
-            {
-                throw new ArgumentNullException(nameof(page));
-            }
 
-            _registerPages.Add(page);
+        /// <summary>
+        /// Gets the children of this component. Depending on the type of component this is, the children will
+        /// vary in their own types.
+        /// </summary>
+        /// <value>The children.</value>
+        public override IEnumerable<IAlfredComponent> Children
+        {
+            get
+            {
+                yield break;
+            }
         }
+
     }
 }

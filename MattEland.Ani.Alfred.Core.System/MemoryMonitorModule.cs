@@ -11,6 +11,7 @@ using System.Diagnostics;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
@@ -18,7 +19,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
     /// <summary>
     ///     A module that displays information on the system's memory utilization percentage
     /// </summary>
-    public class MemoryMonitorModule : SystemMonitorModule
+    public sealed class MemoryMonitorModule : SystemMonitorModule, IDisposable
     {
         private const string MemoryCategoryName = "Memory";
         private const string MemoryUtilizationBytesCounterName = "% Committed Bytes in Use";
@@ -71,7 +72,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         ///     Handles module initialization events
         /// </summary>
         /// <param name="alfred"></param>
-        protected override void InitializeProtected(AlfredProvider alfred)
+        protected override void InitializeProtected(IAlfred alfred)
         {
             Register(_memWidget);
         }
@@ -89,10 +90,8 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <summary>
         /// Disposes this instance.
         /// </summary>
-        public override void Dispose()
+        public void Dispose()
         {
-            base.Dispose();
-
             _memUsedBytesCounter.Dispose();
         }
     }

@@ -12,6 +12,7 @@ using System.Linq;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 
 namespace MattEland.Ani.Alfred.Core
@@ -20,7 +21,7 @@ namespace MattEland.Ani.Alfred.Core
     /// <summary>
     ///     Represents a module within Alfred. Modules contain different bits of information to present to the user.
     /// </summary>
-    public abstract class AlfredModule : AlfredComponent, IDisposable
+    public abstract class AlfredModule : AlfredComponent, IAlfredModule
     {
         [NotNull]
         [ItemNotNull]
@@ -64,46 +65,14 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     Dispose of anything that needs to be done. By default nothing needs to be disposed of, but some modules will
-        ///     need to support this and should override Dispose.
+        /// Clears all child collections
         /// </summary>
-        public virtual void Dispose()
+        protected override void ClearChildCollections()
         {
-        }
+            base.ClearChildCollections();
 
-        /// <summary>
-        ///     Initializes the module.
-        /// </summary>
-        /// <param name="alfred">
-        ///     The provider.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
-        /// <exception cref="InvalidOperationException">
-        ///     Already online when told to initialize.
-        /// </exception>
-        public override void Initialize([NotNull] AlfredProvider alfred)
-        {
-            // Don't allow any residual widgets now that we can display widgets while shut down
             _widgets.Clear();
-
-            base.Initialize(alfred);
-        }
-
-        /// <summary>
-        ///     Shuts down the module and decouples it from Alfred.
-        /// </summary>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
-        /// <exception cref="InvalidOperationException">
-        ///     Already offline when told to shut down.
-        /// </exception>
-        public override void Shutdown()
-        {
-            // We want to clear out the list before shutdown is called so that modules can re-register components for display during shutdown mode as needed
-            _widgets.Clear();
-
-            base.Shutdown();
+            OnPropertyChanged(nameof(Widgets));
         }
 
         /// <summary>
@@ -117,6 +86,7 @@ namespace MattEland.Ani.Alfred.Core
             _widgets.AddSafe(widget);
 
             OnPropertyChanged(nameof(IsVisible));
+            OnPropertyChanged(nameof(Widgets));
         }
 
         /// <summary>
@@ -137,6 +107,16 @@ namespace MattEland.Ani.Alfred.Core
                 // ReSharper disable once AssignNullToNotNullAttribute - for testing purposes we'll allow this
                 Register(widget);
             }
+        }
+
+        /// <summary>
+        /// Gets the children of this component. Depending on the type of component this is, the children will
+        /// vary in their own types.
+        /// </summary>
+        /// <value>The children.</value>
+        public override IEnumerable<IAlfredComponent> Children
+        {
+            get { yield break; }
         }
     }
 }

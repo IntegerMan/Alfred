@@ -6,6 +6,8 @@
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
+using System.ComponentModel;
+
 using JetBrains.Annotations;
 
 namespace MattEland.Ani.Alfred.Core.Widgets
@@ -16,7 +18,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
     ///     Widgets do not contain user interface elements but tell the
     ///     client what user interface elements to create.
     /// </summary>
-    public abstract class AlfredWidget : NotifyPropertyChangedBase
+    public abstract class AlfredWidget : INotifyPropertyChanged
     {
         [CanBeNull]
         private object _dataContext;
@@ -63,6 +65,21 @@ namespace MattEland.Ani.Alfred.Core.Widgets
                 _dataContext = value;
                 OnPropertyChanged(nameof(DataContext));
             }
+        }
+
+        /// <summary>
+        /// Occurs when a property changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Called when a property changes.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        [NotifyPropertyChangedInvocator]
+        protected void OnPropertyChanged([CanBeNull] string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

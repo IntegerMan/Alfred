@@ -118,4 +118,8 @@
     <value>Using unknown voice. Speech synthesis may not function properly.</value>
     <comment>Log for using an unknown voice</comment>
   </data>
+  <data name="InitializingSpeechModule" xml:space="preserve">
+    <value>Initializing speech module...</value>
+    <comment>Log message for starting to build out the speech module.</comment>
+  </data>
 </root>

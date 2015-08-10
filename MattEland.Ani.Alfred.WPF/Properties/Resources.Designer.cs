@@ -83,11 +83,65 @@ namespace MattEland.Ani.Alfred.WPF.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Console Events.
+        ///   Looks up a localized string similar to The application has loaded..
+        /// </summary>
+        public static string AppOnlineLogMessage {
+            get {
+                return ResourceManager.GetString("AppOnlineLogMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Automatically starting Alfred.
+        /// </summary>
+        public static string AutoStartAlfredLogMessage {
+            get {
+                return ResourceManager.GetString("AutoStartAlfredLogMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Event Log.
         /// </summary>
         public static string ConsoleHeader {
             get {
                 return ResourceManager.GetString("ConsoleHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The console is now online.
+        /// </summary>
+        public static string ConsoleOnlineLogMessage {
+            get {
+                return ResourceManager.GetString("ConsoleOnlineLogMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Initialization Complete.
+        /// </summary>
+        public static string InitializationCompleteLogMessage {
+            get {
+                return ResourceManager.GetString("InitializationCompleteLogMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WinClient.InitializeConsole.
+        /// </summary>
+        public static string InitializeConsoleLogHeader {
+            get {
+                return ResourceManager.GetString("InitializeConsoleLogHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Initializing Modules.
+        /// </summary>
+        public static string InitializeModulesLogMessage {
+            get {
+                return ResourceManager.GetString("InitializeModulesLogMessage", resourceCulture);
             }
         }
         
@@ -97,6 +151,15 @@ namespace MattEland.Ani.Alfred.WPF.Properties {
         public static string ModulesHeader {
             get {
                 return ResourceManager.GetString("ModulesHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WinClient.Loaded.
+        /// </summary>
+        public static string WinClientLoadedLogHeader {
+            get {
+                return ResourceManager.GetString("WinClientLoadedLogHeader", resourceCulture);
             }
         }
     }

@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
 // IPlatformProvider.cs
 // 
-// Created on:      07/26/2015 at 4:29 PM
-// Last Modified:   08/03/2015 at 2:02 PM
+// Created on:      08/09/2015 at 6:17 PM
+// Last Modified:   08/09/2015 at 6:19 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -13,10 +13,10 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Widgets;
 
-namespace MattEland.Ani.Alfred.Core
+namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>
-    ///     An interface that promises the ability to build platform-specific implentations of commonly needed items.
+    ///     An interface that promises the ability to build platform-specific implementations of commonly needed items.
     ///     This lets each platform provide their preferred version, for example, providing ObservableCollection for
     ///     lists or ICommand friendly implementations of commands.
     /// </summary>
@@ -25,8 +25,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <summary>
         ///     Generates a collection of the specified type.
         /// </summary>
-        /// <typeparam
-        ///     name="T">
+        /// <typeparam name="T">
         ///     The type the collection will contain.
         /// </typeparam>
         /// <returns>The collection.</returns>
@@ -41,12 +40,11 @@ namespace MattEland.Ani.Alfred.Core
         AlfredCommand CreateCommand();
 
         /// <summary>
-        /// Creates a platform-friendly version of an AlfredCommand with a pre-defined action.
+        ///     Creates a platform-friendly version of an AlfredCommand with a pre-defined action.
         /// </summary>
         /// <param name="executeAction">The action a button click should execute.</param>
         /// <returns>An AlfredCommand.</returns>
         [NotNull]
         AlfredCommand CreateCommand(Action executeAction);
-
     }
 }

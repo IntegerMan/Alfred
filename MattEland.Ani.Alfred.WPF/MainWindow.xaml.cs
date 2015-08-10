@@ -8,6 +8,8 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -15,6 +17,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Ani.Alfred.Core.Speech;
@@ -44,8 +47,9 @@ namespace MattEland.Ani.Alfred.WPF
         [NotNull]
         private readonly AlfredProvider _alfred;
 
-        [NotNull]
-        private readonly AlfredSpeechConsole _console;
+        private SystemMonitoringSubsystem _systemMonitoringSubsystem;
+        private AlfredControlSubsystem _alfredControlSubsystem;
+        private AlfredSpeechConsole _console;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="MainWindow" /> class.
@@ -53,14 +57,17 @@ namespace MattEland.Ani.Alfred.WPF
         public MainWindow()
         {
 
+#if DEBUG
+            // Do not allow topmost window mode while debugging
+            Topmost = false;
+#endif
+
             InitializeComponent();
 
             // Create Alfred. It won't be online and running yet, but create it.
             var platformProvider = new WinClientPlatformProvider();
-            _alfred = new AlfredProvider(platformProvider);
-
-            // DataBindings rely on Alfred presently as there hasn't been a need for a page ViewModel yet
-            DataContext = _alfred;
+            var bootstrapper = new AlfredBootstrapper(platformProvider);
+            _alfred = bootstrapper.Create();
 
             // Give Alfred a way to talk to the user and the client a way to log events that are separate from Alfred
             _console = InitializeConsole(platformProvider);
@@ -68,26 +75,28 @@ namespace MattEland.Ani.Alfred.WPF
             // Give Alfred some Content
             InitializeAlfredModules();
 
+            // DataBindings rely on Alfred presently as there hasn't been a need for a page ViewModel yet
+            DataContext = _alfred;
+
+
             // Set up the update timer
             InitializeUpdatePump();
 
-            _console.Log("WinClient.Initialize", "Initialization Complete", LogLevel.Verbose);
-        }
-
-        /// <summary>
-        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-            _alfred.Dispose();
+            _console.Log("WinClient.Initialize", Properties.Resources.InitializationCompleteLogMessage.NonNull(), LogLevel.Verbose);
         }
 
         private void InitializeAlfredModules()
         {
+            _console.Log("WinClient.Initialize", Properties.Resources.InitializeModulesLogMessage.NonNull(), LogLevel.Verbose);
 
-            _console.Log("WinClient.Initialize", "Initializing Modules", LogLevel.Verbose);
-            StandardModuleProvider.AddStandardModules(_alfred);
-            SystemModuleProvider.AddStandardModules(_alfred);
+            var provider = _alfred.PlatformProvider;
+
+            _alfredControlSubsystem = new AlfredControlSubsystem(provider);
+            _systemMonitoringSubsystem = new SystemMonitoringSubsystem(provider);
+
+            _alfred.Register(_alfredControlSubsystem);
+            _alfred.Register(_systemMonitoringSubsystem);
+
         }
 
         /// <summary>
@@ -126,12 +135,12 @@ namespace MattEland.Ani.Alfred.WPF
             var baseConsole = new SimpleConsole(platformProvider);
 
             // Give Alfred a voice
-            var speechConsole = new AlfredSpeechConsole(baseConsole);
+            _console = new AlfredSpeechConsole(baseConsole);
 
-            speechConsole.Log("WinClient.InitializeConsole", "Console is now online.", LogLevel.Verbose);
-            _alfred.Console = speechConsole;
+            _console.Log(Properties.Resources.InitializeConsoleLogHeader.NonNull(), Properties.Resources.ConsoleOnlineLogMessage.NonNull(), LogLevel.Verbose);
+            _alfred.Console = _console;
 
-            return speechConsole;
+            return _console;
         }
 
         /// <summary>
@@ -141,13 +150,32 @@ namespace MattEland.Ani.Alfred.WPF
         /// <param name="e">The <see cref="RoutedEventArgs" /> instance containing the event data.</param>
         private void OnWindowLoaded(object sender, RoutedEventArgs e)
         {
+            var logHeader = Properties.Resources.WinClientLoadedLogHeader.NonNull();
+
             // Determine whether to auto-start or not based off of settings
             if (Settings.AutoStartAlfred)
             {
+                _console.Log(logHeader, Properties.Resources.AutoStartAlfredLogMessage.NonNull(), LogLevel.Verbose);
                 _alfred.Initialize();
             }
 
-            _console.Log("WinClient.Loaded", "The application is now online", LogLevel.Info);
+            // Auto-select the first tab; if any are present
+            AutoSelectFirstTab();
+
+            // Log that we're good to go
+            _console.Log(logHeader, Properties.Resources.AppOnlineLogMessage.NonNull(), LogLevel.Info);
+        }
+
+        /// <summary>
+        /// Automatically selects the first tab if no tab is selected.
+        /// </summary>
+        private void AutoSelectFirstTab()
+        {
+            Debug.Assert(tabPages != null);
+            if (tabPages.SelectedItem == null && tabPages.HasItems)
+            {
+                tabPages.SelectedIndex = 0;
+            }
         }
 
         /// <summary>
@@ -161,6 +189,23 @@ namespace MattEland.Ani.Alfred.WPF
             if (_alfred.Status != AlfredStatus.Offline)
             {
                 _alfred.Shutdown();
+            }
+        }
+
+        /// <summary>
+        /// Dispose of all allocated resources
+        /// </summary>
+        [SuppressMessage("ReSharper", "UseNullPropagation")]
+        public void Dispose()
+        {
+            if (_systemMonitoringSubsystem != null)
+            {
+                _systemMonitoringSubsystem.Dispose();
+            }
+
+            if (_console != null)
+            {
+                _console.Dispose();
             }
         }
     }

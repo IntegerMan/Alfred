@@ -11,6 +11,7 @@ using System.Diagnostics;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
@@ -18,7 +19,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
     /// <summary>
     ///     A module that displays information on the system's disk input / output operations
     /// </summary>
-    public class DiskMonitorModule : SystemMonitorModule
+    public sealed class DiskMonitorModule : SystemMonitorModule, IDisposable
     {
         private const string DiskCategoryName = "PhysicalDisk";
         private const string DiskReadCounterName = "% Disk Read Time";
@@ -46,10 +47,10 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             _diskWriteCounter = new PerformanceCounter(DiskCategoryName, DiskWriteCounterName, TotalInstanceName, true);
 
             _diskReadWidget = CreatePercentWidget();
-            _diskReadWidget.Text = "Disk Read %:";
+            _diskReadWidget.Text = Resources.DiskReadLabel;
 
             _diskWriteWidget = CreatePercentWidget();
-            _diskWriteWidget.Text = "Disk Write %:";
+            _diskWriteWidget.Text = Resources.DiskWriteLabel;
 
         }
 
@@ -62,16 +63,14 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         public override string Name
         {
             // ReSharper disable once AssignNullToNotNullAttribute
-            get { return "Disk Monitor"; }
+            get { return Resources.DiskMonitorName; }
         }
 
         /// <summary>
         ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        public override void Dispose()
+        public void Dispose()
         {
-            base.Dispose();
-
             _diskReadCounter.Dispose();
             _diskWriteCounter.Dispose();
         }
@@ -106,7 +105,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         ///     Handles module initialization events
         /// </summary>
         /// <param name="alfred"></param>
-        protected override void InitializeProtected(AlfredProvider alfred)
+        protected override void InitializeProtected(IAlfred alfred)
         {
             Register(_diskReadWidget);
             Register(_diskWriteWidget);

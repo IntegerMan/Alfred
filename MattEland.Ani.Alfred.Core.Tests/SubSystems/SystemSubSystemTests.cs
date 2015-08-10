@@ -13,6 +13,7 @@ using System.Linq;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
+using MattEland.Ani.Alfred.Core.Pages;
 
 using NUnit.Framework;
 
@@ -26,7 +27,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
     public class SystemSubSystemTests
     {
         [NotNull]
-        private SystemMonitoringSubSystem _subsystem;
+        private SystemMonitoringSubsystem _subsystem;
 
         [NotNull]
         private AlfredProvider _alfred;
@@ -34,8 +35,10 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
         [SetUp]
         public void TestSetup()
         {
-            _subsystem = new SystemMonitoringSubSystem();
-            _alfred = new AlfredProvider();
+            _subsystem = new SystemMonitoringSubsystem();
+
+            var bootstrapper = new AlfredBootstrapper();
+            _alfred = bootstrapper.Create();
         }
 
         [Test]
@@ -43,16 +46,21 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
         {
             _alfred.Register(_subsystem);
 
-            Assert.AreEqual(1, _alfred.SubSystems.Count(), "Subsystem was not registered");
-            Assert.Contains(_subsystem, _alfred.SubSystems as ICollection, "The subsystem was not found in the collection");
+            Assert.AreEqual(1, _alfred.Subsystems.Count(), "Subsystem was not registered");
+            Assert.Contains(_subsystem, _alfred.Subsystems as ICollection, "The subsystem was not found in the collection");
         }
 
         [Test]
         public void SystemMonitoringSubsystemContainsModules()
         {
-            Assert.IsTrue(_subsystem.Modules.Any(m => m is CpuMonitorModule), "CPU Monitor not found");
-            Assert.IsTrue(_subsystem.Modules.Any(m => m is MemoryMonitorModule), "Memory Monitor not found");
-            Assert.IsTrue(_subsystem.Modules.Any(m => m is DiskMonitorModule), "Disk Monitor not found");
+            _alfred.Register(_subsystem);
+
+            var page = _subsystem.Pages.First() as AlfredModuleListPage;
+            Assert.NotNull(page);
+
+            Assert.IsTrue(page.Modules.Any(m => m is CpuMonitorModule), "CPU Monitor not found");
+            Assert.IsTrue(page.Modules.Any(m => m is MemoryMonitorModule), "Memory Monitor not found");
+            Assert.IsTrue(page.Modules.Any(m => m is DiskMonitorModule), "Disk Monitor not found");
         }
 
         [Test]

@@ -2,19 +2,21 @@
 // AlfredProvider.cs
 // 
 // Created on:      07/25/2015 at 11:30 PM
-// Last Modified:   08/08/2015 at 1:24 AM
+// Last Modified:   08/09/2015 at 3:42 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
-using MattEland.Ani.Alfred.Core.Pages;
+using MattEland.Ani.Alfred.Core.Definitions;
 
 namespace MattEland.Ani.Alfred.Core
 {
@@ -22,30 +24,22 @@ namespace MattEland.Ani.Alfred.Core
     ///     Coordinates providing personal assistance to a user interface and receiving settings and queries back from the user
     ///     interface.
     /// </summary>
-    public sealed class AlfredProvider : NotifyPropertyChangedBase, IDisposable
+    public sealed class AlfredProvider : INotifyPropertyChanged, IAlfred
     {
-        [NotNull]
-        [ItemNotNull]
-        private readonly ICollection<AlfredModule> _modules;
-
         /// <summary>
         ///     The platform provider
         /// </summary>
         [NotNull]
         private readonly IPlatformProvider _platformProvider;
 
-        [NotNull]
-        [ItemNotNull]
-        private readonly ICollection<AlfredPage> _rootPages;
-
         /// <summary>
         ///     The status controller
         /// </summary>
         [NotNull]
-        private readonly AlfredStatusController _statusController;
+        private readonly IStatusController _statusController;
 
         [NotNull]
-        private readonly ICollection<AlfredSubSystem> _subsystems;
+        private readonly ICollection<IAlfredSubsystem> _subsystems;
 
         /// <summary>
         ///     The status
@@ -53,33 +47,33 @@ namespace MattEland.Ani.Alfred.Core
         private AlfredStatus _status;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredProvider" /> class.
+        /// Initializes a new instance of the <see cref="AlfredProvider"/> class.
         /// </summary>
+        /// <remarks>
+        /// Initialization should come from AlfredBootstrapper
+        /// </remarks>
         /// <param name="provider">The provider.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        public AlfredProvider([NotNull] IPlatformProvider provider)
+        /// <param name="controller">The controller.</param>
+        /// <exception cref="System.ArgumentNullException">provider</exception>
+        internal AlfredProvider([NotNull] IPlatformProvider provider, [CanBeNull] IStatusController controller)
         {
+            // Set the controller
+            if (controller == null)
+            {
+                controller = new AlfredStatusController(this);
+            }
+            _statusController = controller;
+            _statusController.Alfred = this;
+
+            // Set the provider
             if (provider == null)
             {
                 throw new ArgumentNullException(nameof(provider));
             }
-
-            _statusController = new AlfredStatusController(this);
-
             _platformProvider = provider;
 
-            _modules = provider.CreateCollection<AlfredModule>();
-
-            _subsystems = provider.CreateCollection<AlfredSubSystem>();
-
-            _rootPages = provider.CreateCollection<AlfredPage>();
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredProvider" /> class.
-        /// </summary>
-        public AlfredProvider() : this(new SimplePlatformProvider())
-        {
+            // Build out sub-collections
+            _subsystems = provider.CreateCollection<IAlfredSubsystem>();
         }
 
         /// <summary>
@@ -125,24 +119,13 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     Gets the modules.
-        /// </summary>
-        /// <value>The modules.</value>
-        [NotNull]
-        [ItemNotNull]
-        public ICollection<AlfredModule> Modules
-        {
-            get { return _modules; }
-        }
-
-        /// <summary>
         ///     Gets the status.
         /// </summary>
         /// <value>The status.</value>
         public AlfredStatus Status
         {
             get { return _status; }
-            internal set
+            set
             {
                 if (value != _status)
                 {
@@ -168,31 +151,9 @@ namespace MattEland.Ani.Alfred.Core
         /// <value>The sub systems.</value>
         [NotNull]
         [ItemNotNull]
-        public IEnumerable<AlfredSubSystem> SubSystems
+        public IEnumerable<IAlfredSubsystem> Subsystems
         {
             get { return _subsystems; }
-        }
-
-        /// <summary>
-        ///     Gets the components - both Modules and SubSystems - registered with Alfred.
-        /// </summary>
-        /// <value>The components.</value>
-        [NotNull]
-        [ItemNotNull]
-        public IEnumerable<AlfredComponent> Components
-        {
-            get
-            {
-                foreach (var subSystem in _subsystems)
-                {
-                    yield return subSystem;
-                }
-
-                foreach (var module in _modules)
-                {
-                    yield return module;
-                }
-            }
         }
 
         /// <summary>
@@ -201,23 +162,13 @@ namespace MattEland.Ani.Alfred.Core
         /// <value>The pages.</value>
         [NotNull]
         [ItemNotNull]
-        public IEnumerable<AlfredPage> RootPages
+        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
+        public IEnumerable<IAlfredPage> RootPages
         {
             get
             {
                 // Give me all pages in subsystems that are root level pages
-                return from subSystem in SubSystems from page in subSystem.Pages where page.IsRootLevel select page;
-            }
-        }
-
-        /// <summary>
-        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-            foreach (var module in Modules)
-            {
-                module.Dispose();
+                return Subsystems.SelectMany(subSystem => subSystem.RootPages);
             }
         }
 
@@ -259,58 +210,10 @@ namespace MattEland.Ani.Alfred.Core
                 throw new InvalidOperationException(Resources.AlfredProvider_Update_ErrorMustBeOnline);
             }
 
-            // Update every component
-            foreach (var component in Components)
+            // Update every system
+            foreach (var item in Subsystems)
             {
-                component.Update();
-            }
-        }
-
-        /// <summary>
-        ///     Adds a module to alfred.
-        /// </summary>
-        /// <exception cref="InvalidOperationException">
-        ///     Thrown if Alfred is not Offline
-        /// </exception>
-        public void Register([NotNull] AlfredModule module)
-        {
-            if (module == null)
-            {
-                throw new ArgumentNullException(nameof(module));
-            }
-
-            AssertMustBeOffline();
-
-            Modules.Add(module);
-        }
-
-        /// <summary>
-        ///     Adds modules to Alfred in bulk.
-        /// </summary>
-        /// <param name="modules">The modules.</param>
-        /// <exception cref="System.ArgumentNullException">
-        ///     modules must be provided
-        /// </exception>
-        public void Register([NotNull] IEnumerable<AlfredModule> modules)
-        {
-            // Standard validation
-            if (modules == null)
-            {
-                throw new ArgumentNullException(nameof(modules));
-            }
-
-            AssertMustBeOffline();
-
-            // Ad each module using the standard Register function for now. This will make it easier to modify the process of registering a module
-            foreach (var module in modules)
-            {
-                if (module == null)
-                {
-                    throw new ArgumentNullException(
-                        nameof(modules),
-                        Resources.AlfredProvider_AddModules_ErrorNullModule);
-                }
-                Register(module);
+                item.Update();
             }
         }
 
@@ -332,16 +235,27 @@ namespace MattEland.Ani.Alfred.Core
         ///     Registers a sub system with Alfred.
         /// </summary>
         /// <param name="subsystem">The subsystem.</param>
-        public void Register([NotNull] AlfredSubSystem subsystem)
+        public void Register([NotNull] AlfredSubsystem subsystem)
         {
-            if (subsystem == null)
-            {
-                throw new ArgumentNullException(nameof(subsystem));
-            }
-
             AssertMustBeOffline();
 
-            _subsystems.Add(subsystem);
+            _subsystems.AddSafe(subsystem);
+            subsystem.OnRegistered(this);
+        }
+
+        /// <summary>
+        /// Occurs when a property changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Called when a property changes.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        [NotifyPropertyChangedInvocator]
+        private void OnPropertyChanged([CanBeNull] string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 

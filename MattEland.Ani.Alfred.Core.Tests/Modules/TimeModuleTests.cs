@@ -14,7 +14,10 @@ using System.Linq;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
+using MattEland.Ani.Alfred.Core.Pages;
+using MattEland.Ani.Alfred.Core.Tests.Mocks;
 
 using NUnit.Framework;
 
@@ -27,9 +30,16 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
         [SetUp]
         public void OnStartup()
         {
-            _alfred = new AlfredProvider();
+            var bootstrapper = new AlfredBootstrapper();
+            _alfred = bootstrapper.Create();
+
+            _page = new AlfredModuleListPage(_alfred.PlatformProvider, "Test");
             _module = new AlfredTimeModule(_alfred.PlatformProvider);
-            _alfred.Modules.Add(_module);
+            _page.Register(_module);
+            _subsystem = new TestSubsystem();
+            _subsystem.AddAutoRegisterPage(_page);
+
+            _alfred.Register(_subsystem);
         }
 
         [NotNull]
@@ -37,6 +47,12 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
 
         [NotNull]
         private AlfredTimeModule _module;
+
+        [NotNull]
+        private TestSubsystem _subsystem;
+
+        [NotNull]
+        private AlfredModuleListPage _page;
 
         private string GetTimeText()
         {

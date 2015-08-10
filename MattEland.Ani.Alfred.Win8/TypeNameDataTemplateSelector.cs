@@ -32,27 +32,27 @@ namespace MattEland.Ani.Alfred.Win8
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {
             // Grab the Type name
-            var key = DefaultTemplateKey;
-
-            var type = item?.GetType();
-
-            if (type?.Name != null)
-            {
-                key = $"{type.Name.Split('.').Last()}";
-            }
+            var key = GetKey(item);
 
             var dt = GetCachedDataTemplate(key);
 
             try
             {
-                if (dt != null) { return dt; }
+                if (dt != null)
+                {
+                    return dt;
+                }
 
                 // look at all parents (visual parents)
                 var fe = container as FrameworkElement;
                 while (fe != null)
                 {
                     dt = FindTemplate(fe, key);
-                    if (dt != null) { return dt; }
+                    if (dt != null)
+                    {
+                        return dt;
+                    }
+
                     // if you were to just look at logical parents,
                     // you'd find that there isn't a Parent for Items set
                     fe = VisualTreeHelper.GetParent(fe) as FrameworkElement;
@@ -67,6 +67,23 @@ namespace MattEland.Ani.Alfred.Win8
                 {
                     AddCachedDataTemplate(key, dt);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Get the key string for a given item
+        /// </summary>
+        /// <param name="item">The item</param>
+        /// <returns>The key string</returns>
+        private string GetKey([CanBeNull] object item)
+        {
+            var key = DefaultTemplateKey;
+
+            var type = item?.GetType();
+
+            if (type?.Name != null)
+            {
+                key = $"{type.Name.Split('.').Last()}";
             }
         }
 

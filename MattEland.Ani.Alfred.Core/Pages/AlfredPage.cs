@@ -7,15 +7,18 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 
 using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Core.Definitions;
 
 namespace MattEland.Ani.Alfred.Core.Pages
 {
     /// <summary>
     ///     A page that can be used in Alfred
     /// </summary>
-    public abstract class AlfredPage : AlfredComponent
+    public abstract class AlfredPage : AlfredComponent, IAlfredPage
     {
         [NotNull]
         private readonly string _name;

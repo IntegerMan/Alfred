@@ -79,6 +79,33 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disk Monitor.
+        /// </summary>
+        internal static string DiskMonitorName {
+            get {
+                return ResourceManager.GetString("DiskMonitorName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disk Read %:.
+        /// </summary>
+        internal static string DiskReadLabel {
+            get {
+                return ResourceManager.GetString("DiskReadLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disk Write %:.
+        /// </summary>
+        internal static string DiskWriteLabel {
+            get {
+                return ResourceManager.GetString("DiskWriteLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Memory:.
         /// </summary>
         internal static string MemoryMonitorModule_LabelName {
@@ -97,7 +124,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to System.
+        ///   Looks up a localized string similar to System Monitoring.
         /// </summary>
         internal static string SystemMonitoringSystem_Name {
             get {

@@ -6,13 +6,17 @@
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
+using MattEland.Ani.Alfred.Core.Pages;
+using MattEland.Ani.Alfred.Core.Tests.Mocks;
 
 using NUnit.Framework;
 
@@ -34,11 +38,40 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
         [SetUp]
         public void SetupTests()
         {
-            _alfred = new AlfredProvider();
+            var bootstrapper = new AlfredBootstrapper();
+            _alfred = bootstrapper.Create();
+            _module = new AlfredPowerModule(_alfred.PlatformProvider);
 
-            _module = new AlfredPowerModule(new SimplePlatformProvider());
+            RegisterTestModule(_alfred, _module);
+        }
 
-            _alfred.Register(_module);
+        /// <summary>
+        /// Registers the module to the Alfred instance using a test subsystem and simple page.
+        /// </summary>
+        /// <param name="alfred">The alfred.</param>
+        /// <param name="module">The module.</param>
+        /// <exception cref="System.ArgumentNullException">alfred, module
+        /// </exception>
+        private void RegisterTestModule([NotNull] AlfredProvider alfred, [NotNull] AlfredModule module)
+        {
+            if (alfred == null)
+            {
+                throw new ArgumentNullException(nameof(alfred));
+            }
+            if (module == null)
+            {
+                throw new ArgumentNullException(nameof(module));
+            }
+
+            var subsystem = new TestSubsystem();
+
+            var page = new AlfredModuleListPage(alfred.PlatformProvider, "Test Page");
+            subsystem.AddAutoRegisterPage(page);
+
+            alfred.Register(subsystem);
+
+            page.Register(module);
+
         }
 
         [NotNull]
@@ -50,105 +83,62 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
         [Test]
         public void AfterShutdownSystemWidgetIsStillPresentInModule()
         {
-            _module.AlfredProvider = _alfred;
-
             _alfred.Initialize();
             _alfred.Update();
             _alfred.Shutdown();
 
             Assert.IsNotNull(_module.Widgets, "Module removed all widgets after shutdown");
-            Assert.Contains(
-                            _module.AlfredStatusWidget,
+            Assert.Contains(_module.AlfredStatusWidget,
                             _module.Widgets as ICollection,
                             "The Status Widget was not present after shutdown");
         }
 
         [Test]
-        public void AtInitialStateInitializeIsVisibleAddModuleFirst()
+        public void AtInitialStateInitializeIsVisible()
         {
             // Doing this again here to illustrate creation / configuration order more clearly
-            _alfred = new AlfredProvider();
-            _module = new AlfredPowerModule(new SimplePlatformProvider());
+            var bootstrapper = new AlfredBootstrapper();
+            _alfred = bootstrapper.Create();
+            _module = new AlfredPowerModule(_alfred.PlatformProvider);
 
-            // Add the module first, then set the provider
-            _alfred.Register(_module);
-            _module.AlfredProvider = _alfred;
+            RegisterTestModule(_alfred, _module);
 
+            Assert.IsNotNull(_module.AlfredInstance, "Alfred was not set");
             Assert.IsTrue(_module.InitializeButton.IsVisible, "Initialize button was not visible while offline.");
             Assert.IsNotNull(_module.Widgets, "_module.Widgets was null");
-            Assert.IsTrue(
-                          _module.Widgets.Contains(_module.InitializeButton),
+            Assert.IsTrue(_module.Widgets.Contains(_module.InitializeButton),
                           "The Initialize button was not part of the UI while offline");
-        }
-
-        [Test]
-        public void AtInitialStateInitializeIsVisibleSetAlfredProviderFirst()
-        {
-            // Doing this again here to illustrate creation / configuration order more clearly
-            _alfred = new AlfredProvider();
-            _module = new AlfredPowerModule(new SimplePlatformProvider());
-
-            // Set the provider first, then add it to Alfred's modules
-            _module.AlfredProvider = _alfred;
-            _alfred.Register(_module);
-
-            Assert.IsTrue(_module.InitializeButton.IsVisible, "Initialize button was not visible while offline.");
-            Assert.IsNotNull(_module.Widgets, "_module.Widgets was null");
-            Assert.IsTrue(
-                          _module.Widgets.Contains(_module.InitializeButton),
-                          "The Initialize button was not part of the UI while offline");
-        }
-
-        [Test]
-        public void CoreModuleDefaultsToNoAlfred()
-        {
-            Assert.IsNull(_module.AlfredProvider, "Alfred Provider was unexpectedly set");
-        }
-
-        [Test]
-        public void CoreModuleDisplaysMessageWhenNoAlfredIsSet()
-        {
-            Assert.AreEqual(
-                            "Alfred Provider has not been set",
-                            _module.AlfredStatusWidget.Text,
-                            "Module did not acknowledge that Alfred Provider wasn't set");
         }
 
         [Test]
         public void CoreModuleHasCurrentStatusAfterInitializeAndUpdate()
         {
-            _module.AlfredProvider = _alfred;
-
             _alfred.Initialize();
 
             _alfred.Update();
 
             var text = _module.AlfredStatusWidget.Text;
             Assert.IsNotNull(text, "Widget text was null");
-            Assert.IsTrue(
-                          text.EndsWith("Online"),
+            Assert.IsTrue(text.EndsWith("Online"),
                           $"Module did not indicate that Alfred was online after update. Instead indicated: {text}");
         }
 
         [Test]
-        public void CoreModuleHasCurrentStatusAfterSettingProvider()
+        public void CoreModuleHasNoProviderText()
         {
-            _module.AlfredProvider = _alfred;
-
-            // Do not initialize or update yet - we should be offline
+            var bootstrapper = new AlfredBootstrapper();
+            _alfred = bootstrapper.Create();
+            _module = new AlfredPowerModule(_alfred.PlatformProvider);
 
             var text = _module.AlfredStatusWidget.Text;
             Assert.IsNotNull(text, "Widget text was null");
-            Assert.IsTrue(
-                          text.EndsWith("Offline"),
-                          $"Module did not indicate that Alfred was offline. Instead indicated: {text}");
+            Assert.IsTrue(text.EndsWith("has not been set"),
+                          $"Component did not indicate that Alfred was not set. Instead indicated: {text}");
         }
 
         [Test]
         public void WhenOfflineTheInitializeButtonAppears()
         {
-            _module.AlfredProvider = _alfred;
-
             _alfred.Initialize();
             _alfred.Update();
             _alfred.Shutdown();
@@ -163,8 +153,6 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
         [Test]
         public void WhenOfflineTheShutdownButtonDoesNotAppear()
         {
-            _module.AlfredProvider = _alfred;
-
             _alfred.Initialize();
             _alfred.Update();
             _alfred.Shutdown();
@@ -178,8 +166,6 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
         [Test]
         public void WhenOnlineTheShutdownButtonAppears()
         {
-            _module.AlfredProvider = _alfred;
-
             _alfred.Initialize();
 
             Assert.IsTrue(_module.ShutdownButton.IsVisible, "Shut down button was not visible while online.");
@@ -192,8 +178,6 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
         [Test]
         public void WhenOnlineTheInitializeButtonDoesNotAppear()
         {
-            _module.AlfredProvider = _alfred;
-
             _alfred.Initialize();
 
             Assert.IsNotNull(_module.Widgets, "_module.Widgets was null");
@@ -205,8 +189,6 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
         [Test]
         public void ClickingTheInitializeButtonInitializesAlfredWhileOffline()
         {
-            _module.AlfredProvider = _alfred;
-
             _module.InitializeButton.Click();
 
             Assert.AreEqual(AlfredStatus.Online, _alfred.Status, "Alfred was not online after button click");
@@ -215,8 +197,6 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
         [Test]
         public void ClickingTheShutdownButtonShutsDownAlfredWhileOnline()
         {
-            _module.AlfredProvider = _alfred;
-
             _alfred.Initialize();
             _alfred.Update();
 
@@ -228,8 +208,6 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
         [Test]
         public void ClickingTheInitializeButtonReinitializesAlfredWhileOfflineAfterShutdown()
         {
-            _module.AlfredProvider = _alfred;
-
             _alfred.Initialize();
             _alfred.Update();
             _alfred.Shutdown();
@@ -242,8 +220,6 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
         [Test]
         public void WhenOfflineShutdownCannotExecute()
         {
-            _module.AlfredProvider = _alfred;
-
             Assert.IsNotNull(_module.ShutdownButton.ClickCommand, "_module.ShutdownButton.ClickCommand was null");
             Assert.IsFalse(_module.ShutdownButton.ClickCommand.CanExecute(null), "Could click shutdown while offline");
         }
@@ -251,8 +227,6 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
         [Test]
         public void WhenOnlineInitializeCannotExecute()
         {
-            _module.AlfredProvider = _alfred;
-
             _alfred.Initialize();
             _alfred.Update();
 

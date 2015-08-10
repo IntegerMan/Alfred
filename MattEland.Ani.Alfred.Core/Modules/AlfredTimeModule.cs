@@ -12,6 +12,7 @@ using System.Globalization;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 
 namespace MattEland.Ani.Alfred.Core.Modules
@@ -31,7 +32,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         public const string HalfHourAlertEventTitle = "Time.HalfHourAlert";
 
-        private DateTime _lastTime;
+        private DateTime _time;
 
         /// <summary>
         ///     Initializes a new instance of the
@@ -55,7 +56,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
             AlertDurationInHours = 4;
             IsAlertEnabled = true;
 
-            _lastTime = DateTime.MinValue;
+            CurrentTime = DateTime.MinValue;
         }
 
         /// <summary>
@@ -115,17 +116,27 @@ namespace MattEland.Ani.Alfred.Core.Modules
         public bool IsAlertEnabled { get; set; }
 
         /// <summary>
+        /// Gets or sets the last time recorded
+        /// </summary>
+        /// <value>The current time.</value>
+        private DateTime CurrentTime
+        {
+            get { return _time; }
+            set { _time = value; }
+        }
+
+        /// <summary>
         ///     Handles module initialization events
         /// </summary>
         /// <param name="alfred"></param>
-        protected override void InitializeProtected(AlfredProvider alfred)
+        protected override void InitializeProtected(IAlfred alfred)
         {
             Register(CurrentDateWidget);
             Register(CurrentTimeWidget);
             Register(BedtimeAlertWidget);
 
             // Ensure it has some initial values so it doesn't "blink" or lag on start
-            _lastTime = DateTime.MinValue;
+            ClearLastTimeRun();
             Update(DateTime.Now);
         }
 
@@ -158,14 +169,14 @@ namespace MattEland.Ani.Alfred.Core.Modules
             UpdateBedtimeAlertVisibility(time);
 
             // Check to see if it's now a new hour and, if so, log it to the console
-            if (_lastTime > DateTime.MinValue)
+            if (CurrentTime > DateTime.MinValue)
             {
-                if (time.Minute == 0 && _lastTime.Hour != time.Hour)
+                if (time.Minute == 0 && CurrentTime.Hour != time.Hour)
                 {
                     // Let the user know it's now X
                     Log(HourAlertEventTitle, timeText, LogLevel.Info);
                 }
-                else if (time.Minute == 30 && _lastTime.Minute != 30)
+                else if (time.Minute == 30 && CurrentTime.Minute != 30)
                 {
                     // Let the user know it's now half after X
                     Log(HalfHourAlertEventTitle, timeText, LogLevel.Info);
@@ -173,7 +184,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
             }
 
             // Store the last time we processed so it can be referenced next iteration
-            _lastTime = time;
+            CurrentTime = time;
         }
 
         /// <summary>
@@ -184,51 +195,60 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </param>
         private void UpdateBedtimeAlertVisibility(DateTime time)
         {
-            var alertVisible = false;
+            // Finally stick the value in the widget
+            BedtimeAlertWidget.IsVisible = CalculateAlertVisibility(time);
+        }
 
+        /// <summary>
+        /// Calculates the alert visibility based on the inputed time.
+        /// </summary>
+        /// <param name="time">The time.</param>
+        /// <returns><c>true</c> if the alert is visible, <c>false</c> otherwise.</returns>
+        private bool CalculateAlertVisibility(DateTime time)
+        {
             // Only do alert visibility calculations if the thing is even enabled.
-            if (IsAlertEnabled)
+            if (!IsAlertEnabled)
             {
-                // Figure out when the alarm display should end. Accept values >= 24 for now.
-                // We'll adjust this in a few blocks when checking for early morning circumstances.
-                var bedtimeAlertEndHour = BedtimeHour + AlertDurationInHours;
-
-                if (time.Hour == BedtimeHour)
-                {
-                    if (time.Minute >= BedtimeMinute)
-                    {
-                        alertVisible = true;
-                    }
-                }
-                else if (time.Hour > BedtimeHour)
-                {
-                    // Check for when we're on the hour the alert will expire
-                    if (time.Hour == bedtimeAlertEndHour && time.Minute < BedtimeMinute)
-                    {
-                        alertVisible = true;
-                    }
-                    else if (time.Hour < bedtimeAlertEndHour)
-                    {
-                        alertVisible = true;
-                    }
-                }
-
-                // Next we'll check early morning carry over for late alerts so 
-                // make sure the end hour is representable on a 24 hour clock.
-                if (bedtimeAlertEndHour >= 24)
-                {
-                    bedtimeAlertEndHour -= 24;
-                }
-
-                // Support scenarios of a 9 PM bedtime but it's 12:30 AM.
-                if (time.Hour <= bedtimeAlertEndHour)
-                {
-                    alertVisible = true;
-                }
+                return false;
             }
 
-            // Finally stick the value in the widget
-            BedtimeAlertWidget.IsVisible = alertVisible;
+            var hour = time.Hour;
+            var minute = time.Minute;
+            var bedHour = BedtimeHour;
+            var bedMinute = BedtimeMinute;
+
+            // Figure out when the alarm display should end. Accept values >= 24 for now.
+            // We'll adjust this in a few blocks when checking for early morning circumstances.
+            var alertDurationInHours = AlertDurationInHours;
+            var bedtimeAlertEndHour = bedHour + alertDurationInHours;
+
+            if (hour == bedHour)
+            {
+                return minute >= bedMinute;
+            }
+
+            if (hour > bedHour)
+            {
+                // Check for when we're on the hour the alert will expire
+                if (hour == bedtimeAlertEndHour && minute < bedMinute)
+                {
+                    return true;
+                }
+
+                return hour < bedtimeAlertEndHour;
+
+            }
+
+            // Next we'll check early morning carry over for late alerts so 
+            // make sure the end hour is representable on a 24 hour clock.
+            if (bedtimeAlertEndHour >= 24)
+            {
+                bedtimeAlertEndHour -= 24;
+            }
+
+            // Support scenarios of a 9 PM bedtime but it's 12:30 AM.
+            return hour <= bedtimeAlertEndHour;
+
         }
 
         /// <summary>
@@ -237,7 +257,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         protected override void ShutdownProtected()
         {
             CurrentTimeWidget.Text = null;
-            _lastTime = DateTime.MinValue;
+            ClearLastTimeRun();
         }
 
         /// <summary>
@@ -249,7 +269,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </remarks>
         public void ClearLastTimeRun()
         {
-            _lastTime = DateTime.MinValue;
+            CurrentTime = DateTime.MinValue;
         }
     }
 }

@@ -2,7 +2,7 @@
 // AlfredStatusController.cs
 // 
 // Created on:      08/03/2015 at 3:09 PM
-// Last Modified:   08/05/2015 at 2:35 PM
+// Last Modified:   08/09/2015 at 9:38 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -12,39 +12,42 @@ using System.Globalization;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Core.Definitions;
 
 namespace MattEland.Ani.Alfred.Core
 {
     /// <summary>
     ///     A utility class that helps control Alfred's status and monitors the initialization and shutdown processes.
     /// </summary>
-    public sealed class AlfredStatusController
+    public sealed class AlfredStatusController : IStatusController
     {
-        [NotNull]
-        private readonly AlfredProvider _alfred;
+        [CanBeNull]
+        private IAlfred _alfred;
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="AlfredStatusController" /> class.
+        /// </summary>
+        public AlfredStatusController() : this(null)
+        {
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredStatusController" /> class.
         /// </summary>
         /// <param name="alfred">The alfred provider.</param>
-        public AlfredStatusController([NotNull] AlfredProvider alfred)
+        public AlfredStatusController([CanBeNull] IAlfred alfred)
         {
-            if (alfred == null)
-            {
-                throw new ArgumentNullException(nameof(alfred));
-            }
-
-            _alfred = alfred;
+            Alfred = alfred;
         }
 
         /// <summary>
-        ///     Gets the alfred provider.
+        ///     Gets or sets the alfred framework.
         /// </summary>
-        /// <value>The alfred provider.</value>
-        [NotNull]
-        public AlfredProvider Alfred
+        /// <value>The alfred framework.</value>
+        public IAlfred Alfred
         {
             get { return _alfred; }
+            set { _alfred = value; }
         }
 
         /// <summary>
@@ -55,47 +58,39 @@ namespace MattEland.Ani.Alfred.Core
         /// </exception>
         public void Initialize()
         {
-            var header = Resources.AlfredStatusController_Initialize_LogHeader.NonNull();
-            var culture = CultureInfo.CurrentCulture;
+            var alfred = Alfred;
+            if (alfred == null)
+            {
+                throw new InvalidOperationException("Alfred is not set. Please set Alfred first");
+            }
 
-            var console = Alfred.Console;
+            var header = Resources.AlfredStatusController_Initialize_LogHeader.NonNull();
+
+            var console = alfred.Console;
 
             // Handle case on initialize but already initializing or online
-            if (Alfred.Status == AlfredStatus.Online)
-            {
-                var message = Resources.AlfredStatusController_Initialize_ErrorAlreadyOnline.NonNull();
-                console?.Log(header, message, LogLevel.Verbose);
-
-                throw new InvalidOperationException(message);
-            }
+            EnsureAlfredOffline(alfred, console, header);
 
             // Inform things that we're setting up right now
             console?.Log(header, Resources.AlfredStatusController_Initialize_Initializing.NonNull(), LogLevel.Verbose);
-            Alfred.Status = AlfredStatus.Initializing;
+            alfred.Status = AlfredStatus.Initializing;
 
-            // Boot up Modules / Subsystems and give them a provider
-            foreach (var component in Alfred.Components)
+            // Boot up items and give them a provider
+            foreach (var item in alfred.Subsystems)
             {
-                // Log the initialization
-                var initLogFormat = Resources.AlfredStatusController_InitializingComponent.NonNull();
-                console?.Log(header, string.Format(culture, initLogFormat, component.NameAndVersion), LogLevel.Verbose);
-
-                // Actually initialize the component
-                component.Initialize(Alfred);
-
-                // Log the completion
-                var initializedLogFormat = Resources.AlfredStatusController_InitializeComponentInitialized.NonNull();
-                console?.Log(header, string.Format(culture, initializedLogFormat, component.NameAndVersion), LogLevel.Verbose);
+                InitializeComponent(console, item, header);
             }
 
             // We're done. Let the world know.
-            Alfred.Status = AlfredStatus.Online;
-            console?.Log(header, Resources.AlfredStatusController_Initialize_InitilizationCompleted.NonNull(), LogLevel.Verbose);
+            alfred.Status = AlfredStatus.Online;
+            console?.Log(header,
+                         Resources.AlfredStatusController_Initialize_InitilizationCompleted.NonNull(),
+                         LogLevel.Verbose);
 
-            // Notify each module that startup was completed
-            foreach (var module in Alfred.Components)
+            // Notify each item that startup was completed
+            foreach (var item in alfred.Subsystems)
             {
-                module.OnInitializationCompleted();
+                item.OnInitializationCompleted();
             }
 
             // Log the completion
@@ -110,12 +105,119 @@ namespace MattEland.Ani.Alfred.Core
         /// </exception>
         public void Shutdown()
         {
+            var alfred = Alfred;
+            if (alfred == null)
+            {
+                throw new InvalidOperationException("Alfred is not set. Please set Alfred first");
+            }
+
             var header = Resources.AlfredStatusController_Shutdown_LogHeader.NonNull();
 
-            var console = Alfred.Console;
+            var console = alfred.Console;
 
             // Handle cases where shutdown shouldn't be allowed
-            switch (Alfred.Status)
+            EnsureAlfredOnline(alfred, console, header);
+
+            // Indicate status so the UI can keep busy
+            console?.Log(header, Resources.AlfredStatusController_Shutdown_Shutting_down.NonNull(), LogLevel.Verbose);
+            alfred.Status = AlfredStatus.Terminating;
+
+            // Shut down items and decouple them from Alfred
+            foreach (var item in alfred.Subsystems)
+            {
+                ShutdownComponent(console, item, header);
+            }
+
+            // We're done here. Tell the world.
+            alfred.Status = AlfredStatus.Offline;
+            console?.Log(header, Resources.AlfredStatusController_Shutdown_Completed.NonNull(), LogLevel.Info);
+
+            // Notify each item that shutdown was completed
+            foreach (var item in alfred.Subsystems)
+            {
+                item.OnShutdownCompleted();
+            }
+        }
+
+        /// <summary>
+        ///     Ensures that alfred is offline and throws an InvalidOperationException if it isn't.
+        /// </summary>
+        /// <param name="alfred">The alfred.</param>
+        /// <param name="console">The console.</param>
+        /// <param name="header">The header.</param>
+        private static void EnsureAlfredOffline([NotNull] IAlfred alfred,
+                                                [CanBeNull] IConsole console,
+                                                [NotNull] string header)
+        {
+            if (alfred.Status == AlfredStatus.Online)
+            {
+                var message = Resources.AlfredStatusController_Initialize_ErrorAlreadyOnline.NonNull();
+                console?.Log(header, message, LogLevel.Verbose);
+
+                throw new InvalidOperationException(message);
+            }
+        }
+
+        /// <summary>
+        ///     Initializes the component.
+        /// </summary>
+        /// <param name="console">The console.</param>
+        /// <param name="item">The item.</param>
+        /// <param name="header">The header.</param>
+        private void InitializeComponent([CanBeNull] IConsole console,
+                                         [NotNull] IAlfredComponent item,
+                                         [NotNull] string header)
+        {
+
+            // Log the initialization
+            var initLogFormat = Resources.AlfredStatusController_InitializingComponent.NonNull();
+            console?.Log(header,
+                         string.Format(CultureInfo.CurrentCulture, initLogFormat, item.NameAndVersion),
+                         LogLevel.Verbose);
+
+            // Actually initialize the component
+            item.Initialize(Alfred);
+
+            // Log the completion
+            var initializedLogFormat = Resources.AlfredStatusController_InitializeComponentInitialized.NonNull();
+            console?.Log(header,
+                         string.Format(CultureInfo.CurrentCulture, initializedLogFormat, item.NameAndVersion),
+                         LogLevel.Verbose);
+        }
+
+        /// <summary>
+        ///     Shutdowns the subsystem.
+        /// </summary>
+        /// <param name="console">The console.</param>
+        /// <param name="item">The item.</param>
+        /// <param name="header">The header.</param>
+        private static void ShutdownComponent([CanBeNull] IConsole console,
+                                              [NotNull] IAlfredComponent item,
+                                              [NotNull] string header)
+        {
+
+            var culture = CultureInfo.CurrentCulture;
+
+            var shuttingDownMessage = Resources.AlfredStatusController_ShuttingDownComponent.NonNull();
+            console?.Log(header, string.Format(culture, shuttingDownMessage, item.NameAndVersion), LogLevel.Verbose);
+
+            item.Shutdown();
+
+            var shutDownMessage = Resources.AlfredStatusController_ComponentOffline.NonNull();
+            console?.Log(header, string.Format(culture, shutDownMessage, item.NameAndVersion), LogLevel.Verbose);
+        }
+
+        /// <summary>
+        ///     Ensures that alfred online.
+        /// </summary>
+        /// <param name="alfred">The alfred.</param>
+        /// <param name="console">The console.</param>
+        /// <param name="header">The header.</param>
+        private static void EnsureAlfredOnline([NotNull] IAlfred alfred,
+                                               [CanBeNull] IConsole console,
+                                               [NotNull] string header)
+        {
+            switch (alfred.Status)
             {
                 case AlfredStatus.Offline:
                     var offlineMessage = Resources.AlfredStatusController_Shutdown_ErrorAlreadyOffline.NonNull();
@@ -129,35 +231,6 @@ namespace MattEland.Ani.Alfred.Core
 
                     throw new InvalidOperationException(terminatingMessage);
             }
-
-            // Indicate status so the UI can keep busy
-            console?.Log(header, Resources.AlfredStatusController_Shutdown_Shutting_down.NonNull(), LogLevel.Verbose);
-            Alfred.Status = AlfredStatus.Terminating;
-
-            // Shut down components and decouple them from Alfred
-            foreach (var component in Alfred.Components)
-            {
-                var culture = CultureInfo.CurrentCulture;
-
-                var shuttingDownMessage = Resources.AlfredStatusController_ShuttingDownComponent.NonNull();
-                console?.Log(header, string.Format(culture, shuttingDownMessage, component.NameAndVersion), LogLevel.Verbose);
-
-                component.Shutdown();
-
-                var shutDownMessage = Resources.AlfredStatusController_ComponentOffline.NonNull();
-                console?.Log(header, string.Format(culture, shutDownMessage, component.NameAndVersion), LogLevel.Verbose);
-            }
-
-            // We're done here. Tell the world.
-            Alfred.Status = AlfredStatus.Offline;
-            console?.Log(header, Resources.AlfredStatusController_Shutdown_Completed.NonNull(), LogLevel.Info);
-
-            // Notify each module that shutdown was completed
-            foreach (var module in Alfred.Components)
-            {
-                module.OnShutdownCompleted();
-            }
-
         }
     }
 }

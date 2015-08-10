@@ -10,14 +10,13 @@ using System;
 
 using JetBrains.Annotations;
 
-// ReSharper disable MemberCanBePrivate.Global
-
 namespace MattEland.Ani.Alfred.Core.Console
 {
+
     /// <summary>
     ///     Represents a logged event to the console
     /// </summary>
-    public struct ConsoleEvent : IEquatable<ConsoleEvent>
+    public struct ConsoleEvent : IEquatable<ConsoleEvent>, IConsoleEvent
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="ConsoleEvent" /> class using the current utcTime.

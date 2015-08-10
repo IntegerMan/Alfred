@@ -7,31 +7,39 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Core.Modules;
 
 namespace MattEland.Ani.Alfred.Core
 {
     /// <summary>
-    ///     An abstract class containing most common shared functionality between SubSystems and Modules
+    ///     An abstract class containing most common shared functionality between Subsystems and Modules
     /// </summary>
-    public abstract class AlfredComponent : NotifyPropertyChangedBase
+    public abstract class AlfredComponent : INotifyPropertyChanged
     {
         [CanBeNull]
-        private AlfredProvider _alfred;
+        private IAlfred _alfred;
 
         private AlfredStatus _status;
+
+        [CanBeNull, ItemNotNull]
+        private IEnumerable<IAlfredComponent> _childrenOnShutdown;
 
         /// <summary>
         /// Gets the alfred instance associated with this component.
         /// </summary>
         /// <value>The alfred instance.</value>
         [CanBeNull]
-        protected internal AlfredProvider AlfredInstance
+        public IAlfred AlfredInstance
         {
             [DebuggerStepThrough]
             get
@@ -96,7 +104,7 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <param name="alfred">The alfred framework.</param>
         /// <exception cref="InvalidOperationException">Already online when told to initialize.</exception>
-        public virtual void Initialize([NotNull] AlfredProvider alfred)
+        public virtual void Initialize([NotNull] IAlfred alfred)
         {
             if (alfred == null)
             {
@@ -115,11 +123,29 @@ namespace MattEland.Ani.Alfred.Core
 
             _alfred = alfred;
 
+            // Reset our children collections so that other collections can be registered during shutdown
+            ClearChildCollections();
+
+            RegisterControls();
+
             InitializeProtected(alfred);
+
+            // Pass on the message to the children
+            foreach (var child in Children)
+            {
+                child.Initialize(alfred);
+            }
 
             Status = AlfredStatus.Online;
 
             OnPropertyChanged(nameof(IsVisible));
+        }
+
+        /// <summary>
+        /// Allows components to define controls
+        /// </summary>
+        protected virtual void RegisterControls()
+        {
         }
 
         /// <summary>
@@ -140,12 +166,29 @@ namespace MattEland.Ani.Alfred.Core
 
             Status = AlfredStatus.Terminating;
 
+            // Pass on the message to the children
+            _childrenOnShutdown = Children.ToList();
+            foreach (var child in _childrenOnShutdown)
+            {
+                child?.Shutdown();
+            }
+
+            // Reset our children collections so that other collections can be registered during shutdown
+            ClearChildCollections();
+
             // Tell the derived module that it's now time to do any special logic (e.g. registering widgets, shutting down resources, stopping timers, etc.)
             ShutdownProtected();
 
             Status = AlfredStatus.Offline;
 
             OnPropertyChanged(nameof(IsVisible));
+        }
+
+        /// <summary>
+        /// Clears all child collections
+        /// </summary>
+        protected virtual void ClearChildCollections()
+        {
         }
 
         /// <summary>
@@ -162,6 +205,13 @@ namespace MattEland.Ani.Alfred.Core
             }
 
             UpdateProtected();
+
+            // Pass on the message to the children
+            foreach (var child in Children)
+            {
+                child.Update();
+            }
+
         }
 
         /// <summary>
@@ -177,6 +227,11 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         public virtual void OnInitializationCompleted()
         {
+            // Pass on the message to the children
+            foreach (var child in Children)
+            {
+                child.OnInitializationCompleted();
+            }
         }
 
         /// <summary>
@@ -185,6 +240,24 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         public virtual void OnShutdownCompleted()
         {
+            var notified = new HashSet<IAlfredComponent>();
+
+            // Pass on the message to the children
+            foreach (var child in Children)
+            {
+                child.OnShutdownCompleted();
+                notified.Add(child);
+            }
+
+            // Tell our old expatriated children that things ended
+            if (_childrenOnShutdown != null)
+            {
+                foreach (var child in _childrenOnShutdown.Where(child => !notified.Contains(child)))
+                {
+                    child?.OnShutdownCompleted();
+                    notified.Add(child);
+                }
+            }
         }
 
         /// <summary>
@@ -195,10 +268,10 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     Handles initialization events
+        /// Handles initialization events
         /// </summary>
-        /// <param name="alfred"></param>
-        protected virtual void InitializeProtected(AlfredProvider alfred)
+        /// <param name="alfred">The alfred instance.</param>
+        protected virtual void InitializeProtected([CanBeNull] IAlfred alfred)
         {
         }
 
@@ -227,5 +300,40 @@ namespace MattEland.Ani.Alfred.Core
 
         }
 
+        /// <summary>
+        /// Gets the children of this component. Depending on the type of component this is, the children will
+        /// vary in their own types.
+        /// </summary>
+        /// <value>The children.</value>
+        [NotNull, ItemNotNull]
+        public abstract IEnumerable<IAlfredComponent> Children { get; }
+
+        /// <summary>
+        /// Called when the component is registered.
+        /// </summary>
+        /// <param name="alfred">The alfred.</param>
+        public virtual void OnRegistered([CanBeNull] IAlfred alfred)
+        {
+            // Hang on to the reference now so AlfredInstance doesn't lie and we can tell
+            // our children who Alfred is before the whole update process happens
+            _alfred = alfred;
+
+            RegisterControls();
+        }
+
+        /// <summary>
+        /// Occurs when a property changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Called when a property changes.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        [NotifyPropertyChangedInvocator]
+        protected void OnPropertyChanged([CanBeNull] string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }
