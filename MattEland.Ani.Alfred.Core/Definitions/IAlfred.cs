@@ -64,6 +64,12 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         ///     Shutdowns this instance.
         /// </summary>
         void Shutdown();
+
+        /// <summary>
+        /// Registers the user statement handler as the framework's user statement handler.
+        /// </summary>
+        /// <param name="userStatementHandler">The user statement handler.</param>
+        void Register([NotNull] IUserStatementHandler userStatementHandler);
     }
 
 }

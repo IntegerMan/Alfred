@@ -9,6 +9,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
@@ -40,6 +41,29 @@ namespace MattEland.Ani.Alfred.Core
 
         [NotNull]
         private readonly ICollection<IAlfredSubsystem> _subsystems;
+
+        [CanBeNull]
+        private IUserStatementHandler _userStatementHandler;
+
+        /// <summary>
+        /// Gets the user statement handler.
+        /// </summary>
+        /// <value>The user statement handler.</value>
+        [CanBeNull]
+        public IUserStatementHandler UserStatementHandler
+        {
+            [DebuggerStepThrough]
+            get
+            { return _userStatementHandler; }
+            private set
+            {
+                if (Equals(value, _userStatementHandler))
+                    return;
+
+                _userStatementHandler = value;
+                OnPropertyChanged(nameof(UserStatementHandler));
+            }
+        }
 
         /// <summary>
         ///     The status
@@ -194,6 +218,20 @@ namespace MattEland.Ani.Alfred.Core
         {
             // This process is a little lengthy so we'll have the status controller handle it
             _statusController.Shutdown();
+        }
+
+        /// <summary>
+        /// Registers the user statement handler as the framework's user statement handler.
+        /// </summary>
+        /// <param name="userStatementHandler">The user statement handler.</param>
+        public void Register([NotNull] IUserStatementHandler userStatementHandler)
+        {
+            if (userStatementHandler == null)
+            {
+                throw new ArgumentNullException(nameof(userStatementHandler));
+            }
+
+            UserStatementHandler = userStatementHandler;
         }
 
         /// <summary>

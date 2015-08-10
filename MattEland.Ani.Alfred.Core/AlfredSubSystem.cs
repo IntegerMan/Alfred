@@ -139,6 +139,7 @@ namespace MattEland.Ani.Alfred.Core
             _pages.Clear();
             _modules.Clear();
         }
+
     }
 
 }

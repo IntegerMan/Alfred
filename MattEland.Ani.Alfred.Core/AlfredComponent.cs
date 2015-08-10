@@ -17,7 +17,6 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Modules;
 
 namespace MattEland.Ani.Alfred.Core
 {
@@ -334,6 +333,25 @@ namespace MattEland.Ani.Alfred.Core
         protected void OnPropertyChanged([CanBeNull] string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        /// <summary>
+        /// Registers the user statement handler as the framework's user statement handler.
+        /// </summary>
+        /// <param name="userStatementHandler">The user statement handler.</param>
+        protected void Register([NotNull] IUserStatementHandler userStatementHandler)
+        {
+            if (userStatementHandler == null)
+            {
+                throw new ArgumentNullException(nameof(userStatementHandler));
+            }
+
+            if (_alfred == null)
+            {
+                throw new InvalidOperationException("This component is not currently attached to an Alfred instance");
+            }
+
+            _alfred.Register(userStatementHandler);
         }
     }
 }

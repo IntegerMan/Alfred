@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using JetBrains.Annotations;
@@ -52,6 +53,7 @@ namespace MattEland.Ani.Alfred.Chat
 
             // Register our chat page
             Register(_chatPage);
+            Register(_chatHandler);
 
             //? There may be some need to integrate this into AlfredProvider proper for voice handling, but not quite yet
         }
