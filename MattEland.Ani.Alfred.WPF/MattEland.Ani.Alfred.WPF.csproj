@@ -87,6 +87,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ApplicationManager.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Converters\LogLevelToBrushConverter.cs" />
     <Compile Include="Platform\WinClientPlatformProvider.cs" />

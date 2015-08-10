@@ -6,6 +6,8 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
 
+using Res = MattEland.Ani.Alfred.Chat.Resources;
+
 namespace MattEland.Ani.Alfred.Chat
 {
     /// <summary>
@@ -35,7 +37,7 @@ namespace MattEland.Ani.Alfred.Chat
         /// <value>The name of the component.</value>
         public override string Name
         {
-            get { return Resources.ChatModuleName.NonNull(); }
+            get { return Res.ChatModuleName.NonNull(); }
         }
     }
 }
