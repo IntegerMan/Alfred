@@ -51,11 +51,9 @@ namespace MattEland.Ani.Alfred.Chat
             // We don't have console until we're registered, so update it here
             _chatHandler.Console = AlfredInstance?.Console;
 
-            // Register our chat page
-            Register(_chatPage);
+            // Register with the rest of the system
+            //Register(_chatPage);
             Register(_chatHandler);
-
-            //? There may be some need to integrate this into AlfredProvider proper for voice handling, but not quite yet
         }
 
         /// <summary>

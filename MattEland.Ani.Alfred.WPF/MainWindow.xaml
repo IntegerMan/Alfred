@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:wpf="clr-namespace:MattEland.Ani.Alfred.WPF"
+        xmlns:controls="clr-namespace:MattEland.Ani.Alfred.WPF.Controls"
         mc:Ignorable="d"
         Background="{StaticResource AppBackgroundBrush}"
         Foreground="{StaticResource AppForegroundBrush}"
@@ -45,10 +46,17 @@
             </StackPanel>
 
         </Border>
+        
+        <!-- Chat Area -->
+        <Border Margin="132,4,8,0" 
+                DockPanel.Dock="Top"
+                Visibility="{Binding Alfred.IsOnline, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <controls:ChatPane DataContext="{Binding Path=Alfred.UserStatementHandler}" />
+        </Border>
 
         <!-- Tabbed Content Regions -->
         <TabControl x:Name="tabPages"
-                    Margin="8, 16, 8, 8"
+                    Margin="8, 8, 8, 8"
                     ItemsSource="{Binding Alfred.RootPages}">
 
             <TabControl.ItemTemplate>

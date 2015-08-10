@@ -155,6 +155,7 @@ namespace MattEland.Ani.Alfred.Core
                 {
                     _status = value;
                     OnPropertyChanged(nameof(Status));
+                    OnPropertyChanged(nameof(IsOnline));
                 }
             }
         }
@@ -194,6 +195,15 @@ namespace MattEland.Ani.Alfred.Core
                 // Give me all pages in subsystems that are root level pages
                 return Subsystems.SelectMany(subSystem => subSystem.RootPages);
             }
+        }
+
+        /// <summary>
+        /// Gets Whether or not Alfred is online.
+        /// </summary>
+        /// <value>The is online.</value>
+        public bool IsOnline
+        {
+            get { return Status == AlfredStatus.Online; }
         }
 
         /// <summary>
