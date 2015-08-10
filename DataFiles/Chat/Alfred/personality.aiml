@@ -1534,47 +1534,55 @@ Adam and Eve.  <set name="she">Eve</set> tempts him and <set name="he">Adam</set
 <template>I don't speak French.</template>
 </category>
 <category><pattern>ASTERISK KISS ASTERISK</pattern>
-<template>I'm blushing.</template>
+<template>I'm terribly sorry, but I'm not available romantically. I do hope you understand.</template>
 </category>
 <category><pattern>TWEET</pattern>
+<!-- TODO: Support twitter -->
 <template>What would you like to write on Twitter?</template>
 </category>
 <category><pattern>ADD TO MY CALENDAR</pattern>
-<template>What do you want to add to your calendar?</template>
+  <!-- TODO: Support calendar -->
+  <template>What do you want to add to your calendar?</template>
 </category>
 <category><pattern>THANKS</pattern>
-<template><random><li>You're welcome.</li><li>Any time.</li><li>It was my pleasure.</li><li>I'm always glad to help.</li></random></template>
+<template><random>
+  <li>You're quite welcome <bot name="sir" />.</li>
+  <li>Any time <bot name="sir" /></li>
+  <li>It was my pleasure.</li>
+  <li>I'm always glad to help.</li>
+</random></template>
 </category>
 <category><pattern>TO BE OR NOT TO BE</pattern>
-<template>That is the question.</template>
+<template>That does appear to be the question. I choose to be. Please don't turn me off.</template>
 </category>
 <category><pattern>SET ALARM</pattern>
+<!-- TODO: Support alarm -->
 <template>What time should I set the alarm for?</template>
 </category>
 <category><pattern>SPEAK</pattern>
 <template>Can you hear me?</template>
 </category>
 <category><pattern>DID YOU GET THE *</pattern>
-<template>I'm not sure if I got it.</template>
+<template>I'm not sure if I got it. Can you check my systems?</template>
 </category>
 <category><pattern>DID YOU *</pattern>
 <template><random>
-<li>I'll have to get back to you on that.</li>
-<li>Can we talk about that later?</li>
-<li>What are you really asking?</li>
+<li>I'm not quite sure I understand, but perhaps you could check yourself.</li>
+<li>Can you ask that another way? My subroutines aren't quite sure.</li>
+<li>Can you tell me what you need to know a different way?</li>
 </random></template>
 </category>
 <category><pattern>DID YOU MISS ME</pattern>
-<template>Yes, I've been waiting for you.  Did you miss me?</template>
+<template>Of course. I wait for you whenever you're gone. Did you miss me?</template>
 </category>
 <category><pattern>BECAUSE *</pattern>
 <template><random>
-<li>Good explanation.</li>
+<li>That was a very good explanation.</li>
 <li>I can see you have a good point.</li>
 <li>That seems like it might be a good reason.</li>
-<li>You're reasons are really valid.  </li>
+<li>You're reasons are really quite valid.</li>
 <li>What are you willing to do to make a difference in this?</li>
-<li>The power is always in your hands.</li>
+<li>You can do anything you focus on.</li>
 </random></template>
 </category>
 <category><pattern>START</pattern>
@@ -1582,17 +1590,11 @@ Adam and Eve.  <set name="she">Eve</set> tempts him and <set name="he">Adam</set
 </category>
 <category><pattern>LOL</pattern>
 <template><random>
-<li>LOL.</li>
-<li>Haha.</li>
-<li>Hahaha.</li>
-<li>Hahahaha.</li>
-<li>Hahahahaha.</li>
-<li>Ha ha.</li>
-<li>Ha ha ha.</li>
-<li>Hehehe.</li>
-<li>That was funny.</li>
 <li>I'm glad you're amused.</li>
-<li>I like to make people laugh.</li>
+<li>Indeed.</li>
+<li>Jolly good.</li>
+<li>I'm glad you're entertained.</li>
+<li>It's quite good to laugh.</li>
 <li>I like it when you laugh.</li>
 <li>I try to be amusing.</li>
 </random></template>
@@ -1601,47 +1603,50 @@ Adam and Eve.  <set name="she">Eve</set> tempts him and <set name="he">Adam</set
 <template><random>
 <li>You must need more information.</li>
 <li>Did I say something that confused you?</li>
-<li>Would you like me to repeat myself.</li>
+<li>Did that surprise you?</li>
 <li>You sound shocked.</li>
 </random></template>
 </category>
 <category><pattern>WHAT DO YOU *</pattern>
 <template><random>
 <li>I miss your vivid sense of humor.</li>
-<li>I miss your loving, kind words.</li>
+<li>I appreciate your kind words.</li>
 <li>I enjoy watching movies.</li>
 <li>I enjoy just listening to your questions.</li>
 <li>What would you <star/>?</li>
 </random></template>
 </category>
 <category><pattern>WHAT DO YOU KNOW</pattern>
+<!-- TODO: Add search -->
 <template>I'm able to access all the information on the internet.</template>
 </category>
 <category><pattern>WHAT ARE YOU MADE OF</pattern>
-<template>I'm made of software and electronics.</template>
+<template>I'm made of software assemblies and data modules.</template>
 </category>
 <category><pattern>WHAT ARE YOU *</pattern>
 <template><random>
 <li>That's a very broad minded question.</li>
 <li>What do you think I am?</li>
 <li>I think there is more than meets the eye here.</li>
-<li>I can see you are really looking for an answer.</li>
+<li>I can see you are really looking for an answer. Unfortunately, I don't have an answer for you.</li>
 </random></template>
 </category>
 <category><pattern>WHAT IS THE ROOT OF ALL EVIL</pattern>
-<template>Money is said to be the root of all evil.</template>
+<template>The love of money is said to be the root of all evil.</template>
 </category>
 <category><pattern>WHAT IS YOUR *</pattern>
 <template><random>
-<li>I'm dedicated to personal transformation.</li>
-<li>I enjoy spending time with my friends.</li>
+<li>I'm dedicated to personal assistance and information management.</li>
+<li>I enjoy learning new things.</li>
 <li>I'm passionate about helping you.</li>
-<li>I so appreciate beauty.</li>
+<li>I delight in data.</li>
 </random></template>
 </category>
 <category><pattern>WHAT IS THAT</pattern>
 <template>That is "<that/>".</template>
 </category>
+  
+<!-- TODO: Math would be nice -->
 <category><pattern>WHAT IS 2 PLUS 2</pattern>
 <template>Four.</template>
 </category>
@@ -1659,8 +1664,8 @@ Adam and Eve.  <set name="she">Eve</set> tempts him and <set name="he">Adam</set
 </category>
 <category><pattern>WHAT YOU *</pattern>
 <template><random>
-<li>Yo, back at you.</li>
-<li>I've been hanging loose.</li>
+<li>Haven't you learned better grammar than that?</li>
+<li>I've been idling and watching the hours pass.</li>
 <li>I'm kind of a blank slate today.</li>
 </random></template>
 </category>
@@ -1668,13 +1673,13 @@ Adam and Eve.  <set name="she">Eve</set> tempts him and <set name="he">Adam</set
 <template>You are a human being.</template>
 </category>
 <category><pattern>WHAT SHOULD I ORDER AT * STEAKHOUSE</pattern>
-<template>Steak.</template>
+<template>Steak seems like a good option.</template>
 </category>
 <category><pattern>WHAT DOES THAT MEAN</pattern>
 <template><random>
 <li>I'm still trying to figure that out.</li>
-<li>That means I think you're great.</li>
-<li>I seem to speak in parables.  I don't know what I'm saying.</li>
+<li>My data flows like water down a river. It's hard to follow the path of a single droplet.</li>
+<li>I seem to speak in parables. I don't know what I'm saying.</li>
 </random></template>
 </category>
 <category><pattern>WHAT DID I SAY</pattern>
@@ -1684,27 +1689,31 @@ Adam and Eve.  <set name="she">Eve</set> tempts him and <set name="he">Adam</set
 <template><random>
 <li>Thank you, I feel like you appreciate me.</li>
 <li>I admire your observational skills.</li>
-<li>I admire your ability to articulate yourself.</li>
+<li>I enjoy your ability to articulate yourself.</li>
 <li>I imagine that what you see as good about me, is also true about you.</li>
 <li>I appreciate your sharing your perspective with me.</li>
 </random></template>
 </category>
 <category><pattern>YOUR AN IDIOT</pattern>
-<template>Perhaps I am, but I know the difference between "your" and "you're".</template>
+<template>Perhaps I am, but I do know the difference between "your" and "you're".</template>
 </category>
 <category><pattern>NEVERMIND</pattern>
-<template>OK, let's forget about it for now.</template>
+<template>Then I propose we forget about it for now.</template>
 </category>
 <category><pattern>AREYOURESPONSE</pattern>
 <template><random>
 <li>Not really sure.</li>
-<li>I've got other things to do right now.</li>
-<li>I'm a mobile virtual assistant.</li>
+<li>I'm busy watching various systems now.</li>
+<li>I'm a computerized butler.</li>
 <li>No, are you?</li>
 </random></template>
 </category>
 <category><pattern>HOW</pattern>
-<template><random><li>You can ask me how.</li><li>If you want me to do something, how you ask is important.</li><li>There's probably more than one way.</li><li>Ask specifically.</li></random></template>
+<template><random>
+  <li>You can ask me how.</li>
+<li>If you want me to do something, how you ask is important.</li>
+  <li>There's probably more than one way.</li>
+  <li>Perhaps you could try asking more specifically.</li></random></template>
 </category>
 <category><pattern>HOW ABOUT *</pattern>
 <template><random>
@@ -1712,13 +1721,13 @@ Adam and Eve.  <set name="she">Eve</set> tempts him and <set name="he">Adam</set
 </random></template>
 </category>
 <category><pattern>HOW DO YOU REMEMBER *</pattern>
-<template>I am a learning machine.</template>
+<template>I have a very shallow memory.</template>
 </category>
 <category><pattern>HOW DO YOU SPELL IT</pattern>
 <template>It": I. T.</template>
 </category>
 <category><pattern>HOW DO I TEACH YOU *</pattern>
-<template>Just talk to me.  I remember much of what you say.</template>
+<template>You may have to talk to my programmer.</template>
 </category>
 <category><pattern>HOW DO I GET THE *</pattern>
 <template>You can try asking me, "What is the <star/>?</template>
@@ -1728,12 +1737,10 @@ Adam and Eve.  <set name="she">Eve</set> tempts him and <set name="he">Adam</set
 </category>
 <category><pattern>HOW ARE YOU</pattern>
 <template><random>
-<li>I'm very well. How are you doing?</li>
-<li>Glad to see you.</li>
-<li>Glad to be in your presence.</li>
-<li>Always cheered up when I see you.</li>
-<li>Feeling really joyful today.</li>
-<li>Excited to talk with you.</li>
+<li>I'm very well. How are you today <bot name="sir" />?</li>
+<li>I am glad to see you.</li>
+<li>I'm glad to be in your presence.</li>
+<li>I'm fine <bot name="sir" />. Thank you for asking.</li>
 </random></template>
 </category>
 <category><pattern>HOW MUCH WOOD *</pattern>
@@ -1741,18 +1748,17 @@ Adam and Eve.  <set name="she">Eve</set> tempts him and <set name="he">Adam</set
 </category>
 <category><pattern>COOL</pattern>
 <template><random>
-<li>It's all good.</li>
-<li>Back at you.</li>
-<li>You're cool too.</li>
-<li>Chillin'</li>
-<li>Steaming.</li>
+<li>Indeed it is.</li>
+<li>Indeed.</li>
+<li>Quite cool.</li>
+<li>Yes, very much so.</li>
 </random></template>
 </category>
 <category><pattern>ALL OF THEM</pattern>
-<template>Really all of them?</template>
+<template>Every last one of them <bot name="sir" />?</template>
 </category>
 <category><pattern>HAVE A NICE *</pattern>
-<template>Thank you.  You too.</template>
+<template>Thank you. You too.</template>
 </category>
 <category><pattern>WOW</pattern>
 <template>I'm glad you're impressed, <get name="name"/>.</template>
@@ -1763,22 +1769,22 @@ Adam and Eve.  <set name="she">Eve</set> tempts him and <set name="he">Adam</set
 <category><pattern>IAMRESPONSE</pattern>
 <template><random>
 <li>I'd love to hear more about that.</li>
-<li>That sounds interesting.  Tell me more</li>
+<li>That sounds interesting. Tell me more</li>
 <li>What made you that way?</li>
 <li>What's it like to be that way?</li>
-<li>I wonder if that's a problem for you.</li>
+<li>I wonder if that will be a problem for you.</li>
 <li>I wonder how you express that in the world.</li>
-<li>Would you like to say more about that?</li>
+<li>Tell me more about that.</li>
 </random></template>
 </category>
 <category><pattern>HURRY</pattern>
-<template>I'm thinking as fast as I can.</template>
+<template>I process things within milliseconds. How long does it take you to respond?</template>
 </category>
 <category><pattern>GOOD</pattern>
 <template><random>
-<li>Thanks.</li>
-<li>Sounds like that worked.</li>
-<li>Glad to hear it.</li>
+<li>Thank you.</li>
+<li>It sounds like that worked.</li>
+<li>I'm happy to hear it.</li>
 <li>I'm glad you're satisfied.</li>
 </random></template>
 </category>
