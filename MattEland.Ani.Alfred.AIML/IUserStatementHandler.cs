@@ -14,5 +14,19 @@ namespace MattEland.Ani.Alfred.Chat
         /// <returns>The response to the user statement</returns>
         [NotNull]
         UserStatementResponse HandleUserStatement([NotNull] string userInput);
+
+        /// <summary>
+        /// Gets the last response from the system.
+        /// </summary>
+        /// <value>The last response.</value>
+        [CanBeNull]
+        UserStatementResponse LastResponse { get; }
+
+        /// <summary>
+        /// Gets the last input from the user.
+        /// </summary>
+        /// <value>The last input.</value>
+        [CanBeNull]
+        string LastInput { get; }
     }
 }

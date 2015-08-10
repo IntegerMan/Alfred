@@ -36,10 +36,18 @@ namespace MattEland.Ani.Alfred.WPF.Controls
         [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         private void OnSubmitClicked(object sender, RoutedEventArgs e)
         {
-            var chatPage = (ChatPage)DataContext;
+            // Validate input
+            var text = txtInput.Text;
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                MessageBox.Show("Please enter something to say", "No Content");
+                return;
+            }
+
+            var chatHandler = (IUserStatementHandler)DataContext;
 
             // Send it to the page object (which will route it through to the chat subsystem)
-            var response = chatPage.HandleUserStatement(txtInput.Text.Trim());
+            var response = chatHandler.HandleUserStatement(text.Trim());
 
             // If it was a success, we'll also want to clear out the input
             if (response != null && response.WasHandled)

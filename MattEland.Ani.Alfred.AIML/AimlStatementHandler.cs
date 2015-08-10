@@ -7,14 +7,17 @@
 // ---------------------------------------------------------
 
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Xml;
 
 using AIMLbot;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
 
 namespace MattEland.Ani.Alfred.Chat
@@ -25,7 +28,7 @@ namespace MattEland.Ani.Alfred.Chat
     /// <remarks>
     ///     AIML stands for Artificial Intelligence Markup Language
     /// </remarks>
-    public class AimlStatementHandler : IUserStatementHandler
+    public class AimlStatementHandler : IUserStatementHandler, INotifyPropertyChanged
     {
         [NotNull]
         private readonly Bot _chatBot;
@@ -41,6 +44,11 @@ namespace MattEland.Ani.Alfred.Chat
 
         [NotNull]
         private readonly string _settingsPath;
+
+        [CanBeNull]
+        private string _input;
+
+        private UserStatementResponse _response;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
@@ -70,38 +78,21 @@ namespace MattEland.Ani.Alfred.Chat
 
             // Set up the chat bot
             _chatBot = new Bot();
-            InitializeChatBot();
             _user = new User("Batman", _chatBot);
+            try
+            {
+                InitializeChatBot();
+            }
+            catch (Exception ex)
+            {
+                _console?.Log(_logHeader, "Error initializing chat: " + ex.Message, LogLevel.Error);
+            }
 
         }
-
-        /// <summary>
-        /// Loads the settings XML document and returns it.
-        /// </summary>
-        /// <param name="pathToSettings">The path to settings.</param>
-        /// <returns>The XmlDocument</returns>
-        /// <exception cref="System.IO.FileNotFoundException">
-        /// </exception>
-        [NotNull]
-        private static XmlDocument LoadSettingsXml([NotNull] string pathToSettings)
-        {
-            if (pathToSettings != null && pathToSettings.Length <= 0)
-                throw new FileNotFoundException();
-
-            if (!new FileInfo(pathToSettings).Exists)
-                throw new FileNotFoundException();
-
-            var settingsXml = new XmlDocument();
-            settingsXml.Load(pathToSettings);
-
-            return settingsXml;
-        }
-
 
         private void InitializeChatBot()
         {
             _chatBot.WrittenToLog += OnWrittenToLog;
-            var settingsXml = LoadSettingsXml(_settingsPath);
             _chatBot.loadSettings(_settingsPath);
 
             // Load AIML files
@@ -167,7 +158,53 @@ namespace MattEland.Ani.Alfred.Chat
             // Log the output to the diagnostic log. Info should make it spoken if speech is on.
             _console?.Log("Chat.Output", response.ResponseText, LogLevel.Info);
 
+            // Update query properties
+            LastResponse = response;
+            LastInput = userInput;
+
             return response;
+        }
+
+        /// <summary>
+        /// Gets the last response from the system.
+        /// </summary>
+        /// <value>The last response.</value>
+        [CanBeNull]
+        public UserStatementResponse LastResponse
+        {
+            get { return _response; }
+            private set
+            {
+                if (Equals(value, _response))
+                    return;
+                _response = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Gets the last input from the user.
+        /// </summary>
+        /// <value>The last input.</value>
+        [CanBeNull]
+        public string LastInput
+        {
+            get { return _input; }
+            private set
+            {
+                if (value == _input)
+                    return;
+                _input = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         }
     }

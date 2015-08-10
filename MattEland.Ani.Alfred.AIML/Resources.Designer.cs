@@ -88,6 +88,15 @@ namespace MattEland.Ani.Alfred.Chat {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hi.
+        /// </summary>
+        internal static string InitialGreetingText {
+            get {
+                return ResourceManager.GetString("InitialGreetingText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Empty path to a settings file.
         /// </summary>
         internal static string NoSettingsPathError {

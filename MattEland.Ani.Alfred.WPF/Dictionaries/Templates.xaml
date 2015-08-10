@@ -189,7 +189,7 @@
     </DataTemplate>
     
     <DataTemplate DataType="{x:Type chat:ChatPage}">
-        <controls:ChatPane DataContext="{Binding}" />
+        <controls:ChatPane DataContext="{Binding Path=ChatHandler}" />
     </DataTemplate>
 
 </ResourceDictionary>

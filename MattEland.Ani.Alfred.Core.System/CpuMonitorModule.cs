@@ -53,8 +53,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             // Add counters for each CPU instance we're using
             foreach (var instance in cpuInstanceNames)
             {
-                _processorCounters.Add(
-                                       new PerformanceCounter(
+                _processorCounters.Add(new PerformanceCounter(
                                            CpuCategoryName,
                                            CpuUsageCounterName,
                                            instance,

@@ -7,8 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" 
              d:DesignWidth="300" 
-             d:DataContext="{d:DesignInstance chat:ChatPage}"
-             Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+             d:DataContext="{d:DesignInstance chat:AimlStatementHandler}">
     <StackPanel>
 
         <!-- Alfred's response to prior statement -->
@@ -34,13 +33,13 @@
         <DockPanel>
             <Button x:Name="btnSubmit" 
                     Margin="8,0,0,0"
+                    Padding="8,0"
                     IsDefault="True"
                     Click="OnSubmitClicked"
                     DockPanel.Dock="Right"
                     Content="Submit" />
             <TextBox x:Name="txtInput"
-                    ToolTip="Enter your statement here and click Submit once you're ready."
-                    Text="{Binding Path=UserInput, Mode=TwoWay}" />
+                    ToolTip="Enter your statement here and click Submit once you're ready." />
 
         </DockPanel>
 

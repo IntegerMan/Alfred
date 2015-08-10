@@ -130,4 +130,8 @@
   <data name="NoSettingsPathError" xml:space="preserve">
     <value>Empty path to a settings file</value>
   </data>
+  <data name="InitialGreetingText" xml:space="preserve">
+    <value>Hi</value>
+    <comment>Initial text from the user (not really) to Alfred to get Alfred to greet the user.</comment>
+  </data>
 </root>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 using JetBrains.Annotations;
 
@@ -15,26 +16,28 @@ namespace MattEland.Ani.Alfred.Chat
     public class ChatPage : AlfredPage
     {
         [NotNull]
-        private string _input;
+        private readonly IUserStatementHandler _chatHandler;
 
+        /// <summary>
+        /// Gets the chat handler.
+        /// </summary>
+        /// <value>The chat handler.</value>
         [NotNull]
-        private readonly IUserStatementHandler _inputHandler;
-
-        [NotNull]
-        private UserStatementResponse _response;
+        public IUserStatementHandler ChatHandler
+        {
+            [DebuggerStepThrough]
+            get
+            { return _chatHandler; }
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredPage" /> class.
         /// </summary>
         /// <param name="name">The name.</param>
-        /// <param name="inputHandler">The input handler</param>
-        public ChatPage([NotNull] string name, [NotNull] IUserStatementHandler inputHandler) : base(name)
+        /// <param name="chatHandler">The input handler</param>
+        public ChatPage([NotNull] string name, [NotNull] IUserStatementHandler chatHandler) : base(name)
         {
-            _inputHandler = inputHandler;
-
-            _input = string.Empty;
-
-            _response = new UserStatementResponse(string.Empty, Resources.InitialGreeting.NonNull(), true);
+            _chatHandler = chatHandler;
         }
 
         /// <summary>
@@ -47,63 +50,6 @@ namespace MattEland.Ani.Alfred.Chat
             get { yield break; }
         }
 
-        /// <summary>
-        /// Gets the last response from Alfred.
-        /// </summary>
-        /// <value>The last response.</value>
-        [NotNull]
-        [UsedImplicitly]
-        public UserStatementResponse LastResponse
-        {
-            get { return _response; }
-            set
-            {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
-
-                if (Equals(value, _response))
-                    return;
-
-                _response = value;
-                OnPropertyChanged(nameof(LastResponse));
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the user's input.
-        /// </summary>
-        /// <value>The user input.</value>
-        [NotNull]
-        public string UserInput
-        {
-            get { return _input; }
-            set
-            {
-                if (value != _input)
-                {
-                    _input = value.NonNull();
-
-                    OnPropertyChanged(nameof(UserInput));
-                }
-            }
-        }
-
-        /// <summary>
-        /// Handles user statement and grabs a resonse from Alfred.
-        /// </summary>
-        /// <param name="input">The user input.</param>
-        /// <returns>The response to the statement</returns>
-        public UserStatementResponse HandleUserStatement([CanBeNull] string input)
-        {
-            UserInput = input.NonNull();
-
-            var response = _inputHandler.HandleUserStatement(UserInput);
-
-            LastResponse = response;
-            return response;
-        }
     }
 
 }

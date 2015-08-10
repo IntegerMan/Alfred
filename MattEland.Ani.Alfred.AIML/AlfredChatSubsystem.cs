@@ -57,6 +57,16 @@ namespace MattEland.Ani.Alfred.Chat
         }
 
         /// <summary>
+        ///     A notification method that is invoked when initialization for Alfred is complete so the UI can be fully enabled or
+        ///     adjusted
+        /// </summary>
+        public override void OnInitializationCompleted()
+        {
+            // Say hi so Alfred greets the user
+            _chatHandler.HandleUserStatement(Res.InitialGreetingText.NonNull());
+        }
+
+        /// <summary>
         ///     Gets the name of the component.
         /// </summary>
         /// <value>The name of the component.</value>
