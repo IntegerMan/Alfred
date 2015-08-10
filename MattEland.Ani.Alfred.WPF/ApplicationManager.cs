@@ -2,7 +2,7 @@
 // ApplicationManager.cs
 // 
 // Created on:      08/09/2015 at 11:21 PM
-// Last Modified:   08/09/2015 at 11:21 PM
+// Last Modified:   08/09/2015 at 11:43 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -26,14 +26,24 @@ using Res = MattEland.Ani.Alfred.WPF.Properties.Resources;
 namespace MattEland.Ani.Alfred.WPF
 {
     /// <summary>
-    /// The application manager takes care of the discrete bits of managing Alfred that 
-    /// shouldn't be the concern of MainWindow or other user interface elements.
+    ///     The application manager takes care of the discrete bits of managing Alfred that
+    ///     shouldn't be the concern of MainWindow or other user interface elements.
     /// </summary>
     public sealed class ApplicationManager : IDisposable
     {
+        /// <summary>
+        ///     The Alfred Provider that makes the application possible
+        /// </summary>
+        [NotNull]
+        private readonly AlfredProvider _alfred;
+
+        private AlfredControlSubsystem _alfredControlSubsystem;
+        private AlfredChatSubsystem _chatSubsystem;
+        private AlfredSpeechConsole _console;
+        private SystemMonitoringSubsystem _systemMonitoringSubsystem;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
         /// </summary>
         public ApplicationManager()
         {
@@ -57,22 +67,13 @@ namespace MattEland.Ani.Alfred.WPF
         {
             [DebuggerStepThrough]
             get
-            { return _alfred; }
+            {
+                return _alfred;
+            }
         }
 
         /// <summary>
-        ///     The Alfred Provider that makes the application possible
-        /// </summary>
-        [NotNull]
-        private readonly AlfredProvider _alfred;
-
-        private SystemMonitoringSubsystem _systemMonitoringSubsystem;
-        private AlfredControlSubsystem _alfredControlSubsystem;
-        private AlfredSpeechConsole _console;
-        private AlfredChatSubsystem _chatSubsystem;
-
-        /// <summary>
-        /// Gets the console.
+        ///     Gets the console.
         /// </summary>
         /// <value>The console.</value>
         public IConsole Console
@@ -80,6 +81,21 @@ namespace MattEland.Ani.Alfred.WPF
             get { return _console; }
         }
 
+        /// <summary>
+        ///     Disposes of loose resources
+        /// </summary>
+        [SuppressMessage("ReSharper", "UseNullPropagation")]
+        public void Dispose()
+        {
+            if (_systemMonitoringSubsystem != null)
+            {
+                _systemMonitoringSubsystem?.Dispose();
+            }
+            if (_console != null)
+            {
+                _console?.Dispose();
+            }
+        }
 
         /// <summary>
         ///     Initializes the console for the application and returns the instantiated console.
@@ -101,7 +117,9 @@ namespace MattEland.Ani.Alfred.WPF
             // Give Alfred a voice
             _console = new AlfredSpeechConsole(baseConsole);
 
-            _console.Log(Res.InitializeConsoleLogHeader.NonNull(), Res.ConsoleOnlineLogMessage.NonNull(), LogLevel.Verbose);
+            _console.Log(Res.InitializeConsoleLogHeader.NonNull(),
+                         Res.ConsoleOnlineLogMessage.NonNull(),
+                         LogLevel.Verbose);
             _alfred.Console = _console;
 
             return _console;
@@ -124,7 +142,7 @@ namespace MattEland.Ani.Alfred.WPF
         }
 
         /// <summary>
-        /// Updates the module
+        ///     Updates the module
         /// </summary>
         public void Update()
         {
@@ -136,7 +154,7 @@ namespace MattEland.Ani.Alfred.WPF
         }
 
         /// <summary>
-        /// Starts Alfred
+        ///     Starts Alfred
         /// </summary>
         public void Start()
         {
@@ -144,7 +162,7 @@ namespace MattEland.Ani.Alfred.WPF
         }
 
         /// <summary>
-        /// Stops Alfred
+        ///     Stops Alfred
         /// </summary>
         public void Stop()
         {
@@ -153,16 +171,6 @@ namespace MattEland.Ani.Alfred.WPF
             {
                 _alfred.Shutdown();
             }
-        }
-
-        /// <summary>
-        /// Disposes of loose resources
-        /// </summary>
-        [SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_console")]
-        public void Dispose()
-        {
-            _systemMonitoringSubsystem?.Dispose();
-            _console?.Dispose();
         }
     }
 }
