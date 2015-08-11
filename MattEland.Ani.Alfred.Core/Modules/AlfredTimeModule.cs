@@ -46,13 +46,13 @@ namespace MattEland.Ani.Alfred.Core.Modules
         {
             CurrentDateWidget = new TextWidget();
             CurrentTimeWidget = new TextWidget();
-            BedtimeAlertWidget = new WarningWidget
+            AlarmAlertWidget = new WarningWidget
             {
                 IsVisible = false,
                 Text = Resources.AlfredTimeModule_AlfredTimeModule_BedtimeNagMessage
             };
-            BedtimeHour = 21;
-            BedtimeMinute = 30;
+            AlarmHour = 21;
+            AlarmMinute = 30;
             AlertDurationInHours = 4;
             IsAlertEnabled = true;
 
@@ -89,19 +89,19 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         /// <value>The bedtime alert widget.</value>
         [NotNull]
-        public WarningWidget BedtimeAlertWidget { get; }
+        public WarningWidget AlarmAlertWidget { get; }
 
         /// <summary>
         ///     Gets or sets the bedtime hour.  Defaults to 9 PM
         /// </summary>
         /// <value>The bedtime hour.</value>
-        public int BedtimeHour { get; set; }
+        public int AlarmHour { get; set; }
 
         /// <summary>
         ///     Gets or sets the bedtime minute. Defaults to 30 minutes past the hour.
         /// </summary>
         /// <value>The bedtime minute.</value>
-        public int BedtimeMinute { get; set; }
+        public int AlarmMinute { get; set; }
 
         /// <summary>
         ///     Gets or sets the alert duration in hours.
@@ -133,7 +133,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         {
             Register(CurrentDateWidget);
             Register(CurrentTimeWidget);
-            Register(BedtimeAlertWidget);
+            Register(AlarmAlertWidget);
 
             // Ensure it has some initial values so it doesn't "blink" or lag on start
             ClearLastTimeRun();
@@ -196,7 +196,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         private void UpdateBedtimeAlertVisibility(DateTime time)
         {
             // Finally stick the value in the widget
-            BedtimeAlertWidget.IsVisible = CalculateAlertVisibility(time);
+            AlarmAlertWidget.IsVisible = CalculateAlertVisibility(time);
         }
 
         /// <summary>
@@ -214,8 +214,8 @@ namespace MattEland.Ani.Alfred.Core.Modules
 
             var hour = time.Hour;
             var minute = time.Minute;
-            var bedHour = BedtimeHour;
-            var bedMinute = BedtimeMinute;
+            var bedHour = AlarmHour;
+            var bedMinute = AlarmMinute;
 
             // Figure out when the alarm display should end. Accept values >= 24 for now.
             // We'll adjust this in a few blocks when checking for early morning circumstances.

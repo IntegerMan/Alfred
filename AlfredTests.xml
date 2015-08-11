@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Root CoveredStatements="1048" TotalStatements="2654" CoveragePercent="39" ReportType="NDependXML" DotCoverVersion="3.1.3">
+<Root CoveredStatements="1050" TotalStatements="2654" CoveragePercent="40" ReportType="NDependXML" DotCoverVersion="3.1.3">
   <Assembly Name="MattEland.Ani.Alfred.Chat" CoveredStatements="53" TotalStatements="159" CoveragePercent="33">
     <Namespace Name="MattEland.Ani.Alfred.Chat" CoveredStatements="53" TotalStatements="159" CoveragePercent="33">
       <Type Name="AimlStatementHandler" CoveredStatements="53" TotalStatements="87" CoveragePercent="61">
@@ -57,7 +57,7 @@
       </Type>
     </Namespace>
   </Assembly>
-  <Assembly Name="MattEland.Ani.Alfred.Core" CoveredStatements="890" TotalStatements="1189" CoveragePercent="75">
+  <Assembly Name="MattEland.Ani.Alfred.Core" CoveredStatements="892" TotalStatements="1189" CoveragePercent="75">
     <Namespace Name="MattEland.Ani.Alfred.Core" CoveredStatements="410" TotalStatements="544" CoveragePercent="75">
       <Type Name="AlfredBootstrapper" CoveredStatements="16" TotalStatements="53" CoveragePercent="30">
         <Method Name=".ctor()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="36" />
@@ -202,16 +202,16 @@
     </Namespace>
     <Namespace Name="MattEland.Ani.Alfred.Core.Definitions" CoveredStatements="12" TotalStatements="12" CoveragePercent="100">
       <Type Name="UserStatementResponse" CoveredStatements="12" TotalStatements="12" CoveragePercent="100">
-        <Method Name=".ctor(String,String,Boolean)" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="13" />
-        <Method Name="get_ResponseText()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="32" />
-        <Method Name="get_UserInput()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="25" />
-        <Method Name="get_WasHandled()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="38" />
-        <Method Name="set_ResponseText(String)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="32" />
-        <Method Name="set_UserInput(String)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="25" />
-        <Method Name="set_WasHandled(Boolean)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="38" />
+        <Method Name=".ctor(String,String,Boolean)" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="15" />
+        <Method Name="get_ResponseText()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="34" />
+        <Method Name="get_UserInput()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="27" />
+        <Method Name="get_WasHandled()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="40" />
+        <Method Name="set_ResponseText(String)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="34" />
+        <Method Name="set_UserInput(String)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="27" />
+        <Method Name="set_WasHandled(Boolean)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="40" />
       </Type>
     </Namespace>
-    <Namespace Name="MattEland.Ani.Alfred.Core.Modules" CoveredStatements="287" TotalStatements="350" CoveragePercent="82">
+    <Namespace Name="MattEland.Ani.Alfred.Core.Modules" CoveredStatements="289" TotalStatements="350" CoveragePercent="83">
       <Type Name="AlfredControlSubsystem" CoveredStatements="33" TotalStatements="33" CoveragePercent="100">
         <Method Name=".ctor()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="43" />
         <Method Name=".ctor(IPlatformProvider)" CoveredStatements="8" TotalStatements="8" CoveragePercent="100" FirstStatementLine="52" />
@@ -256,23 +256,23 @@
         <Method Name="UpdateProtected()" CoveredStatements="15" TotalStatements="20" CoveragePercent="75" FirstStatementLine="53" />
         <Method Name="UpdateWidgetText(AlfredTextWidget,IAlfredComponent)" CoveredStatements="5" TotalStatements="9" CoveragePercent="56" FirstStatementLine="130" />
       </Type>
-      <Type Name="AlfredTimeModule" CoveredStatements="90" TotalStatements="95" CoveragePercent="95">
+      <Type Name="AlfredTimeModule" CoveredStatements="92" TotalStatements="95" CoveragePercent="97">
         <Method Name=".ctor(IPlatformProvider)" CoveredStatements="11" TotalStatements="11" CoveragePercent="100" FirstStatementLine="45" />
-        <Method Name="CalculateAlertVisibility(DateTime)" CoveredStatements="23" TotalStatements="25" CoveragePercent="92" FirstStatementLine="208" />
+        <Method Name="CalculateAlertVisibility(DateTime)" CoveredStatements="25" TotalStatements="25" CoveragePercent="100" FirstStatementLine="208" />
         <Method Name="ClearLastTimeRun()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="271" />
+        <Method Name="get_AlarmAlertWidget()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="92" />
+        <Method Name="get_AlarmHour()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="98" />
+        <Method Name="get_AlarmMinute()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="104" />
         <Method Name="get_AlertDurationInHours()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="110" />
-        <Method Name="get_BedtimeAlertWidget()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="92" />
-        <Method Name="get_BedtimeHour()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="98" />
-        <Method Name="get_BedtimeMinute()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="104" />
         <Method Name="get_CurrentDateWidget()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="83" />
         <Method Name="get_CurrentTime()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="124" />
         <Method Name="get_CurrentTimeWidget()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="76" />
         <Method Name="get_IsAlertEnabled()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="116" />
         <Method Name="get_Name()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="68" />
         <Method Name="InitializeProtected(IAlfred)" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="133" />
+        <Method Name="set_AlarmHour(Int32)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="98" />
+        <Method Name="set_AlarmMinute(Int32)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="104" />
         <Method Name="set_AlertDurationInHours(Int32)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="110" />
-        <Method Name="set_BedtimeHour(Int32)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="98" />
-        <Method Name="set_BedtimeMinute(Int32)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="104" />
         <Method Name="set_CurrentTime(DateTime)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="125" />
         <Method Name="set_IsAlertEnabled(Boolean)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="116" />
         <Method Name="ShutdownProtected()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="258" />

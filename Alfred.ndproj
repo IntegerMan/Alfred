@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <NDepend AppName="Alfred" Platform="DotNet">
   <OutputDir KeepXmlFiles="False">C:\Dev\Alfred\Alfred\NDependOut</OutputDir>
   <Assemblies>
@@ -81,7 +81,8 @@
   <SourceFileRebasing FromPath="" ToPath="" />
   <PathVariables />
   <RuleFiles />
-  <ProjectRules AreActive="True" /><Queries>
+  <ProjectRules AreActive="True" />
+  <Queries>
     <Group Name="Code Quality" Active="True" ShownInReport="False">
       <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="True"><![CDATA[// <Name>Types too big - critical</Name>
 warnif count > 0 from t in JustMyCode.Types where 
@@ -2134,7 +2135,9 @@ select m
 //</HowToFix>]]></Query>
       <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Instances size shouldn't be too big</Name>
 warnif count > 0 from t in JustMyCode.Types where 
-  t.SizeOfInst > 64 && !t.NameLike("Window") && !t.NameLike("App") && !t.NameLike("Page")
+  t.SizeOfInst > 64 && !t.NameLike("Window") && !t.NameLike("App") && !t.NameLike("Page")&& !t.NameLike("Pane")&& !t.NameLike("Control")
+
+
   orderby t.SizeOfInst descending
 select new { t, t.SizeOfInst, t.InstanceFields }
 
@@ -4614,7 +4617,8 @@ warnif count > 0 from f in Application.Fields where
  !f.IsInitOnly && 
  !f.IsLiteral && 
  !f.IsEnumValue &&
- !f.NameLike("<>")
+ !f.NameLike("<>") &&
+ !f.FullNameLike("WPF")
 
 // A non-private field assigned from outside its class,
 // usually leads to complicated field state management.
@@ -8077,4 +8081,5 @@ select new { n, n.NbLinesOfCode }
 //</HowToFix>]]></Query>
       </Group>
     </Group>
-  </Queries></NDepend>
+  </Queries>
+</NDepend>
