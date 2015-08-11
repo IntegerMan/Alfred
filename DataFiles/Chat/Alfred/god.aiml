@@ -11,7 +11,7 @@ This provides handling for sentences involving God, primarily in conjuction with
   <!-- Thank God special case -->
   <category>
     <pattern>THANK GOD</pattern>
-    <template>
+    <template id="tmp_thank_god">
       <random>
         <li>He is good.</li>
         <li>My programmer has found He's always there.</li>

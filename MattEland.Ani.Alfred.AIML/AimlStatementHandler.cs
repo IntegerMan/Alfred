@@ -350,7 +350,8 @@ namespace MattEland.Ani.Alfred.Chat
         [CanBeNull]
         private static string GetResponseTemplate([CanBeNull] Result result)
         {
-            var subQuery = result?.SubQueries?.FirstOrDefault();
+            // We want the last template as the other templates have redirected to it
+            var subQuery = result?.SubQueries?.LastOrDefault();
 
             return subQuery?.Template;
         }

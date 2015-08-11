@@ -11,7 +11,7 @@ This provides fallback functions to address any input not handled by other modul
   <!-- Generic Fallback -->
   <category>
     <pattern>*</pattern>
-    <template>
+    <template id="tmp_fallback">
       <random>
         <li>I'm sorry but I'm not yet able to understand that command. For a list of commands, type "Help".</li>
       </random>

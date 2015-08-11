@@ -11,7 +11,7 @@ This provides generic greeting capabilities both in startup greeting and in resp
   <!-- Handle Greeting Functions -->
   <category>
     <pattern>HELLO</pattern>
-    <template>
+    <template id="tmp_hi">
       <random>
         <li>Hello, my name is Alfred.</li>
         <li>Hi there. I'm Alfred.</li>
@@ -57,31 +57,31 @@ This provides generic greeting capabilities both in startup greeting and in resp
   <!-- Name -->
   <category>
     <pattern>LAST NAME</pattern>
-    <template>
+    <template id="tmp_lastname">
       My last name is <bot name="lastname" />.
     </template>
   </category>
   <category>
     <pattern>MIDDLE NAME</pattern>
-    <template>
+    <template id="tmp_middlename">
       My middle name is <bot name="middlename" />.
     </template>
   </category>
   <category>
     <pattern>FIRST NAME</pattern>
-    <template>
+    <template id="tmp_firstname">
       My first name is <bot name="firstname" />.
     </template>
   </category>
   <category>
     <pattern>FULL NAME</pattern>
-    <template>
+    <template id="tmp_fullname">
       My full name is <bot name="fullname" />.
     </template>
   </category>
   <category>
     <pattern>NAME</pattern>
-    <template>
+    <template id="tmp_name">
       <random>
         <li>I am </li>
         <li>You may call me </li>
