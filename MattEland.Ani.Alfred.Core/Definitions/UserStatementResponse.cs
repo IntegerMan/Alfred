@@ -2,7 +2,7 @@
 // UserStatementResponse.cs
 // 
 // Created on:      08/10/2015 at 5:01 PM
-// Last Modified:   08/10/2015 at 11:04 PM
+// Last Modified:   08/11/2015 at 1:41 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -19,34 +19,49 @@ namespace MattEland.Ani.Alfred.Core.Definitions
     public struct UserStatementResponse : IEquatable<UserStatementResponse>
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
+        ///     Initializes a new instance of the <see cref="T:UserStatementResponse" /> class.
         /// </summary>
-        public UserStatementResponse([CanBeNull] string userInput, [CanBeNull] string responseText, bool wasHandled)
+        /// <param name="userInput">The user input.</param>
+        /// <param name="responseText">The response text.</param>
+        /// <param name="template">The template.</param>
+        /// <param name="command">The Command.</param>
+        public UserStatementResponse([CanBeNull] string userInput,
+                                     [CanBeNull] string responseText,
+                                     string template,
+                                     string command)
         {
             UserInput = userInput ?? string.Empty;
             ResponseText = responseText ?? string.Empty;
-            WasHandled = wasHandled;
+            Template = template;
+            Command = command;
         }
 
         /// <summary>
-        ///     Gets or sets the original user input text.
+        ///     Gets the original user input text.
         /// </summary>
         /// <value>The user input.</value>
         [NotNull]
         public string UserInput { get; }
 
         /// <summary>
-        ///     Gets or sets the response text.
+        ///     Gets the response text.
         /// </summary>
         /// <value>The response text.</value>
         [NotNull]
         public string ResponseText { get; }
 
         /// <summary>
-        ///     Gets or sets whether or not the statement was handled.
+        ///     Gets the AIML template used to generate a response.
         /// </summary>
-        /// <value>Whether or not the statement was handled.</value>
-        public bool WasHandled { get; }
+        /// <value>The template.</value>
+        [CanBeNull]
+        public string Template { get; }
+
+        /// <summary>
+        ///     Gets the system Command to execute.
+        /// </summary>
+        /// <value>The Command.</value>
+        public string Command { get; }
 
         /// <summary>
         ///     Determines if this instance is equivalent to the other instance
@@ -56,7 +71,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         public bool Equals(UserStatementResponse other)
         {
             return string.Equals(UserInput, other.UserInput) && string.Equals(ResponseText, other.ResponseText) &&
-                   WasHandled == other.WasHandled;
+                   string.Equals(Template, other.Template) && string.Equals(Command, other.Command);
         }
 
         /// <summary>
@@ -82,14 +97,12 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         {
             unchecked
             {
-                // Guards against GetHashCode getting called unexpectedly - maybe in constructor? Saw errors with unknown stack
-                // when this was not present
-                var userInput = UserInput ?? string.Empty;
-                var responseText = ResponseText ?? string.Empty;
-
-                var hashCode = userInput.GetHashCode();
-                hashCode = (hashCode * 397) ^ responseText.GetHashCode();
-                hashCode = (hashCode * 397) ^ WasHandled.GetHashCode();
+                // ?? Guards against GetHashCode getting called unexpectedly - maybe in constructor? Saw errors with
+                // unknown stack when this was not present
+                var hashCode = (UserInput ?? string.Empty).GetHashCode();
+                hashCode = (hashCode * 397) ^ (ResponseText ?? string.Empty).GetHashCode();
+                hashCode = (hashCode * 397) ^ (Command ?? string.Empty).GetHashCode();
+                hashCode = (hashCode * 397) ^ (Template ?? string.Empty).GetHashCode();
 
                 return hashCode;
             }

@@ -48,7 +48,6 @@ namespace MattEland.Ani.Alfred.Chat.Tests
 
             // Do some basic validity checks
             Assert.NotNull(response, "Response was null");
-            Assert.IsTrue(response.WasHandled);
             Assert.AreEqual(text, response.UserInput);
             Assert.IsNotNull(response.ResponseText, "Response text was null");
 

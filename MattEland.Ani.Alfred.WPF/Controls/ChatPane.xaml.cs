@@ -47,14 +47,11 @@ namespace MattEland.Ani.Alfred.WPF.Controls
             var chatHandler = (IUserStatementHandler)DataContext;
 
             // Send it to the page object (which will route it through to the chat subsystem)
-            var response = chatHandler.HandleUserStatement(text.Trim());
+            chatHandler.HandleUserStatement(text.Trim());
 
-            // If it was a success, we'll also want to clear out the input
-            if (response.WasHandled)
-            {
-                txtInput.Text = string.Empty;
-                txtInput.Focus();
-            }
+            // Clear out the input for the next time around
+            txtInput.Text = string.Empty;
+            txtInput.Focus();
 
         }
     }

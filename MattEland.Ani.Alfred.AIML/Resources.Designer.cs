@@ -70,11 +70,47 @@ namespace MattEland.Ani.Alfred.Chat {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chat.Input.
+        /// </summary>
+        internal static string ChatInputHeader {
+            get {
+                return ResourceManager.GetString("ChatInputHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chat.
         /// </summary>
         internal static string ChatModuleName {
             get {
                 return ResourceManager.GetString("ChatModuleName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chat.Output.
+        /// </summary>
+        internal static string ChatOutputHeader {
+            get {
+                return ResourceManager.GetString("ChatOutputHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chat.Processing.
+        /// </summary>
+        internal static string ChatProcessingHeader {
+            get {
+                return ResourceManager.GetString("ChatProcessingHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Batman.
+        /// </summary>
+        internal static string ChatUserName {
+            get {
+                return ResourceManager.GetString("ChatUserName", resourceCulture);
             }
         }
         
@@ -97,6 +133,15 @@ namespace MattEland.Ani.Alfred.Chat {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error parsing OOB command: {0} for command: {1}.
+        /// </summary>
+        internal static string ErrorParsingCommand {
+            get {
+                return ResourceManager.GetString("ErrorParsingCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Greetings sir. What can I do for you?.
         /// </summary>
         internal static string InitialGreeting {
@@ -111,6 +156,15 @@ namespace MattEland.Ani.Alfred.Chat {
         internal static string InitialGreetingText {
             get {
                 return ResourceManager.GetString("InitialGreetingText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No end tag for OOB command: {0}.
+        /// </summary>
+        internal static string NoEndTagForOobCommand {
+            get {
+                return ResourceManager.GetString("NoEndTagForOobCommand", resourceCulture);
             }
         }
         

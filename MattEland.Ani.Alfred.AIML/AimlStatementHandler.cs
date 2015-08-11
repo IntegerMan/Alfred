@@ -2,7 +2,7 @@
 // AimlStatementHandler.cs
 // 
 // Created on:      08/10/2015 at 12:51 AM
-// Last Modified:   08/10/2015 at 11:06 PM
+// Last Modified:   08/11/2015 at 2:36 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -12,7 +12,10 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Xml;
+using System.Xml.Linq;
 
 using AIMLbot;
 
@@ -78,12 +81,12 @@ namespace MattEland.Ani.Alfred.Chat
             _settingsPath = settingsPath;
 
             // Logging Housekeeping
-            _logHeader = "Chat.Processing";
+            _logHeader = Resources.ChatProcessingHeader.NonNull();
             _console = console;
 
             // Set up the chat bot
             _chatBot = new Bot();
-            _user = new User("Batman", _chatBot);
+            _user = new User(Resources.ChatUserName, _chatBot);
             try
             {
                 InitializeChatBot();
@@ -112,7 +115,13 @@ namespace MattEland.Ani.Alfred.Chat
             [DebuggerStepThrough]
             set
             {
+                if (Equals(value, _console))
+                {
+                    return;
+                }
+
                 _console = value;
+                OnPropertyChanged();
             }
         }
 
@@ -131,7 +140,7 @@ namespace MattEland.Ani.Alfred.Chat
         public UserStatementResponse HandleUserStatement(string userInput)
         {
             // Log the input to the diagnostic log.
-            _console?.Log("Chat.Input", userInput, LogLevel.UserInput);
+            _console?.Log(Resources.ChatInputHeader.NonNull(), userInput, LogLevel.UserInput);
 
             // We're calling 3rd party code - be extremely careful
             Result result = null;
@@ -141,20 +150,27 @@ namespace MattEland.Ani.Alfred.Chat
             }
             catch (Exception ex)
             {
-                _console?.Log(_logHeader, ex.Message, LogLevel.Error);
-                var errorFormat = string.Format(CultureInfo.CurrentCulture,
-                                                Resources.ChatErrorLastLogMessageFormat,
-                                                _chatBot.LastLogMessage);
-                _console?.Log(_logHeader, errorFormat.NonNull(), LogLevel.Verbose);
+                _console?.Log(Resources.ChatInputHeader.NonNull(), ex.Message, LogLevel.Error);
             }
 
+            // Get the template out of the response so we can see if there are any OOB instructions
+            var template = GetResponseTemplate(result);
+
+            // Grab the command from the template, if one was present
+            var command = GetCommandFromTemplate(template, _console);
+
             // Handle the response keeping in mind it could have messed up
-            var response = result == null
-                               ? new UserStatementResponse(userInput, Resources.DefaultFailureResponseText, false)
-                               : new UserStatementResponse(userInput, result.RawOutput, true);
+            var output = result?.RawOutput ?? Resources.DefaultFailureResponseText;
+            _console?.Log(Resources.ChatOutputHeader.NonNull(), output.NonNull(), LogLevel.ChatResponse);
+
+            var response = new UserStatementResponse(userInput, output, template, command);
 
             // Log the output to the diagnostic log.
-            _console?.Log("Chat.Output", response.ResponseText, LogLevel.ChatResponse);
+            if (!string.IsNullOrWhiteSpace(template))
+            {
+                var message = string.Format(CultureInfo.CurrentCulture, "Using Template: {0}", template).NonNull();
+                _console?.Log(Resources.ChatOutputHeader.NonNull(), message, LogLevel.Verbose);
+            }
 
             // Update query properties
             LastResponse = response;
@@ -201,6 +217,144 @@ namespace MattEland.Ani.Alfred.Chat
             }
         }
 
+        /// <summary>
+        ///     Gets the first command present from the template and returns that node in XML format.
+        /// </summary>
+        /// <param name="template">The template.</param>
+        /// <param name="console">The console.</param>
+        /// <returns>System.String.</returns>
+        private static string GetCommandFromTemplate([CanBeNull] string template, [CanBeNull] IConsole console)
+        {
+            // Do a bunch of trimming and interpreting to find our XML
+            var commandXml = GetCommandXmlFromTemplate(template, console);
+            if (commandXml == null)
+            {
+                return null;
+            }
+
+            // Load the XML as a document so we can manipulate the elements easier
+            XDocument xdoc;
+            try
+            {
+                xdoc = XDocument.Parse(commandXml);
+            }
+            catch (XmlException ex)
+            {
+                var message = string.Format(CultureInfo.CurrentCulture,
+                                            Resources.ErrorParsingCommand,
+                                            ex.Message,
+                                            commandXml);
+                console?.Log(Resources.ChatOutputHeader.NonNull(),
+                             message.NonNull(),
+                             LogLevel.Error);
+                return null;
+            }
+
+            // Grab the OOB root tag out of the document
+            var oobElement = xdoc.Root;
+            if (oobElement == null)
+            {
+                console?.Log(Resources.ChatOutputHeader.NonNull(), "OOB command had no root element", LogLevel.Error);
+                return null;
+            }
+
+            // Return either the XML of the first node or the value of an text value
+            var command = oobElement.FirstNode?.ToString() ?? oobElement.Value;
+
+            console?.Log(Resources.ChatOutputHeader.NonNull(), "Received OOB Command: " + command, LogLevel.Info);
+
+            return command;
+
+        }
+
+        /// <summary>
+        ///     Gets the command XML from a template.
+        /// </summary>
+        /// <param name="template">The template.</param>
+        /// <param name="console">The console.</param>
+        /// <returns>The XML without noise of periphery characters</returns>
+        [SuppressMessage("ReSharper", "SuggestVarOrType_BuiltInTypes")]
+        [CanBeNull]
+        private static string GetCommandXmlFromTemplate([CanBeNull] string template, [CanBeNull] IConsole console)
+        {
+            // Early exit if it's empty
+            if (template == null)
+            {
+                return null;
+            }
+
+            // Set up constants
+            const StringComparison ComparisonType = StringComparison.OrdinalIgnoreCase;
+            const string StartTag = "<oob";
+            const string EndTag = "</oob>";
+            const string SelfClosingTagEnd = "/>";
+
+            // Figure out where we start
+            var start = template.IndexOf(StartTag, ComparisonType);
+
+            // If we don't have a tag, there's no command and that's fine
+            if (start < 0)
+            {
+                return null;
+            }
+
+            // We don't care about the portion of the string before the start so chop it off now
+            template = template.Substring(start);
+
+            // Try to find self-closing tags first
+            var selfClosingEnd = template.LastIndexOf(SelfClosingTagEnd, ComparisonType);
+            if (selfClosingEnd >= 0)
+            {
+                // We're self-closing. Advance to the end of the tag
+                selfClosingEnd = selfClosingEnd + SelfClosingTagEnd.Length;
+            }
+
+            // Look for an end tag for our command node
+            var end = template.IndexOf(EndTag, ComparisonType);
+            if (end >= 0)
+            {
+                end += EndTag.Length;
+            }
+
+            // If we have both a self-closing tag and an end tag, the self-closing probably belongs to
+            // an inner XML element. In that case we want to go with the end tag. On the other hand, if
+            // we have a self-closing tag and no end tag, we'll want to go with the self-closing tag.
+
+            // That's what this is doing - taking the self-closing tag as the end tag
+            if (end <= 0 && selfClosingEnd >= 0)
+            {
+                end = selfClosingEnd;
+            }
+
+            // If we don't have an end at this point, we need to bow out as a tag that was started but not finished
+            if (end < 0)
+            {
+                var message = string.Format(CultureInfo.CurrentCulture, Resources.NoEndTagForOobCommand, template).NonNull();
+                console?.Log(Resources.ChatOutputHeader.NonNull(), message, LogLevel.Error);
+
+                return null;
+            }
+
+            // Now we can snip out the extra bits to get our template XML
+            return template.Substring(0, end);
+        }
+
+        /// <summary>
+        ///     Gets the response template from the AIML chat message result.
+        /// </summary>
+        /// <param name="result">The result of a chat message to the AIML interpreter.</param>
+        /// <returns>The response template</returns>
+        /// <remarks>
+        ///     Result is not CLSCompliant so this method should not be made public
+        /// </remarks>
+        [CanBeNull]
+        private static string GetResponseTemplate([CanBeNull] Result result)
+        {
+            var subQuery = result?.SubQueries?.FirstOrDefault();
+
+            return subQuery?.Template;
+        }
+
         private void InitializeChatBot()
         {
             _chatBot.WrittenToLog += OnWrittenToLog;
@@ -230,7 +384,6 @@ namespace MattEland.Ani.Alfred.Chat
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
         }
 
         /// <summary>

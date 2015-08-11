@@ -140,4 +140,23 @@
   <data name="ChatErrorLastLogMessageFormat" xml:space="preserve">
     <value>Last Log Message:{0}</value>
   </data>
+  <data name="ErrorParsingCommand" xml:space="preserve">
+    <value>Error parsing OOB command: {0} for command: {1}</value>
+    <comment>{0} is exception message, {1} is the XML attempted</comment>
+  </data>
+  <data name="ChatOutputHeader" xml:space="preserve">
+    <value>Chat.Output</value>
+  </data>
+  <data name="NoEndTagForOobCommand" xml:space="preserve">
+    <value>No end tag for OOB command: {0}</value>
+  </data>
+  <data name="ChatUserName" xml:space="preserve">
+    <value>Batman</value>
+  </data>
+  <data name="ChatProcessingHeader" xml:space="preserve">
+    <value>Chat.Processing</value>
+  </data>
+  <data name="ChatInputHeader" xml:space="preserve">
+    <value>Chat.Input</value>
+  </data>
 </root>

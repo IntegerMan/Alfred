@@ -551,7 +551,7 @@ I like to talk to people.
 <template><random><li>When?</li><li>How?</li><li>I don't think so.</li></random></template>
 </category>
 <category><pattern>YOU WILL LISTEN *</pattern>
-<template>Oh I get it, you think I obey your commands.</template>
+<template>Oh I get it, you think I obey your Command.</template>
 </category>
 <category><pattern>YOU WILL HAVE TO TAKE MY WORD *</pattern>
 <template>How do I know I can trust you?</template>
