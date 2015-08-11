@@ -4538,7 +4538,7 @@ select new {
 // *finer solution* by tagging eah concerned field with 
 // *CannotDecreaseVisibilityAttribute*.
 //</HowToFix>]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Types that could be declared as private, nested in a parent type</Name>
+      <Query Active="False" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Types that could be declared as private, nested in a parent type</Name>
 
 warnif count > 0 
 from t in Application.Types
@@ -4580,7 +4580,7 @@ select new {
 // However *nested private types* are hardly testable. Hence this rule  
 // might not be applied to types consumed directly by tests.
 //</HowToFix>]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Avoid publicly visible constant fields</Name>
+      <Query Active="False" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Avoid publicly visible constant fields</Name>
 warnif count > 0 
 from f in Application.Fields
 where f.IsLiteral && 

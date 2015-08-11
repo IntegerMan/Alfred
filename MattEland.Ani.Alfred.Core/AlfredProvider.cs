@@ -214,7 +214,7 @@ namespace MattEland.Ani.Alfred.Core
         /// </exception>
         public void Initialize()
         {
-            // This logic is a bit lengthy, so we'll have the status controller take care of it
+            // This logic is a bit lengthy, so wE'll have the status controller take care of it
             _statusController.Initialize();
         }
 

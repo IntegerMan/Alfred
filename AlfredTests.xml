@@ -1,7 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Root CoveredStatements="1050" TotalStatements="2658" CoveragePercent="40" ReportType="NDependXML" DotCoverVersion="3.1.3">
-  <Assembly Name="MattEland.Ani.Alfred.Chat" CoveredStatements="53" TotalStatements="159" CoveragePercent="33">
-    <Namespace Name="MattEland.Ani.Alfred.Chat" CoveredStatements="53" TotalStatements="159" CoveragePercent="33">
+<Root CoveredStatements="1050" TotalStatements="2666" CoveragePercent="39" ReportType="NDependXML" DotCoverVersion="3.1.3">
+  <Assembly Name="DataFiles" CoveredStatements="0" TotalStatements="2" CoveragePercent="0">
+    <Namespace Name="DataFiles" CoveredStatements="0" TotalStatements="2" CoveragePercent="0">
+      <Type Name="DataFilesMain" CoveredStatements="0" TotalStatements="2" CoveragePercent="0">
+        <Method Name="Main()" CoveredStatements="0" TotalStatements="2" CoveragePercent="0" FirstStatementLine="28" />
+      </Type>
+    </Namespace>
+  </Assembly>
+  <Assembly Name="MattEland.Ani.Alfred.Chat" CoveredStatements="53" TotalStatements="163" CoveragePercent="33">
+    <Namespace Name="MattEland.Ani.Alfred.Chat" CoveredStatements="53" TotalStatements="163" CoveragePercent="33">
       <Type Name="AimlStatementHandler" CoveredStatements="53" TotalStatements="87" CoveragePercent="61">
         <Method Name=".ctor()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="59" />
         <Method Name=".ctor(IConsole,String)" CoveredStatements="12" TotalStatements="20" CoveragePercent="60" FirstStatementLine="71" />
@@ -17,14 +24,15 @@
         <Method Name="set_LastInput(String)" CoveredStatements="5" TotalStatements="7" CoveragePercent="71" FirstStatementLine="194" />
         <Method Name="set_LastResponse(UserStatementResponse)" CoveredStatements="5" TotalStatements="7" CoveragePercent="71" FirstStatementLine="175" />
       </Type>
-      <Type Name="AlfredChatSubsystem" CoveredStatements="0" TotalStatements="25" CoveragePercent="0">
-        <Method Name=".ctor()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="35" />
-        <Method Name=".ctor(IPlatformProvider)" CoveredStatements="0" TotalStatements="5" CoveragePercent="0" FirstStatementLine="44" />
-        <Method Name="get_Name()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="65" />
-        <Method Name="get_RegisterPage()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="57" />
-        <Method Name="OnInitializationCompleted()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="91" />
-        <Method Name="RegisterControls()" CoveredStatements="0" TotalStatements="9" CoveragePercent="0" FirstStatementLine="72" />
-        <Method Name="set_RegisterPage(Boolean)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="57" />
+      <Type Name="AlfredChatSubsystem" CoveredStatements="0" TotalStatements="29" CoveragePercent="0">
+        <Method Name=".ctor()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="36" />
+        <Method Name=".ctor(IPlatformProvider)" CoveredStatements="0" TotalStatements="5" CoveragePercent="0" FirstStatementLine="45" />
+        <Method Name="get_Name()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="66" />
+        <Method Name="get_RegisterPage()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="58" />
+        <Method Name="OnInitializationCompleted()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="92" />
+        <Method Name="RegisterControls()" CoveredStatements="0" TotalStatements="9" CoveragePercent="0" FirstStatementLine="73" />
+        <Method Name="set_RegisterPage(Boolean)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="58" />
+        <Method Name="Shutdown()" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="106" />
       </Type>
       <Type Name="ChatPage" CoveredStatements="0" TotalStatements="9" CoveragePercent="0">
         <Type Name="&lt;get_Children&gt;d__5" CoveredStatements="0" TotalStatements="2" CoveragePercent="0">
@@ -57,7 +65,7 @@
       </Type>
     </Namespace>
   </Assembly>
-  <Assembly Name="MattEland.Ani.Alfred.Core" CoveredStatements="892" TotalStatements="1193" CoveragePercent="75">
+  <Assembly Name="MattEland.Ani.Alfred.Core" CoveredStatements="892" TotalStatements="1195" CoveragePercent="75">
     <Namespace Name="MattEland.Ani.Alfred.Core" CoveredStatements="402" TotalStatements="528" CoveragePercent="76">
       <Type Name="AlfredBootstrapper" CoveredStatements="16" TotalStatements="53" CoveragePercent="30">
         <Method Name=".ctor()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="36" />
@@ -198,17 +206,17 @@
         <Method Name="op_Inequality(ConsoleEvent,ConsoleEvent)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="151" />
       </Type>
     </Namespace>
-    <Namespace Name="MattEland.Ani.Alfred.Core.Definitions" CoveredStatements="15" TotalStatements="30" CoveragePercent="50">
-      <Type Name="UserStatementResponse" CoveredStatements="15" TotalStatements="30" CoveragePercent="50">
-        <Method Name=".ctor(String,String,Boolean)" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="24" />
-        <Method Name="Equals(Object)" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="67" />
-        <Method Name="Equals(UserStatementResponse)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="56" />
-        <Method Name="get_ResponseText()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="42" />
-        <Method Name="get_UserInput()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="35" />
-        <Method Name="get_WasHandled()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="48" />
-        <Method Name="GetHashCode()" CoveredStatements="0" TotalStatements="7" CoveragePercent="0" FirstStatementLine="80" />
-        <Method Name="op_Equality(UserStatementResponse,UserStatementResponse)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="97" />
-        <Method Name="op_Inequality(UserStatementResponse,UserStatementResponse)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="108" />
+    <Namespace Name="MattEland.Ani.Alfred.Core.Definitions" CoveredStatements="15" TotalStatements="32" CoveragePercent="47">
+      <Type Name="UserStatementResponse" CoveredStatements="15" TotalStatements="32" CoveragePercent="47">
+        <Method Name=".ctor(String,String,Boolean)" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="25" />
+        <Method Name="Equals(Object)" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="68" />
+        <Method Name="Equals(UserStatementResponse)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="57" />
+        <Method Name="get_ResponseText()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="43" />
+        <Method Name="get_UserInput()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="36" />
+        <Method Name="get_WasHandled()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="49" />
+        <Method Name="GetHashCode()" CoveredStatements="0" TotalStatements="9" CoveragePercent="0" FirstStatementLine="82" />
+        <Method Name="op_Equality(UserStatementResponse,UserStatementResponse)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="105" />
+        <Method Name="op_Inequality(UserStatementResponse,UserStatementResponse)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="116" />
       </Type>
     </Namespace>
     <Namespace Name="MattEland.Ani.Alfred.Core.Modules" CoveredStatements="294" TotalStatements="352" CoveragePercent="84">
