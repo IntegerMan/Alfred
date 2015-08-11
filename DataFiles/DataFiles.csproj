@@ -99,6 +99,7 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Chat\Alfred\power.aiml" />
     <Content Include="Chat\config\DefaultPredicates.xml" />
     <Content Include="Chat\config\GenderSubstitutions.xml" />
     <Content Include="Chat\config\Person2Substitutions.xml" />

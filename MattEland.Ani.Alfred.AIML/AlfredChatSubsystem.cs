@@ -6,6 +6,7 @@
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -91,6 +92,22 @@ namespace MattEland.Ani.Alfred.Chat
         {
             // Say hi so Alfred greets the user
             _chatHandler.DoInitialGreeting();
+        }
+
+        /// <summary>
+        ///     Shuts down the component.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException">
+        /// </exception>
+        /// <exception cref="System.InvalidOperationException">
+        ///     Already offline when told to shut down.
+        /// </exception>
+        public override void Shutdown()
+        {
+            // Have Alfred say goodbye as you're shutting down
+            _chatHandler?.HandleUserStatement("Goodbye");
+
+            base.Shutdown();
         }
     }
 

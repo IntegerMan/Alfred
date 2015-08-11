@@ -12,8 +12,8 @@ This provides functionality for the "HELP" command
   <category>
     <pattern>HELP</pattern>
     <template>
-      For help on commands, type "Help Commands".<br />
-      For a list of questions you can ask me type "Help Questions". <br />
+      For help on commands, type "Help Commands".
+      For a list of questions you can ask me type "Help Questions".
       For a list of other things I respond to, type "Help Other"
     </template>
   </category>
@@ -23,6 +23,7 @@ This provides functionality for the "HELP" command
     <template>
       Presently I support the following commands:
         Navigate
+        Shutdown
         Help
     </template>
   </category>
@@ -39,6 +40,7 @@ This provides functionality for the "HELP" command
     <template>
       You can ask me about the following topics:
         Name
+        Status
     </template>
   </category>
 
@@ -54,6 +56,7 @@ This provides functionality for the "HELP" command
     <template>
       I also respond to the following keywords:
         Hello
+        Goodbye
         Thanks
     </template>
   </category>
