@@ -1,4 +1,6 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+
+using JetBrains.Annotations;
 
 namespace MattEland.Ani.Alfred.Core.Definitions
 {
@@ -12,8 +14,8 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// </summary>
         public UserStatementResponse([CanBeNull] string userInput, [CanBeNull] string responseText, bool wasHandled)
         {
-            UserInput = userInput.NonNull();
-            ResponseText = responseText.NonNull();
+            UserInput = userInput ?? string.Empty;
+            ResponseText = responseText ?? string.Empty;
             WasHandled = wasHandled;
         }
 
