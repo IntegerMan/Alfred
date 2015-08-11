@@ -93,7 +93,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <value>Whether or not the component is visible.</value>
         public override bool IsVisible
         {
-            get { return Modules.Any(m => m.Widgets.Any(w => w.IsVisible)); }
+            get { return base.IsVisible && Modules.Any(m => m.Widgets.Any(w => w.IsVisible)); }
         }
     }
 }
