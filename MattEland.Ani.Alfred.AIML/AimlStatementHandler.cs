@@ -81,7 +81,7 @@ namespace MattEland.Ani.Alfred.Chat
             _settingsPath = settingsPath;
 
             // Logging Housekeeping
-            _logHeader = Resources.ChatProcessingHeader.NonNull();
+            _logHeader = Resources.ChatProcessingHeader;
             _console = console;
 
             // Set up the chat bot
@@ -93,9 +93,9 @@ namespace MattEland.Ani.Alfred.Chat
             }
             catch (Exception ex)
             {
-                var errorFormat = Resources.ErrorInitializingChat.NonNull();
+                var errorFormat = Resources.ErrorInitializingChat;
                 var message = string.Format(CultureInfo.CurrentCulture, errorFormat, ex.Message);
-                _console?.Log(_logHeader, message.NonNull(), LogLevel.Error);
+                _console?.Log(_logHeader, message, LogLevel.Error);
             }
 
         }
@@ -140,7 +140,7 @@ namespace MattEland.Ani.Alfred.Chat
         public UserStatementResponse HandleUserStatement(string userInput)
         {
             // Log the input to the diagnostic log.
-            _console?.Log(Resources.ChatInputHeader.NonNull(), userInput, LogLevel.UserInput);
+            _console?.Log(Resources.ChatInputHeader, userInput, LogLevel.UserInput);
 
             // We're calling 3rd party code - be extremely careful
             Result result = null;
@@ -150,7 +150,7 @@ namespace MattEland.Ani.Alfred.Chat
             }
             catch (Exception ex)
             {
-                _console?.Log(Resources.ChatInputHeader.NonNull(), ex.Message, LogLevel.Error);
+                _console?.Log(Resources.ChatInputHeader, ex.Message, LogLevel.Error);
             }
 
             // Get the template out of the response so we can see if there are any OOB instructions
@@ -160,19 +160,21 @@ namespace MattEland.Ani.Alfred.Chat
             var command = GetCommandFromTemplate(template, _console);
 
             // Handle the response keeping in mind it could have messed up
-            var output = result?.RawOutput ?? Resources.DefaultFailureResponseText;
-            _console?.Log(Resources.ChatOutputHeader.NonNull(), output.NonNull(), LogLevel.ChatResponse);
-
-            var response = new UserStatementResponse(userInput, output, template, command);
-
-            // Log the output to the diagnostic log.
-            if (!string.IsNullOrWhiteSpace(template))
+            var output = result?.Output ?? Resources.DefaultFailureResponseText;
+            if (!string.IsNullOrWhiteSpace(output))
             {
-                var message = string.Format(CultureInfo.CurrentCulture, "Using Template: {0}", template).NonNull();
-                _console?.Log(Resources.ChatOutputHeader.NonNull(), message, LogLevel.Verbose);
+                _console?.Log(Resources.ChatOutputHeader, output, LogLevel.ChatResponse);
             }
 
-            // Update query properties
+            // Log the output to the diagnostic log. Sometimes - for redirect commands / etc. there's no response
+            if (!string.IsNullOrWhiteSpace(template))
+            {
+                var message = string.Format(CultureInfo.CurrentCulture, "Using Template: {0}", template);
+                _console?.Log(Resources.ChatOutputHeader, message, LogLevel.Verbose);
+            }
+
+            // Update query properties and return the result
+            var response = new UserStatementResponse(userInput, output, template, command);
             LastResponse = response;
             LastInput = userInput;
 
@@ -222,17 +224,42 @@ namespace MattEland.Ani.Alfred.Chat
         /// </summary>
         /// <param name="template">The template.</param>
         /// <param name="console">The console.</param>
-        /// <returns>System.String.</returns>
-        private static string GetCommandFromTemplate([CanBeNull] string template, [CanBeNull] IConsole console)
+        /// <returns>The chat command or null if there was no command</returns>
+        private static ChatCommand GetCommandFromTemplate([CanBeNull] string template, [CanBeNull] IConsole console)
         {
             // Do a bunch of trimming and interpreting to find our XML
             var commandXml = GetCommandXmlFromTemplate(template, console);
             if (commandXml == null)
             {
-                return null;
+                return ChatCommand.Empty;
             }
 
             // Load the XML as a document so we can manipulate the elements easier
+            var commandNode = GetCommandNodeXElement(commandXml, console);
+            if (commandNode == null)
+            {
+                return ChatCommand.Empty;
+            }
+
+            var subsystem = commandNode.Attribute("subsystem")?.Value;
+            var command = commandNode.Attribute("command")?.Value;
+            var data = commandNode.Attribute("data")?.Value;
+
+            console?.Log(Resources.ChatOutputHeader, "Received OOB Command: " + command, LogLevel.Info);
+
+            return new ChatCommand(subsystem, command, data);
+
+        }
+
+        /// <summary>
+        /// Gets the command node Xml Element.
+        /// </summary>
+        /// <param name="commandXml">The command XML.</param>
+        /// <param name="console">The console.</param>
+        /// <returns>An XElement representing a command.</returns>
+        private static XElement GetCommandNodeXElement([NotNull] string commandXml, [CanBeNull] IConsole console)
+        {
+
             XDocument xdoc;
             try
             {
@@ -244,9 +271,11 @@ namespace MattEland.Ani.Alfred.Chat
                                             Resources.ErrorParsingCommand,
                                             ex.Message,
                                             commandXml);
-                console?.Log(Resources.ChatOutputHeader.NonNull(),
-                             message.NonNull(),
+
+                console?.Log(Resources.ChatOutputHeader,
+                             message,
                              LogLevel.Error);
+
                 return null;
             }
 
@@ -254,17 +283,22 @@ namespace MattEland.Ani.Alfred.Chat
             var oobElement = xdoc.Root;
             if (oobElement == null)
             {
-                console?.Log(Resources.ChatOutputHeader.NonNull(), "OOB command had no root element", LogLevel.Error);
+                console?.Log(Resources.ChatOutputHeader, "OOB command had no root element", LogLevel.Error);
+
                 return null;
             }
 
             // Return either the XML of the first node or the value of an text value
-            var command = oobElement.FirstNode?.ToString() ?? oobElement.Value;
+            var xElement = oobElement.FirstNode as XElement;
 
-            console?.Log(Resources.ChatOutputHeader.NonNull(), "Received OOB Command: " + command, LogLevel.Info);
+            // Validate our element
+            if (xElement == null || xElement.Name.LocalName?.ToLowerInvariant() != "alfred")
+            {
+                console?.Log(Resources.ChatOutputHeader, "OOB root element was not an alfred XElement", LogLevel.Error);
+                return null;
+            }
 
-            return command;
-
+            return xElement;
         }
 
         /// <summary>
@@ -329,8 +363,8 @@ namespace MattEland.Ani.Alfred.Chat
             // If we don't have an end at this point, we need to bow out as a tag that was started but not finished
             if (end < 0)
             {
-                var message = string.Format(CultureInfo.CurrentCulture, Resources.NoEndTagForOobCommand, template).NonNull();
-                console?.Log(Resources.ChatOutputHeader.NonNull(), message, LogLevel.Error);
+                var message = string.Format(CultureInfo.CurrentCulture, Resources.NoEndTagForOobCommand, template);
+                console?.Log(Resources.ChatOutputHeader, message, LogLevel.Error);
 
                 return null;
             }
@@ -394,7 +428,7 @@ namespace MattEland.Ani.Alfred.Chat
         public void DoInitialGreeting()
         {
             // Send a "hi" into the system
-            HandleUserStatement(Resources.InitialGreetingText.NonNull());
+            HandleUserStatement(Resources.InitialGreetingText);
 
             // Clear out the input so it doesn't look like the user typed it
             LastInput = string.Empty;

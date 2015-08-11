@@ -28,7 +28,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         public UserStatementResponse([CanBeNull] string userInput,
                                      [CanBeNull] string responseText,
                                      string template,
-                                     string command)
+                                     ChatCommand command)
         {
             UserInput = userInput ?? string.Empty;
             ResponseText = responseText ?? string.Empty;
@@ -61,7 +61,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         ///     Gets the system Command to execute.
         /// </summary>
         /// <value>The Command.</value>
-        public string Command { get; }
+        public ChatCommand Command { get; }
 
         /// <summary>
         ///     Determines if this instance is equivalent to the other instance
@@ -71,7 +71,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         public bool Equals(UserStatementResponse other)
         {
             return string.Equals(UserInput, other.UserInput) && string.Equals(ResponseText, other.ResponseText) &&
-                   string.Equals(Template, other.Template) && string.Equals(Command, other.Command);
+                   string.Equals(Template, other.Template) && Command == other.Command;
         }
 
         /// <summary>
@@ -101,8 +101,8 @@ namespace MattEland.Ani.Alfred.Core.Definitions
                 // unknown stack when this was not present
                 var hashCode = (UserInput ?? string.Empty).GetHashCode();
                 hashCode = (hashCode * 397) ^ (ResponseText ?? string.Empty).GetHashCode();
-                hashCode = (hashCode * 397) ^ (Command ?? string.Empty).GetHashCode();
                 hashCode = (hashCode * 397) ^ (Template ?? string.Empty).GetHashCode();
+                hashCode = (hashCode * 397) ^ Command.GetHashCode();
 
                 return hashCode;
             }

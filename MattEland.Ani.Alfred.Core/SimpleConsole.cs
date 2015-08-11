@@ -53,16 +53,16 @@ namespace MattEland.Ani.Alfred.Core
         /// <param name="title">The title.</param>
         /// <param name="message">The message.</param>
         /// <param name="level">The logging level.</param>
-        public void Log([NotNull] string title, [NotNull] string message, LogLevel level)
+        public void Log([CanBeNull] string title, [CanBeNull] string message, LogLevel level)
         {
             if (title == null)
             {
-                throw new ArgumentNullException(nameof(title));
+                title = "Unknown";
             }
 
             if (message == null)
             {
-                throw new ArgumentNullException(nameof(message));
+                return;
             }
 
             var evt = new ConsoleEvent(title, message, level);

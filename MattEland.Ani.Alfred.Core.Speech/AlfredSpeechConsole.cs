@@ -84,7 +84,15 @@ namespace MattEland.Ani.Alfred.Core.Speech
         /// <param name="level">The logging level.</param>
         public void Log(string title, string message, LogLevel level)
         {
-            Debug.Assert(!string.IsNullOrWhiteSpace(message));
+            if (title == null)
+            {
+                title = "Unknown";
+            }
+
+            if (message == null)
+            {
+                return;
+            }
 
             // Always log things to the base logger
             _console.Log(title, message, level);

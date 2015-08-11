@@ -37,7 +37,7 @@ This provides handling for the Goodbye, Shutdown and Status verbs
     <!-- Turn off then have Alfred say goodbye so you get a farewell -->
     <template id="tmp_shutdown">
       <oob>
-        CORE_SHUTDOWN
+        <alfred subsystem="core" command="shutdown" />
       </oob>
     </template>
   </category>
