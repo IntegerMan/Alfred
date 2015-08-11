@@ -44,7 +44,7 @@ namespace MattEland.Ani.Alfred.WPF.Controls
                 return;
             }
 
-            var chatHandler = (IUserStatementHandler)DataContext;
+            var chatHandler = (IChatProvider)DataContext;
 
             // Send it to the page object (which will route it through to the chat subsystem)
             chatHandler.HandleUserStatement(text.Trim());

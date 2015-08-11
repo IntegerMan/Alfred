@@ -16,14 +16,14 @@ namespace MattEland.Ani.Alfred.Chat
     public sealed class ChatPage : AlfredPage
     {
         [NotNull]
-        private readonly IUserStatementHandler _chatHandler;
+        private readonly IChatProvider _chatHandler;
 
         /// <summary>
         /// Gets the chat handler.
         /// </summary>
         /// <value>The chat handler.</value>
         [NotNull]
-        public IUserStatementHandler ChatHandler
+        public IChatProvider ChatHandler
         {
             [DebuggerStepThrough]
             get
@@ -35,7 +35,7 @@ namespace MattEland.Ani.Alfred.Chat
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="chatHandler">The input handler</param>
-        public ChatPage([NotNull] string name, [NotNull] IUserStatementHandler chatHandler) : base(name)
+        public ChatPage([NotNull] string name, [NotNull] IChatProvider chatHandler) : base(name)
         {
             _chatHandler = chatHandler;
         }

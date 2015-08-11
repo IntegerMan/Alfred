@@ -33,7 +33,7 @@ namespace MattEland.Ani.Alfred.Chat
     /// <remarks>
     ///     AIML stands for Artificial Intelligence Markup Language
     /// </remarks>
-    public sealed class AimlStatementHandler : IUserStatementHandler, INotifyPropertyChanged
+    public sealed class AimlStatementHandler : IChatProvider, INotifyPropertyChanged
     {
         [NotNull]
         private readonly Bot _chatBot;

@@ -255,4 +255,7 @@
   <data name="ChatModuleName" xml:space="preserve">
     <value>Chat</value>
   </data>
+  <data name="NoAlfredInstance" xml:space="preserve">
+    <value>This component is not currently attached to an Alfred instance</value>
+  </data>
 </root>

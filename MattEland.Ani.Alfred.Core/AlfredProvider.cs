@@ -43,25 +43,25 @@ namespace MattEland.Ani.Alfred.Core
         private readonly ICollection<IAlfredSubsystem> _subsystems;
 
         [CanBeNull]
-        private IUserStatementHandler _userStatementHandler;
+        private IChatProvider _chatProvider;
 
         /// <summary>
-        /// Gets the user statement handler.
+        /// Gets the chat provider.
         /// </summary>
-        /// <value>The user statement handler.</value>
+        /// <value>The chat provider.</value>
         [CanBeNull]
-        public IUserStatementHandler UserStatementHandler
+        public IChatProvider ChatProvider
         {
             [DebuggerStepThrough]
             get
-            { return _userStatementHandler; }
+            { return _chatProvider; }
             private set
             {
-                if (Equals(value, _userStatementHandler))
+                if (Equals(value, _chatProvider))
                     return;
 
-                _userStatementHandler = value;
-                OnPropertyChanged(nameof(UserStatementHandler));
+                _chatProvider = value;
+                OnPropertyChanged(nameof(ChatProvider));
             }
         }
 
@@ -231,17 +231,17 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        /// Registers the user statement handler as the framework's user statement handler.
+        /// Registers the chat provider as the framework's chat provider.
         /// </summary>
-        /// <param name="userStatementHandler">The user statement handler.</param>
-        public void Register([NotNull] IUserStatementHandler userStatementHandler)
+        /// <param name="chatProvider">The chat provider.</param>
+        public void Register([NotNull] IChatProvider chatProvider)
         {
-            if (userStatementHandler == null)
+            if (chatProvider == null)
             {
-                throw new ArgumentNullException(nameof(userStatementHandler));
+                throw new ArgumentNullException(nameof(chatProvider));
             }
 
-            UserStatementHandler = userStatementHandler;
+            ChatProvider = chatProvider;
         }
 
         /// <summary>

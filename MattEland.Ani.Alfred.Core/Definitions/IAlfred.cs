@@ -74,8 +74,8 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <summary>
         /// Registers the user statement handler as the framework's user statement handler.
         /// </summary>
-        /// <param name="userStatementHandler">The user statement handler.</param>
-        void Register([NotNull] IUserStatementHandler userStatementHandler);
+        /// <param name="chatProvider">The user statement handler.</param>
+        void Register([NotNull] IChatProvider chatProvider);
     }
 
 }

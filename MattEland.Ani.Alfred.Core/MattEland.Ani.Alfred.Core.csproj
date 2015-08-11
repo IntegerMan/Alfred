@@ -57,7 +57,7 @@
     <Compile Include="Definitions\IAlfredSubsystem.cs" />
     <Compile Include="Console\IConsoleEvent.cs" />
     <Compile Include="Definitions\IStatusController.cs" />
-    <Compile Include="Definitions\IUserStatementHandler.cs" />
+    <Compile Include="Definitions\IChatProvider.cs" />
     <Compile Include="Definitions\UserStatementResponse.cs" />
     <Compile Include="Modules\AlertVisibilityCalculator.cs" />
     <Compile Include="Modules\AlfredPagesListModule.cs" />

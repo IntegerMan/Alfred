@@ -336,22 +336,22 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        /// Registers the user statement handler as the framework's user statement handler.
+        /// Registers the chat provider as the framework's chat provider.
         /// </summary>
-        /// <param name="userStatementHandler">The user statement handler.</param>
-        protected void Register([NotNull] IUserStatementHandler userStatementHandler)
+        /// <param name="chatProvider">The chat provider.</param>
+        protected void Register([NotNull] IChatProvider chatProvider)
         {
-            if (userStatementHandler == null)
+            if (chatProvider == null)
             {
-                throw new ArgumentNullException(nameof(userStatementHandler));
+                throw new ArgumentNullException(nameof(chatProvider));
             }
 
             if (_alfred == null)
             {
-                throw new InvalidOperationException("This component is not currently attached to an Alfred instance");
+                throw new InvalidOperationException(Resources.NoAlfredInstance);
             }
 
-            _alfred.Register(userStatementHandler);
+            _alfred.Register(chatProvider);
         }
     }
 }

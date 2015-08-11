@@ -5,7 +5,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
     /// <summary>
     /// An interface defining a class that can attempt handle user input in text form
     /// </summary>
-    public interface IUserStatementHandler
+    public interface IChatProvider
     {
         /// <summary>
         /// Handles a user statement.

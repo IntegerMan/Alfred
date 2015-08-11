@@ -2,11 +2,10 @@
 // AlfredChatSubsystem.cs
 // 
 // Created on:      08/09/2015 at 11:09 PM
-// Last Modified:   08/10/2015 at 9:33 PM
+// Last Modified:   08/11/2015 at 3:57 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -51,7 +50,6 @@ namespace MattEland.Ani.Alfred.Chat
         /// <summary>
         ///     Gets or sets whether the page should be registered. If not, the chat functionality will just be supplied to the
         ///     system via the chat handler.
-        /// 
         ///     Defaults to false.
         /// </summary>
         /// <value>Whether or not the page should be registered.</value>
@@ -105,7 +103,7 @@ namespace MattEland.Ani.Alfred.Chat
         public override void Shutdown()
         {
             // Have Alfred say goodbye as you're shutting down
-            _chatHandler?.HandleUserStatement("Goodbye");
+            _chatHandler.HandleUserStatement("Goodbye");
 
             base.Shutdown();
         }

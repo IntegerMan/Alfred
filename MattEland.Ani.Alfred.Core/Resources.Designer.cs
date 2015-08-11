@@ -349,6 +349,15 @@ namespace MattEland.Ani.Alfred.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This component is not currently attached to an Alfred instance.
+        /// </summary>
+        internal static string NoAlfredInstance {
+            get {
+                return ResourceManager.GetString("NoAlfredInstance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Alfred Provider has not been set.
         /// </summary>
         internal static string NoAlfredText {

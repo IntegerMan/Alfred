@@ -51,7 +51,7 @@
         <Border Margin="132,4,8,0" 
                 DockPanel.Dock="Top"
                 Visibility="{Binding Alfred.IsOnline, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <controls:ChatPane DataContext="{Binding Path=Alfred.UserStatementHandler}" />
+            <controls:ChatPane DataContext="{Binding Path=Alfred.ChatProvider}" />
         </Border>
 
         <!-- Tabbed Content Regions -->
