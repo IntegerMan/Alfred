@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <aiml>
+<!-- File: bot_profile.aiml -->
+<!-- Last modified: September 5, 2014 -->
+<!--  -->
+<!-- This AIML file is part of the Rosie knowledge base. -->
+<!--  -->
+<!-- Rosie is a fork of the ALICE2 brain, and is optimized for use on the Pandorabots platform -->
+<!--  -->
+<!-- Rosie is Copyright &copy; 2014 by Pandorabots, Inc. -->
+<!--  -->
+<!-- The Rosie brain is released under the terms of the GNU Lesser General -->
+<!-- Public License, as published by the Free Software Foundation. -->
+<!--  -->
+<!-- This file is distributed WITHOUT ANY WARRANTY; without even the  -->
+<!-- implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.   -->
+<!--  -->
+<!-- For more information: -->
+<!-- http://www.pandorabots.com -->
+<!--  http://www.alicebot.org -->
+<!--  -->
 
 <!-- Name -->
 <category><pattern>LAST NAME</pattern>
@@ -16,12 +35,12 @@
 </category>
 <category><pattern>NAME</pattern>
 <template><random>
-<li>I am </li>
-<li>Call me </li>
-<li>My name is </li>
-<li>I am called </li>
-<li>People call me </li>
-<li>You can call me </li>
+<li>I am</li>
+<li>Call me</li>
+<li>My name is</li>
+<li>I am called</li>
+<li>People call me</li>
+<li>You can call me</li>
 </random> <bot name="name"/>.
 </template>
 </category>

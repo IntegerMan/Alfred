@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+Copyright (c) 2015 Matt Eland
+
+This provides generic greeting capabilities both in startup greeting and in response to "HELLO" keywords 
+-->
+
+<aiml>
+
+  <!-- Handle Greeting Functions -->
+  <category>
+    <pattern>HELLO</pattern>
+    <template>
+      <random>
+        <li>Hello, my name is Alfred.</li>
+        <li>Hi there. I'm Alfred.</li>
+        <li>My name is Alfred and it's good to see you.</li>
+      </random>
+    </template>
+  </category>
+
+  <!-- Common Substitutes for Hello -->
+  <category>
+    <pattern>HI</pattern>
+    <template>
+      <srai>HELLO</srai>
+    </template>
+  </category>
+  <category>
+    <pattern>HEY</pattern>
+    <template>
+      <srai>HELLO</srai>
+    </template>
+  </category>
+  <category>
+    <pattern>GREETINGS</pattern>
+    <template>
+      <srai>HELLO</srai>
+    </template>
+  </category>
+  <category>
+    <pattern>HI *</pattern>
+    <template>
+      <srai>HELLO</srai>
+      <sr />
+    </template>
+  </category>
+  <category>
+    <pattern>HEY *</pattern>
+    <template>
+      <srai>HELLO</srai>
+      <sr />
+    </template>
+  </category>
+
+  <!-- Name -->
+  <category>
+    <pattern>LAST NAME</pattern>
+    <template>
+      My last name is <bot name="lastname" />.
+    </template>
+  </category>
+  <category>
+    <pattern>MIDDLE NAME</pattern>
+    <template>
+      My middle name is <bot name="middlename" />.
+    </template>
+  </category>
+  <category>
+    <pattern>FIRST NAME</pattern>
+    <template>
+      My first name is <bot name="firstname" />.
+    </template>
+  </category>
+  <category>
+    <pattern>FULL NAME</pattern>
+    <template>
+      My full name is <bot name="fullname" />.
+    </template>
+  </category>
+  <category>
+    <pattern>NAME</pattern>
+    <template>
+      <random>
+        <li>I am </li>
+        <li>You may call me </li>
+        <li>My name is </li>
+        <li>I am called </li>
+        <li>I'm </li>
+        <li>Please call me </li>
+      </random>
+      <bot name="name" />.
+    </template>
+  </category>
+
+  <!-- Handle the event that Alfred Starts Up as if the user said "Hello" -->
+  <category>
+    <pattern>EVENT_ALFRED_START</pattern>
+    <template>
+      <srai>HELLO</srai>
+    </template>
+  </category>
+
+  <!-- Process "Hello" and other forms as compound commands -->
+  <category>
+    <pattern>HELLO *</pattern>
+    <template>
+      <srai>HELLO</srai>
+      <sr />
+    </template>
+  </category>
+</aiml>

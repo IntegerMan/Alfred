@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+Copyright (c) 2015 Matt Eland
+
+This provides fallback functions to address any input not handled by other modules
+-->
+
+<aiml>
+
+  <!-- Generic Fallback -->
+  <category>
+    <pattern>*</pattern>
+    <template>
+      <random>
+        <li>I'm sorry but I'm not yet able to understand that command. For a list of commands, type "Help".</li>
+      </random>
+    </template>
+  </category>
+
+</aiml>

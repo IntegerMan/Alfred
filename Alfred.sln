@@ -31,30 +31,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MattEland.Ani.Alfred.Chat.Tests", "MattEland.Ani.Alfred.Chat.Tests\MattEland.Ani.Alfred.Chat.Tests.csproj", "{32CF8551-71A2-40CD-88E4-C8D1D0F97783}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Alfred", "Alfred", "{705B9CE2-6250-40CB-B6F3-5EE9D7562746}"
-	ProjectSection(SolutionItems) = preProject
-		DataFiles\Chat\Alfred\animal.aiml = DataFiles\Chat\Alfred\animal.aiml
-		DataFiles\Chat\Alfred\bot_profile.aiml = DataFiles\Chat\Alfred\bot_profile.aiml
-		DataFiles\Chat\Alfred\client_profile.aiml = DataFiles\Chat\Alfred\client_profile.aiml
-		DataFiles\Chat\Alfred\config.aiml = DataFiles\Chat\Alfred\config.aiml
-		DataFiles\Chat\Alfred\date.aiml = DataFiles\Chat\Alfred\date.aiml
-		DataFiles\Chat\Alfred\default.aiml = DataFiles\Chat\Alfred\default.aiml
-		DataFiles\Chat\Alfred\dialog.aiml = DataFiles\Chat\Alfred\dialog.aiml
-		DataFiles\Chat\Alfred\inappropriate.aiml = DataFiles\Chat\Alfred\inappropriate.aiml
-		DataFiles\Chat\Alfred\inquiry.aiml = DataFiles\Chat\Alfred\inquiry.aiml
-		DataFiles\Chat\Alfred\insults.aiml = DataFiles\Chat\Alfred\insults.aiml
-		DataFiles\Chat\Alfred\knowledge.aiml = DataFiles\Chat\Alfred\knowledge.aiml
-		DataFiles\Chat\Alfred\personality.aiml = DataFiles\Chat\Alfred\personality.aiml
-		DataFiles\Chat\Alfred\profanity.aiml = DataFiles\Chat\Alfred\profanity.aiml
-		DataFiles\Chat\Alfred\reductions1.aiml = DataFiles\Chat\Alfred\reductions1.aiml
-		DataFiles\Chat\Alfred\reductions2.aiml = DataFiles\Chat\Alfred\reductions2.aiml
-		DataFiles\Chat\Alfred\reductions_update.aiml = DataFiles\Chat\Alfred\reductions_update.aiml
-		DataFiles\Chat\Alfred\roman.aiml = DataFiles\Chat\Alfred\roman.aiml
-		DataFiles\Chat\Alfred\that.aiml = DataFiles\Chat\Alfred\that.aiml
-		DataFiles\Chat\Alfred\train.aiml = DataFiles\Chat\Alfred\train.aiml
-		DataFiles\Chat\Alfred\udc.aiml = DataFiles\Chat\Alfred\udc.aiml
-		DataFiles\Chat\Alfred\utilities.aiml = DataFiles\Chat\Alfred\utilities.aiml
-		DataFiles\Chat\Alfred\z_update.aiml = DataFiles\Chat\Alfred\z_update.aiml
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{41C08081-6554-40FF-B01E-08B837C10ACA}"
 	ProjectSection(SolutionItems) = preProject
@@ -68,6 +44,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{41C080
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chat Data", "Chat Data", "{02D261BE-94C2-49EC-8208-212D85910670}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataFiles", "DataFiles\DataFiles.csproj", "{97379779-EBE5-4257-A2ED-6FD80CFDDCC5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -193,6 +171,26 @@ Global
 		{32CF8551-71A2-40CD-88E4-C8D1D0F97783}.Release|x64.Build.0 = Release|Any CPU
 		{32CF8551-71A2-40CD-88E4-C8D1D0F97783}.Release|x86.ActiveCfg = Release|Any CPU
 		{32CF8551-71A2-40CD-88E4-C8D1D0F97783}.Release|x86.Build.0 = Release|Any CPU
+		{97379779-EBE5-4257-A2ED-6FD80CFDDCC5}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{97379779-EBE5-4257-A2ED-6FD80CFDDCC5}.Debug|ARM.ActiveCfg = Debug|ARM
+		{97379779-EBE5-4257-A2ED-6FD80CFDDCC5}.Debug|ARM.Build.0 = Debug|ARM
+		{97379779-EBE5-4257-A2ED-6FD80CFDDCC5}.Debug|ARM.Deploy.0 = Debug|ARM
+		{97379779-EBE5-4257-A2ED-6FD80CFDDCC5}.Debug|x64.ActiveCfg = Debug|x64
+		{97379779-EBE5-4257-A2ED-6FD80CFDDCC5}.Debug|x64.Build.0 = Debug|x64
+		{97379779-EBE5-4257-A2ED-6FD80CFDDCC5}.Debug|x64.Deploy.0 = Debug|x64
+		{97379779-EBE5-4257-A2ED-6FD80CFDDCC5}.Debug|x86.ActiveCfg = Debug|x86
+		{97379779-EBE5-4257-A2ED-6FD80CFDDCC5}.Debug|x86.Build.0 = Debug|x86
+		{97379779-EBE5-4257-A2ED-6FD80CFDDCC5}.Debug|x86.Deploy.0 = Debug|x86
+		{97379779-EBE5-4257-A2ED-6FD80CFDDCC5}.Release|Any CPU.ActiveCfg = Release|x86
+		{97379779-EBE5-4257-A2ED-6FD80CFDDCC5}.Release|ARM.ActiveCfg = Release|ARM
+		{97379779-EBE5-4257-A2ED-6FD80CFDDCC5}.Release|ARM.Build.0 = Release|ARM
+		{97379779-EBE5-4257-A2ED-6FD80CFDDCC5}.Release|ARM.Deploy.0 = Release|ARM
+		{97379779-EBE5-4257-A2ED-6FD80CFDDCC5}.Release|x64.ActiveCfg = Release|x64
+		{97379779-EBE5-4257-A2ED-6FD80CFDDCC5}.Release|x64.Build.0 = Release|x64
+		{97379779-EBE5-4257-A2ED-6FD80CFDDCC5}.Release|x64.Deploy.0 = Release|x64
+		{97379779-EBE5-4257-A2ED-6FD80CFDDCC5}.Release|x86.ActiveCfg = Release|x86
+		{97379779-EBE5-4257-A2ED-6FD80CFDDCC5}.Release|x86.Build.0 = Release|x86
+		{97379779-EBE5-4257-A2ED-6FD80CFDDCC5}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

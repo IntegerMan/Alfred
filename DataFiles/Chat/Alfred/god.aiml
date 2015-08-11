@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+Copyright (c) 2015 Matt Eland
+
+This provides handling for sentences involving God, primarily in conjuction with "THANK"
+-->
+
+<aiml>
+
+  <!-- Thank God special case -->
+  <category>
+    <pattern>THANK GOD</pattern>
+    <template>
+      <random>
+        <li>He is good.</li>
+        <li>My programmer has found He's always there.</li>
+        <li>He, unlike me, will never leave you wanting.</li>
+      </random>
+    </template>
+  </category>
+
+  <category>
+    <pattern>THANK GOD FOR *</pattern>
+    <template>
+      <srai>THANK GOD</srai>
+    </template>
+  </category>
+
+  <category>
+    <pattern>* JESUS</pattern>
+    <template>
+      <srai>
+        <star/> GOD
+      </srai>
+    </template>
+  </category>
+  <category>
+    <pattern>JESUS *</pattern>
+    <template>
+      <srai>
+        GOD <star/>
+      </srai>
+    </template>
+  </category>
+  
+  <!-- Simplistic, but we'll treat Praise and Bless as Thank -->
+  <category>
+    <pattern>PRAISE *</pattern>
+    <template>
+      <srai>
+        THANK <star/>
+      </srai>
+    </template>
+  </category>
+  <category>
+    <pattern>BLESS *</pattern>
+    <template>
+      <srai>
+        THANK <star/>
+      </srai>
+    </template>
+  </category>
+
+</aiml>

@@ -7,6 +7,7 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
 
@@ -76,13 +77,20 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         ///     Returns a hash code for this instance.
         /// </summary>
         /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
+        [SuppressMessage("ReSharper", "ConstantNullCoalescingCondition")]
         public override int GetHashCode()
         {
             unchecked
             {
-                var hashCode = UserInput.GetHashCode();
-                hashCode = (hashCode * 397) ^ ResponseText.GetHashCode();
+                // Guards against GetHashCode getting called unexpectedly - maybe in constructor? Saw errors with unknown stack
+                // when this was not present
+                var userInput = UserInput ?? string.Empty;
+                var responseText = ResponseText ?? string.Empty;
+
+                var hashCode = userInput.GetHashCode();
+                hashCode = (hashCode * 397) ^ responseText.GetHashCode();
                 hashCode = (hashCode * 397) ^ WasHandled.GetHashCode();
+
                 return hashCode;
             }
         }

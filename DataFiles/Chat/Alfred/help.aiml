@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+Copyright (c) 2015 Matt Eland
+
+This provides functionality for the "HELP" command
+-->
+
+<aiml>
+
+  <!-- Generic Fallback -->
+  <category>
+    <pattern>HELP</pattern>
+    <template>
+      For help on commands, type "Help Commands" for a list of questions you can ask me type "Help Questions". For a list of other things I respond to, type "Help Other"
+    </template>
+  </category>
+  
+  <category>
+    <pattern>HELP COMMANDS</pattern>
+    <template>
+      Presently I support the following commands:
+         <li>Help</li>
+    </template>
+  </category>
+
+  <category>
+    <pattern>COMMANDS</pattern>
+    <template>
+      <srai>HELP COMMANDS</srai>
+    </template>
+  </category>  
+  
+  <category>
+    <pattern>HELP QUESTIONS</pattern>
+    <template>
+      You can ask me about the following topics:
+         <li>Name</li>
+    </template>
+  </category>
+
+  <category>
+    <pattern>COMMANDS</pattern>
+    <template>
+      <srai>HELP QUESTIONS</srai>
+    </template>
+  </category>
+
+  <category>
+    <pattern>HELP OTHER</pattern>
+    <template>
+      I also respond to the following keywords:
+      <li>Hello</li>
+      <li>Name</li>
+      <li>Thanks</li>
+    </template>
+  </category>
+
+  <category>
+    <pattern>HELP MISC</pattern>
+    <template>
+      <srai>HELP OTHER</srai>
+    </template>
+  </category>
+
+
+</aiml>

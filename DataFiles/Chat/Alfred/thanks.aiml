@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+Copyright (c) 2015 Matt Eland
+
+This provides generic politeness and manners related to things such as "THANKS"
+-->
+
+<aiml>
+
+  <!-- Basic Thanks Handling -->
+  <category>
+    <pattern>THANKS</pattern>
+    <template>
+      <random>
+        <li>Of course.</li>
+        <li>That's what I'm here for.</li>
+        <li>I'm glad it helped.</li>
+        <li>It was no problem at all.</li>
+      </random>
+    </template>
+  </category>
+
+  <!-- Common Substitutes for THANKS -->
+  <category>
+    <pattern>THANK YOU</pattern>
+    <template>
+      <srai>THANKS</srai>
+    </template>
+  </category>
+  
+  <!-- Handle longer sentences -->
+  <category>
+    <pattern>THANK YOU FOR *</pattern>
+    <template>
+      <srai>THANKS</srai>
+    </template>
+  </category>
+  <category>
+    <pattern>THANKS FOR *</pattern>
+    <template>
+      <srai>THANKS</srai>
+    </template>
+  </category>
+
+</aiml>
