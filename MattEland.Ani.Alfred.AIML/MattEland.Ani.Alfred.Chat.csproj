@@ -57,6 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AimlCommandParser.cs" />
     <Compile Include="AimlStatementHandler.cs" />
     <Compile Include="AlfredChatSubsystem.cs" />
     <Compile Include="ChatPage.cs" />
