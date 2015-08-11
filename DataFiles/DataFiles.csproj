@@ -139,6 +139,7 @@
     <EmbeddedResource Include="Chat\Alfred\help.aiml" />
     <EmbeddedResource Include="Chat\Alfred\thanks.aiml" />
     <None Include="Chat\Alfred\god.aiml" />
+    <None Include="Chat\Alfred\ui_navigation.aiml" />
     <None Include="Chat\Rosie\animal.aiml" />
     <None Include="Chat\Rosie\bot_profile.aiml" />
     <None Include="Chat\Rosie\client_profile.aiml" />
