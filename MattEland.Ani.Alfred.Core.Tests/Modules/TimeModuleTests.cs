@@ -123,7 +123,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
             _module.Update(oneThirtyAm);
 
             Assert.IsFalse(
-                           string.IsNullOrWhiteSpace(_module.AlarmAlertWidget.Text),
+                           string.IsNullOrWhiteSpace(_module.AlertWidget.Text),
                            "Alert text is not set when alert is visible.");
         }
 
@@ -137,7 +137,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
             _module.Update(oneThirtyPm);
 
             Assert.IsFalse(
-                           _module.AlarmAlertWidget.IsVisible,
+                           _module.AlertWidget.IsVisible,
                            "It's the afternoon but the module is alerting that we're near bedtime.");
         }
 
@@ -151,15 +151,15 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
             _module.Update(nineThirtyAm);
 
             Assert.IsFalse(
-                           _module.AlarmAlertWidget.IsVisible,
+                           _module.AlertWidget.IsVisible,
                            "It's morning but the module is alerting that we're near bedtime.");
         }
 
         [Test]
         public void TimeModuleCautionWidgetIsHiddenLateAtNightForNoonBedtimes()
         {
-            _module.AlarmHour = 12;
-            _module.AlarmMinute = 0;
+            _module.AlertHour = 12;
+            _module.AlertMinute = 0;
             _module.AlertDurationInHours = 2;
 
             _alfred.Initialize();
@@ -168,7 +168,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
             _module.Update(evening);
 
             Assert.IsFalse(
-                           _module.AlarmAlertWidget.IsVisible,
+                           _module.AlertWidget.IsVisible,
                            "It's late in the evening with a noon bedtime but the alert is still showing.");
         }
 
@@ -182,7 +182,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
             _module.Update(noon);
 
             Assert.IsFalse(
-                           _module.AlarmAlertWidget.IsVisible,
+                           _module.AlertWidget.IsVisible,
                            "It's noon but the module is alerting that we're near bedtime.");
         }
 
@@ -197,7 +197,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
             var oneThirtyAm = new DateTime(1980, 9, 10, 1, 30, 0);
             _module.Update(oneThirtyAm);
 
-            Assert.IsFalse(_module.AlarmAlertWidget.IsVisible, "Alerts are disabled but the alert is still visible.");
+            Assert.IsFalse(_module.AlertWidget.IsVisible, "Alerts are disabled but the alert is still visible.");
         }
 
         [Test]
@@ -210,7 +210,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
             _module.Update(midnight);
 
             Assert.IsTrue(
-                          _module.AlarmAlertWidget.IsVisible,
+                          _module.AlertWidget.IsVisible,
                           "It's midnight but the module isn't alerting that we need to be in bed.");
         }
 
@@ -224,7 +224,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
             _module.Update(oneThirtyAm);
 
             Assert.IsTrue(
-                          _module.AlarmAlertWidget.IsVisible,
+                          _module.AlertWidget.IsVisible,
                           "It's early morning but the module isn't alerting that we need to be in bed.");
         }
 
@@ -238,37 +238,37 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
             _module.Update(elevenThirtyPm);
 
             Assert.IsTrue(
-                          _module.AlarmAlertWidget.IsVisible,
+                          _module.AlertWidget.IsVisible,
                           "It's nearly midnight but the module isn't alerting that we need to be in bed.");
         }
 
         [Test]
         public void TimeModuleCautionWidgetIsVisibleAfterAlarm()
         {
-            _module.AlarmMinute = 30;
+            _module.AlertMinute = 30;
             _alfred.Initialize();
 
             // This is just a minute after the alarm should start
-            var alarmTime = new DateTime(1980, 9, 10, _module.AlarmHour, _module.AlarmMinute + 1, 0);
+            var alarmTime = new DateTime(1980, 9, 10, _module.AlertHour, _module.AlertMinute + 1, 0);
             _module.Update(alarmTime);
 
-            Assert.IsTrue(_module.AlarmAlertWidget.IsVisible,
+            Assert.IsTrue(_module.AlertWidget.IsVisible,
                           "It's right after the alarm but the alarm is off.");
         }
 
         [Test]
         public void TimeModuleCautionWidgetIsVisibleBeforeEndOfAlarm()
         {
-            _module.AlarmHour = 12;
+            _module.AlertHour = 12;
             _module.AlertDurationInHours = 1;
-            _module.AlarmMinute = 30;
+            _module.AlertMinute = 30;
             _alfred.Initialize();
 
             // Feed in a time right before the alarm should end
             var endAlarmHour = new DateTime(1980, 9, 10, 13, 0, 0);
             _module.Update(endAlarmHour);
 
-            Assert.IsTrue(_module.AlarmAlertWidget.IsVisible,
+            Assert.IsTrue(_module.AlertWidget.IsVisible,
                           "It's right before the end of the alarm but the alarm is off.");
         }
 
@@ -314,9 +314,9 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
         {
             _alfred.Initialize();
 
-            Assert.IsNotNull(_module.AlarmAlertWidget, "The Bedtime alert widget was not present");
+            Assert.IsNotNull(_module.AlertWidget, "The Bedtime alert widget was not present");
             Assert.Contains(
-                            _module.AlarmAlertWidget,
+                            _module.AlertWidget,
                             _module.Widgets as ICollection,
                             "The module did not contain a registered bedtime alert widget.");
         }

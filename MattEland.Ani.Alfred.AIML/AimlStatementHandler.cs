@@ -2,13 +2,14 @@
 // AimlStatementHandler.cs
 // 
 // Created on:      08/10/2015 at 12:51 AM
-// Last Modified:   08/10/2015 at 9:42 PM
+// Last Modified:   08/10/2015 at 10:37 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -219,6 +220,8 @@ namespace MattEland.Ani.Alfred.Chat
         ///     Called when a property changes.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed",
+            Justification = "Using CallerMemberName to auto-default this value from any property caller")]
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

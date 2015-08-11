@@ -24,10 +24,6 @@ namespace MattEland.Ani.Alfred.Core
     {
         [NotNull]
         [ItemNotNull]
-        private readonly ICollection<IAlfredModule> _modules;
-
-        [NotNull]
-        [ItemNotNull]
         private readonly ICollection<IAlfredPage> _pages;
 
         /// <summary>
@@ -42,7 +38,6 @@ namespace MattEland.Ani.Alfred.Core
                 throw new ArgumentNullException(nameof(provider));
             }
 
-            _modules = provider.CreateCollection<IAlfredModule>();
             _pages = provider.CreateCollection<IAlfredPage>();
         }
 
@@ -64,28 +59,11 @@ namespace MattEland.Ani.Alfred.Core
         {
             get
             {
-                // Pages are higher up in the hierarchy than modules so they come first
                 foreach (var page in _pages)
                 {
                     yield return page;
                 }
-
-                // Return all modules
-                foreach (var module in _modules)
-                {
-                    yield return module;
-                }
             }
-        }
-
-        /// <summary>
-        ///     Gets the modules associated with this subsystem
-        /// </summary>
-        /// <value>The modules.</value>
-        [ItemNotNull]
-        public IEnumerable<IAlfredModule> Modules
-        {
-            get { return _modules; }
         }
 
         /// <summary>
@@ -108,17 +86,6 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     Registers a module.
-        /// </summary>
-        /// <param name="module">The module.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0")]
-        protected void Register([NotNull] IAlfredModule module)
-        {
-            _modules.AddSafe(module);
-            module.OnRegistered(AlfredInstance);
-        }
-
-        /// <summary>
         ///     Registers a page.
         /// </summary>
         /// <param name="page">The page.</param>
@@ -137,7 +104,6 @@ namespace MattEland.Ani.Alfred.Core
             base.ClearChildCollections();
 
             _pages.Clear();
-            _modules.Clear();
         }
 
     }

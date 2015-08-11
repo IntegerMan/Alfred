@@ -2,7 +2,7 @@
 // AlfredTimeModule.cs
 // 
 // Created on:      07/26/2015 at 1:46 PM
-// Last Modified:   08/07/2015 at 7:34 PM
+// Last Modified:   08/10/2015 at 10:52 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -46,13 +46,13 @@ namespace MattEland.Ani.Alfred.Core.Modules
         {
             CurrentDateWidget = new TextWidget();
             CurrentTimeWidget = new TextWidget();
-            AlarmAlertWidget = new WarningWidget
+            AlertWidget = new WarningWidget
             {
                 IsVisible = false,
                 Text = Resources.AlfredTimeModule_AlfredTimeModule_BedtimeNagMessage
             };
-            AlarmHour = 21;
-            AlarmMinute = 30;
+            AlertHour = 21;
+            AlertMinute = 30;
             AlertDurationInHours = 4;
             IsAlertEnabled = true;
 
@@ -89,19 +89,19 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         /// <value>The bedtime alert widget.</value>
         [NotNull]
-        public WarningWidget AlarmAlertWidget { get; }
+        public WarningWidget AlertWidget { get; }
 
         /// <summary>
         ///     Gets or sets the bedtime hour.  Defaults to 9 PM
         /// </summary>
         /// <value>The bedtime hour.</value>
-        public int AlarmHour { get; set; }
+        public int AlertHour { get; set; }
 
         /// <summary>
         ///     Gets or sets the bedtime minute. Defaults to 30 minutes past the hour.
         /// </summary>
         /// <value>The bedtime minute.</value>
-        public int AlarmMinute { get; set; }
+        public int AlertMinute { get; set; }
 
         /// <summary>
         ///     Gets or sets the alert duration in hours.
@@ -116,7 +116,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         public bool IsAlertEnabled { get; set; }
 
         /// <summary>
-        /// Gets or sets the last time recorded
+        ///     Gets or sets the last time recorded
         /// </summary>
         /// <value>The current time.</value>
         private DateTime CurrentTime
@@ -133,7 +133,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         {
             Register(CurrentDateWidget);
             Register(CurrentTimeWidget);
-            Register(AlarmAlertWidget);
+            Register(AlertWidget);
 
             // Ensure it has some initial values so it doesn't "blink" or lag on start
             ClearLastTimeRun();
@@ -195,60 +195,20 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </param>
         private void UpdateBedtimeAlertVisibility(DateTime time)
         {
-            // Finally stick the value in the widget
-            AlarmAlertWidget.IsVisible = CalculateAlertVisibility(time);
-        }
-
-        /// <summary>
-        /// Calculates the alert visibility based on the inputed time.
-        /// </summary>
-        /// <param name="time">The time.</param>
-        /// <returns><c>true</c> if the alert is visible, <c>false</c> otherwise.</returns>
-        private bool CalculateAlertVisibility(DateTime time)
-        {
-            // Only do alert visibility calculations if the thing is even enabled.
             if (!IsAlertEnabled)
             {
-                return false;
+                // Easy call; if it's disabled, don't show it
+                AlertWidget.IsVisible = false;
             }
-
-            var hour = time.Hour;
-            var minute = time.Minute;
-            var bedHour = AlarmHour;
-            var bedMinute = AlarmMinute;
-
-            // Figure out when the alarm display should end. Accept values >= 24 for now.
-            // We'll adjust this in a few blocks when checking for early morning circumstances.
-            var alertDurationInHours = AlertDurationInHours;
-            var bedtimeAlertEndHour = bedHour + alertDurationInHours;
-
-            if (hour == bedHour)
+            else
             {
-                return minute >= bedMinute;
+                // Farm off the more complicated math to a dedicated class
+                AlertWidget.IsVisible = AlertVisibilityCalculator.CalculateAlertVisibility(time.Hour,
+                                                                                           time.Minute,
+                                                                                           AlertHour,
+                                                                                           AlertMinute,
+                                                                                           AlertDurationInHours);
             }
-
-            if (hour > bedHour)
-            {
-                // Check for when we're on the hour the alert will expire
-                if (hour == bedtimeAlertEndHour && minute < bedMinute)
-                {
-                    return true;
-                }
-
-                return hour < bedtimeAlertEndHour;
-
-            }
-
-            // Next we'll check early morning carry over for late alerts so 
-            // make sure the end hour is representable on a 24 hour clock.
-            if (bedtimeAlertEndHour >= 24)
-            {
-                bedtimeAlertEndHour -= 24;
-            }
-
-            // Support scenarios of a 9 PM bedtime but it's 12:30 AM.
-            return hour <= bedtimeAlertEndHour;
-
         }
 
         /// <summary>

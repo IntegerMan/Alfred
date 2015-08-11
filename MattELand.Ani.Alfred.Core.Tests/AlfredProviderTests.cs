@@ -2,7 +2,7 @@
 // AlfredProviderTests.cs
 // 
 // Created on:      07/25/2015 at 11:43 PM
-// Last Modified:   08/07/2015 at 11:12 PM
+// Last Modified:   08/10/2015 at 10:34 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -58,22 +58,10 @@ namespace MattEland.Ani.Alfred.Core.Tests
         {
             _alfred.Register(new AlfredControlSubsystem(_alfred.PlatformProvider));
 
-            var numModules = 0;
-
-            foreach (var subsystem in _alfred.Subsystems)
-            {
-                numModules += subsystem.Modules.Count();
-
-                foreach (var page in subsystem.Pages)
-                {
-                    var modulePage = page as AlfredModuleListPage;
-
-                    if (modulePage != null)
-                    {
-                        numModules += modulePage.Modules.Count();
-                    }
-                }
-            }
+            var numModules =
+                _alfred.Subsystems.SelectMany(subsystem => subsystem.Pages)
+                       .OfType<AlfredModuleListPage>()
+                       .Sum(modulePage => modulePage.Modules.Count());
 
             Assert.Greater(numModules,
                            0,
@@ -191,7 +179,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
+        [ExpectedException(typeof (InvalidOperationException))]
         public void ModulesCannotBeAddedWhileOnline()
         {
             _alfred.Initialize();
@@ -199,7 +187,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
+        [ExpectedException(typeof (InvalidOperationException))]
         public void ModulesCannotUpdateWhileOffline()
         {
             _alfred.Register(new AlfredControlSubsystem(_alfred.PlatformProvider));
@@ -208,7 +196,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
+        [ExpectedException(typeof (InvalidOperationException))]
         public void RegisteringAWidgetMultipleTimesThrowsAnException()
         {
             var testModule = new AlfredTestModule();
@@ -225,7 +213,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [ExpectedException(typeof (ArgumentNullException))]
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public void RegisteringNullSubsystemGeneratesNullRef()
         {
@@ -325,7 +313,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
+        [ExpectedException(typeof (InvalidOperationException))]
         public void UpdateWithNoModulesWhileOfflineStillGeneratesError()
         {
             _alfred.Update();

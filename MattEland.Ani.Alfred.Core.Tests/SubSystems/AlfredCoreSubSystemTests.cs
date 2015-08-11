@@ -111,17 +111,6 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
         }
 
         [Test]
-        public void SubsystemModulesPropertyYieldsExpectedResults()
-        {
-            Assert.AreEqual(0, _subsystem.Modules.Count(), "Subsystem should not have any loose modules. Modules should be attached to pages.");
-
-            /* I may want to come back to this approach...
-
-            AssertExpectedModules(_subsystem.Modules);
-            */
-        }
-
-        [Test]
         public void ControlPageContainsCorrectModules()
         {
             _alfred.Register(_subsystem);

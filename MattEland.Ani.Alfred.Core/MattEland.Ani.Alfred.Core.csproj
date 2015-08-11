@@ -59,6 +59,7 @@
     <Compile Include="Definitions\IStatusController.cs" />
     <Compile Include="Definitions\IUserStatementHandler.cs" />
     <Compile Include="Definitions\UserStatementResponse.cs" />
+    <Compile Include="Modules\AlertVisibilityCalculator.cs" />
     <Compile Include="Modules\AlfredPagesListModule.cs" />
     <Compile Include="Definitions\IAlfredComponent.cs" />
     <Compile Include="Pages\AlfredEventLogPage.cs" />

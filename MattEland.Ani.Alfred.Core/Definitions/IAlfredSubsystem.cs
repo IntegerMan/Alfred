@@ -26,15 +26,6 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         IEnumerable<IAlfredPage> Pages { get; }
 
         /// <summary>
-        ///     Gets the modules associated with this subsystem.
-        ///     This does not include modules associated with pages.
-        /// </summary>
-        /// <value>The modules.</value>
-        [NotNull]
-        [ItemNotNull]
-        IEnumerable<IAlfredModule> Modules { get; }
-
-        /// <summary>
         /// Gets the root-level pages provided by this subsystem.
         /// </summary>
         /// <value>The root-level pages.</value>
