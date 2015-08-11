@@ -2,7 +2,7 @@
 // AimlStatementHandler.cs
 // 
 // Created on:      08/10/2015 at 12:51 AM
-// Last Modified:   08/10/2015 at 10:37 PM
+// Last Modified:   08/10/2015 at 11:06 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -30,7 +30,7 @@ namespace MattEland.Ani.Alfred.Chat
     /// <remarks>
     ///     AIML stands for Artificial Intelligence Markup Language
     /// </remarks>
-    public class AimlStatementHandler : IUserStatementHandler, INotifyPropertyChanged
+    public sealed class AimlStatementHandler : IUserStatementHandler, INotifyPropertyChanged
     {
         [NotNull]
         private readonly Bot _chatBot;
@@ -65,7 +65,9 @@ namespace MattEland.Ani.Alfred.Chat
         /// </summary>
         /// <param name="console">The console.</param>
         /// <param name="settingsPath">The settings path.</param>
-        /// <exception cref="System.ArgumentException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "I really don't trust third party libraries to advertise thrown exception types")]
         public AimlStatementHandler([CanBeNull] IConsole console, [NotNull] string settingsPath)
         {
             // Validate / Store Settings
@@ -124,6 +126,8 @@ namespace MattEland.Ani.Alfred.Chat
         /// </summary>
         /// <param name="userInput">The user input.</param>
         /// <returns>The response to the user statement</returns>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "I really don't trust third party libraries to advertise thrown exception types")]
         public UserStatementResponse HandleUserStatement(string userInput)
         {
             // Log the input to the diagnostic log.
@@ -223,7 +227,7 @@ namespace MattEland.Ani.Alfred.Chat
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed",
             Justification = "Using CallerMemberName to auto-default this value from any property caller")]
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
