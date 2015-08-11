@@ -133,28 +133,18 @@ namespace MattEland.Ani.Alfred.Chat
         /// </summary>
         /// <param name="userInput">The user input.</param>
         /// <returns>The response to the user statement</returns>
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
-            Justification = "I really don't trust third party libraries to advertise thrown exception types")]
         public UserStatementResponse HandleUserStatement(string userInput)
         {
             //- Log the input to the diagnostic log.
             _console?.Log(Resources.ChatInputHeader, userInput, LogLevel.UserInput);
 
-            //+ We're calling 3rd party code - be extremely careful
-            Result result = null;
-            try
-            {
-                result = _chatBot.Chat(userInput, _user.UserID);
-            }
-            catch (Exception ex)
-            {
-                _console?.Log(Resources.ChatInputHeader, ex.Message, LogLevel.Error);
-            }
+            //! Give our input to the chat bot
+            var result = GetChatResult(userInput);
 
             //+ Get the template out of the response so we can see if there are any OOB instructions
-            var template = GetResponseTemplate(result);
+            var template = AimlCommandParser.GetResponseTemplate(result);
 
-            //+ Grab the command from the template, if one was present
+            //! Grab the command from the template, if one was present
             var command = AimlCommandParser.GetCommandFromTemplate(template, _console);
 
             // Interpret the response keeping in mind it could have messed up
@@ -167,8 +157,7 @@ namespace MattEland.Ani.Alfred.Chat
             //- Log the output to the diagnostic log. Sometimes - for redirect commands / etc. there's no response
             if (!string.IsNullOrWhiteSpace(template))
             {
-                var message = string.Format(CultureInfo.CurrentCulture, "Using Template: {0}", template);
-                _console?.Log(Resources.ChatOutputHeader, message, LogLevel.Verbose);
+                _console?.Log(Resources.ChatOutputHeader, string.Format(CultureInfo.CurrentCulture, "Using Template: {0}", template), LogLevel.Verbose);
             }
 
             //- Update query properties and return the result
@@ -177,6 +166,28 @@ namespace MattEland.Ani.Alfred.Chat
             LastInput = userInput;
 
             return response;
+        }
+
+        /// <summary>
+        /// Gets the chat result.
+        /// </summary>
+        /// <param name="userInput">The user input.</param>
+        /// <returns>The result of the communication to the chat bot</returns>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "I really don't trust third party libraries to advertise thrown exception types")]
+        private Result GetChatResult(string userInput)
+        {
+            Result result = null;
+            try
+            {
+                result = _chatBot.Chat(userInput, _user.UserID);
+            }
+            catch (Exception ex)
+            {
+                // We're calling undocumented 3rd party code here so be very careful on exceptions
+                _console?.Log(Resources.ChatInputHeader, ex.Message, LogLevel.Error);
+            }
+            return result;
         }
 
         /// <summary>
@@ -218,22 +229,8 @@ namespace MattEland.Ani.Alfred.Chat
         }
 
         /// <summary>
-        ///     Gets the response template from the AIML chat message result.
+        /// Sets up the chat bot
         /// </summary>
-        /// <param name="result">The result of a chat message to the AIML interpreter.</param>
-        /// <returns>The response template</returns>
-        /// <remarks>
-        ///     Result is not CLSCompliant so this method should not be made public
-        /// </remarks>
-        [CanBeNull]
-        private static string GetResponseTemplate([CanBeNull] Result result)
-        {
-            // We want the last template as the other templates have redirected to it
-            var subQuery = result?.SubQueries?.LastOrDefault();
-
-            return subQuery?.Template;
-        }
-
         private void InitializeChatBot()
         {
             _chatBot.WrittenToLog += OnWrittenToLog;
@@ -245,6 +242,9 @@ namespace MattEland.Ani.Alfred.Chat
             _chatBot.isAcceptingUserInput = true;
         }
 
+        /// <summary>
+        /// Respond to log events in the chat bot by writing them to our console
+        /// </summary>
         private void OnWrittenToLog()
         {
             if (!string.IsNullOrWhiteSpace(_chatBot.LastLogMessage))

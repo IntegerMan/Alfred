@@ -2,15 +2,18 @@
 // AimlCommandParser.cs
 // 
 // Created on:      08/11/2015 at 6:23 PM
-// Last Modified:   08/11/2015 at 6:27 PM
+// Last Modified:   08/11/2015 at 6:45 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+
+using AIMLbot;
 
 using JetBrains.Annotations;
 
@@ -29,6 +32,10 @@ namespace MattEland.Ani.Alfred.Chat
     /// </remarks>
     internal static class AimlCommandParser
     {
+        private const string StartTag = "<oob";
+        private const string EndTag = "</oob>";
+        private const string SelfClosingTagEnd = "/>";
+
         /// <summary>
         ///     Gets the first command present from the template and returns that node in XML format.
         /// </summary>
@@ -76,7 +83,7 @@ namespace MattEland.Ani.Alfred.Chat
             }
             catch (XmlException ex)
             {
-                var message = string.Format(CultureInfo.CurrentCulture,
+                var message = String.Format(CultureInfo.CurrentCulture,
                                             Resources.ErrorParsingCommand,
                                             ex.Message,
                                             commandXml);
@@ -101,9 +108,9 @@ namespace MattEland.Ani.Alfred.Chat
             var xElement = oobElement.FirstNode as XElement;
 
             // Validate our element
-            if (xElement == null || xElement.Name.LocalName?.ToLowerInvariant() != "alfred")
+            if (xElement == null || xElement.Name.LocalName?.ToUpperInvariant() != "ALFRED")
             {
-                console?.Log(Resources.ChatOutputHeader, "OOB root element was not an alfred XElement", LogLevel.Error);
+                console?.Log(Resources.ChatOutputHeader, Resources.OobRootNotAlfredXElement, LogLevel.Error);
                 return null;
             }
 
@@ -120,22 +127,16 @@ namespace MattEland.Ani.Alfred.Chat
         [CanBeNull]
         private static string GetCommandXmlFromTemplate([CanBeNull] string template, [CanBeNull] IConsole console)
         {
-            // Early exit if it's empty
+            //- Early exit if it's empty
             if (template == null)
             {
                 return null;
             }
 
-            // Set up constants
-            const StringComparison ComparisonType = StringComparison.OrdinalIgnoreCase;
-            const string StartTag = "<oob";
-            const string EndTag = "</oob>";
-            const string SelfClosingTagEnd = "/>";
+            // Figure out where the XML starts
+            var start = template.IndexOf(StartTag, StringComparison.OrdinalIgnoreCase);
 
-            // Figure out where we start
-            var start = template.IndexOf(StartTag, ComparisonType);
-
-            // If we don't have a tag, there's no command and that's fine
+            //- If we don't have a tag, there's no command and that's fine
             if (start < 0)
             {
                 return null;
@@ -144,42 +145,85 @@ namespace MattEland.Ani.Alfred.Chat
             // We don't care about the portion of the string before the start so chop it off now
             template = template.Substring(start);
 
-            // Try to find self-closing tags first
-            var selfClosingEnd = template.LastIndexOf(SelfClosingTagEnd, ComparisonType);
-            if (selfClosingEnd >= 0)
-            {
-                // We're self-closing. Advance to the end of the tag
-                selfClosingEnd = selfClosingEnd + SelfClosingTagEnd.Length;
-            }
+            //- Try to find self-closing tags first
+            var selfClosingEnd = GetIndexOfLastSelfClosingTagEnd(template);
 
-            // Look for an end tag for our command node
-            var end = template.IndexOf(EndTag, ComparisonType);
-            if (end >= 0)
-            {
-                end += EndTag.Length;
-            }
+            //- Look for an end tag for our command node
+            var end = GetIndexOfEndTag(template);
 
-            // If we have both a self-closing tag and an end tag, the self-closing probably belongs to
-            // an inner XML element. In that case we want to go with the end tag. On the other hand, if
-            // we have a self-closing tag and no end tag, we'll want to go with the self-closing tag.
+            /* 
+            If we have both a self-closing tag and an end tag, the self-closing probably belongs to
+            an inner XML element. In that case we want to go with the end tag. On the other hand, if
+            we have a self-closing tag and no end tag, we'll want to go with the self-closing tag.
+            */
 
-            // That's what this is doing - taking the self-closing tag as the end tag
+            // Take the self-closing tag as the end tag if we don't have an end tag
             if (end <= 0 && selfClosingEnd >= 0)
             {
                 end = selfClosingEnd;
             }
 
-            // If we don't have an end at this point, we need to bow out as a tag that was started but not finished
+            //- If we don't have an end at this point, we need to bow out as a tag that was started but not finished
             if (end < 0)
             {
-                var message = string.Format(CultureInfo.CurrentCulture, Resources.NoEndTagForOobCommand, template);
-                console?.Log(Resources.ChatOutputHeader, message, LogLevel.Error);
+                console?.Log(Resources.ChatOutputHeader,
+                             String.Format(CultureInfo.CurrentCulture, Resources.NoEndTagForOobCommand, template),
+                             LogLevel.Error);
 
                 return null;
             }
 
-            // Now we can snip out the extra bits to get our template XML
+            // Snip out things after the end to get our template XML
             return template.Substring(0, end);
+        }
+
+        /// <summary>
+        ///     Gets the index of last self closing OOB tag end.
+        /// </summary>
+        /// <param name="template">The template.</param>
+        /// <returns>The index of the end of the self-closing tag or -1 for not found</returns>
+        private static int GetIndexOfLastSelfClosingTagEnd([NotNull] string template)
+        {
+            var selfClosingEnd = template.LastIndexOf(SelfClosingTagEnd, StringComparison.OrdinalIgnoreCase);
+            if (selfClosingEnd >= 0)
+            {
+                // We're self-closing. Advance to the end of the tag
+                selfClosingEnd = selfClosingEnd + SelfClosingTagEnd.Length;
+            }
+            return selfClosingEnd;
+        }
+
+        /// <summary>
+        ///     Gets the index of end OOB tag.
+        /// </summary>
+        /// <param name="template">The template.</param>
+        /// <returns>The index of the end of the end tag or -1 for not found</returns>
+        private static int GetIndexOfEndTag([NotNull] string template)
+        {
+
+            var end = template.IndexOf(EndTag, StringComparison.OrdinalIgnoreCase);
+            if (end >= 0)
+            {
+                end += EndTag.Length;
+            }
+            return end;
+        }
+
+        /// <summary>
+        ///     Gets the response template from the AIML chat message result.
+        /// </summary>
+        /// <param name="result">The result of a chat message to the AIML interpreter.</param>
+        /// <returns>The response template</returns>
+        /// <remarks>
+        ///     Result is not CLSCompliant so this method should not be made public
+        /// </remarks>
+        [CanBeNull]
+        internal static string GetResponseTemplate([CanBeNull] Result result)
+        {
+            // We want the last template as the other templates have redirected to it
+            var subQuery = result?.SubQueries?.LastOrDefault();
+
+            return subQuery?.Template;
         }
     }
 }

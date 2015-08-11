@@ -159,4 +159,7 @@
   <data name="ChatInputHeader" xml:space="preserve">
     <value>Chat.Input</value>
   </data>
+  <data name="OobRootNotAlfredXElement" xml:space="preserve">
+    <value>OOB root element was not an alfred XElement</value>
+  </data>
 </root>

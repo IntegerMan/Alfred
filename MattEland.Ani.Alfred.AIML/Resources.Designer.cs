@@ -176,5 +176,14 @@ namespace MattEland.Ani.Alfred.Chat {
                 return ResourceManager.GetString("NoSettingsPathError", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OOB root element was not an alfred XElement.
+        /// </summary>
+        internal static string OobRootNotAlfredXElement {
+            get {
+                return ResourceManager.GetString("OobRootNotAlfredXElement", resourceCulture);
+            }
+        }
     }
 }
