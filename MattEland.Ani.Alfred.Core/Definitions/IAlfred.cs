@@ -66,6 +66,12 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         void Shutdown();
 
         /// <summary>
+        /// Gets a value indicating whether this instance is online.
+        /// </summary>
+        /// <value><c>true</c> if this instance is online; otherwise, <c>false</c>.</value>
+        bool IsOnline { get; }
+
+        /// <summary>
         /// Registers the user statement handler as the framework's user statement handler.
         /// </summary>
         /// <param name="userStatementHandler">The user statement handler.</param>
