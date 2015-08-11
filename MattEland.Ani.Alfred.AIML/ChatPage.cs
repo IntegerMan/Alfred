@@ -13,7 +13,7 @@ namespace MattEland.Ani.Alfred.Chat
     /// <summary>
     /// A custom page for interacting with Alfred via Chat
     /// </summary>
-    public class ChatPage : AlfredPage
+    public sealed class ChatPage : AlfredPage
     {
         [NotNull]
         private readonly IUserStatementHandler _chatHandler;

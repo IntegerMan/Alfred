@@ -21,7 +21,7 @@ namespace MattEland.Ani.Alfred.Chat
     /// <summary>
     ///     The Chat subsystem for Alfred. Presents a chatting mechanism using AIML powered conversation bots.
     /// </summary>
-    public class AlfredChatSubsystem : AlfredSubsystem
+    public sealed class AlfredChatSubsystem : AlfredSubsystem
     {
         [NotNull]
         private readonly AimlStatementHandler _chatHandler;

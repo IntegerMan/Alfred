@@ -18,7 +18,7 @@ namespace MattEland.Ani.Alfred.WPF.Controls
     /// <summary>
     ///     Interaction logic for ChatPane.xaml
     /// </summary>
-    public partial class ChatPane
+    public sealed partial class ChatPane
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="ChatPane" /> class.
@@ -50,7 +50,7 @@ namespace MattEland.Ani.Alfred.WPF.Controls
             var response = chatHandler.HandleUserStatement(text.Trim());
 
             // If it was a success, we'll also want to clear out the input
-            if (response != null && response.WasHandled)
+            if (response.WasHandled)
             {
                 txtInput.Text = string.Empty;
                 txtInput.Focus();
