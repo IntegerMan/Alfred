@@ -39,8 +39,14 @@ namespace MattEland.Ani.Alfred.Core.Console
         UserInput,
 
         /// <summary>
-        /// A system chat response to the user, intended to be spoken aloud or displayed prominently.
+        /// A system chat response to the user as a direct result of a user action, 
+        /// intended to be spoken aloud or displayed prominently.
         /// </summary>
-        ChatResponse
+        ChatResponse,
+
+        /// <summary>
+        /// A system chat notification to the user, intended to be spoken aloud or displayed prominently.
+        /// </summary>
+        ChatNotification
     }
 }

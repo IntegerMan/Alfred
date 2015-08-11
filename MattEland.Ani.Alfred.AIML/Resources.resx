@@ -134,4 +134,10 @@
     <value>Hi</value>
     <comment>Initial text from the user (not really) to Alfred to get Alfred to greet the user.</comment>
   </data>
+  <data name="ErrorInitializingChat" xml:space="preserve">
+    <value>Error initializing chat: {0}</value>
+  </data>
+  <data name="ChatErrorLastLogMessageFormat" xml:space="preserve">
+    <value>Last Log Message:{0}</value>
+  </data>
 </root>

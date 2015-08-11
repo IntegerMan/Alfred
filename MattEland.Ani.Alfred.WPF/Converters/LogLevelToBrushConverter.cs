@@ -247,6 +247,7 @@ namespace MattEland.Ani.Alfred.WPF.Converters
                     return UserInputBrush;
 
                 case LogLevel.ChatResponse:
+                case LogLevel.ChatNotification:
                     return ChatResponseBrush;
 
                 default:

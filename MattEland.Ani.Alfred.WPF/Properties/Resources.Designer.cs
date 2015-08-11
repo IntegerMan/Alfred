@@ -155,6 +155,24 @@ namespace MattEland.Ani.Alfred.WPF.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please enter something to say.
+        /// </summary>
+        public static string WarningNoChatText {
+            get {
+                return ResourceManager.GetString("WarningNoChatText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Empty Search.
+        /// </summary>
+        public static string WarningNoChatTextHeader {
+            get {
+                return ResourceManager.GetString("WarningNoChatTextHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to WinClient.Loaded.
         /// </summary>
         public static string WinClientLoadedLogHeader {

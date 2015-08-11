@@ -17,6 +17,7 @@
     <Name>System.Xaml</Name>
     <Name>PresentationCore</Name>
     <Name>System.Speech</Name>
+    <Name>AIMLbot</Name>
   </FrameworkAssemblies>
   <Dirs>
     <Dir>C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319</Dir>

@@ -9,6 +9,7 @@
     <Color x:Key="ErrorForegroundColor">DarkRed</Color>
 
     <Color x:Key="AppForegroundColor">#C6C6C6</Color>
+    <Color x:Key="AppMutedForegroundColor">#6A6A75</Color>
     <Color x:Key="AppBackgroundColor">#1E1E1E</Color>
     <Color x:Key="AppBorderColor">#434346</Color>
     
@@ -33,11 +34,12 @@
     
     <SolidColorBrush Color="{StaticResource AccentColor}" x:Key="AccentForegroundBrush" />
     
-    <SolidColorBrush Color="{StaticResource UserLogColor}" x:Key="UserLogBrush" />
+    <SolidColorBrush Color="{StaticResource GoodColor}" x:Key="UserLogBrush" />
     <SolidColorBrush Color="{StaticResource AccentColor}" x:Key="AlfredBrush" />
 
     <SolidColorBrush Color="{StaticResource AppBackgroundColor}" x:Key="AppBackgroundBrush" />
     <SolidColorBrush Color="{StaticResource AppForegroundColor}" x:Key="AppForegroundBrush" />
+    <SolidColorBrush Color="{StaticResource AppMutedForegroundColor}" x:Key="AppMutedForegroundBrush" />
     <SolidColorBrush Color="{StaticResource AppBorderColor}" x:Key="AppBorderBrush" />
 
     <SolidColorBrush Color="{StaticResource LightBackgroundColor}" x:Key="LightBackgroundBrush" />

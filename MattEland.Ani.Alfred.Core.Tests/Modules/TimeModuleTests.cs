@@ -334,7 +334,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
             var consoleEvent = console.Events.Single(e => e.Title == AlfredTimeModule.HalfHourAlertEventTitle);
 
             //  We want to ensure it's an informational purposes
-            Assert.AreEqual(LogLevel.Info, consoleEvent.Level);
+            Assert.AreEqual(LogLevel.ChatNotification, consoleEvent.Level);
         }
 
         [Test]
@@ -351,7 +351,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
             var consoleEvent = console.Events.Single(e => e.Title == AlfredTimeModule.HourAlertEventTitle);
 
             //  We want to ensure it's an informational purposes
-            Assert.AreEqual(LogLevel.Info, consoleEvent.Level);
+            Assert.AreEqual(LogLevel.ChatNotification, consoleEvent.Level);
         }
 
         [Test]

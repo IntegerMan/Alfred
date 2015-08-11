@@ -174,12 +174,12 @@ namespace MattEland.Ani.Alfred.Core.Modules
                 if (time.Minute == 0 && CurrentTime.Hour != time.Hour)
                 {
                     // Let the user know it's now X
-                    Log(HourAlertEventTitle, timeText, LogLevel.ChatResponse);
+                    Log(HourAlertEventTitle, timeText, LogLevel.ChatNotification);
                 }
                 else if (time.Minute == 30 && CurrentTime.Minute != 30)
                 {
                     // Let the user know it's now half after X
-                    Log(HalfHourAlertEventTitle, timeText, LogLevel.ChatResponse);
+                    Log(HalfHourAlertEventTitle, timeText, LogLevel.ChatNotification);
                 }
             }
 

@@ -61,6 +61,15 @@ namespace MattEland.Ani.Alfred.Chat {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Last Log Message:{0}.
+        /// </summary>
+        internal static string ChatErrorLastLogMessageFormat {
+            get {
+                return ResourceManager.GetString("ChatErrorLastLogMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chat.
         /// </summary>
         internal static string ChatModuleName {
@@ -75,6 +84,15 @@ namespace MattEland.Ani.Alfred.Chat {
         internal static string DefaultFailureResponseText {
             get {
                 return ResourceManager.GetString("DefaultFailureResponseText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error initializing chat: {0}.
+        /// </summary>
+        internal static string ErrorInitializingChat {
+            get {
+                return ResourceManager.GetString("ErrorInitializingChat", resourceCulture);
             }
         }
         

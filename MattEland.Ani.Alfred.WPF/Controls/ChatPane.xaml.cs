@@ -11,7 +11,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows;
 
-using MattEland.Ani.Alfred.Chat;
 using MattEland.Ani.Alfred.Core.Definitions;
 
 namespace MattEland.Ani.Alfred.WPF.Controls
@@ -41,7 +40,7 @@ namespace MattEland.Ani.Alfred.WPF.Controls
             var text = txtInput.Text;
             if (string.IsNullOrWhiteSpace(text))
             {
-                MessageBox.Show("Please enter something to say", "No Content");
+                MessageBox.Show(Properties.Resources.WarningNoChatText, Properties.Resources.WarningNoChatTextHeader);
                 return;
             }
 

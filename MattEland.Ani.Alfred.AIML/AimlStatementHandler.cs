@@ -2,16 +2,16 @@
 // AimlStatementHandler.cs
 // 
 // Created on:      08/10/2015 at 12:51 AM
-// Last Modified:   08/10/2015 at 1:21 AM
+// Last Modified:   08/10/2015 at 9:42 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
-using System.Xml;
 
 using AIMLbot;
 
@@ -35,16 +35,16 @@ namespace MattEland.Ani.Alfred.Chat
         private readonly Bot _chatBot;
 
         [NotNull]
-        private readonly User _user;
-
-        [CanBeNull]
-        private IConsole _console;
-
-        [NotNull]
         private readonly string _logHeader;
 
         [NotNull]
         private readonly string _settingsPath;
+
+        [NotNull]
+        private readonly User _user;
+
+        [CanBeNull]
+        private IConsole _console;
 
         [CanBeNull]
         private string _input;
@@ -54,12 +54,13 @@ namespace MattEland.Ani.Alfred.Chat
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
         /// </summary>
-        public AimlStatementHandler() : this(null, Path.Combine(Environment.CurrentDirectory, @"Chat\config\settings.xml"))
+        public AimlStatementHandler()
+            : this(null, Path.Combine(Environment.CurrentDirectory, @"Chat\config\settings.xml"))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:System.Object" /> class.
+        ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
         /// </summary>
         /// <param name="console">The console.</param>
         /// <param name="settingsPath">The settings path.</param>
@@ -86,28 +87,11 @@ namespace MattEland.Ani.Alfred.Chat
             }
             catch (Exception ex)
             {
-                _console?.Log(_logHeader, "Error initializing chat: " + ex.Message, LogLevel.Error);
+                var errorFormat = Resources.ErrorInitializingChat.NonNull();
+                var message = string.Format(CultureInfo.CurrentCulture, errorFormat, ex.Message);
+                _console?.Log(_logHeader, message.NonNull(), LogLevel.Error);
             }
 
-        }
-
-        private void InitializeChatBot()
-        {
-            _chatBot.WrittenToLog += OnWrittenToLog;
-            _chatBot.loadSettings(_settingsPath);
-
-            // Load AIML files
-            _chatBot.isAcceptingUserInput = false;
-            _chatBot.loadAIMLFromFiles();
-            _chatBot.isAcceptingUserInput = true;
-        }
-
-        private void OnWrittenToLog()
-        {
-            if (!string.IsNullOrWhiteSpace(_chatBot.LastLogMessage))
-            {
-                _console?.Log(_logHeader, _chatBot.LastLogMessage, LogLevel.Verbose);
-            }
         }
 
         /// <summary>
@@ -130,6 +114,11 @@ namespace MattEland.Ani.Alfred.Chat
         }
 
         /// <summary>
+        ///     Occurs when a property changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
         ///     Handles a user statement.
         /// </summary>
         /// <param name="userInput">The user input.</param>
@@ -148,7 +137,10 @@ namespace MattEland.Ani.Alfred.Chat
             catch (Exception ex)
             {
                 _console?.Log(_logHeader, ex.Message, LogLevel.Error);
-                _console?.Log(_logHeader, "Last Log Message:" + _chatBot.LastLogMessage, LogLevel.Verbose);
+                var errorFormat = string.Format(CultureInfo.CurrentCulture,
+                                                Resources.ChatErrorLastLogMessageFormat,
+                                                _chatBot.LastLogMessage);
+                _console?.Log(_logHeader, errorFormat.NonNull(), LogLevel.Verbose);
             }
 
             // Handle the response keeping in mind it could have messed up
@@ -167,7 +159,7 @@ namespace MattEland.Ani.Alfred.Chat
         }
 
         /// <summary>
-        /// Gets the last response from the system.
+        ///     Gets the last response from the system.
         /// </summary>
         /// <value>The last response.</value>
         [CanBeNull]
@@ -177,14 +169,16 @@ namespace MattEland.Ani.Alfred.Chat
             private set
             {
                 if (Equals(value, _response))
+                {
                     return;
+                }
                 _response = value;
                 OnPropertyChanged();
             }
         }
 
         /// <summary>
-        /// Gets the last input from the user.
+        ///     Gets the last input from the user.
         /// </summary>
         /// <value>The last input.</value>
         [CanBeNull]
@@ -194,14 +188,37 @@ namespace MattEland.Ani.Alfred.Chat
             private set
             {
                 if (value == _input)
+                {
                     return;
+                }
                 _input = value;
                 OnPropertyChanged();
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        private void InitializeChatBot()
+        {
+            _chatBot.WrittenToLog += OnWrittenToLog;
+            _chatBot.loadSettings(_settingsPath);
 
+            // Load AIML files
+            _chatBot.isAcceptingUserInput = false;
+            _chatBot.loadAIMLFromFiles();
+            _chatBot.isAcceptingUserInput = true;
+        }
+
+        private void OnWrittenToLog()
+        {
+            if (!string.IsNullOrWhiteSpace(_chatBot.LastLogMessage))
+            {
+                _console?.Log(_logHeader, _chatBot.LastLogMessage, LogLevel.Verbose);
+            }
+        }
+
+        /// <summary>
+        ///     Called when a property changes.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -210,8 +227,8 @@ namespace MattEland.Ani.Alfred.Chat
         }
 
         /// <summary>
-        /// Performs an initial greeting by sending hi to the conversation system
-        /// and erasing it from the last input so the user sees Alfred greeting them.
+        ///     Performs an initial greeting by sending hi to the conversation system
+        ///     and erasing it from the last input so the user sees Alfred greeting them.
         /// </summary>
         public void DoInitialGreeting()
         {
