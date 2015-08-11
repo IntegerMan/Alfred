@@ -2,7 +2,7 @@
 // AlfredProvider.cs
 // 
 // Created on:      07/25/2015 at 11:30 PM
-// Last Modified:   08/09/2015 at 3:42 PM
+// Last Modified:   08/11/2015 at 7:02 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -46,35 +46,15 @@ namespace MattEland.Ani.Alfred.Core
         private IChatProvider _chatProvider;
 
         /// <summary>
-        /// Gets the chat provider.
-        /// </summary>
-        /// <value>The chat provider.</value>
-        [CanBeNull]
-        public IChatProvider ChatProvider
-        {
-            [DebuggerStepThrough]
-            get
-            { return _chatProvider; }
-            private set
-            {
-                if (Equals(value, _chatProvider))
-                    return;
-
-                _chatProvider = value;
-                OnPropertyChanged(nameof(ChatProvider));
-            }
-        }
-
-        /// <summary>
         ///     The status
         /// </summary>
         private AlfredStatus _status;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlfredProvider"/> class.
+        ///     Initializes a new instance of the <see cref="AlfredProvider" /> class.
         /// </summary>
         /// <remarks>
-        /// Initialization should come from AlfredBootstrapper
+        ///     Initialization should come from AlfredBootstrapper
         /// </remarks>
         /// <param name="provider">The provider.</param>
         /// <param name="controller">The controller.</param>
@@ -101,11 +81,26 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     Gets or sets the console provider. This can be null.
+        ///     Gets the chat provider.
         /// </summary>
-        /// <value>The console.</value>
+        /// <value>The chat provider.</value>
         [CanBeNull]
-        public IConsole Console { get; set; }
+        public IChatProvider ChatProvider
+        {
+            [DebuggerStepThrough]
+            get
+            { return _chatProvider; }
+            private set
+            {
+                if (Equals(value, _chatProvider))
+                {
+                    return;
+                }
+
+                _chatProvider = value;
+                OnPropertyChanged(nameof(ChatProvider));
+            }
+        }
 
         /// <summary>
         ///     Gets the name and version of Alfred.
@@ -115,16 +110,6 @@ namespace MattEland.Ani.Alfred.Core
         public string NameAndVersion
         {
             get { return string.Format(CultureInfo.CurrentCulture, "{0} {1}", Name, Version); }
-        }
-
-        /// <summary>
-        ///     Gets the name of the framework.
-        /// </summary>
-        /// <value>The name.</value>
-        [NotNull]
-        public string Name
-        {
-            get { return Resources.AlfredProvider_Name.NonNull(); }
         }
 
         /// <summary>
@@ -143,6 +128,33 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
+        ///     Gets the collection provider used for cross platform portability.
+        /// </summary>
+        /// <value>The collection provider.</value>
+        [NotNull]
+        public IPlatformProvider PlatformProvider
+        {
+            get { return _platformProvider; }
+        }
+
+        /// <summary>
+        ///     Gets or sets the console provider. This can be null.
+        /// </summary>
+        /// <value>The console.</value>
+        [CanBeNull]
+        public IConsole Console { get; set; }
+
+        /// <summary>
+        ///     Gets the name of the framework.
+        /// </summary>
+        /// <value>The name.</value>
+        [NotNull]
+        public string Name
+        {
+            get { return Resources.AlfredProvider_Name.NonNull(); }
+        }
+
+        /// <summary>
         ///     Gets the status.
         /// </summary>
         /// <value>The status.</value>
@@ -158,16 +170,6 @@ namespace MattEland.Ani.Alfred.Core
                     OnPropertyChanged(nameof(IsOnline));
                 }
             }
-        }
-
-        /// <summary>
-        ///     Gets the collection provider used for cross platform portability.
-        /// </summary>
-        /// <value>The collection provider.</value>
-        [NotNull]
-        public IPlatformProvider PlatformProvider
-        {
-            get { return _platformProvider; }
         }
 
         /// <summary>
@@ -198,7 +200,7 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        /// Gets Whether or not Alfred is online.
+        ///     Gets Whether or not Alfred is online.
         /// </summary>
         /// <value>The is online.</value>
         public bool IsOnline
@@ -231,7 +233,7 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        /// Registers the chat provider as the framework's chat provider.
+        ///     Registers the chat provider as the framework's chat provider.
         /// </summary>
         /// <param name="chatProvider">The chat provider.</param>
         public void Register([NotNull] IChatProvider chatProvider)
@@ -243,6 +245,11 @@ namespace MattEland.Ani.Alfred.Core
 
             ChatProvider = chatProvider;
         }
+
+        /// <summary>
+        ///     Occurs when a property changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         ///     Tells modules to take a look at their content and update as needed.
@@ -266,38 +273,22 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     Checks that Alfred must be offline and throws an exception if it isn't.
-        /// </summary>
-        /// <exception cref="System.InvalidOperationException">
-        ///     Alfred must be offline in order to add modules.
-        /// </exception>
-        private void AssertMustBeOffline()
-        {
-            if (Status != AlfredStatus.Offline)
-            {
-                throw new InvalidOperationException(Resources.AlfredProvider_AssertMustBeOffline_ErrorNotOffline);
-            }
-        }
-
-        /// <summary>
         ///     Registers a sub system with Alfred.
         /// </summary>
         /// <param name="subsystem">The subsystem.</param>
         public void Register([NotNull] AlfredSubsystem subsystem)
         {
-            AssertMustBeOffline();
+            if (Status != AlfredStatus.Offline)
+            {
+                throw new InvalidOperationException(Resources.AlfredProvider_AssertMustBeOffline_ErrorNotOffline);
+            }
 
             _subsystems.AddSafe(subsystem);
             subsystem.OnRegistered(this);
         }
 
         /// <summary>
-        /// Occurs when a property changes.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// Called when a property changes.
+        ///     Called when a property changes.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         [NotifyPropertyChangedInvocator]

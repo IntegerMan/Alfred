@@ -2,7 +2,7 @@
 // AimlStatementHandler.cs
 // 
 // Created on:      08/10/2015 at 12:51 AM
-// Last Modified:   08/11/2015 at 2:36 PM
+// Last Modified:   08/11/2015 at 6:57 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -124,11 +124,6 @@ namespace MattEland.Ani.Alfred.Chat
         }
 
         /// <summary>
-        ///     Occurs when a property changes.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
         ///     Handles a user statement.
         /// </summary>
         /// <param name="userInput">The user input.</param>
@@ -157,7 +152,9 @@ namespace MattEland.Ani.Alfred.Chat
             //- Log the output to the diagnostic log. Sometimes - for redirect commands / etc. there's no response
             if (!string.IsNullOrWhiteSpace(template))
             {
-                _console?.Log(Resources.ChatOutputHeader, string.Format(CultureInfo.CurrentCulture, "Using Template: {0}", template), LogLevel.Verbose);
+                _console?.Log(Resources.ChatOutputHeader,
+                              string.Format(CultureInfo.CurrentCulture, "Using Template: {0}", template),
+                              LogLevel.Verbose);
             }
 
             //- Update query properties and return the result
@@ -166,28 +163,6 @@ namespace MattEland.Ani.Alfred.Chat
             LastInput = userInput;
 
             return response;
-        }
-
-        /// <summary>
-        /// Gets the chat result.
-        /// </summary>
-        /// <param name="userInput">The user input.</param>
-        /// <returns>The result of the communication to the chat bot</returns>
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
-            Justification = "I really don't trust third party libraries to advertise thrown exception types")]
-        private Result GetChatResult(string userInput)
-        {
-            Result result = null;
-            try
-            {
-                result = _chatBot.Chat(userInput, _user.UserID);
-            }
-            catch (Exception ex)
-            {
-                // We're calling undocumented 3rd party code here so be very careful on exceptions
-                _console?.Log(Resources.ChatInputHeader, ex.Message, LogLevel.Error);
-            }
-            return result;
         }
 
         /// <summary>
@@ -229,7 +204,34 @@ namespace MattEland.Ani.Alfred.Chat
         }
 
         /// <summary>
-        /// Sets up the chat bot
+        ///     Occurs when a property changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        ///     Gets the chat result.
+        /// </summary>
+        /// <param name="userInput">The user input.</param>
+        /// <returns>The result of the communication to the chat bot</returns>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "I really don't trust third party libraries to advertise thrown exception types")]
+        private Result GetChatResult(string userInput)
+        {
+            Result result = null;
+            try
+            {
+                result = _chatBot.Chat(userInput, _user.UserID);
+            }
+            catch (Exception ex)
+            {
+                // We're calling undocumented 3rd party code here so be very careful on exceptions
+                _console?.Log(Resources.ChatInputHeader, ex.Message, LogLevel.Error);
+            }
+            return result;
+        }
+
+        /// <summary>
+        ///     Sets up the chat bot
         /// </summary>
         private void InitializeChatBot()
         {
@@ -243,7 +245,7 @@ namespace MattEland.Ani.Alfred.Chat
         }
 
         /// <summary>
-        /// Respond to log events in the chat bot by writing them to our console
+        ///     Respond to log events in the chat bot by writing them to our console
         /// </summary>
         private void OnWrittenToLog()
         {
