@@ -33,8 +33,8 @@
   </Dirs>
   <MergeCodeGeneratedByCompiler>True</MergeCodeGeneratedByCompiler>
   <Report Kind="0" SectionsEnabled="65535" XslPath="" Flags="261376" />
-  <BuildComparisonSetting ProjectMode="CurrentProject" BuildMode="NDaysAgoAnalysisResult" ProjectFileToCompareWith="C:\Dev\Alfred\Alfred\Alfred.ndproj" BuildFileToCompareWith="C:\Dev\Alfred\Alfred\NDependOut\NDependAnalysisResult_Alfred_2015Jul29_15h11.ndar" NDaysAgo="1" FocusOnRecentRulesViolations="False" />
-  <BaselineInUISetting ProjectMode="CurrentProject" BuildMode="NDaysAgoAnalysisResult" ProjectFileToCompareWith="C:\Dev\Alfred\Alfred\Alfred.ndproj" BuildFileToCompareWith="C:\Dev\Alfred\Alfred\NDependOut\NDependAnalysisResult_Alfred_2015Jul29_15h11.ndar" NDaysAgo="1" FocusOnRecentRulesViolations="False" />
+  <BuildComparisonSetting ProjectMode="CurrentProject" BuildMode="MostRecentAnalysisResultAvailable" ProjectFileToCompareWith="C:\Dev\Alfred\Alfred\Alfred.ndproj" BuildFileToCompareWith="C:\Dev\Alfred\Alfred\NDependOut\NDependAnalysisResult_Alfred_2015Aug10_23h08.ndar" NDaysAgo="1" FocusOnRecentRulesViolations="False" />
+  <BaselineInUISetting ProjectMode="CurrentProject" BuildMode="MostRecentAnalysisResultAvailable" ProjectFileToCompareWith="C:\Dev\Alfred\Alfred\Alfred.ndproj" BuildFileToCompareWith="C:\Dev\Alfred\Alfred\NDependOut\NDependAnalysisResult_Alfred_2015Aug10_23h08.ndar" NDaysAgo="1" FocusOnRecentRulesViolations="False" />
   <CoverageFiles CoverageDir="" UncoverableAttribute="">
     <CoverageFile MergeMode="Or">C:\Dev\Alfred\Alfred\AlfredTests.xml</CoverageFile>
   </CoverageFiles>
@@ -1937,6 +1937,7 @@ warnif count > 0 from t in JustMyCode.Types where
   t.IsClass &&
  !t.IsGeneratedByCompiler &&
  !t.IsStatic &&
+ !t.NameLike("Factory") && !t.NameLike("Builder") && !t.NameLike("Bootstrapper") &&
  !t.ParentNamespace.NameLike(".Test") &&
   t.SizeOfInst > 0 &&
   t.SizeOfInst <= 16 &&   // Structure instance must not be too big, 
@@ -4374,12 +4375,14 @@ select new { tAttr, types , methods, fields }
 //</HowToFix>]]></Query>
     </Group>
     <Group Name="Visibility" Active="True" ShownInReport="False">
-      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Methods that could have a lower visibility</Name>
+      <Query Active="False" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Methods that could have a lower visibility</Name>
 warnif count > 0 from m in JustMyCode.Methods where 
   m.Visibility != m.OptimalVisibility &&
   !m.ParentNamespace.NameLike(".Test") &&
+  !m.FullNameLike("WPF") &&
   !m.HasAttribute("NDepend.Attributes.CannotDecreaseVisibilityAttribute".AllowNoMatch()) &&
   !m.HasAttribute("NDepend.Attributes.IsNotDeadCodeAttribute".AllowNoMatch()) &&
+  !m.HasAttribute("JetBrains.Annotations.UsedImplicitlyAttribute".AllowNoMatch()) &&
   // If you don't want to link NDepend.API.dll, you can use your own attributes 
   // and adapt the source code of this rule.
   
