@@ -110,9 +110,8 @@ namespace MattEland.Ani.Alfred.Core.Modules
                 return true;
             }
 
-            // Execute the command
-            return false;
-
+            // Can't handle it; let the base module take it
+            return base.HandleChatCommand(command, result);
         }
 
         /// <summary>

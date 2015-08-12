@@ -16,7 +16,8 @@ This provides handling for time and date queries
         <li>The time is now {0}.</li>
         <li>It is currently {0}.</li>
         <li>It is now {0}.</li>
-      </random>        
+      </random>
+      <oob><alfred subsystem="core" command="CurrentTime" /></oob>
     </template>
   </category>
 
@@ -60,7 +61,10 @@ This provides handling for time and date queries
         <li>Today is {0}.</li>
         <li>This is {0}.</li>
         <li>The current date is {0}.</li>
-      </random>        
+      </random>
+      <oob>
+        <alfred subsystem="core" command="CurrentDate" />
+      </oob>
     </template>
   </category>
 

@@ -32,6 +32,23 @@ namespace MattEland.Common
         }
 
         /// <summary>
+        /// Ensures that the passed in string is not null and returns either the input string or replacement.
+        /// </summary>
+        /// <param name="input">The input string.</param>
+        /// <param name="replacement">The replacement string when input is null.</param>
+        /// <returns>A sanitized string</returns>
+        [NotNull]
+        public static string IfNull([CanBeNull] this string input, [NotNull] string replacement)
+        {
+            if (replacement == null)
+            {
+                throw new ArgumentNullException(nameof(replacement));
+            }
+
+            return input ?? replacement;
+        }
+
+        /// <summary>
         /// Extension method to compare two strings and return true if they're equal.
         /// </summary>
         /// <param name="input">The input string.</param>
