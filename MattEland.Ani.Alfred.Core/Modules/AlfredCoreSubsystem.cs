@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------
-// AlfredControlSubsystem.cs
+// AlfredCoreSubsystem.cs
 // 
 // Created on:      08/08/2015 at 6:12 PM
 // Last Modified:   08/08/2015 at 6:58 PM
@@ -16,10 +16,13 @@ using MattEland.Ani.Alfred.Core.Pages;
 namespace MattEland.Ani.Alfred.Core.Modules
 {
     /// <summary>
-    ///     The control subsystem provides essential monitoring and control functionality for Alfred such as the Alfred control
-    ///     page, an event log page, etc.
+    ///     The core subsystem provides essential monitoring and control functionality for Alfred such as the Alfred control
+    ///     page, an event log page, etc. as well as monitoring of the current time and date.
     /// </summary>
-    public sealed class AlfredControlSubsystem : AlfredSubsystem
+    /// <remarks>
+    /// TODO: Once Alfred has a calendar subsystem, the time / date functionality may need to move there
+    /// </remarks>
+    public sealed class AlfredCoreSubsystem : AlfredSubsystem
     {
         [NotNull]
         private readonly AlfredModuleListPage _controlPage;
@@ -42,7 +45,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
-        public AlfredControlSubsystem() : this(new SimplePlatformProvider())
+        public AlfredCoreSubsystem() : this(new SimplePlatformProvider())
         {
         }
 
@@ -51,7 +54,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         /// <param name="provider">The provider.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public AlfredControlSubsystem([NotNull] IPlatformProvider provider) : base(provider)
+        public AlfredCoreSubsystem([NotNull] IPlatformProvider provider) : base(provider)
         {
 
             _controlPage = new AlfredModuleListPage(provider, ControlPageName);

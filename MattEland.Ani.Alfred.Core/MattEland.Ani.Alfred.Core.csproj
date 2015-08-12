@@ -73,7 +73,7 @@
     <Compile Include="AlfredStatusController.cs" />
     <Compile Include="AlfredSubSystem.cs" />
     <Compile Include="Console\LogLevel.cs" />
-    <Compile Include="Modules\AlfredControlSubSystem.cs" />
+    <Compile Include="Modules\AlfredCoreSubsystem.cs" />
     <Compile Include="Modules\AlfredSubSystemListModule.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Definitions\IPlatformProvider.cs" />

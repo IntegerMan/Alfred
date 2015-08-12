@@ -38,7 +38,7 @@ namespace MattEland.Ani.Alfred.WPF
         [NotNull]
         private readonly AlfredApplication _alfred;
 
-        private AlfredControlSubsystem _alfredControlSubsystem;
+        private AlfredCoreSubsystem _alfredCoreSubsystem;
         private AlfredChatSubsystem _chatSubsystem;
         private AlfredSpeechConsole _console;
         private SystemMonitoringSubsystem _systemMonitoringSubsystem;
@@ -127,11 +127,11 @@ namespace MattEland.Ani.Alfred.WPF
 
             var provider = _alfred.PlatformProvider;
 
-            _alfredControlSubsystem = new AlfredControlSubsystem(provider);
+            _alfredCoreSubsystem = new AlfredCoreSubsystem(provider);
             _systemMonitoringSubsystem = new SystemMonitoringSubsystem(provider);
             _chatSubsystem = new AlfredChatSubsystem(provider);
 
-            _alfred.Register(_alfredControlSubsystem);
+            _alfred.Register(_alfredCoreSubsystem);
             _alfred.Register(_systemMonitoringSubsystem);
             _alfred.Register(_chatSubsystem);
 

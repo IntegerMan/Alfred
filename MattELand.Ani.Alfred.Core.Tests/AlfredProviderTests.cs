@@ -56,7 +56,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         [Test]
         public void AddingStandardModulesAddsModules()
         {
-            _alfred.Register(new AlfredControlSubsystem(_alfred.PlatformProvider));
+            _alfred.Register(new AlfredCoreSubsystem(_alfred.PlatformProvider));
 
             var numModules =
                 _alfred.Subsystems.SelectMany(subsystem => subsystem.Pages)
@@ -153,7 +153,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         [Test]
         public void InitializingInitializesComponents()
         {
-            _alfred.Register(new AlfredControlSubsystem(_alfred.PlatformProvider));
+            _alfred.Register(new AlfredCoreSubsystem(_alfred.PlatformProvider));
 
             _alfred.Initialize();
 
@@ -183,14 +183,14 @@ namespace MattEland.Ani.Alfred.Core.Tests
         public void ModulesCannotBeAddedWhileOnline()
         {
             _alfred.Initialize();
-            _alfred.Register(new AlfredControlSubsystem(_alfred.PlatformProvider));
+            _alfred.Register(new AlfredCoreSubsystem(_alfred.PlatformProvider));
         }
 
         [Test]
         [ExpectedException(typeof(InvalidOperationException))]
         public void ModulesCannotUpdateWhileOffline()
         {
-            _alfred.Register(new AlfredControlSubsystem(_alfred.PlatformProvider));
+            _alfred.Register(new AlfredCoreSubsystem(_alfred.PlatformProvider));
 
             _alfred.Update();
         }
@@ -299,7 +299,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         [Test]
         public void ShuttingDownShutsDownComponents()
         {
-            _alfred.Register(new AlfredControlSubsystem(_alfred.PlatformProvider));
+            _alfred.Register(new AlfredCoreSubsystem(_alfred.PlatformProvider));
 
             _alfred.Initialize();
             _alfred.Shutdown();

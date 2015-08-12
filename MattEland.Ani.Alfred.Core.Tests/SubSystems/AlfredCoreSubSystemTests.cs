@@ -29,14 +29,14 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
         [SetUp]
         public void SetUp()
         {
-            _subsystem = new AlfredControlSubsystem();
+            _subsystem = new AlfredCoreSubsystem();
 
             var bootstrapper = new AlfredBootstrapper();
             _alfred = bootstrapper.Create();
         }
 
         [NotNull]
-        private AlfredControlSubsystem _subsystem;
+        private AlfredCoreSubsystem _subsystem;
 
         [NotNull]
         private AlfredApplication _alfred;
@@ -59,7 +59,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
             _alfred.Initialize();
             _alfred.Update();
 
-            Assert.IsTrue(_alfred.RootPages.Any(p => p.Name == AlfredControlSubsystem.ControlPageName),
+            Assert.IsTrue(_alfred.RootPages.Any(p => p.Name == AlfredCoreSubsystem.ControlPageName),
                           "Control Page was not found");
         }
 
@@ -73,7 +73,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
             _alfred.Initialize();
             _alfred.Update();
 
-            Assert.IsTrue(_alfred.RootPages.Any(p => p.Name == AlfredControlSubsystem.EventLogPageName),
+            Assert.IsTrue(_alfred.RootPages.Any(p => p.Name == AlfredCoreSubsystem.EventLogPageName),
                           "Event Log Page was not found");
         }
 
@@ -84,7 +84,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
             _alfred.Initialize();
             _alfred.Update();
 
-            Assert.IsTrue(_alfred.RootPages.All(p => p.Name != AlfredControlSubsystem.EventLogPageName),
+            Assert.IsTrue(_alfred.RootPages.All(p => p.Name != AlfredCoreSubsystem.EventLogPageName),
                           "Event Log Page was present when no console was provided");
         }
 
@@ -118,7 +118,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
             _alfred.Update();
 
             // Grab the Page
-            var pageName = AlfredControlSubsystem.ControlPageName;
+            var pageName = AlfredCoreSubsystem.ControlPageName;
             var page = FindPage<AlfredModuleListPage>(pageName);
 
             // Ensure our expected modules are there
