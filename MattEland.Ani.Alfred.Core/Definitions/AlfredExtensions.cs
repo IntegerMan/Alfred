@@ -13,7 +13,7 @@ using System.Reflection;
 
 using JetBrains.Annotations;
 
-namespace MattEland.Ani.Alfred.Core
+namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>
     ///     Extension methods commonly used by Alfred

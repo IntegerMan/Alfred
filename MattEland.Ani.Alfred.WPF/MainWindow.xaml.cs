@@ -17,6 +17,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.WPF.Properties;
 
 using Res = MattEland.Ani.Alfred.WPF.Properties.Resources;

@@ -71,7 +71,7 @@
     <Compile Include="Pages\AlfredPage.cs" />
     <Compile Include="Definitions\AlfredStatus.cs" />
     <Compile Include="AlfredStatusController.cs" />
-    <Compile Include="AlfredExtensions.cs" />
+    <Compile Include="Definitions\AlfredExtensions.cs" />
     <Compile Include="AlfredSubSystem.cs" />
     <Compile Include="Console\LogLevel.cs" />
     <Compile Include="Modules\AlfredControlSubSystem.cs" />
