@@ -71,7 +71,6 @@
     <Compile Include="Pages\AlfredPage.cs" />
     <Compile Include="Definitions\AlfredStatus.cs" />
     <Compile Include="AlfredStatusController.cs" />
-    <Compile Include="Definitions\AlfredExtensions.cs" />
     <Compile Include="AlfredSubSystem.cs" />
     <Compile Include="Console\LogLevel.cs" />
     <Compile Include="Modules\AlfredControlSubSystem.cs" />
@@ -112,6 +111,12 @@
       <HintPath>..\packages\JetBrains.Annotations.9.2.0\lib\portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\JetBrains.Annotations.PCL328.dll</HintPath>
       <Private>True</Private>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MattEland.Common\MattEland.Common.csproj">
+      <Project>{514cb422-a6ef-4c75-b925-92ab599ba1be}</Project>
+      <Name>MattEland.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

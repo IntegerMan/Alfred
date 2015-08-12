@@ -2,7 +2,7 @@
 // AimlStatementHandler.cs
 // 
 // Created on:      08/10/2015 at 12:51 AM
-// Last Modified:   08/11/2015 at 6:57 PM
+// Last Modified:   08/12/2015 at 2:24 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -19,9 +19,9 @@ using AIMLbot;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat
 {
@@ -107,9 +107,7 @@ namespace MattEland.Ani.Alfred.Chat
         {
             [DebuggerStepThrough]
             get
-            {
-                return _console;
-            }
+            { return _console; }
             [DebuggerStepThrough]
             set
             {
@@ -204,6 +202,19 @@ namespace MattEland.Ani.Alfred.Chat
         }
 
         /// <summary>
+        ///     Performs an initial greeting by sending hi to the conversation system
+        ///     and erasing it from the last input so the user sees Alfred greeting them.
+        /// </summary>
+        public void DoInitialGreeting()
+        {
+            // Send a "hi" into the system
+            HandleUserStatement(Resources.InitialGreetingText.NonNull());
+
+            // Clear out the input so it doesn't look like the user typed it
+            LastInput = string.Empty;
+        }
+
+        /// <summary>
         ///     Occurs when a property changes.
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
@@ -265,19 +276,6 @@ namespace MattEland.Ani.Alfred.Chat
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        /// <summary>
-        ///     Performs an initial greeting by sending hi to the conversation system
-        ///     and erasing it from the last input so the user sees Alfred greeting them.
-        /// </summary>
-        public void DoInitialGreeting()
-        {
-            // Send a "hi" into the system
-            HandleUserStatement(Resources.InitialGreetingText.NonNull());
-
-            // Clear out the input so it doesn't look like the user typed it
-            LastInput = string.Empty;
         }
     }
 

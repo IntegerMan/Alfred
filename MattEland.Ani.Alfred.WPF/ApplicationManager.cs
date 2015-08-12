@@ -20,6 +20,7 @@ using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Ani.Alfred.Core.Speech;
 using MattEland.Ani.Alfred.WPF.Platform;
+using MattEland.Common;
 
 using Res = MattEland.Ani.Alfred.WPF.Properties.Resources;
 

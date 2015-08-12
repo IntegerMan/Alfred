@@ -1,5 +1,5 @@
 // ---------------------------------------------------------
-// AlfredExtensions.cs
+// CommonExtensions.cs
 // 
 // Created on:      08/05/2015 at 2:16 PM
 // Last Modified:   08/08/2015 at 7:32 PM
@@ -13,12 +13,12 @@ using System.Reflection;
 
 using JetBrains.Annotations;
 
-namespace MattEland.Ani.Alfred.Core.Definitions
+namespace MattEland.Common
 {
     /// <summary>
-    ///     Extension methods commonly used by Alfred
+    ///     Extension methods commonly used
     /// </summary>
-    public static class AlfredExtensions
+    public static class CommonExtensions
     {
         /// <summary>
         ///     Ensures that the passed in string is not null and returns either the input string or string.empty.
@@ -83,7 +83,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
             // This shouldn't happen, but I want to check to make sure
             if (collection.Contains(item))
             {
-                throw new InvalidOperationException("The specified item was already part of the collection");
+                throw new InvalidOperationException(Resources.ErrorItemAlreadyInCollection);
             }
 
             collection.Add(item);

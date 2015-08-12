@@ -13,6 +13,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common;
 
 using Res = MattEland.Ani.Alfred.Chat.Resources;
 
