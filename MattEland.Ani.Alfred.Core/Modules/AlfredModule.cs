@@ -2,7 +2,7 @@
 // AlfredModule.cs
 // 
 // Created on:      08/11/2015 at 9:44 PM
-// Last Modified:   08/11/2015 at 9:44 PM
+// Last Modified:   08/12/2015 at 3:43 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -60,6 +60,17 @@ namespace MattEland.Ani.Alfred.Core.Modules
         public override IEnumerable<IAlfredComponent> Children
         {
             get { yield break; }
+        }
+
+        /// <summary>
+        ///     Handles a chat command that may be intended for this module.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="result">The default system response. This should be modified and returned.</param>
+        /// <returns><c>true</c> if the command was handled, <c>false</c> otherwise.</returns>
+        public virtual bool HandleChatCommand(ChatCommand command, [NotNull] AlfredCommandResult result)
+        {
+            return false;
         }
 
         /// <summary>

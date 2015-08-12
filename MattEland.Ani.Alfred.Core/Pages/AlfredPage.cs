@@ -63,6 +63,17 @@ namespace MattEland.Ani.Alfred.Core.Pages
         {
             get { return true; }
         }
+
+        /// <summary>
+        ///     Handles a chat command that may be intended for this page or one of its modules.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="result">The default system response. This should be modified and returned.</param>
+        /// <returns><c>true</c> if the command was handled, <c>false</c> otherwise.</returns>
+        public virtual bool HandleChatCommand(ChatCommand command, AlfredCommandResult result)
+        {
+            return false;
+        }
     }
 
 }

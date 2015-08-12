@@ -32,6 +32,19 @@ namespace MattEland.Common
         }
 
         /// <summary>
+        /// Extension method to compare two strings and return true if they're equal.
+        /// </summary>
+        /// <param name="input">The input string.</param>
+        /// <param name="other">The other string.</param>
+        /// <param name="comparison">The comparison type. Defaults to ordinal ignoring case.</param>
+        /// <returns><c>true</c> if the strings are equal, <c>false</c> otherwise.</returns>
+        [NotNull]
+        public static bool Compare([CanBeNull] this string input, [CanBeNull] string other, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
+        {
+            return string.Compare(input, other, comparison) == 0;
+        }
+
+        /// <summary>
         ///     Gets the Version of this module's assembly based on the AssemblyVersionAttribute.
         /// </summary>
         /// <param name="caller">The caller.</param>

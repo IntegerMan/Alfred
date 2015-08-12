@@ -2,7 +2,7 @@
 // AlfredChatSubsystem.cs
 // 
 // Created on:      08/09/2015 at 11:09 PM
-// Last Modified:   08/11/2015 at 3:57 PM
+// Last Modified:   08/12/2015 at 3:54 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -66,6 +66,15 @@ namespace MattEland.Ani.Alfred.Chat
         }
 
         /// <summary>
+        ///     Gets the identifier for the subsystem to be used in command routing.
+        /// </summary>
+        /// <value>The identifier for the subsystem.</value>
+        public override string Id
+        {
+            get { return "Chat"; }
+        }
+
+        /// <summary>
         ///     Allows components to define controls
         /// </summary>
         protected override void RegisterControls()
@@ -90,32 +99,7 @@ namespace MattEland.Ani.Alfred.Chat
         public override void OnInitializationCompleted()
         {
             // Say hi so Alfred greets the user
-            AlfredInstance.ChatProvider.DoInitialGreeting();
-        }
-
-        /// <summary>
-        ///     Shuts down the component.
-        /// </summary>
-        /// <exception cref="System.ArgumentNullException">
-        /// </exception>
-        /// <exception cref="System.InvalidOperationException">
-        ///     Already offline when told to shut down.
-        /// </exception>
-        public override void Shutdown()
-        {
-            // Have Alfred say goodbye as you're shutting down
-            _chatHandler.HandleUserStatement("Goodbye");
-
-            base.Shutdown();
-        }
-
-        /// <summary>
-        ///     Gets the identifier for the subsystem to be used in command routing.
-        /// </summary>
-        /// <value>The identifier for the subsystem.</value>
-        public override string Id
-        {
-            get { return "Chat"; }
+            AlfredInstance?.ChatProvider?.DoInitialGreeting();
         }
     }
 

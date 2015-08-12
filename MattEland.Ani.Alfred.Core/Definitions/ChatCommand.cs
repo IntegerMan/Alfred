@@ -62,6 +62,9 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         ///     Gets the name of the command to execute. This will be interpreted by the subsystem.
         /// </summary>
         /// <value>The name of the command.</value>
+        /// <remarks>
+        /// TODO: This might be better off as Name as Command leads to syntax like: command.Command
+        /// </remarks>
         public string Command { get; }
 
         /// <summary>

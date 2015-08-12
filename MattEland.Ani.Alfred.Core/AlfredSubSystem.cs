@@ -2,7 +2,7 @@
 // AlfredSubSystem.cs
 // 
 // Created on:      08/07/2015 at 10:00 PM
-// Last Modified:   08/12/2015 at 1:50 AM
+// Last Modified:   08/12/2015 at 3:52 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -59,13 +59,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <value>The children.</value>
         public override IEnumerable<IAlfredComponent> Children
         {
-            get
-            {
-                foreach (var page in _pages)
-                {
-                    yield return page;
-                }
-            }
+            get { return _pages; }
         }
 
         /// <summary>
@@ -85,14 +79,14 @@ namespace MattEland.Ani.Alfred.Core
         public abstract string Id { get; }
 
         /// <summary>
-        ///     Handles a chat command that may be intended for this module.
+        ///     Handles a chat command that may be intended for this subsystem.
         /// </summary>
         /// <param name="command">The command.</param>
         /// <param name="result">The default system response. This should be modified and returned.</param>
         /// <returns><c>true</c> if the command was handled, <c>false</c> otherwise.</returns>
         public virtual bool HandleChatCommand(ChatCommand command, [NotNull] AlfredCommandResult result)
         {
-            return false;
+            return Pages.Any(page => page.HandleChatCommand(command, result));
         }
 
         /// <summary>
