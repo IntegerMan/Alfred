@@ -155,9 +155,9 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <returns>The Alfred instance.</returns>
         [NotNull]
-        public AlfredProvider Create()
+        public AlfredApplication Create()
         {
-            var alfred = new AlfredProvider(_platformProvider, _statusController);
+            var alfred = new AlfredApplication(_platformProvider, _statusController);
             alfred.Console = _console;
 
             return alfred;

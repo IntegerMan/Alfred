@@ -38,7 +38,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Pages
         }
 
         [NotNull]
-        private AlfredProvider _alfred;
+        private AlfredApplication _alfred;
 
         [NotNull]
         private TestPage _page;

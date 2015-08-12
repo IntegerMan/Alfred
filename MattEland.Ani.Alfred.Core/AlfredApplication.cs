@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------
-// AlfredProvider.cs
+// AlfredApplication.cs
 // 
 // Created on:      07/25/2015 at 11:30 PM
 // Last Modified:   08/11/2015 at 7:02 PM
@@ -25,7 +25,7 @@ namespace MattEland.Ani.Alfred.Core
     ///     Coordinates providing personal assistance to a user interface and receiving settings and queries back from the user
     ///     interface.
     /// </summary>
-    public sealed class AlfredProvider : INotifyPropertyChanged, IAlfred
+    public sealed class AlfredApplication : INotifyPropertyChanged, IAlfred
     {
         /// <summary>
         ///     The platform provider
@@ -51,7 +51,7 @@ namespace MattEland.Ani.Alfred.Core
         private AlfredStatus _status;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredProvider" /> class.
+        ///     Initializes a new instance of the <see cref="AlfredApplication" /> class.
         /// </summary>
         /// <remarks>
         ///     Initialization should come from AlfredBootstrapper
@@ -59,7 +59,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <param name="provider">The provider.</param>
         /// <param name="controller">The controller.</param>
         /// <exception cref="System.ArgumentNullException">provider</exception>
-        internal AlfredProvider([NotNull] IPlatformProvider provider, [CanBeNull] IStatusController controller)
+        internal AlfredApplication([NotNull] IPlatformProvider provider, [CanBeNull] IStatusController controller)
         {
             // Set the controller
             if (controller == null)
@@ -216,7 +216,7 @@ namespace MattEland.Ani.Alfred.Core
         /// </exception>
         public void Initialize()
         {
-            // This logic is a bit lengthy, so wE'll have the status controller take care of it
+            // This logic is a bit lengthy, so we'll have the status controller take care of it
             _statusController.Initialize();
         }
 

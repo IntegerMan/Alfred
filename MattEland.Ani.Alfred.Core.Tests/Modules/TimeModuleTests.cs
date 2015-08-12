@@ -43,7 +43,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
         }
 
         [NotNull]
-        private AlfredProvider _alfred;
+        private AlfredApplication _alfred;
 
         [NotNull]
         private AlfredTimeModule _module;

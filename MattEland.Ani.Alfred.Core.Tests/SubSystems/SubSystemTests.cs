@@ -26,7 +26,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
     public class SubSystemTests
     {
         [NotNull]
-        private AlfredProvider _alfred;
+        private AlfredApplication _alfred;
 
         [NotNull]
         private TestSubsystem _subsystem;

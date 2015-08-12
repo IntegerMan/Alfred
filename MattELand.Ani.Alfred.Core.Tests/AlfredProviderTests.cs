@@ -24,7 +24,7 @@ using NUnit.Framework;
 namespace MattEland.Ani.Alfred.Core.Tests
 {
     /// <summary>
-    ///     Tests AlfredProvider
+    ///     Tests AlfredApplication
     /// </summary>
     [TestFixture]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
@@ -45,7 +45,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         }
 
         [NotNull]
-        private AlfredProvider _alfred;
+        private AlfredApplication _alfred;
 
         [NotNull]
         private TestSubsystem _subsystem;
@@ -179,7 +179,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         }
 
         [Test]
-        [ExpectedException(typeof (InvalidOperationException))]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void ModulesCannotBeAddedWhileOnline()
         {
             _alfred.Initialize();
@@ -187,7 +187,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         }
 
         [Test]
-        [ExpectedException(typeof (InvalidOperationException))]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void ModulesCannotUpdateWhileOffline()
         {
             _alfred.Register(new AlfredControlSubsystem(_alfred.PlatformProvider));
@@ -196,7 +196,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         }
 
         [Test]
-        [ExpectedException(typeof (InvalidOperationException))]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void RegisteringAWidgetMultipleTimesThrowsAnException()
         {
             var testModule = new AlfredTestModule();
@@ -213,7 +213,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         }
 
         [Test]
-        [ExpectedException(typeof (ArgumentNullException))]
+        [ExpectedException(typeof(ArgumentNullException))]
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public void RegisteringNullSubsystemGeneratesNullRef()
         {
@@ -313,7 +313,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         }
 
         [Test]
-        [ExpectedException(typeof (InvalidOperationException))]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void UpdateWithNoModulesWhileOfflineStillGeneratesError()
         {
             _alfred.Update();

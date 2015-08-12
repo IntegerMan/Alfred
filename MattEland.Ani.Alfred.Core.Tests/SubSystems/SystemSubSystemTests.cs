@@ -30,7 +30,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
         private SystemMonitoringSubsystem _subsystem;
 
         [NotNull]
-        private AlfredProvider _alfred;
+        private AlfredApplication _alfred;
 
         [SetUp]
         public void TestSetup()

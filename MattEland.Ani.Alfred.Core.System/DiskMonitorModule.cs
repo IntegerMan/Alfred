@@ -104,23 +104,22 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <summary>
         ///     Handles module initialization events
         /// </summary>
-        /// <param name="alfred"></param>
-        protected override void InitializeProtected(IAlfred alfred)
+        /// <param name="alfred"></paramAlfredApplicationtected override void InitializeProtected(IAlfred alfred)
         {
             Register(_diskReadWidget);
             Register(_diskWriteWidget);
-        }
-
-        /// <summary>
-        ///     Handles updating the module as needed
-        /// </summary>
-        protected override void UpdateProtected()
-        {
-            var readPercent = GetNextCounterValueSafe(_diskReadCounter);
-            var writePercent = GetNextCounterValueSafe(_diskWriteCounter);
-
-            _diskReadWidget.Value = readPercent;
-            _diskWriteWidget.Value = writePercent;
-        }
     }
+
+    /// <summary>
+    ///     Handles updating the module as needed
+    /// </summary>
+    protected override void UpdateProtected()
+    {
+        var readPercent = GetNextCounterValueSafe(_diskReadCounter);
+        var writePercent = GetNextCounterValueSafe(_diskWriteCounter);
+
+        _diskReadWidget.Value = readPercent;
+        _diskWriteWidget.Value = writePercent;
+    }
+}
 }

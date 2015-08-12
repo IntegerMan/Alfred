@@ -39,7 +39,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
         private AlfredControlSubsystem _subsystem;
 
         [NotNull]
-        private AlfredProvider _alfred;
+        private AlfredApplication _alfred;
 
         [Test]
         public void AlfredContainsAPageAfterRegistration()

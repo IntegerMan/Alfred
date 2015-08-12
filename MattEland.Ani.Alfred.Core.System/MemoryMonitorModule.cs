@@ -71,28 +71,27 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <summary>
         ///     Handles module initialization events
         /// </summary>
-        /// <param name="alfred"></param>
-        protected override void InitializeProtected(IAlfred alfred)
+        /// <param name="alfrAlfredApplication        protected override void InitializeProtected(IAlfred alfred)
         {
             Register(_memWidget);
-        }
-
-        /// <summary>
-        ///     Handles updating the module as needed
-        /// </summary>
-        protected override void UpdateProtected()
-        {
-            var usedMemory = GetNextCounterValueSafe(_memUsedBytesCounter);
-
-            _memWidget.Value = usedMemory;
-        }
-
-        /// <summary>
-        /// Disposes this instance.
-        /// </summary>
-        public void Dispose()
-        {
-            _memUsedBytesCounter.Dispose();
-        }
     }
+
+    /// <summary>
+    ///     Handles updating the module as needed
+    /// </summary>
+    protected override void UpdateProtected()
+    {
+        var usedMemory = GetNextCounterValueSafe(_memUsedBytesCounter);
+
+        _memWidget.Value = usedMemory;
+    }
+
+    /// <summary>
+    /// Disposes this instance.
+    /// </summary>
+    public void Dispose()
+    {
+        _memUsedBytesCounter.Dispose();
+    }
+}
 }

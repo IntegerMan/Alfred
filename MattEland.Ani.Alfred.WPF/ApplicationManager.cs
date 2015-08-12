@@ -35,7 +35,7 @@ namespace MattEland.Ani.Alfred.WPF
         ///     The Alfred Provider that makes the application possible
         /// </summary>
         [NotNull]
-        private readonly AlfredProvider _alfred;
+        private readonly AlfredApplication _alfred;
 
         private AlfredControlSubsystem _alfredControlSubsystem;
         private AlfredChatSubsystem _chatSubsystem;
@@ -63,7 +63,7 @@ namespace MattEland.Ani.Alfred.WPF
         /// </summary>
         [NotNull]
         [UsedImplicitly]
-        public AlfredProvider Alfred
+        public AlfredApplication Alfred
         {
             [DebuggerStepThrough]
             get

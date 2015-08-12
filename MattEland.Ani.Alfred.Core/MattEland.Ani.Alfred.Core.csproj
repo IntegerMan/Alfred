@@ -77,7 +77,7 @@
     <Compile Include="Definitions\IPlatformProvider.cs" />
     <Compile Include="Modules\AlfredTimeModule.cs" />
     <Compile Include="AlfredModule.cs" />
-    <Compile Include="AlfredProvider.cs" />
+    <Compile Include="AlfredApplication.cs" />
     <Compile Include="Console\ConsoleEvent.cs" />
     <Compile Include="Console\IConsole.cs" />
     <Compile Include="Modules\AlfredPowerModule.cs" />

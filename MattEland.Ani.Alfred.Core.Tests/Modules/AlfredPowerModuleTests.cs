@@ -52,7 +52,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
         /// <param name="module">The module.</param>
         /// <exception cref="System.ArgumentNullException">alfred, module
         /// </exception>
-        private void RegisterTestModule([NotNull] AlfredProvider alfred, [NotNull] AlfredModule module)
+        private void RegisterTestModule([NotNull] AlfredApplication alfred, [NotNull] AlfredModule module)
         {
             if (alfred == null)
             {
@@ -75,7 +75,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
         }
 
         [NotNull]
-        private AlfredProvider _alfred;
+        private AlfredApplication _alfred;
 
         [NotNull]
         private AlfredPowerModule _module;
