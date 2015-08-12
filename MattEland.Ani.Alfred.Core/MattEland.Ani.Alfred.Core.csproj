@@ -76,7 +76,7 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Definitions\IPlatformProvider.cs" />
     <Compile Include="Modules\AlfredTimeModule.cs" />
-    <Compile Include="AlfredModule.cs" />
+    <Compile Include="Modules\AlfredModule.cs" />
     <Compile Include="AlfredApplication.cs" />
     <Compile Include="Console\ConsoleEvent.cs" />
     <Compile Include="Console\IConsole.cs" />

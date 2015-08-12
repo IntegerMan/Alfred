@@ -1,13 +1,12 @@
 ﻿// ---------------------------------------------------------
 // AlfredPage.cs
 // 
-// Created on:      08/08/2015 at 7:17 PM
-// Last Modified:   08/08/2015 at 7:55 PM
+// Created on:      08/11/2015 at 9:44 PM
+// Last Modified:   08/11/2015 at 9:45 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 
 using JetBrains.Annotations;
 
@@ -38,6 +37,15 @@ namespace MattEland.Ani.Alfred.Core.Pages
         }
 
         /// <summary>
+        ///     Gets whether or not the component is visible to the user interface.
+        /// </summary>
+        /// <value>Whether or not the component is visible.</value>
+        public override bool IsVisible
+        {
+            get { return Status == AlfredStatus.Online; }
+        }
+
+        /// <summary>
         ///     Gets or sets the name of the page.
         /// </summary>
         /// <value>The name.</value>
@@ -54,15 +62,6 @@ namespace MattEland.Ani.Alfred.Core.Pages
         public bool IsRootLevel
         {
             get { return true; }
-        }
-
-        /// <summary>
-        ///     Gets whether or not the component is visible to the user interface.
-        /// </summary>
-        /// <value>Whether or not the component is visible.</value>
-        public override bool IsVisible
-        {
-            get { return Status == AlfredStatus.Online; }
         }
     }
 

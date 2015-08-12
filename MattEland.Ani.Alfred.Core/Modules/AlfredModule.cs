@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
 // AlfredModule.cs
 // 
-// Created on:      07/29/2015 at 3:01 PM
-// Last Modified:   08/07/2015 at 11:17 PM
+// Created on:      08/11/2015 at 9:44 PM
+// Last Modified:   08/11/2015 at 9:44 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -15,7 +15,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 
-namespace MattEland.Ani.Alfred.Core
+namespace MattEland.Ani.Alfred.Core.Modules
 {
 
     /// <summary>
@@ -28,7 +28,7 @@ namespace MattEland.Ani.Alfred.Core
         private readonly ICollection<AlfredWidget> _widgets;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlfredModule"/> class.
+        ///     Initializes a new instance of the <see cref="AlfredModule" /> class.
         /// </summary>
         /// <param name="platformProvider">The platform provider.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
@@ -43,6 +43,25 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
+        ///     Gets whether or not the module is visible to the user interface.
+        /// </summary>
+        /// <value>Whether or not the module is visible.</value>
+        public override bool IsVisible
+        {
+            get { return _widgets.Any(w => w.IsVisible); }
+        }
+
+        /// <summary>
+        ///     Gets the children of this component. Depending on the type of component this is, the children will
+        ///     vary in their own types.
+        /// </summary>
+        /// <value>The children.</value>
+        public override IEnumerable<IAlfredComponent> Children
+        {
+            get { yield break; }
+        }
+
+        /// <summary>
         ///     Gets the user interface widgets for the module.
         /// </summary>
         /// <value>The user interface widgets.</value>
@@ -53,19 +72,7 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     Gets whether or not the module is visible to the user interface.
-        /// </summary>
-        /// <value>Whether or not the module is visible.</value>
-        public override bool IsVisible
-        {
-            get
-            {
-                return _widgets.Any(w => w.IsVisible);
-            }
-        }
-
-        /// <summary>
-        /// Clears all child collections
+        ///     Clears all child collections
         /// </summary>
         protected override void ClearChildCollections()
         {
@@ -107,16 +114,6 @@ namespace MattEland.Ani.Alfred.Core
                 // ReSharper disable once AssignNullToNotNullAttribute - for testing purposes we'll allow this
                 Register(widget);
             }
-        }
-
-        /// <summary>
-        /// Gets the children of this component. Depending on the type of component this is, the children will
-        /// vary in their own types.
-        /// </summary>
-        /// <value>The children.</value>
-        public override IEnumerable<IAlfredComponent> Children
-        {
-            get { yield break; }
         }
     }
 }
