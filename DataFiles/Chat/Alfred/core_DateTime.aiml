@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+Copyright (c) 2015 Matt Eland
+
+This provides handling for time and date queries
+-->
+
+<aiml>
+
+  <!-- Time Handling -->
+  <category>
+    <pattern>TIME</pattern>
+    <template id="tmp_time">
+      <random>
+        <li>The time is now {0}.</li>
+        <li>It is currently {0}.</li>
+        <li>It is now {0}.</li>
+      </random>        
+    </template>
+  </category>
+
+  <!-- Time Redirects -->
+  <category>
+    <pattern>What TIME is it</pattern>
+    <template>
+        <srai>TIME</srai>
+    </template>
+  </category>
+  <category>
+    <pattern>Whats the Time</pattern>
+    <template>
+        <srai>TIME</srai>
+    </template>
+  </category>
+  <category>
+    <pattern>What is the Time</pattern>
+    <template>
+        <srai>TIME</srai>
+    </template>
+  </category>
+  <category>
+    <pattern>Do you have the time</pattern>
+    <template>
+        <srai>TIME</srai>
+    </template>
+  </category>
+  <category>
+    <pattern>Current Time</pattern>
+    <template>
+        <srai>TIME</srai>
+    </template>
+  </category>
+
+  <!-- Date Handling -->
+  <category>
+    <pattern>CURRENT DATE</pattern>
+    <template id="tmp_date">
+      <random>
+        <li>Today is {0}.</li>
+        <li>This is {0}.</li>
+        <li>The current date is {0}.</li>
+      </random>        
+    </template>
+  </category>
+
+  <!-- Date Handling Redirect -->
+  <category>
+    <pattern>What day is it</pattern>
+    <template>
+        <srai>CURRENT DATE</srai>
+    </template>
+  </category>
+  <category>
+    <pattern>Today</pattern>
+    <template>
+        <srai>CURRENT DATE</srai>
+    </template>
+  </category>
+  <category>
+    <pattern>When is it</pattern>
+    <template>
+        <srai>CURRENT DATE</srai>
+    </template>
+  </category>  
+  <category>
+    <pattern>What is the date</pattern>
+    <template>
+        <srai>CURRENT DATE</srai>
+    </template>
+  </category>
+  <category>
+    <pattern>Date</pattern>
+    <template>
+        <srai>CURRENT DATE</srai>
+    </template>
+  </category>
+  <category>
+    <pattern>What date is it</pattern>
+    <template>
+        <srai>CURRENT DATE</srai>
+    </template>
+  </category>
+
+</aiml>

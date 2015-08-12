@@ -99,7 +99,8 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Chat\Alfred\power.aiml" />
+    <None Include="Chat\Alfred\core_DateTime.aiml" />
+    <None Include="Chat\Alfred\core_power.aiml" />
     <Content Include="Chat\config\DefaultPredicates.xml" />
     <Content Include="Chat\config\GenderSubstitutions.xml" />
     <Content Include="Chat\config\Person2Substitutions.xml" />
