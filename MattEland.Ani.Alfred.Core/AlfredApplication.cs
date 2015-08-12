@@ -243,7 +243,13 @@ namespace MattEland.Ani.Alfred.Core
                 throw new ArgumentNullException(nameof(chatProvider));
             }
 
-            ChatProvider = chatProvider;
+            /* The ChatProvider we're getting is nice and all, but we want to be able
+               to route ChatCommands to the various Subsystems while still allowing the
+               user to interact directly with an IChatProvider. To do this we decorate
+               the one that's coming in with our own provider that intercepts ChatCommands
+               and routes them accordingly while still returning the same result to the user */
+
+            ChatProvider = new DelegatingChatProvider(chatProvider, this);
         }
 
         /// <summary>

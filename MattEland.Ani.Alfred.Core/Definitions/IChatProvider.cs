@@ -28,5 +28,10 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <value>The last input.</value>
         [CanBeNull]
         string LastInput { get; }
+
+        /// <summary>
+        /// Does an initial greeting to the user without requiring any input. This should set LastInput to null.
+        /// </summary>
+        void DoInitialGreeting();
     }
 }

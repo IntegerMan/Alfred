@@ -12,7 +12,7 @@
   <item name="substitutionsfile" value="Substitutions.xml"/>
   <item name="maxlogbuffersize" value="64"/>
   <item name="notacceptinguserinputmessage" value="Alfred is not currently available to chat."/>
-  <item name="stripperregex" value="[^0-9a-zA-Z]"/>
+  <item name="stripperregex" value="[^0-9a-zA-Z_]"/>
   <item name="botmaster" value="Matt Eland"/>
   <item name="master" value="Bruce Wayne"/>
   <item name="author" value="Matt Eland"/>

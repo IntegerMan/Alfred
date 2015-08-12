@@ -72,6 +72,11 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         bool IsOnline { get; }
 
         /// <summary>
+        /// Gets the chat provider.
+        /// </summary>
+        /// <value>The chat provider.</value>
+        IChatProvider ChatProvider { get; }
+        /// <summary>
         /// Registers the user statement handler as the framework's user statement handler.
         /// </summary>
         /// <param name="chatProvider">The user statement handler.</param>

@@ -22,6 +22,12 @@ This provides generic greeting capabilities both in startup greeting and in resp
 
   <!-- Common Substitutes for Hello -->
   <category>
+    <pattern>EVT_STARTUP</pattern>
+    <template>
+      <srai>HELLO</srai>
+    </template>
+  </category>
+  <category>
     <pattern>HI</pattern>
     <template>
       <srai>HELLO</srai>
