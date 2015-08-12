@@ -9,6 +9,7 @@
 using System;
 using System.Windows.Input;
 
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 
 namespace MattEland.Ani.Alfred.WPF.Platform

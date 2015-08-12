@@ -11,7 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
 
-namespace MattEland.Ani.Alfred.Core.Widgets
+namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>
     ///     Represents a command that can be executed on the user interface layer

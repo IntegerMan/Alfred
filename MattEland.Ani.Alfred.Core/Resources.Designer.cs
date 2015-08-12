@@ -331,6 +331,15 @@ namespace MattEland.Ani.Alfred.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {{Subsystem: {0}, Command: {1}, Data: {2}}}.
+        /// </summary>
+        internal static string ChatCommandToString {
+            get {
+                return ResourceManager.GetString("ChatCommandToString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chat.
         /// </summary>
         internal static string ChatModuleName {

@@ -2,7 +2,7 @@
 // AimlCommandParser.cs
 // 
 // Created on:      08/11/2015 at 6:23 PM
-// Last Modified:   08/11/2015 at 6:45 PM
+// Last Modified:   08/11/2015 at 10:16 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -58,13 +58,18 @@ namespace MattEland.Ani.Alfred.Chat
                 return ChatCommand.Empty;
             }
 
+            // Build the ChatCommand
             var subsystem = commandNode.Attribute("subsystem")?.Value;
             var command = commandNode.Attribute("command")?.Value;
             var data = commandNode.Attribute("data")?.Value;
+            var chatCommand = new ChatCommand(subsystem, command, data);
 
-            console?.Log(Resources.ChatOutputHeader, "Received OOB Command: " + command, LogLevel.Info);
+            // Log for diagnostics
+            console?.Log(Resources.ChatOutputHeader,
+                         string.Format(CultureInfo.CurrentCulture, "Received OOB Command: {0}", chatCommand),
+                         LogLevel.Info);
 
-            return new ChatCommand(subsystem, command, data);
+            return chatCommand;
         }
 
         /// <summary>
@@ -83,7 +88,7 @@ namespace MattEland.Ani.Alfred.Chat
             }
             catch (XmlException ex)
             {
-                var message = String.Format(CultureInfo.CurrentCulture,
+                var message = string.Format(CultureInfo.CurrentCulture,
                                             Resources.ErrorParsingCommand,
                                             ex.Message,
                                             commandXml);
@@ -167,7 +172,7 @@ namespace MattEland.Ani.Alfred.Chat
             if (end < 0)
             {
                 console?.Log(Resources.ChatOutputHeader,
-                             String.Format(CultureInfo.CurrentCulture, Resources.NoEndTagForOobCommand, template),
+                             string.Format(CultureInfo.CurrentCulture, Resources.NoEndTagForOobCommand, template),
                              LogLevel.Error);
 
                 return null;

@@ -2,11 +2,12 @@
 // ChatCommand.cs
 // 
 // Created on:      08/11/2015 at 3:59 PM
-// Last Modified:   08/11/2015 at 4:51 PM
+// Last Modified:   08/11/2015 at 10:18 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
+using System.Globalization;
 
 namespace MattEland.Ani.Alfred.Core.Definitions
 {
@@ -79,6 +80,16 @@ namespace MattEland.Ani.Alfred.Core.Definitions
             return string.Equals(Subsystem, other.Subsystem) && string.Equals(Command, other.Command) &&
                    string.Equals(Data, other.Data);
         }
+
+        /// <summary>
+        ///     Returns a <see cref="System.String" /> that represents this instance.
+        /// </summary>
+        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
+        public override string ToString()
+        {
+            return string.Format(CultureInfo.CurrentCulture, Resources.ChatCommandToString.NonNull(), Subsystem, Command, Data);
+        }
+
 
         /// <summary>
         ///     Determines whether the specified <see cref="System.Object" /> is equal to this instance.
