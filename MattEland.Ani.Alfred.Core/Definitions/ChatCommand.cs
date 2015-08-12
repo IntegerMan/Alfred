@@ -87,7 +87,8 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.CurrentCulture, Resources.ChatCommandToString.NonNull(), Subsystem, Command, Data);
+            // ReSharper disable once AssignNullToNotNullAttribute
+            return string.Format(CultureInfo.CurrentCulture, Resources.ChatCommandToString, Subsystem, Command, Data);
         }
 
 
