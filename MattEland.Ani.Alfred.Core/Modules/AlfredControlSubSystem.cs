@@ -113,6 +113,13 @@ namespace MattEland.Ani.Alfred.Core.Modules
             get { return Resources.AlfredControlSubSystem_Name; }
         }
 
-
+        /// <summary>
+        ///     Gets the identifier for the subsystem to be used in command routing.
+        /// </summary>
+        /// <value>The identifier for the subsystem.</value>
+        public override string Id
+        {
+            get { return "Core"; }
+        }
     }
 }

@@ -151,5 +151,14 @@ namespace MattEland.Ani.Alfred.Core.Tests.Mocks
 
             _registerPages.Add(page);
         }
+
+        /// <summary>
+        ///     Gets the identifier for the subsystem to be used in command routing.
+        /// </summary>
+        /// <value>The identifier for the subsystem.</value>
+        public override string Id
+        {
+            get { return "Test"; }
+        }
     }
 }

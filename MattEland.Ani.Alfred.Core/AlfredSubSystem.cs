@@ -2,12 +2,13 @@
 // AlfredSubSystem.cs
 // 
 // Created on:      08/07/2015 at 10:00 PM
-// Last Modified:   08/09/2015 at 6:53 PM
+// Last Modified:   08/12/2015 at 1:50 AM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 using JetBrains.Annotations;
@@ -76,6 +77,24 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
+        ///     Gets the identifier for the subsystem to be used in command routing.
+        /// </summary>
+        /// <value>The identifier for the subsystem.</value>
+        [NotNull]
+        public abstract string Id { get; }
+
+        /// <summary>
+        ///     Handles a chat command that may be intended for this module.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="result">The default system response. This should be modified and returned.</param>
+        /// <returns><c>true</c> if the command was handled, <c>false</c> otherwise.</returns>
+        public bool HandleChatCommand(ChatCommand command, [NotNull] AlfredCommandResult result)
+        {
+            return false;
+        }
+
+        /// <summary>
         ///     Gets the pages associated with this subsystem
         /// </summary>
         /// <value>The pages.</value>
@@ -89,7 +108,7 @@ namespace MattEland.Ani.Alfred.Core
         ///     Registers a page.
         /// </summary>
         /// <param name="page">The page.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0")]
+        [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0")]
         protected void Register([NotNull] IAlfredPage page)
         {
             _pages.AddSafe(page);
@@ -105,7 +124,6 @@ namespace MattEland.Ani.Alfred.Core
 
             _pages.Clear();
         }
-
     }
 
 }

@@ -9,6 +9,7 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 
 using JetBrains.Annotations;
 
@@ -94,13 +95,28 @@ namespace MattEland.Ani.Alfred.Core
         /// <returns>The response to the user statement</returns>
         public UserStatementResponse HandleUserStatement(string userInput)
         {
-
+            //+ Delegate the actual work of processing the input to a chat provider
             var response = ChatProvider.HandleUserStatement(userInput);
 
-            // TODO: Route this to Alfred's Subsystems to handle as a command
+            //+ Route this to Alfred's Subsystems to handle as a command
+            var result = CommandDispatcher.HandleChatCommand(response, Alfred);
 
-            // Update our values so the consumer can check or bind to this instance.
-            LastInput = userInput;
+            if (!string.IsNullOrWhiteSpace(result.RedirectToChat))
+            {
+                //! Do a recursive call to HandleUserInput with the new redirect
+                response = HandleUserStatement(result.RedirectToChat);
+            }
+            else
+            {
+                // We'll stick our new values into the response as well so the command can change things
+                response = new UserStatementResponse(result.NewLastInput,
+                                                     result.NewLastOutput,
+                                                     response.Template,
+                                                     response.Command);
+            }
+
+            //- Update and return our values so the consumer can check or bind to this instance.
+            LastInput = response.UserInput;
             LastResponse = response;
 
             return response;
@@ -171,4 +187,5 @@ namespace MattEland.Ani.Alfred.Core
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
+
 }

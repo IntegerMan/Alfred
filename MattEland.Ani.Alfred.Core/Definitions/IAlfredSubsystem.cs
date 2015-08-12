@@ -31,6 +31,22 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <value>The root-level pages.</value>
         [NotNull, ItemNotNull]
         IEnumerable<IAlfredPage> RootPages { get; }
+
+        /// <summary>
+        /// Gets the identifier for the subsystem to be used in command routing.
+        /// </summary>
+        /// <value>The identifier for the subsystem.</value>
+        [NotNull]
+        string Id { get; }
+
+        /// <summary>
+        /// Handles a chat command that may be intended for this module.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="result">The default system response. This should be modified and returned.</param>
+        /// <returns><c>true</c> if the command was handled, <c>false</c> otherwise.</returns>
+        [NotNull]
+        bool HandleChatCommand(ChatCommand command, [NotNull] AlfredCommandResult result);
     }
 
 }
