@@ -131,7 +131,6 @@ namespace MattEland.Ani.Alfred.Chat.Tests
         [TestCase("Hi", "Hello")]
         [TestCase("Hey", "Hello")]
         [TestCase("Thank You", "Thanks")]
-        [TestCase("Dude", "The Dude abides")]
         public void ChatRedirectTests([NotNull] string input, [NotNull] string redirectTo)
         {
             var template = GetReplyTemplate(input);
