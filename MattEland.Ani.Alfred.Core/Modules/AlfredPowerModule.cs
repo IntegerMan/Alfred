@@ -2,7 +2,7 @@
 // AlfredPowerModule.cs
 // 
 // Created on:      08/02/2015 at 4:56 PM
-// Last Modified:   08/07/2015 at 11:55 PM
+// Last Modified:   08/12/2015 at 2:01 AM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -43,10 +43,10 @@ namespace MattEland.Ani.Alfred.Core.Modules
         {
             _statusWidget = new TextWidget(Resources.AlfredCoreModule_AlfredNotSet);
 
-            var initializeCommand = platformProvider.CreateCommand(() => AlfredInstance?.Initialize());
+            var initializeCommand = platformProvider.CreateCommand(ExecuteInitializeCommand);
             _initializeButton = new ButtonWidget(Resources.InitializeButtonText, initializeCommand);
 
-            var shutdownCommand = platformProvider.CreateCommand(() => AlfredInstance?.Shutdown());
+            var shutdownCommand = platformProvider.CreateCommand(ExecuteShutdownCommand);
             _shutdownButton = new ButtonWidget(Resources.ShutdownButtonText, shutdownCommand);
         }
 
@@ -88,6 +88,22 @@ namespace MattEland.Ani.Alfred.Core.Modules
         public ButtonWidget ShutdownButton
         {
             get { return _shutdownButton; }
+        }
+
+        /// <summary>
+        ///     Handles the initialize command by initializing Alfred
+        /// </summary>
+        internal void ExecuteInitializeCommand()
+        {
+            AlfredInstance?.Initialize();
+        }
+
+        /// <summary>
+        ///     Handles the shutdown command by shutting down Alfred
+        /// </summary>
+        internal void ExecuteShutdownCommand()
+        {
+            AlfredInstance?.Shutdown();
         }
 
         /// <summary>
@@ -140,7 +156,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        /// Called when the component is registered.
+        ///     Called when the component is registered.
         /// </summary>
         /// <param name="alfred">The alfred.</param>
         public override void OnRegistered(IAlfred alfred)

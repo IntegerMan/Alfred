@@ -121,5 +121,33 @@ namespace MattEland.Ani.Alfred.Core.Modules
         {
             get { return "Core"; }
         }
+
+        /// <summary>
+        ///     Handles a chat command that may be intended for this module.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="result">The default system response. This should be modified and returned.</param>
+        /// <returns><c>true</c> if the command was handled, <c>false</c> otherwise.</returns>
+        public override bool HandleChatCommand(ChatCommand command, AlfredCommandResult result)
+        {
+            /* TODO: This logic would be awesome if Modules could register
+               supported commands with their Subsystem and delegation could
+               happen automatically */
+
+            // Qualify that this is a message we can answer
+            if (command.Command?.ToUpperInvariant() != "SHUTDOWN")
+            {
+                return false;
+            }
+
+            // Respond via delegation to the power module
+            _powerModule.ExecuteShutdownCommand();
+
+            // Have Alfred say goodbye
+            result.RedirectToChat = "Bye";
+
+            return true;
+
+        }
     }
 }

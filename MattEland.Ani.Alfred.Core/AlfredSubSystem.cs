@@ -89,7 +89,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <param name="command">The command.</param>
         /// <param name="result">The default system response. This should be modified and returned.</param>
         /// <returns><c>true</c> if the command was handled, <c>false</c> otherwise.</returns>
-        public bool HandleChatCommand(ChatCommand command, [NotNull] AlfredCommandResult result)
+        public virtual bool HandleChatCommand(ChatCommand command, [NotNull] AlfredCommandResult result)
         {
             return false;
         }
