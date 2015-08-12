@@ -55,19 +55,19 @@ This provides handling for navigating to UI areas
   <category>
     <pattern>Navigate System</pattern>
     <template>
-      CMD_NAV[System] Navigating...
+      <alfred subsystem="ui" command="nav" data="System" />
     </template>
   </category>
   <category>
     <pattern>Navigate System Monitoring</pattern>
     <template>
-      CMD_NAV[System] Navigating...
+      <alfred subsystem="ui" command="nav" data="System" />
     </template>
   </category>
   <category>
     <pattern>Navigate System Monitor</pattern>
     <template>
-      CMD_NAV[System] Navigating...
+      <alfred subsystem="ui" command="nav" data="System" />
     </template>
   </category>
   
@@ -75,13 +75,13 @@ This provides handling for navigating to UI areas
   <category>
     <pattern>Navigate Core</pattern>
     <template>
-      CMD_NAV[Core] Navigating...
+      <alfred subsystem="ui" command="nav" data="Core" />
     </template>
   </category>
   <category>
     <pattern>Navigate Home</pattern>
     <template>
-      CMD_NAV[Core] Navigating...
+      <alfred subsystem="ui" command="nav" data="Core" />
     </template>
   </category>
   
@@ -89,13 +89,13 @@ This provides handling for navigating to UI areas
   <category>
     <pattern>Navigate Event Log</pattern>
     <template>
-      CMD_NAV[Log] Navigating...
+      <alfred subsystem="ui" command="nav" data="Event Log" />
     </template>
   </category>
   <category>
     <pattern>Navigate Log</pattern>
     <template>
-      CMD_NAV[Log] Navigating...
+      <alfred subsystem="ui" command="nav" data="Event Log" />
     </template>
   </category>
   

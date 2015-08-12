@@ -30,21 +30,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F8E42D0B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MattEland.Ani.Alfred.Chat.Tests", "MattEland.Ani.Alfred.Chat.Tests\MattEland.Ani.Alfred.Chat.Tests.csproj", "{32CF8551-71A2-40CD-88E4-C8D1D0F97783}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Alfred", "Alfred", "{705B9CE2-6250-40CB-B6F3-5EE9D7562746}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{41C08081-6554-40FF-B01E-08B837C10ACA}"
-	ProjectSection(SolutionItems) = preProject
-		DataFiles\Chat\config\DefaultPredicates.xml = DataFiles\Chat\config\DefaultPredicates.xml
-		DataFiles\Chat\config\GenderSubstitutions.xml = DataFiles\Chat\config\GenderSubstitutions.xml
-		DataFiles\Chat\config\Person2Substitutions.xml = DataFiles\Chat\config\Person2Substitutions.xml
-		DataFiles\Chat\config\PersonSubstitutions.xml = DataFiles\Chat\config\PersonSubstitutions.xml
-		DataFiles\Chat\config\Settings.xml = DataFiles\Chat\config\Settings.xml
-		DataFiles\Chat\config\Splitters.xml = DataFiles\Chat\config\Splitters.xml
-		DataFiles\Chat\config\Substitutions.xml = DataFiles\Chat\config\Substitutions.xml
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chat Data", "Chat Data", "{02D261BE-94C2-49EC-8208-212D85910670}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataFiles", "DataFiles\DataFiles.csproj", "{97379779-EBE5-4257-A2ED-6FD80CFDDCC5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MattEland.Common", "MattEland.Common\MattEland.Common.csproj", "{514CB422-A6EF-4C75-B925-92AB599BA1BE}"
@@ -221,9 +206,6 @@ Global
 		{AB933947-863E-455F-ABA9-A8866EAC1894} = {4B2AB36C-F1B4-4CB3-B94C-966BBD61ED42}
 		{3A25074A-351A-471E-AAF8-171A0E66F83A} = {4B2AB36C-F1B4-4CB3-B94C-966BBD61ED42}
 		{32CF8551-71A2-40CD-88E4-C8D1D0F97783} = {F8E42D0B-BC19-43B5-BF57-0CF46AC785C5}
-		{705B9CE2-6250-40CB-B6F3-5EE9D7562746} = {02D261BE-94C2-49EC-8208-212D85910670}
-		{41C08081-6554-40FF-B01E-08B837C10ACA} = {02D261BE-94C2-49EC-8208-212D85910670}
-		{02D261BE-94C2-49EC-8208-212D85910670} = {A47042C4-F451-4062-8025-59386DAA7BF0}
 		{97379779-EBE5-4257-A2ED-6FD80CFDDCC5} = {19C5600C-235A-4B95-B57D-8EC061FF44D7}
 		{514CB422-A6EF-4C75-B925-92AB599BA1BE} = {4B2AB36C-F1B4-4CB3-B94C-966BBD61ED42}
 	EndGlobalSection
