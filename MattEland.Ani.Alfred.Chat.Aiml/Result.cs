@@ -31,12 +31,12 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             this.user = user;
             this.chatEngine = chatEngine;
             this.request = request;
-            this.request.result = this;
+            this.request.Result = this;
         }
 
         public string RawInput
         {
-            get { return request.rawInput; }
+            get { return request.RawInput; }
         }
 
         public string Output
@@ -47,7 +47,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                 {
                     return RawOutput;
                 }
-                if (request.hasTimedOut)
+                if (request.HasTimedOut)
                 {
                     return chatEngine.TimeOutMessage;
                 }

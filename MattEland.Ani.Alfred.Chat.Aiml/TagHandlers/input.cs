@@ -46,7 +46,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                                 }
                                 ChatEngine.writeToLog("ERROR! An input tag with a bady formed index (" +
                                                templateNode.Attributes[0].Value +
-                                               ") was encountered processing the input: " + request.rawInput);
+                                               ") was encountered processing the input: " + request.RawInput);
                             }
                             else
                             {
@@ -57,14 +57,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                                 }
                                 ChatEngine.writeToLog("ERROR! An input tag with a bady formed index (" +
                                                templateNode.Attributes[0].Value +
-                                               ") was encountered processing the input: " + request.rawInput);
+                                               ") was encountered processing the input: " + request.RawInput);
                             }
                         }
                         catch
                         {
                             ChatEngine.writeToLog("ERROR! An input tag with a bady formed index (" +
                                            templateNode.Attributes[0].Value + ") was encountered processing the input: " +
-                                           request.rawInput);
+                                           request.RawInput);
                         }
                     }
                 }

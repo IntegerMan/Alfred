@@ -103,26 +103,30 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             }
         }
 
-        public string evaluate(string path,
+        public string Evaluate(string path,
                                SubQuery query,
-                               Request request,
+                               [NotNull] Request request,
                                MatchState matchstate,
                                StringBuilder wildcard)
         {
-            if (request.StartedOn.AddMilliseconds(request.chatEngine.TimeOut) < DateTime.Now)
+            //- Validate Inputs
+            if (request == null)
             {
-                request.chatEngine.writeToLog("WARNING! Request timeout. User: " + request.user.UserID +
-                                              " raw input: \"" +
-                                              request.rawInput + "\"");
-                request.hasTimedOut = true;
+                throw new ArgumentNullException(nameof(request));
+            }
+
+            // Ensure we haven't taken too long
+            if (request.CheckForTimedOut())
+            {
                 return string.Empty;
             }
+
             path = path.Trim();
             if (_children.Count == 0)
             {
                 if (path.Length > 0)
                 {
-                    storeWildCard(path, wildcard);
+                    AddWordToStringBuilder(path, wildcard);
                 }
                 return Template;
             }
@@ -137,8 +141,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             {
                 var node = _children["_"];
                 var wildcard1 = new StringBuilder();
-                storeWildCard(strArray[0], wildcard1);
-                var str = node.evaluate(path1, query, request, matchstate, wildcard1);
+                AddWordToStringBuilder(strArray[0], wildcard1);
+                var str = node.Evaluate(path1, query, request, matchstate, wildcard1);
                 if (str.Length > 0)
                 {
                     if (wildcard1.Length > 0)
@@ -173,7 +177,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
                 }
                 var node = _children[key];
                 var wildcard1 = new StringBuilder();
-                var str = node.evaluate(path1, query, request, matchstate1, wildcard1);
+                var str = node.Evaluate(path1, query, request, matchstate1, wildcard1);
                 if (str.Length > 0)
                 {
                     if (wildcard1.Length > 0)
@@ -201,8 +205,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             {
                 var node = _children["*"];
                 var wildcard1 = new StringBuilder();
-                storeWildCard(strArray[0], wildcard1);
-                var str = node.evaluate(path1, query, request, matchstate, wildcard1);
+                AddWordToStringBuilder(strArray[0], wildcard1);
+                var str = node.Evaluate(path1, query, request, matchstate, wildcard1);
                 if (str.Length > 0)
                 {
                     if (wildcard1.Length > 0)
@@ -226,20 +230,29 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             }
             if (Word == "_" || Word == "*")
             {
-                storeWildCard(strArray[0], wildcard);
-                return evaluate(path1, query, request, matchstate, wildcard);
+                AddWordToStringBuilder(strArray[0], wildcard);
+                return Evaluate(path1, query, request, matchstate, wildcard);
             }
             wildcard = new StringBuilder();
             return string.Empty;
         }
 
-        private void storeWildCard(string word, StringBuilder wildcard)
+        /// <summary>
+        /// Adds a word to the string builder ensuring that there is space before the word if the
+        /// StringBuilder has already had items added to it.
+        /// </summary>
+        /// <param name="word">The word.</param>
+        /// <param name="stringBuilder">The string builder.</param>
+        private static void AddWordToStringBuilder(string word, [NotNull] StringBuilder stringBuilder)
         {
-            if (wildcard.Length > 0)
+            // If it's not the first string in there, add a space.
+            if (stringBuilder.Length > 0)
             {
-                wildcard.Append(" ");
+                stringBuilder.Append(" ");
             }
-            wildcard.Append(word);
+
+            // Add our word
+            stringBuilder.Append(word);
         }
     }
 }

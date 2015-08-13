@@ -42,13 +42,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                                 {
                                     return query.InputStar[index];
                                 }
-                                ChatEngine.writeToLog("InputStar out of bounds reference caused by input: " + request.rawInput);
+                                ChatEngine.writeToLog("InputStar out of bounds reference caused by input: " + request.RawInput);
                             }
                             catch
                             {
                                 ChatEngine.writeToLog(
                                                "Index set to non-integer value whilst processing star tag in response to the input: " +
-                                               request.rawInput);
+                                               request.RawInput);
                             }
                         }
                     }
@@ -57,7 +57,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                 {
                     ChatEngine.writeToLog(
                                    "A star tag tried to reference an empty InputStar collection when processing the input: " +
-                                   request.rawInput);
+                                   request.RawInput);
                 }
             }
             return string.Empty;

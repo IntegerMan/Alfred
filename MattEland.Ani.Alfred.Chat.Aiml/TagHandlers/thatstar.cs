@@ -33,7 +33,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                     }
                     ChatEngine.writeToLog(
                                    "ERROR! An out of bounds index to thatstar was encountered when processing the input: " +
-                                   request.rawInput);
+                                   request.RawInput);
                 }
                 else if (templateNode.Attributes.Count == 1 && templateNode.Attributes[0].Name.ToLower() == "index")
                 {
@@ -50,20 +50,20 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                                 }
                                 ChatEngine.writeToLog("ERROR! An input tag with a bady formed index (" +
                                                templateNode.Attributes[0].Value +
-                                               ") was encountered processing the input: " + request.rawInput);
+                                               ") was encountered processing the input: " + request.RawInput);
                             }
                             else
                             {
                                 ChatEngine.writeToLog(
                                                "ERROR! An out of bounds index to thatstar was encountered when processing the input: " +
-                                               request.rawInput);
+                                               request.RawInput);
                             }
                         }
                         catch
                         {
                             ChatEngine.writeToLog("ERROR! A thatstar tag with a bady formed index (" +
                                            templateNode.Attributes[0].Value + ") was encountered processing the input: " +
-                                           request.rawInput);
+                                           request.RawInput);
                         }
                     }
                 }
