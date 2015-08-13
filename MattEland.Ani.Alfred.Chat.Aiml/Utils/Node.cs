@@ -104,15 +104,19 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         public string Evaluate(string path,
-                               SubQuery query,
-                               [NotNull] Request request,
-                               MatchState matchstate,
-                               StringBuilder wildcard)
+                                       SubQuery query,
+                                       [NotNull] Request request,
+                                       MatchState matchstate,
+                                       [NotNull] StringBuilder wildcard)
         {
             //- Validate Inputs
             if (request == null)
             {
                 throw new ArgumentNullException(nameof(request));
+            }
+            if (wildcard == null)
+            {
+                throw new ArgumentNullException(nameof(wildcard));
             }
 
             // Ensure we haven't taken too long
@@ -121,120 +125,200 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
                 return string.Empty;
             }
 
-            path = path.Trim();
+            //- Ensure path is something we can manipulate
+            path = path?.Trim() ?? string.Empty;
+
+            // If no child nodes, this is it - this is our match
             if (_children.Count == 0)
             {
-                if (path.Length > 0)
+                // Update the path
+                if (!string.IsNullOrEmpty(path))
                 {
                     AddWordToStringBuilder(path, wildcard);
                 }
+
+                // Bring back the template
                 return Template;
             }
-            if (path.Length == 0)
+
+            // If there's no path at all, just use the template
+            if (string.IsNullOrEmpty(path))
             {
                 return Template;
             }
-            var strArray = path.Split(" \r\n\t".ToCharArray());
-            var key = UppercaseTextTransformer.TransformInput(strArray[0]);
-            var path1 = path.Substring(key.Length, path.Length - key.Length);
+
+            // Grab the first word from the path
+            const string WordSeparators = " \r\n\t";
+            var words = path.Split(WordSeparators.ToCharArray());
+            Debug.Assert(words[0] != null);
+            var key = words[0].ToUpperInvariant();
+
+            // Grab the rest of the path
+            var newPath = path.Substring(key.Length, path.Length - key.Length);
+
             if (_children.ContainsKey("_"))
             {
-                var node = _children["_"];
-                var wildcard1 = new StringBuilder();
-                AddWordToStringBuilder(strArray[0], wildcard1);
-                var str = node.Evaluate(path1, query, request, matchstate, wildcard1);
-                if (str.Length > 0)
+                string str1;
+
+                if (EvaluateUnderscoreChild(query, request, matchstate, words, newPath, out str1))
                 {
-                    if (wildcard1.Length > 0)
-                    {
-                        switch (matchstate)
-                        {
-                            case MatchState.UserInput:
-                                query.InputStar.Add(wildcard1.ToString());
-                                wildcard1.Remove(0, wildcard1.Length);
-                                break;
-                            case MatchState.That:
-                                query.ThatStar.Add(wildcard1.ToString());
-                                break;
-                            case MatchState.Topic:
-                                query.TopicStar.Add(wildcard1.ToString());
-                                break;
-                        }
-                    }
-                    return str;
+                    return str1;
                 }
             }
+
             if (_children.ContainsKey(key))
             {
-                var matchstate1 = matchstate;
-                if (key == "<THAT>")
+                string s1;
+                if (EvaluateKeyedChildNode(query, request, matchstate, key, newPath, out s1))
                 {
-                    matchstate1 = MatchState.That;
-                }
-                else if (key == "<TOPIC>")
-                {
-                    matchstate1 = MatchState.Topic;
-                }
-                var node = _children[key];
-                var wildcard1 = new StringBuilder();
-                var str = node.Evaluate(path1, query, request, matchstate1, wildcard1);
-                if (str.Length > 0)
-                {
-                    if (wildcard1.Length > 0)
-                    {
-                        switch (matchstate)
-                        {
-                            case MatchState.UserInput:
-                                query.InputStar.Add(wildcard1.ToString());
-                                wildcard1.Remove(0, wildcard1.Length);
-                                break;
-                            case MatchState.That:
-                                query.ThatStar.Add(wildcard1.ToString());
-                                wildcard1.Remove(0, wildcard1.Length);
-                                break;
-                            case MatchState.Topic:
-                                query.TopicStar.Add(wildcard1.ToString());
-                                wildcard1.Remove(0, wildcard1.Length);
-                                break;
-                        }
-                    }
-                    return str;
+                    return s1;
                 }
             }
+
             if (_children.ContainsKey("*"))
             {
-                var node = _children["*"];
-                var wildcard1 = new StringBuilder();
-                AddWordToStringBuilder(strArray[0], wildcard1);
-                var str = node.Evaluate(path1, query, request, matchstate, wildcard1);
-                if (str.Length > 0)
-                {
-                    if (wildcard1.Length > 0)
-                    {
-                        switch (matchstate)
-                        {
-                            case MatchState.UserInput:
-                                query.InputStar.Add(wildcard1.ToString());
-                                wildcard1.Remove(0, wildcard1.Length);
-                                break;
-                            case MatchState.That:
-                                query.ThatStar.Add(wildcard1.ToString());
-                                break;
-                            case MatchState.Topic:
-                                query.TopicStar.Add(wildcard1.ToString());
-                                break;
-                        }
-                    }
-                    return str;
-                }
+                string str2;
+                if (EvaluateAsterixChildNode(query, request, matchstate, words, newPath, out str2))
+                    return str2;
             }
+
             if (Word == "_" || Word == "*")
             {
-                AddWordToStringBuilder(strArray[0], wildcard);
-                return Evaluate(path1, query, request, matchstate, wildcard);
+                AddWordToStringBuilder(words[0], wildcard);
+                return Evaluate(newPath, query, request, matchstate, wildcard);
             }
-            wildcard = new StringBuilder();
+
             return string.Empty;
+        }
+
+        private bool EvaluateAsterixChildNode(SubQuery query,
+                                              Request request,
+                                              MatchState matchstate,
+                                              string[] words,
+                                              string newPath,
+                                              out string str2)
+        {
+
+            var node = _children["*"];
+            var wildcard1 = new StringBuilder();
+            AddWordToStringBuilder(words[0], wildcard1);
+            var str = node.Evaluate(newPath, query, request, matchstate, wildcard1);
+            if (str.Length > 0)
+            {
+                if (wildcard1.Length > 0)
+                {
+                    switch (matchstate)
+                    {
+                        case MatchState.UserInput:
+                            query.InputStar.Add(wildcard1.ToString());
+                            wildcard1.Remove(0, wildcard1.Length);
+                            break;
+                        case MatchState.That:
+                            query.ThatStar.Add(wildcard1.ToString());
+                            break;
+                        case MatchState.Topic:
+                            query.TopicStar.Add(wildcard1.ToString());
+                            break;
+                    }
+                }
+                {
+                    str2 = str;
+                    return true;
+                }
+            }
+            str2 = string.Empty;
+            return false;
+        }
+
+        private bool EvaluateKeyedChildNode(SubQuery query,
+                                            Request request,
+                                            MatchState matchstate,
+                                            string key,
+                                            string newPath,
+                                            out string s1)
+        {
+
+            var matchstate1 = matchstate;
+            if (key == "<THAT>")
+            {
+                matchstate1 = MatchState.That;
+            }
+            else if (key == "<TOPIC>")
+            {
+                matchstate1 = MatchState.Topic;
+            }
+            var node = _children[key];
+            var wildcard1 = new StringBuilder();
+            var str = node.Evaluate(newPath, query, request, matchstate1, wildcard1);
+            if (str.Length > 0)
+            {
+                if (wildcard1.Length > 0)
+                {
+                    switch (matchstate)
+                    {
+                        case MatchState.UserInput:
+                            query.InputStar.Add(wildcard1.ToString());
+                            wildcard1.Remove(0, wildcard1.Length);
+                            break;
+                        case MatchState.That:
+                            query.ThatStar.Add(wildcard1.ToString());
+                            wildcard1.Remove(0, wildcard1.Length);
+                            break;
+                        case MatchState.Topic:
+                            query.TopicStar.Add(wildcard1.ToString());
+                            wildcard1.Remove(0, wildcard1.Length);
+                            break;
+                    }
+                }
+                {
+                    s1 = str;
+                    return true;
+                }
+            }
+            s1 = string.Empty;
+            return false;
+        }
+
+        private bool EvaluateUnderscoreChild(SubQuery query,
+                                             Request request,
+                                             MatchState matchstate,
+                                             string[] words,
+                                             string newPath,
+                                             out string str1)
+        {
+
+            var node = _children["_"];
+
+            var wildcard1 = new StringBuilder();
+
+            AddWordToStringBuilder(words[0], wildcard1);
+
+            var str = node.Evaluate(newPath, query, request, matchstate, wildcard1);
+            if (!string.IsNullOrEmpty(str))
+            {
+                if (wildcard1.Length > 0)
+                {
+                    switch (matchstate)
+                    {
+                        case MatchState.UserInput:
+                            query.InputStar.Add(wildcard1.ToString());
+                            wildcard1.Remove(0, wildcard1.Length);
+                            break;
+                        case MatchState.That:
+                            query.ThatStar.Add(wildcard1.ToString());
+                            break;
+                        case MatchState.Topic:
+                            query.TopicStar.Add(wildcard1.ToString());
+                            break;
+                    }
+                }
+                {
+                    str1 = str;
+                    return true;
+                }
+            }
+            str1 = string.Empty;
+            return false;
         }
 
         /// <summary>
