@@ -406,7 +406,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         public string Normalize(string input, bool isUserInput)
         {
             //? Transform this input into 
-            var applySubstitutions = new ApplySubstitutions(_chatEngine);
+            var applySubstitutions = new TextSubstitutionTransformer(_chatEngine);
             var transformedInput = applySubstitutions.Transform(input);
 
             var transformedSubstitutions = transformedInput.Split(" \r\n\t".ToCharArray());

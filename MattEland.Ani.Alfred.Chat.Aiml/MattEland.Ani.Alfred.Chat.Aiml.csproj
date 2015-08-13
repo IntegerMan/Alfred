@@ -48,7 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChatEngine.cs" />
-    <Compile Include="Normalize\ApplySubstitutions.cs" />
+    <Compile Include="Normalize\TextSubstitutionTransformer.cs" />
     <Compile Include="Normalize\MakeCaseInsensitive.cs" />
     <Compile Include="Normalize\SplitIntoSentences.cs" />
     <Compile Include="Normalize\StripIllegalCharacters.cs" />
