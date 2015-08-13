@@ -17,7 +17,7 @@
   <item name="master" value="Bruce Wayne"/>
   <item name="author" value="Matt Eland"/>
   <item name="location" value="Columbus"/>
-  <item name="gender" value="Male"/>
+  <item name="gender" value="1"/>
   <item name="body" value="disparate modules and assorted libraries"/>
   <item name="birthday" value="8/10/2015"/>
   <item name="birthplace" value="Lewis Center, Ohio, USA"/>
