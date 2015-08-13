@@ -420,7 +420,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 
             //? Loop through each substitution and...
             var stringBuilder = new StringBuilder();
-            var illegalCharacters = new StripIllegalCharacters(_chatEngine);
+            var illegalCharacters = new SanitizingTextTransformer(_chatEngine);
 
             // Loop through each word found and append it to the output string
             foreach (var word in words)
