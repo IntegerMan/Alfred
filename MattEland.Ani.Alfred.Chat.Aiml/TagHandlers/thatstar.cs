@@ -23,47 +23,47 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 
         protected override string ProcessChange()
         {
-            if (templateNode.Name.ToLower() == "thatstar")
+            if (TemplateNode.Name.ToLower() == "thatstar")
             {
-                if (templateNode.Attributes.Count == 0)
+                if (TemplateNode.Attributes.Count == 0)
                 {
-                    if (query.ThatStar.Count > 0)
+                    if (Query.ThatStar.Count > 0)
                     {
-                        return query.ThatStar[0];
+                        return Query.ThatStar[0];
                     }
                     ChatEngine.writeToLog(
                                    "ERROR! An out of bounds index to thatstar was encountered when processing the input: " +
-                                   request.RawInput);
+                                   Request.RawInput);
                 }
-                else if (templateNode.Attributes.Count == 1 && templateNode.Attributes[0].Name.ToLower() == "index")
+                else if (TemplateNode.Attributes.Count == 1 && TemplateNode.Attributes[0].Name.ToLower() == "index")
                 {
-                    if (templateNode.Attributes[0].Value.Length > 0)
+                    if (TemplateNode.Attributes[0].Value.Length > 0)
                     {
                         try
                         {
-                            var num = Convert.ToInt32(templateNode.Attributes[0].Value.Trim());
-                            if (query.ThatStar.Count > 0)
+                            var num = Convert.ToInt32(TemplateNode.Attributes[0].Value.Trim());
+                            if (Query.ThatStar.Count > 0)
                             {
                                 if (num > 0)
                                 {
-                                    return query.ThatStar[num - 1];
+                                    return Query.ThatStar[num - 1];
                                 }
                                 ChatEngine.writeToLog("ERROR! An input tag with a bady formed index (" +
-                                               templateNode.Attributes[0].Value +
-                                               ") was encountered processing the input: " + request.RawInput);
+                                               TemplateNode.Attributes[0].Value +
+                                               ") was encountered processing the input: " + Request.RawInput);
                             }
                             else
                             {
                                 ChatEngine.writeToLog(
                                                "ERROR! An out of bounds index to thatstar was encountered when processing the input: " +
-                                               request.RawInput);
+                                               Request.RawInput);
                             }
                         }
                         catch
                         {
                             ChatEngine.writeToLog("ERROR! A thatstar tag with a bady formed index (" +
-                                           templateNode.Attributes[0].Value + ") was encountered processing the input: " +
-                                           request.RawInput);
+                                           TemplateNode.Attributes[0].Value + ") was encountered processing the input: " +
+                                           Request.RawInput);
                         }
                     }
                 }

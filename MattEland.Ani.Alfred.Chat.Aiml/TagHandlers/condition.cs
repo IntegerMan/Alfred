@@ -19,50 +19,50 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         public condition(ChatEngine chatEngine, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
             : base(chatEngine, user, query, request, result, templateNode)
         {
-            isRecursive = false;
+            IsRecursive = false;
         }
 
         protected override string ProcessChange()
         {
-            if (templateNode.Name.ToLower() == "condition")
+            if (TemplateNode.Name.ToLower() == "condition")
             {
-                if (templateNode.Attributes.Count == 2)
+                if (TemplateNode.Attributes.Count == 2)
                 {
                     var name = "";
                     var str = "";
-                    if (templateNode.Attributes[0].Name == "name")
+                    if (TemplateNode.Attributes[0].Name == "name")
                     {
-                        name = templateNode.Attributes[0].Value;
+                        name = TemplateNode.Attributes[0].Value;
                     }
-                    else if (templateNode.Attributes[0].Name == "value")
+                    else if (TemplateNode.Attributes[0].Name == "value")
                     {
-                        str = templateNode.Attributes[0].Value;
+                        str = TemplateNode.Attributes[0].Value;
                     }
-                    if (templateNode.Attributes[1].Name == "name")
+                    if (TemplateNode.Attributes[1].Name == "name")
                     {
-                        name = templateNode.Attributes[1].Value;
+                        name = TemplateNode.Attributes[1].Value;
                     }
-                    else if (templateNode.Attributes[1].Name == "value")
+                    else if (TemplateNode.Attributes[1].Name == "value")
                     {
-                        str = templateNode.Attributes[1].Value;
+                        str = TemplateNode.Attributes[1].Value;
                     }
                     if (name.Length > 0 & str.Length > 0)
                     {
-                        var input = user.Predicates.GetValue(name);
+                        var input = User.Predicates.GetValue(name);
                         if (
                             new Regex(str.Replace(" ", "\\s").Replace("*", "[\\sA-Z0-9]+"), RegexOptions.IgnoreCase)
                                 .IsMatch(input))
                         {
-                            return templateNode.InnerXml;
+                            return TemplateNode.InnerXml;
                         }
                     }
                 }
-                else if (templateNode.Attributes.Count == 1)
+                else if (TemplateNode.Attributes.Count == 1)
                 {
-                    if (templateNode.Attributes[0].Name == "name")
+                    if (TemplateNode.Attributes[0].Name == "name")
                     {
-                        var name = templateNode.Attributes[0].Value;
-                        foreach (XmlNode xmlNode in templateNode.ChildNodes)
+                        var name = TemplateNode.Attributes[0].Value;
+                        foreach (XmlNode xmlNode in TemplateNode.ChildNodes)
                         {
                             if (xmlNode.Name.ToLower() == "li")
                             {
@@ -70,7 +70,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                                 {
                                     if (xmlNode.Attributes[0].Name.ToLower() == "value")
                                     {
-                                        var input = user.Predicates.GetValue(name);
+                                        var input = User.Predicates.GetValue(name);
                                         if (
                                             new Regex(
                                                 xmlNode.Attributes[0].Value.Replace(" ", "\\s")
@@ -89,9 +89,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                         }
                     }
                 }
-                else if (templateNode.Attributes.Count == 0)
+                else if (TemplateNode.Attributes.Count == 0)
                 {
-                    foreach (XmlNode xmlNode in templateNode.ChildNodes)
+                    foreach (XmlNode xmlNode in TemplateNode.ChildNodes)
                     {
                         if (xmlNode.Name.ToLower() == "li")
                         {
@@ -117,7 +117,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                                 }
                                 if (name.Length > 0 & str.Length > 0)
                                 {
-                                    var input = user.Predicates.GetValue(name);
+                                    var input = User.Predicates.GetValue(name);
                                     if (
                                         new Regex(str.Replace(" ", "\\s").Replace("*", "[\\sA-Z0-9]+"),
                                                   RegexOptions.IgnoreCase).IsMatch(input))

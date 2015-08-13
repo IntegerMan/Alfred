@@ -22,9 +22,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 
         protected override string ProcessChange()
         {
-            if (templateNode.Name.ToLower() == "id")
+            if (TemplateNode.Name.ToLower() == "id")
             {
-                return user.UserID;
+                return User.UserID;
             }
             return string.Empty;
         }

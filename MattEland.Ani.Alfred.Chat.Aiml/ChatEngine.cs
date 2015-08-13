@@ -409,7 +409,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                     {
                         try
                         {
-                            var str = processNode(AimlTagHandler.getNode(query.Template),
+                            var str = processNode(AimlTagHandler.GetNode(query.Template),
                                                   query,
                                                   request,
                                                   result,
@@ -467,7 +467,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                 return node.InnerText;
             }
 
-            if (handler.isRecursive)
+            if (handler.IsRecursive)
             {
                 if (node.HasChildNodes)
                 {
@@ -481,7 +481,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                 }
                 return handler.Transform();
             }
-            var node2 = AimlTagHandler.getNode("<node>" + handler.Transform() + "</node>");
+            var node2 = AimlTagHandler.GetNode("<node>" + handler.Transform() + "</node>");
             if (!node2.HasChildNodes)
             {
                 return node2.InnerXml;

@@ -20,15 +20,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         public random(ChatEngine chatEngine, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
             : base(chatEngine, user, query, request, result, templateNode)
         {
-            isRecursive = false;
+            IsRecursive = false;
         }
 
         protected override string ProcessChange()
         {
-            if (templateNode.Name.ToLower() == "random" && templateNode.HasChildNodes)
+            if (TemplateNode.Name.ToLower() == "random" && TemplateNode.HasChildNodes)
             {
                 var list = new List<XmlNode>();
-                foreach (XmlNode xmlNode in templateNode.ChildNodes)
+                foreach (XmlNode xmlNode in TemplateNode.ChildNodes)
                 {
                     if (xmlNode.Name == "li")
                     {

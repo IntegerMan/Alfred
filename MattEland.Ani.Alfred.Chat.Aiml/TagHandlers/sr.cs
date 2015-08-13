@@ -22,16 +22,16 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 
         protected override string ProcessChange()
         {
-            if (templateNode.Name.ToLower() == "sr")
+            if (TemplateNode.Name.ToLower() == "sr")
             {
                 return
                     new srai(ChatEngine,
-                             user,
-                             query,
-                             request,
-                             result,
-                             getNode("<srai>" +
-                                     new star(ChatEngine, user, query, request, result, getNode("<star/>"))
+                             User,
+                             Query,
+                             Request,
+                             Result,
+                             GetNode("<srai>" +
+                                     new star(ChatEngine, User, Query, Request, Result, GetNode("<star/>"))
                                          .Transform() + "</srai>")).Transform();
             }
             return string.Empty;

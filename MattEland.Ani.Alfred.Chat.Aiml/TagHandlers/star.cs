@@ -23,32 +23,32 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 
         protected override string ProcessChange()
         {
-            if (templateNode.Name.ToLower() == "star")
+            if (TemplateNode.Name.ToLower() == "star")
             {
-                if (query.InputStar.Count > 0)
+                if (Query.InputStar.Count > 0)
                 {
-                    if (templateNode.Attributes.Count == 0)
+                    if (TemplateNode.Attributes.Count == 0)
                     {
-                        return query.InputStar[0];
+                        return Query.InputStar[0];
                     }
-                    if (templateNode.Attributes.Count == 1)
+                    if (TemplateNode.Attributes.Count == 1)
                     {
-                        if (templateNode.Attributes[0].Name.ToLower() == "index")
+                        if (TemplateNode.Attributes[0].Name.ToLower() == "index")
                         {
                             try
                             {
-                                var index = Convert.ToInt32(templateNode.Attributes[0].Value) - 1;
-                                if (index >= 0 & index < query.InputStar.Count)
+                                var index = Convert.ToInt32(TemplateNode.Attributes[0].Value) - 1;
+                                if (index >= 0 & index < Query.InputStar.Count)
                                 {
-                                    return query.InputStar[index];
+                                    return Query.InputStar[index];
                                 }
-                                ChatEngine.writeToLog("InputStar out of bounds reference caused by input: " + request.RawInput);
+                                ChatEngine.writeToLog("InputStar out of bounds reference caused by input: " + Request.RawInput);
                             }
                             catch
                             {
                                 ChatEngine.writeToLog(
                                                "Index set to non-integer value whilst processing star tag in response to the input: " +
-                                               request.RawInput);
+                                               Request.RawInput);
                             }
                         }
                     }
@@ -57,7 +57,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                 {
                     ChatEngine.writeToLog(
                                    "A star tag tried to reference an empty InputStar collection when processing the input: " +
-                                   request.RawInput);
+                                   Request.RawInput);
                 }
             }
             return string.Empty;

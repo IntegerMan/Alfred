@@ -23,7 +23,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 
         protected override string ProcessChange()
         {
-            if (templateNode.Name.ToLower() == "size")
+            if (TemplateNode.Name.ToLower() == "size")
             {
                 return Convert.ToString(ChatEngine.Size);
             }

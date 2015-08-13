@@ -25,14 +25,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 
         protected override string ProcessChange()
         {
-            if (!(templateNode.Name.ToLower() == "sentence"))
+            if (!(TemplateNode.Name.ToLower() == "sentence"))
             {
                 return string.Empty;
             }
-            if (templateNode.InnerText.Length > 0)
+            if (TemplateNode.InnerText.Length > 0)
             {
                 var stringBuilder = new StringBuilder();
-                var chArray = templateNode.InnerText.Trim().ToCharArray();
+                var chArray = TemplateNode.InnerText.Trim().ToCharArray();
                 var flag = true;
                 for (var index = 0; index < chArray.Length; ++index)
                 {
@@ -60,8 +60,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                 }
                 return stringBuilder.ToString();
             }
-            templateNode.InnerText = new star(ChatEngine, user, query, request, result, getNode("<star/>")).Transform();
-            if (templateNode.InnerText.Length > 0)
+            TemplateNode.InnerText = new star(ChatEngine, User, Query, Request, Result, GetNode("<star/>")).Transform();
+            if (TemplateNode.InnerText.Length > 0)
             {
                 return ProcessChange();
             }

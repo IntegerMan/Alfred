@@ -23,7 +23,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 
         protected override string ProcessChange()
         {
-            if (templateNode.Name.ToLower() == "date")
+            if (TemplateNode.Name.ToLower() == "date")
             {
                 return DateTime.Now.ToString(ChatEngine.Locale);
             }

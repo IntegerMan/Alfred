@@ -22,10 +22,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 
         protected override string ProcessChange()
         {
-            if (templateNode.Name.ToLower() == "get" && ChatEngine.GlobalSettings.Count > 0 &&
-                (templateNode.Attributes.Count == 1 && templateNode.Attributes[0].Name.ToLower() == "name"))
+            if (TemplateNode.Name.ToLower() == "get" && ChatEngine.GlobalSettings.Count > 0 &&
+                (TemplateNode.Attributes.Count == 1 && TemplateNode.Attributes[0].Name.ToLower() == "name"))
             {
-                return user.Predicates.GetValue(templateNode.Attributes[0].Value);
+                return User.Predicates.GetValue(TemplateNode.Attributes[0].Value);
             }
             return string.Empty;
         }

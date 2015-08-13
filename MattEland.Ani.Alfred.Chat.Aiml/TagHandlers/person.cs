@@ -23,17 +23,17 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 
         protected override string ProcessChange()
         {
-            if (!(templateNode.Name.ToLower() == "person"))
+            if (!(TemplateNode.Name.ToLower() == "person"))
             {
                 return string.Empty;
             }
-            if (templateNode.InnerText.Length > 0)
+            if (TemplateNode.InnerText.Length > 0)
             {
-                return TextSubstitutionTransformer.Substitute(ChatEngine.PersonSubstitutions, templateNode.InnerText);
+                return TextSubstitutionTransformer.Substitute(ChatEngine.PersonSubstitutions, TemplateNode.InnerText);
             }
-            templateNode.InnerText =
-                new star(ChatEngine, user, query, request, result, getNode("<star/>")).Transform();
-            if (templateNode.InnerText.Length > 0)
+            TemplateNode.InnerText =
+                new star(ChatEngine, User, Query, Request, Result, GetNode("<star/>")).Transform();
+            if (TemplateNode.InnerText.Length > 0)
             {
                 return ProcessChange();
             }

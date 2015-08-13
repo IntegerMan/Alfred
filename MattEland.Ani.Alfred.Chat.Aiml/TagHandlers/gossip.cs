@@ -22,9 +22,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 
         protected override string ProcessChange()
         {
-            if (templateNode.Name.ToLower() == "gossip" && templateNode.InnerText.Length > 0)
+            if (TemplateNode.Name.ToLower() == "gossip" && TemplateNode.InnerText.Length > 0)
             {
-                ChatEngine.writeToLog("GOSSIP from user: " + user.UserID + ", '" + templateNode.InnerText + "'");
+                ChatEngine.writeToLog("GOSSIP from user: " + User.UserID + ", '" + TemplateNode.InnerText + "'");
             }
             return string.Empty;
         }

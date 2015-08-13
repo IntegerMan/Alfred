@@ -22,9 +22,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 
         protected override string ProcessChange()
         {
-            if (templateNode.Name.ToLower() == "lowercase")
+            if (TemplateNode.Name.ToLower() == "lowercase")
             {
-                return templateNode.InnerText.ToLower(Locale);
+                return TemplateNode.InnerText.ToLower(Locale);
             }
             return string.Empty;
         }

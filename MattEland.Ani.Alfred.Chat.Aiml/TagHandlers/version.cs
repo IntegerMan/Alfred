@@ -22,7 +22,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 
         protected override string ProcessChange()
         {
-            if (templateNode.Name.ToLower() == "version")
+            if (TemplateNode.Name.ToLower() == "version")
             {
                 return ChatEngine.GlobalSettings.GetValue("version");
             }

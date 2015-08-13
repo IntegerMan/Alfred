@@ -23,14 +23,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 
         protected override string ProcessChange()
         {
-            if (!(templateNode.Name.ToLower() == "formal"))
+            if (!(TemplateNode.Name.ToLower() == "formal"))
             {
                 return string.Empty;
             }
             var stringBuilder = new StringBuilder();
-            if (templateNode.InnerText.Length > 0)
+            if (TemplateNode.InnerText.Length > 0)
             {
-                foreach (var str1 in templateNode.InnerText.ToLower().Split())
+                foreach (var str1 in TemplateNode.InnerText.ToLower().Split())
                 {
                     var str2 = str1.Substring(0, 1).ToUpper();
                     if (str1.Length > 1)

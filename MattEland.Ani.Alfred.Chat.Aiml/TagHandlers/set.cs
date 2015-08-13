@@ -22,17 +22,17 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 
         protected override string ProcessChange()
         {
-            if (!(templateNode.Name.ToLower() == "set") || ChatEngine.GlobalSettings.Count <= 0 ||
-                (templateNode.Attributes.Count != 1 || !(templateNode.Attributes[0].Name.ToLower() == "name")))
+            if (!(TemplateNode.Name.ToLower() == "set") || ChatEngine.GlobalSettings.Count <= 0 ||
+                (TemplateNode.Attributes.Count != 1 || !(TemplateNode.Attributes[0].Name.ToLower() == "name")))
             {
                 return string.Empty;
             }
-            if (templateNode.InnerText.Length > 0)
+            if (TemplateNode.InnerText.Length > 0)
             {
-                user.Predicates.Add(templateNode.Attributes[0].Value, templateNode.InnerText);
-                return user.Predicates.GetValue(templateNode.Attributes[0].Value);
+                User.Predicates.Add(TemplateNode.Attributes[0].Value, TemplateNode.InnerText);
+                return User.Predicates.GetValue(TemplateNode.Attributes[0].Value);
             }
-            user.Predicates.Remove(templateNode.Attributes[0].Value);
+            User.Predicates.Remove(TemplateNode.Attributes[0].Value);
             return string.Empty;
         }
     }

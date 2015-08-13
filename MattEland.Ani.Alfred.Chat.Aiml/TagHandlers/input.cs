@@ -23,48 +23,48 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 
         protected override string ProcessChange()
         {
-            if (templateNode.Name.ToLower() == "input")
+            if (TemplateNode.Name.ToLower() == "input")
             {
-                if (templateNode.Attributes.Count == 0)
+                if (TemplateNode.Attributes.Count == 0)
                 {
-                    return user.getResultSentence();
+                    return User.getResultSentence();
                 }
-                if (templateNode.Attributes.Count == 1 && templateNode.Attributes[0].Name.ToLower() == "index")
+                if (TemplateNode.Attributes.Count == 1 && TemplateNode.Attributes[0].Name.ToLower() == "index")
                 {
-                    if (templateNode.Attributes[0].Value.Length > 0)
+                    if (TemplateNode.Attributes[0].Value.Length > 0)
                     {
                         try
                         {
-                            var strArray = templateNode.Attributes[0].Value.Split(",".ToCharArray());
+                            var strArray = TemplateNode.Attributes[0].Value.Split(",".ToCharArray());
                             if (strArray.Length == 2)
                             {
                                 var num1 = Convert.ToInt32(strArray[0].Trim());
                                 var num2 = Convert.ToInt32(strArray[1].Trim());
                                 if (num1 > 0 & num2 > 0)
                                 {
-                                    return user.getResultSentence(num1 - 1, num2 - 1);
+                                    return User.getResultSentence(num1 - 1, num2 - 1);
                                 }
                                 ChatEngine.writeToLog("ERROR! An input tag with a bady formed index (" +
-                                               templateNode.Attributes[0].Value +
-                                               ") was encountered processing the input: " + request.RawInput);
+                                               TemplateNode.Attributes[0].Value +
+                                               ") was encountered processing the input: " + Request.RawInput);
                             }
                             else
                             {
-                                var num = Convert.ToInt32(templateNode.Attributes[0].Value.Trim());
+                                var num = Convert.ToInt32(TemplateNode.Attributes[0].Value.Trim());
                                 if (num > 0)
                                 {
-                                    return user.getResultSentence(num - 1);
+                                    return User.getResultSentence(num - 1);
                                 }
                                 ChatEngine.writeToLog("ERROR! An input tag with a bady formed index (" +
-                                               templateNode.Attributes[0].Value +
-                                               ") was encountered processing the input: " + request.RawInput);
+                                               TemplateNode.Attributes[0].Value +
+                                               ") was encountered processing the input: " + Request.RawInput);
                             }
                         }
                         catch
                         {
                             ChatEngine.writeToLog("ERROR! An input tag with a bady formed index (" +
-                                           templateNode.Attributes[0].Value + ") was encountered processing the input: " +
-                                           request.RawInput);
+                                           TemplateNode.Attributes[0].Value + ") was encountered processing the input: " +
+                                           Request.RawInput);
                         }
                     }
                 }

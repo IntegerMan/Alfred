@@ -22,16 +22,16 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 
         protected override string ProcessChange()
         {
-            if (!(templateNode.Name.ToLower() == "srai") || templateNode.InnerText.Length <= 0)
+            if (!(TemplateNode.Name.ToLower() == "srai") || TemplateNode.InnerText.Length <= 0)
             {
                 return string.Empty;
             }
 
-            var request = new Request(templateNode.InnerText, user, ChatEngine, this.request);
+            var request = new Request(TemplateNode.InnerText, User, ChatEngine, this.Request);
 
             var result = ChatEngine.Chat(request);
 
-            this.request.CheckForTimedOut();
+            this.Request.CheckForTimedOut();
 
             return result.Output;
         }
