@@ -228,7 +228,7 @@ namespace MattEland.Ani.Alfred.Chat
             // We want the last template as the other templates have redirected to it
             var subQuery = result?.SubQueries?.LastOrDefault();
 
-            return subQuery?.Template;
+            return subQuery.Template;
         }
     }
 }
