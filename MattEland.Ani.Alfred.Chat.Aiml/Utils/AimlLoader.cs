@@ -403,26 +403,51 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             return stringBuilder.ToString();
         }
 
-        public string Normalize(string input, bool isUserInput)
+        /// <summary>
+        /// Normalizes the input by stripping out illegal characters and applying common substitutions.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <param name="isUserInput">The is user input.</param>
+        /// <returns>The normalized input</returns>
+        public string Normalize([CanBeNull] string input, bool isUserInput)
         {
-            //? Transform this input into 
-            var applySubstitutions = new TextSubstitutionTransformer(_chatEngine);
-            var transformedInput = applySubstitutions.Transform(input);
+            // Do common substitutions
+            input = TextSubstitutionTransformer.Substitute(_chatEngine.Substitutions, input);
 
-            var transformedSubstitutions = transformedInput.Split(" \r\n\t".ToCharArray());
+            // Grab the words in the input
+            const string WordBoundaries = " \r\n\t";
+            string[] words = input.Split(WordBoundaries.ToCharArray());
 
             //? Loop through each substitution and...
             var stringBuilder = new StringBuilder();
             var illegalCharacters = new StripIllegalCharacters(_chatEngine);
-            foreach (var input1 in transformedSubstitutions)
-            {
-                var str = !isUserInput
-                              ? (input1 == "*" || input1 == "_" ? input1 : illegalCharacters.Transform(input1))
-                              : illegalCharacters.Transform(input1);
 
-                stringBuilder.Append(str.Trim() + " ");
+            // Loop through each word found and append it to the output string
+            foreach (var word in words)
+            {
+                //- Sanity check
+                if (string.IsNullOrEmpty(word))
+                {
+                    continue;
+                }
+
+                // Sanitize the input keeping in mind that this could be a dividing wildcard character
+                string result;
+                if (isUserInput)
+                {
+                    result = illegalCharacters.Transform(word);
+                }
+                else
+                {
+                    const string Wildcards = "*_";
+                    result = Wildcards.Contains(word) ? word : illegalCharacters.Transform(word);
+                }
+
+                //- Add it to the output
+                stringBuilder.AppendFormat("{0} ", result?.Trim());
             }
 
+            //- Send the result back
             return stringBuilder.ToString().Replace("  ", " ");
         }
     }
