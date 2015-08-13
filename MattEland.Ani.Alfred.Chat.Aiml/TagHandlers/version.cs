@@ -24,7 +24,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         {
             if (templateNode.Name.ToLower() == "version")
             {
-                return ChatEngine.GlobalSettings.grabSetting("version");
+                return ChatEngine.GlobalSettings.GetValue("version");
             }
 
             return string.Empty;

@@ -25,7 +25,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             if (templateNode.Name.ToLower() == "get" && ChatEngine.GlobalSettings.Count > 0 &&
                 (templateNode.Attributes.Count == 1 && templateNode.Attributes[0].Name.ToLower() == "name"))
             {
-                return user.Predicates.grabSetting(templateNode.Attributes[0].Value);
+                return user.Predicates.GetValue(templateNode.Attributes[0].Value);
             }
             return string.Empty;
         }

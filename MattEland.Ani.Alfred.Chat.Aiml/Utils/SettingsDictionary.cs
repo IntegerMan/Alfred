@@ -7,49 +7,101 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Xml;
 
-using MattEland.Ani.Alfred.Chat.Aiml.Normalize;
+using JetBrains.Annotations;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 {
+    /// <summary>
+    /// A dictionary for holding setting values
+    /// </summary>
+    /// <remarks>
+    /// This is a lot of code that seems like it could be replaced with a standard dictionary.
+    /// 
+    /// It's odd that it doesn't implement any IEnumerable or ICollection or IDictionary interfaces.
+    /// 
+    /// The only unique thing about this dictionary is the upper / lowercase management and the ordered
+    /// nature of the keys
+    /// 
+    /// TODO: Clean up this class by using more built in mechanisms
+    /// </remarks>
     public class SettingsDictionary
     {
+        [NotNull]
+        [ItemNotNull]
         private readonly List<string> _orderedKeys = new List<string>();
+
+        [NotNull]
         private readonly Dictionary<string, string> _settingsHash = new Dictionary<string, string>();
 
+        /// <summary>
+        /// Gets the number of keys in the keys collection.
+        /// </summary>
+        /// <value>The keys.</value>
         public int Count
         {
             get { return _orderedKeys.Count; }
         }
 
-        public XmlDocument DictionaryAsXML
+        /// <summary>
+        /// Gets an XML representation of this dictionary.
+        /// </summary>
+        /// <value>An XML representation of this dictionary</value>
+        /// <remarks>TODO: This would be nice to either remove or make use XElement / XDocument</remarks>
+        [NotNull]
+        public XmlDocument ToXml
         {
             get
             {
+                // Create a document to put everything into
                 var xmlDocument = new XmlDocument();
+
+                //- Add a header to the document
                 var xmlDeclaration = xmlDocument.CreateXmlDeclaration("1.0", "UTF-8", "");
                 xmlDocument.AppendChild(xmlDeclaration);
-                var node1 = xmlDocument.CreateNode(XmlNodeType.Element, "root", "");
-                xmlDocument.AppendChild(node1);
+
+                // Add a base node for holding entries
+                var root = xmlDocument.CreateNode(XmlNodeType.Element, "root", "");
+                xmlDocument.AppendChild(root);
+
+                // Loop through each child and add it to the dictionary
                 foreach (var index in _orderedKeys)
                 {
-                    var node2 = xmlDocument.CreateNode(XmlNodeType.Element, "item", "");
-                    var attribute1 = xmlDocument.CreateAttribute("name");
-                    attribute1.Value = index;
-                    var attribute2 = xmlDocument.CreateAttribute("value");
-                    attribute2.Value = _settingsHash[index];
-                    node2.Attributes.Append(attribute1);
-                    node2.Attributes.Append(attribute2);
-                    node1.AppendChild(node2);
+                    // Build a node for the child
+                    var childNode = xmlDocument.CreateNode(XmlNodeType.Element, "item", "");
+                    Debug.Assert(childNode.Attributes != null);
+
+                    // Give it a name
+                    var nameAttribute = xmlDocument.CreateAttribute("name");
+                    nameAttribute.Value = index;
+                    childNode.Attributes.Append(nameAttribute);
+
+                    // Give it a value
+                    var valueAttribute = xmlDocument.CreateAttribute("value");
+                    valueAttribute.Value = _settingsHash[index];
+                    childNode.Attributes.Append(valueAttribute);
+
+                    // Add it to the document
+                    root.AppendChild(childNode);
                 }
+
+                // Send back the document
                 return xmlDocument;
             }
         }
 
-        public string[] SettingNames
+        /// <summary>
+        /// Gets the setting names as an array.
+        /// </summary>
+        /// <value>The setting names.</value>
+        /// <remarks>TODO: I'd love to remove this or use IEnumerable instead</remarks>
+        [NotNull]
+        public string[] Keys
         {
             get
             {
@@ -59,105 +111,220 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             }
         }
 
-        public void loadSettings(string pathToSettings)
+        /// <summary>
+        /// Clears current values and loads values into the dictionary from a settings file at the specified path.
+        /// </summary>
+        /// <param name="pathToSettings">The path to the settings file.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="XmlException"></exception>
+        /// <exception cref="System.ArgumentException">pathToSettings did not have a value</exception>
+        /// <exception cref="System.IO.FileNotFoundException">Could not find a settings file at the given path</exception>
+        public void Load([NotNull] string pathToSettings)
         {
-            if (pathToSettings.Length <= 0)
+            if (pathToSettings == null)
             {
-                throw new FileNotFoundException();
+                throw new ArgumentNullException(nameof(pathToSettings));
             }
+            if (string.IsNullOrWhiteSpace(pathToSettings))
+            {
+                throw new ArgumentException("pathToSettings did not have a value", nameof(pathToSettings));
+            }
+
+            // Verify the settings file exists
             if (!new FileInfo(pathToSettings).Exists)
             {
-                throw new FileNotFoundException();
+                throw new FileNotFoundException("Could not find a settings file at the given path", pathToSettings);
             }
-            var settingsAsXML = new XmlDocument();
-            settingsAsXML.Load(pathToSettings);
-            loadSettings(settingsAsXML);
+
+            // Build out an XML document from the path
+            var document = new XmlDocument();
+            document.Load(pathToSettings);
+
+            Load(document);
         }
 
-        public void loadSettings(XmlDocument settingsAsXML)
+        /// <summary>
+        /// Clears current settings and loads settings from the document.
+        /// </summary>
+        /// <param name="document">The settings as XML.</param>
+        public void Load([NotNull] XmlDocument document)
         {
-            clearSettings();
-            foreach (XmlNode xmlNode in settingsAsXML.DocumentElement.ChildNodes)
+            if (document == null)
             {
-                if (xmlNode.Name == "item" & xmlNode.Attributes.Count == 2 &&
-                    xmlNode.Attributes[0].Name == "name" & xmlNode.Attributes[1].Name == "value")
+                throw new ArgumentNullException(nameof(document));
+            }
+
+            Clear();
+
+            var childNodes = document.DocumentElement?.ChildNodes;
+            if (childNodes == null)
+            {
+                return;
+            }
+
+            // Grab values from the child nodes
+            foreach (XmlNode xmlNode in childNodes)
+            {
+
+                //- Sanity Check
+                var attributes = xmlNode?.Attributes;
+                if (attributes == null || attributes.Count < 2)
                 {
-                    var name = xmlNode.Attributes["name"].Value;
-                    var str = xmlNode.Attributes["value"].Value;
-                    if (name.Length > 0)
+                    continue;
+                }
+
+                // Grab the name and value and add a node for these values
+                if (xmlNode.Name == "item" & attributes.Count == 2 &&
+                    attributes[0]?.Name == "name" && attributes[1]?.Name == "value")
+                {
+                    var name = attributes["name"]?.Value;
+                    var value = attributes["value"]?.Value;
+
+                    if (!string.IsNullOrEmpty(name))
                     {
-                        addSetting(name, str);
+                        Add(name, value);
                     }
                 }
             }
         }
 
-        public void addSetting(string name, string value)
+        /// <summary>
+        /// Adds an entry with the specified name and value
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="value">The value.</param>
+        public void Add([NotNull] string name, [CanBeNull] string value)
         {
-            var str = MakeCaseInsensitive.TransformInput(name);
-            if (str.Length <= 0)
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (string.IsNullOrEmpty(name))
             {
                 return;
             }
-            removeSetting(str);
-            _orderedKeys.Add(str);
-            _settingsHash.Add(MakeCaseInsensitive.TransformInput(str), value);
+
+            name = name.ToUpperInvariant();
+            Remove(name);
+
+            _orderedKeys.Add(name);
+            _settingsHash.Add(name, value);
         }
 
-        public void removeSetting(string name)
+        /// <summary>
+        /// Removes an entry with the specified name
+        /// </summary>
+        /// <param name="name">The name.</param>
+        public void Remove([NotNull] string name)
         {
-            var name1 = MakeCaseInsensitive.TransformInput(name);
-            _orderedKeys.Remove(name1);
-            removeFromHash(name1);
-        }
-
-        private void removeFromHash(string name)
-        {
-            _settingsHash.Remove(MakeCaseInsensitive.TransformInput(name));
-        }
-
-        public void updateSetting(string name, string value)
-        {
-            var str = MakeCaseInsensitive.TransformInput(name);
-            if (!_orderedKeys.Contains(str))
+            if (name == null)
             {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            name = name.ToUpperInvariant();
+
+            _orderedKeys.Remove(name);
+
+            RemoveFromHash(name);
+        }
+
+        /// <summary>
+        /// Removes the name entry from the settings dictionary.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        private void RemoveFromHash([NotNull] string name)
+        {
+            _settingsHash.Remove(name.ToUpperInvariant());
+        }
+
+        /// <summary>
+        /// Updates the entry under name with the specified value.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="value">The value.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        public void Update([NotNull] string name, [CanBeNull] string value)
+        {
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            name = name.ToUpperInvariant();
+
+            if (!Contains(name))
+            {
+                //? This seems like it should throw an exception or delegate to Add
                 return;
             }
-            removeFromHash(str);
-            _settingsHash.Add(MakeCaseInsensitive.TransformInput(str), value);
+
+            // Remove it from the list so that when we add it again it'll be at the end
+            RemoveFromHash(name);
+
+            // Do a simple add
+            _settingsHash.Add(name, value);
         }
 
-        public void clearSettings()
+        /// <summary>
+        /// Clears the dictionary.
+        /// </summary>
+        public void Clear()
         {
             _orderedKeys.Clear();
             _settingsHash.Clear();
         }
 
-        public string grabSetting(string name)
+        /// <summary>
+        /// Gets the value under the specified name or string.Empty if no entry was found.
+        /// </summary>
+        /// <param name="name">The name of the key.</param>
+        /// <returns>The value in the dictionary</returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        public string GetValue([NotNull] string name)
         {
-            var name1 = MakeCaseInsensitive.TransformInput(name);
-            if (containsSettingCalled(name1))
+            if (name == null)
             {
-                return _settingsHash[name1];
+                throw new ArgumentNullException(nameof(name));
             }
-            return string.Empty;
+
+            name = name.ToUpperInvariant();
+
+            return Contains(name) ? _settingsHash[name] : string.Empty;
         }
 
-        public bool containsSettingCalled(string name)
+        /// <summary>
+        /// Determines whether this dictionary contains an entry under the given name
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns><c>true</c> if there is an entry for name; otherwise, <c>false</c>.</returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        public bool Contains([NotNull] string name)
         {
-            var str = MakeCaseInsensitive.TransformInput(name);
-            if (str.Length > 0)
+            if (name == null)
             {
-                return _orderedKeys.Contains(str);
+                throw new ArgumentNullException(nameof(name));
             }
-            return false;
+
+            return _orderedKeys.Contains(name.ToUpperInvariant());
         }
 
-        public void Clone(SettingsDictionary target)
+        /// <summary>
+        /// Clones the settings into the target dictionary.
+        /// </summary>
+        /// <param name="target">The target dictionary.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        public void Clone([NotNull] SettingsDictionary target)
         {
+            if (target == null)
+            {
+                throw new ArgumentNullException(nameof(target));
+            }
+
             foreach (var name in _orderedKeys)
             {
-                target.addSetting(name, grabSetting(name));
+                target.Add(name, GetValue(name));
             }
         }
     }

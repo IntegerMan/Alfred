@@ -63,37 +63,37 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
         private int MaxLogBufferSize
         {
-            get { return Convert.ToInt32(GlobalSettings.grabSetting("maxlogbuffersize")); }
+            get { return Convert.ToInt32(GlobalSettings.GetValue("maxlogbuffersize")); }
         }
 
         private string NotAcceptingUserInputMessage
         {
-            get { return GlobalSettings.grabSetting("notacceptinguserinputmessage"); }
+            get { return GlobalSettings.GetValue("notacceptinguserinputmessage"); }
         }
 
         public double TimeOut
         {
-            get { return Convert.ToDouble(GlobalSettings.grabSetting("timeout")); }
+            get { return Convert.ToDouble(GlobalSettings.GetValue("timeout")); }
         }
 
         public string TimeOutMessage
         {
-            get { return GlobalSettings.grabSetting("timeoutmessage"); }
+            get { return GlobalSettings.GetValue("timeoutmessage"); }
         }
 
         public CultureInfo Locale
         {
-            get { return new CultureInfo(GlobalSettings.grabSetting("culture")); }
+            get { return new CultureInfo(GlobalSettings.GetValue("culture")); }
         }
 
         public Regex Strippers
         {
-            get { return new Regex(GlobalSettings.grabSetting("stripperregex"), RegexOptions.IgnorePatternWhitespace); }
+            get { return new Regex(GlobalSettings.GetValue("stripperregex"), RegexOptions.IgnorePatternWhitespace); }
         }
 
         public string AdminEmail
         {
-            get { return GlobalSettings.grabSetting("adminemail"); }
+            get { return GlobalSettings.GetValue("adminemail"); }
             set
             {
                 if (value.Length > 0)
@@ -105,23 +105,23 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                     {
                         throw new Exception("The AdminEmail is not a valid email address");
                     }
-                    GlobalSettings.addSetting("adminemail", value);
+                    GlobalSettings.Add("adminemail", value);
                 }
                 else
                 {
-                    GlobalSettings.addSetting("adminemail", "");
+                    GlobalSettings.Add("adminemail", "");
                 }
             }
         }
 
         public bool IsLogging
         {
-            get { return GlobalSettings.grabSetting("islogging").ToLower() == "true"; }
+            get { return GlobalSettings.GetValue("islogging").ToLower() == "true"; }
         }
 
         public bool WillCallHome
         {
-            get { return GlobalSettings.grabSetting("willcallhome").ToLower() == "true"; }
+            get { return GlobalSettings.GetValue("willcallhome").ToLower() == "true"; }
         }
 
         public Gender Sex
@@ -129,7 +129,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             get
             {
                 Gender gender;
-                switch (Convert.ToInt32(GlobalSettings.grabSetting("gender")))
+                switch (Convert.ToInt32(GlobalSettings.GetValue("gender")))
                 {
                     case -1:
                         gender = Gender.Unknown;
@@ -150,17 +150,17 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
         public string AimlDirectoryPath
         {
-            get { return Path.Combine(Environment.CurrentDirectory, GlobalSettings.grabSetting("aimldirectory")); }
+            get { return Path.Combine(Environment.CurrentDirectory, GlobalSettings.GetValue("aimldirectory")); }
         }
 
         public string PathToConfigFiles
         {
-            get { return Path.Combine(Environment.CurrentDirectory, GlobalSettings.grabSetting("configdirectory")); }
+            get { return Path.Combine(Environment.CurrentDirectory, GlobalSettings.GetValue("configdirectory")); }
         }
 
         public string PathToLogs
         {
-            get { return Path.Combine(Environment.CurrentDirectory, GlobalSettings.grabSetting("logdirectory")); }
+            get { return Path.Combine(Environment.CurrentDirectory, GlobalSettings.GetValue("logdirectory")); }
         }
 
         public event LogMessageDelegate WrittenToLog;
@@ -193,134 +193,134 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
         public void loadSettings(string pathToSettings)
         {
-            GlobalSettings.loadSettings(pathToSettings);
-            if (!GlobalSettings.containsSettingCalled("version"))
+            GlobalSettings.Load(pathToSettings);
+            if (!GlobalSettings.Contains("version"))
             {
-                GlobalSettings.addSetting("version", Environment.Version.ToString());
+                GlobalSettings.Add("version", Environment.Version.ToString());
             }
-            if (!GlobalSettings.containsSettingCalled("name"))
+            if (!GlobalSettings.Contains("name"))
             {
-                GlobalSettings.addSetting("name", "Unknown");
+                GlobalSettings.Add("name", "Unknown");
             }
-            if (!GlobalSettings.containsSettingCalled("botmaster"))
+            if (!GlobalSettings.Contains("botmaster"))
             {
-                GlobalSettings.addSetting("botmaster", "Unknown");
+                GlobalSettings.Add("botmaster", "Unknown");
             }
-            if (!GlobalSettings.containsSettingCalled("master"))
+            if (!GlobalSettings.Contains("master"))
             {
-                GlobalSettings.addSetting("botmaster", "Unknown");
+                GlobalSettings.Add("botmaster", "Unknown");
             }
-            if (!GlobalSettings.containsSettingCalled("author"))
+            if (!GlobalSettings.Contains("author"))
             {
-                GlobalSettings.addSetting("author", "Nicholas H.Tollervey");
+                GlobalSettings.Add("author", "Nicholas H.Tollervey");
             }
-            if (!GlobalSettings.containsSettingCalled("location"))
+            if (!GlobalSettings.Contains("location"))
             {
-                GlobalSettings.addSetting("location", "Unknown");
+                GlobalSettings.Add("location", "Unknown");
             }
-            if (!GlobalSettings.containsSettingCalled("gender"))
+            if (!GlobalSettings.Contains("gender"))
             {
-                GlobalSettings.addSetting("gender", "-1");
+                GlobalSettings.Add("gender", "-1");
             }
-            if (!GlobalSettings.containsSettingCalled("birthday"))
+            if (!GlobalSettings.Contains("birthday"))
             {
-                GlobalSettings.addSetting("birthday", "2006/11/08");
+                GlobalSettings.Add("birthday", "2006/11/08");
             }
-            if (!GlobalSettings.containsSettingCalled("birthplace"))
+            if (!GlobalSettings.Contains("birthplace"))
             {
-                GlobalSettings.addSetting("birthplace", "Towcester, Northamptonshire, UK");
+                GlobalSettings.Add("birthplace", "Towcester, Northamptonshire, UK");
             }
-            if (!GlobalSettings.containsSettingCalled("website"))
+            if (!GlobalSettings.Contains("website"))
             {
-                GlobalSettings.addSetting("website", "http://sourceforge.net/projects/aimlbot");
+                GlobalSettings.Add("website", "http://sourceforge.net/projects/aimlbot");
             }
-            if (GlobalSettings.containsSettingCalled("adminemail"))
+            if (GlobalSettings.Contains("adminemail"))
             {
-                AdminEmail = GlobalSettings.grabSetting("adminemail");
+                AdminEmail = GlobalSettings.GetValue("adminemail");
             }
             else
             {
-                GlobalSettings.addSetting("adminemail", "");
+                GlobalSettings.Add("adminemail", "");
             }
-            if (!GlobalSettings.containsSettingCalled("islogging"))
+            if (!GlobalSettings.Contains("islogging"))
             {
-                GlobalSettings.addSetting("islogging", "False");
+                GlobalSettings.Add("islogging", "False");
             }
-            if (!GlobalSettings.containsSettingCalled("willcallhome"))
+            if (!GlobalSettings.Contains("willcallhome"))
             {
-                GlobalSettings.addSetting("willcallhome", "False");
+                GlobalSettings.Add("willcallhome", "False");
             }
-            if (!GlobalSettings.containsSettingCalled("timeout"))
+            if (!GlobalSettings.Contains("timeout"))
             {
-                GlobalSettings.addSetting("timeout", "2000");
+                GlobalSettings.Add("timeout", "2000");
             }
-            if (!GlobalSettings.containsSettingCalled("timeoutmessage"))
+            if (!GlobalSettings.Contains("timeoutmessage"))
             {
-                GlobalSettings.addSetting("timeoutmessage", "ERROR: The request has timed out.");
+                GlobalSettings.Add("timeoutmessage", "ERROR: The request has timed out.");
             }
-            if (!GlobalSettings.containsSettingCalled("culture"))
+            if (!GlobalSettings.Contains("culture"))
             {
-                GlobalSettings.addSetting("culture", "en-US");
+                GlobalSettings.Add("culture", "en-US");
             }
-            if (!GlobalSettings.containsSettingCalled("splittersfile"))
+            if (!GlobalSettings.Contains("splittersfile"))
             {
-                GlobalSettings.addSetting("splittersfile", "Splitters.xml");
+                GlobalSettings.Add("splittersfile", "Splitters.xml");
             }
-            if (!GlobalSettings.containsSettingCalled("person2substitutionsfile"))
+            if (!GlobalSettings.Contains("person2substitutionsfile"))
             {
-                GlobalSettings.addSetting("person2substitutionsfile", "Person2Substitutions.xml");
+                GlobalSettings.Add("person2substitutionsfile", "Person2Substitutions.xml");
             }
-            if (!GlobalSettings.containsSettingCalled("personsubstitutionsfile"))
+            if (!GlobalSettings.Contains("personsubstitutionsfile"))
             {
-                GlobalSettings.addSetting("personsubstitutionsfile", "PersonSubstitutions.xml");
+                GlobalSettings.Add("personsubstitutionsfile", "PersonSubstitutions.xml");
             }
-            if (!GlobalSettings.containsSettingCalled("gendersubstitutionsfile"))
+            if (!GlobalSettings.Contains("gendersubstitutionsfile"))
             {
-                GlobalSettings.addSetting("gendersubstitutionsfile", "GenderSubstitutions.xml");
+                GlobalSettings.Add("gendersubstitutionsfile", "GenderSubstitutions.xml");
             }
-            if (!GlobalSettings.containsSettingCalled("defaultpredicates"))
+            if (!GlobalSettings.Contains("defaultpredicates"))
             {
-                GlobalSettings.addSetting("defaultpredicates", "DefaultPredicates.xml");
+                GlobalSettings.Add("defaultpredicates", "DefaultPredicates.xml");
             }
-            if (!GlobalSettings.containsSettingCalled("substitutionsfile"))
+            if (!GlobalSettings.Contains("substitutionsfile"))
             {
-                GlobalSettings.addSetting("substitutionsfile", "Substitutions.xml");
+                GlobalSettings.Add("substitutionsfile", "Substitutions.xml");
             }
-            if (!GlobalSettings.containsSettingCalled("aimldirectory"))
+            if (!GlobalSettings.Contains("aimldirectory"))
             {
-                GlobalSettings.addSetting("aimldirectory", "aiml");
+                GlobalSettings.Add("aimldirectory", "aiml");
             }
-            if (!GlobalSettings.containsSettingCalled("configdirectory"))
+            if (!GlobalSettings.Contains("configdirectory"))
             {
-                GlobalSettings.addSetting("configdirectory", "config");
+                GlobalSettings.Add("configdirectory", "config");
             }
-            if (!GlobalSettings.containsSettingCalled("logdirectory"))
+            if (!GlobalSettings.Contains("logdirectory"))
             {
-                GlobalSettings.addSetting("logdirectory", "logs");
+                GlobalSettings.Add("logdirectory", "logs");
             }
-            if (!GlobalSettings.containsSettingCalled("maxlogbuffersize"))
+            if (!GlobalSettings.Contains("maxlogbuffersize"))
             {
-                GlobalSettings.addSetting("maxlogbuffersize", "64");
+                GlobalSettings.Add("maxlogbuffersize", "64");
             }
-            if (!GlobalSettings.containsSettingCalled("notacceptinguserinputmessage"))
+            if (!GlobalSettings.Contains("notacceptinguserinputmessage"))
             {
-                GlobalSettings.addSetting("notacceptinguserinputmessage",
+                GlobalSettings.Add("notacceptinguserinputmessage",
                                           "This ChatEngine is currently set to not accept user input.");
             }
-            if (!GlobalSettings.containsSettingCalled("stripperregex"))
+            if (!GlobalSettings.Contains("stripperregex"))
             {
-                GlobalSettings.addSetting("stripperregex", "[^0-9a-zA-Z]");
+                GlobalSettings.Add("stripperregex", "[^0-9a-zA-Z]");
             }
-            Person2Substitutions.loadSettings(Path.Combine(PathToConfigFiles,
-                                                           GlobalSettings.grabSetting("person2substitutionsfile")));
-            PersonSubstitutions.loadSettings(Path.Combine(PathToConfigFiles,
-                                                          GlobalSettings.grabSetting("personsubstitutionsfile")));
-            GenderSubstitutions.loadSettings(Path.Combine(PathToConfigFiles,
-                                                          GlobalSettings.grabSetting("gendersubstitutionsfile")));
-            DefaultPredicates.loadSettings(Path.Combine(PathToConfigFiles,
-                                                        GlobalSettings.grabSetting("defaultpredicates")));
-            Substitutions.loadSettings(Path.Combine(PathToConfigFiles, GlobalSettings.grabSetting("substitutionsfile")));
-            loadSplitters(Path.Combine(PathToConfigFiles, GlobalSettings.grabSetting("splittersfile")));
+            Person2Substitutions.Load(Path.Combine(PathToConfigFiles,
+                                                           GlobalSettings.GetValue("person2substitutionsfile")));
+            PersonSubstitutions.Load(Path.Combine(PathToConfigFiles,
+                                                          GlobalSettings.GetValue("personsubstitutionsfile")));
+            GenderSubstitutions.Load(Path.Combine(PathToConfigFiles,
+                                                          GlobalSettings.GetValue("gendersubstitutionsfile")));
+            DefaultPredicates.Load(Path.Combine(PathToConfigFiles,
+                                                        GlobalSettings.GetValue("defaultpredicates")));
+            Substitutions.Load(Path.Combine(PathToConfigFiles, GlobalSettings.GetValue("substitutionsfile")));
+            loadSplitters(Path.Combine(PathToConfigFiles, GlobalSettings.GetValue("splittersfile")));
         }
 
         private void loadSplitters(string pathToSplitters)

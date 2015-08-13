@@ -43,7 +43,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             }
             else
             {
-                var key = MakeCaseInsensitive.TransformInput(path.Trim().Split(" ".ToCharArray())[0]);
+                var key = UppercaseTextTransformer.TransformInput(path.Trim().Split(" ".ToCharArray())[0]);
                 var path1 = path.Substring(key.Length, path.Length - key.Length).Trim();
                 if (children.ContainsKey(key))
                 {
@@ -86,7 +86,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
                 return template;
             }
             var strArray = path.Split(" \r\n\t".ToCharArray());
-            var key = MakeCaseInsensitive.TransformInput(strArray[0]);
+            var key = UppercaseTextTransformer.TransformInput(strArray[0]);
             var path1 = path.Substring(key.Length, path.Length - key.Length);
             if (children.ContainsKey("_"))
             {

@@ -29,10 +29,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             }
             if (templateNode.InnerText.Length > 0)
             {
-                user.Predicates.addSetting(templateNode.Attributes[0].Value, templateNode.InnerText);
-                return user.Predicates.grabSetting(templateNode.Attributes[0].Value);
+                user.Predicates.Add(templateNode.Attributes[0].Value, templateNode.InnerText);
+                return user.Predicates.GetValue(templateNode.Attributes[0].Value);
             }
-            user.Predicates.removeSetting(templateNode.Attributes[0].Value);
+            user.Predicates.Remove(templateNode.Attributes[0].Value);
             return string.Empty;
         }
     }

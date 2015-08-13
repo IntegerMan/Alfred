@@ -31,7 +31,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             this.chatEngine = chatEngine;
             Predicates = new SettingsDictionary();
             this.chatEngine.DefaultPredicates.Clone(Predicates);
-            Predicates.addSetting("topic", "*");
+            Predicates.Add("topic", "*");
         }
 
         public string UserID
@@ -41,7 +41,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
         public string Topic
         {
-            get { return Predicates.grabSetting("topic"); }
+            get { return Predicates.GetValue("topic"); }
         }
 
         public Result LastResult

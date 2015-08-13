@@ -133,7 +133,7 @@ namespace MattEland.Ani.Alfred.Chat
             //! Give our input to the chat ChatEngine
             var result = GetChatResult(userInput);
 
-            //+ Get the template out of the response so we can see if there are any OOB instructions
+            //+ GetValue the template out of the response so we can see if there are any OOB instructions
             var template = AimlCommandParser.GetResponseTemplate(result);
 
             //! Grab the command from the template, if one was present

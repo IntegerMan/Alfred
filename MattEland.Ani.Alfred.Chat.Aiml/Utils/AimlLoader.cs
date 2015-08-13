@@ -264,14 +264,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
                 throw new ArgumentNullException(nameof(filename));
             }
 
-            // Get the pattern node
+            // GetValue the pattern node
             var patternNode = FindChildNode("pattern", node);
             if (patternNode == null)
             {
                 throw new XmlException(string.Format(Locale, "Missing pattern tag in a node found in {0}", filename));
             }
 
-            // Get the template node
+            // GetValue the template node
             var templateNode = FindChildNode("template", node);
             if (Equals(null, templateNode))
             {
@@ -304,11 +304,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
                 throw new ArgumentNullException(nameof(topicName));
             }
 
-            // Get the pattern from the node
+            // GetValue the pattern from the node
             var patternNode = FindChildNode("pattern", node);
             var pattern = patternNode?.InnerText ?? string.Empty;
 
-            // Get the "that" value from the node
+            // GetValue the "that" value from the node
             var thatNode = FindChildNode("that", node);
             var that = thatNode?.InnerText ?? "*";
 

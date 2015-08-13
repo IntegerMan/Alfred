@@ -48,7 +48,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                     }
                     if (name.Length > 0 & str.Length > 0)
                     {
-                        var input = user.Predicates.grabSetting(name);
+                        var input = user.Predicates.GetValue(name);
                         if (
                             new Regex(str.Replace(" ", "\\s").Replace("*", "[\\sA-Z0-9]+"), RegexOptions.IgnoreCase)
                                 .IsMatch(input))
@@ -70,7 +70,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                                 {
                                     if (xmlNode.Attributes[0].Name.ToLower() == "value")
                                     {
-                                        var input = user.Predicates.grabSetting(name);
+                                        var input = user.Predicates.GetValue(name);
                                         if (
                                             new Regex(
                                                 xmlNode.Attributes[0].Value.Replace(" ", "\\s")
@@ -117,7 +117,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                                 }
                                 if (name.Length > 0 & str.Length > 0)
                                 {
-                                    var input = user.Predicates.grabSetting(name);
+                                    var input = user.Predicates.GetValue(name);
                                     if (
                                         new Regex(str.Replace(" ", "\\s").Replace("*", "[\\sA-Z0-9]+"),
                                                   RegexOptions.IgnoreCase).IsMatch(input))
