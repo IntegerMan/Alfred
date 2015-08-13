@@ -8,45 +8,70 @@
 // ---------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
+using System.Linq;
+using JetBrains.Annotations;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
 {
+    /// <summary>
+    /// A utility class for splitting strings into sentences
+    /// </summary>
+    /// <remarks>
+    /// TODO: Look into usages and make this a static 
+    /// </remarks>
     public class SplitIntoSentences
     {
-        private readonly ChatEngine chatEngine;
-        private string inputString;
+        [NotNull]
+        private readonly ChatEngine _chatEngine;
 
-        public SplitIntoSentences(ChatEngine chatEngine, string inputString)
+        [NotNull]
+        private string _inputString;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SplitIntoSentences"/> class.
+        /// </summary>
+        /// <param name="chatEngine">The chat engine.</param>
+        /// <param name="inputString">The input string.</param>
+        public SplitIntoSentences([NotNull] ChatEngine chatEngine, string inputString)
         {
-            this.chatEngine = chatEngine;
-            this.inputString = inputString;
+            if (chatEngine == null) throw new ArgumentNullException(nameof(chatEngine));
+            _chatEngine = chatEngine;
+            _inputString = inputString;
         }
 
-        public SplitIntoSentences(ChatEngine chatEngine)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SplitIntoSentences"/> class.
+        /// </summary>
+        /// <param name="chatEngine">The chat engine.</param>
+        public SplitIntoSentences([NotNull] ChatEngine chatEngine)
         {
-            this.chatEngine = chatEngine;
+            if (chatEngine == null) throw new ArgumentNullException(nameof(chatEngine));
+            _chatEngine = chatEngine;
+            _inputString= string.Empty;
         }
 
-        public string[] Transform(string inputString)
+        /// <summary>
+        /// Transforms the specified input string.
+        /// </summary>
+        /// <param name="inputString">The input string.</param>
+        /// <returns>Sentences</returns>
+        public string[] Transform([NotNull] string inputString)
         {
-            this.inputString = inputString;
+            if (inputString == null) throw new ArgumentNullException(nameof(inputString));
+            _inputString = inputString;
             return Transform();
         }
 
+        /// <summary>
+        /// Transforms the input string into sentences.
+        /// </summary>
+        /// <returns>Sentences</returns>
+        [NotNull]
         public string[] Transform()
         {
-            var strArray = inputString.Split(chatEngine.Splitters.ToArray(), StringSplitOptions.RemoveEmptyEntries);
-            var list = new List<string>();
-            foreach (var str1 in strArray)
-            {
-                var str2 = str1.Trim();
-                if (str2.Length > 0)
-                {
-                    list.Add(str2);
-                }
-            }
-            return list.ToArray();
+            var strArray = _inputString.Split(_chatEngine.Splitters.ToArray(), StringSplitOptions.RemoveEmptyEntries);
+
+            return strArray.Select(word => word.Trim()).Where(wordTrimmed => wordTrimmed.Length > 0).ToArray();
         }
     }
 }
