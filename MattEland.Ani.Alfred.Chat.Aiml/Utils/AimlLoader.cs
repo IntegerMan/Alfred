@@ -8,210 +8,433 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml;
 
+using JetBrains.Annotations;
+
 using MattEland.Ani.Alfred.Chat.Aiml.Normalize;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 {
-    public class AIMLLoader
+    /// <summary>
+    /// A class used for building AIML resources
+    /// </summary>
+    public class AimlLoader
     {
-        private readonly ChatEngine chatEngine;
+        [NotNull]
+        private readonly ChatEngine _chatEngine;
 
-        public AIMLLoader(ChatEngine chatEngine)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AimlLoader"/> class.
+        /// </summary>
+        /// <param name="chatEngine">The chat engine.</param>
+        /// <exception cref="System.ArgumentNullException">chatEngine</exception>
+        public AimlLoader([NotNull] ChatEngine chatEngine)
         {
-            this.chatEngine = chatEngine;
-        }
-
-        public void loadAIML()
-        {
-            loadAIML(chatEngine.PathToAIML);
-        }
-
-        public void loadAIML(string path)
-        {
-            if (!Directory.Exists(path))
+            if (chatEngine == null)
             {
-                throw new FileNotFoundException("The directory specified as the path to the AIML files (" + path +
-                                                ") cannot be found by the AIMLLoader object. Please make sure the directory where you think the AIML files are to be found is the same as the directory specified in the settings file.");
+                throw new ArgumentNullException(nameof(chatEngine));
             }
-            chatEngine.writeToLog("Starting to process AIML files found in the directory " + path);
-            var files = Directory.GetFiles(path, "*.aiml");
+
+            _chatEngine = chatEngine;
+        }
+
+        /// <summary>
+        /// Loads AIML resources from the directory listed in ChatEngine.AimlDirectoryPath.
+        /// </summary>
+        /// <exception cref="System.InvalidOperationException">ChatEngine.AimlDirectoryPath was not set</exception>
+        public void LoadAiml()
+        {
+            var pathToAiml = _chatEngine.AimlDirectoryPath;
+
+            if (string.IsNullOrEmpty(pathToAiml))
+            {
+                throw new InvalidOperationException("ChatEngine.AimlDirectoryPath was not set");
+            }
+
+            LoadAiml(pathToAiml);
+        }
+
+        /// <summary>
+        /// Loads AIML resources from a file.
+        /// </summary>
+        /// <param name="directoryPath">The path to the directory containing the .AIML files.</param>
+        public void LoadAiml([NotNull] string directoryPath)
+        {
+            //- Parameter validation
+            if (directoryPath == null)
+            {
+                throw new ArgumentNullException(nameof(directoryPath));
+            }
+
+            if (!Directory.Exists(directoryPath))
+            {
+                var message = string.Format(Locale, "The directory specified as the directoryPath to the AIML files ({0}) cannot be found by the AimlLoader object. Please make sure the directory where you think the AIML files are to be found is the same as the directory specified in the settings file.", directoryPath);
+                throw new FileNotFoundException(message);
+            }
+
+            // Grab all files in the directory that should meet our needs
+            Log("Starting to process AIML files found in the directory " + directoryPath);
+
+            var files = Directory.GetFiles(directoryPath, "*.aiml");
             if (files.Length <= 0)
             {
-                throw new FileNotFoundException("Could not find any .aiml files in the specified directory (" + path +
-                                                "). Please make sure that your aiml file end in a lowercase aiml extension, for example - myFile.aiml is valid but myFile.AIML is not.");
+                throw new FileNotFoundException(string.Format(Locale, "Could not find any .aiml files in the specified directory ({0}). Please make sure that your aiml file end in a lowercase aiml extension, for example - myFile.aiml is valid but myFile.AIML is not.", directoryPath));
             }
+
+            // Load each file we've found
             foreach (var filename in files)
             {
-                loadAIMLFile(filename);
+                if (filename != null)
+                {
+                    LoadAimlFile(filename);
+                }
             }
-            chatEngine.writeToLog("Finished processing the AIML files. " + Convert.ToString(chatEngine.Size) +
-                           " categories processed.");
+
+            Log(string.Format(Locale, "Finished processing the AIML files. {0} categories processed.", Convert.ToString(_chatEngine.Size)));
         }
 
-        public void loadAIMLFile(string filename)
+        /// <summary>
+        /// Gets the locale we're using for the chat engine.
+        /// </summary>
+        /// <value>The locale.</value>
+        public CultureInfo Locale
         {
-            chatEngine.writeToLog("Processing AIML file: " + filename);
+            get
+            {
+                return _chatEngine.Locale ?? CultureInfo.CurrentCulture;
+            }
+        }
+
+        /// <summary>
+        /// Logs the specified message to the log.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        private void Log(string message)
+        {
+            if (message != null)
+            {
+                _chatEngine.writeToLog(message);
+            }
+        }
+
+        /// <summary>
+        /// Loads AIML resources from a file with the specified directoryPath.
+        /// </summary>
+        /// <param name="path">The directoryPath.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        public void LoadAimlFile([NotNull] string path)
+        {
+            if (path == null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            _chatEngine.writeToLog("Processing AIML file: " + path);
+
+            // Load the document. Loads of XmlExceptions can be thrown here
             var doc = new XmlDocument();
-            doc.Load(filename);
-            loadAIMLFromXML(doc, filename);
+            doc.Load(path);
+
+            // Load the Aiml resources from the document
+            LoadAimlFromXml(doc, path);
         }
 
-        public void loadAIMLFromXML(XmlDocument doc, string filename)
+        /// <summary>
+        /// Loads the AIML from an XML Document.
+        /// </summary>
+        /// <param name="doc">The document.</param>
+        /// <param name="filename">The directoryPath.</param>
+        public void LoadAimlFromXml([NotNull] XmlDocument doc, [NotNull] string filename)
         {
-            foreach (XmlNode node in doc.DocumentElement.ChildNodes)
+            //- Validate
+            if (doc == null)
             {
-                if (node.Name == "topic")
+                throw new ArgumentNullException(nameof(doc));
+            }
+
+            // Grab the nodes from the document
+            var nodes = doc.DocumentElement?.ChildNodes.Cast<XmlNode>();
+            if (nodes == null)
+            {
+                return;
+            }
+
+            //- Handle each node in turn
+            foreach (var node in nodes)
+            {
+                if (node == null)
+                    continue;
+
+                // At the root level we support Topics and Categories
+                switch (node.Name.ToUpperInvariant())
                 {
-                    processTopic(node, filename);
+                    case "TOPIC":
+                        ProcessTopic(node, filename);
+                        break;
+
+                    case "CATEGORY":
+                        ProcessCategory(node, "*", filename);
+                        break;
                 }
-                else if (node.Name == "category")
+            }
+        }
+
+        /// <summary>
+        /// Processes a topic node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="filename">The filename.</param>
+        private void ProcessTopic([NotNull] XmlNode node, [NotNull] string filename)
+        {
+            //- Validation
+            if (node == null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+            if (filename == null)
+            {
+                throw new ArgumentNullException(nameof(filename));
+            }
+
+            // Loop through child categories and process them
+            foreach (XmlNode childNode in node.ChildNodes)
+            {
+                if (childNode != null && childNode.Name.Compare("category"))
                 {
-                    processCategory(node, filename);
+                    ProcessCategory(childNode, GetNameFromNode(node), filename);
                 }
             }
         }
 
-        private void processTopic(XmlNode node, string filename)
+        /// <summary>
+        /// Gets a name from node's name attribute defaulting to "*" when name is not found.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <returns>The name value</returns>
+        [NotNull]
+        private static string GetNameFromNode([NotNull] XmlNode node)
         {
-            var topicName = "*";
-            if (node.Attributes.Count == 1 & node.Attributes[0].Name == "name")
+            if (node == null)
             {
-                topicName = node.Attributes["name"].Value;
+                throw new ArgumentNullException(nameof(node));
             }
-            foreach (XmlNode node1 in node.ChildNodes)
+
+            var nameValue = "*";
+            var attributes = node.Attributes;
+            if (attributes != null && attributes.Count == 1 & attributes[0]?.Name == "name")
             {
-                if (node1.Name == "category")
+                // Grab the name from the node and use that as our topic
+                var nameAttribute = attributes["name"];
+                if (nameAttribute?.Value != null)
                 {
-                    processCategory(node1, topicName, filename);
+                    nameValue = nameAttribute.Value;
                 }
+
             }
+
+            return nameValue;
         }
 
-        private void processCategory(XmlNode node, string filename)
+        /// <summary>
+        /// Processes a category node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="topicName">Name of the topic.</param>
+        /// <param name="filename">The filename.</param>
+        private void ProcessCategory([NotNull] XmlNode node, [NotNull] string topicName, [NotNull] string filename)
         {
-            processCategory(node, "*", filename);
-        }
+            //- Validation
+            if (node == null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+            if (topicName == null)
+            {
+                throw new ArgumentNullException(nameof(topicName));
+            }
+            if (filename == null)
+            {
+                throw new ArgumentNullException(nameof(filename));
+            }
 
-        private void processCategory(XmlNode node, string topicName, string filename)
-        {
-            var node1 = FindNode("pattern", node);
-            var node2 = FindNode("template", node);
-            if (Equals(null, node1))
+            // Get the pattern node
+            var patternNode = FindChildNode("pattern", node);
+            if (patternNode == null)
             {
-                throw new XmlException("Missing pattern tag in a node found in " + filename);
+                throw new XmlException(string.Format(Locale, "Missing pattern tag in a node found in {0}", filename));
             }
-            if (Equals(null, node2))
+
+            // Get the template node
+            var templateNode = FindChildNode("template", node);
+            if (Equals(null, templateNode))
             {
-                throw new XmlException("Missing template tag in the node with pattern: " + node1.InnerText +
-                                       " found in " + filename);
+                throw new XmlException(string.Format(Locale, "Missing template tag in the node with pattern: {0} found in {1}", patternNode.InnerText, filename));
             }
-            var path = generatePath(node, topicName, false);
+
+            // Figure out our path for logging and validation purposes
+            var path = BuildPathString(node, topicName, false);
             if (path.Length > 0)
             {
                 try
                 {
-                    chatEngine.Graphmaster.addCategory(path, node2.OuterXml, filename);
-                    ++chatEngine.Size;
+                    var graphmaster = _chatEngine.Graphmaster;
+                    graphmaster.AddCategory(path, templateNode.OuterXml, filename);
+
+                    _chatEngine.Size++;
                 }
                 catch
                 {
-                    chatEngine.writeToLog("ERROR! Failed to load a new category into the graphmaster where the path = " + path +
-                                   " and template = " + node2.OuterXml + " produced by a category in the file: " +
-                                   filename);
+                    Log(string.Format(Locale, "ERROR! Failed to load a new category into the graphmaster where the directoryPath = {0} and template = {1} produced by a category in the file: {2}", path, templateNode.OuterXml, filename));
                 }
             }
             else
             {
-                chatEngine.writeToLog("WARNING! Attempted to load a new category with an empty pattern where the path = " +
-                               path + " and template = " + node2.OuterXml + " produced by a category in the file: " +
-                               filename);
+                Log(string.Format(Locale, "WARNING! Attempted to load a new category with an empty pattern where the directoryPath = {0} and template = {1} produced by a category in the file: {2}", path, templateNode.OuterXml, filename));
             }
         }
 
-        public string generatePath(XmlNode node, string topicName, bool isUserInput)
+        /// <summary>
+        /// Builds the path string from a node given a topic name.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="topicName">Name of the topic.</param>
+        /// <param name="isUserInput">The is user input.</param>
+        /// <returns>The path string</returns>
+        [NotNull]
+        public string BuildPathString([NotNull] XmlNode node, [NotNull] string topicName, bool isUserInput)
         {
-            var node1 = FindNode("pattern", node);
-            var node2 = FindNode("that", node);
-            var that = "*";
-            var pattern = !Equals(null, node1) ? node1.InnerText : string.Empty;
-            if (!Equals(null, node2))
+            //- Validation
+            if (node == null)
             {
-                that = node2.InnerText;
+                throw new ArgumentNullException(nameof(node));
             }
-            return generatePath(pattern, that, topicName, isUserInput);
+            if (topicName == null)
+            {
+                throw new ArgumentNullException(nameof(topicName));
+            }
+
+            // Get the pattern from the node
+            var patternNode = FindChildNode("pattern", node);
+            var pattern = patternNode?.InnerText ?? string.Empty;
+
+            // Get the "that" value from the node
+            var thatNode = FindChildNode("that", node);
+            var that = thatNode?.InnerText ?? "*";
+
+            // Delegate path building
+            return BuildPathString(pattern, that, topicName, isUserInput);
         }
 
-        private XmlNode FindNode(string name, XmlNode node)
+        /// <summary>
+        /// Finds a child node with the specified name from the node specified.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="node">The node.</param>
+        /// <returns>System.Xml.XmlNode.</returns>
+        [CanBeNull]
+        private static XmlNode FindChildNode([NotNull] string name, [NotNull] XmlNode node)
         {
-            foreach (XmlNode xmlNode in node.ChildNodes)
+            if (name == null)
             {
-                if (xmlNode.Name == name)
-                {
-                    return xmlNode;
-                }
+                throw new ArgumentNullException(nameof(name));
             }
-            return null;
+
+            if (node == null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+
+            return node.ChildNodes.Cast<XmlNode>().FirstOrDefault(xmlNode => xmlNode?.Name == name);
         }
 
-        public string generatePath(string pattern, string that, string topicName, bool isUserInput)
+        /// <summary>
+        /// Builds a directoryPath string representing a compound state involving a pattern, "that" value, and topic.
+        /// </summary>
+        /// <param name="pattern">The pattern.</param>
+        /// <param name="that">The that value.</param>
+        /// <param name="topicName">Name of the topic.</param>
+        /// <param name="isUserInput">Whether or not this is user input.</param>
+        /// <returns>A directoryPath string representing the pattern, that, and topicName values.</returns>
+        [NotNull]
+        public string BuildPathString([NotNull] string pattern, [NotNull] string that,
+                                           [NotNull] string topicName, bool isUserInput)
         {
-            var stringBuilder = new StringBuilder();
-            var str1 = string.Empty;
-            string str2;
-            string str3;
-            string str4;
-            if (chatEngine.TrustAIML & !isUserInput)
+            //- Validate inputs
+            if (pattern == null)
             {
-                str2 = pattern.Trim();
-                str3 = that.Trim();
-                str4 = topicName.Trim();
+                throw new ArgumentNullException(nameof(pattern));
             }
-            else
+            if (that == null)
             {
-                str2 = Normalize(pattern, isUserInput).Trim();
-                str3 = Normalize(that, isUserInput).Trim();
-                str4 = Normalize(topicName, isUserInput).Trim();
+                throw new ArgumentNullException(nameof(that));
             }
-            if (str2.Length <= 0)
+            if (topicName == null)
+            {
+                throw new ArgumentNullException(nameof(topicName));
+            }
+
+            // Determine if we'll sanitize input or not
+            var trustInput = _chatEngine.TrustAiml & !isUserInput;
+
+            // Build pattern string
+            pattern = trustInput ? pattern.Trim() : Normalize(pattern, isUserInput).Trim();
+            if (string.IsNullOrEmpty(pattern))
             {
                 return string.Empty;
             }
-            if (str3.Length == 0)
+
+            // Build "that" display string
+            that = trustInput ? that.Trim() : Normalize(that, isUserInput).Trim();
+            if (string.IsNullOrEmpty(that))
             {
-                str3 = "*";
+                that = "*";
             }
-            if (str4.Length == 0)
+            else if (that.Length > _chatEngine.MaxThatSize)
             {
-                str4 = "*";
+                that = "*";
             }
-            if (str3.Length > chatEngine.MaxThatSize)
+
+            // Build Topic display string
+            topicName = trustInput ? topicName.Trim() : Normalize(topicName, isUserInput).Trim();
+            if (string.IsNullOrEmpty(topicName))
             {
-                str3 = "*";
+                topicName = "*";
             }
-            stringBuilder.Append(str2);
+
+            // Build and return the Path String
+            var stringBuilder = new StringBuilder();
+            stringBuilder.Append(pattern);
             stringBuilder.Append(" <that> ");
-            stringBuilder.Append(str3);
+            stringBuilder.Append(that);
             stringBuilder.Append(" <topic> ");
-            stringBuilder.Append(str4);
+            stringBuilder.Append(topicName);
+
             return stringBuilder.ToString();
         }
 
         public string Normalize(string input, bool isUserInput)
         {
             var stringBuilder = new StringBuilder();
-            var applySubstitutions = new ApplySubstitutions(chatEngine);
-            var illegalCharacters = new StripIllegalCharacters(chatEngine);
-            foreach (var input1 in applySubstitutions.Transform(input).Split(" \r\n\t".ToCharArray()))
+            var applySubstitutions = new ApplySubstitutions(_chatEngine);
+            var illegalCharacters = new StripIllegalCharacters(_chatEngine);
+
+            var transformedSubstitutions = applySubstitutions.Transform(input).Split(" \r\n\t".ToCharArray());
+
+            foreach (var input1 in transformedSubstitutions)
             {
                 var str = !isUserInput
                               ? (input1 == "*" || input1 == "_" ? input1 : illegalCharacters.Transform(input1))
                               : illegalCharacters.Transform(input1);
                 stringBuilder.Append(str.Trim() + " ");
             }
+
             return stringBuilder.ToString().Replace("  ", " ");
         }
     }

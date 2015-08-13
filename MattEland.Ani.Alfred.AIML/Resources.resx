@@ -128,7 +128,7 @@
     <comment>This is the default reply that Alfred outputs when the sentence couldn't be handled.</comment>
   </data>
   <data name="NoSettingsPathError" xml:space="preserve">
-    <value>Empty path to a settings file</value>
+    <value>Empty directoryPath to a settings file</value>
   </data>
   <data name="InitialGreetingText" xml:space="preserve">
     <value>Hi</value>

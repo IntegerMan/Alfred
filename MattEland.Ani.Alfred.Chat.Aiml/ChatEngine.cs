@@ -51,7 +51,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         public List<string> Splitters = new List<string>();
         public DateTime StartedOn = DateTime.Now;
         public SettingsDictionary Substitutions;
-        public bool TrustAIML = true;
+        public bool TrustAiml = true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ChatEngine"/> class.
@@ -148,7 +148,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             }
         }
 
-        public string PathToAIML
+        public string AimlDirectoryPath
         {
             get { return Path.Combine(Environment.CurrentDirectory, GlobalSettings.grabSetting("aimldirectory")); }
         }
@@ -167,12 +167,12 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
         public void loadAIMLFromFiles()
         {
-            new AIMLLoader(this).loadAIML();
+            new AimlLoader(this).LoadAiml();
         }
 
         public void loadAIMLFromXML(XmlDocument newAIML, string filename)
         {
-            new AIMLLoader(this).loadAIMLFromXML(newAIML, filename);
+            new AimlLoader(this).LoadAimlFromXml(newAIML, filename);
         }
 
         private void setup()
@@ -390,11 +390,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             var result = new Result(request.user, this, request);
             if (isAcceptingUserInput)
             {
-                var aimlLoader = new AIMLLoader(this);
+                var aimlLoader = new AimlLoader(this);
                 foreach (var pattern in new SplitIntoSentences(this).Transform(request.rawInput))
                 {
                     result.InputSentences.Add(pattern);
-                    var str = aimlLoader.generatePath(pattern, request.user.getLastBotOutput(), request.user.Topic, true);
+                    var str = aimlLoader.BuildPathString(pattern, request.user.getLastBotOutput(), request.user.Topic, true);
                     result.NormalizedPaths.Add(str);
                 }
                 foreach (var str in result.NormalizedPaths)

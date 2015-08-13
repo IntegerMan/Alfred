@@ -29,7 +29,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             get { return children.Count; }
         }
 
-        public void addCategory(string path, string template, string filename)
+        public void AddCategory(string path, string template, string filename)
         {
             if (template.Length == 0)
             {
@@ -47,13 +47,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
                 var path1 = path.Substring(key.Length, path.Length - key.Length).Trim();
                 if (children.ContainsKey(key))
                 {
-                    children[key].addCategory(path1, template, filename);
+                    children[key].AddCategory(path1, template, filename);
                 }
                 else
                 {
                     var node = new Node();
                     node.word = key;
-                    node.addCategory(path1, template, filename);
+                    node.AddCategory(path1, template, filename);
                     children.Add(node.word, node);
                 }
             }

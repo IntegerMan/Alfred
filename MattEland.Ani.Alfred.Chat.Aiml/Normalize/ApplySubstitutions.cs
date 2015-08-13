@@ -11,23 +11,19 @@ using System;
 using System.Text;
 using System.Text.RegularExpressions;
 
+using JetBrains.Annotations;
+
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
 {
-    public class ApplySubstitutions : TextTransformer
+    internal sealed class ApplySubstitutions : TextTransformer
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="ApplySubstitutions" /> class.
+        /// Initializes a new instance of the <see cref="TextTransformer" /> class.
         /// </summary>
         /// <param name="chatEngine">The ChatEngine.</param>
-        /// <param name="inputString">The input string.</param>
-        public ApplySubstitutions(ChatEngine chatEngine, string inputString)
-            : base(chatEngine, inputString)
-        {
-        }
-
-        public ApplySubstitutions(ChatEngine chatEngine)
+        internal ApplySubstitutions(ChatEngine chatEngine)
             : base(chatEngine)
         {
         }
@@ -46,19 +42,35 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
 
         protected override string ProcessChange()
         {
-            return Substitute(ChatEngine, ChatEngine.Substitutions, InputString);
+            return Substitute(ChatEngine.Substitutions, InputString);
         }
 
-        public static string Substitute(ChatEngine chatEngine, SettingsDictionary dictionary, string target)
+        internal static string Substitute([NotNull] SettingsDictionary dictionary,
+                                          [NotNull] string target)
         {
+            if (dictionary == null)
+            {
+                throw new ArgumentNullException(nameof(dictionary));
+            }
+            if (target == null)
+            {
+                throw new ArgumentNullException(nameof(target));
+            }
+
             var marker = getMarker(5);
             var input = target;
-            foreach (var str in dictionary.SettingNames)
+
+            var settingNames = dictionary.SettingNames;
+            if (settingNames != null)
             {
-                var pattern = "\\b" + makeRegexSafe(str).TrimEnd().TrimStart() + "\\b";
-                var replacement = marker + dictionary.grabSetting(str).Trim() + marker;
-                input = Regex.Replace(input, pattern, replacement, RegexOptions.IgnoreCase);
+                foreach (var str in settingNames)
+                {
+                    var pattern = "\\b" + makeRegexSafe(str).TrimEnd().TrimStart() + "\\b";
+                    var replacement = marker + dictionary.grabSetting(str).Trim() + marker;
+                    input = Regex.Replace(input, pattern, replacement, RegexOptions.IgnoreCase);
+                }
             }
+
             return input.Replace(marker, "");
         }
 

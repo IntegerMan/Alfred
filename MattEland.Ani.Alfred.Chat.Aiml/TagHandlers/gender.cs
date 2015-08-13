@@ -29,7 +29,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             }
             if (templateNode.InnerText.Length > 0)
             {
-                return ApplySubstitutions.Substitute(ChatEngine, ChatEngine.GenderSubstitutions, templateNode.InnerText);
+                return ApplySubstitutions.Substitute(ChatEngine.GenderSubstitutions, templateNode.InnerText);
             }
             templateNode.InnerText =
                 new star(ChatEngine, user, query, request, result, getNode("<star/>")).Transform();
