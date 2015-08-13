@@ -2,8 +2,9 @@
 // SettingsDictionary.cs
 // 
 // Created on:      08/12/2015 at 10:28 PM
-// Last Modified:   08/12/2015 at 11:03 PM
-// Original author: Matt Eland
+// Last Modified:   08/12/2015 at 11:59 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System.Collections.Generic;
@@ -99,7 +100,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 
         public void addSetting(string name, string value)
         {
-            string str = MakeCaseInsensitive.TransformInput(name);
+            var str = MakeCaseInsensitive.TransformInput(name);
             if (str.Length <= 0)
             {
                 return;
@@ -111,7 +112,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 
         public void removeSetting(string name)
         {
-            string name1 = MakeCaseInsensitive.TransformInput(name);
+            var name1 = MakeCaseInsensitive.TransformInput(name);
             orderedKeys.Remove(name1);
             removeFromHash(name1);
         }
@@ -123,7 +124,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 
         public void updateSetting(string name, string value)
         {
-            string str = MakeCaseInsensitive.TransformInput(name);
+            var str = MakeCaseInsensitive.TransformInput(name);
             if (!orderedKeys.Contains(str))
             {
                 return;
@@ -140,7 +141,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 
         public string grabSetting(string name)
         {
-            string name1 = MakeCaseInsensitive.TransformInput(name);
+            var name1 = MakeCaseInsensitive.TransformInput(name);
             if (containsSettingCalled(name1))
             {
                 return settingsHash[name1];
@@ -150,7 +151,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 
         public bool containsSettingCalled(string name)
         {
-            string str = MakeCaseInsensitive.TransformInput(name);
+            var str = MakeCaseInsensitive.TransformInput(name);
             if (str.Length > 0)
             {
                 return orderedKeys.Contains(str);

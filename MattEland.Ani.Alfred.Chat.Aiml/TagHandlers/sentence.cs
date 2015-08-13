@@ -2,8 +2,9 @@
 // sentence.cs
 // 
 // Created on:      08/12/2015 at 10:52 PM
-// Last Modified:   08/12/2015 at 11:03 PM
-// Original author: Matt Eland
+// Last Modified:   08/12/2015 at 11:59 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
@@ -36,7 +37,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                 for (var index = 0; index < chArray.Length; ++index)
                 {
                     var input = Convert.ToString(chArray[index]);
-                    if (bot.Splitters.Contains(input))
+                    if (Bot.Splitters.Contains(input))
                     {
                         flag = true;
                     }
@@ -44,12 +45,12 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                     {
                         if (flag)
                         {
-                            stringBuilder.Append(input.ToUpper(bot.Locale));
+                            stringBuilder.Append(input.ToUpper(Locale));
                             flag = false;
                         }
                         else
                         {
-                            stringBuilder.Append(input.ToLower(bot.Locale));
+                            stringBuilder.Append(input.ToLower(Locale));
                         }
                     }
                     else
@@ -59,7 +60,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                 }
                 return stringBuilder.ToString();
             }
-            templateNode.InnerText = new star(bot, user, query, request, result, getNode("<star/>")).Transform();
+            templateNode.InnerText = new star(Bot, user, query, request, result, getNode("<star/>")).Transform();
             if (templateNode.InnerText.Length > 0)
             {
                 return ProcessChange();

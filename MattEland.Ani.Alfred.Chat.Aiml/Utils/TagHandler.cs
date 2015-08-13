@@ -2,8 +2,9 @@
 // TagHandler.cs
 // 
 // Created on:      08/12/2015 at 10:36 PM
-// Last Modified:   08/12/2015 at 11:03 PM
-// Original author: Matt Eland
+// Last Modified:   08/12/2015 at 11:59 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         {
             if (!Assemblies.ContainsKey(AssemblyName))
             {
-                return (AimlTagHandler) null;
+                return null;
             }
             var assembly = Assemblies[AssemblyName];
             assembly.GetTypes();

@@ -2,8 +2,9 @@
 // srai.cs
 // 
 // Created on:      08/12/2015 at 10:55 PM
-// Last Modified:   08/12/2015 at 11:03 PM
-// Original author: Matt Eland
+// Last Modified:   08/12/2015 at 11:59 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System.Xml;
@@ -25,9 +26,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             {
                 return string.Empty;
             }
-            var request = new Request(templateNode.InnerText, user, bot);
+
+            // TODO: The problem with this model is you don't get the full template as it's traced through. This
+            // gives the client difficulties in determining what tag was hit. Then again, maybe I can write around
+            // this and not even need to know on the outside how it was routed.
+
+            var request = new Request(templateNode.InnerText, user, Bot);
             request.StartedOn = this.request.StartedOn;
-            var result = bot.Chat(request);
+
+            var result = Bot.Chat(request);
             this.request.hasTimedOut = request.hasTimedOut;
             return result.Output;
         }

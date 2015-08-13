@@ -2,8 +2,9 @@
 // uppercase.cs
 // 
 // Created on:      08/12/2015 at 11:00 PM
-// Last Modified:   08/12/2015 at 11:03 PM
-// Original author: Matt Eland
+// Last Modified:   08/12/2015 at 11:59 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System.Xml;
@@ -23,7 +24,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         {
             if (templateNode.Name.ToLower() == "uppercase")
             {
-                return templateNode.InnerText.ToUpper(bot.Locale);
+                return templateNode.InnerText.ToUpper(Locale);
             }
             return string.Empty;
         }

@@ -2,8 +2,9 @@
 // get.cs
 // 
 // Created on:      08/12/2015 at 10:45 PM
-// Last Modified:   08/12/2015 at 11:03 PM
-// Original author: Matt Eland
+// Last Modified:   08/12/2015 at 11:59 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System.Xml;
@@ -21,7 +22,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 
         protected override string ProcessChange()
         {
-            if (templateNode.Name.ToLower() == "get" && bot.GlobalSettings.Count > 0 &&
+            if (templateNode.Name.ToLower() == "get" && Bot.GlobalSettings.Count > 0 &&
                 (templateNode.Attributes.Count == 1 && templateNode.Attributes[0].Name.ToLower() == "name"))
             {
                 return user.Predicates.grabSetting(templateNode.Attributes[0].Value);

@@ -2,8 +2,9 @@
 // ApplySubstitutions.cs
 // 
 // Created on:      08/12/2015 at 10:37 PM
-// Last Modified:   08/12/2015 at 11:03 PM
-// Original author: Matt Eland
+// Last Modified:   08/12/2015 at 11:59 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
@@ -16,6 +17,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
 {
     public class ApplySubstitutions : TextTransformer
     {
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="ApplySubstitutions" /> class.
+        /// </summary>
+        /// <param name="bot">The bot.</param>
+        /// <param name="inputString">The input string.</param>
         public ApplySubstitutions(Bot bot, string inputString)
             : base(bot, inputString)
         {
@@ -40,7 +46,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
 
         protected override string ProcessChange()
         {
-            return Substitute(bot, bot.Substitutions, inputString);
+            return Substitute(Bot, Bot.Substitutions, InputString);
         }
 
         public static string Substitute(Bot bot, SettingsDictionary dictionary, string target)

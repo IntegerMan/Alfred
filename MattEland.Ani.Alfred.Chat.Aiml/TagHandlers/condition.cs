@@ -2,8 +2,9 @@
 // condition.cs
 // 
 // Created on:      08/12/2015 at 10:42 PM
-// Last Modified:   08/12/2015 at 11:03 PM
-// Original author: Matt Eland
+// Last Modified:   08/12/2015 at 11:59 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System.Text.RegularExpressions;
@@ -47,7 +48,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                     }
                     if (name.Length > 0 & str.Length > 0)
                     {
-                        string input = user.Predicates.grabSetting(name);
+                        var input = user.Predicates.grabSetting(name);
                         if (
                             new Regex(str.Replace(" ", "\\s").Replace("*", "[\\sA-Z0-9]+"), RegexOptions.IgnoreCase)
                                 .IsMatch(input))
@@ -69,7 +70,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                                 {
                                     if (xmlNode.Attributes[0].Name.ToLower() == "value")
                                     {
-                                        string input = user.Predicates.grabSetting(name);
+                                        var input = user.Predicates.grabSetting(name);
                                         if (
                                             new Regex(
                                                 xmlNode.Attributes[0].Value.Replace(" ", "\\s")
@@ -116,7 +117,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                                 }
                                 if (name.Length > 0 & str.Length > 0)
                                 {
-                                    string input = user.Predicates.grabSetting(name);
+                                    var input = user.Predicates.grabSetting(name);
                                     if (
                                         new Regex(str.Replace(" ", "\\s").Replace("*", "[\\sA-Z0-9]+"),
                                                   RegexOptions.IgnoreCase).IsMatch(input))

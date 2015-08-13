@@ -2,8 +2,9 @@
 // bot.cs
 // 
 // Created on:      08/12/2015 at 10:40 PM
-// Last Modified:   08/12/2015 at 11:03 PM
-// Original author: Matt Eland
+// Last Modified:   08/12/2015 at 11:59 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System.Xml;
@@ -24,7 +25,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             if (templateNode.Name.ToLower() == "bot" && templateNode.Attributes.Count == 1 &&
                 templateNode.Attributes[0].Name.ToLower() == "name")
             {
-                return bot.GlobalSettings.grabSetting(templateNode.Attributes["name"].Value);
+                return Bot.GlobalSettings.grabSetting(templateNode.Attributes["name"].Value);
             }
             return string.Empty;
         }

@@ -2,8 +2,9 @@
 // thatstar.cs
 // 
 // Created on:      08/12/2015 at 10:58 PM
-// Last Modified:   08/12/2015 at 11:03 PM
-// Original author: Matt Eland
+// Last Modified:   08/12/2015 at 11:59 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
@@ -30,7 +31,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                     {
                         return query.ThatStar[0];
                     }
-                    bot.writeToLog(
+                    Bot.writeToLog(
                                    "ERROR! An out of bounds index to thatstar was encountered when processing the input: " +
                                    request.rawInput);
                 }
@@ -47,20 +48,20 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                                 {
                                     return query.ThatStar[num - 1];
                                 }
-                                bot.writeToLog("ERROR! An input tag with a bady formed index (" +
+                                Bot.writeToLog("ERROR! An input tag with a bady formed index (" +
                                                templateNode.Attributes[0].Value +
                                                ") was encountered processing the input: " + request.rawInput);
                             }
                             else
                             {
-                                bot.writeToLog(
+                                Bot.writeToLog(
                                                "ERROR! An out of bounds index to thatstar was encountered when processing the input: " +
                                                request.rawInput);
                             }
                         }
                         catch
                         {
-                            bot.writeToLog("ERROR! A thatstar tag with a bady formed index (" +
+                            Bot.writeToLog("ERROR! A thatstar tag with a bady formed index (" +
                                            templateNode.Attributes[0].Value + ") was encountered processing the input: " +
                                            request.rawInput);
                         }

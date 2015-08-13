@@ -2,8 +2,9 @@
 // javascript.cs
 // 
 // Created on:      08/12/2015 at 10:48 PM
-// Last Modified:   08/12/2015 at 11:03 PM
-// Original author: Matt Eland
+// Last Modified:   08/12/2015 at 11:59 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System.Xml;
@@ -21,7 +22,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 
         protected override string ProcessChange()
         {
-            bot.writeToLog("The javascript tag is not implemented in this bot");
+            Bot.writeToLog("The javascript tag is not implemented in this bot");
             return string.Empty;
         }
     }

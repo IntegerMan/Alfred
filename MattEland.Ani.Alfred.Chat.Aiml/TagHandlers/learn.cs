@@ -2,8 +2,9 @@
 // learn.cs
 // 
 // Created on:      08/12/2015 at 10:49 PM
-// Last Modified:   08/12/2015 at 11:03 PM
-// Original author: Matt Eland
+// Last Modified:   08/12/2015 at 11:59 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System.IO;
@@ -31,11 +32,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                     try
                     {
                         newAIML.Load(innerText);
-                        bot.loadAIMLFromXML(newAIML, innerText);
+                        Bot.loadAIMLFromXML(newAIML, innerText);
                     }
                     catch
                     {
-                        bot.writeToLog(
+                        Bot.writeToLog(
                                        "ERROR! Attempted (but failed) to <learn> some new AIML from the following URI: " +
                                        innerText);
                     }

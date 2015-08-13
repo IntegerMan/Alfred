@@ -2,8 +2,9 @@
 // star.cs
 // 
 // Created on:      08/12/2015 at 10:56 PM
-// Last Modified:   08/12/2015 at 11:03 PM
-// Original author: Matt Eland
+// Last Modified:   08/12/2015 at 11:59 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
@@ -41,11 +42,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                                 {
                                     return query.InputStar[index];
                                 }
-                                bot.writeToLog("InputStar out of bounds reference caused by input: " + request.rawInput);
+                                Bot.writeToLog("InputStar out of bounds reference caused by input: " + request.rawInput);
                             }
                             catch
                             {
-                                bot.writeToLog(
+                                Bot.writeToLog(
                                                "Index set to non-integer value whilst processing star tag in response to the input: " +
                                                request.rawInput);
                             }
@@ -54,7 +55,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                 }
                 else
                 {
-                    bot.writeToLog(
+                    Bot.writeToLog(
                                    "A star tag tried to reference an empty InputStar collection when processing the input: " +
                                    request.rawInput);
                 }

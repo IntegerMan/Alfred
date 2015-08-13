@@ -2,61 +2,131 @@
 // TextTransformer.cs
 // 
 // Created on:      08/12/2015 at 10:36 PM
-// Last Modified:   08/12/2015 at 11:03 PM
-// Original author: Matt Eland
+// Last Modified:   08/12/2015 at 11:59 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
+
+using System;
+using System.Diagnostics;
+using System.Globalization;
+
+using JetBrains.Annotations;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 {
+    /// <summary>
+    ///     An abstract class representing a class that will transform input text into output text.
+    /// </summary>
     public abstract class TextTransformer
     {
-        public Bot bot;
-        protected string inputString;
+        [CanBeNull]
+        private Bot _bot;
 
-        public TextTransformer(Bot bot, string inputString)
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="TextTransformer" /> class.
+        /// </summary>
+        /// <param name="bot">The bot.</param>
+        /// <param name="inputString">The input string.</param>
+        protected TextTransformer([CanBeNull] Bot bot, [CanBeNull] string inputString)
         {
-            this.bot = bot;
-            this.inputString = inputString;
+            _bot = bot;
+            InputString = inputString;
         }
 
-        public TextTransformer(Bot bot)
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="TextTransformer" /> class.
+        /// </summary>
+        /// <param name="bot">The bot.</param>
+        protected TextTransformer([CanBeNull] Bot bot)
         {
-            this.bot = bot;
-            inputString = string.Empty;
+            _bot = bot;
+            InputString = string.Empty;
         }
 
-        public TextTransformer()
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="TextTransformer" /> class.
+        /// </summary>
+        protected TextTransformer()
         {
-            bot = null;
-            inputString = string.Empty;
+            _bot = null;
+            InputString = string.Empty;
         }
 
-        public string InputString
+        /// <summary>
+        ///     Gets the chat bot associated with this transformer.
+        /// </summary>
+        /// <value>The bot.</value>
+        [CanBeNull]
+        [Obsolete("It'd be good to not need to use this anymore and rely on pass-throughs")]
+        public Bot Bot
         {
-            get { return inputString; }
-            set { inputString = value; }
+            [DebuggerStepThrough]
+            get { return _bot; }
+            [DebuggerStepThrough]
+            internal set { _bot = value; }
         }
 
+        /// <summary>
+        ///     Gets the current locale.
+        /// </summary>
+        /// <value>The locale.</value>
+        protected CultureInfo Locale
+        {
+            get { return _bot != null ? _bot.Locale : CultureInfo.CurrentCulture; }
+        }
+
+        /// <summary>
+        ///     Gets or sets the input string.
+        /// </summary>
+        /// <value>The input string.</value>
+        [CanBeNull]
+        public string InputString { get; set; }
+
+        /// <summary>
+        ///     Gets the output string.
+        /// </summary>
+        /// <value>The output string.</value>
         public string OutputString
         {
             get { return Transform(); }
         }
 
-        public string Transform(string input)
+        /// <summary>
+        ///     Transforms the specified input text into output text and returns it.
+        ///     The input value then becomes InputString in this instance.
+        /// </summary>
+        /// <param name="input">The input text.</param>
+        /// <returns>The outputted text from the transform.</returns>
+        public string Transform([CanBeNull] string input)
         {
-            inputString = input;
+            //- Store the new input
+            InputString = input;
+
+            // Process and return the result using our primary method
             return Transform();
         }
 
+        /// <summary>
+        ///     Transforms the input text into the output text.
+        /// </summary>
+        /// <returns>The outputted text from the transform.</returns>
         public string Transform()
         {
-            if (inputString.Length > 0)
+            //- Ensure we have a valid value
+            if (string.IsNullOrWhiteSpace(InputString))
             {
-                return ProcessChange();
+                return string.Empty;
             }
-            return string.Empty;
+
+            // Farm out processing the transform to the concrete implementation
+            return ProcessChange();
         }
 
+        /// <summary>
+        ///     Processes the input text and returns the processed value.
+        /// </summary>
+        /// <returns>The processed output</returns>
         protected abstract string ProcessChange();
     }
 }

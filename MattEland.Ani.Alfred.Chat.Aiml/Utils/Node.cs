@@ -2,8 +2,9 @@
 // Node.cs
 // 
 // Created on:      08/12/2015 at 10:27 PM
-// Last Modified:   08/12/2015 at 11:03 PM
-// Original author: Matt Eland
+// Last Modified:   08/12/2015 at 11:59 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
@@ -42,7 +43,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             }
             else
             {
-                string key = MakeCaseInsensitive.TransformInput(path.Trim().Split(" ".ToCharArray())[0]);
+                var key = MakeCaseInsensitive.TransformInput(path.Trim().Split(" ".ToCharArray())[0]);
                 var path1 = path.Substring(key.Length, path.Length - key.Length).Trim();
                 if (children.ContainsKey(key))
                 {
@@ -85,7 +86,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
                 return template;
             }
             var strArray = path.Split(" \r\n\t".ToCharArray());
-            string key = MakeCaseInsensitive.TransformInput(strArray[0]);
+            var key = MakeCaseInsensitive.TransformInput(strArray[0]);
             var path1 = path.Substring(key.Length, path.Length - key.Length);
             if (children.ContainsKey("_"))
             {

@@ -2,8 +2,9 @@
 // person2.cs
 // 
 // Created on:      08/12/2015 at 10:51 PM
-// Last Modified:   08/12/2015 at 11:03 PM
-// Original author: Matt Eland
+// Last Modified:   08/12/2015 at 11:59 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System.Xml;
@@ -28,9 +29,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             }
             if (templateNode.InnerText.Length > 0)
             {
-                return ApplySubstitutions.Substitute(bot, bot.Person2Substitutions, templateNode.InnerText);
+                return ApplySubstitutions.Substitute(Bot, Bot.Person2Substitutions, templateNode.InnerText);
             }
-            templateNode.InnerText = new star(bot, user, query, request, result, getNode("<star/>")).Transform();
+            templateNode.InnerText = new star(Bot, user, query, request, result, getNode("<star/>")).Transform();
             if (templateNode.InnerText.Length > 0)
             {
                 return ProcessChange();

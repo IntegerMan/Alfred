@@ -2,8 +2,9 @@
 // that.cs
 // 
 // Created on:      08/12/2015 at 10:57 PM
-// Last Modified:   08/12/2015 at 11:03 PM
-// Original author: Matt Eland
+// Last Modified:   08/12/2015 at 11:59 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
@@ -43,7 +44,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                                 {
                                     return user.getThat(num1 - 1, num2 - 1);
                                 }
-                                bot.writeToLog("ERROR! An input tag with a bady formed index (" +
+                                Bot.writeToLog("ERROR! An input tag with a badly formed index (" +
                                                templateNode.Attributes[0].Value +
                                                ") was encountered processing the input: " + request.rawInput);
                             }
@@ -54,14 +55,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                                 {
                                     return user.getThat(num - 1);
                                 }
-                                bot.writeToLog("ERROR! An input tag with a bady formed index (" +
+                                Bot.writeToLog("ERROR! An input tag with a badly formed index (" +
                                                templateNode.Attributes[0].Value +
                                                ") was encountered processing the input: " + request.rawInput);
                             }
                         }
                         catch
                         {
-                            bot.writeToLog("ERROR! An input tag with a bady formed index (" +
+                            Bot.writeToLog("ERROR! An input tag with a bady formed index (" +
                                            templateNode.Attributes[0].Value + ") was encountered processing the input: " +
                                            request.rawInput);
                         }

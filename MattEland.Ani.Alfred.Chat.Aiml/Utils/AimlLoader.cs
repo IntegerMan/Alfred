@@ -2,8 +2,9 @@
 // AimlLoader.cs
 // 
 // Created on:      08/12/2015 at 10:25 PM
-// Last Modified:   08/12/2015 at 11:03 PM
-// Original author: Matt Eland
+// Last Modified:   08/12/2015 at 11:59 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
@@ -202,13 +203,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         public string Normalize(string input, bool isUserInput)
         {
             var stringBuilder = new StringBuilder();
-            ApplySubstitutions applySubstitutions = new ApplySubstitutions(bot);
-            StripIllegalCharacters illegalCharacters = new StripIllegalCharacters(bot);
-            foreach (string input1 in applySubstitutions.Transform(input).Split(" \r\n\t".ToCharArray()))
+            var applySubstitutions = new ApplySubstitutions(bot);
+            var illegalCharacters = new StripIllegalCharacters(bot);
+            foreach (var input1 in applySubstitutions.Transform(input).Split(" \r\n\t".ToCharArray()))
             {
-                string str = !isUserInput
-                                 ? (input1 == "*" || input1 == "_" ? input1 : illegalCharacters.Transform(input1))
-                                 : illegalCharacters.Transform(input1);
+                var str = !isUserInput
+                              ? (input1 == "*" || input1 == "_" ? input1 : illegalCharacters.Transform(input1))
+                              : illegalCharacters.Transform(input1);
                 stringBuilder.Append(str.Trim() + " ");
             }
             return stringBuilder.ToString().Replace("  ", " ");
