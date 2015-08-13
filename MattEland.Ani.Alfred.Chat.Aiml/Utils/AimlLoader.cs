@@ -243,7 +243,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        /// Processes a category node.
+        /// Processes a category node and adds it to the ChatEngine.
         /// </summary>
         /// <param name="node">The node.</param>
         /// <param name="topicName">Name of the topic.</param>
@@ -280,25 +280,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 
             // Figure out our path for logging and validation purposes
             var path = BuildPathString(node, topicName, false);
-            if (path.Length > 0)
-            {
-                try
-                {
-                    var graphmaster = _chatEngine.Graphmaster;
-                    graphmaster.AddCategory(path, templateNode.OuterXml, filename);
-
-                    _chatEngine.Size++;
-                }
-                catch
-                {
-                    Log(string.Format(Locale, "ERROR! Failed to load a new category into the graphmaster where the directoryPath = {0} and template = {1} produced by a category in the file: {2}", path, templateNode.OuterXml, filename));
-                }
-            }
-            else
-            {
-                Log(string.Format(Locale, "WARNING! Attempted to load a new category with an empty pattern where the directoryPath = {0} and template = {1} produced by a category in the file: {2}", path, templateNode.OuterXml, filename));
-            }
+            _chatEngine.AddCategoryToGraph(templateNode, path, filename);
         }
+
 
         /// <summary>
         /// Builds the path string from a node given a topic name.
@@ -421,17 +405,21 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 
         public string Normalize(string input, bool isUserInput)
         {
-            var stringBuilder = new StringBuilder();
+            //? Transform this input into 
             var applySubstitutions = new ApplySubstitutions(_chatEngine);
+            var transformedInput = applySubstitutions.Transform(input);
+
+            var transformedSubstitutions = transformedInput.Split(" \r\n\t".ToCharArray());
+
+            //? Loop through each substitution and...
+            var stringBuilder = new StringBuilder();
             var illegalCharacters = new StripIllegalCharacters(_chatEngine);
-
-            var transformedSubstitutions = applySubstitutions.Transform(input).Split(" \r\n\t".ToCharArray());
-
             foreach (var input1 in transformedSubstitutions)
             {
                 var str = !isUserInput
                               ? (input1 == "*" || input1 == "_" ? input1 : illegalCharacters.Transform(input1))
                               : illegalCharacters.Transform(input1);
+
                 stringBuilder.Append(str.Trim() + " ");
             }
 

@@ -169,7 +169,7 @@ namespace MattEland.Ani.Alfred.Chat {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Empty path to a settings file.
+        ///   Looks up a localized string similar to Empty directoryPath to a settings file.
         /// </summary>
         internal static string NoSettingsPathError {
             get {

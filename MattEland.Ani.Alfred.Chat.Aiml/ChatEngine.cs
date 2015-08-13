@@ -624,5 +624,53 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             {
             }
         }
+
+        /// <summary>
+        /// Adds the category to the graph.
+        /// </summary>
+        /// <param name="node">The template node.</param>
+        /// <param name="path">The path.</param>
+        /// <param name="filename">The filename.</param>
+        public void AddCategoryToGraph([NotNull] XmlNode node, [NotNull] string path, [NotNull] string filename)
+        {
+            //- Validate
+            if (filename == null)
+            {
+                throw new ArgumentNullException(nameof(filename));
+            }
+            if (path == null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+            if (node == null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+            if (string.IsNullOrEmpty(path))
+            {
+                writeToLog(string.Format(Locale,
+                                  "WARNING! Attempted to load a new category with an empty pattern where the directoryPath = {0} and template = {1} produced by a category in the file: {2}",
+                                  path,
+                                  node.OuterXml,
+                                  filename));
+                return;
+            }
+
+            // Add it to the graph
+            try
+            {
+                Graphmaster.AddCategory(path, node.OuterXml, filename);
+
+                Size++;
+            }
+            catch
+            {
+                writeToLog(string.Format(Locale,
+                                  "ERROR! Failed to load a new category into the graphmaster where the directoryPath = {0} and template = {1} produced by a category in the file: {2}",
+                                  path,
+                                  node.OuterXml,
+                                  filename));
+            }
+        }
     }
 }
