@@ -2,8 +2,9 @@
 // AimlCommandParser.cs
 // 
 // Created on:      08/11/2015 at 6:23 PM
-// Last Modified:   08/11/2015 at 10:16 PM
-// Original author: Matt Eland
+// Last Modified:   08/12/2015 at 11:15 PM
+// 
+// Last Updated by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
@@ -13,10 +14,9 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 
-using AIMLbot;
-
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Chat.Aiml;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 

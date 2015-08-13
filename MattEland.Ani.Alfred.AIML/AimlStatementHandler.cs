@@ -2,8 +2,9 @@
 // AimlStatementHandler.cs
 // 
 // Created on:      08/10/2015 at 12:51 AM
-// Last Modified:   08/12/2015 at 2:24 PM
-// Original author: Matt Eland
+// Last Modified:   08/12/2015 at 11:16 PM
+// 
+// Last Updated by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
@@ -12,16 +13,11 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-
-using AIMLbot;
-using AIMLbot.Normalize;
-using AIMLbot.Utils;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Chat.Aiml;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
@@ -227,25 +223,14 @@ namespace MattEland.Ani.Alfred.Chat
         /// </summary>
         /// <param name="userInput">The user input.</param>
         /// <returns>The result of the communication to the chat bot</returns>
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
-            Justification = "I really don't trust third party libraries to advertise thrown exception types")]
         private Result GetChatResult(string userInput)
         {
-            try
-            {
-                var request = new Request(userInput, _user, _chatBot);
-                var result = _chatBot.Chat(request);
+            var request = new Request(userInput, _user, _chatBot);
+            var result = _chatBot.Chat(request);
 
-                return result;
-            }
-            catch (Exception ex)
-            {
-                // We're calling undocumented 3rd party code here so be very careful on exceptions
-                _console?.Log(Resources.ChatInputHeader, ex.Message, LogLevel.Error);
-
-                return null;
-            }
+            return result;
         }
+
         /// <summary>
         ///     Sets up the chat bot
         /// </summary>

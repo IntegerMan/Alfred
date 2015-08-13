@@ -39,10 +39,6 @@
     <AssemblyOriginatorKeyFile>AlfredAppTestCertificate.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AIMLbot, Version=1.0.5700.1408, Culture=neutral, PublicKeyToken=777f3a4eaa22fd41, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libraries\AIMLbot.dll</HintPath>
-    </Reference>
     <Reference Include="JetBrains.Annotations, Version=9.1.1.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Annotations.9.1.1\lib\net20\JetBrains.Annotations.dll</HintPath>
       <Private>True</Private>
@@ -77,6 +73,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MattEland.Ani.Alfred.Chat.Aiml\MattEland.Ani.Alfred.Chat.Aiml.csproj">
+      <Project>{818801e4-7862-409a-8e92-4f66800324eb}</Project>
+      <Name>MattEland.Ani.Alfred.Chat.Aiml</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MattEland.Ani.Alfred.Core\MattEland.Ani.Alfred.Core.csproj">
       <Project>{549F22E5-1F66-4420-89BF-9460603F9516}</Project>
       <Name>MattEland.Ani.Alfred.Core</Name>
