@@ -15,8 +15,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     public class srai : AimlTagHandler
     {
-        public srai(Bot bot, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
-            : base(bot, user, query, request, result, templateNode)
+        public srai(ChatEngine chatEngine, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
+            : base(chatEngine, user, query, request, result, templateNode)
         {
         }
 
@@ -31,10 +31,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             // gives the client difficulties in determining what tag was hit. Then again, maybe I can write around
             // this and not even need to know on the outside how it was routed.
 
-            var request = new Request(templateNode.InnerText, user, Bot);
+            var request = new Request(templateNode.InnerText, user, ChatEngine);
             request.StartedOn = this.request.StartedOn;
 
-            var result = Bot.Chat(request);
+            var result = ChatEngine.Chat(request);
             this.request.hasTimedOut = request.hasTimedOut;
             return result.Output;
         }

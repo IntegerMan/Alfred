@@ -15,8 +15,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     public class version : AimlTagHandler
     {
-        public version(Bot bot, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
-            : base(bot, user, query, request, result, templateNode)
+        public version(ChatEngine chatEngine, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
+            : base(chatEngine, user, query, request, result, templateNode)
         {
         }
 
@@ -24,7 +24,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         {
             if (templateNode.Name.ToLower() == "version")
             {
-                return Bot.GlobalSettings.grabSetting("version");
+                return ChatEngine.GlobalSettings.grabSetting("version");
             }
 
             return string.Empty;

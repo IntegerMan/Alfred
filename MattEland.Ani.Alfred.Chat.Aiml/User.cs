@@ -18,19 +18,19 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
     {
         private readonly string id;
         private readonly List<Result> Results = new List<Result>();
-        public Bot bot;
+        public ChatEngine chatEngine;
         public SettingsDictionary Predicates;
 
-        public User(string UserID, Bot bot)
+        public User(string UserID, ChatEngine chatEngine)
         {
             if (UserID.Length <= 0)
             {
                 throw new Exception("The UserID cannot be empty");
             }
             id = UserID;
-            this.bot = bot;
-            Predicates = new SettingsDictionary(this.bot);
-            this.bot.DefaultPredicates.Clone(Predicates);
+            this.chatEngine = chatEngine;
+            Predicates = new SettingsDictionary(this.chatEngine);
+            this.chatEngine.DefaultPredicates.Clone(Predicates);
             Predicates.addSetting("topic", "*");
         }
 

@@ -18,8 +18,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     public class sentence : AimlTagHandler
     {
-        public sentence(Bot bot, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
-            : base(bot, user, query, request, result, templateNode)
+        public sentence(ChatEngine chatEngine, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
+            : base(chatEngine, user, query, request, result, templateNode)
         {
         }
 
@@ -37,7 +37,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                 for (var index = 0; index < chArray.Length; ++index)
                 {
                     var input = Convert.ToString(chArray[index]);
-                    if (Bot.Splitters.Contains(input))
+                    if (ChatEngine.Splitters.Contains(input))
                     {
                         flag = true;
                     }
@@ -60,7 +60,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                 }
                 return stringBuilder.ToString();
             }
-            templateNode.InnerText = new star(Bot, user, query, request, result, getNode("<star/>")).Transform();
+            templateNode.InnerText = new star(ChatEngine, user, query, request, result, getNode("<star/>")).Transform();
             if (templateNode.InnerText.Length > 0)
             {
                 return ProcessChange();

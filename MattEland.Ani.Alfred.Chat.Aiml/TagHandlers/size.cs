@@ -16,8 +16,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     public class size : AimlTagHandler
     {
-        public size(Bot bot, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
-            : base(bot, user, query, request, result, templateNode)
+        public size(ChatEngine chatEngine, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
+            : base(chatEngine, user, query, request, result, templateNode)
         {
         }
 
@@ -25,7 +25,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         {
             if (templateNode.Name.ToLower() == "size")
             {
-                return Convert.ToString(Bot.Size);
+                return Convert.ToString(ChatEngine.Size);
             }
             return string.Empty;
         }

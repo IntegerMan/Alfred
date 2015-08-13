@@ -13,18 +13,18 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 {
     public class Request
     {
-        public Bot bot;
+        public ChatEngine chatEngine;
         public bool hasTimedOut;
         public string rawInput;
         public Result result;
         public DateTime StartedOn;
         public User user;
 
-        public Request(string rawInput, User user, Bot bot)
+        public Request(string rawInput, User user, ChatEngine chatEngine)
         {
             this.rawInput = rawInput;
             this.user = user;
-            this.bot = bot;
+            this.chatEngine = chatEngine;
             StartedOn = DateTime.Now;
         }
     }

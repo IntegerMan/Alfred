@@ -16,8 +16,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     public class person2 : AimlTagHandler
     {
-        public person2(Bot bot, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
-            : base(bot, user, query, request, result, templateNode)
+        public person2(ChatEngine chatEngine, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
+            : base(chatEngine, user, query, request, result, templateNode)
         {
         }
 
@@ -29,9 +29,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             }
             if (templateNode.InnerText.Length > 0)
             {
-                return ApplySubstitutions.Substitute(Bot, Bot.Person2Substitutions, templateNode.InnerText);
+                return ApplySubstitutions.Substitute(ChatEngine, ChatEngine.Person2Substitutions, templateNode.InnerText);
             }
-            templateNode.InnerText = new star(Bot, user, query, request, result, getNode("<star/>")).Transform();
+            templateNode.InnerText = new star(ChatEngine, user, query, request, result, getNode("<star/>")).Transform();
             if (templateNode.InnerText.Length > 0)
             {
                 return ProcessChange();

@@ -23,21 +23,21 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <summary>
         ///     Initializes a new instance of the <see cref="TextTransformer" /> class.
         /// </summary>
-        /// <param name="bot">The bot.</param>
+        /// <param name="chatEngine">The ChatEngine.</param>
         /// <param name="inputString">The input string.</param>
-        protected TextTransformer([CanBeNull] Bot bot, [CanBeNull] string inputString)
+        protected TextTransformer([CanBeNull] ChatEngine chatEngine, [CanBeNull] string inputString)
         {
-            Bot = bot;
+            ChatEngine = chatEngine;
             InputString = inputString;
         }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="TextTransformer" /> class.
         /// </summary>
-        /// <param name="bot">The bot.</param>
-        protected TextTransformer([CanBeNull] Bot bot)
+        /// <param name="chatEngine">The ChatEngine.</param>
+        protected TextTransformer([CanBeNull] ChatEngine chatEngine)
         {
-            Bot = bot;
+            ChatEngine = chatEngine;
             InputString = string.Empty;
         }
 
@@ -46,17 +46,17 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// </summary>
         protected TextTransformer()
         {
-            Bot = null;
+            ChatEngine = null;
             InputString = string.Empty;
         }
 
         /// <summary>
-        ///     Gets the chat bot associated with this transformer.
+        ///     Gets the chat ChatEngine associated with this transformer.
         /// </summary>
-        /// <value>The bot.</value>
+        /// <value>The ChatEngine.</value>
         [CanBeNull]
         [Obsolete("It'd be good to not need to use this anymore and rely on pass-throughs")]
-        public Bot Bot
+        public ChatEngine ChatEngine
         {
             [DebuggerStepThrough]
             get;
@@ -70,7 +70,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <value>The locale.</value>
         protected CultureInfo Locale
         {
-            get { return Bot != null ? Bot.Locale : CultureInfo.CurrentCulture; }
+            get { return ChatEngine != null ? ChatEngine.Locale : CultureInfo.CurrentCulture; }
         }
 
         /// <summary>

@@ -13,19 +13,19 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
 {
     public class StripIllegalCharacters : TextTransformer
     {
-        public StripIllegalCharacters(Bot bot, string inputString)
-            : base(bot, inputString)
+        public StripIllegalCharacters(ChatEngine chatEngine, string inputString)
+            : base(chatEngine, inputString)
         {
         }
 
-        public StripIllegalCharacters(Bot bot)
-            : base(bot)
+        public StripIllegalCharacters(ChatEngine chatEngine)
+            : base(chatEngine)
         {
         }
 
         protected override string ProcessChange()
         {
-            return Bot.Strippers.Replace(InputString, " ");
+            return ChatEngine.Strippers.Replace(InputString, " ");
         }
     }
 }

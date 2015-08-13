@@ -15,14 +15,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     public class system : AimlTagHandler
     {
-        public system(Bot bot, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
-            : base(bot, user, query, request, result, templateNode)
+        public system(ChatEngine chatEngine, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
+            : base(chatEngine, user, query, request, result, templateNode)
         {
         }
 
         protected override string ProcessChange()
         {
-            Bot.writeToLog("The system tag is not implemented in this bot");
+            ChatEngine.writeToLog("The system tag is not implemented in this ChatEngine");
             return string.Empty;
         }
     }

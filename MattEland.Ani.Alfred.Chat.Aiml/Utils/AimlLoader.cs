@@ -18,16 +18,16 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 {
     public class AIMLLoader
     {
-        private readonly Bot bot;
+        private readonly ChatEngine chatEngine;
 
-        public AIMLLoader(Bot bot)
+        public AIMLLoader(ChatEngine chatEngine)
         {
-            this.bot = bot;
+            this.chatEngine = chatEngine;
         }
 
         public void loadAIML()
         {
-            loadAIML(bot.PathToAIML);
+            loadAIML(chatEngine.PathToAIML);
         }
 
         public void loadAIML(string path)
@@ -37,7 +37,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
                 throw new FileNotFoundException("The directory specified as the path to the AIML files (" + path +
                                                 ") cannot be found by the AIMLLoader object. Please make sure the directory where you think the AIML files are to be found is the same as the directory specified in the settings file.");
             }
-            bot.writeToLog("Starting to process AIML files found in the directory " + path);
+            chatEngine.writeToLog("Starting to process AIML files found in the directory " + path);
             var files = Directory.GetFiles(path, "*.aiml");
             if (files.Length <= 0)
             {
@@ -48,13 +48,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             {
                 loadAIMLFile(filename);
             }
-            bot.writeToLog("Finished processing the AIML files. " + Convert.ToString(bot.Size) +
+            chatEngine.writeToLog("Finished processing the AIML files. " + Convert.ToString(chatEngine.Size) +
                            " categories processed.");
         }
 
         public void loadAIMLFile(string filename)
         {
-            bot.writeToLog("Processing AIML file: " + filename);
+            chatEngine.writeToLog("Processing AIML file: " + filename);
             var doc = new XmlDocument();
             doc.Load(filename);
             loadAIMLFromXML(doc, filename);
@@ -114,19 +114,19 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             {
                 try
                 {
-                    bot.Graphmaster.addCategory(path, node2.OuterXml, filename);
-                    ++bot.Size;
+                    chatEngine.Graphmaster.addCategory(path, node2.OuterXml, filename);
+                    ++chatEngine.Size;
                 }
                 catch
                 {
-                    bot.writeToLog("ERROR! Failed to load a new category into the graphmaster where the path = " + path +
+                    chatEngine.writeToLog("ERROR! Failed to load a new category into the graphmaster where the path = " + path +
                                    " and template = " + node2.OuterXml + " produced by a category in the file: " +
                                    filename);
                 }
             }
             else
             {
-                bot.writeToLog("WARNING! Attempted to load a new category with an empty pattern where the path = " +
+                chatEngine.writeToLog("WARNING! Attempted to load a new category with an empty pattern where the path = " +
                                path + " and template = " + node2.OuterXml + " produced by a category in the file: " +
                                filename);
             }
@@ -164,7 +164,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             string str2;
             string str3;
             string str4;
-            if (bot.TrustAIML & !isUserInput)
+            if (chatEngine.TrustAIML & !isUserInput)
             {
                 str2 = pattern.Trim();
                 str3 = that.Trim();
@@ -188,7 +188,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             {
                 str4 = "*";
             }
-            if (str3.Length > bot.MaxThatSize)
+            if (str3.Length > chatEngine.MaxThatSize)
             {
                 str3 = "*";
             }
@@ -203,8 +203,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         public string Normalize(string input, bool isUserInput)
         {
             var stringBuilder = new StringBuilder();
-            var applySubstitutions = new ApplySubstitutions(bot);
-            var illegalCharacters = new StripIllegalCharacters(bot);
+            var applySubstitutions = new ApplySubstitutions(chatEngine);
+            var illegalCharacters = new StripIllegalCharacters(chatEngine);
             foreach (var input1 in applySubstitutions.Transform(input).Split(" \r\n\t".ToCharArray()))
             {
                 var str = !isUserInput

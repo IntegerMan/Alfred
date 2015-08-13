@@ -14,18 +14,18 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
 {
     public class SplitIntoSentences
     {
-        private readonly Bot bot;
+        private readonly ChatEngine chatEngine;
         private string inputString;
 
-        public SplitIntoSentences(Bot bot, string inputString)
+        public SplitIntoSentences(ChatEngine chatEngine, string inputString)
         {
-            this.bot = bot;
+            this.chatEngine = chatEngine;
             this.inputString = inputString;
         }
 
-        public SplitIntoSentences(Bot bot)
+        public SplitIntoSentences(ChatEngine chatEngine)
         {
-            this.bot = bot;
+            this.chatEngine = chatEngine;
         }
 
         public string[] Transform(string inputString)
@@ -36,7 +36,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
 
         public string[] Transform()
         {
-            var strArray = inputString.Split(bot.Splitters.ToArray(), StringSplitOptions.RemoveEmptyEntries);
+            var strArray = inputString.Split(chatEngine.Splitters.ToArray(), StringSplitOptions.RemoveEmptyEntries);
             var list = new List<string>();
             foreach (var str1 in strArray)
             {

@@ -20,8 +20,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         public XmlNode templateNode;
         public User user;
 
-        public AimlTagHandler(Bot bot, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
-            : base(bot, templateNode.OuterXml)
+        public AimlTagHandler(ChatEngine chatEngine, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
+            : base(chatEngine, templateNode.OuterXml)
         {
             this.user = user;
             this.query = query;

@@ -16,8 +16,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     public class learn : AimlTagHandler
     {
-        public learn(Bot bot, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
-            : base(bot, user, query, request, result, templateNode)
+        public learn(ChatEngine chatEngine, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
+            : base(chatEngine, user, query, request, result, templateNode)
         {
         }
 
@@ -32,11 +32,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                     try
                     {
                         newAIML.Load(innerText);
-                        Bot.loadAIMLFromXML(newAIML, innerText);
+                        ChatEngine.loadAIMLFromXML(newAIML, innerText);
                     }
                     catch
                     {
-                        Bot.writeToLog(
+                        ChatEngine.writeToLog(
                                        "ERROR! Attempted (but failed) to <learn> some new AIML from the following URI: " +
                                        innerText);
                     }

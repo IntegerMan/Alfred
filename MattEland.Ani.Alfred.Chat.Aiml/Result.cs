@@ -17,7 +17,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 {
     public class Result
     {
-        public Bot bot;
+        public ChatEngine chatEngine;
         public TimeSpan Duration;
         public List<string> InputSentences = new List<string>();
         public List<string> NormalizedPaths = new List<string>();
@@ -26,10 +26,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         public List<SubQuery> SubQueries = new List<SubQuery>();
         public User user;
 
-        public Result(User user, Bot bot, Request request)
+        public Result(User user, ChatEngine chatEngine, Request request)
         {
             this.user = user;
-            this.bot = bot;
+            this.chatEngine = chatEngine;
             this.request = request;
             this.request.result = this;
         }
@@ -49,14 +49,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                 }
                 if (request.hasTimedOut)
                 {
-                    return bot.TimeOutMessage;
+                    return chatEngine.TimeOutMessage;
                 }
                 var stringBuilder = new StringBuilder();
                 foreach (var str in NormalizedPaths)
                 {
                     stringBuilder.Append(str + Environment.NewLine);
                 }
-                bot.writeToLog("The bot could not find any response for the input: " + RawInput + " with the path(s): " +
+                chatEngine.writeToLog("The ChatEngine could not find any response for the input: " + RawInput + " with the path(s): " +
                                Environment.NewLine + stringBuilder + " from the user with an id: " + user.UserID);
                 return string.Empty;
             }
@@ -87,7 +87,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
         private bool checkEndsAsSentence(string sentence)
         {
-            foreach (var str in bot.Splitters)
+            foreach (var str in chatEngine.Splitters)
             {
                 if (sentence.Trim().EndsWith(str))
                 {

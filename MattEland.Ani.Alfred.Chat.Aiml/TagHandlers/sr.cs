@@ -15,8 +15,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     public class sr : AimlTagHandler
     {
-        public sr(Bot bot, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
-            : base(bot, user, query, request, result, templateNode)
+        public sr(ChatEngine chatEngine, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
+            : base(chatEngine, user, query, request, result, templateNode)
         {
         }
 
@@ -25,13 +25,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             if (templateNode.Name.ToLower() == "sr")
             {
                 return
-                    new srai(Bot,
+                    new srai(ChatEngine,
                              user,
                              query,
                              request,
                              result,
                              getNode("<srai>" +
-                                     new star(Bot, user, query, request, result, getNode("<star/>"))
+                                     new star(ChatEngine, user, query, request, result, getNode("<star/>"))
                                          .Transform() + "</srai>")).Transform();
             }
             return string.Empty;

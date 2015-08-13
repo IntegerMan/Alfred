@@ -16,8 +16,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     public class that : AimlTagHandler
     {
-        public that(Bot bot, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
-            : base(bot, user, query, request, result, templateNode)
+        public that(ChatEngine chatEngine, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
+            : base(chatEngine, user, query, request, result, templateNode)
         {
         }
 
@@ -44,7 +44,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                                 {
                                     return user.getThat(num1 - 1, num2 - 1);
                                 }
-                                Bot.writeToLog("ERROR! An input tag with a badly formed index (" +
+                                ChatEngine.writeToLog("ERROR! An input tag with a badly formed index (" +
                                                templateNode.Attributes[0].Value +
                                                ") was encountered processing the input: " + request.rawInput);
                             }
@@ -55,14 +55,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                                 {
                                     return user.getThat(num - 1);
                                 }
-                                Bot.writeToLog("ERROR! An input tag with a badly formed index (" +
+                                ChatEngine.writeToLog("ERROR! An input tag with a badly formed index (" +
                                                templateNode.Attributes[0].Value +
                                                ") was encountered processing the input: " + request.rawInput);
                             }
                         }
                         catch
                         {
-                            Bot.writeToLog("ERROR! An input tag with a bady formed index (" +
+                            ChatEngine.writeToLog("ERROR! An input tag with a bady formed index (" +
                                            templateNode.Attributes[0].Value + ") was encountered processing the input: " +
                                            request.rawInput);
                         }

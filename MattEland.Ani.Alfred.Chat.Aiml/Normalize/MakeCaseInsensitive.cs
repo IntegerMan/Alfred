@@ -13,13 +13,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
 {
     public class MakeCaseInsensitive : TextTransformer
     {
-        public MakeCaseInsensitive(Bot bot, string inputString)
-            : base(bot, inputString)
+        public MakeCaseInsensitive(ChatEngine chatEngine, string inputString)
+            : base(chatEngine, inputString)
         {
         }
 
-        public MakeCaseInsensitive(Bot bot)
-            : base(bot)
+        public MakeCaseInsensitive(ChatEngine chatEngine)
+            : base(chatEngine)
         {
         }
 

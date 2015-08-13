@@ -20,15 +20,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
         /// <summary>
         ///     Initializes a new instance of the <see cref="ApplySubstitutions" /> class.
         /// </summary>
-        /// <param name="bot">The bot.</param>
+        /// <param name="chatEngine">The ChatEngine.</param>
         /// <param name="inputString">The input string.</param>
-        public ApplySubstitutions(Bot bot, string inputString)
-            : base(bot, inputString)
+        public ApplySubstitutions(ChatEngine chatEngine, string inputString)
+            : base(chatEngine, inputString)
         {
         }
 
-        public ApplySubstitutions(Bot bot)
-            : base(bot)
+        public ApplySubstitutions(ChatEngine chatEngine)
+            : base(chatEngine)
         {
         }
 
@@ -46,10 +46,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
 
         protected override string ProcessChange()
         {
-            return Substitute(Bot, Bot.Substitutions, InputString);
+            return Substitute(ChatEngine, ChatEngine.Substitutions, InputString);
         }
 
-        public static string Substitute(Bot bot, SettingsDictionary dictionary, string target)
+        public static string Substitute(ChatEngine chatEngine, SettingsDictionary dictionary, string target)
         {
             var marker = getMarker(5);
             var input = target;

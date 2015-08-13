@@ -15,14 +15,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     public class get : AimlTagHandler
     {
-        public get(Bot bot, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
-            : base(bot, user, query, request, result, templateNode)
+        public get(ChatEngine chatEngine, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
+            : base(chatEngine, user, query, request, result, templateNode)
         {
         }
 
         protected override string ProcessChange()
         {
-            if (templateNode.Name.ToLower() == "get" && Bot.GlobalSettings.Count > 0 &&
+            if (templateNode.Name.ToLower() == "get" && ChatEngine.GlobalSettings.Count > 0 &&
                 (templateNode.Attributes.Count == 1 && templateNode.Attributes[0].Name.ToLower() == "name"))
             {
                 return user.Predicates.grabSetting(templateNode.Attributes[0].Value);

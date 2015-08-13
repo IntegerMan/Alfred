@@ -15,8 +15,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     public class gossip : AimlTagHandler
     {
-        public gossip(Bot bot, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
-            : base(bot, user, query, request, result, templateNode)
+        public gossip(ChatEngine chatEngine, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
+            : base(chatEngine, user, query, request, result, templateNode)
         {
         }
 
@@ -24,7 +24,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         {
             if (templateNode.Name.ToLower() == "gossip" && templateNode.InnerText.Length > 0)
             {
-                Bot.writeToLog("GOSSIP from user: " + user.UserID + ", '" + templateNode.InnerText + "'");
+                ChatEngine.writeToLog("GOSSIP from user: " + user.UserID + ", '" + templateNode.InnerText + "'");
             }
             return string.Empty;
         }

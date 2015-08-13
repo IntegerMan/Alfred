@@ -16,8 +16,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     public class topicstar : AimlTagHandler
     {
-        public topicstar(Bot bot, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
-            : base(bot, user, query, request, result, templateNode)
+        public topicstar(ChatEngine chatEngine, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
+            : base(chatEngine, user, query, request, result, templateNode)
         {
         }
 
@@ -31,7 +31,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                     {
                         return query.TopicStar[0];
                     }
-                    Bot.writeToLog(
+                    ChatEngine.writeToLog(
                                    "ERROR! An out of bounds index to topicstar was encountered when processing the input: " +
                                    request.rawInput);
                 }
@@ -48,20 +48,20 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                                 {
                                     return query.TopicStar[num - 1];
                                 }
-                                Bot.writeToLog("ERROR! An input tag with a bady formed index (" +
+                                ChatEngine.writeToLog("ERROR! An input tag with a bady formed index (" +
                                                templateNode.Attributes[0].Value +
                                                ") was encountered processing the input: " + request.rawInput);
                             }
                             else
                             {
-                                Bot.writeToLog(
+                                ChatEngine.writeToLog(
                                                "ERROR! An out of bounds index to topicstar was encountered when processing the input: " +
                                                request.rawInput);
                             }
                         }
                         catch
                         {
-                            Bot.writeToLog("ERROR! A thatstar tag with a bady formed index (" +
+                            ChatEngine.writeToLog("ERROR! A thatstar tag with a bady formed index (" +
                                            templateNode.Attributes[0].Value + ") was encountered processing the input: " +
                                            request.rawInput);
                         }

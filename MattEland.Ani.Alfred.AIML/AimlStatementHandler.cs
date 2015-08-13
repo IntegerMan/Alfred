@@ -33,7 +33,7 @@ namespace MattEland.Ani.Alfred.Chat
     public sealed class AimlStatementHandler : IChatProvider, INotifyPropertyChanged
     {
         [NotNull]
-        private readonly Bot _chatBot;
+        private readonly ChatEngine _chatChatEngine;
 
         [CanBeNull]
         private readonly string _logHeader;
@@ -81,9 +81,9 @@ namespace MattEland.Ani.Alfred.Chat
             _logHeader = Resources.ChatProcessingHeader;
             _console = console;
 
-            //+ Set up the chat bot
-            _chatBot = new Bot();
-            _user = new User(Resources.ChatUserName, _chatBot);
+            //+ Set up the chat ChatEngine
+            _chatChatEngine = new ChatEngine();
+            _user = new User(Resources.ChatUserName, _chatChatEngine);
             try
             {
                 InitializeChatBot();
@@ -130,7 +130,7 @@ namespace MattEland.Ani.Alfred.Chat
             //- Log the input to the diagnostic log.
             _console?.Log(Resources.ChatInputHeader, userInput, LogLevel.UserInput);
 
-            //! Give our input to the chat bot
+            //! Give our input to the chat ChatEngine
             var result = GetChatResult(userInput);
 
             //+ Get the template out of the response so we can see if there are any OOB instructions
@@ -222,37 +222,37 @@ namespace MattEland.Ani.Alfred.Chat
         ///     Gets the chat result.
         /// </summary>
         /// <param name="userInput">The user input.</param>
-        /// <returns>The result of the communication to the chat bot</returns>
+        /// <returns>The result of the communication to the chat ChatEngine</returns>
         private Result GetChatResult(string userInput)
         {
-            var request = new Request(userInput, _user, _chatBot);
-            var result = _chatBot.Chat(request);
+            var request = new Request(userInput, _user, _chatChatEngine);
+            var result = _chatChatEngine.Chat(request);
 
             return result;
         }
 
         /// <summary>
-        ///     Sets up the chat bot
+        ///     Sets up the chat ChatEngine
         /// </summary>
         private void InitializeChatBot()
         {
-            _chatBot.WrittenToLog += OnWrittenToLog;
-            _chatBot.loadSettings(_settingsPath);
+            _chatChatEngine.WrittenToLog += OnWrittenToLog;
+            _chatChatEngine.loadSettings(_settingsPath);
 
             //+ Load AIML files
-            _chatBot.isAcceptingUserInput = false;
-            _chatBot.loadAIMLFromFiles();
-            _chatBot.isAcceptingUserInput = true;
+            _chatChatEngine.isAcceptingUserInput = false;
+            _chatChatEngine.loadAIMLFromFiles();
+            _chatChatEngine.isAcceptingUserInput = true;
         }
 
         /// <summary>
-        ///     Respond to log events in the chat bot by writing them to our console
+        ///     Respond to log events in the chat ChatEngine by writing them to our console
         /// </summary>
         private void OnWrittenToLog()
         {
-            if (!string.IsNullOrWhiteSpace(_chatBot.LastLogMessage))
+            if (!string.IsNullOrWhiteSpace(_chatChatEngine.LastLogMessage))
             {
-                _console?.Log(_logHeader, _chatBot.LastLogMessage, LogLevel.Verbose);
+                _console?.Log(_logHeader, _chatChatEngine.LastLogMessage, LogLevel.Verbose);
             }
         }
 

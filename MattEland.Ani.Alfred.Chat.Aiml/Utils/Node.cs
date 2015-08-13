@@ -65,9 +65,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
                                MatchState matchstate,
                                StringBuilder wildcard)
         {
-            if (request.StartedOn.AddMilliseconds(request.bot.TimeOut) < DateTime.Now)
+            if (request.StartedOn.AddMilliseconds(request.chatEngine.TimeOut) < DateTime.Now)
             {
-                request.bot.writeToLog("WARNING! Request timeout. User: " + request.user.UserID + " raw input: \"" +
+                request.chatEngine.writeToLog("WARNING! Request timeout. User: " + request.user.UserID + " raw input: \"" +
                                        request.rawInput + "\"");
                 request.hasTimedOut = true;
                 return string.Empty;

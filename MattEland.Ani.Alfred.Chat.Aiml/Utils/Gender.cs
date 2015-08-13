@@ -10,7 +10,7 @@
 namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 {
     /// <summary>
-    ///     An enumeration of bot Genders
+    ///     An enumeration of ChatEngine Genders
     /// </summary>
     public enum Gender
     {
@@ -20,12 +20,12 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         Unknown = -1,
 
         /// <summary>
-        ///     Represents a female bot
+        ///     Represents a female ChatEngine
         /// </summary>
         Female = 0,
 
         /// <summary>
-        ///     Represents a male bot
+        ///     Represents a male ChatEngine
         /// </summary>
         Male = 1
     }

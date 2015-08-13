@@ -19,11 +19,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
     {
         private readonly List<string> orderedKeys = new List<string>();
         private readonly Dictionary<string, string> settingsHash = new Dictionary<string, string>();
-        protected Bot bot;
+        protected ChatEngine chatEngine;
 
-        public SettingsDictionary(Bot bot)
+        public SettingsDictionary(ChatEngine chatEngine)
         {
-            this.bot = bot;
+            this.chatEngine = chatEngine;
         }
 
         public int Count

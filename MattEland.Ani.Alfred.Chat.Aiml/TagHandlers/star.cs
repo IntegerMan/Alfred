@@ -16,8 +16,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     public class star : AimlTagHandler
     {
-        public star(Bot bot, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
-            : base(bot, user, query, request, result, templateNode)
+        public star(ChatEngine chatEngine, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
+            : base(chatEngine, user, query, request, result, templateNode)
         {
         }
 
@@ -42,11 +42,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                                 {
                                     return query.InputStar[index];
                                 }
-                                Bot.writeToLog("InputStar out of bounds reference caused by input: " + request.rawInput);
+                                ChatEngine.writeToLog("InputStar out of bounds reference caused by input: " + request.rawInput);
                             }
                             catch
                             {
-                                Bot.writeToLog(
+                                ChatEngine.writeToLog(
                                                "Index set to non-integer value whilst processing star tag in response to the input: " +
                                                request.rawInput);
                             }
@@ -55,7 +55,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                 }
                 else
                 {
-                    Bot.writeToLog(
+                    ChatEngine.writeToLog(
                                    "A star tag tried to reference an empty InputStar collection when processing the input: " +
                                    request.rawInput);
                 }
