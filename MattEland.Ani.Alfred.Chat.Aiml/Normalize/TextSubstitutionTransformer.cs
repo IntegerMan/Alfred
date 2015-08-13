@@ -28,10 +28,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
         private const string WordBoundary = @"\b";
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="TextTransformer" /> class.
+        /// Initializes a new instance of the <see cref="TextTransformer" /> class.
         /// </summary>
-        /// <param settingName="chatEngine">The ChatEngine.</param>
-        internal TextSubstitutionTransformer(ChatEngine chatEngine)
+        /// <param name="chatEngine">The ChatEngine.</param>
+        internal TextSubstitutionTransformer([NotNull] ChatEngine chatEngine)
             : base(chatEngine)
         {
         }
