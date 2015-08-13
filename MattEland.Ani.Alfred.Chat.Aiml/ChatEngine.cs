@@ -435,7 +435,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             {
                 result.OutputSentences.Add(NotAcceptingUserInputMessage);
             }
-            result.Duration = DateTime.Now - request.StartedOn;
+            result.Completed();
             request.User.addResult(result);
             return result;
         }

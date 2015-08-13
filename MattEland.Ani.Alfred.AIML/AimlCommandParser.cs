@@ -226,7 +226,7 @@ namespace MattEland.Ani.Alfred.Chat
         internal static string GetResponseTemplate([CanBeNull] Result result)
         {
             // We want the last template as the other templates have redirected to it
-            var subQuery = result?.SubQueries?.LastOrDefault();
+            var subQuery = result.SubQueries?.LastOrDefault();
 
             return subQuery.Template;
         }

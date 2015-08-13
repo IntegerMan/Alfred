@@ -11,32 +11,100 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+using JetBrains.Annotations;
+
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml
 {
+    /// <summary>
+    /// Represents the result of an Aiml query
+    /// </summary>
     public class Result
     {
-        public ChatEngine chatEngine;
-        public TimeSpan Duration;
-        public List<string> InputSentences = new List<string>();
-        public List<string> NormalizedPaths = new List<string>();
-        public List<string> OutputSentences = new List<string>();
-        public Request request;
-        public List<SubQuery> SubQueries = new List<SubQuery>();
-        public User user;
+        /// <summary>
+        /// Gets the chat engine.
+        /// </summary>
+        /// <value>The chat engine.</value>
+        [NotNull]
+        public ChatEngine ChatEngine { get; }
 
-        public Result(User user, ChatEngine chatEngine, Request request)
+        /// <summary>
+        /// Gets the duration of the request.
+        /// </summary>
+        /// <value>The duration.</value>
+        public TimeSpan Duration { get; private set; }
+        /// <summary>
+        /// Gets the input sentences.
+        /// </summary>
+        /// <value>The input sentences.</value>
+        [NotNull]
+        public List<string> InputSentences { get; } = new List<string>();
+        /// <summary>
+        /// Gets the normalized paths.
+        /// </summary>
+        /// <value>The normalized paths.</value>
+        [NotNull]
+        public List<string> NormalizedPaths { get; } = new List<string>();
+        /// <summary>
+        /// Gets the output sentences.
+        /// </summary>
+        /// <value>The output sentences.</value>
+        [NotNull]
+        public List<string> OutputSentences { get; } = new List<string>();
+        /// <summary>
+        /// Gets the request.
+        /// </summary>
+        /// <value>The request.</value>
+        [NotNull]
+        public Request Request { get; }
+        /// <summary>
+        /// Gets the SubQueries.
+        /// </summary>
+        /// <value>The SubQueries.</value>
+        [NotNull]
+        public List<SubQuery> SubQueries { get; } = new List<SubQuery>();
+        /// <summary>
+        /// Gets the user.
+        /// </summary>
+        /// <value>The user.</value>
+        [NotNull]
+        public User User { get; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Result" /> class.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <param name="chatEngine">The chat engine.</param>
+        /// <param name="request">The request.</param>
+        public Result([NotNull] User user, [NotNull] ChatEngine chatEngine, [NotNull] Request request)
         {
-            this.user = user;
-            this.chatEngine = chatEngine;
-            this.request = request;
-            this.request.Result = this;
+            //- Validation
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            if (chatEngine == null)
+            {
+                throw new ArgumentNullException(nameof(chatEngine));
+            }
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+
+            //- Set Fields
+            User = user;
+            ChatEngine = chatEngine;
+
+            // Ensure the request is linked to this
+            Request = request;
+            Request.Result = this;
         }
 
         public string RawInput
         {
-            get { return request.RawInput; }
+            get { return Request.RawInput; }
         }
 
         public string Output
@@ -47,17 +115,17 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                 {
                     return RawOutput;
                 }
-                if (request.HasTimedOut)
+                if (Request.HasTimedOut)
                 {
-                    return chatEngine.TimeOutMessage;
+                    return ChatEngine.TimeOutMessage;
                 }
                 var stringBuilder = new StringBuilder();
                 foreach (var str in NormalizedPaths)
                 {
                     stringBuilder.Append(str + Environment.NewLine);
                 }
-                chatEngine.writeToLog("The ChatEngine could not find any response for the input: " + RawInput + " with the path(s): " +
-                               Environment.NewLine + stringBuilder + " from the user with an id: " + user.UserID);
+                ChatEngine.writeToLog("The ChatEngine could not find any response for the input: " + RawInput + " with the path(s): " +
+                               Environment.NewLine + stringBuilder + " from the user with an id: " + User.UserID);
                 return string.Empty;
             }
         }
@@ -87,7 +155,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
         private bool checkEndsAsSentence(string sentence)
         {
-            foreach (var str in chatEngine.Splitters)
+            foreach (var str in ChatEngine.Splitters)
             {
                 if (sentence.Trim().EndsWith(str))
                 {
@@ -95,6 +163,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Tells the result that the request completed and it should calculate the Duration of the request
+        /// </summary>
+        public void Completed()
+        {
+            Duration = DateTime.Now - Request.StartedOn;
         }
     }
 }
