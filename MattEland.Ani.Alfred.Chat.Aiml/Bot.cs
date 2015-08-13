@@ -18,6 +18,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 
+using JetBrains.Annotations;
+
 using MattEland.Ani.Alfred.Chat.Aiml.Normalize;
 using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
@@ -28,9 +30,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
     {
         public delegate void LogMessageDelegate();
 
-        private readonly Dictionary<string, Assembly> LateBindingAssemblies = new Dictionary<string, Assembly>();
         private readonly List<string> LogBuffer = new List<string>();
-        private Dictionary<string, TagHandler> CustomTags;
         public SettingsDictionary DefaultPredicates;
         public SettingsDictionary GenderSubstitutions;
         public SettingsDictionary GlobalSettings;
@@ -173,7 +173,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             PersonSubstitutions = new SettingsDictionary(this);
             Substitutions = new SettingsDictionary(this);
             DefaultPredicates = new SettingsDictionary(this);
-            CustomTags = new Dictionary<string, TagHandler>();
             Graphmaster = new Node();
         }
 
@@ -453,105 +452,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                 }
                 return stringBuilder.ToString();
             }
-            var AimlTagHandler = getBespokeTags(user, query, request, result, node);
-            if (Equals(null, AimlTagHandler))
-            {
-                switch (str)
-                {
-                    case "bot":
-                        AimlTagHandler = new bot(this, user, query, request, result, node);
-                        break;
-                    case "condition":
-                        AimlTagHandler = new condition(this, user, query, request, result, node);
-                        break;
-                    case "date":
-                        AimlTagHandler = new date(this, user, query, request, result, node);
-                        break;
-                    case "formal":
-                        AimlTagHandler = new formal(this, user, query, request, result, node);
-                        break;
-                    case "gender":
-                        AimlTagHandler = new gender(this, user, query, request, result, node);
-                        break;
-                    case "get":
-                        AimlTagHandler = new get(this, user, query, request, result, node);
-                        break;
-                    case "gossip":
-                        AimlTagHandler = new gossip(this, user, query, request, result, node);
-                        break;
-                    case "id":
-                        AimlTagHandler = new id(this, user, query, request, result, node);
-                        break;
-                    case "input":
-                        AimlTagHandler = new input(this, user, query, request, result, node);
-                        break;
-                    case "javascript":
-                        AimlTagHandler = new javascript(this, user, query, request, result, node);
-                        break;
-                    case "learn":
-                        AimlTagHandler = new learn(this, user, query, request, result, node);
-                        break;
-                    case "lowercase":
-                        AimlTagHandler = new lowercase(this, user, query, request, result, node);
-                        break;
-                    case "person":
-                        AimlTagHandler = new person(this, user, query, request, result, node);
-                        break;
-                    case "person2":
-                        AimlTagHandler = new person2(this, user, query, request, result, node);
-                        break;
-                    case "random":
-                        AimlTagHandler = new random(this, user, query, request, result, node);
-                        break;
-                    case "sentence":
-                        AimlTagHandler = new sentence(this, user, query, request, result, node);
-                        break;
-                    case "set":
-                        AimlTagHandler = new set(this, user, query, request, result, node);
-                        break;
-                    case "size":
-                        AimlTagHandler = new size(this, user, query, request, result, node);
-                        break;
-                    case "sr":
-                        AimlTagHandler = new sr(this, user, query, request, result, node);
-                        break;
-                    case "srai":
-                        AimlTagHandler = new srai(this, user, query, request, result, node);
-                        break;
-                    case "star":
-                        AimlTagHandler = new star(this, user, query, request, result, node);
-                        break;
-                    case "system":
-                        AimlTagHandler = new system(this, user, query, request, result, node);
-                        break;
-                    case "that":
-                        AimlTagHandler = new that(this, user, query, request, result, node);
-                        break;
-                    case "thatstar":
-                        AimlTagHandler = new thatstar(this, user, query, request, result, node);
-                        break;
-                    case "think":
-                        AimlTagHandler = new think(this, user, query, request, result, node);
-                        break;
-                    case "topicstar":
-                        AimlTagHandler = new topicstar(this, user, query, request, result, node);
-                        break;
-                    case "uppercase":
-                        AimlTagHandler = new uppercase(this, user, query, request, result, node);
-                        break;
-                    case "version":
-                        AimlTagHandler = new version(this, user, query, request, result, node);
-                        break;
-                    default:
-                        AimlTagHandler = null;
-                        break;
-                }
-            }
-            if (Equals(null, AimlTagHandler))
+
+            var handler = BuildTagHandler(node, query, request, result, user, str);
+
+            if (Equals(null, handler))
             {
                 return node.InnerText;
             }
-            if (AimlTagHandler.isRecursive)
+
+            if (handler.isRecursive)
             {
                 if (node.HasChildNodes)
                 {
@@ -563,9 +472,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                         }
                     }
                 }
-                return AimlTagHandler.Transform();
+                return handler.Transform();
             }
-            var node2 = AimlTagHandler.getNode("<node>" + AimlTagHandler.Transform() + "</node>");
+            var node2 = AimlTagHandler.getNode("<node>" + handler.Transform() + "</node>");
             if (!node2.HasChildNodes)
             {
                 return node2.InnerXml;
@@ -578,31 +487,82 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             return stringBuilder1.ToString();
         }
 
-        public AimlTagHandler getBespokeTags(User user, SubQuery query, Request request, Result result, XmlNode node)
+        /// <summary>
+        /// Builds the tag handler from the given parameters.
+        /// </summary>
+        /// <remarks>
+        /// TODO: Document parameters
+        /// </remarks>
+        /// <returns>The tag handler.</returns>
+        [CanBeNull]
+        private AimlTagHandler BuildTagHandler(XmlNode node,
+                                               SubQuery query,
+                                               Request request,
+                                               Result result,
+                                               User user,
+                                               [CanBeNull] string tagName)
         {
-            if (!CustomTags.ContainsKey(node.Name.ToLower()))
+            switch (tagName?.ToLowerInvariant())
             {
-                return null;
+                case "bot":
+                    return new bot(this, user, query, request, result, node);
+                case "condition":
+                    return new condition(this, user, query, request, result, node);
+                case "date":
+                    return new date(this, user, query, request, result, node);
+                case "formal":
+                    return new formal(this, user, query, request, result, node);
+                case "gender":
+                    return new gender(this, user, query, request, result, node);
+                case "get":
+                    return new get(this, user, query, request, result, node);
+                case "gossip":
+                    return new gossip(this, user, query, request, result, node);
+                case "id":
+                    return new id(this, user, query, request, result, node);
+                case "input":
+                    return new input(this, user, query, request, result, node);
+                case "javascript":
+                    return new javascript(this, user, query, request, result, node);
+                case "learn":
+                    return new learn(this, user, query, request, result, node);
+                case "lowercase":
+                    return new lowercase(this, user, query, request, result, node);
+                case "person":
+                    return new person(this, user, query, request, result, node);
+                case "person2":
+                    return new person2(this, user, query, request, result, node);
+                case "random":
+                    return new random(this, user, query, request, result, node);
+                case "sentence":
+                    return new sentence(this, user, query, request, result, node);
+                case "set":
+                    return new set(this, user, query, request, result, node);
+                case "size":
+                    return new size(this, user, query, request, result, node);
+                case "sr":
+                    return new sr(this, user, query, request, result, node);
+                case "srai":
+                    return new srai(this, user, query, request, result, node);
+                case "star":
+                    return new star(this, user, query, request, result, node);
+                case "system":
+                    return new system(this, user, query, request, result, node);
+                case "that":
+                    return new that(this, user, query, request, result, node);
+                case "thatstar":
+                    return new thatstar(this, user, query, request, result, node);
+                case "think":
+                    return new think(this, user, query, request, result, node);
+                case "topicstar":
+                    return new topicstar(this, user, query, request, result, node);
+                case "uppercase":
+                    return new uppercase(this, user, query, request, result, node);
+                case "version":
+                    return new version(this, user, query, request, result, node);
             }
 
-            var customTag = CustomTags[node.Name.ToLower()];
-
-            // TODO: It'd be very nice not to use .Instantiate.
-            var tagHandler = customTag.Instantiate(LateBindingAssemblies);
-
-            if (Equals(null, tagHandler))
-            {
-                return null;
-            }
-
-            tagHandler.user = user;
-            tagHandler.query = query;
-            tagHandler.request = request;
-            tagHandler.result = result;
-            tagHandler.templateNode = node;
-            tagHandler.Bot = this;
-
-            return tagHandler;
+            return null;
         }
 
         public void saveToBinaryFile(string path)
@@ -620,38 +580,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         public void loadFromBinaryFile(string path)
         {
             var fileStream = File.OpenRead(path);
-            Graphmaster = (Node) new BinaryFormatter().Deserialize(fileStream);
+            Graphmaster = (Node)new BinaryFormatter().Deserialize(fileStream);
             fileStream.Close();
-        }
-
-        public void loadCustomTagHandlers(string pathToDLL)
-        {
-            var assembly = Assembly.LoadFrom(pathToDLL);
-            var types = assembly.GetTypes();
-            for (var index = 0; index < types.Length; ++index)
-            {
-                foreach (var obj in types[index].GetCustomAttributes(false))
-                {
-                    if (obj is CustomTagAttribute)
-                    {
-                        if (!LateBindingAssemblies.ContainsKey(assembly.FullName))
-                        {
-                            LateBindingAssemblies.Add(assembly.FullName, assembly);
-                        }
-                        var tagHandler = new TagHandler();
-                        tagHandler.AssemblyName = assembly.FullName;
-                        tagHandler.ClassName = types[index].FullName;
-                        tagHandler.TagName = types[index].Name.ToLower();
-                        if (CustomTags.ContainsKey(tagHandler.TagName))
-                        {
-                            throw new Exception("ERROR! Unable to add the custom tag: <" + tagHandler.TagName +
-                                                ">, found in: " + pathToDLL +
-                                                " as a handler for this tag already exists.");
-                        }
-                        CustomTags.Add(tagHandler.TagName, tagHandler);
-                    }
-                }
-            }
         }
 
         public void phoneHome(string errorMessage, Request request)
