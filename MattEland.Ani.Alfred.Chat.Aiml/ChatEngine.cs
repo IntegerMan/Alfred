@@ -2,7 +2,7 @@
 // ChatEngine.cs
 // 
 // Created on:      08/12/2015 at 9:45 PM
-// Last Modified:   08/12/2015 at 11:59 PM
+// Last Modified:   08/13/2015 at 3:13 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Net.Mail;
-using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -23,15 +22,16 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Chat.Aiml.Normalize;
 using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml
 {
     /// <summary>
-    /// ChatEngine represents a ChatBot, its parsing capabilities, its knowledge library, etc.
+    ///     ChatEngine represents a ChatBot, its parsing capabilities, its knowledge library, etc.
     /// </summary>
     /// <remarks>
-    /// TODO: This is a very monolithic class that needs to have many more utility classes and
-    /// have its responsibilities shared. Of course, documentation is important too.
+    ///     TODO: This is a very monolithic class that needs to have many more utility classes and
+    ///     have its responsibilities shared. Of course, documentation is important too.
     /// </remarks>
     public class ChatEngine
     {
@@ -48,13 +48,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         public SettingsDictionary Person2Substitutions;
         public SettingsDictionary PersonSubstitutions;
         public int Size;
+
+        [NotNull, ItemNotNull]
         public List<string> Splitters = new List<string>();
         public DateTime StartedOn = DateTime.Now;
         public SettingsDictionary Substitutions;
         public bool TrustAiml = true;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ChatEngine"/> class.
+        ///     Initializes a new instance of the <see cref="ChatEngine" /> class.
         /// </summary>
         public ChatEngine()
         {
@@ -76,14 +78,47 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             get { return Convert.ToDouble(GlobalSettings.GetValue("timeout")); }
         }
 
+        /// <summary>
+        /// Gets the timeout message.
+        /// This message is used when a request takes too long and times out.
+        /// </summary>
+        /// <value>The timeout message.</value>
+        [NotNull]
         public string TimeOutMessage
         {
-            get { return GlobalSettings.GetValue("timeoutmessage"); }
+            get
+            {
+                var timeoutMessage = GlobalSettings.GetValue("timeoutmessage");
+
+                if (string.IsNullOrEmpty(TimeOutMessage))
+                {
+                    timeoutMessage = "Your request has timed out. Please try again or phrase your sentence differently.";
+                }
+
+                // ReSharper disable once AssignNullToNotNullAttribute
+                return timeoutMessage;
+            }
         }
 
+        /// <summary>
+        /// Gets the locale of this instance.
+        /// </summary>
+        /// <value>The locale.</value>
         public CultureInfo Locale
         {
-            get { return new CultureInfo(GlobalSettings.GetValue("culture")); }
+            get
+            {
+                /* TODO: I'm not sure I like reading from GlobalSettings.
+                Maybe for a web deploy, but CurrentCulture works great. */
+
+                var cultureValue = GlobalSettings.GetValue("culture");
+                if (string.IsNullOrEmpty(cultureValue))
+                {
+                    return CultureInfo.CurrentCulture;
+                }
+
+                return new CultureInfo(cultureValue);
+            }
         }
 
         public Regex Strippers
@@ -305,20 +340,20 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             if (!GlobalSettings.Contains("notacceptinguserinputmessage"))
             {
                 GlobalSettings.Add("notacceptinguserinputmessage",
-                                          "This ChatEngine is currently set to not accept user input.");
+                                   "This ChatEngine is currently set to not accept user input.");
             }
             if (!GlobalSettings.Contains("stripperregex"))
             {
                 GlobalSettings.Add("stripperregex", "[^0-9a-zA-Z]");
             }
             Person2Substitutions.Load(Path.Combine(PathToConfigFiles,
-                                                           GlobalSettings.GetValue("person2substitutionsfile")));
+                                                   GlobalSettings.GetValue("person2substitutionsfile")));
             PersonSubstitutions.Load(Path.Combine(PathToConfigFiles,
-                                                          GlobalSettings.GetValue("personsubstitutionsfile")));
+                                                  GlobalSettings.GetValue("personsubstitutionsfile")));
             GenderSubstitutions.Load(Path.Combine(PathToConfigFiles,
-                                                          GlobalSettings.GetValue("gendersubstitutionsfile")));
+                                                  GlobalSettings.GetValue("gendersubstitutionsfile")));
             DefaultPredicates.Load(Path.Combine(PathToConfigFiles,
-                                                        GlobalSettings.GetValue("defaultpredicates")));
+                                                GlobalSettings.GetValue("defaultpredicates")));
             Substitutions.Load(Path.Combine(PathToConfigFiles, GlobalSettings.GetValue("substitutionsfile")));
             loadSplitters(Path.Combine(PathToConfigFiles, GlobalSettings.GetValue("splittersfile")));
         }
@@ -394,7 +429,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                 foreach (var pattern in new SplitIntoSentences(this).Transform(request.RawInput))
                 {
                     result.InputSentences.Add(pattern);
-                    var str = aimlLoader.BuildPathString(pattern, request.User.getLastBotOutput(), request.User.Topic, true);
+                    var str = aimlLoader.BuildPathString(pattern,
+                                                         request.User.getLastBotOutput(),
+                                                         request.User.Topic,
+                                                         true);
                     result.NormalizedPaths.Add(str);
                 }
                 foreach (var str in result.NormalizedPaths)
@@ -495,10 +533,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         }
 
         /// <summary>
-        /// Builds the tag handler from the given parameters.
+        ///     Builds the tag handler from the given parameters.
         /// </summary>
         /// <remarks>
-        /// TODO: Document parameters
+        ///     TODO: Document parameters
         /// </remarks>
         /// <returns>The tag handler.</returns>
         [CanBeNull]
@@ -623,7 +661,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         }
 
         /// <summary>
-        /// Adds the category to the graph.
+        ///     Adds the category to the graph.
         /// </summary>
         /// <param name="node">The template node.</param>
         /// <param name="path">The path.</param>
@@ -646,10 +684,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             if (string.IsNullOrEmpty(path))
             {
                 writeToLog(string.Format(Locale,
-                                  "WARNING! Attempted to load a new category with an empty pattern where the directoryPath = {0} and template = {1} produced by a category in the file: {2}",
-                                  path,
-                                  node.OuterXml,
-                                  filename));
+                                         "WARNING! Attempted to load a new category with an empty pattern where the directoryPath = {0} and template = {1} produced by a category in the file: {2}",
+                                         path,
+                                         node.OuterXml,
+                                         filename));
                 return;
             }
 
@@ -663,10 +701,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             catch
             {
                 writeToLog(string.Format(Locale,
-                                  "ERROR! Failed to load a new category into the graphmaster where the directoryPath = {0} and template = {1} produced by a category in the file: {2}",
-                                  path,
-                                  node.OuterXml,
-                                  filename));
+                                         "ERROR! Failed to load a new category into the graphmaster where the directoryPath = {0} and template = {1} produced by a category in the file: {2}",
+                                         path,
+                                         node.OuterXml,
+                                         filename));
             }
         }
     }
