@@ -29,7 +29,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             }
             id = UserID;
             this.chatEngine = chatEngine;
-            Predicates = new SettingsDictionary(this.chatEngine);
+            Predicates = new SettingsDictionary();
             this.chatEngine.DefaultPredicates.Clone(Predicates);
             Predicates.addSetting("topic", "*");
         }

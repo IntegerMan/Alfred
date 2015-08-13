@@ -177,12 +177,12 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
         private void setup()
         {
-            GlobalSettings = new SettingsDictionary(this);
-            GenderSubstitutions = new SettingsDictionary(this);
-            Person2Substitutions = new SettingsDictionary(this);
-            PersonSubstitutions = new SettingsDictionary(this);
-            Substitutions = new SettingsDictionary(this);
-            DefaultPredicates = new SettingsDictionary(this);
+            GlobalSettings = new SettingsDictionary();
+            GenderSubstitutions = new SettingsDictionary();
+            Person2Substitutions = new SettingsDictionary();
+            PersonSubstitutions = new SettingsDictionary();
+            Substitutions = new SettingsDictionary();
+            DefaultPredicates = new SettingsDictionary();
             Graphmaster = new Node();
         }
 

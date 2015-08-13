@@ -17,18 +17,12 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 {
     public class SettingsDictionary
     {
-        private readonly List<string> orderedKeys = new List<string>();
-        private readonly Dictionary<string, string> settingsHash = new Dictionary<string, string>();
-        protected ChatEngine chatEngine;
-
-        public SettingsDictionary(ChatEngine chatEngine)
-        {
-            this.chatEngine = chatEngine;
-        }
+        private readonly List<string> _orderedKeys = new List<string>();
+        private readonly Dictionary<string, string> _settingsHash = new Dictionary<string, string>();
 
         public int Count
         {
-            get { return orderedKeys.Count; }
+            get { return _orderedKeys.Count; }
         }
 
         public XmlDocument DictionaryAsXML
@@ -40,13 +34,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
                 xmlDocument.AppendChild(xmlDeclaration);
                 var node1 = xmlDocument.CreateNode(XmlNodeType.Element, "root", "");
                 xmlDocument.AppendChild(node1);
-                foreach (var index in orderedKeys)
+                foreach (var index in _orderedKeys)
                 {
                     var node2 = xmlDocument.CreateNode(XmlNodeType.Element, "item", "");
                     var attribute1 = xmlDocument.CreateAttribute("name");
                     attribute1.Value = index;
                     var attribute2 = xmlDocument.CreateAttribute("value");
-                    attribute2.Value = settingsHash[index];
+                    attribute2.Value = _settingsHash[index];
                     node2.Attributes.Append(attribute1);
                     node2.Attributes.Append(attribute2);
                     node1.AppendChild(node2);
@@ -59,8 +53,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         {
             get
             {
-                var array = new string[orderedKeys.Count];
-                orderedKeys.CopyTo(array, 0);
+                var array = new string[_orderedKeys.Count];
+                _orderedKeys.CopyTo(array, 0);
                 return array;
             }
         }
@@ -106,37 +100,37 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
                 return;
             }
             removeSetting(str);
-            orderedKeys.Add(str);
-            settingsHash.Add(MakeCaseInsensitive.TransformInput(str), value);
+            _orderedKeys.Add(str);
+            _settingsHash.Add(MakeCaseInsensitive.TransformInput(str), value);
         }
 
         public void removeSetting(string name)
         {
             var name1 = MakeCaseInsensitive.TransformInput(name);
-            orderedKeys.Remove(name1);
+            _orderedKeys.Remove(name1);
             removeFromHash(name1);
         }
 
         private void removeFromHash(string name)
         {
-            settingsHash.Remove(MakeCaseInsensitive.TransformInput(name));
+            _settingsHash.Remove(MakeCaseInsensitive.TransformInput(name));
         }
 
         public void updateSetting(string name, string value)
         {
             var str = MakeCaseInsensitive.TransformInput(name);
-            if (!orderedKeys.Contains(str))
+            if (!_orderedKeys.Contains(str))
             {
                 return;
             }
             removeFromHash(str);
-            settingsHash.Add(MakeCaseInsensitive.TransformInput(str), value);
+            _settingsHash.Add(MakeCaseInsensitive.TransformInput(str), value);
         }
 
         public void clearSettings()
         {
-            orderedKeys.Clear();
-            settingsHash.Clear();
+            _orderedKeys.Clear();
+            _settingsHash.Clear();
         }
 
         public string grabSetting(string name)
@@ -144,7 +138,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             var name1 = MakeCaseInsensitive.TransformInput(name);
             if (containsSettingCalled(name1))
             {
-                return settingsHash[name1];
+                return _settingsHash[name1];
             }
             return string.Empty;
         }
@@ -154,14 +148,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             var str = MakeCaseInsensitive.TransformInput(name);
             if (str.Length > 0)
             {
-                return orderedKeys.Contains(str);
+                return _orderedKeys.Contains(str);
             }
             return false;
         }
 
         public void Clone(SettingsDictionary target)
         {
-            foreach (var name in orderedKeys)
+            foreach (var name in _orderedKeys)
             {
                 target.addSetting(name, grabSetting(name));
             }
