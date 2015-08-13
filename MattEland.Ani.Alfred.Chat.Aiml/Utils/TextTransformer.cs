@@ -2,7 +2,7 @@
 // TextTransformer.cs
 // 
 // Created on:      08/12/2015 at 10:36 PM
-// Last Modified:   08/12/2015 at 11:59 PM
+// Last Modified:   08/13/2015 at 12:02 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -20,9 +20,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
     /// </summary>
     public abstract class TextTransformer
     {
-        [CanBeNull]
-        private Bot _bot;
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="TextTransformer" /> class.
         /// </summary>
@@ -30,7 +27,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <param name="inputString">The input string.</param>
         protected TextTransformer([CanBeNull] Bot bot, [CanBeNull] string inputString)
         {
-            _bot = bot;
+            Bot = bot;
             InputString = inputString;
         }
 
@@ -40,7 +37,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <param name="bot">The bot.</param>
         protected TextTransformer([CanBeNull] Bot bot)
         {
-            _bot = bot;
+            Bot = bot;
             InputString = string.Empty;
         }
 
@@ -49,7 +46,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// </summary>
         protected TextTransformer()
         {
-            _bot = null;
+            Bot = null;
             InputString = string.Empty;
         }
 
@@ -62,9 +59,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         public Bot Bot
         {
             [DebuggerStepThrough]
-            get { return _bot; }
+            get;
             [DebuggerStepThrough]
-            internal set { _bot = value; }
+            internal set;
         }
 
         /// <summary>
@@ -73,7 +70,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <value>The locale.</value>
         protected CultureInfo Locale
         {
-            get { return _bot != null ? _bot.Locale : CultureInfo.CurrentCulture; }
+            get { return Bot != null ? Bot.Locale : CultureInfo.CurrentCulture; }
         }
 
         /// <summary>
