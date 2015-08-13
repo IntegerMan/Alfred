@@ -24,7 +24,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         {
             if (TemplateNode.Name.ToLower() == "gossip" && TemplateNode.InnerText.Length > 0)
             {
-                ChatEngine.writeToLog("GOSSIP from user: " + User.UserID + ", '" + TemplateNode.InnerText + "'");
+                ChatEngine.writeToLog("GOSSIP from user: " + User.Id + ", '" + TemplateNode.InnerText + "'");
             }
             return string.Empty;
         }

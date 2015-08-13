@@ -38,6 +38,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         public delegate void LogMessageDelegate();
 
         private readonly List<string> LogBuffer = new List<string>();
+
+        [NotNull]
         public SettingsDictionary DefaultPredicates;
         public SettingsDictionary GenderSubstitutions;
         public SettingsDictionary GlobalSettings;
@@ -430,7 +432,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                 {
                     result.InputSentences.Add(pattern);
                     var str = aimlLoader.BuildPathString(pattern,
-                                                         request.User.getLastBotOutput(),
+                                                         request.User.LastChatOutput,
                                                          request.User.Topic,
                                                          true);
                     result.NormalizedPaths.Add(str);
@@ -474,7 +476,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                 result.OutputSentences.Add(NotAcceptingUserInputMessage);
             }
             result.Completed();
-            request.User.addResult(result);
+            request.User.AddResult(result);
             return result;
         }
 
@@ -638,7 +640,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                     .Replace("*TIME*", DateTime.Now.ToString())
                     .Replace("*MESSAGE*", errorMessage)
                     .Replace("*RAWINPUT*", request.RawInput)
-                    .Replace("*USER*", request.User.UserID);
+                    .Replace("*USER*", request.User.Id);
             var stringBuilder = new StringBuilder();
             foreach (var str2 in request.Result.NormalizedPaths)
             {

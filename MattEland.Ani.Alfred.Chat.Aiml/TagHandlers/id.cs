@@ -24,7 +24,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         {
             if (TemplateNode.Name.ToLower() == "id")
             {
-                return User.UserID;
+                return User.Id;
             }
             return string.Empty;
         }

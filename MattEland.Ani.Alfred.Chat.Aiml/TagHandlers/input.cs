@@ -27,7 +27,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             {
                 if (TemplateNode.Attributes.Count == 0)
                 {
-                    return User.getResultSentence();
+                    return User.GetInputSentence();
                 }
                 if (TemplateNode.Attributes.Count == 1 && TemplateNode.Attributes[0].Name.ToLower() == "index")
                 {
@@ -42,7 +42,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                                 var num2 = Convert.ToInt32(strArray[1].Trim());
                                 if (num1 > 0 & num2 > 0)
                                 {
-                                    return User.getResultSentence(num1 - 1, num2 - 1);
+                                    return User.GetInputSentence(num1 - 1, num2 - 1);
                                 }
                                 ChatEngine.writeToLog("ERROR! An input tag with a bady formed index (" +
                                                TemplateNode.Attributes[0].Value +
@@ -53,7 +53,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                                 var num = Convert.ToInt32(TemplateNode.Attributes[0].Value.Trim());
                                 if (num > 0)
                                 {
-                                    return User.getResultSentence(num - 1);
+                                    return User.GetInputSentence(num - 1);
                                 }
                                 ChatEngine.writeToLog("ERROR! An input tag with a bady formed index (" +
                                                TemplateNode.Attributes[0].Value +

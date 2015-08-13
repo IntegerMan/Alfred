@@ -156,7 +156,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                                             RawInput,
                                             Environment.NewLine,
                                             stringBuilder,
-                                            User.UserID);
+                                            User.Id);
                 ChatEngine.writeToLog(message);
 
                 return "I'm sorry but I don't understand. Can you try asking differently?";

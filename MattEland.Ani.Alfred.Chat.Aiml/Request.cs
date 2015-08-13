@@ -157,7 +157,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                 if (HasTimedOut)
                 {
                     var message = string.Format("WARNING! Request timeout. User: {0} raw input: \"{1}\"",
-                                                User.UserID,
+                                                User.Id,
                                                 RawInput);
 
                     ChatEngine.writeToLog(message);
