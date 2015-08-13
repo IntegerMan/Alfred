@@ -2,7 +2,7 @@
 // Node.cs
 // 
 // Created on:      08/12/2015 at 10:27 PM
-// Last Modified:   08/12/2015 at 11:59 PM
+// Last Modified:   08/13/2015 at 1:17 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -19,6 +19,9 @@ using MattEland.Ani.Alfred.Chat.Aiml.Normalize;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 {
+    /// <summary>
+    /// Represents a node in the conversational graph
+    /// </summary>
     [Serializable]
     public class Node
     {
@@ -26,12 +29,26 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         [ItemNotNull]
         private readonly Dictionary<string, Node> _children = new Dictionary<string, Node>();
 
+        /// <summary>
+        ///     Gets or sets the filename.
+        /// </summary>
+        /// <value>The filename.</value>
         public string Filename { get; set; } = string.Empty;
+
+        /// <summary>
+        ///     Gets or sets the template.
+        /// </summary>
+        /// <value>The template.</value>
         public string Template { get; set; } = string.Empty;
+
+        /// <summary>
+        ///     Gets or sets the word.
+        /// </summary>
+        /// <value>The word.</value>
         public string Word { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets the number of children this node has.
+        ///     Gets the number of children this node has.
         /// </summary>
         /// <value>The children count.</value>
         public int ChildrenCount
@@ -40,7 +57,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        /// Adds the category to the node as a new child node.
+        ///     Adds the category to the node as a new child node.
         /// </summary>
         /// <param name="path">The path.</param>
         /// <param name="template">The template.</param>
@@ -50,7 +67,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             //- Validate Input
             if (string.IsNullOrEmpty(template))
             {
-                string message = $"The category with a pattern: {path} found in file: {filename} has an empty template tag. ABORTING";
+                string message =
+                    $"The category with a pattern: {path} found in file: {filename} has an empty template tag. ABORTING";
                 throw new XmlException(message);
             }
 
@@ -93,8 +111,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         {
             if (request.StartedOn.AddMilliseconds(request.chatEngine.TimeOut) < DateTime.Now)
             {
-                request.chatEngine.writeToLog("WARNING! Request timeout. User: " + request.user.UserID + " raw input: \"" +
-                                       request.rawInput + "\"");
+                request.chatEngine.writeToLog("WARNING! Request timeout. User: " + request.user.UserID +
+                                              " raw input: \"" +
+                                              request.rawInput + "\"");
                 request.hasTimedOut = true;
                 return string.Empty;
             }
