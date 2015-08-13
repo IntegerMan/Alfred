@@ -9,8 +9,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Xml;
+
+using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Normalize;
 
@@ -19,43 +22,66 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
     [Serializable]
     public class Node
     {
-        private readonly Dictionary<string, Node> children = new Dictionary<string, Node>();
-        public string filename = string.Empty;
-        public string template = string.Empty;
-        public string word = string.Empty;
+        [NotNull]
+        [ItemNotNull]
+        private readonly Dictionary<string, Node> _children = new Dictionary<string, Node>();
 
-        public int NumberOfChildNodes
+        public string Filename { get; set; } = string.Empty;
+        public string Template { get; set; } = string.Empty;
+        public string Word { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets the number of children this node has.
+        /// </summary>
+        /// <value>The children count.</value>
+        public int ChildrenCount
         {
-            get { return children.Count; }
+            get { return _children.Count; }
         }
 
-        public void AddCategory(string path, string template, string filename)
+        /// <summary>
+        /// Adds the category to the node as a new child node.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <param name="template">The template.</param>
+        /// <param name="filename">The filename.</param>
+        public void AddCategory([CanBeNull] string path, [NotNull] string template, [CanBeNull] string filename)
         {
-            if (template.Length == 0)
+            //- Validate Input
+            if (string.IsNullOrEmpty(template))
             {
-                throw new XmlException("The category with a pattern: " + path + " found in file: " + filename +
-                                       " has an empty template tag. ABORTING");
+                string message = $"The category with a pattern: {path} found in file: {filename} has an empty template tag. ABORTING";
+                throw new XmlException(message);
             }
-            if (path.Trim().Length == 0)
+
+            if (string.IsNullOrWhiteSpace(path))
             {
-                this.template = template;
-                this.filename = filename;
+                Template = template;
+                Filename = filename;
             }
             else
             {
-                var key = UppercaseTextTransformer.TransformInput(path.Trim().Split(" ".ToCharArray())[0]);
-                var path1 = path.Substring(key.Length, path.Length - key.Length).Trim();
-                if (children.ContainsKey(key))
+                // Grab our key as the first word from the path
+                var words = path.Trim().Split(" ".ToCharArray());
+                var key = words[0].ToUpperInvariant();
+
+                // Chop off the rest of the path string
+                var restOfPath = path.Substring(key.Length, path.Length - key.Length).Trim();
+
+                Node node;
+                if (_children.ContainsKey(key))
                 {
-                    children[key].AddCategory(path1, template, filename);
+                    node = _children[key];
+                    Debug.Assert(node != null);
                 }
                 else
                 {
-                    var node = new Node();
-                    node.word = key;
-                    node.AddCategory(path1, template, filename);
-                    children.Add(node.word, node);
+                    node = new Node { Word = key };
+
+                    _children.Add(key, node);
                 }
+
+                node.AddCategory(restOfPath, template, filename);
             }
         }
 
@@ -73,24 +99,24 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
                 return string.Empty;
             }
             path = path.Trim();
-            if (children.Count == 0)
+            if (_children.Count == 0)
             {
                 if (path.Length > 0)
                 {
                     storeWildCard(path, wildcard);
                 }
-                return template;
+                return Template;
             }
             if (path.Length == 0)
             {
-                return template;
+                return Template;
             }
             var strArray = path.Split(" \r\n\t".ToCharArray());
             var key = UppercaseTextTransformer.TransformInput(strArray[0]);
             var path1 = path.Substring(key.Length, path.Length - key.Length);
-            if (children.ContainsKey("_"))
+            if (_children.ContainsKey("_"))
             {
-                var node = children["_"];
+                var node = _children["_"];
                 var wildcard1 = new StringBuilder();
                 storeWildCard(strArray[0], wildcard1);
                 var str = node.evaluate(path1, query, request, matchstate, wildcard1);
@@ -115,7 +141,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
                     return str;
                 }
             }
-            if (children.ContainsKey(key))
+            if (_children.ContainsKey(key))
             {
                 var matchstate1 = matchstate;
                 if (key == "<THAT>")
@@ -126,7 +152,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
                 {
                     matchstate1 = MatchState.Topic;
                 }
-                var node = children[key];
+                var node = _children[key];
                 var wildcard1 = new StringBuilder();
                 var str = node.evaluate(path1, query, request, matchstate1, wildcard1);
                 if (str.Length > 0)
@@ -152,9 +178,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
                     return str;
                 }
             }
-            if (children.ContainsKey("*"))
+            if (_children.ContainsKey("*"))
             {
-                var node = children["*"];
+                var node = _children["*"];
                 var wildcard1 = new StringBuilder();
                 storeWildCard(strArray[0], wildcard1);
                 var str = node.evaluate(path1, query, request, matchstate, wildcard1);
@@ -179,7 +205,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
                     return str;
                 }
             }
-            if (word == "_" || word == "*")
+            if (Word == "_" || Word == "*")
             {
                 storeWildCard(strArray[0], wildcard);
                 return evaluate(path1, query, request, matchstate, wildcard);
