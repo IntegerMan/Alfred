@@ -27,7 +27,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <param name="inputString">The input string.</param>
         protected TextTransformer([CanBeNull] ChatEngine chatEngine, [CanBeNull] string inputString)
         {
-            ChatEngine = chatEngine;
+            _chatEngine = chatEngine;
             InputString = inputString;
         }
 
@@ -35,20 +35,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         ///     Initializes a new instance of the <see cref="TextTransformer" /> class.
         /// </summary>
         /// <param name="chatEngine">The ChatEngine.</param>
-        protected TextTransformer([CanBeNull] ChatEngine chatEngine)
+        protected TextTransformer([CanBeNull] ChatEngine chatEngine) : this(chatEngine, null)
         {
-            ChatEngine = chatEngine;
-            InputString = string.Empty;
         }
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="TextTransformer" /> class.
-        /// </summary>
-        protected TextTransformer()
-        {
-            ChatEngine = null;
-            InputString = string.Empty;
-        }
+        private ChatEngine _chatEngine;
 
         /// <summary>
         ///     Gets the chat ChatEngine associated with this transformer.
@@ -59,9 +50,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         public ChatEngine ChatEngine
         {
             [DebuggerStepThrough]
-            get;
+            get
+            { return _chatEngine; }
             [DebuggerStepThrough]
-            internal set;
+            internal set
+            { _chatEngine = value; }
         }
 
         /// <summary>
@@ -70,7 +63,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <value>The locale.</value>
         protected CultureInfo Locale
         {
-            get { return ChatEngine != null ? ChatEngine.Locale : CultureInfo.CurrentCulture; }
+            get { return _chatEngine != null ? _chatEngine.Locale : CultureInfo.CurrentCulture; }
         }
 
         /// <summary>
