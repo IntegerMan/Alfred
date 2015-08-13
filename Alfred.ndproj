@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <NDepend AppName="Alfred" Platform="DotNet">
   <OutputDir KeepXmlFiles="False">C:\Dev\Alfred\Alfred\NDependOut</OutputDir>
   <Assemblies>
@@ -7,6 +7,8 @@
     <Name>MattEland.Ani.Alfred.Core.Modules.SysMonitor</Name>
     <Name>MattEland.Ani.Alfred.Core.Speech</Name>
     <Name>MattEland.Ani.Alfred.Chat</Name>
+    <Name>MattEland.Ani.Alfred.Chat.Aiml</Name>
+    <Name>MattEland.Common</Name>
   </Assemblies>
   <FrameworkAssemblies>
     <Name>mscorlib</Name>
@@ -18,6 +20,8 @@
     <Name>PresentationCore</Name>
     <Name>System.Speech</Name>
     <Name>AIMLbot</Name>
+    <Name>System.Xml.Linq</Name>
+    <Name>System.Xml</Name>
   </FrameworkAssemblies>
   <Dirs>
     <Dir>C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319</Dir>
@@ -30,6 +34,8 @@
     <Dir>c:\dev\Alfred\Alfred\MattEland.Ani.Alfred.Core.System\bin\Debug</Dir>
     <Dir>c:\dev\Alfred\Alfred\MattEland.Ani.Alfred.Core.Speech\bin\Debug</Dir>
     <Dir>c:\dev\Alfred\Alfred\MattEland.Ani.Alfred.AIML\bin\Debug</Dir>
+    <Dir>C:\Dev\Alfred\Alfred\MattEland.Ani.Alfred.Chat.Aiml\bin\Debug</Dir>
+    <Dir>C:\Dev\Alfred\Alfred\MattEland.Common\bin\Debug</Dir>
   </Dirs>
   <MergeCodeGeneratedByCompiler>True</MergeCodeGeneratedByCompiler>
   <Report Kind="0" SectionsEnabled="65535" XslPath="" Flags="261376" />
@@ -81,8 +87,7 @@
   <SourceFileRebasing FromPath="" ToPath="" />
   <PathVariables />
   <RuleFiles />
-  <ProjectRules AreActive="True" />
-  <Queries>
+  <ProjectRules AreActive="True" /><Queries>
     <Group Name="Code Quality" Active="True" ShownInReport="False">
       <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="True"><![CDATA[// <Name>Types too big - critical</Name>
 warnif count > 0 from t in JustMyCode.Types where 
@@ -8084,5 +8089,4 @@ select new { n, n.NbLinesOfCode }
 //</HowToFix>]]></Query>
       </Group>
     </Group>
-  </Queries>
-</NDepend>
+  </Queries></NDepend>

@@ -14,8 +14,11 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 using AIMLbot;
+using AIMLbot.Normalize;
+using AIMLbot.Utils;
 
 using JetBrains.Annotations;
 
@@ -228,19 +231,21 @@ namespace MattEland.Ani.Alfred.Chat
             Justification = "I really don't trust third party libraries to advertise thrown exception types")]
         private Result GetChatResult(string userInput)
         {
-            Result result = null;
             try
             {
-                result = _chatBot.Chat(userInput, _user.UserID);
+                var request = new Request(userInput, _user, _chatBot);
+                var result = _chatBot.Chat(request);
+
+                return result;
             }
             catch (Exception ex)
             {
                 // We're calling undocumented 3rd party code here so be very careful on exceptions
                 _console?.Log(Resources.ChatInputHeader, ex.Message, LogLevel.Error);
-            }
-            return result;
-        }
 
+                return null;
+            }
+        }
         /// <summary>
         ///     Sets up the chat bot
         /// </summary>

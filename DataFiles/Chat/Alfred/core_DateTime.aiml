@@ -9,6 +9,7 @@ This provides handling for time and date queries
 <aiml>
 
   <!-- Time Handling -->
+
   <category>
     <pattern>TIME</pattern>
     <template id="tmp_time">

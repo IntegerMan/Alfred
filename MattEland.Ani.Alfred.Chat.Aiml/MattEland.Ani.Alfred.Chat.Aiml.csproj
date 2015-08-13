@@ -47,8 +47,53 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AimlChatProvider.cs" />
+    <Compile Include="Bot.cs" />
+    <Compile Include="Normalize\ApplySubstitutions.cs" />
+    <Compile Include="Normalize\MakeCaseInsensitive.cs" />
+    <Compile Include="Normalize\SplitIntoSentences.cs" />
+    <Compile Include="Normalize\StripIllegalCharacters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Request.cs" />
+    <Compile Include="Result.cs" />
+    <Compile Include="TagHandlers\bot.cs" />
+    <Compile Include="TagHandlers\thatstar.cs" />
+    <Compile Include="TagHandlers\condition.cs" />
+    <Compile Include="TagHandlers\date.cs" />
+    <Compile Include="TagHandlers\formal.cs" />
+    <Compile Include="TagHandlers\gender.cs" />
+    <Compile Include="TagHandlers\get.cs" />
+    <Compile Include="TagHandlers\gossip.cs" />
+    <Compile Include="TagHandlers\id.cs" />
+    <Compile Include="TagHandlers\input.cs" />
+    <Compile Include="TagHandlers\javascript.cs" />
+    <Compile Include="TagHandlers\learn.cs" />
+    <Compile Include="TagHandlers\lowercase.cs" />
+    <Compile Include="TagHandlers\person.cs" />
+    <Compile Include="TagHandlers\person2.cs" />
+    <Compile Include="TagHandlers\random.cs" />
+    <Compile Include="TagHandlers\sentence.cs" />
+    <Compile Include="TagHandlers\set.cs" />
+    <Compile Include="TagHandlers\size.cs" />
+    <Compile Include="TagHandlers\sr.cs" />
+    <Compile Include="TagHandlers\srai.cs" />
+    <Compile Include="TagHandlers\star.cs" />
+    <Compile Include="TagHandlers\system.cs" />
+    <Compile Include="TagHandlers\that.cs" />
+    <Compile Include="TagHandlers\think.cs" />
+    <Compile Include="TagHandlers\topicstar.cs" />
+    <Compile Include="TagHandlers\uppercase.cs" />
+    <Compile Include="TagHandlers\version.cs" />
+    <Compile Include="User.cs" />
+    <Compile Include="Utils\AimlLoader.cs" />
+    <Compile Include="Utils\AimlTagHandler.cs" />
+    <Compile Include="Utils\CustomTagAttribute.cs" />
+    <Compile Include="Utils\Gender.cs" />
+    <Compile Include="Utils\MatchState.cs" />
+    <Compile Include="Utils\Node.cs" />
+    <Compile Include="Utils\SettingsDictionary.cs" />
+    <Compile Include="Utils\SubQuery.cs" />
+    <Compile Include="Utils\TagHandler.cs" />
+    <Compile Include="Utils\TextTransformer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MattEland.Ani.Alfred.Core\MattEland.Ani.Alfred.Core.csproj">
