@@ -66,7 +66,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         ///     Gets the duration of the request.
         /// </summary>
         /// <value>The duration.</value>
-        [UsedImplicitly]
         public TimeSpan Duration { get; private set; }
 
         /// <summary>
