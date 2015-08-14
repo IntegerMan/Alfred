@@ -9,21 +9,24 @@
 
 using System.Xml;
 
+using JetBrains.Annotations;
+
 using MattEland.Ani.Alfred.Chat.Aiml.Normalize;
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     public class person2 : AimlTagHandler
     {
-        public person2(ChatEngine chatEngine, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
-            : base(chatEngine, user, query, request, result, templateNode)
+        public person2([NotNull] TagHandlerParameters parameters)
+            : base(parameters)
         {
         }
 
         protected override string ProcessChange()
         {
-            if (!(TemplateNode.Name.ToLower() == "person2"))
+            if (TemplateNode.Name.ToLower() != "person2")
             {
                 return string.Empty;
             }
@@ -31,7 +34,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             {
                 return TextSubstitutionTransformer.Substitute(ChatEngine.Person2Substitutions, TemplateNode.InnerText);
             }
-            TemplateNode.InnerText = new star(ChatEngine, User, Query, Request, Result, GetNode("<star/>")).Transform();
+
+            var node = GetNode("<star/>");
+            var parameters = GetTagHandlerParametersForNode(node);
+            TemplateNode.InnerText = new star(parameters).Transform().NonNull();
+
             if (TemplateNode.InnerText.Length > 0)
             {
                 return ProcessChange();

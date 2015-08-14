@@ -422,8 +422,12 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             return result;
         }
 
-        private string ProcessNode(XmlNode node, SubQuery query, Request request, Result result, User user)
+        private string ProcessNode([NotNull] XmlNode node, SubQuery query, Request request, Result result, User user)
         {
+            if (node == null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
             if (request.CheckForTimedOut())
             {
                 return string.Empty;

@@ -70,31 +70,18 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <summary>
         /// Initializes a new instance of the <see cref="AimlTagHandler" /> class.
         /// </summary>
-        /// <param name="chatEngine">The chat engine.</param>
-        /// <param name="user">The user.</param>
-        /// <param name="query">The query.</param>
-        /// <param name="request">The request.</param>
-        /// <param name="result">The result.</param>
-        /// <param name="templateNode">The template node.</param>
-        protected AimlTagHandler(ChatEngine chatEngine, User user, SubQuery query, Request request, Result result,
-                                 [NotNull] XmlNode templateNode)
-                    : base(chatEngine, templateNode.OuterXml)
+        protected AimlTagHandler([NotNull] TagHandlerParameters parameters)
+                    : base(parameters.ChatEngine, parameters.TemplateNode.OuterXml)
         {
-            //- Validate
-            if (templateNode?.Attributes == null)
-            {
-                throw new ArgumentNullException(nameof(templateNode));
-            }
-
             //- Assign fields
-            User = user;
-            Query = query;
-            Request = request;
-            Result = result;
+            User = parameters.User;
+            Query = parameters.Query;
+            Request = parameters.Request;
+            Result = parameters.Result;
 
             // Assign the template node and clear out the namespace values
-            templateNode.Attributes.RemoveNamedItem("xmlns");
-            TemplateNode = templateNode;
+            parameters.TemplateNode.Attributes?.RemoveNamedItem("xmlns");
+            TemplateNode = parameters.TemplateNode;
         }
 
         /// <summary>
@@ -119,6 +106,22 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 
             // Return the root element
             return xmlDocument.FirstChild;
+        }
+
+        /// <summary>
+        /// Gets tag handler parameters for the given template node.
+        /// </summary>
+        /// <param name="templateNode">The template node.</param>
+        /// <returns>TagHandlerParameters.</returns>
+        [NotNull]
+        protected TagHandlerParameters GetTagHandlerParametersForNode([NotNull] XmlNode templateNode)
+        {
+            if (templateNode == null)
+            {
+                throw new ArgumentNullException(nameof(templateNode));
+            }
+
+            return new TagHandlerParameters(ChatEngine, User, Query, Request, Result, templateNode);
         }
     }
 }

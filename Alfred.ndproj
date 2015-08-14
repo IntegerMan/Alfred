@@ -19,7 +19,6 @@
     <Name>System.Xaml</Name>
     <Name>PresentationCore</Name>
     <Name>System.Speech</Name>
-    <Name>AIMLbot</Name>
     <Name>System.Xml.Linq</Name>
     <Name>System.Xml</Name>
   </FrameworkAssemblies>

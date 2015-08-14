@@ -7,17 +7,21 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Xml;
+
+using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Normalize;
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     public class person : AimlTagHandler
     {
-        public person(ChatEngine chatEngine, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
-            : base(chatEngine, user, query, request, result, templateNode)
+        public person([NotNull] TagHandlerParameters parameters)
+            : base(parameters)
         {
         }
 
@@ -31,13 +35,17 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             {
                 return TextSubstitutionTransformer.Substitute(ChatEngine.PersonSubstitutions, TemplateNode.InnerText);
             }
-            TemplateNode.InnerText =
-                new star(ChatEngine, User, Query, Request, Result, GetNode("<star/>")).Transform();
+
+            var templateNode = GetNode("<star/>");
+            var parameters = GetTagHandlerParametersForNode(templateNode);
+            var star = new star(parameters);
+            TemplateNode.InnerText = star.Transform().NonNull();
             if (TemplateNode.InnerText.Length > 0)
             {
                 return ProcessChange();
             }
             return string.Empty;
         }
+
     }
 }

@@ -111,94 +111,107 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         }
 
         [CanBeNull]
-        public AimlTagHandler Build(
-            XmlNode node,
+        public AimlTagHandler Build([NotNull] XmlNode node,
             SubQuery query,
             Request request,
             Result result,
             User user,
             [CanBeNull] string tagName)
         {
-            // Ensure not null on the tag
+            //- Validate
+            if (node == null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
             if (tagName == null)
             {
                 return null;
             }
 
+            //- All construction will require these parameters so build them now
+            // TODO: Would thee be better suited for outside of this method and passed in as parameters?
+            var parameters = new TagHandlerParameters(_engine, user, query, request, result, node);
+
             // Check our mapping for an instance of that type and use it
-            var handler = BuildDynamic(node, query, request, result, user, tagName);
+            var handler = BuildTagHandlerDynamic(tagName, parameters);
             if (handler != null)
             {
                 return handler;
             }
 
-            switch (tagName?.ToLowerInvariant())
+            //! Construction for tags that have not yet been reviewed and cut over to dynamic invocation 
+            switch (tagName.ToLowerInvariant())
             {
                 case "condition":
-                    return new condition(_engine, user, query, request, result, node);
+                    return new condition(parameters);
                 case "date":
-                    return new date(_engine, user, query, request, result, node);
+                    return new date(parameters);
                 case "formal":
-                    return new formal(_engine, user, query, request, result, node);
+                    return new formal(parameters);
                 case "gender":
-                    return new gender(_engine, user, query, request, result, node);
+                    return new gender(parameters);
                 case "get":
-                    return new get(_engine, user, query, request, result, node);
+                    return new get(parameters);
                 case "gossip":
-                    return new gossip(_engine, user, query, request, result, node);
+                    return new gossip(parameters);
                 case "id":
-                    return new id(_engine, user, query, request, result, node);
+                    return new id(parameters);
                 case "input":
-                    return new input(_engine, user, query, request, result, node);
+                    return new input(parameters);
                 case "javascript":
-                    return new javascript(_engine, user, query, request, result, node);
+                    return new javascript(parameters);
                 case "learn":
-                    return new learn(_engine, user, query, request, result, node);
+                    return new learn(parameters);
                 case "lowercase":
-                    return new lowercase(_engine, user, query, request, result, node);
+                    return new lowercase(parameters);
                 case "person":
-                    return new person(_engine, user, query, request, result, node);
+                    return new person(parameters);
                 case "person2":
-                    return new person2(_engine, user, query, request, result, node);
+                    return new person2(parameters);
                 case "sentence":
-                    return new sentence(_engine, user, query, request, result, node);
+                    return new sentence(parameters);
                 case "set":
-                    return new set(_engine, user, query, request, result, node);
+                    return new set(parameters);
                 case "size":
-                    return new size(_engine, user, query, request, result, node);
+                    return new size(parameters);
                 case "sr":
-                    return new sr(_engine, user, query, request, result, node);
+                    return new sr(parameters);
                 case "srai":
-                    return new srai(_engine, user, query, request, result, node);
+                    return new srai(parameters);
                 case "star":
-                    return new star(_engine, user, query, request, result, node);
+                    return new star(parameters);
                 case "system":
-                    return new system(_engine, user, query, request, result, node);
+                    return new system(parameters);
                 case "that":
-                    return new that(_engine, user, query, request, result, node);
+                    return new that(parameters);
                 case "thatstar":
-                    return new thatstar(_engine, user, query, request, result, node);
+                    return new thatstar(parameters);
                 case "think":
-                    return new think(_engine, user, query, request, result, node);
+                    return new think(parameters);
                 case "topicstar":
-                    return new topicstar(_engine, user, query, request, result, node);
+                    return new topicstar(parameters);
                 case "uppercase":
-                    return new uppercase(_engine, user, query, request, result, node);
+                    return new uppercase(parameters);
                 case "version":
-                    return new version(_engine, user, query, request, result, node);
+                    return new version(parameters);
             }
 
             return null;
         }
 
+        /// <summary>
+        /// Builds a tag handler using dynamic invocation and reflection relying on the HandlesAimlTag attribute.
+        /// </summary>
+        /// <param name="tagName">Name of the tag.</param>
+        /// <param name="parameters">The construction parameters.</param>
+        /// <returns>The tag handler.</returns>
         [CanBeNull]
-        private AimlTagHandler BuildDynamic(XmlNode node,
-                                            SubQuery query,
-                                            Request request,
-                                            Result result,
-                                            User user,
-                                            [NotNull] string tagName)
+        private AimlTagHandler BuildTagHandlerDynamic([NotNull] string tagName, [NotNull] TagHandlerParameters parameters)
         {
+            if (parameters == null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
 
             //- Ensure we have the requested tag. If we don't exit now.
             var tagKey = tagName.ToUpperInvariant();
@@ -222,7 +235,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                    will be present on the type and, if not, a TargetInvocationException will be 
                    thrown. */
 
-                var instance = Activator.CreateInstance(type, _engine, user, query, request, result, node);
+                var instance = Activator.CreateInstance(type, parameters);
 
                 // The result doesn't have to be an AimlTagHandler. Do a safe cast and check.
                 var handler = instance as AimlTagHandler;
@@ -231,7 +244,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                     return handler;
                 }
 
-                // The item is not of the right type. Prepare the log
+                //- The item is not of the right type. Prepare the log
                 logMessage =
                     string.Format(_engine.Locale,
                                   "Dynamic tag handler for {0} instantiated an instance of type {1} that was not an AimlTagHandler. Disabling this handler.",
@@ -241,6 +254,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             }
             catch (TargetInvocationException ex)
             {
+                //- Error handling for errors encountered during invocation
                 logMessage = string.Format(_engine.Locale,
                                            "Dynamic tag handler for {0} encountered an invocation error instantiating type {1}: {2}\n Disabling this handler.",
                                            tagName,
@@ -250,6 +264,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             }
             catch (MissingMethodException ex)
             {
+                //- This happens if the constructor wasn't found with the right parameters
                 logMessage = string.Format(_engine.Locale,
                                            "Dynamic tag handler for {0} encountered a missing method error instantiating type {1}: {2}\n Disabling this handler.",
                                            tagName,
@@ -261,6 +276,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             // If we got here, it didn't work; unregister it.
             _engine.Log(logMessage, LogLevel.Error);
             _handlerMapping.Remove(tagKey);
+
             return null;
         }
     }

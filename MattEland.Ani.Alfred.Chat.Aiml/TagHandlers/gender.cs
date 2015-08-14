@@ -9,21 +9,24 @@
 
 using System.Xml;
 
+using JetBrains.Annotations;
+
 using MattEland.Ani.Alfred.Chat.Aiml.Normalize;
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     public class gender : AimlTagHandler
     {
-        public gender(ChatEngine chatEngine, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
-            : base(chatEngine, user, query, request, result, templateNode)
+        public gender([NotNull] TagHandlerParameters parameters)
+            : base(parameters)
         {
         }
 
         protected override string ProcessChange()
         {
-            if (!(TemplateNode.Name.ToLower() == "gender"))
+            if (TemplateNode.Name.ToLower() != "gender")
             {
                 return string.Empty;
             }
@@ -31,13 +34,17 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             {
                 return TextSubstitutionTransformer.Substitute(ChatEngine.GenderSubstitutions, TemplateNode.InnerText);
             }
-            TemplateNode.InnerText =
-                new star(ChatEngine, User, Query, Request, Result, GetNode("<star/>")).Transform();
-            if (TemplateNode.InnerText.Length > 0)
+
+            var node = GetNode("<star/>");
+            var parameters = GetTagHandlerParametersForNode(node);
+
+            TemplateNode.InnerText = new star(parameters).Transform().NonNull();
+
+            if (TemplateNode.InnerText.IsNullOrEmpty())
             {
-                return ProcessChange();
+                return string.Empty;
             }
-            return string.Empty;
+            return ProcessChange();
         }
     }
 }

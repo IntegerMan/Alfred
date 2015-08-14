@@ -10,6 +10,8 @@
 using System;
 using System.Xml;
 
+using JetBrains.Annotations;
+
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Ani.Alfred.Core.Console;
 
@@ -17,8 +19,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     public class that : AimlTagHandler
     {
-        public that(ChatEngine chatEngine, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
-            : base(chatEngine, user, query, request, result, templateNode)
+        public that([NotNull] TagHandlerParameters parameters)
+            : base(parameters)
         {
         }
 

@@ -9,14 +9,16 @@
 
 using System.Xml;
 
+using JetBrains.Annotations;
+
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     public class sr : AimlTagHandler
     {
-        public sr(ChatEngine chatEngine, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
-            : base(chatEngine, user, query, request, result, templateNode)
+        public sr([NotNull] TagHandlerParameters parameters)
+            : base(parameters)
         {
         }
 
@@ -24,16 +26,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         {
             if (TemplateNode.Name.ToLower() == "sr")
             {
-                return
-                    new srai(ChatEngine,
-                             User,
-                             Query,
-                             Request,
-                             Result,
-                             GetNode("<srai>" +
-                                     new star(ChatEngine, User, Query, Request, Result, GetNode("<star/>"))
-                                         .Transform() + "</srai>")).Transform();
+                var node = GetNode("<star/>");
+                var parameters = GetTagHandlerParametersForNode(node);
+                var starResult = new star(parameters).Transform();
+
+                node = GetNode($"<srai>{starResult}</srai>");
+                parameters = GetTagHandlerParametersForNode(node);
+                return new srai(parameters).Transform();
             }
+
             return string.Empty;
         }
     }

@@ -12,20 +12,23 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 
+using JetBrains.Annotations;
+
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     public class sentence : AimlTagHandler
     {
-        public sentence(ChatEngine chatEngine, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
-            : base(chatEngine, user, query, request, result, templateNode)
+        public sentence([NotNull] TagHandlerParameters parameters)
+            : base(parameters)
         {
         }
 
         protected override string ProcessChange()
         {
-            if (!(TemplateNode.Name.ToLower() == "sentence"))
+            if (TemplateNode.Name.ToLower() != "sentence")
             {
                 return string.Empty;
             }
@@ -60,12 +63,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                 }
                 return stringBuilder.ToString();
             }
-            TemplateNode.InnerText = new star(ChatEngine, User, Query, Request, Result, GetNode("<star/>")).Transform();
-            if (TemplateNode.InnerText.Length > 0)
+            var node = GetNode("<star/>");
+            var parameters = GetTagHandlerParametersForNode(node);
+            TemplateNode.InnerText = new star(parameters).Transform().NonNull();
+
+            if (TemplateNode.InnerText.IsNullOrEmpty())
             {
-                return ProcessChange();
+                return string.Empty;
             }
-            return string.Empty;
+            return ProcessChange();
         }
     }
 }

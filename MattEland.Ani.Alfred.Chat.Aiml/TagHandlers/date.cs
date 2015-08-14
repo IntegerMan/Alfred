@@ -10,14 +10,16 @@
 using System;
 using System.Xml;
 
+using JetBrains.Annotations;
+
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     public class date : AimlTagHandler
     {
-        public date(ChatEngine chatEngine, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
-            : base(chatEngine, user, query, request, result, templateNode)
+        public date([NotNull] TagHandlerParameters parameters)
+            : base(parameters)
         {
         }
 
