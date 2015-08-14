@@ -162,8 +162,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                     return new person(_engine, user, query, request, result, node);
                 case "person2":
                     return new person2(_engine, user, query, request, result, node);
-                case "random":
-                    return new random(_engine, user, query, request, result, node);
                 case "sentence":
                     return new sentence(_engine, user, query, request, result, node);
                 case "set":
