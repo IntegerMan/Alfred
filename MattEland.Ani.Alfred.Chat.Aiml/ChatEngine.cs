@@ -428,7 +428,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             if (isAcceptingUserInput)
             {
                 var aimlLoader = new AimlLoader(this);
-                foreach (var pattern in new SplitIntoSentences(this).Transform(request.RawInput))
+                foreach (var pattern in SplitSentenceHelper.Split(request.RawInput, this))
                 {
                     result.InputSentences.Add(pattern);
                     var str = aimlLoader.BuildPathString(pattern,
