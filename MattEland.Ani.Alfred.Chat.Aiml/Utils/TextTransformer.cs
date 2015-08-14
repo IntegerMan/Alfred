@@ -13,6 +13,8 @@ using System.Globalization;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Console;
+
 namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 {
     /// <summary>
@@ -118,5 +120,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// </summary>
         /// <returns>The processed output</returns>
         protected abstract string ProcessChange();
+
+        /// <summary>
+        /// Logs the specified message to the logger.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="level">The log level.</param>
+        protected void Log(string message, LogLevel level)
+        {
+            _chatEngine?.Log(message, level);
+        }
     }
 }

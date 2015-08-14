@@ -18,11 +18,9 @@ using System.Text.RegularExpressions;
 using System.Xml;
 
 using JetBrains.Annotations;
-
-using MattEland.Ani.Alfred.Chat.Aiml.Normalize;
 using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
-using MattEland.Common;
+using MattEland.Ani.Alfred.Core.Console;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml
 {
@@ -37,15 +35,21 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
     {
         public delegate void LogMessageDelegate();
 
-        private readonly List<string> LogBuffer = new List<string>();
+        /// <summary>
+        /// Gets the logger.
+        /// </summary>
+        /// <value>The logger.</value>
+        [CanBeNull]
+        public IConsole Logger { get; set; }
 
         [NotNull]
         public SettingsDictionary DefaultPredicates;
         public SettingsDictionary GenderSubstitutions;
         public SettingsDictionary GlobalSettings;
+
         public Node Graphmaster;
+
         public bool isAcceptingUserInput = true;
-        public string LastLogMessage = string.Empty;
         public int MaxThatSize = 256;
         public SettingsDictionary Person2Substitutions;
         public SettingsDictionary PersonSubstitutions;
@@ -53,8 +57,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
         [NotNull, ItemNotNull]
         public List<string> Splitters = new List<string>();
-        public DateTime StartedOn = DateTime.Now;
         public SettingsDictionary Substitutions;
+
         public bool TrustAiml = true;
 
         /// <summary>
@@ -63,11 +67,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         public ChatEngine()
         {
             setup();
-        }
-
-        private int MaxLogBufferSize
-        {
-            get { return Convert.ToInt32(GlobalSettings.GetValue("maxlogbuffersize")); }
         }
 
         private string NotAcceptingUserInputMessage
@@ -151,11 +150,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             }
         }
 
-        public bool IsLogging
-        {
-            get { return GlobalSettings.GetValue("islogging").ToLower() == "true"; }
-        }
-
         public bool WillCallHome
         {
             get { return GlobalSettings.GetValue("willcallhome").ToLower() == "true"; }
@@ -194,13 +188,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         {
             get { return Path.Combine(Environment.CurrentDirectory, GlobalSettings.GetValue("configdirectory")); }
         }
-
-        public string PathToLogs
-        {
-            get { return Path.Combine(Environment.CurrentDirectory, GlobalSettings.GetValue("logdirectory")); }
-        }
-
-        public event LogMessageDelegate WrittenToLog;
 
         public void loadAIMLFromFiles()
         {
@@ -387,34 +374,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             Splitters.Add(";");
         }
 
-        public void writeToLog(string message)
+        /// <summary>
+        /// Logs the specified message to the logger.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="level">The log level.</param>
+        public void Log(string message, LogLevel level)
         {
-            LastLogMessage = message;
-            if (IsLogging)
-            {
-                LogBuffer.Add(DateTime.Now + ": " + message + Environment.NewLine);
-                if (LogBuffer.Count > MaxLogBufferSize - 1)
-                {
-                    var directoryInfo = new DirectoryInfo(PathToLogs);
-                    if (!directoryInfo.Exists)
-                    {
-                        directoryInfo.Create();
-                    }
-                    var fileInfo = new FileInfo(Path.Combine(PathToLogs, DateTime.Now.ToString("yyyyMMdd") + ".log"));
-                    var streamWriter = fileInfo.Exists ? fileInfo.AppendText() : fileInfo.CreateText();
-                    foreach (var str in LogBuffer)
-                    {
-                        streamWriter.WriteLine(str);
-                    }
-                    streamWriter.Close();
-                    LogBuffer.Clear();
-                }
-            }
-            if (Equals(null, WrittenToLog))
-            {
-                return;
-            }
-            WrittenToLog();
+            Logger?.Log("ChatEngine", message, level);
         }
 
         public Result Chat(string rawInput, string UserGUID)
@@ -465,8 +432,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                             {
                                 phoneHome(ex.Message, request);
                             }
-                            writeToLog("WARNING! A problem was encountered when trying to process the input: " +
-                                       request.RawInput + " with the template: \"" + query.Template + "\"");
+                            Log("A problem was encountered when trying to process the input: " +
+                                       request.RawInput + " with the template: \"" + query.Template + "\"", LogLevel.Warning);
                         }
                     }
                 }
@@ -685,11 +652,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             }
             if (string.IsNullOrEmpty(path))
             {
-                writeToLog(string.Format(Locale,
-                                         "WARNING! Attempted to load a new category with an empty pattern where the directoryPath = {0} and template = {1} produced by a category in the file: {2}",
+                Log(string.Format(Locale,
+                                         "Attempted to load a new category with an empty pattern where the directoryPath = {0} and template = {1} produced by a category in the file: {2}",
                                          path,
                                          node.OuterXml,
-                                         filename));
+                                         filename), LogLevel.Warning);
                 return;
             }
 
@@ -702,11 +669,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             }
             catch
             {
-                writeToLog(string.Format(Locale,
-                                         "ERROR! Failed to load a new category into the graphmaster where the directoryPath = {0} and template = {1} produced by a category in the file: {2}",
+                Log(string.Format(Locale,
+                                         "Failed to load a new category into the graphmaster where the directoryPath = {0} and template = {1} produced by a category in the file: {2}",
                                          path,
                                          node.OuterXml,
-                                         filename));
+                                         filename), LogLevel.Error);
             }
         }
     }

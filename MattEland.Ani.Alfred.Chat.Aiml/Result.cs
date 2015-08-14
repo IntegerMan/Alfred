@@ -16,6 +16,7 @@ using System.Text;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Ani.Alfred.Core.Console;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml
 {
@@ -157,7 +158,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                                             Environment.NewLine,
                                             stringBuilder,
                                             User.Id);
-                ChatEngine.writeToLog(message);
+                ChatEngine.Log(message, LogLevel.Warning);
 
                 return "I'm sorry but I don't understand. Can you try asking differently?";
             }

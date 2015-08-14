@@ -10,6 +10,7 @@
 using System.Xml;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Ani.Alfred.Core.Console;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
@@ -24,7 +25,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         {
             if (TemplateNode.Name.ToLower() == "gossip" && TemplateNode.InnerText.Length > 0)
             {
-                ChatEngine.writeToLog("GOSSIP from user: " + User.Id + ", '" + TemplateNode.InnerText + "'");
+                Log("GOSSIP from user: " + User.Id + ", '" + TemplateNode.InnerText + "'", LogLevel.Info);
             }
             return string.Empty;
         }

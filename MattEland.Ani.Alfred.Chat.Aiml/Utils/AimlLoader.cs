@@ -2,13 +2,12 @@
 // AimlLoader.cs
 // 
 // Created on:      08/12/2015 at 10:25 PM
-// Last Modified:   08/12/2015 at 11:59 PM
+// Last Modified:   08/13/2015 at 11:49 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -18,12 +17,13 @@ using System.Xml;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Normalize;
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 {
     /// <summary>
-    /// A class used for building AIML resources
+    ///     A class used for building AIML resources
     /// </summary>
     public class AimlLoader
     {
@@ -31,7 +31,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         private readonly ChatEngine _chatEngine;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AimlLoader"/> class.
+        ///     Initializes a new instance of the <see cref="AimlLoader" /> class.
         /// </summary>
         /// <param name="chatEngine">The chat engine.</param>
         /// <exception cref="System.ArgumentNullException">chatEngine</exception>
@@ -46,7 +46,16 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        /// Loads AIML resources from the directory listed in ChatEngine.AimlDirectoryPath.
+        ///     Gets the locale we're using for the chat engine.
+        /// </summary>
+        /// <value>The locale.</value>
+        public CultureInfo Locale
+        {
+            get { return _chatEngine.Locale ?? CultureInfo.CurrentCulture; }
+        }
+
+        /// <summary>
+        ///     Loads AIML resources from the directory listed in ChatEngine.AimlDirectoryPath.
         /// </summary>
         /// <exception cref="System.InvalidOperationException">ChatEngine.AimlDirectoryPath was not set</exception>
         public void LoadAiml()
@@ -62,7 +71,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        /// Loads AIML resources from a file.
+        ///     Loads AIML resources from a file.
         /// </summary>
         /// <param name="directoryPath">The path to the directory containing the .AIML files.</param>
         public void LoadAiml([NotNull] string directoryPath)
@@ -75,17 +84,21 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 
             if (!Directory.Exists(directoryPath))
             {
-                var message = string.Format(Locale, "The directory specified as the directoryPath to the AIML files ({0}) cannot be found by the AimlLoader object. Please make sure the directory where you think the AIML files are to be found is the same as the directory specified in the settings file.", directoryPath);
+                var message = string.Format(Locale,
+                                            "The directory specified as the directoryPath to the AIML files ({0}) cannot be found by the AimlLoader object. Please make sure the directory where you think the AIML files are to be found is the same as the directory specified in the settings file.",
+                                            directoryPath);
                 throw new FileNotFoundException(message);
             }
 
             // Grab all files in the directory that should meet our needs
-            Log("Starting to process AIML files found in the directory " + directoryPath);
+            Log("Starting to process AIML files found in the directory " + directoryPath, LogLevel.Verbose);
 
             var files = Directory.GetFiles(directoryPath, "*.aiml");
             if (files.Length <= 0)
             {
-                throw new FileNotFoundException(string.Format(Locale, "Could not find any .aiml files in the specified directory ({0}). Please make sure that your aiml file end in a lowercase aiml extension, for example - myFile.aiml is valid but myFile.AIML is not.", directoryPath));
+                throw new FileNotFoundException(string.Format(Locale,
+                                                              "Could not find any .aiml files in the specified directory ({0}). Please make sure that your aiml file end in a lowercase aiml extension, for example - myFile.aiml is valid but myFile.AIML is not.",
+                                                              directoryPath));
             }
 
             // Load each file we've found
@@ -97,35 +110,28 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
                 }
             }
 
-            Log(string.Format(Locale, "Finished processing the AIML files. {0} categories processed.", Convert.ToString(_chatEngine.Size)));
+            Log(
+                string.Format(Locale,
+                              "Finished processing the AIML files. {0} categories processed.",
+                              Convert.ToString(_chatEngine.Size)),
+                LogLevel.Verbose);
         }
 
         /// <summary>
-        /// Gets the locale we're using for the chat engine.
-        /// </summary>
-        /// <value>The locale.</value>
-        public CultureInfo Locale
-        {
-            get
-            {
-                return _chatEngine.Locale ?? CultureInfo.CurrentCulture;
-            }
-        }
-
-        /// <summary>
-        /// Logs the specified message to the log.
+        ///     Logs the specified message to the log.
         /// </summary>
         /// <param name="message">The message.</param>
-        private void Log(string message)
+        /// <param name="level">The log level.</param>
+        private void Log(string message, LogLevel level)
         {
             if (message != null)
             {
-                _chatEngine.writeToLog(message);
+                _chatEngine.Log(message, level);
             }
         }
 
         /// <summary>
-        /// Loads AIML resources from a file with the specified directoryPath.
+        ///     Loads AIML resources from a file with the specified directoryPath.
         /// </summary>
         /// <param name="path">The directoryPath.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
@@ -136,7 +142,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
                 throw new ArgumentNullException(nameof(path));
             }
 
-            _chatEngine.writeToLog("Processing AIML file: " + path);
+            Log("Processing AIML file: " + path, LogLevel.Verbose);
 
             // Load the document. Loads of XmlExceptions can be thrown here
             var doc = new XmlDocument();
@@ -147,7 +153,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        /// Loads the AIML from an XML Document.
+        ///     Loads the AIML from an XML Document.
         /// </summary>
         /// <param name="doc">The document.</param>
         /// <param name="filename">The directoryPath.</param>
@@ -170,7 +176,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             foreach (var node in nodes)
             {
                 if (node == null)
+                {
                     continue;
+                }
 
                 // At the root level we support Topics and Categories
                 switch (node.Name.ToUpperInvariant())
@@ -187,7 +195,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        /// Processes a topic node.
+        ///     Processes a topic node.
         /// </summary>
         /// <param name="node">The node.</param>
         /// <param name="filename">The filename.</param>
@@ -214,7 +222,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        /// Gets a name from node's name attribute defaulting to "*" when name is not found.
+        ///     Gets a name from node's name attribute defaulting to "*" when name is not found.
         /// </summary>
         /// <param name="node">The node.</param>
         /// <returns>The name value</returns>
@@ -243,7 +251,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        /// Processes a category node and adds it to the ChatEngine.
+        ///     Processes a category node and adds it to the ChatEngine.
         /// </summary>
         /// <param name="node">The node.</param>
         /// <param name="topicName">Name of the topic.</param>
@@ -275,7 +283,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             var templateNode = FindChildNode("template", node);
             if (Equals(null, templateNode))
             {
-                throw new XmlException(string.Format(Locale, "Missing template tag in the node with pattern: {0} found in {1}", patternNode.InnerText, filename));
+                throw new XmlException(string.Format(Locale,
+                                                     "Missing template tag in the node with pattern: {0} found in {1}",
+                                                     patternNode.InnerText,
+                                                     filename));
             }
 
             // Figure out our path for logging and validation purposes
@@ -283,9 +294,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             _chatEngine.AddCategoryToGraph(templateNode, path, filename);
         }
 
-
         /// <summary>
-        /// Builds the path string from a node given a topic name.
+        ///     Builds the path string from a node given a topic name.
         /// </summary>
         /// <param name="node">The node.</param>
         /// <param name="topicName">Name of the topic.</param>
@@ -317,7 +327,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        /// Finds a child node with the specified name from the node specified.
+        ///     Finds a child node with the specified name from the node specified.
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="node">The node.</param>
@@ -339,7 +349,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        /// Builds a directoryPath string representing a compound state involving a pattern, "that" value, and topic.
+        ///     Builds a directoryPath string representing a compound state involving a pattern, "that" value, and topic.
         /// </summary>
         /// <param name="pattern">The pattern.</param>
         /// <param name="that">The that value.</param>
@@ -347,8 +357,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <param name="isUserInput">Whether or not this is user input.</param>
         /// <returns>A directoryPath string representing the pattern, that, and topicName values.</returns>
         [NotNull]
-        public string BuildPathString([NotNull] string pattern, [NotNull] string that,
-                                           [NotNull] string topicName, bool isUserInput)
+        public string BuildPathString([NotNull] string pattern,
+                                      [NotNull] string that,
+                                      [NotNull] string topicName,
+                                      bool isUserInput)
         {
             //- Validate inputs
             if (pattern == null)
@@ -404,7 +416,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        /// Normalizes the input by stripping out illegal characters and applying common substitutions.
+        ///     Normalizes the input by stripping out illegal characters and applying common substitutions.
         /// </summary>
         /// <param name="input">The input.</param>
         /// <param name="isUserInput">The is user input.</param>
@@ -416,7 +428,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 
             // Grab the words in the input
             const string WordBoundaries = " \r\n\t";
-            string[] words = input.Split(WordBoundaries.ToCharArray());
+            var words = input.Split(WordBoundaries.ToCharArray());
 
             //? Loop through each substitution and...
             var stringBuilder = new StringBuilder();

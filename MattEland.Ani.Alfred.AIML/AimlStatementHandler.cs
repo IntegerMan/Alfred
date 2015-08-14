@@ -2,9 +2,9 @@
 // AimlStatementHandler.cs
 // 
 // Created on:      08/10/2015 at 12:51 AM
-// Last Modified:   08/12/2015 at 11:16 PM
+// Last Modified:   08/14/2015 at 12:00 AM
 // 
-// Last Updated by: Matt Eland
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
@@ -34,9 +34,6 @@ namespace MattEland.Ani.Alfred.Chat
     {
         [NotNull]
         private readonly ChatEngine _chatChatEngine;
-
-        [CanBeNull]
-        private readonly string _logHeader;
 
         [NotNull]
         private readonly string _settingsPath;
@@ -78,12 +75,14 @@ namespace MattEland.Ani.Alfred.Chat
             _settingsPath = settingsPath;
 
             //- Logging Housekeeping
-            _logHeader = Resources.ChatProcessingHeader;
             _console = console;
 
             //+ Set up the chat ChatEngine
-            _chatChatEngine = new ChatEngine();
-            _user = new User(Resources.ChatUserName, _chatChatEngine);
+            _chatChatEngine = new ChatEngine { Logger = console };
+
+            // TODO: Use the currently logged in user's name instead?
+            _user = new User(Resources.ChatUserName.NonNull(), _chatChatEngine);
+
             try
             {
                 InitializeChatBot();
@@ -92,7 +91,7 @@ namespace MattEland.Ani.Alfred.Chat
             {
                 var errorFormat = Resources.ErrorInitializingChat;
                 var message = string.Format(CultureInfo.CurrentCulture, errorFormat, ex.Message);
-                _console?.Log(_logHeader, message, LogLevel.Error);
+                _console?.Log(Resources.ChatProcessingHeader, message, LogLevel.Error);
             }
 
         }
@@ -105,6 +104,7 @@ namespace MattEland.Ani.Alfred.Chat
         public IConsole Console
         {
             [DebuggerStepThrough]
+            [UsedImplicitly]
             get
             { return _console; }
             [DebuggerStepThrough]
@@ -223,7 +223,7 @@ namespace MattEland.Ani.Alfred.Chat
         /// </summary>
         /// <param name="userInput">The user input.</param>
         /// <returns>The result of the communication to the chat ChatEngine</returns>
-        private Result GetChatResult(string userInput)
+        private Result GetChatResult([NotNull] string userInput)
         {
             var request = new Request(userInput, _user, _chatChatEngine);
             var result = _chatChatEngine.Chat(request);
@@ -236,24 +236,13 @@ namespace MattEland.Ani.Alfred.Chat
         /// </summary>
         private void InitializeChatBot()
         {
-            _chatChatEngine.WrittenToLog += OnWrittenToLog;
+            _chatChatEngine.Logger = _console;
             _chatChatEngine.loadSettings(_settingsPath);
 
             //+ Load AIML files
             _chatChatEngine.isAcceptingUserInput = false;
             _chatChatEngine.loadAIMLFromFiles();
             _chatChatEngine.isAcceptingUserInput = true;
-        }
-
-        /// <summary>
-        ///     Respond to log events in the chat ChatEngine by writing them to our console
-        /// </summary>
-        private void OnWrittenToLog()
-        {
-            if (!string.IsNullOrWhiteSpace(_chatChatEngine.LastLogMessage))
-            {
-                _console?.Log(_logHeader, _chatChatEngine.LastLogMessage, LogLevel.Verbose);
-            }
         }
 
         /// <summary>

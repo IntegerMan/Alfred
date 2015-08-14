@@ -10,6 +10,7 @@
 using System.Xml;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Ani.Alfred.Core.Console;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
@@ -20,9 +21,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         {
         }
 
+        /// <summary>
+        /// Processes the input text and returns the processed value.
+        /// </summary>
+        /// <returns>The processed output</returns>
         protected override string ProcessChange()
         {
-            ChatEngine.writeToLog("The system tag is not implemented in this ChatEngine");
+            Log("The system tag is not implemented in this ChatEngine", LogLevel.Warning);
             return string.Empty;
         }
     }

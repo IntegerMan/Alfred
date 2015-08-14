@@ -11,6 +11,8 @@ using System;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Console;
+
 namespace MattEland.Ani.Alfred.Chat.Aiml
 {
     /// <summary>
@@ -156,11 +158,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
                 if (HasTimedOut)
                 {
-                    var message = string.Format("WARNING! Request timeout. User: {0} raw input: \"{1}\"",
+                    var message = string.Format("Request timeout. User: {0} raw input: \"{1}\"",
                                                 User.Id,
                                                 RawInput);
 
-                    ChatEngine.writeToLog(message);
+                    ChatEngine.Log(message, LogLevel.Warning);
                 }
 
             }

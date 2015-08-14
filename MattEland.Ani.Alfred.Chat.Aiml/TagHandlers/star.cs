@@ -2,7 +2,7 @@
 // star.cs
 // 
 // Created on:      08/12/2015 at 10:56 PM
-// Last Modified:   08/12/2015 at 11:59 PM
+// Last Modified:   08/13/2015 at 11:55 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -11,12 +11,18 @@ using System;
 using System.Xml;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Ani.Alfred.Core.Console;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     public class star : AimlTagHandler
     {
-        public star(ChatEngine chatEngine, User user, SubQuery query, Request request, Result result, XmlNode templateNode)
+        public star(ChatEngine chatEngine,
+                    User user,
+                    SubQuery query,
+                    Request request,
+                    Result result,
+                    XmlNode templateNode)
             : base(chatEngine, user, query, request, result, templateNode)
         {
         }
@@ -42,22 +48,25 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                                 {
                                     return Query.InputStar[index];
                                 }
-                                ChatEngine.writeToLog("InputStar out of bounds reference caused by input: " + Request.RawInput);
+                                Log("InputStar out of bounds reference caused by input: " + Request.RawInput,
+                                    LogLevel.Error);
                             }
                             catch
                             {
-                                ChatEngine.writeToLog(
-                                               "Index set to non-integer value whilst processing star tag in response to the input: " +
-                                               Request.RawInput);
+                                Log(
+                                    "Index set to non-integer value whilst processing star tag in response to the input: " +
+                                    Request.RawInput,
+                                    LogLevel.Error);
                             }
                         }
                     }
                 }
                 else
                 {
-                    ChatEngine.writeToLog(
-                                   "A star tag tried to reference an empty InputStar collection when processing the input: " +
-                                   Request.RawInput);
+                    Log(
+                        "A star tag tried to reference an empty InputStar collection when processing the input: " +
+                        Request.RawInput,
+                        LogLevel.Error);
                 }
             }
             return string.Empty;

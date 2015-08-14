@@ -10,6 +10,7 @@
 using System.Xml;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Ani.Alfred.Core.Console;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
@@ -22,7 +23,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 
         protected override string ProcessChange()
         {
-            ChatEngine.writeToLog("The javascript tag is not implemented in this ChatEngine");
+            Log("The javascript tag is not implemented in this ChatEngine", LogLevel.Warning);
             return string.Empty;
         }
     }

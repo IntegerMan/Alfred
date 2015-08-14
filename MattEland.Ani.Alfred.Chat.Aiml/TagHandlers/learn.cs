@@ -11,6 +11,7 @@ using System.IO;
 using System.Xml;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Ani.Alfred.Core.Console;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
@@ -36,9 +37,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                     }
                     catch
                     {
-                        ChatEngine.writeToLog(
-                                       "ERROR! Attempted (but failed) to <learn> some new AIML from the following URI: " +
-                                       innerText);
+                        Log("Attempted (but failed) to <learn> some new AIML from the following URI: " +
+                                       innerText, LogLevel.Error);
                     }
                 }
             }

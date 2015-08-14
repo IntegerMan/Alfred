@@ -11,6 +11,7 @@ using System;
 using System.Xml;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Ani.Alfred.Core.Console;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
@@ -31,9 +32,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                     {
                         return Query.ThatStar[0];
                     }
-                    ChatEngine.writeToLog(
-                                   "ERROR! An out of bounds index to thatstar was encountered when processing the input: " +
-                                   Request.RawInput);
+                    ChatEngine.Log(
+                                   "An out of bounds index to thatstar was encountered when processing the input: " +
+                                   Request.RawInput, LogLevel.Error);
                 }
                 else if (TemplateNode.Attributes.Count == 1 && TemplateNode.Attributes[0].Name.ToLower() == "index")
                 {
@@ -48,22 +49,22 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                                 {
                                     return Query.ThatStar[num - 1];
                                 }
-                                ChatEngine.writeToLog("ERROR! An input tag with a bady formed index (" +
+                                Log("An input tag with a bady formed index (" +
                                                TemplateNode.Attributes[0].Value +
-                                               ") was encountered processing the input: " + Request.RawInput);
+                                               ") was encountered processing the input: " + Request.RawInput, LogLevel.Error);
                             }
                             else
                             {
-                                ChatEngine.writeToLog(
-                                               "ERROR! An out of bounds index to thatstar was encountered when processing the input: " +
-                                               Request.RawInput);
+                                Log(
+                                               "An out of bounds index to thatstar was encountered when processing the input: " +
+                                               Request.RawInput, LogLevel.Error);
                             }
                         }
                         catch
                         {
-                            ChatEngine.writeToLog("ERROR! A thatstar tag with a bady formed index (" +
+                            Log("A thatstar tag with a bady formed index (" +
                                            TemplateNode.Attributes[0].Value + ") was encountered processing the input: " +
-                                           Request.RawInput);
+                                           Request.RawInput, LogLevel.Error);
                         }
                     }
                 }

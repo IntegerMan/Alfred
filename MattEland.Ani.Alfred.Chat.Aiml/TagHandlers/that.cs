@@ -11,6 +11,7 @@ using System;
 using System.Xml;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Ani.Alfred.Core.Console;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
@@ -44,9 +45,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                                 {
                                     return User.GetOutputSentence(num1 - 1, num2 - 1);
                                 }
-                                ChatEngine.writeToLog("ERROR! An input tag with a badly formed index (" +
+                                Log("An input tag with a badly formed index (" +
                                                TemplateNode.Attributes[0].Value +
-                                               ") was encountered processing the input: " + Request.RawInput);
+                                               ") was encountered processing the input: " + Request.RawInput, LogLevel.Error);
                             }
                             else
                             {
@@ -55,16 +56,16 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                                 {
                                     return User.GetOutputSentence(num - 1);
                                 }
-                                ChatEngine.writeToLog("ERROR! An input tag with a badly formed index (" +
+                                Log("An input tag with a badly formed index (" +
                                                TemplateNode.Attributes[0].Value +
-                                               ") was encountered processing the input: " + Request.RawInput);
+                                               ") was encountered processing the input: " + Request.RawInput, LogLevel.Error);
                             }
                         }
                         catch
                         {
-                            ChatEngine.writeToLog("ERROR! An input tag with a bady formed index (" +
+                            Log("An input tag with a badly formed index (" +
                                            TemplateNode.Attributes[0].Value + ") was encountered processing the input: " +
-                                           Request.RawInput);
+                                           Request.RawInput, LogLevel.Error);
                         }
                     }
                 }
