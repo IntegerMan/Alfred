@@ -130,5 +130,16 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         {
             _chatEngine?.Log(message, level);
         }
+
+        /// <summary>
+        /// Gets the global setting with the specified name.
+        /// </summary>
+        /// <param name="settingName">Name of the setting.</param>
+        /// <returns>The value of the setting or string.Empty if no setting found</returns>
+        protected string GetGlobalSetting([CanBeNull] string settingName)
+        {
+            return null == settingName ? string.Empty : _chatEngine?.GlobalSettings.GetValue(settingName);
+
+        }
     }
 }

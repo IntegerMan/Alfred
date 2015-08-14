@@ -57,7 +57,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Request.cs" />
     <Compile Include="Result.cs" />
-    <Compile Include="TagHandlers\bot.cs" />
+    <Compile Include="TagHandlers\BotTagHandler.cs" />
     <Compile Include="TagHandlers\thatstar.cs" />
     <Compile Include="TagHandlers\condition.cs" />
     <Compile Include="TagHandlers\date.cs" />

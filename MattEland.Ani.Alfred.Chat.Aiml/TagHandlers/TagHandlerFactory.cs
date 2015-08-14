@@ -134,8 +134,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 
             switch (tagName?.ToLowerInvariant())
             {
-                case "bot":
-                    return new bot(_engine, user, query, request, result, node);
                 case "condition":
                     return new condition(_engine, user, query, request, result, node);
                 case "date":

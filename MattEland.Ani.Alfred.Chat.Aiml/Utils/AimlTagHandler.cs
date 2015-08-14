@@ -58,6 +58,16 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         public User User { get; }
 
         /// <summary>
+        /// Gets the template node as an XmlElement.
+        /// </summary>
+        /// <value>The template element.</value>
+        [CanBeNull]
+        protected XmlElement TemplateElement
+        {
+            get { return TemplateNode as XmlElement; }
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="AimlTagHandler" /> class.
         /// </summary>
         /// <param name="chatEngine">The chat engine.</param>
