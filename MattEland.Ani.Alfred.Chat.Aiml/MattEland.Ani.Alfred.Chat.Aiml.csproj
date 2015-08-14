@@ -50,6 +50,7 @@
     <Compile Include="ChatEngine.cs" />
     <Compile Include="Normalize\TextSubstitutionTransformer.cs" />
     <Compile Include="Normalize\UppercaseTextTransformer.cs" />
+    <Compile Include="TagHandlers\HandlesAimlTagAttribute.cs" />
     <Compile Include="TagHandlers\TagHandlerFactory.cs" />
     <Compile Include="Utils\SplitSentenceHelper.cs" />
     <Compile Include="Normalize\SanitizingTextTransformer.cs" />
@@ -107,7 +108,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources.resx" />
+    <EmbeddedResource Include="Resources.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

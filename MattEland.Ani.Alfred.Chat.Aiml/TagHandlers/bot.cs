@@ -13,6 +13,7 @@ using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
+    [HandlesAimlTag("bot")]
     public class bot : AimlTagHandler
     {
         public bot(ChatEngine chatEngine, User user, SubQuery query, Request request, Result result, XmlNode templateNode)

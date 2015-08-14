@@ -15,6 +15,7 @@ using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
+    [HandlesAimlTag("random")]
     public class random : AimlTagHandler
     {
         public random(ChatEngine chatEngine, User user, SubQuery query, Request request, Result result, XmlNode templateNode)

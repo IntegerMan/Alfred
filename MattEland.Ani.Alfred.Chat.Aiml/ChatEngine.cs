@@ -2,7 +2,7 @@
 // ChatEngine.cs
 // 
 // Created on:      08/12/2015 at 9:45 PM
-// Last Modified:   08/14/2015 at 12:26 AM
+// Last Modified:   08/14/2015 at 1:53 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -34,11 +35,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
     /// </remarks>
     public class ChatEngine
     {
+        [NotNull]
+        private readonly TagHandlerFactory _tagFactory;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="ChatEngine" /> class.
         /// </summary>
         public ChatEngine()
         {
+            _tagFactory = new TagHandlerFactory(this);
             GlobalSettings = new SettingsDictionary();
             GenderSubstitutions = new SettingsDictionary();
             Person2Substitutions = new SettingsDictionary();
@@ -437,7 +442,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                 return stringBuilder.ToString();
             }
 
-            var handler = TagHandlerFactory.Build(this, node, query, request, result, user, str);
+            var handler = _tagFactory.Build(node, query, request, result, user, str);
 
             if (Equals(null, handler))
             {
