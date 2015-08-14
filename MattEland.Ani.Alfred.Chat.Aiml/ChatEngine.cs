@@ -2,7 +2,7 @@
 // ChatEngine.cs
 // 
 // Created on:      08/12/2015 at 9:45 PM
-// Last Modified:   08/14/2015 at 12:17 AM
+// Last Modified:   08/14/2015 at 12:26 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -33,32 +33,53 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
     /// </remarks>
     public class ChatEngine
     {
-        [NotNull]
-        public SettingsDictionary DefaultPredicates;
-
-        public SettingsDictionary GenderSubstitutions;
-        public SettingsDictionary GlobalSettings;
-        public Node Graphmaster;
-        public bool isAcceptingUserInput = true;
-        public int MaxThatSize = 256;
-        public SettingsDictionary Person2Substitutions;
-        public SettingsDictionary PersonSubstitutions;
-        public int Size;
-
-        [NotNull]
-        [ItemNotNull]
-        public List<string> Splitters = new List<string>();
-
-        public SettingsDictionary Substitutions;
-        public bool TrustAiml = true;
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="ChatEngine" /> class.
         /// </summary>
         public ChatEngine()
         {
-            setup();
+            GlobalSettings = new SettingsDictionary();
+            GenderSubstitutions = new SettingsDictionary();
+            Person2Substitutions = new SettingsDictionary();
+            PersonSubstitutions = new SettingsDictionary();
+            Substitutions = new SettingsDictionary();
+            DefaultPredicates = new SettingsDictionary();
+            RootNode = new Node();
         }
+
+        [NotNull]
+        public SettingsDictionary DefaultPredicates { get; }
+
+        [NotNull]
+        public SettingsDictionary GenderSubstitutions { get; }
+
+        [NotNull]
+        public SettingsDictionary GlobalSettings { get; }
+
+        /// <summary>
+        ///     Gets or sets the root node of the Aiml knowledge graph.
+        /// </summary>
+        /// <value>The root node.</value>
+        [NotNull]
+        public Node RootNode { get; set; }
+
+        public bool IsAcceptingUserInput { get; set; } = true;
+        public int MaxThatSize { get; set; } = 256;
+
+        [NotNull]
+        public SettingsDictionary Person2Substitutions { get; }
+
+        [NotNull]
+        public SettingsDictionary PersonSubstitutions { get; }
+
+        public int Size { get; private set; }
+
+        [NotNull]
+        [ItemNotNull]
+        public List<string> Splitters { get; } = new List<string>();
+
+        public SettingsDictionary Substitutions { get; }
+        public bool TrustAiml { get; } = true;
 
         /// <summary>
         ///     Gets the logger.
@@ -148,30 +169,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             }
         }
 
-        public Gender Sex
-        {
-            get
-            {
-                Gender gender;
-                switch (Convert.ToInt32(GlobalSettings.GetValue("gender")))
-                {
-                    case -1:
-                        gender = Gender.Unknown;
-                        break;
-                    case 0:
-                        gender = Gender.Female;
-                        break;
-                    case 1:
-                        gender = Gender.Male;
-                        break;
-                    default:
-                        gender = Gender.Unknown;
-                        break;
-                }
-                return gender;
-            }
-        }
-
         public string AimlDirectoryPath
         {
             get { return Path.Combine(Environment.CurrentDirectory, GlobalSettings.GetValue("aimldirectory")); }
@@ -182,33 +179,22 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             get { return Path.Combine(Environment.CurrentDirectory, GlobalSettings.GetValue("configdirectory")); }
         }
 
-        public void loadAIMLFromFiles()
+        public void LoadAIMLFromFiles()
         {
             new AimlLoader(this).LoadAiml();
         }
 
-        public void loadAIMLFromXML(XmlDocument newAIML, string filename)
+        public void LoadAIMLFromXML(XmlDocument newAIML, string filename)
         {
             new AimlLoader(this).LoadAimlFromXml(newAIML, filename);
         }
 
-        private void setup()
+        public void LoadSettings()
         {
-            GlobalSettings = new SettingsDictionary();
-            GenderSubstitutions = new SettingsDictionary();
-            Person2Substitutions = new SettingsDictionary();
-            PersonSubstitutions = new SettingsDictionary();
-            Substitutions = new SettingsDictionary();
-            DefaultPredicates = new SettingsDictionary();
-            Graphmaster = new Node();
+            LoadSettings(Path.Combine(Environment.CurrentDirectory, Path.Combine("config", "Settings.xml")));
         }
 
-        public void loadSettings()
-        {
-            loadSettings(Path.Combine(Environment.CurrentDirectory, Path.Combine("config", "Settings.xml")));
-        }
-
-        public void loadSettings(string pathToSettings)
+        public void LoadSettings(string pathToSettings)
         {
             GlobalSettings.Load(pathToSettings);
             if (!GlobalSettings.Contains("version"))
@@ -337,10 +323,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             DefaultPredicates.Load(Path.Combine(PathToConfigFiles,
                                                 GlobalSettings.GetValue("defaultpredicates")));
             Substitutions.Load(Path.Combine(PathToConfigFiles, GlobalSettings.GetValue("substitutionsfile")));
-            loadSplitters(Path.Combine(PathToConfigFiles, GlobalSettings.GetValue("splittersfile")));
+            LoadSplitters(Path.Combine(PathToConfigFiles, GlobalSettings.GetValue("splittersfile")));
         }
 
-        private void loadSplitters(string pathToSplitters)
+        private void LoadSplitters(string pathToSplitters)
         {
             if (new FileInfo(pathToSplitters).Exists)
             {
@@ -377,6 +363,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             Logger?.Log("ChatEngine", message, level);
         }
 
+        [UsedImplicitly]
         public Result Chat(string rawInput, string UserGUID)
         {
             return Chat(new Request(rawInput, new User(UserGUID, this), this));
@@ -385,7 +372,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         public Result Chat(Request request)
         {
             var result = new Result(request.User, this, request);
-            if (isAcceptingUserInput)
+            if (IsAcceptingUserInput)
             {
                 var aimlLoader = new AimlLoader(this);
                 foreach (var pattern in SplitSentenceHelper.Split(request.RawInput, this))
@@ -400,7 +387,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                 foreach (var str in result.NormalizedPaths)
                 {
                     var query = new SubQuery(str);
-                    query.Template = Graphmaster.Evaluate(str, query, request, MatchState.UserInput, new StringBuilder());
+                    query.Template = RootNode.Evaluate(str, query, request, MatchState.UserInput, new StringBuilder());
                     result.SubQueries.Add(query);
                 }
                 foreach (var query in result.SubQueries)
@@ -409,7 +396,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                     {
                         try
                         {
-                            var str = processNode(AimlTagHandler.GetNode(query.Template),
+                            var str = ProcessNode(AimlTagHandler.GetNode(query.Template),
                                                   query,
                                                   request,
                                                   result,
@@ -437,7 +424,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             return result;
         }
 
-        private string processNode(XmlNode node, SubQuery query, Request request, Result result, User user)
+        private string ProcessNode(XmlNode node, SubQuery query, Request request, Result result, User user)
         {
             if (request.CheckForTimedOut())
             {
@@ -451,7 +438,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                 {
                     foreach (XmlNode node1 in node.ChildNodes)
                     {
-                        stringBuilder.Append(processNode(node1, query, request, result, user));
+                        stringBuilder.Append(ProcessNode(node1, query, request, result, user));
                     }
                 }
                 return stringBuilder.ToString();
@@ -472,7 +459,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                     {
                         if (node1.NodeType != XmlNodeType.Text)
                         {
-                            node1.InnerXml = processNode(node1, query, request, result, user);
+                            node1.InnerXml = ProcessNode(node1, query, request, result, user);
                         }
                     }
                 }
@@ -486,7 +473,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             var stringBuilder1 = new StringBuilder();
             foreach (XmlNode node1 in node2.ChildNodes)
             {
-                stringBuilder1.Append(processNode(node1, query, request, result, user));
+                stringBuilder1.Append(ProcessNode(node1, query, request, result, user));
             }
             return stringBuilder1.ToString();
         }
@@ -500,7 +487,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                 fileInfo.Delete();
             }
             var fileStream = File.Create(path);
-            new BinaryFormatter().Serialize(fileStream, Graphmaster);
+            new BinaryFormatter().Serialize(fileStream, RootNode);
             fileStream.Close();
         }
 
@@ -508,7 +495,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         public void LoadFromBinaryFile(string path)
         {
             var fileStream = File.OpenRead(path);
-            Graphmaster = (Node)new BinaryFormatter().Deserialize(fileStream);
+            RootNode = (Node) new BinaryFormatter().Deserialize(fileStream);
             fileStream.Close();
         }
 
@@ -547,7 +534,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             // Add it to the graph
             try
             {
-                Graphmaster.AddCategory(path, node.OuterXml, filename);
+                RootNode.AddCategory(path, node.OuterXml, filename);
 
                 Size++;
             }

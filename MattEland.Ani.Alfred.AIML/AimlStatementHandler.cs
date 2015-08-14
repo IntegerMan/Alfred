@@ -237,12 +237,12 @@ namespace MattEland.Ani.Alfred.Chat
         private void InitializeChatBot()
         {
             _chatChatEngine.Logger = _console;
-            _chatChatEngine.loadSettings(_settingsPath);
+            _chatChatEngine.LoadSettings(_settingsPath);
 
             //+ Load AIML files
-            _chatChatEngine.isAcceptingUserInput = false;
-            _chatChatEngine.loadAIMLFromFiles();
-            _chatChatEngine.isAcceptingUserInput = true;
+            _chatChatEngine.IsAcceptingUserInput = false;
+            _chatChatEngine.LoadAIMLFromFiles();
+            _chatChatEngine.IsAcceptingUserInput = true;
         }
 
         /// <summary>

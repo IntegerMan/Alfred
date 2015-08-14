@@ -33,7 +33,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                     try
                     {
                         newAIML.Load(innerText);
-                        ChatEngine.loadAIMLFromXML(newAIML, innerText);
+                        ChatEngine.LoadAIMLFromXML(newAIML, innerText);
                     }
                     catch
                     {

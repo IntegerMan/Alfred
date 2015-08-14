@@ -87,7 +87,6 @@
     <Compile Include="User.cs" />
     <Compile Include="Utils\AimlLoader.cs" />
     <Compile Include="Utils\AimlTagHandler.cs" />
-    <Compile Include="Utils\Gender.cs" />
     <Compile Include="Utils\MatchState.cs" />
     <Compile Include="Utils\Node.cs" />
     <Compile Include="Utils\SettingsDictionary.cs" />
