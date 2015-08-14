@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Root CoveredStatements="2002" TotalStatements="4392" CoveragePercent="46" ReportType="NDependXML" DotCoverVersion="3.1.3">
+<Root CoveredStatements="2002" TotalStatements="4370" CoveragePercent="46" ReportType="NDependXML" DotCoverVersion="3.1.3">
   <Assembly Name="DataFiles" CoveredStatements="0" TotalStatements="2" CoveragePercent="0">
     <Namespace Name="DataFiles" CoveredStatements="0" TotalStatements="2" CoveragePercent="0">
       <Type Name="DataFilesMain" CoveredStatements="0" TotalStatements="2" CoveragePercent="0">
@@ -71,7 +71,7 @@
       </Type>
     </Namespace>
   </Assembly>
-  <Assembly Name="MattEland.Ani.Alfred.Chat.Aiml" CoveredStatements="832" TotalStatements="2042" CoveragePercent="41">
+  <Assembly Name="MattEland.Ani.Alfred.Chat.Aiml" CoveredStatements="832" TotalStatements="2020" CoveragePercent="41">
     <Namespace Name="MattEland.Ani.Alfred.Chat.Aiml" CoveredStatements="346" TotalStatements="581" CoveragePercent="60">
       <Type Name="ChatEngine" CoveredStatements="213" TotalStatements="381" CoveragePercent="56">
         <Method Name=".ctor()" CoveredStatements="15" TotalStatements="15" CoveragePercent="100" FirstStatementLine="72" />
@@ -188,14 +188,23 @@
         <Method Name="TransformInput(String)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="56" />
       </Type>
     </Namespace>
-    <Namespace Name="MattEland.Ani.Alfred.Chat.Aiml.TagHandlers" CoveredStatements="69" TotalStatements="743" CoveragePercent="9">
+    <Namespace Name="MattEland.Ani.Alfred.Chat.Aiml.TagHandlers" CoveredStatements="69" TotalStatements="721" CoveragePercent="10">
       <Type Name="BotTagHandler" CoveredStatements="0" TotalStatements="14" CoveragePercent="0">
         <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="30" />
         <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="11" CoveragePercent="0" FirstStatementLine="39" />
       </Type>
-      <Type Name="condition" CoveredStatements="0" TotalStatements="110" CoveragePercent="0">
-        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="22" />
-        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="106" CoveragePercent="0" FirstStatementLine="28" />
+      <Type Name="ConditionTagHandler" CoveredStatements="0" TotalStatements="89" CoveragePercent="0">
+        <Type Name="&lt;&gt;c" CoveredStatements="0" TotalStatements="2" CoveragePercent="0">
+          <Method Name="&lt;EvaluateConditionWithNameAndChildNodes&gt;b__3_0(XmlElement)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="139" />
+          <Method Name="&lt;EvaluateConditionWithNameAndChildNodes&gt;b__3_1(XmlElement)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="140" />
+        </Type>
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="34" />
+        <Method Name="BuildValidationRegex(String)" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="217" />
+        <Method Name="EvaluateConditionWithNameAndChildNodes(XmlNode,String)" CoveredStatements="0" TotalStatements="22" CoveragePercent="0" FirstStatementLine="131" />
+        <Method Name="EvaluateLooseConditionWithChildNodes(XmlNode)" CoveredStatements="0" TotalStatements="24" CoveragePercent="0" FirstStatementLine="88" />
+        <Method Name="EvaluateSimpleConditionNode(XmlElement,String,String)" CoveredStatements="0" TotalStatements="11" CoveragePercent="0" FirstStatementLine="175" />
+        <Method Name="IsRegexMatch(String,String)" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="204" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="18" CoveragePercent="0" FirstStatementLine="44" />
       </Type>
       <Type Name="date" CoveredStatements="0" TotalStatements="9" CoveragePercent="0">
         <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="22" />
@@ -286,13 +295,13 @@
         <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="22" />
         <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="31" />
       </Type>
-      <Type Name="TagHandlerFactory" CoveredStatements="53" TotalStatements="117" CoveragePercent="45">
+      <Type Name="TagHandlerFactory" CoveredStatements="53" TotalStatements="116" CoveragePercent="46">
         <Type Name="&lt;&gt;c" CoveredStatements="1" TotalStatements="1" CoveragePercent="100">
           <Method Name="&lt;RegisterTagHandlersInAppDomain&gt;b__3_0(Assembly)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="65" />
         </Type>
         <Method Name=".ctor(ChatEngine)" CoveredStatements="7" TotalStatements="9" CoveragePercent="78" FirstStatementLine="35" />
-        <Method Name="Build(XmlNode,SubQuery,Request,Result,User,String)" CoveredStatements="10" TotalStatements="41" CoveragePercent="24" FirstStatementLine="120" />
-        <Method Name="BuildDynamic(String,TagHandlerParameters)" CoveredStatements="7" TotalStatements="32" CoveragePercent="22" FirstStatementLine="203" />
+        <Method Name="Build(XmlNode,SubQuery,Request,Result,User,String)" CoveredStatements="10" TotalStatements="40" CoveragePercent="25" FirstStatementLine="130" />
+        <Method Name="BuildTagHandlerDynamic(String,TagHandlerParameters)" CoveredStatements="7" TotalStatements="32" CoveragePercent="22" FirstStatementLine="219" />
         <Method Name="RegisterTagHandlersInAppDomain()" CoveredStatements="10" TotalStatements="10" CoveragePercent="100" FirstStatementLine="60" />
         <Method Name="RegisterTagHandlersInAssembly(Assembly)" CoveredStatements="18" TotalStatements="24" CoveragePercent="75" FirstStatementLine="77" />
       </Type>
@@ -347,11 +356,11 @@
         <Method Name="get_Query()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="33" />
         <Method Name="get_Request()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="39" />
         <Method Name="get_Result()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="45" />
-        <Method Name="get_TemplateElement()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="67" />
+        <Method Name="get_TemplateElement()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="68" />
         <Method Name="get_TemplateNode()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="52" />
-        <Method Name="get_User()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="58" />
-        <Method Name="GetNode(String)" CoveredStatements="6" TotalStatements="8" CoveragePercent="75" FirstStatementLine="96" />
-        <Method Name="GetTagHandlerParametersForNode(XmlNode)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="118" />
+        <Method Name="get_User()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="59" />
+        <Method Name="GetNode(String)" CoveredStatements="6" TotalStatements="8" CoveragePercent="75" FirstStatementLine="97" />
+        <Method Name="GetTagHandlerParametersForNode(XmlNode)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="119" />
         <Method Name="set_IsRecursive(Boolean)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="27" />
       </Type>
       <Type Name="Node" CoveredStatements="98" TotalStatements="176" CoveragePercent="56">

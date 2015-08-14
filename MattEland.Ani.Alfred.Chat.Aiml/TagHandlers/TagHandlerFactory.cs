@@ -152,8 +152,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             //! Construction for tags that have not yet been reviewed and cut over to dynamic invocation 
             switch (tagName.ToLowerInvariant())
             {
-                case "condition":
-                    return new condition(parameters);
                 case "date":
                     return new date(parameters);
                 case "formal":

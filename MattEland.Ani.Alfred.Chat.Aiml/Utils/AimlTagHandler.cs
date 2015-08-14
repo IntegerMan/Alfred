@@ -55,6 +55,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// Gets the user.
         /// </summary>
         /// <value>The user.</value>
+        [NotNull]
         public User User { get; }
 
         /// <summary>
