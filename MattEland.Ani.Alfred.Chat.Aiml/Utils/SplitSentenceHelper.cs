@@ -10,9 +10,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using JetBrains.Annotations;
 
-namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
+namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 {
     /// <summary>
     /// A utility class for splitting strings into sentences
