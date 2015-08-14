@@ -2,7 +2,7 @@
 // TagHandlerFactory.cs
 // 
 // Created on:      08/14/2015 at 12:14 AM
-// Last Modified:   08/14/2015 at 1:58 AM
+// Last Modified:   08/14/2015 at 2:20 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -110,13 +110,23 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             }
         }
 
+        /// <summary>
+        ///     Builds a tag handler for the specified node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="query">The query.</param>
+        /// <param name="request">The request.</param>
+        /// <param name="result">The result.</param>
+        /// <param name="user">The user.</param>
+        /// <param name="tagName">Name of the tag.</param>
+        /// <returns>The tag handler.</returns>
         [CanBeNull]
         public AimlTagHandler Build([NotNull] XmlNode node,
-            SubQuery query,
-            Request request,
-            Result result,
-            User user,
-            [CanBeNull] string tagName)
+                                    SubQuery query,
+                                    Request request,
+                                    Result result,
+                                    User user,
+                                    [CanBeNull] string tagName)
         {
             //- Validate
             if (node == null)
@@ -200,13 +210,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         }
 
         /// <summary>
-        /// Builds a tag handler using dynamic invocation and reflection relying on the HandlesAimlTag attribute.
+        ///     Builds a tag handler using dynamic invocation and reflection relying on the HandlesAimlTag attribute.
         /// </summary>
         /// <param name="tagName">Name of the tag.</param>
         /// <param name="parameters">The construction parameters.</param>
         /// <returns>The tag handler.</returns>
         [CanBeNull]
-        private AimlTagHandler BuildTagHandlerDynamic([NotNull] string tagName, [NotNull] TagHandlerParameters parameters)
+        private AimlTagHandler BuildTagHandlerDynamic([NotNull] string tagName,
+                                                      [NotNull] TagHandlerParameters parameters)
         {
             if (parameters == null)
             {
