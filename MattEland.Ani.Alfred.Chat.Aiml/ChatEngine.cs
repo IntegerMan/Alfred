@@ -130,6 +130,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         ///     Gets the locale of this instance.
         /// </summary>
         /// <value>The locale.</value>
+        [NotNull]
         public CultureInfo Locale
         {
             get

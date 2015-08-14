@@ -2,7 +2,7 @@
 // TagHandlerFactory.cs
 // 
 // Created on:      08/14/2015 at 12:14 AM
-// Last Modified:   08/14/2015 at 2:20 PM
+// Last Modified:   08/14/2015 at 5:26 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -22,8 +22,8 @@ using MattEland.Common;
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// <summary>
-    ///     TagHandlerFactory is responsible for taking a set of input parameters and instantiating the appropriate class and
-    ///     providing that class the necessary parameters
+    ///     TagHandlerFactory is responsible for taking a set of input parameters and instantiating the
+    ///     appropriate class and providing that class the necessary parameters
     /// </summary>
     public sealed class TagHandlerFactory
     {
@@ -37,6 +37,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
         /// </summary>
+        /// <exception cref="ArgumentNullException"><paramref name="engine" /> is <see langword="null" />.</exception>
         public TagHandlerFactory([NotNull] ChatEngine engine)
         {
             //- Validate
@@ -53,8 +54,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         }
 
         /// <summary>
-        ///     Registers all AimlTagHandler derived types decorated with the HandlesAimlTag attribute in any assembly that is
-        ///     currently loaded.
+        ///     Registers all AimlTagHandler derived types decorated with the HandlesAimlTag attribute in any
+        ///     assembly that is currently loaded.
         /// </summary>
         private void RegisterTagHandlersInAppDomain()
         {
@@ -69,7 +70,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         }
 
         /// <summary>
-        ///     Loads and registers tag handlers in the given assembly. Valid tag handlers are non-abstract classes derived from
+        ///     Loads and registers tag handlers in the given assembly. Valid tag handlers are non-abstract
+        ///     classes derived from
         ///     AimlTagHandler and decorated with the HandlesAimlTag attribute.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
@@ -94,7 +96,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                 }
 
                 // Grab the attribute and exit early if it's not there
-                var attribute = type.GetCustomAttribute(typeof(HandlesAimlTagAttribute)) as HandlesAimlTagAttribute;
+                var attribute =
+                    type.GetCustomAttribute(typeof(HandlesAimlTagAttribute)) as
+                    HandlesAimlTagAttribute;
                 if (attribute == null)
                 {
                     continue;
@@ -119,6 +123,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// <param name="result">The result.</param>
         /// <param name="user">The user.</param>
         /// <param name="tagName">Name of the tag.</param>
+        /// <exception cref="ArgumentNullException">node</exception>
         /// <returns>The tag handler.</returns>
         [CanBeNull]
         public AimlTagHandler Build([NotNull] XmlNode node,
@@ -149,13 +154,31 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                 return handler;
             }
 
-            //! Construction for tags that have not yet been reviewed and cut over to dynamic invocation 
-            switch (tagName.ToLowerInvariant())
+            return BuildTagHandlerDeprecated(tagName, parameters);
+        }
+
+        /// <summary>
+        ///     Builds a tag handler using deprecated hard-coded links between tag names and classes. Each one
+        ///     of these items is getting revised and converted over to the dynamic invoke model. As that
+        ///     happens their corresponding line in this method should be removed and this method can be
+        ///     retired eventually.
+        /// </summary>
+        /// <param name="tagName">Name of the tag.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <returns>A tag handler</returns>
+        private static AimlTagHandler BuildTagHandlerDeprecated(string tagName,
+                                                                [NotNull] TagHandlerParameters
+                                                                    parameters)
+        {
+            if (parameters == null)
             {
-                case "DateTagHandler":
-                    return new DateTagHandler(parameters);
-                case "formal":
-                    return new formal(parameters);
+                throw new ArgumentNullException(nameof(parameters));
+            }
+
+            //! Construction for tags that have not yet been reviewed and cut over to dynamic invocation 
+            switch (tagName.NonNull().ToLowerInvariant())
+            {
                 case "gender":
                     return new gender(parameters);
                 case "get":
@@ -208,7 +231,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         }
 
         /// <summary>
-        ///     Builds a tag handler using dynamic invocation and reflection relying on the HandlesAimlTag attribute.
+        ///     Builds a tag handler using dynamic invocation and reflection relying on the HandlesAimlTag
+        ///     attribute.
         /// </summary>
         /// <param name="tagName">Name of the tag.</param>
         /// <param name="parameters">The construction parameters.</param>

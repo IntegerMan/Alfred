@@ -63,9 +63,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         ///     Gets the current locale.
         /// </summary>
         /// <value>The locale.</value>
+        [NotNull]
         protected CultureInfo Locale
         {
-            get { return _chatEngine != null ? _chatEngine.Locale : CultureInfo.CurrentCulture; }
+            get { return _chatEngine?.Locale ?? CultureInfo.CurrentCulture; }
         }
 
         /// <summary>
