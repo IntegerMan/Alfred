@@ -50,6 +50,7 @@
     <Compile Include="ChatEngine.cs" />
     <Compile Include="Normalize\TextSubstitutionTransformer.cs" />
     <Compile Include="Normalize\UppercaseTextTransformer.cs" />
+    <Compile Include="TagHandlers\TagHandlerFactory.cs" />
     <Compile Include="Utils\SplitSentenceHelper.cs" />
     <Compile Include="Normalize\SanitizingTextTransformer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

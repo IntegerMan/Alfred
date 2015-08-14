@@ -2,7 +2,7 @@
 // ChatEngine.cs
 // 
 // Created on:      08/12/2015 at 9:45 PM
-// Last Modified:   08/13/2015 at 3:13 PM
+// Last Modified:   08/14/2015 at 12:17 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -11,13 +11,13 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Net.Mail;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 
 using JetBrains.Annotations;
+
 using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Ani.Alfred.Core.Console;
@@ -33,32 +33,23 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
     /// </remarks>
     public class ChatEngine
     {
-        public delegate void LogMessageDelegate();
-
-        /// <summary>
-        /// Gets the logger.
-        /// </summary>
-        /// <value>The logger.</value>
-        [CanBeNull]
-        public IConsole Logger { get; set; }
-
         [NotNull]
         public SettingsDictionary DefaultPredicates;
+
         public SettingsDictionary GenderSubstitutions;
         public SettingsDictionary GlobalSettings;
-
         public Node Graphmaster;
-
         public bool isAcceptingUserInput = true;
         public int MaxThatSize = 256;
         public SettingsDictionary Person2Substitutions;
         public SettingsDictionary PersonSubstitutions;
         public int Size;
 
-        [NotNull, ItemNotNull]
+        [NotNull]
+        [ItemNotNull]
         public List<string> Splitters = new List<string>();
-        public SettingsDictionary Substitutions;
 
+        public SettingsDictionary Substitutions;
         public bool TrustAiml = true;
 
         /// <summary>
@@ -68,6 +59,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         {
             setup();
         }
+
+        /// <summary>
+        ///     Gets the logger.
+        /// </summary>
+        /// <value>The logger.</value>
+        [CanBeNull]
+        public IConsole Logger { get; set; }
 
         private string NotAcceptingUserInputMessage
         {
@@ -80,8 +78,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         }
 
         /// <summary>
-        /// Gets the timeout message.
-        /// This message is used when a request takes too long and times out.
+        ///     Gets the timeout message.
+        ///     This message is used when a request takes too long and times out.
         /// </summary>
         /// <value>The timeout message.</value>
         [NotNull]
@@ -102,7 +100,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         }
 
         /// <summary>
-        /// Gets the locale of this instance.
+        ///     Gets the locale of this instance.
         /// </summary>
         /// <value>The locale.</value>
         public CultureInfo Locale
@@ -148,11 +146,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                     GlobalSettings.Add("adminemail", "");
                 }
             }
-        }
-
-        public bool WillCallHome
-        {
-            get { return GlobalSettings.GetValue("willcallhome").ToLower() == "true"; }
         }
 
         public Gender Sex
@@ -375,7 +368,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         }
 
         /// <summary>
-        /// Logs the specified message to the logger.
+        ///     Logs the specified message to the logger.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="level">The log level.</param>
@@ -428,12 +421,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                         }
                         catch (Exception ex)
                         {
-                            if (WillCallHome)
-                            {
-                                phoneHome(ex.Message, request);
-                            }
                             Log("A problem was encountered when trying to process the input: " +
-                                       request.RawInput + " with the template: \"" + query.Template + "\"", LogLevel.Warning);
+                                request.RawInput + " with the template: \"" + query.Template + "\": " + ex.Message,
+                                LogLevel.Error);
                         }
                     }
                 }
@@ -467,7 +457,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                 return stringBuilder.ToString();
             }
 
-            var handler = BuildTagHandler(node, query, request, result, user, str);
+            var handler = TagHandlerFactory.Build(this, node, query, request, result, user, str);
 
             if (Equals(null, handler))
             {
@@ -501,85 +491,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             return stringBuilder1.ToString();
         }
 
-        /// <summary>
-        ///     Builds the tag handler from the given parameters.
-        /// </summary>
-        /// <remarks>
-        ///     TODO: Document parameters
-        /// </remarks>
-        /// <returns>The tag handler.</returns>
-        [CanBeNull]
-        private AimlTagHandler BuildTagHandler(XmlNode node,
-                                               SubQuery query,
-                                               Request request,
-                                               Result result,
-                                               User user,
-                                               [CanBeNull] string tagName)
-        {
-            switch (tagName?.ToLowerInvariant())
-            {
-                case "ChatEngine":
-                    return new bot(this, user, query, request, result, node);
-                case "condition":
-                    return new condition(this, user, query, request, result, node);
-                case "date":
-                    return new date(this, user, query, request, result, node);
-                case "formal":
-                    return new formal(this, user, query, request, result, node);
-                case "gender":
-                    return new gender(this, user, query, request, result, node);
-                case "get":
-                    return new get(this, user, query, request, result, node);
-                case "gossip":
-                    return new gossip(this, user, query, request, result, node);
-                case "id":
-                    return new id(this, user, query, request, result, node);
-                case "input":
-                    return new input(this, user, query, request, result, node);
-                case "javascript":
-                    return new javascript(this, user, query, request, result, node);
-                case "learn":
-                    return new learn(this, user, query, request, result, node);
-                case "lowercase":
-                    return new lowercase(this, user, query, request, result, node);
-                case "person":
-                    return new person(this, user, query, request, result, node);
-                case "person2":
-                    return new person2(this, user, query, request, result, node);
-                case "random":
-                    return new random(this, user, query, request, result, node);
-                case "sentence":
-                    return new sentence(this, user, query, request, result, node);
-                case "set":
-                    return new set(this, user, query, request, result, node);
-                case "size":
-                    return new size(this, user, query, request, result, node);
-                case "sr":
-                    return new sr(this, user, query, request, result, node);
-                case "srai":
-                    return new srai(this, user, query, request, result, node);
-                case "star":
-                    return new star(this, user, query, request, result, node);
-                case "system":
-                    return new system(this, user, query, request, result, node);
-                case "that":
-                    return new that(this, user, query, request, result, node);
-                case "thatstar":
-                    return new thatstar(this, user, query, request, result, node);
-                case "think":
-                    return new think(this, user, query, request, result, node);
-                case "topicstar":
-                    return new topicstar(this, user, query, request, result, node);
-                case "uppercase":
-                    return new uppercase(this, user, query, request, result, node);
-                case "version":
-                    return new version(this, user, query, request, result, node);
-            }
-
-            return null;
-        }
-
-        public void saveToBinaryFile(string path)
+        [UsedImplicitly]
+        public void SaveToBinaryFile(string path)
         {
             var fileInfo = new FileInfo(path);
             if (fileInfo.Exists)
@@ -591,42 +504,12 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             fileStream.Close();
         }
 
-        public void loadFromBinaryFile(string path)
+        [UsedImplicitly]
+        public void LoadFromBinaryFile(string path)
         {
             var fileStream = File.OpenRead(path);
             Graphmaster = (Node)new BinaryFormatter().Deserialize(fileStream);
             fileStream.Close();
-        }
-
-        public void phoneHome(string errorMessage, Request request)
-        {
-            var message = new MailMessage("donotreply@aimlbot.com", AdminEmail);
-            message.Subject = "WARNING! AIMLBot has encountered a problem...";
-            var str1 =
-                "Dear Botmaster,\r\n\r\nThis is an automatically generated email to report errors with your ChatEngine.\r\n\r\nAt *TIME* the ChatEngine encountered the following error:\r\n\r\n\"*MESSAGE*\"\r\n\r\nwhilst processing the following input:\r\n\r\n\"*RAWINPUT*\"\r\n\r\nfrom the user with an id of: *USER*\r\n\r\nThe normalized paths generated by the raw input were as follows:\r\n\r\n*PATHS*\r\n\r\nPlease check your AIML!\r\n\r\nRegards,\r\n\r\nThe AIMLbot program.\r\n"
-                    .Replace("*TIME*", DateTime.Now.ToString())
-                    .Replace("*MESSAGE*", errorMessage)
-                    .Replace("*RAWINPUT*", request.RawInput)
-                    .Replace("*USER*", request.User.Id);
-            var stringBuilder = new StringBuilder();
-            foreach (var str2 in request.Result.NormalizedPaths)
-            {
-                stringBuilder.Append(str2 + Environment.NewLine);
-            }
-            var str3 = str1.Replace("*PATHS*", stringBuilder.ToString());
-            message.Body = str3;
-            message.IsBodyHtml = false;
-            try
-            {
-                if (message.To.Count <= 0)
-                {
-                    return;
-                }
-                new SmtpClient().Send(message);
-            }
-            catch
-            {
-            }
         }
 
         /// <summary>
@@ -653,10 +536,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             if (string.IsNullOrEmpty(path))
             {
                 Log(string.Format(Locale,
-                                         "Attempted to load a new category with an empty pattern where the directoryPath = {0} and template = {1} produced by a category in the file: {2}",
-                                         path,
-                                         node.OuterXml,
-                                         filename), LogLevel.Warning);
+                                  "Attempted to load a new category with an empty pattern where the directoryPath = {0} and template = {1} produced by a category in the file: {2}",
+                                  path,
+                                  node.OuterXml,
+                                  filename),
+                    LogLevel.Warning);
                 return;
             }
 
@@ -670,10 +554,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             catch
             {
                 Log(string.Format(Locale,
-                                         "Failed to load a new category into the graphmaster where the directoryPath = {0} and template = {1} produced by a category in the file: {2}",
-                                         path,
-                                         node.OuterXml,
-                                         filename), LogLevel.Error);
+                                  "Failed to load a new category into the graphmaster where the directoryPath = {0} and template = {1} produced by a category in the file: {2}",
+                                  path,
+                                  node.OuterXml,
+                                  filename),
+                    LogLevel.Error);
             }
         }
     }
