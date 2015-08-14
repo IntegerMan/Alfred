@@ -2,78 +2,38 @@
 // AimlTagHandler.cs
 // 
 // Created on:      08/12/2015 at 10:25 PM
-// Last Modified:   08/12/2015 at 11:59 PM
+// Last Modified:   08/14/2015 at 6:01 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Diagnostics;
 using System.Xml;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Console;
+
 namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 {
     /// <summary>
-    /// An abstract class representing a TextTransformer that can also handle an AIML tag.
+    ///     An abstract class representing a TextTransformer that can also handle an AIML tag.
     /// </summary>
     public abstract class AimlTagHandler : TextTransformer
     {
         /// <summary>
-        /// Gets or sets a value indicating whether this instance is recursive.
+        ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.
         /// </summary>
-        /// <value><c>true</c> if this instance is recursive; otherwise, <c>false</c>.</value>
-        public bool IsRecursive { get; set; } = true;
-
-        /// <summary>
-        /// Gets the query.
-        /// </summary>
-        /// <value>The query.</value>
-        public SubQuery Query { get; }
-
-        /// <summary>
-        /// Gets the request.
-        /// </summary>
-        /// <value>The request.</value>
-        public Request Request { get; }
-
-        /// <summary>
-        /// Gets the result of the operation.
-        /// </summary>
-        /// <value>The result.</value>
-        public Result Result { get; }
-
-        /// <summary>
-        /// Gets the template node.
-        /// </summary>
-        /// <value>The template node.</value>
-        [NotNull]
-        public XmlNode TemplateNode { get; }
-
-        /// <summary>
-        /// Gets the user.
-        /// </summary>
-        /// <value>The user.</value>
-        [NotNull]
-        public User User { get; }
-
-        /// <summary>
-        /// Gets the template node as an XmlElement.
-        /// </summary>
-        /// <value>The template element.</value>
-        [CanBeNull]
-        protected XmlElement TemplateElement
-        {
-            get { return TemplateNode as XmlElement; }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AimlTagHandler" /> class.
-        /// </summary>
+        /// <exception cref="ArgumentNullException"><paramref name="parameters"/> is <see langword="null" />.</exception>
         protected AimlTagHandler([NotNull] TagHandlerParameters parameters)
-                    : base(parameters.ChatEngine, parameters.TemplateNode.OuterXml)
+            : base(parameters.ChatEngine, parameters.TemplateNode.OuterXml)
         {
+            //- Validation
+            if (parameters == null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+
             //- Assign fields
             User = parameters.User;
             Query = parameters.Query;
@@ -86,13 +46,66 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        /// Gets an XML node from an XML string.
+        ///     Gets or sets a value indicating whether this instance is recursive.
+        /// </summary>
+        /// <value><c>true</c> if this instance is recursive; otherwise, <c>false</c>.</value>
+        public bool IsRecursive { get; set; } = true;
+
+        /// <summary>
+        ///     Gets the query.
+        /// </summary>
+        /// <value>The query.</value>
+        public SubQuery Query { get; }
+
+        /// <summary>
+        ///     Gets the request.
+        /// </summary>
+        /// <value>The request.</value>
+        public Request Request { get; }
+
+        /// <summary>
+        ///     Gets the result of the operation.
+        /// </summary>
+        /// <value>The result.</value>
+        public Result Result { get; }
+
+        /// <summary>
+        ///     Gets the template node.
+        /// </summary>
+        /// <value>The template node.</value>
+        [NotNull]
+        public XmlNode TemplateNode { get; }
+
+        /// <summary>
+        ///     Gets the user.
+        /// </summary>
+        /// <value>The user.</value>
+        [NotNull]
+        public User User { get; }
+
+        /// <summary>
+        ///     Gets the template node as an XmlElement.
+        /// </summary>
+        /// <value>The template element.</value>
+        [CanBeNull]
+        protected XmlElement TemplateElement
+        {
+            get { return TemplateNode as XmlElement; }
+        }
+
+        /// <summary>
+        ///     Gets an XML node from an XML string.
         /// </summary>
         /// <param name="xml">The outer XML.</param>
         /// <returns>An XmlNode from the document</returns>
         /// <remarks>
-        /// TODO: This is only here for convenience. An extension method may be in order
+        ///     TODO: This is only here for convenience. An extension method may be in order
         /// </remarks>
+        /// <exception cref="ArgumentException">xml</exception>
+        /// <exception cref="XmlException">
+        ///     There is a load or parse error in the XML. In this case, the
+        ///     document remains empty.
+        /// </exception>
         public static XmlNode GetNode([NotNull] string xml)
         {
             if (string.IsNullOrWhiteSpace(xml))
@@ -110,10 +123,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        /// Gets tag handler parameters for the given template node.
+        ///     Gets tag handler parameters for the given template node.
         /// </summary>
         /// <param name="templateNode">The template node.</param>
         /// <returns>TagHandlerParameters.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="templateNode"/> is <see langword="null" />.</exception>
         [NotNull]
         protected TagHandlerParameters GetTagHandlerParametersForNode([NotNull] XmlNode templateNode)
         {
@@ -123,6 +137,24 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             }
 
             return new TagHandlerParameters(ChatEngine, User, Query, Request, Result, templateNode);
+        }
+
+        /// <summary>
+        ///     Gets the XML child node for an AIML star operation.
+        /// </summary>
+        /// <returns>The star node.</returns>
+        [CanBeNull]
+        protected XmlNode GetStarNode()
+        {
+            try
+            {
+                return GetNode("<star/>");
+            }
+            catch (XmlException ex)
+            {
+                Log("Error creating star node: " + ex.Message, LogLevel.Error);
+                return null;
+            }
         }
     }
 }

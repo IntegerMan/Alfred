@@ -74,10 +74,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
 
             //- Grab our setting names
             var settingNames = dictionary.Keys;
-            if (settingNames == null)
-            {
-                return input;
-            }
 
             // Look for each setting settingName in the input string to replace it with our setting value
             foreach (var settingName in settingNames)

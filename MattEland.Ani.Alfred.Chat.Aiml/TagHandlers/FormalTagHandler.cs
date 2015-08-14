@@ -2,7 +2,7 @@
 // FormalTagHandler.cs
 // 
 // Created on:      08/12/2015 at 10:44 PM
-// Last Modified:   08/14/2015 at 5:17 PM
+// Last Modified:   08/14/2015 at 5:50 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -19,6 +19,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     /// <summary>
     ///     A tag handler that handles the "formal" AIML tag by taking the inner text and
     ///     Returning It In Formal Case.
+    /// 
+    ///     See "http://www.alicebot.org/TR/2005/WD-aiml/#section-formal" for more on the formal tag
     /// </summary>
     [HandlesAimlTag("formal")]
     public class FormalTagHandler : AimlTagHandler

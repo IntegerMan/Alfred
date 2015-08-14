@@ -2,7 +2,7 @@
 // StringExtensions.cs
 // 
 // Created on:      08/12/2015 at 2:12 PM
-// Last Modified:   08/14/2015 at 12:58 AM
+// Last Modified:   08/14/2015 at 5:54 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -14,10 +14,21 @@ using JetBrains.Annotations;
 namespace MattEland.Common
 {
     /// <summary>
-    ///     Extension methods commonly used
+    ///     Contains extension methods dealing with string operations.
     /// </summary>
     public static class StringExtensions
     {
+        /// <summary>
+        ///     Determines if the input string is has text (is not null and has text beyond whitespace).
+        /// </summary>
+        /// <param name="input">The input string.</param>
+        /// <returns><c>true</c> if the string has text; otherwise, <c>false</c>.</returns>
+        [UsedImplicitly]
+        public static bool HasText([CanBeNull] this string input)
+        {
+            return !input.IsNullOrWhitespace();
+        }
+
         /// <summary>
         ///     Determines if the input string is null or an empty string.
         /// </summary>
@@ -41,7 +52,8 @@ namespace MattEland.Common
         }
 
         /// <summary>
-        ///     Ensures that the passed in string is not null and returns either the input string or string.empty.
+        ///     Ensures that the passed in string is not null and returns either the input string or
+        ///     string.empty.
         /// </summary>
         /// <param name="input">The input string.</param>
         /// <returns>A sanitized string</returns>
@@ -52,7 +64,8 @@ namespace MattEland.Common
         }
 
         /// <summary>
-        ///     Ensures that the passed in string is not null and returns either the input string or replacement.
+        ///     Ensures that the passed in string is not null and returns either the input string or
+        ///     replacement.
         /// </summary>
         /// <param name="input">The input string.</param>
         /// <param name="replacement">The replacement string when input is null.</param>

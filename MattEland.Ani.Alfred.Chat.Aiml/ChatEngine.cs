@@ -56,6 +56,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         [NotNull]
         public SettingsDictionary DefaultPredicates { get; }
 
+        /// <summary>
+        /// Gets the gender substitutions dictionary. This is a collection of male and female pronouns and their
+        /// replacement values to use when the "gender" AIML tag is present.
+        /// </summary>
+        /// <value>The gender substitutions dictionary.</value>
         [NotNull]
         public SettingsDictionary GenderSubstitutions { get; }
 
@@ -228,9 +233,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             {
                 GlobalSettings.Add("location", "Unknown");
             }
-            if (!GlobalSettings.Contains("gender"))
+            if (!GlobalSettings.Contains("GenderTagHandler"))
             {
-                GlobalSettings.Add("gender", "-1");
+                GlobalSettings.Add("GenderTagHandler", "-1");
             }
             if (!GlobalSettings.Contains("birthday"))
             {

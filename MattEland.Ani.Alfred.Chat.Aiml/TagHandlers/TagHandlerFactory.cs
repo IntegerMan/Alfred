@@ -179,8 +179,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             //! Construction for tags that have not yet been reviewed and cut over to dynamic invocation 
             switch (tagName.NonNull().ToLowerInvariant())
             {
-                case "gender":
-                    return new gender(parameters);
+                case "GenderTagHandler":
+                    return new GenderTagHandler(parameters);
                 case "get":
                     return new get(parameters);
                 case "gossip":
