@@ -27,7 +27,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     public class ConditionTagHandler : AimlTagHandler
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AimlTagHandler" /> class.
+        /// Initializes a new instance of the <see cref="ConditionTagHandler" /> class.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
         public ConditionTagHandler([NotNull] TagHandlerParameters parameters)

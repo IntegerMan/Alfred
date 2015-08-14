@@ -250,15 +250,6 @@ namespace MattEland.Ani.Alfred.Core.Modules
                 return true;
             }
 
-            // Respond to date commands
-            if (command.Command.Compare("CurrentDate"))
-            {
-                // This requires that NewLastOutput has {0} in it
-                result.NewLastOutput = string.Format(CultureInfo.CurrentCulture, result.NewLastOutput.IfNull("{0}"), DateTime.Now);
-
-                return true;
-            }
-
             // Can't handle it; let the base module take it
             return base.HandleChatCommand(command, result);
         }
