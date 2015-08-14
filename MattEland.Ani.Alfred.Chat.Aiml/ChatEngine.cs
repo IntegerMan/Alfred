@@ -21,6 +21,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml
 {
@@ -199,7 +200,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             GlobalSettings.Load(pathToSettings);
             if (!GlobalSettings.Contains("version"))
             {
-                GlobalSettings.Add("version", Environment.Version.ToString());
+                GlobalSettings.Add("version", this.GetAssemblyVersion()?.ToString());
             }
             if (!GlobalSettings.Contains("name"))
             {
@@ -215,7 +216,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             }
             if (!GlobalSettings.Contains("author"))
             {
-                GlobalSettings.Add("author", "Nicholas H.Tollervey");
+                GlobalSettings.Add("author", "Matt Eland");
             }
             if (!GlobalSettings.Contains("location"))
             {
@@ -227,7 +228,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             }
             if (!GlobalSettings.Contains("birthday"))
             {
-                GlobalSettings.Add("birthday", "2006/11/08");
+                GlobalSettings.Add("birthday", "8/10/2015");
             }
             if (!GlobalSettings.Contains("birthplace"))
             {
@@ -244,14 +245,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             else
             {
                 GlobalSettings.Add("adminemail", "");
-            }
-            if (!GlobalSettings.Contains("islogging"))
-            {
-                GlobalSettings.Add("islogging", "False");
-            }
-            if (!GlobalSettings.Contains("willcallhome"))
-            {
-                GlobalSettings.Add("willcallhome", "False");
             }
             if (!GlobalSettings.Contains("timeout"))
             {
@@ -495,7 +488,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         public void LoadFromBinaryFile(string path)
         {
             var fileStream = File.OpenRead(path);
-            RootNode = (Node) new BinaryFormatter().Deserialize(fileStream);
+            RootNode = (Node)new BinaryFormatter().Deserialize(fileStream);
             fileStream.Close();
         }
 

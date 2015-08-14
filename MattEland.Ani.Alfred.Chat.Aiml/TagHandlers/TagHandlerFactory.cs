@@ -32,7 +32,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         {
             switch (tagName?.ToLowerInvariant())
             {
-                case "ChatEngine":
+                case "bot":
                     return new bot(engine, user, query, request, result, node);
                 case "condition":
                     return new condition(engine, user, query, request, result, node);
