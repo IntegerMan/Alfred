@@ -191,14 +191,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                     return new that(parameters);
                 case "thatstar":
                     return new thatstar(parameters);
-                case "think":
-                    return new ThinkTagHandler(parameters);
                 case "topicstar":
                     return new topicstar(parameters);
                 case "uppercase":
                     return new uppercase(parameters);
-                case "version":
-                    return new version(parameters);
             }
 
             return null;
