@@ -40,7 +40,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             var isDateNode = TemplateNode.Name.Matches("date");
 
             // Format using long date formatting for the culture
-            const string DateFormatString = "D";
+            const string DateFormatString = "D"; // TODO: Add support for a format attribute
 
             return isDateNode ? DateTime.Now.ToString(DateFormatString, Locale) : string.Empty;
 
