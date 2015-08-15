@@ -2,7 +2,7 @@
 // StringExtensions.cs
 // 
 // Created on:      08/12/2015 at 2:12 PM
-// Last Modified:   08/14/2015 at 5:54 PM
+// Last Modified:   08/14/2015 at 11:26 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -70,6 +70,7 @@ namespace MattEland.Common
         /// <param name="input">The input string.</param>
         /// <param name="replacement">The replacement string when input is null.</param>
         /// <returns>A sanitized string</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="replacement" /> is <see langword="null" />.</exception>
         [NotNull]
         public static string IfNull([CanBeNull] this string input, [NotNull] string replacement)
         {
@@ -82,14 +83,15 @@ namespace MattEland.Common
         }
 
         /// <summary>
-        ///     Extension method to compare two strings and return true if they're equal.
+        ///     Extension method to compare two strings and return true if they're equal according to the
+        ///     comparison type used. By default strings are compared ordinally ignoring casing.
         /// </summary>
         /// <param name="input">The input string.</param>
         /// <param name="other">The other string.</param>
         /// <param name="comparison">The comparison type. Defaults to ordinal ignoring case.</param>
         /// <returns><c>true</c> if the strings are equal, <c>false</c> otherwise.</returns>
         [NotNull]
-        public static bool Compare([CanBeNull] this string input,
+        public static bool Matches([CanBeNull] this string input,
                                    [CanBeNull] string other,
                                    StringComparison comparison = StringComparison.OrdinalIgnoreCase)
         {

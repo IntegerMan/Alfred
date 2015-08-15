@@ -65,7 +65,7 @@
     <Compile Include="TagHandlers\GenderTagHandler.cs" />
     <Compile Include="TagHandlers\GetTagHandler.cs" />
     <Compile Include="TagHandlers\GossipTagHandler.cs" />
-    <Compile Include="TagHandlers\id.cs" />
+    <Compile Include="TagHandlers\UserIdTagHandler.cs" />
     <Compile Include="TagHandlers\input.cs" />
     <Compile Include="TagHandlers\javascript.cs" />
     <Compile Include="TagHandlers\learn.cs" />

@@ -41,7 +41,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             var node = TemplateNode;
 
             //- Ensure we have something to care about
-            if (node.Name.Compare("gossip") && node.InnerText.HasText())
+            if (node.Name.Matches("gossip") && node.InnerText.HasText())
             {
                 Log(string.Format(Locale, "GOSSIP from user: {0}, '{1}'", User.Id, node.InnerText), LogLevel.Info);
             }

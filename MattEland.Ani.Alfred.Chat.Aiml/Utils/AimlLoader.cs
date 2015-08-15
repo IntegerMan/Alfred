@@ -214,7 +214,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             // Loop through child categories and process them
             foreach (XmlNode childNode in node.ChildNodes)
             {
-                if (childNode != null && childNode.Name.Compare("category"))
+                if (childNode != null && childNode.Name.Matches("category"))
                 {
                     ProcessCategory(childNode, GetNameFromNode(node), filename);
                 }

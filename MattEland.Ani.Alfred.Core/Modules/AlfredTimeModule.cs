@@ -242,7 +242,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         public override bool HandleChatCommand(ChatCommand command, AlfredCommandResult result)
         {
             // Respond to time commands
-            if (command.Command.Compare("CurrentTime"))
+            if (command.Command.Matches("CurrentTime"))
             {
                 // This requires that NewLastOutput has {0} in it
                 result.NewLastOutput = string.Format(CultureInfo.CurrentCulture, result.NewLastOutput.IfNull("{0}"), DateTime.Now);

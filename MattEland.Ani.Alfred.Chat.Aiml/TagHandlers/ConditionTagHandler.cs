@@ -50,7 +50,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             }
 
             //- Ensure we're working with the right node type
-            if (!element.Name.Compare("ConditionTagHandler"))
+            if (!element.Name.Matches("ConditionTagHandler"))
             {
                 return string.Empty;
             }
@@ -94,7 +94,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             foreach (XmlElement xmlNode in node.ChildNodes)
             {
                 //- Ensure we're looking at valid li's
-                if (xmlNode == null || !xmlNode.Name.Compare("li"))
+                if (xmlNode == null || !xmlNode.Name.Matches("li"))
                 {
                     continue;
                 }
@@ -137,7 +137,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             // Select XmlElements from the children for each "li" choice
             foreach (var child in from XmlElement xmlNode in node.ChildNodes
                                   where xmlNode != null
-                                  where xmlNode.Name.Compare("li")
+                                  where xmlNode.Name.Matches("li")
                                   select xmlNode)
             {
                 //- Sanity check

@@ -100,7 +100,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         public override bool HandleChatCommand(ChatCommand command, AlfredCommandResult result)
         {
             // Verify this this is a message we can answer
-            if (command.Command.Compare("SHUTDOWN"))
+            if (command.Command.Matches("SHUTDOWN"))
             {
                 ExecuteShutdownCommand();
 

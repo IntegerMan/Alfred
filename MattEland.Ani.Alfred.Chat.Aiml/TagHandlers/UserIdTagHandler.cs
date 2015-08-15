@@ -1,13 +1,11 @@
 ﻿// ---------------------------------------------------------
-// DateTagHandler.cs
+// UserIdTagHandler.cs
 // 
-// Created on:      08/12/2015 at 10:43 PM
-// Last Modified:   08/14/2015 at 3:13 PM
+// Created on:      08/12/2015 at 10:47 PM
+// Last Modified:   08/14/2015 at 11:28 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
-
-using System;
 
 using JetBrains.Annotations;
 
@@ -17,16 +15,17 @@ using MattEland.Common;
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// <summary>
-    /// An AimlTagHandler for the "date" tag. This provides an easy way of giving the time and date.
+    ///     A tag handler for the AIML "id" tag that outputs the user's identifier found in the User.Id
+    ///     property.
     /// </summary>
-    [HandlesAimlTag("date")]
-    public class DateTagHandler : AimlTagHandler
+    [HandlesAimlTag("id")]
+    public class UserIdTagHandler : AimlTagHandler
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="DateTagHandler" /> class.
+        ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
-        public DateTagHandler([NotNull] TagHandlerParameters parameters)
+        public UserIdTagHandler([NotNull] TagHandlerParameters parameters)
             : base(parameters)
         {
         }
@@ -37,12 +36,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// <returns>The processed output</returns>
         protected override string ProcessChange()
         {
-            var isDateNode = TemplateNode.Name.Matches("date");
-
-            // Format using long date formatting for the culture
-            const string DateFormatString = "D";
-
-            return isDateNode ? DateTime.Now.ToString(DateFormatString, Locale) : string.Empty;
+            // If it's the ID tag, use the user's ID, otherwise we don't care
+            return TemplateNode.Name.Matches("id") ? User.Id : string.Empty;
 
         }
     }
