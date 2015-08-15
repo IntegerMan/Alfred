@@ -32,7 +32,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 
                 node = GetNode($"<srai>{starResult}</srai>");
                 parameters = GetTagHandlerParametersForNode(node);
-                return new srai(parameters).Transform();
+                return new RedirectTagHandler(parameters).Transform();
             }
 
             return string.Empty;

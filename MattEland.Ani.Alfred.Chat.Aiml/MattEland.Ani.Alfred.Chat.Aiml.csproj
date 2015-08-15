@@ -82,7 +82,7 @@
     <Compile Include="TagHandlers\SetTagHandler.cs" />
     <Compile Include="TagHandlers\SizeTagHandler.cs" />
     <Compile Include="TagHandlers\sr.cs" />
-    <Compile Include="TagHandlers\srai.cs" />
+    <Compile Include="TagHandlers\RedirectTagHandler.cs" />
     <Compile Include="TagHandlers\star.cs" />
     <Compile Include="TagHandlers\SystemTagHandler.cs" />
     <Compile Include="TagHandlers\that.cs" />

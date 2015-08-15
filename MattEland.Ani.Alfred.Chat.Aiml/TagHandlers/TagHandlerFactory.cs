@@ -181,8 +181,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             {
                 case "sr":
                     return new sr(parameters);
-                case "srai":
-                    return new srai(parameters);
                 case "star":
                     return new star(parameters);
 
