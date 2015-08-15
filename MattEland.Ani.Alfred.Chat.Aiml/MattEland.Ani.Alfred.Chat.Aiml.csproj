@@ -84,7 +84,7 @@
     <Compile Include="TagHandlers\sr.cs" />
     <Compile Include="TagHandlers\srai.cs" />
     <Compile Include="TagHandlers\star.cs" />
-    <Compile Include="TagHandlers\system.cs" />
+    <Compile Include="TagHandlers\SystemTagHandler.cs" />
     <Compile Include="TagHandlers\that.cs" />
     <Compile Include="TagHandlers\ThinkTagHandler.cs" />
     <Compile Include="TagHandlers\topicstar.cs" />

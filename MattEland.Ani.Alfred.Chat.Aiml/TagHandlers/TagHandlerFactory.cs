@@ -186,9 +186,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                 case "star":
                     return new star(parameters);
 
-                case "system":
-                    return new system(parameters);
-
                 case "that":
                     return new that(parameters);
                 case "thatstar":
