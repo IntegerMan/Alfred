@@ -140,5 +140,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml {
                 return ResourceManager.GetString("LearnErrorXmlException", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error processing sr operation: {0}.
+        /// </summary>
+        internal static string SrTagHandlerError {
+            get {
+                return ResourceManager.GetString("SrTagHandlerError", resourceCulture);
+            }
+        }
     }
 }
