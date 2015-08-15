@@ -78,7 +78,7 @@
     <Compile Include="TagHandlers\FirstPersonToSecondPersonTagHandler.cs" />
     <Compile Include="TagHandlers\SecondPersonToFirstPersonTagHandler.cs" />
     <Compile Include="TagHandlers\RandomTagHandler.cs" />
-    <Compile Include="TagHandlers\sentence.cs" />
+    <Compile Include="TagHandlers\SentenceTagHandler.cs" />
     <Compile Include="TagHandlers\set.cs" />
     <Compile Include="TagHandlers\size.cs" />
     <Compile Include="TagHandlers\sr.cs" />
