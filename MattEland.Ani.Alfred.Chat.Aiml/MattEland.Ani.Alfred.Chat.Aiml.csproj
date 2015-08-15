@@ -72,7 +72,7 @@
     <Compile Include="TagHandlers\GossipTagHandler.cs" />
     <Compile Include="TagHandlers\UserIdTagHandler.cs" />
     <Compile Include="TagHandlers\InputTagHandler.cs" />
-    <Compile Include="TagHandlers\javascript.cs" />
+    <Compile Include="TagHandlers\JavaScriptTagHandler.cs" />
     <Compile Include="TagHandlers\learn.cs" />
     <Compile Include="TagHandlers\lowercase.cs" />
     <Compile Include="TagHandlers\person.cs" />

@@ -104,4 +104,7 @@
   <data name="InputErrorOverflow" xml:space="preserve">
     <value>An input tag ({0}) caused an overflow processing the input: {1}</value>
   </data>
+  <data name="JavaScriptNotSupportedMessage" xml:space="preserve">
+    <value>The javascript tag is not supported</value>
+  </data>
 </root>

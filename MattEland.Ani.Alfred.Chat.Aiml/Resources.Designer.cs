@@ -77,5 +77,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml {
                 return ResourceManager.GetString("InputErrorOverflow", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The javascript tag is not supported.
+        /// </summary>
+        internal static string JavaScriptNotSupportedMessage {
+            get {
+                return ResourceManager.GetString("JavaScriptNotSupportedMessage", resourceCulture);
+            }
+        }
     }
 }
