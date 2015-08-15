@@ -2,7 +2,7 @@
 // ChatEngine.cs
 // 
 // Created on:      08/12/2015 at 9:45 PM
-// Last Modified:   08/14/2015 at 1:53 AM
+// Last Modified:   08/15/2015 at 12:51 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -11,7 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -57,8 +56,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         public SettingsDictionary DefaultPredicates { get; }
 
         /// <summary>
-        /// Gets the gender substitutions dictionary. This is a collection of male and female pronouns and their
-        /// replacement values to use when the "gender" AIML tag is present.
+        ///     Gets the gender substitutions dictionary. This is a collection of male and female pronouns and
+        ///     their
+        ///     replacement values to use when the "gender" AIML tag is present.
         /// </summary>
         /// <value>The gender substitutions dictionary.</value>
         [NotNull]
@@ -77,9 +77,18 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         public bool IsAcceptingUserInput { get; set; } = true;
         public int MaxThatSize { get; set; } = 256;
 
+        /// <summary>
+        /// Gets the person substitutions settings dictionary for second person to first person conversions.
+        /// </summary>
+        /// <value>The person substitutions settings dictionary.</value>
         [NotNull]
         public SettingsDictionary Person2Substitutions { get; }
 
+        /// <summary>
+        ///     Gets the person substitutions settings dictionary. This contains things related to moving from
+        ///     the first person to the second person.
+        /// </summary>
+        /// <value>The person substitutions settings dictionary.</value>
         [NotNull]
         public SettingsDictionary PersonSubstitutions { get; }
 
@@ -123,7 +132,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
                 if (string.IsNullOrEmpty(TimeOutMessage))
                 {
-                    timeoutMessage = "Your request has timed out. Please try again or phrase your sentence differently.";
+                    timeoutMessage =
+                        "Your request has timed out. Please try again or phrase your sentence differently.";
                 }
 
                 // ReSharper disable once AssignNullToNotNullAttribute
@@ -155,7 +165,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
         public Regex Strippers
         {
-            get { return new Regex(GlobalSettings.GetValue("stripperregex"), RegexOptions.IgnorePatternWhitespace); }
+            get
+            {
+                return new Regex(GlobalSettings.GetValue("stripperregex"),
+                                 RegexOptions.IgnorePatternWhitespace);
+            }
         }
 
         public string AdminEmail
@@ -183,12 +197,20 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
         public string AimlDirectoryPath
         {
-            get { return Path.Combine(Environment.CurrentDirectory, GlobalSettings.GetValue("aimldirectory")); }
+            get
+            {
+                return Path.Combine(Environment.CurrentDirectory,
+                                    GlobalSettings.GetValue("aimldirectory"));
+            }
         }
 
         public string PathToConfigFiles
         {
-            get { return Path.Combine(Environment.CurrentDirectory, GlobalSettings.GetValue("configdirectory")); }
+            get
+            {
+                return Path.Combine(Environment.CurrentDirectory,
+                                    GlobalSettings.GetValue("configdirectory"));
+            }
         }
 
         public void LoadAIMLFromFiles()
@@ -203,7 +225,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
         public void LoadSettings()
         {
-            LoadSettings(Path.Combine(Environment.CurrentDirectory, Path.Combine("config", "Settings.xml")));
+            LoadSettings(Path.Combine(Environment.CurrentDirectory,
+                                      Path.Combine("config", "Settings.xml")));
         }
 
         public void LoadSettings(string pathToSettings)
@@ -319,14 +342,16 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                 GlobalSettings.Add("stripperregex", "[^0-9a-zA-Z]");
             }
             Person2Substitutions.Load(Path.Combine(PathToConfigFiles,
-                                                   GlobalSettings.GetValue("person2substitutionsfile")));
+                                                   GlobalSettings.GetValue(
+                                                                           "person2substitutionsfile")));
             PersonSubstitutions.Load(Path.Combine(PathToConfigFiles,
                                                   GlobalSettings.GetValue("personsubstitutionsfile")));
             GenderSubstitutions.Load(Path.Combine(PathToConfigFiles,
                                                   GlobalSettings.GetValue("gendersubstitutionsfile")));
             DefaultPredicates.Load(Path.Combine(PathToConfigFiles,
                                                 GlobalSettings.GetValue("defaultpredicates")));
-            Substitutions.Load(Path.Combine(PathToConfigFiles, GlobalSettings.GetValue("substitutionsfile")));
+            Substitutions.Load(Path.Combine(PathToConfigFiles,
+                                            GlobalSettings.GetValue("substitutionsfile")));
             LoadSplitters(Path.Combine(PathToConfigFiles, GlobalSettings.GetValue("splittersfile")));
         }
 
@@ -391,7 +416,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                 foreach (var str in result.NormalizedPaths)
                 {
                     var query = new SubQuery(str);
-                    query.Template = RootNode.Evaluate(str, query, request, MatchState.UserInput, new StringBuilder());
+                    query.Template = RootNode.Evaluate(str,
+                                                       query,
+                                                       request,
+                                                       MatchState.UserInput,
+                                                       new StringBuilder());
                     result.SubQueries.Add(query);
                 }
                 foreach (var query in result.SubQueries)
@@ -413,7 +442,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                         catch (Exception ex)
                         {
                             Log("A problem was encountered when trying to process the input: " +
-                                request.RawInput + " with the template: \"" + query.Template + "\": " + ex.Message,
+                                request.RawInput + " with the template: \"" + query.Template +
+                                "\": " + ex.Message,
                                 LogLevel.Error);
                         }
                     }
@@ -428,7 +458,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             return result;
         }
 
-        private string ProcessNode([NotNull] XmlNode node, SubQuery query, Request request, Result result, User user)
+        private string ProcessNode([NotNull] XmlNode node,
+                                   SubQuery query,
+                                   Request request,
+                                   Result result,
+                                   User user)
         {
             if (node == null)
             {
@@ -513,7 +547,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <param name="node">The template node.</param>
         /// <param name="path">The path.</param>
         /// <param name="filename">The filename.</param>
-        public void AddCategoryToGraph([NotNull] XmlNode node, [NotNull] string path, [NotNull] string filename)
+        public void AddCategoryToGraph([NotNull] XmlNode node,
+                                       [NotNull] string path,
+                                       [NotNull] string filename)
         {
             //- Validate
             if (filename == null)

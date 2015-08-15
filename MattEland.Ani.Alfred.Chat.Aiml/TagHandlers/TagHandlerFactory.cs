@@ -179,10 +179,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             //! Construction for tags that have not yet been reviewed and cut over to dynamic invocation 
             switch (tagName.NonNull().ToLowerInvariant())
             {
-                case "person":
-                    return new person(parameters);
-                case "person2":
-                    return new person2(parameters);
                 case "sentence":
                     return new sentence(parameters);
                 case "set":

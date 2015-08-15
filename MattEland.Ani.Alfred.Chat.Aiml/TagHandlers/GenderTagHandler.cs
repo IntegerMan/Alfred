@@ -71,16 +71,5 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             return TemplateNode.InnerText.HasText() ? ProcessChange() : string.Empty;
         }
 
-        /// <summary>
-        ///     Builds a star tag handler.
-        /// </summary>
-        /// <returns>star.</returns>
-        private star BuildStarTagHandler()
-        {
-            var node = GetStarNode();
-            var parameters = GetTagHandlerParametersForNode(node);
-            var star = new star(parameters);
-            return star;
-        }
     }
 }

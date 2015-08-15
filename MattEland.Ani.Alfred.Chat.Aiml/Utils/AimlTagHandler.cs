@@ -8,10 +8,12 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 using System.Xml;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
 using MattEland.Ani.Alfred.Core.Console;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
@@ -144,7 +146,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         ///     Gets the XML child node for an AIML star operation.
         /// </summary>
         /// <returns>The star node.</returns>
-        [CanBeNull]
+        [NotNull]
         protected XmlNode GetStarNode()
         {
             try
@@ -153,9 +155,23 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             }
             catch (XmlException ex)
             {
-                Log("Error creating star node: " + ex.Message, LogLevel.Error);
-                return null;
+                Debug.Fail("GetStarNode cannot return a null value but encountered an XmlException: " + ex.Message);
+
+                throw ex;
             }
+        }
+
+        /// <summary>
+        ///     Builds a star tag handler.
+        /// </summary>
+        /// <returns>A star tag handler.</returns>
+        [NotNull]
+        protected star BuildStarTagHandler()
+        {
+            var node = GetStarNode();
+            var parameters = GetTagHandlerParametersForNode(node);
+
+            return new star(parameters);
         }
     }
 }

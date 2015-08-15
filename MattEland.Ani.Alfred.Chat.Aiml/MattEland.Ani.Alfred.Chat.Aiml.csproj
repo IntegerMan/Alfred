@@ -75,8 +75,8 @@
     <Compile Include="TagHandlers\JavaScriptTagHandler.cs" />
     <Compile Include="TagHandlers\LearnTagHandler.cs" />
     <Compile Include="TagHandlers\LowercaseTagHandler.cs" />
-    <Compile Include="TagHandlers\person.cs" />
-    <Compile Include="TagHandlers\person2.cs" />
+    <Compile Include="TagHandlers\FirstPersonToSecondPersonTagHandler.cs" />
+    <Compile Include="TagHandlers\SecondPersonToFirstPersonTagHandler.cs" />
     <Compile Include="TagHandlers\RandomTagHandler.cs" />
     <Compile Include="TagHandlers\sentence.cs" />
     <Compile Include="TagHandlers\set.cs" />
