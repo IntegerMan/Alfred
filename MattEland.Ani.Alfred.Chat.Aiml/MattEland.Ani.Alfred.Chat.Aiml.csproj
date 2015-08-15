@@ -63,7 +63,7 @@
     <Compile Include="TagHandlers\DateTagHandler.cs" />
     <Compile Include="TagHandlers\FormalTagHandler.cs" />
     <Compile Include="TagHandlers\GenderTagHandler.cs" />
-    <Compile Include="TagHandlers\get.cs" />
+    <Compile Include="TagHandlers\GetTagHandler.cs" />
     <Compile Include="TagHandlers\gossip.cs" />
     <Compile Include="TagHandlers\id.cs" />
     <Compile Include="TagHandlers\input.cs" />

@@ -67,7 +67,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             var parameters = GetTagHandlerParametersForNode(node);
             TemplateNode.InnerText = new star(parameters).Transform().NonNull();
 
-            if (TemplateNode.InnerText.IsNullOrEmpty())
+            if (TemplateNode.InnerText.IsEmpty())
             {
                 return string.Empty;
             }

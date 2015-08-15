@@ -35,7 +35,7 @@ namespace MattEland.Common
         /// <param name="input">The input string.</param>
         /// <returns><c>true</c> if the string is null or empty; otherwise, <c>false</c>.</returns>
         [UsedImplicitly]
-        public static bool IsNullOrEmpty([CanBeNull] this string input)
+        public static bool IsEmpty([CanBeNull] this string input)
         {
             return string.IsNullOrEmpty(input);
         }

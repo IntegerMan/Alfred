@@ -36,7 +36,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// </summary>
         static RandomTagHandler()
         {
-            // Reuse the same randomizer; You get more random results this way
+            // Reuse the same randomizer; You GetTagHandler more random results this way
             _randomizer = new Random();
         }
 

@@ -44,7 +44,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                 element.Name.Compare("ChatEngine") &&
                 element.HasAttribute("name"))
             {
-                // Grab the attribute and use its value to get a setting value
+                // Grab the attribute and use its value to GetTagHandler a setting value
                 var nameAttribute = element.Attributes["name"];
                 if (nameAttribute != null)
                 {

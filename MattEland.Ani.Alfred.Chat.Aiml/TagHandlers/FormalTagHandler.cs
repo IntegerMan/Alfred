@@ -43,7 +43,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             //- Ensure we're looking at the correct tag
             var node = TemplateNode;
             var innerText = node.InnerText;
-            if (!node.Name.Compare("formal") || innerText.IsNullOrEmpty())
+            if (!node.Name.Compare("formal") || innerText.IsEmpty())
             {
                 return string.Empty;
             }
