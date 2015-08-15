@@ -67,6 +67,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         ///     Gets the user.
         /// </summary>
         /// <value>The user.</value>
+        [NotNull]
         public User User
         {
             get { return _user; }
@@ -85,6 +86,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         ///     Gets the request.
         /// </summary>
         /// <value>The request.</value>
+        [NotNull]
         public Request Request
         {
             get { return _request; }

@@ -61,6 +61,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         ///     Gets the request.
         /// </summary>
         /// <value>The request.</value>
+        [NotNull]
         public Request Request { get; }
 
         /// <summary>

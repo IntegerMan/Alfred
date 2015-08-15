@@ -50,6 +50,11 @@
     <Compile Include="ChatEngine.cs" />
     <Compile Include="Normalize\TextSubstitutionTransformer.cs" />
     <Compile Include="Normalize\UppercaseTextTransformer.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="TagHandlers\HandlesAimlTagAttribute.cs" />
     <Compile Include="TagHandlers\TagHandlerFactory.cs" />
     <Compile Include="Utils\SplitSentenceHelper.cs" />
@@ -66,7 +71,7 @@
     <Compile Include="TagHandlers\GetTagHandler.cs" />
     <Compile Include="TagHandlers\GossipTagHandler.cs" />
     <Compile Include="TagHandlers\UserIdTagHandler.cs" />
-    <Compile Include="TagHandlers\input.cs" />
+    <Compile Include="TagHandlers\InputTagHandler.cs" />
     <Compile Include="TagHandlers\javascript.cs" />
     <Compile Include="TagHandlers\learn.cs" />
     <Compile Include="TagHandlers\lowercase.cs" />
@@ -110,7 +115,8 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">
-      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
