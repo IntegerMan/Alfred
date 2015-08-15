@@ -196,7 +196,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             new AimlLoader(this).LoadAiml();
         }
 
-        public void LoadAIMLFromXML(XmlDocument newAIML, string filename)
+        public void LoadAimlFile(XmlDocument newAIML, string filename)
         {
             new AimlLoader(this).LoadAimlFromXml(newAIML, filename);
         }

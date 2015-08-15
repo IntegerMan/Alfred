@@ -86,5 +86,59 @@ namespace MattEland.Ani.Alfred.Chat.Aiml {
                 return ResourceManager.GetString("JavaScriptNotSupportedMessage", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find learning file at path: {1}.
+        /// </summary>
+        internal static string LearnErrorFileNotFound {
+            get {
+                return ResourceManager.GetString("LearnErrorFileNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not load learning file due to a {0} exception: {1} on file: {2}.
+        /// </summary>
+        internal static string LearnErrorIOException {
+            get {
+                return ResourceManager.GetString("LearnErrorIOException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not load learning file due to an invalid format on file {0}.
+        /// </summary>
+        internal static string LearnErrorNotSupportedException {
+            get {
+                return ResourceManager.GetString("LearnErrorNotSupportedException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not interact with file &apos;{0}&apos; due to a security exception: {1}.
+        /// </summary>
+        internal static string LearnErrorSecurityException {
+            get {
+                return ResourceManager.GetString("LearnErrorSecurityException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not interact with file &apos;{0}&apos; due to an access exception: {1}.
+        /// </summary>
+        internal static string LearnErrorUnauthorizedException {
+            get {
+                return ResourceManager.GetString("LearnErrorUnauthorizedException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not load learning file due to an XML exception: {0} on file: {1}.
+        /// </summary>
+        internal static string LearnErrorXmlException {
+            get {
+                return ResourceManager.GetString("LearnErrorXmlException", resourceCulture);
+            }
+        }
     }
 }
