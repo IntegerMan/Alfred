@@ -179,8 +179,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             //! Construction for tags that have not yet been reviewed and cut over to dynamic invocation 
             switch (tagName.NonNull().ToLowerInvariant())
             {
-                case "size":
-                    return new size(parameters);
                 case "sr":
                     return new sr(parameters);
                 case "srai":

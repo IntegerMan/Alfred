@@ -113,7 +113,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             Log(
                 string.Format(Locale,
                               "Finished processing the AIML files. {0} categories processed.",
-                              Convert.ToString(_chatEngine.Size)),
+                              Convert.ToString(_chatEngine.NodeCount)),
                 LogLevel.Verbose);
         }
 
@@ -301,6 +301,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <param name="topicName">Name of the topic.</param>
         /// <param name="isUserInput">The is user input.</param>
         /// <returns>The path string</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="topicName"/> is <see langword="null" />.</exception>
         [NotNull]
         public string BuildPathString([NotNull] XmlNode node, [NotNull] string topicName, bool isUserInput)
         {
@@ -356,6 +358,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <param name="topicName">Name of the topic.</param>
         /// <param name="isUserInput">Whether or not this is user input.</param>
         /// <returns>A directoryPath string representing the pattern, that, and topicName values.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="pattern"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="that"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="topicName"/> is <see langword="null" />.</exception>
         [NotNull]
         public string BuildPathString([NotNull] string pattern,
                                       [NotNull] string that,

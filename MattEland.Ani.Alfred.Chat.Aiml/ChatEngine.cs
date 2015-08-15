@@ -92,7 +92,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         [NotNull]
         public SettingsDictionary PersonSubstitutions { get; }
 
-        public int Size { get; private set; }
+        /// <summary>
+        /// Gets the count of AIML nodes in memory.
+        /// </summary>
+        /// <value>The count of AIML nodes.</value>
+        public int NodeCount
+        {
+            get { return RootNode.ChildrenCount; }
+        }
 
         [NotNull]
         [ItemNotNull]
@@ -579,8 +586,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             try
             {
                 RootNode.AddCategory(path, node.OuterXml, filename);
-
-                Size++;
             }
             catch
             {
