@@ -17,6 +17,9 @@ using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
+    /// <summary>
+    /// An AIML tag handler that handles converting from the second person "You were" to the first person "I am".
+    /// </summary>
     [HandlesAimlTag("person2")]
     public class SecondPersonToFirstPersonTagHandler : AimlTagHandler
     {
