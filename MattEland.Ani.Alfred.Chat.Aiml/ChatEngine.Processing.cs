@@ -8,6 +8,7 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
@@ -123,10 +124,16 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             return result;
         }
 
+        /// <summary>
+        /// Processes a chat SubQuery.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="query">The query.</param>
+        /// <param name="result">The result.</param>
         [SuppressMessage("ReSharper", "CatchAllClause")]
         private void ProcessChatSubQuery([NotNull] Request request,
-                                         [NotNull] SubQuery query,
-                                         [NotNull] Result result)
+                                                 [NotNull] SubQuery query,
+                                                 [NotNull] Result result)
         {
             //- Validate
             if (request == null)
@@ -144,29 +151,49 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
             try
             {
+                // Build an XML node out of the template the query traced to
                 var node = AimlTagHandler.GetNode(query.Template);
-                var str = ProcessNode(node,
-                                      query,
-                                      request,
-                                      result,
-                                      request.User);
-                if (str.Length > 0)
+
+                // If no template, there's nothing to do.
+                if (node == null)
                 {
-                    result.OutputSentences.Add(str);
+                    return;
                 }
+
+                // Process the chat node with the given template and tag handlers. This will result in the chat output.
+                var nodeOutput = ProcessNode(node, query, request, result, request.User);
+
+                // Check to see if the output had textual values, and, if so, add them to our output.
+                if (nodeOutput.HasText())
+                {
+                    result.OutputSentences.Add(nodeOutput);
+                }
+
             }
             catch (Exception ex)
             {
+                /* Catching all exceptions here because ProcessNode could be doing invokes to third party code due to how
+                HandlesAimlTag attribute and dynamic invocation work */
                 Log(string.Format(Locale, Resources.ChatProcessNodeError, request.RawInput, query.Template, ex.Message),
                     LogLevel.Error);
             }
         }
 
+        /// <summary>
+        /// Processes an XML node as part of resolving a chat query and returns a chat result dependant on the type of node and the node's contents.
+        /// This method is called recursively when resolving complicated compound chat messages.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="query">The query.</param>
+        /// <param name="request">The request.</param>
+        /// <param name="result">The result.</param>
+        /// <param name="user">The user.</param>
+        /// <returns>The textual result of evaluating the node</returns>
         private string ProcessNode([NotNull] XmlNode node,
-                                   [NotNull] SubQuery query,
-                                   [NotNull] Request request,
-                                   [NotNull] Result result,
-                                   [NotNull] User user)
+                                           [NotNull] SubQuery query,
+                                           [NotNull] Request request,
+                                           [NotNull] Result result,
+                                           [NotNull] User user)
         {
             //- Validation
             if (node == null)
@@ -223,6 +250,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             var nodeContents = string.Format(Locale, "<node>{0}</node>", handler.Transform());
 
             // Build a node out of the output of the transform
+            Debug.Assert(nodeContents != null);
             var evaluatedNode = AimlTagHandler.GetNode(nodeContents);
             if (evaluatedNode == null)
             {
@@ -248,47 +276,119 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             return sbOutput.ToString();
         }
 
-        private string ProcessRecursiveNode(XmlNode node,
-                                            SubQuery query,
-                                            Request request,
-                                            Result result,
-                                            User user,
-                                            [NotNull] TextTransformer handler)
+        /// <summary>
+        /// Processes chat contents with a handler that returns true for IsRecursive.
+        /// </summary>
+        /// <remarks>
+        /// This is a separate method to reduce the complexity of ProcessNode
+        /// </remarks>
+        /// <param name="node">The node.</param>
+        /// <param name="query">The query.</param>
+        /// <param name="request">The request.</param>
+        /// <param name="result">The result.</param>
+        /// <param name="user">The user.</param>
+        /// <param name="handler">The handler.</param>
+        /// <returns>System.String.</returns>
+        private string ProcessRecursiveNode([NotNull] XmlNode node,
+                                                    [NotNull] SubQuery query,
+                                                    [NotNull] Request request,
+                                                    [NotNull] Result result,
+                                                    [NotNull] User user,
+                                                    [NotNull] TextTransformer handler)
         {
+            //- Validation
+            if (node == null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+            if (query == null)
+            {
+                throw new ArgumentNullException(nameof(query));
+            }
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+            if (result == null)
+            {
+                throw new ArgumentNullException(nameof(result));
+            }
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
             if (handler == null)
             {
                 throw new ArgumentNullException(nameof(handler));
             }
 
+            // Process child nodes
             if (node.HasChildNodes)
             {
-                foreach (XmlNode node1 in node.ChildNodes)
+                foreach (XmlNode childNode in node.ChildNodes)
                 {
-                    if (node1.NodeType != XmlNodeType.Text)
+                    if (childNode != null && childNode.NodeType != XmlNodeType.Text)
                     {
-                        node1.InnerXml = ProcessNode(node1, query, request, result, user);
+                        childNode.InnerXml = ProcessNode(childNode, query, request, result, user);
                     }
                 }
             }
+
+            // Do the final evaluation on the handler and return that
             return handler.Transform();
         }
 
-        private string ProcessTemplateNode(XmlNode node,
-                                           SubQuery query,
-                                           Request request,
-                                           Result result,
-                                           User user)
+        /// <summary>
+        /// Processes a template node by processing all internal contents and returning the results.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="query">The query.</param>
+        /// <param name="request">The request.</param>
+        /// <param name="result">The result.</param>
+        /// <param name="user">The user.</param>
+        /// <returns>The output text.</returns>
+        private string ProcessTemplateNode([NotNull] XmlNode node,
+                                                   [NotNull] SubQuery query,
+                                                   [NotNull] Request request,
+                                                   [NotNull] Result result,
+                                                   [NotNull] User user)
         {
+            //- Validation
+            if (node == null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+            if (query == null)
+            {
+                throw new ArgumentNullException(nameof(query));
+            }
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+            if (result == null)
+            {
+                throw new ArgumentNullException(nameof(result));
+            }
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
 
-            var stringBuilder = new StringBuilder();
+            // Loop through all contained children and process them, returning the results
+            var sbOutput = new StringBuilder();
             if (node.HasChildNodes)
             {
-                foreach (XmlNode node1 in node.ChildNodes)
+                foreach (XmlNode childNode in node.ChildNodes)
                 {
-                    stringBuilder.Append(ProcessNode(node1, query, request, result, user));
+                    if (childNode != null)
+                    {
+                        sbOutput.Append(ProcessNode(childNode, query, request, result, user));
+                    }
                 }
             }
-            return stringBuilder.ToString();
+
+            return sbOutput.ToString();
         }
 
     }
