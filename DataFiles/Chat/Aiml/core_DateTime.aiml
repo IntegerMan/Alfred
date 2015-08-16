@@ -104,5 +104,23 @@ This provides handling for time and date queries
         <srai>CURRENT DATE</srai>
     </template>
   </category>
+  <category>
+    <pattern>which day is it</pattern>
+    <template>
+        <srai>CURRENT DATE</srai>
+    </template>
+  </category>
+  <category>
+    <pattern>which day of the week is it</pattern>
+    <template>
+        <srai>CURRENT DATE</srai>
+    </template>
+  </category>
+  <category>
+    <pattern>what day of the week is it</pattern>
+    <template>
+        <srai>CURRENT DATE</srai>
+    </template>
+  </category>
 
 </aiml>
