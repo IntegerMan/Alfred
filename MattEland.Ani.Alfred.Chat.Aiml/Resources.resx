@@ -156,4 +156,10 @@
   <data name="StarErrorNoInputStarElements" xml:space="preserve">
     <value>A star tag tried to reference an empty InputStar collection when processing the input: {0}</value>
   </data>
+  <data name="TopicStarErrorOutOfRange" xml:space="preserve">
+    <value>An input tag with an out of range index ({0}) was encountered processing the input: {1}</value>
+  </data>
+  <data name="TopicStarErrorNoItems" xml:space="preserve">
+    <value>Tried to process a topicstar node when query's TopicStar collection was empty: {0}</value>
+  </data>
 </root>

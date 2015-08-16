@@ -2,7 +2,7 @@
 // TagHandlerFactory.cs
 // 
 // Created on:      08/14/2015 at 12:14 AM
-// Last Modified:   08/14/2015 at 5:26 PM
+// Last Modified:   08/16/2015 at 12:10 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -123,20 +123,32 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// <param name="result">The result.</param>
         /// <param name="user">The user.</param>
         /// <param name="tagName">Name of the tag.</param>
-        /// <exception cref="ArgumentNullException">node</exception>
+        /// <exception cref="ArgumentNullException">node, query, request, user</exception>
         /// <returns>The tag handler.</returns>
         [CanBeNull]
         public AimlTagHandler Build([NotNull] XmlNode node,
-                                    SubQuery query,
-                                    Request request,
+                                    [NotNull] SubQuery query,
+                                    [NotNull] Request request,
                                     Result result,
-                                    User user,
+                                    [NotNull] User user,
                                     [CanBeNull] string tagName)
         {
             //- Validate
             if (node == null)
             {
                 throw new ArgumentNullException(nameof(node));
+            }
+            if (query == null)
+            {
+                throw new ArgumentNullException(nameof(query));
+            }
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
             }
             if (tagName == null)
             {
@@ -147,43 +159,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             // TODO: Would thee be better suited for outside of this method and passed in as parameters?
             var parameters = new TagHandlerParameters(_engine, user, query, request, result, node);
 
-            // Check our mapping for an instance of that type and use it
-            var handler = BuildTagHandlerDynamic(tagName, parameters);
-            if (handler != null)
-            {
-                return handler;
-            }
-
-            return BuildTagHandlerDeprecated(tagName, parameters);
-        }
-
-        /// <summary>
-        ///     Builds a tag handler using deprecated hard-coded links between tag names and classes. Each one
-        ///     of these items is getting revised and converted over to the dynamic invoke model. As that
-        ///     happens their corresponding line in this method should be removed and this method can be
-        ///     retired eventually.
-        /// </summary>
-        /// <param name="tagName">Name of the tag.</param>
-        /// <param name="parameters">The parameters.</param>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <returns>A tag handler</returns>
-        private static AimlTagHandler BuildTagHandlerDeprecated(string tagName,
-                                                                [NotNull] TagHandlerParameters
-                                                                    parameters)
-        {
-            if (parameters == null)
-            {
-                throw new ArgumentNullException(nameof(parameters));
-            }
-
-            //! Construction for tags that have not yet been reviewed and cut over to dynamic invocation 
-            switch (tagName.NonNull().ToLowerInvariant())
-            {
-                case "topicstar":
-                    return new topicstar(parameters);
-            }
-
-            return null;
+            // Use dynamic invocation to create a TagHandler based on usage of the HandlesAimlTag attribute.
+            return BuildTagHandlerDynamic(tagName, parameters);
         }
 
         /// <summary>

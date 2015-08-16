@@ -87,7 +87,7 @@
     <Compile Include="TagHandlers\SystemTagHandler.cs" />
     <Compile Include="TagHandlers\OutputTagHandler.cs" />
     <Compile Include="TagHandlers\ThinkTagHandler.cs" />
-    <Compile Include="TagHandlers\topicstar.cs" />
+    <Compile Include="TagHandlers\TopicStarTagHandler.cs" />
     <Compile Include="TagHandlers\UpperCaseTagHandler.cs" />
     <Compile Include="TagHandlers\VersionTagHandler.cs" />
     <Compile Include="User.cs" />

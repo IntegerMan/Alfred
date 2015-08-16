@@ -169,6 +169,24 @@ namespace MattEland.Ani.Alfred.Chat.Aiml {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tried to process a topicstar node when query&apos;s TopicStar collection was empty: {0}.
+        /// </summary>
+        internal static string TopicStarErrorNoItems {
+            get {
+                return ResourceManager.GetString("TopicStarErrorNoItems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An input tag with an out of range index ({0}) was encountered processing the input: {1}.
+        /// </summary>
+        internal static string TopicStarErrorOutOfRange {
+            get {
+                return ResourceManager.GetString("TopicStarErrorOutOfRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The id cannot be empty.
         /// </summary>
         internal static string UserCtorNullId {
