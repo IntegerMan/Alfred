@@ -32,8 +32,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <param name="chatEngine">The chat engine.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        /// <exception cref="System.ArgumentOutOfRangeException">The id cannot be empty</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The id cannot be empty</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="chatEngine"/> is <see langword="null" />.</exception>
         public User([NotNull] string id, [NotNull] ChatEngine chatEngine)
         {
             //- Validation
@@ -43,7 +43,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             }
             if (string.IsNullOrWhiteSpace(id))
             {
-                throw new ArgumentOutOfRangeException(nameof(id), "The id cannot be empty");
+                throw new ArgumentOutOfRangeException(nameof(id), Resources.UserCtorNullId);
             }
 
             Id = id;
@@ -107,31 +107,12 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         }
 
         /// <summary>
-        ///     Gets the first output sentence from the first result
-        /// </summary>
-        /// <returns>The output sentence</returns>
-        public string GetOutputSentence()
-        {
-            return GetOutputSentence(0, 0);
-        }
-
-        /// <summary>
-        ///     Gets the first output sentence from the specified result.
-        /// </summary>
-        /// <param name="resultIndex">Index of the result.</param>
-        /// <returns>The output sentence</returns>
-        public string GetOutputSentence(int resultIndex)
-        {
-            return GetOutputSentence(resultIndex, 0);
-        }
-
-        /// <summary>
         ///     Gets the output sentence from the specified result and sentence.
         /// </summary>
-        /// <param name="resultIndex">Index of the result.</param>
-        /// <param name="sentenceIndex">Index of the sentence.</param>
+        /// <param name="resultIndex">Index of the result. Defaults to 1.</param>
+        /// <param name="sentenceIndex">Index of the sentence. Defaults to 1.</param>
         /// <returns>The output sentence</returns>
-        public string GetOutputSentence(int resultIndex, int sentenceIndex)
+        public string GetOutputSentence(int resultIndex = 1, int sentenceIndex = 1)
         {
             //- Ensure we're not grabbing out of range
             var isValidResult = resultIndex >= 0 & resultIndex < _results.Count;
@@ -154,33 +135,12 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         }
 
         /// <summary>
-        ///     Gets the first input sentence from the first result.
-        /// </summary>
-        /// <returns>
-        ///     The specified sentenceIndex.
-        /// </returns>
-        public string GetInputSentence()
-        {
-            return GetInputSentence(0, 0);
-        }
-
-        /// <summary>
-        ///     Gets the first input sentence from the specified result.
-        /// </summary>
-        /// <param name="resultIndex">Index of the result.</param>
-        /// <returns>The specified sentenceIndex.</returns>
-        public string GetInputSentence(int resultIndex)
-        {
-            return GetInputSentence(resultIndex, 0);
-        }
-
-        /// <summary>
         ///     Gets the specified input sentence from the specified result.
         /// </summary>
-        /// <param name="resultIndex">Index of the result.</param>
-        /// <param name="sentenceIndex">Index of the sentenceIndex.</param>
+        /// <param name="resultIndex">Index of the result. Defaults to 1.</param>
+        /// <param name="sentenceIndex">Index of the sentenceIndex. Defaults to 1.</param>
         /// <returns>The specified sentenceIndex.</returns>
-        public string GetInputSentence(int resultIndex, int sentenceIndex)
+        public string GetInputSentence(int resultIndex = 1, int sentenceIndex = 1)
         {
             //- Ensure we're grabbing at an acceptable resultIndex
             var isValidResult = resultIndex >= 0 & resultIndex < _results.Count;
@@ -207,6 +167,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         ///     Adds a result to the user's results.
         /// </summary>
         /// <param name="latestResult">The latest chat result.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="latestResult"/> is <see langword="null" />.</exception>
         public void AddResult([NotNull] Result latestResult)
         {
             if (latestResult == null)

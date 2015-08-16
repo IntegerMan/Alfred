@@ -52,37 +52,24 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             var indexText = element.GetAttribute("index");
             if (indexText.HasText())
             {
-
                 // We can be either in a # format or a #,# format. Check to find out which
                 var indexes = indexText.Split(",".ToCharArray());
 
+                //- Grab values for the inputs. This refers to the nth last thing the user said to the engine
+                int inputIndex;
+                int.TryParse(indexes[0]?.Trim(), out inputIndex);
+
+                //- Sentence index is optional. This refers to the sentence in the input referred to by inputIndex.
+                var sentenceIndex = 1;
                 if (indexes.Length >= 2)
                 {
-                    // We're looking at [InputsAgo],[SentenceInInput]
-
-                    //- Grab values for the inputs, keeping in mind bad data is possible
-                    var inputIndex = -1;
-                    int.TryParse(indexes[0]?.Trim(), out inputIndex);
-
-                    var sentenceIndex = -1;
                     int.TryParse(indexes[1]?.Trim(), out sentenceIndex);
-
-                    //- If we have some usable values, go with those
-                    if (inputIndex > 0 && sentenceIndex > 0)
-                    {
-                        // Grab the input X inputs ago and Y sentences into that input
-                        return User.GetInputSentence(inputIndex - 1, sentenceIndex - 1);
-                    }
                 }
-                else
+
+                // Grab the input X inputs ago and Y sentences into that input
+                if (inputIndex > 0 && sentenceIndex > 0)
                 {
-                    // This is a single index so we don't care which sentence was part of the input, we just care about the index order.
-                    int num;
-                    if (int.TryParse(indexText, out num) && num > 0)
-                    {
-                        // Grab the first sentence of X inputs ago
-                        return User.GetInputSentence(num - 1);
-                    }
+                    return User.GetInputSentence(inputIndex - 1, sentenceIndex - 1);
                 }
             }
 

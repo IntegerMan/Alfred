@@ -85,7 +85,7 @@
     <Compile Include="TagHandlers\RedirectTagHandler.cs" />
     <Compile Include="TagHandlers\star.cs" />
     <Compile Include="TagHandlers\SystemTagHandler.cs" />
-    <Compile Include="TagHandlers\that.cs" />
+    <Compile Include="TagHandlers\OutputTagHandler.cs" />
     <Compile Include="TagHandlers\ThinkTagHandler.cs" />
     <Compile Include="TagHandlers\topicstar.cs" />
     <Compile Include="TagHandlers\UpperCaseTagHandler.cs" />

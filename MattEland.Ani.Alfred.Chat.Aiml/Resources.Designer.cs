@@ -149,5 +149,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml {
                 return ResourceManager.GetString("SrTagHandlerError", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The id cannot be empty.
+        /// </summary>
+        internal static string UserCtorNullId {
+            get {
+                return ResourceManager.GetString("UserCtorNullId", resourceCulture);
+            }
+        }
     }
 }

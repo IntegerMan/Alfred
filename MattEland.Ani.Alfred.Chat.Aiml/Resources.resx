@@ -147,4 +147,7 @@
   <data name="SrTagHandlerError" xml:space="preserve">
     <value>Error processing sr operation: {0}</value>
   </data>
+  <data name="UserCtorNullId" xml:space="preserve">
+    <value>The id cannot be empty</value>
+  </data>
 </root>
