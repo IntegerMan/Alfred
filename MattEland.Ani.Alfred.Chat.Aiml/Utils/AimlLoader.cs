@@ -100,15 +100,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
                     }
                     catch (XmlException)
                     {
-                        //- It's already been logged. Try next file
+                        Log("XML error reading file " + filename, LogLevel.Error);
                     }
-                    catch (IOException)
+                    catch (IOException ex)
                     {
-                        //- It's already been logged. Try next file
+                        Log("IO error reading file " + filename + " " + ex.Message, LogLevel.Error);
                     }
-                    catch (SecurityException)
+                    catch (SecurityException ex)
                     {
-                        //- It's already been logged. Try next file
+                        Log("Security error reading file " + filename + " " + ex.Message, LogLevel.Error);
                     }
                 }
             }

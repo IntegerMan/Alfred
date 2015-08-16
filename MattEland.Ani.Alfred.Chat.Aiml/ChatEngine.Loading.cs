@@ -2,14 +2,13 @@
 // ChatEngine.Loading.cs
 // 
 // Created on:      08/16/2015 at 12:51 AM
-// Last Modified:   08/16/2015 at 12:51 AM
+// Last Modified:   08/16/2015 at 2:54 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Security;
 using System.Xml;
 
@@ -17,59 +16,87 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Ani.Alfred.Core.Console;
-using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml
 {
     public partial class ChatEngine
     {
-        /// <summary>
-        /// Holds the application's directory at startup for expediting loading values
-        /// </summary>
-        [NotNull]
-        private readonly string _startDirectory;
-
-        [NotNull]
-        private string _aimlDirectoryPath;
-
         [NotNull]
         private readonly AimlLoader _aimlLoader;
 
-        [NotNull]
-        public string AimlDirectoryPath
+        /// <summary>
+        ///     Gets a value indicating whether input in AIML files should be trusted.
+        ///     If false the input will go through the full normalization process.
+        /// </summary>
+        /// <value>Whether or not AIML files are trusted.</value>
+        public bool TrustAiml { get; } = true;
+
+        /// <summary>
+        ///     Loads all .aiml files from a directory.
+        /// </summary>
+        /// <param name="directoryPath">The directory path.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="directoryPath" /> is
+        ///     <see langword="null" />.
+        /// </exception>
+        /// <exception cref="DirectoryNotFoundException">
+        ///     The specified path is invalid (for example, it is on
+        ///     an unmapped drive).
+        /// </exception>
+        /// <exception cref="UnauthorizedAccessException">
+        ///     Access to <paramref name="directoryPath" /> is
+        ///     denied.
+        /// </exception>
+        /// <exception cref="IOException">There was an I/O related error reading files from the directory.</exception>
+        public void LoadAimlFromDirectory([NotNull] string directoryPath)
         {
-            get
+            if (directoryPath == null)
             {
-                return _aimlDirectoryPath;
+                throw new ArgumentNullException(nameof(directoryPath));
             }
-            set { _aimlDirectoryPath = value; }
-        }
 
-        public void LoadAimlFromDirectory()
-        {
-            _aimlLoader.LoadAiml(AimlDirectoryPath);
-        }
-
-        public void LoadAimlFromDirectory(string directoryPath)
-        {
             _aimlLoader.LoadAiml(directoryPath);
         }
 
-        public void LoadAimlFile(XmlDocument newAIML, string filename)
+        /// <summary>
+        ///     Loads a specific aiml file.
+        /// </summary>
+        /// <param name="aimlFile">The aiml file.</param>
+        /// <param name="filename">The filename.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="aimlFile" /> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="filename" /> is <see langword="null" />.</exception>
+        internal void LoadAimlFile([NotNull] XmlDocument aimlFile, [NotNull] string filename)
         {
-            _aimlLoader.LoadAimlFromXml(newAIML, filename);
+            //- Validate
+            if (aimlFile == null)
+            {
+                throw new ArgumentNullException(nameof(aimlFile));
+            }
+            if (filename == null)
+            {
+                throw new ArgumentNullException(nameof(filename));
+            }
+
+            // Load the file
+            _aimlLoader.LoadAimlFromXml(aimlFile, filename);
         }
 
         /// <summary>
-        /// Loads settings from the specified settings directory path.
-        /// There is assumed to be a settings.xml file in this directory.
+        ///     Loads settings from the specified settings directory path.
+        ///     There is assumed to be a settings.xml file in this directory.
         /// </summary>
         /// <param name="settingsDirectoryPath">The settings directory path.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="IOException"><paramref name="settingsDirectoryPath" /> is <see langword="null" />.</exception>
-        /// <exception cref="DirectoryNotFoundException">The specified path is invalid (for example, it is on an unmapped drive).</exception>
-        /// <exception cref="UnauthorizedAccessException">Access to <paramref name="settingsDirectoryPath" /> is denied.</exception>
+        /// <exception cref="DirectoryNotFoundException">
+        ///     The specified path is invalid (for example, it is on
+        ///     an unmapped drive).
+        /// </exception>
+        /// <exception cref="UnauthorizedAccessException">
+        ///     Access to <paramref name="settingsDirectoryPath" />
+        ///     is denied.
+        /// </exception>
         /// <exception cref="SecurityException">The caller does not have the required permission.</exception>
         /// <exception cref="FileNotFoundException">Could not find a settings file at the given path</exception>
         /// <exception cref="XmlException">The settings file was not found.</exception>
@@ -84,35 +111,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             // Invoke
             Librarian.LoadSettings(settingsDirectoryPath);
         }
-
-        /// <summary>
-        /// Gets a value indicating whether input in AIML files should be trusted. 
-        /// If false the input will go through the full normalization process.
-        /// </summary>
-        /// <value>Whether or not AIML files are trusted.</value>
-        public bool TrustAiml { get; } = true;
-
-        [UsedImplicitly]
-        public void SaveToBinaryFile(string path)
-        {
-            var fileInfo = new FileInfo(path);
-            if (fileInfo.Exists)
-            {
-                fileInfo.Delete();
-            }
-            var fileStream = File.Create(path);
-            new BinaryFormatter().Serialize(fileStream, RootNode);
-            fileStream.Close();
-        }
-
-        [UsedImplicitly]
-        public void LoadFromBinaryFile(string path)
-        {
-            var fileStream = File.OpenRead(path);
-            RootNode = (Node)new BinaryFormatter().Deserialize(fileStream);
-            fileStream.Close();
-        }
-
 
         /// <summary>
         ///     Adds the category to the graph.
@@ -141,20 +139,21 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             {
                 throw new ArgumentNullException(nameof(node));
             }
+
+            // You can't add nodes with an empty path
             if (string.IsNullOrEmpty(path))
             {
-                Log(string.Format(Locale,
-                                  "Attempted to load a new category with an empty pattern where the directoryPath = {0} and template = {1} produced by a category in the file: {2}",
-                                  path,
-                                  node.OuterXml,
-                                  filename),
-                    LogLevel.Warning);
+                var message = string.Format(Locale,
+                                            Resources.ChatEngineAddCategoryErrorNoPath,
+                                            path,
+                                            node.OuterXml,
+                                            filename);
+                Log(message, LogLevel.Warning);
                 return;
             }
 
-            // Add it to the graph
+            // Add the node to the graph
             RootNode.AddCategory(path, node.OuterXml, filename);
         }
-
     }
 }

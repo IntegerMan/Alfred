@@ -45,8 +45,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             Logger = logger;
 
             // Set Directory-related items
-            _startDirectory = Environment.CurrentDirectory;
-            _aimlDirectoryPath = Path.Combine(_startDirectory, @"chat\aiml");
 
             // Build helper components
             _tagFactory = new TagHandlerFactory(this);

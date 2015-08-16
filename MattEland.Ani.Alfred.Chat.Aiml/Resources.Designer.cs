@@ -61,6 +61,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Attempted to load a new category with an empty pattern where the directoryPath = {0} and template = {1} produced by a category in the file: {2}.
+        /// </summary>
+        internal static string ChatEngineAddCategoryErrorNoPath {
+            get {
+                return ResourceManager.GetString("ChatEngineAddCategoryErrorNoPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to I&apos;m sorry but I don&apos;t understand. Can you try asking differently?.
         /// </summary>
         internal static string ChatEngineDontUnderstandFallback {
