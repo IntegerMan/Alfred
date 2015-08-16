@@ -132,18 +132,16 @@ namespace MattEland.Ani.Alfred.Chat.Tests
             AssertMessageGetsReplyTemplate(input, templateId);
         }
 
-        [TestCase("Bye", "GOODBYE")]
-        [TestCase("Hi", "Hello")]
-        [TestCase("Hey", "Hello")]
-        [TestCase("Thank You", "Thanks")]
-        public void ChatRedirectTests([NotNull] string input, [NotNull] string redirectTo)
+        [TestCase("Bye", "tmp_bye")]
+        [TestCase("Hi", "tmp_hi")]
+        [TestCase("Hey", "tmp_hi")]
+        [TestCase("Thank You", "tmp_thanks")]
+        public void ChatRedirectTests([NotNull] string input, [NotNull] string redirectTemplateId)
         {
             var template = GetReplyTemplate(input);
 
-            var redirectFind = $"<srai>{redirectTo.ToLowerInvariant()}</srai>";
-
-            Assert.IsTrue(template.ToLowerInvariant().Contains(redirectFind),
-                          $"The template {template} did not contain a redirect to {redirectTo}");
+            Assert.IsTrue(template.ToLowerInvariant().Contains(redirectTemplateId),
+                          $"The template {template} did not redirect to the template with an Id tag of {redirectTemplateId}");
         }
 
         /// <summary>
@@ -178,6 +176,19 @@ namespace MattEland.Ani.Alfred.Chat.Tests
             var expected = now.ToString("t");
             Assert.That(reply.Contains(expected),
                         $"Asked for current time at {now} and got a reply of '{reply}' which did not contain {expected}");
+        }
+        /// <summary>
+        ///     Asserts that when working through redirects, the engine can get the deepest redirect template.
+        /// </summary>
+        /// <remarks>
+        ///     Test for ALF-10
+        /// </remarks>
+        [Test]
+        public void AskingForCurrentTimeRevealsRedirectedTemplate()
+        {
+            var reply = GetReplyTemplate("What time is it?");
+
+            Assert.That(reply.Contains("<date"), $"The reply template of {reply} did not contain a date tag. Redirects are likely broken.");
         }
     }
 }
