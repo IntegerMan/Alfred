@@ -215,20 +215,39 @@ namespace MattEland.Ani.Alfred.Chat
         }
 
         /// <summary>
-        ///     Gets the response template from the AIML chat message result.
+        ///     Gets the response template from the last request spawned in the AIML chat message result.
         /// </summary>
         /// <param name="result">The result of a chat message to the AIML interpreter.</param>
         /// <returns>The response template</returns>
         /// <remarks>
         ///     Result is not CLSCompliant so this method should not be made public
         /// </remarks>
+        /// <exception cref="ArgumentNullException"><paramref name="result"/> is <see langword="null" />.</exception>
         [CanBeNull]
-        internal static string GetResponseTemplate([CanBeNull] Result result)
+        internal static string GetResponseTemplate([NotNull] Result result)
         {
-            // We want the last template as the other templates have redirected to it
-            var subQuery = result.SubQueries?.LastOrDefault();
+            if (result == null)
+            {
+                throw new ArgumentNullException(nameof(result));
+            }
 
-            return subQuery.Template;
+            // We want the last template as the other templates have redirected to it
+            string template = string.Empty;
+            var request = result.Request;
+            while (request != null)
+            {
+                // Grab the template used for this request
+                var query = request.Result?.SubQueries.FirstOrDefault();
+                if (query != null)
+                {
+                    template = query.Template;
+                }
+
+                // If it has an inner request, we'll use that for next iteration, otherwise we're done.
+                request = request.Child;
+            }
+
+            return template;
         }
     }
 }

@@ -2,7 +2,7 @@
 // Request.cs
 // 
 // Created on:      08/12/2015 at 10:22 PM
-// Last Modified:   08/16/2015 at 5:17 PM
+// Last Modified:   08/16/2015 at 5:46 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -21,6 +21,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
     /// </summary>
     public class Request
     {
+        private Request _child;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="Request" /> class.
         /// </summary>
@@ -73,7 +75,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             {
                 // Set up the parent / child hierarchy
                 Parent = parent;
-                parent.Child = this;
+                parent.RegisterChild(this);
 
                 // Copy some additional properties from the parent
                 StartedOn = parent.StartedOn;
@@ -145,7 +147,24 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// </remarks>
         /// <value>The child request.</value>
         [CanBeNull]
-        public Request Child { get; private set; }
+        public Request Child
+        {
+            get { return _child; }
+        }
+
+        /// <summary>
+        ///     Registers a child request.
+        /// </summary>
+        /// <param name="childRequest">The child request.</param>
+        /// <exception cref="ArgumentNullException">childRequest</exception>
+        private void RegisterChild([NotNull] Request childRequest)
+        {
+            if (childRequest == null)
+            {
+                throw new ArgumentNullException(nameof(childRequest));
+            }
+            _child = childRequest;
+        }
 
         /// <summary>
         ///     Checks to see if this has timed out and returns true if that has happened. This will also log
