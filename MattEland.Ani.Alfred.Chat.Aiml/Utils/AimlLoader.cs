@@ -11,6 +11,7 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Security;
 using System.Text;
 using System.Xml;
 
@@ -51,29 +52,17 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <value>The locale.</value>
         public CultureInfo Locale
         {
-            get { return _chatEngine.Locale ?? CultureInfo.CurrentCulture; }
-        }
-
-        /// <summary>
-        ///     Loads AIML resources from the directory listed in ChatEngine.AimlDirectoryPath.
-        /// </summary>
-        /// <exception cref="System.InvalidOperationException">ChatEngine.AimlDirectoryPath was not set</exception>
-        public void LoadAiml()
-        {
-            var pathToAiml = _chatEngine.AimlDirectoryPath;
-
-            if (string.IsNullOrEmpty(pathToAiml))
-            {
-                throw new InvalidOperationException("ChatEngine.AimlDirectoryPath was not set");
-            }
-
-            LoadAiml(pathToAiml);
+            get { return _chatEngine.Locale; }
         }
 
         /// <summary>
         ///     Loads AIML resources from a file.
         /// </summary>
         /// <param name="directoryPath">The path to the directory containing the .AIML files.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="directoryPath"/> is <see langword="null" />.</exception>
+        /// <exception cref="DirectoryNotFoundException">The directory specified does not exist.</exception>
+        /// <exception cref="UnauthorizedAccessException">The caller does not have the required permission. </exception>
+        /// <exception cref="IOException"><paramref name="directoryPath" /> led to an invalid file name.-or-A network error has occurred. </exception>
         public void LoadAiml([NotNull] string directoryPath)
         {
             //- Parameter validation
@@ -85,20 +74,19 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             if (!Directory.Exists(directoryPath))
             {
                 var message = string.Format(Locale,
-                                            "The directory specified as the directoryPath to the AIML files ({0}) cannot be found by the AimlLoader object. Please make sure the directory where you think the AIML files are to be found is the same as the directory specified in the settings file.",
+                                            Resources.LoadAimlDirectoryNotFound,
                                             directoryPath);
-                throw new FileNotFoundException(message);
+                throw new DirectoryNotFoundException(message);
             }
 
             // Grab all files in the directory that should meet our needs
-            Log("Starting to process AIML files found in the directory " + directoryPath, LogLevel.Verbose);
+            Log(string.Format(Locale, Resources.LoadAimlStartingToLoad, directoryPath), LogLevel.Verbose);
 
             var files = Directory.GetFiles(directoryPath, "*.aiml");
             if (files.Length <= 0)
             {
-                throw new FileNotFoundException(string.Format(Locale,
-                                                              "Could not find any .aiml files in the specified directory ({0}). Please make sure that your aiml file end in a lowercase aiml extension, for example - myFile.aiml is valid but myFile.AIML is not.",
-                                                              directoryPath));
+                Log(string.Format(Locale, Resources.LoadAimlNoFilesInDirectory, directoryPath), LogLevel.Error);
+                return;
             }
 
             // Load each file we've found
@@ -106,13 +94,27 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             {
                 if (filename != null)
                 {
-                    LoadAimlFile(filename);
+                    try
+                    {
+                        LoadAimlFile(filename);
+                    }
+                    catch (XmlException)
+                    {
+                        //- It's already been logged. Try next file
+                    }
+                    catch (IOException)
+                    {
+                        //- It's already been logged. Try next file
+                    }
+                    catch (SecurityException)
+                    {
+                        //- It's already been logged. Try next file
+                    }
                 }
             }
 
-            Log(
-                string.Format(Locale,
-                              "Finished processing the AIML files. {0} categories processed.",
+            Log(string.Format(Locale,
+                              Resources.LoadAimlFinishedLoading,
                               Convert.ToString(_chatEngine.NodeCount)),
                 LogLevel.Verbose);
         }
@@ -135,6 +137,12 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// </summary>
         /// <param name="path">The directoryPath.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="XmlException">There is a load or parse error in the XML. In this case, a <see cref="T:System.IO.FileNotFoundException" /> is raised. </exception>
+        /// <exception cref="DirectoryNotFoundException">The specified path is invalid (for example, it is on an unmapped drive). </exception>
+        /// <exception cref="IOException">An I/O error occurred while opening the file. </exception>
+        /// <exception cref="UnauthorizedAccessException"><paramref name="path" /> specified a file that is read-only.-or- This operation is not supported on the current platform.-or- <paramref name="filename" /> specified a directory.-or- The caller does not have the required permission. </exception>
+        /// <exception cref="FileNotFoundException">The file specified in <paramref name="path" /> was not found. </exception>
+        /// <exception cref="SecurityException">The caller does not have the required permission. </exception>
         public void LoadAimlFile([NotNull] string path)
         {
             if (path == null)
@@ -157,12 +165,18 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// </summary>
         /// <param name="doc">The document.</param>
         /// <param name="filename">The directoryPath.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="doc"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="filename"/> is <see langword="null" />.</exception>
         public void LoadAimlFromXml([NotNull] XmlDocument doc, [NotNull] string filename)
         {
             //- Validate
             if (doc == null)
             {
                 throw new ArgumentNullException(nameof(doc));
+            }
+            if (filename == null)
+            {
+                throw new ArgumentNullException(nameof(filename));
             }
 
             // Grab the nodes from the document

@@ -7,8 +7,11 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
+using System.Security;
 
 using JetBrains.Annotations;
 
@@ -32,18 +35,30 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <summary>
         ///     Initializes a new instance of the <see cref="ChatEngine" /> class.
         /// </summary>
+        /// <exception cref="IOException">An I/O error occurred.</exception>
+        /// <exception cref="SecurityException">The caller does not have the appropriate permission.</exception>
+        /// <exception cref="DirectoryNotFoundException">Attempted to set a local path that cannot be found.</exception>
         public ChatEngine()
         {
+            // Set Directory-related items
+            _startDirectory = Environment.CurrentDirectory;
+            _aimlDirectoryPath = Path.Combine(_startDirectory, @"chat\aiml");
+
+            // Build helper components
             _tagFactory = new TagHandlerFactory(this);
+            _aimlLoader = new AimlLoader(this);
+            RootNode = new Node();
+
+            // Create standard dictionaries
             GlobalSettings = new SettingsDictionary();
             GenderSubstitutions = new SettingsDictionary();
             SecondPersonToFirstPersonSubstitutions = new SettingsDictionary();
             FirstPersonToSecondPersonSubstitutions = new SettingsDictionary();
             Substitutions = new SettingsDictionary();
 
+            // Populate smaller value dictionaries
             SentenceSplitters = new List<string> { ".", "!", "?", ";" };
 
-            RootNode = new Node();
         }
 
         /// <summary>
@@ -121,5 +136,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         {
             Logger?.Log("ChatEngine", message, level);
         }
+
+
     }
 }

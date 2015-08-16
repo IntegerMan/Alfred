@@ -178,4 +178,19 @@
   <data name="ChatErrorNoMessage" xml:space="preserve">
     <value>A chat message is required to interact with the system.</value>
   </data>
+  <data name="LoadAimlNoFilesInDirectory" xml:space="preserve">
+    <value>Could not find any .aiml files in the specified directory ({0}). Please make sure that your aiml file end in a lowercase aiml extension, for example - myFile.aiml is valid but myFile.AIML is not.</value>
+  </data>
+  <data name="LoadAimlStartingToLoad" xml:space="preserve">
+    <value>Starting to process AIML files found in the directory {0}</value>
+  </data>
+  <data name="LoadAimlDirectoryNotFound" xml:space="preserve">
+    <value>The directory specified as the directoryPath to the AIML files ({0}) cannot be found by the AimlLoader object. Please make sure the directory where you think the AIML files are to be found is the same as the directory specified in the settings file.</value>
+  </data>
+  <data name="LoadAimlFinishedLoading" xml:space="preserve">
+    <value>Finished processing the AIML files. {0} categories processed.</value>
+  </data>
+  <data name="LoadAimlErrorNoDirectoryPath" xml:space="preserve">
+    <value>ChatEngine.AimlDirectoryPath was not set</value>
+  </data>
 </root>

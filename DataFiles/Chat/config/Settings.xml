@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <root>
-  <item name="aimldirectory" value="chat/Alfred"/>
+  <item name="aimldirectory" value="chat/Aiml"/>
   <item name="configdirectory" value="chat/config"/>
   
   <item name="logdirectory" value="logs"/>

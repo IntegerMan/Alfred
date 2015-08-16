@@ -22,38 +22,55 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 {
     public partial class ChatEngine
     {
+        /// <summary>
+        /// Holds the application's directory at startup for expediting loading values
+        /// </summary>
+        [NotNull]
+        private readonly string _startDirectory;
 
+        [NotNull]
+        private string _aimlDirectoryPath;
+
+        [NotNull]
+        private readonly AimlLoader _aimlLoader;
+
+        [NotNull]
         public string AimlDirectoryPath
         {
             get
             {
-                return Path.Combine(Environment.CurrentDirectory,
-                                    GlobalSettings.GetValue("aimldirectory"));
+                return _aimlDirectoryPath;
             }
+            set { _aimlDirectoryPath = value; }
         }
 
         public string PathToConfigFiles
         {
             get
             {
-                return Path.Combine(Environment.CurrentDirectory,
+                return Path.Combine(_startDirectory,
                                     GlobalSettings.GetValue("configdirectory"));
             }
         }
 
-        public void LoadAimlFromFiles()
+        public void LoadAimlFromDirectory()
         {
-            new AimlLoader(this).LoadAiml();
+            _aimlLoader.LoadAiml(AimlDirectoryPath);
+        }
+
+        public void LoadAimlFromDirectory(string directoryPath)
+        {
+            _aimlLoader.LoadAiml(directoryPath);
         }
 
         public void LoadAimlFile(XmlDocument newAIML, string filename)
         {
-            new AimlLoader(this).LoadAimlFromXml(newAIML, filename);
+            _aimlLoader.LoadAimlFromXml(newAIML, filename);
         }
 
         public void LoadSettings()
         {
-            LoadSettings(Path.Combine(Environment.CurrentDirectory,
+            LoadSettings(Path.Combine(_startDirectory,
                                       Path.Combine("config", "Settings.xml")));
         }
 

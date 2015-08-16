@@ -242,7 +242,7 @@ namespace MattEland.Ani.Alfred.Chat
         {
             _chatChatEngine.Logger = _console;
             _chatChatEngine.LoadSettings(_settingsPath);
-            _chatChatEngine.LoadAimlFromFiles();
+            _chatChatEngine.LoadAimlFromDirectory();
         }
 
         /// <summary>
