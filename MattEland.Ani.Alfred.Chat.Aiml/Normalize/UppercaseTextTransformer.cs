@@ -22,9 +22,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
         /// Initializes a new instance of the <see cref="TextTransformer" /> class.
         /// </summary>
         /// <param name="chatEngine">The ChatEngine.</param>
-        /// <param name="inputString">The input string.</param>
-        public UppercaseTextTransformer(ChatEngine chatEngine, string inputString)
-            : base(chatEngine, inputString)
+        /// <param name="input">The input string.</param>
+        public UppercaseTextTransformer([NotNull] ChatEngine chatEngine, string input)
+            : base(chatEngine, input)
         {
         }
 
@@ -32,7 +32,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
         /// Initializes a new instance of the <see cref="TextTransformer" /> class.
         /// </summary>
         /// <param name="chatEngine">The ChatEngine.</param>
-        public UppercaseTextTransformer(ChatEngine chatEngine)
+        public UppercaseTextTransformer([NotNull] ChatEngine chatEngine)
             : base(chatEngine)
         {
         }

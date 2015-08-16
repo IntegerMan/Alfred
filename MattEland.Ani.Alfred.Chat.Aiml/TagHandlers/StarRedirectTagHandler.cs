@@ -38,24 +38,26 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// <returns>The processed output</returns>
         protected override string ProcessChange()
         {
-            if (TemplateNode.Name.Matches("sr"))
+            if (!TemplateNode.Name.Matches("sr"))
             {
-                // Execute a star operation
-                var star = BuildStarTagHandler();
-                var starResult = star.Transform();
+                return string.Empty;
+            }
 
-                // Execute a redirect to the result of the star operation
-                try
-                {
-                    var node = GetNode($"<srai>{starResult}</srai>");
-                    var parameters = GetTagHandlerParametersForNode(node);
-                    return new RedirectTagHandler(parameters).Transform();
+            // Execute a star operation
+            var star = BuildStarTagHandler();
+            var starResult = star.Transform();
 
-                }
-                catch (XmlException xmlEx)
-                {
-                    Log(string.Format(Locale, Resources.SrTagHandlerError, xmlEx.Message), LogLevel.Error);
-                }
+            // Execute a redirect to the result of the star operation
+            try
+            {
+                var node = BuildNode(string.Format(Locale, "<srai>{0}</srai>", starResult).NonNull());
+                var parameters = GetTagHandlerParametersForNode(node);
+                return new RedirectTagHandler(parameters).Transform();
+
+            }
+            catch (XmlException xmlEx)
+            {
+                Log(string.Format(Locale, Resources.SrTagHandlerError, xmlEx.Message), LogLevel.Error);
             }
 
             return string.Empty;

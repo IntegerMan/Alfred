@@ -2,7 +2,7 @@
 // AimlLoader.cs
 // 
 // Created on:      08/12/2015 at 10:25 PM
-// Last Modified:   08/13/2015 at 11:49 PM
+// Last Modified:   08/16/2015 at 4:49 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -59,10 +59,16 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         ///     Loads AIML resources from a file.
         /// </summary>
         /// <param name="directoryPath">The path to the directory containing the .AIML files.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="directoryPath"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="directoryPath" /> is
+        ///     <see langword="null" />.
+        /// </exception>
         /// <exception cref="DirectoryNotFoundException">The directory specified does not exist.</exception>
         /// <exception cref="UnauthorizedAccessException">The caller does not have the required permission. </exception>
-        /// <exception cref="IOException"><paramref name="directoryPath" /> led to an invalid file name.-or-A network error has occurred. </exception>
+        /// <exception cref="IOException">
+        ///     <paramref name="directoryPath" /> led to an invalid file name.-or-A
+        ///     network error has occurred.
+        /// </exception>
         public void LoadAiml([NotNull] string directoryPath)
         {
             //- Parameter validation
@@ -80,12 +86,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             }
 
             // Grab all files in the directory that should meet our needs
-            Log(string.Format(Locale, Resources.LoadAimlStartingToLoad, directoryPath), LogLevel.Verbose);
+            Log(string.Format(Locale, Resources.LoadAimlStartingToLoad, directoryPath),
+                LogLevel.Verbose);
 
             var files = Directory.GetFiles(directoryPath, "*.aiml");
             if (files.Length <= 0)
             {
-                Log(string.Format(Locale, Resources.LoadAimlNoFilesInDirectory, directoryPath), LogLevel.Error);
+                Log(string.Format(Locale, Resources.LoadAimlNoFilesInDirectory, directoryPath),
+                    LogLevel.Error);
                 return;
             }
 
@@ -100,22 +108,23 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
                     }
                     catch (XmlException)
                     {
-                        Log("XML error reading file " + filename, LogLevel.Error);
+                        Log(string.Format(Locale, Resources.AimlLoaderErrorXmlException.NonNull(), filename), LogLevel.Error);
                     }
                     catch (IOException ex)
                     {
-                        Log("IO error reading file " + filename + " " + ex.Message, LogLevel.Error);
+                        Log(string.Format(Locale, Resources.AimlLoaderErrorIOException.NonNull(), filename, ex.Message), LogLevel.Error);
                     }
                     catch (SecurityException ex)
                     {
-                        Log("Security error reading file " + filename + " " + ex.Message, LogLevel.Error);
+                        Log(string.Format(Locale, Resources.AimlLoaderErrorSecurityException.NonNull(), filename, ex.Message),
+                            LogLevel.Error);
                     }
                 }
             }
 
             Log(string.Format(Locale,
                               Resources.LoadAimlFinishedLoading,
-                              Convert.ToString(_chatEngine.NodeCount)),
+                              _chatEngine.NodeCount),
                 LogLevel.Verbose);
         }
 
@@ -137,11 +146,25 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// </summary>
         /// <param name="path">The directoryPath.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        /// <exception cref="XmlException">There is a load or parse error in the XML. In this case, a <see cref="T:System.IO.FileNotFoundException" /> is raised. </exception>
-        /// <exception cref="DirectoryNotFoundException">The specified path is invalid (for example, it is on an unmapped drive). </exception>
+        /// <exception cref="XmlException">
+        ///     There is a load or parse error in the XML. In this case, a
+        ///     <see cref="T:System.IO.FileNotFoundException" /> is raised.
+        /// </exception>
+        /// <exception cref="DirectoryNotFoundException">
+        ///     The specified path is invalid (for example, it is on
+        ///     an unmapped drive).
+        /// </exception>
         /// <exception cref="IOException">An I/O error occurred while opening the file. </exception>
-        /// <exception cref="UnauthorizedAccessException"><paramref name="path" /> specified a file that is read-only.-or- This operation is not supported on the current platform.-or- <paramref name="filename" /> specified a directory.-or- The caller does not have the required permission. </exception>
-        /// <exception cref="FileNotFoundException">The file specified in <paramref name="path" /> was not found. </exception>
+        /// <exception cref="UnauthorizedAccessException">
+        ///     <paramref name="path" /> specified a file that is
+        ///     read-only.-or- This operation is not supported on the current platform.-or-
+        ///     <paramref name="path" /> specified a directory.-or- The caller does not have the required
+        ///     permission.
+        /// </exception>
+        /// <exception cref="FileNotFoundException">
+        ///     The file specified in <paramref name="path" /> was not
+        ///     found.
+        /// </exception>
         /// <exception cref="SecurityException">The caller does not have the required permission. </exception>
         public void LoadAimlFile([NotNull] string path)
         {
@@ -150,7 +173,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
                 throw new ArgumentNullException(nameof(path));
             }
 
-            Log("Processing AIML file: " + path, LogLevel.Verbose);
+            Log(string.Format(Locale, Resources.AimlLoaderProcessingFile.NonNull(), path), LogLevel.Verbose);
 
             // Load the document. Loads of XmlExceptions can be thrown here
             var doc = new XmlDocument();
@@ -164,19 +187,19 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         ///     Loads the AIML from an XML Document.
         /// </summary>
         /// <param name="doc">The document.</param>
-        /// <param name="filename">The directoryPath.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="doc"/> is <see langword="null" />.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="filename"/> is <see langword="null" />.</exception>
-        public void LoadAimlFromXml([NotNull] XmlDocument doc, [NotNull] string filename)
+        /// <param name="fileName">The directoryPath.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="doc" /> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="fileName" /> is <see langword="null" />.</exception>
+        public void LoadAimlFromXml([NotNull] XmlDocument doc, [NotNull] string fileName)
         {
             //- Validate
             if (doc == null)
             {
                 throw new ArgumentNullException(nameof(doc));
             }
-            if (filename == null)
+            if (fileName == null)
             {
-                throw new ArgumentNullException(nameof(filename));
+                throw new ArgumentNullException(nameof(fileName));
             }
 
             // Grab the nodes from the document
@@ -198,11 +221,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
                 switch (node.Name.ToUpperInvariant())
                 {
                     case "TOPIC":
-                        ProcessTopic(node, filename);
+                        ProcessTopic(node, fileName);
                         break;
 
                     case "CATEGORY":
-                        ProcessCategory(node, "*", filename);
+                        ProcessCategory(node, "*", fileName);
                         break;
                 }
             }
@@ -270,7 +293,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <param name="node">The node.</param>
         /// <param name="topicName">Name of the topic.</param>
         /// <param name="filename">The filename.</param>
-        private void ProcessCategory([NotNull] XmlNode node, [NotNull] string topicName, [NotNull] string filename)
+        private void ProcessCategory([NotNull] XmlNode node,
+                                     [NotNull] string topicName,
+                                     [NotNull] string filename)
         {
             //- Validation
             if (node == null)
@@ -290,7 +315,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             var patternNode = FindChildNode("pattern", node);
             if (patternNode == null)
             {
-                throw new XmlException(string.Format(Locale, "Missing pattern tag in a node found in {0}", filename));
+                throw new XmlException(string.Format(Locale,
+                                                     "Missing pattern tag in a node found in {0}",
+                                                     filename));
             }
 
             // GetValue the template node
@@ -315,10 +342,12 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <param name="topicName">Name of the topic.</param>
         /// <param name="isUserInput">The is user input.</param>
         /// <returns>The path string</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null" />.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="topicName"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="node" /> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="topicName" /> is <see langword="null" />.</exception>
         [NotNull]
-        public string BuildPathString([NotNull] XmlNode node, [NotNull] string topicName, bool isUserInput)
+        public string BuildPathString([NotNull] XmlNode node,
+                                      [NotNull] string topicName,
+                                      bool isUserInput)
         {
             //- Validation
             if (node == null)
@@ -365,16 +394,17 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        ///     Builds a directoryPath string representing a compound state involving a pattern, "that" value, and topic.
+        ///     Builds a directoryPath string representing a compound state involving a pattern, "that" value,
+        ///     and topic.
         /// </summary>
         /// <param name="pattern">The pattern.</param>
         /// <param name="that">The that value.</param>
         /// <param name="topicName">Name of the topic.</param>
         /// <param name="isUserInput">Whether or not this is user input.</param>
         /// <returns>A directoryPath string representing the pattern, that, and topicName values.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="pattern"/> is <see langword="null" />.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="that"/> is <see langword="null" />.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="topicName"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="pattern" /> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="that" /> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="topicName" /> is <see langword="null" />.</exception>
         [NotNull]
         public string BuildPathString([NotNull] string pattern,
                                       [NotNull] string that,
@@ -444,7 +474,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         public string Normalize([CanBeNull] string input, bool isUserInput)
         {
             // Do common substitutions
-            input = TextSubstitutionTransformer.Substitute(_chatEngine.Librarian.Substitutions, input);
+            input = TextSubstitutionHelper.Substitute(_chatEngine.Librarian.Substitutions,
+                                                           input);
 
             // Grab the words in the input
             const string WordBoundaries = " \r\n\t";
@@ -475,7 +506,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
                 }
 
                 //- Add it to the output
-                stringBuilder.AppendFormat("{0} ", result?.Trim());
+                stringBuilder.AppendFormat(Locale, "{0} ", result?.Trim());
             }
 
             //- Send the result back

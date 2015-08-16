@@ -56,14 +56,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                 var indexes = indexText.Split(",".ToCharArray());
 
                 //- Grab values for the inputs. This refers to the nth last thing the user said to the engine
-                int inputIndex;
-                int.TryParse(indexes[0]?.Trim(), out inputIndex);
+                var inputIndex = indexes[0].AsInt();
 
                 //- Sentence index is optional. This refers to the sentence in the input referred to by inputIndex.
                 var sentenceIndex = 1;
                 if (indexes.Length >= 2)
                 {
-                    int.TryParse(indexes[1]?.Trim(), out sentenceIndex);
+                    sentenceIndex = indexes[1].AsInt();
                 }
 
                 // Grab the input X inputs ago and Y sentences into that input

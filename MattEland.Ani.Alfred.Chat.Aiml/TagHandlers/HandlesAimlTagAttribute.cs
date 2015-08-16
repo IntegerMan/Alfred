@@ -18,7 +18,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     /// An attribute describing a class that can handle an AIML tag
     /// </summary>
     [AttributeUsage(AttributeTargets.Class), UsedImplicitly]
-    public class HandlesAimlTagAttribute : Attribute
+    public sealed class HandlesAimlTagAttribute : Attribute
     {
 
         /// <summary>
@@ -38,8 +38,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         {
             [DebuggerStepThrough]
             get;
-            [DebuggerStepThrough]
-            set;
         }
     }
 }

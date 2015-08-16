@@ -18,13 +18,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     /// A tag handler for the AIML "uppercase" tag. This outputs its text in upper case.
     /// </summary>
     [HandlesAimlTag("uppercase")]
-    public class UpperCaseTagHandler : AimlTagHandler
+    public class UppercaseTagHandler : AimlTagHandler
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AimlTagHandler" /> class.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
-        public UpperCaseTagHandler([NotNull] TagHandlerParameters parameters)
+        public UppercaseTagHandler([NotNull] TagHandlerParameters parameters)
             : base(parameters)
         {
         }

@@ -45,7 +45,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
             // Set simple properties
             MaxThatSize = 256;
-            TimeOut = 2000;
+            Timeout = 2000;
             RootNode = new Node();
 
             // Build helper components
@@ -71,7 +71,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <value>The sentence splitters.</value>
         [NotNull]
         [ItemNotNull]
-        public List<string> SentenceSplitters { get; }
+        public ICollection<string> SentenceSplitters { get; }
 
         /// <summary>
         ///     Gets the logger.
@@ -94,7 +94,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         ///     Gets the time out limit for a request in milliseconds. Defaults to 2000 (2 seconds).
         /// </summary>
         /// <value>The time out.</value>
-        public double TimeOut { get; set; }
+        public double Timeout { get; set; }
 
         /// <summary>
         ///     Gets or sets the maximum size that can be used to hold a path in the that value.
@@ -265,19 +265,19 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// </summary>
         /// <param name="node">The template node.</param>
         /// <param name="path">The path.</param>
-        /// <param name="filename">The filename.</param>
+        /// <param name="fileName">The filename.</param>
         /// <exception cref="ArgumentNullException">
-        ///     <paramref name="filename" />, <paramref name="path" />, or
+        ///     <paramref name="fileName" />, <paramref name="path" />, or
         ///     <paramref name="node" /> is <see langword="null" />.
         /// </exception>
         public void AddCategoryToGraph([NotNull] XmlNode node,
                                        [NotNull] string path,
-                                       [NotNull] string filename)
+                                       [NotNull] string fileName)
         {
             //- Validate
-            if (filename == null)
+            if (fileName == null)
             {
-                throw new ArgumentNullException(nameof(filename));
+                throw new ArgumentNullException(nameof(fileName));
             }
             if (path == null)
             {
@@ -295,13 +295,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                                             Resources.ChatEngineAddCategoryErrorNoPath,
                                             path,
                                             node.OuterXml,
-                                            filename);
+                                            fileName);
                 Log(message, LogLevel.Warning);
                 return;
             }
 
             // Add the node to the graph
-            RootNode.AddCategory(path, node.OuterXml, filename);
+            RootNode.AddCategory(path, node.OuterXml, fileName);
         }
 
     }

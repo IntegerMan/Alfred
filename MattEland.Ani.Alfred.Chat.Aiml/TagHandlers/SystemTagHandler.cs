@@ -40,7 +40,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                http://stackoverflow.com/questions/15234448/run-shell-commands-using-c-sharp-and-get-the-info-into-string 
                is a nice starting place. */
 
-            Log("The SystemTagHandler tag is not implemented in this ChatEngine", LogLevel.Warning);
+            Log(Resources.SystemNotImplemented, LogLevel.Warning);
 
             return string.Empty;
         }

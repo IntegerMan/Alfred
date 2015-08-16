@@ -61,6 +61,42 @@ namespace MattEland.Ani.Alfred.Chat.Aiml {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to IO error reading file {0} {1}.
+        /// </summary>
+        internal static string AimlLoaderErrorIOException {
+            get {
+                return ResourceManager.GetString("AimlLoaderErrorIOException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Security error reading file {0} {1}.
+        /// </summary>
+        internal static string AimlLoaderErrorSecurityException {
+            get {
+                return ResourceManager.GetString("AimlLoaderErrorSecurityException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to XML error reading file {0}.
+        /// </summary>
+        internal static string AimlLoaderErrorXmlException {
+            get {
+                return ResourceManager.GetString("AimlLoaderErrorXmlException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Processing AIML file: {0}.
+        /// </summary>
+        internal static string AimlLoaderProcessingFile {
+            get {
+                return ResourceManager.GetString("AimlLoaderProcessingFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Attempted to load a new category with an empty pattern where the directoryPath = {0} and template = {1} produced by a category in the file: {2}.
         /// </summary>
         internal static string ChatEngineAddCategoryErrorNoPath {
@@ -268,6 +304,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Request timeout. User: {0} raw input: &quot;{1}&quot;.
+        /// </summary>
+        internal static string RequestTimedOut {
+            get {
+                return ResourceManager.GetString("RequestTimedOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not load settings from file &apos;{0}&apos; due to a security concern: {1}.
         /// </summary>
         internal static string SettignsLoadErrorSecurity {
@@ -354,6 +399,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml {
         internal static string StarErrorNoInputStarElements {
             get {
                 return ResourceManager.GetString("StarErrorNoInputStarElements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The SystemTagHandler tag is not implemented in this ChatEngine.
+        /// </summary>
+        internal static string SystemNotImplemented {
+            get {
+                return ResourceManager.GetString("SystemNotImplemented", resourceCulture);
             }
         }
         

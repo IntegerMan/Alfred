@@ -34,16 +34,32 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         [NotNull]
         public string FullPath { get; }
 
+        /// <summary>
+        /// Gets or sets the template.
+        /// </summary>
+        /// <value>The template.</value>
         [NotNull]
         public string Template { get; set; } = string.Empty;
 
+        /// <summary>
+        /// Gets the that star collection.
+        /// </summary>
+        /// <value>The that star collection.</value>
         [NotNull]
-        public List<string> ThatStar { get; } = new List<string>();
+        public IList<string> ThatStar { get; } = new List<string>();
 
+        /// <summary>
+        /// Gets the topic star collection.
+        /// </summary>
+        /// <value>The topic star collection.</value>
         [NotNull]
-        public List<string> TopicStar { get; } = new List<string>();
+        public IList<string> TopicStar { get; } = new List<string>();
 
+        /// <summary>
+        /// Gets the input star collection.
+        /// </summary>
+        /// <value>The input star collection.</value>
         [NotNull]
-        public List<string> InputStar { get; } = new List<string>();
+        public IList<string> InputStar { get; } = new List<string>();
     }
 }

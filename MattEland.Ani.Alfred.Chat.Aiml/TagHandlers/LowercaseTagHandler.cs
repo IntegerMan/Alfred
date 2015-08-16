@@ -19,13 +19,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     ///     lower case.
     /// </summary>
     [HandlesAimlTag("lowercase")]
-    public class LowerCaseTagHandler : AimlTagHandler
+    public class LowercaseTagHandler : AimlTagHandler
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
-        public LowerCaseTagHandler([NotNull] TagHandlerParameters parameters)
+        public LowercaseTagHandler([NotNull] TagHandlerParameters parameters)
             : base(parameters)
         {
         }

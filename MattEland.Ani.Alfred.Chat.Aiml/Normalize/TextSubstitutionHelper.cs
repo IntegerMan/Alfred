@@ -1,65 +1,44 @@
 ﻿// ---------------------------------------------------------
-// TextSubstitutionTransformer.cs
+// TextSubstitutionHelper.cs
 // 
 // Created on:      08/12/2015 at 10:37 PM
-// Last Modified:   08/13/2015 at 11:54 AM
+// Last Modified:   08/16/2015 at 5:25 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
 {
 
     /// <summary>
-    ///     A TextTransformer that replaces found occurrences of strings
-    ///     with their values found in the ChatEngine's settings dictionary.
+    ///     A text transformation helper class that replaces found occurrences of strings
+    ///     with their values found in the settings provider.
     /// </summary>
-    internal sealed class TextSubstitutionTransformer : TextTransformer
+    internal static class TextSubstitutionHelper
     {
-
         private const string Marker = "zzMARKERzz";
         private const string WordBoundary = @"\b";
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TextTransformer" /> class.
+        ///     Substitutes all occurrences of the words in the settings provider found in input with the
+        ///     replacement values stored in that provider.
         /// </summary>
-        /// <param name="chatEngine">The ChatEngine.</param>
-        internal TextSubstitutionTransformer([NotNull] ChatEngine chatEngine)
-            : base(chatEngine)
-        {
-        }
-
-        /// <summary>
-        ///     Processes the input text and returns the processed value.
-        /// </summary>
-        /// <returns>The processed output</returns>
-        protected override string ProcessChange()
-        {
-            /* Replace simple substitutions found in the input string with values
-            in the substitutions dictionary. This is useful for common words
-            that are equivalent in meaning. */
-
-            return Substitute(Librarian.Substitutions, InputString);
-        }
-
-        /// <summary>
-        /// Substitutes all occurrences of the words in the dictionary found in input with the
-        /// values stored in that dictionary.
-        /// </summary>
-        /// <param name="dictionary">The dictionary.</param>
+        /// <param name="settings">The settings manager.</param>
         /// <param name="input">The input.</param>
         /// <returns>A modified version of the input string.</returns>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
         [NotNull]
-        internal static string Substitute([NotNull] SettingsDictionary dictionary,
+        internal static string Substitute([NotNull] SettingsManager settings,
                                           [CanBeNull] string input)
         {
             //- Validate
@@ -67,13 +46,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
             {
                 input = string.Empty;
             }
-            if (dictionary == null)
+            if (settings == null)
             {
-                throw new ArgumentNullException(nameof(dictionary));
+                throw new ArgumentNullException(nameof(settings));
             }
 
             //- Grab our setting names
-            var settingNames = dictionary.Keys;
+            var settingNames = settings.Keys;
 
             // Look for each setting settingName in the input string to replace it with our setting value
             foreach (var settingName in settingNames)
@@ -83,7 +62,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
                     continue;
                 }
 
-                var settingValue = dictionary.GetValue(settingName);
+                var settingValue = settings.GetValue(settingName);
 
                 input = Substitute(input, settingName, settingValue);
             }
@@ -93,14 +72,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
         }
 
         /// <summary>
-        /// Substitutes whole word instances of settingName in input with settingValue.
+        ///     Substitutes whole word instances of settingName in input with settingValue.
         /// </summary>
         /// <param name="input">The input.</param>
         /// <param name="settingName">Name of the setting.</param>
         /// <param name="settingValue">The setting value.</param>
         /// <returns>System.String.</returns>
         [NotNull]
-        private static string Substitute([CanBeNull] string input, [CanBeNull] string settingName,
+        private static string Substitute([CanBeNull] string input,
+                                         [CanBeNull] string settingName,
                                          [CanBeNull] string settingValue)
         {
             //- Sanity check
@@ -114,14 +94,22 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
             }
 
             // Surround the setting with our marker string
-            var replacement = string.Format("{0}{1}{0}", Marker, settingValue.Trim());
+            var replacement =
+                string.Format(CultureInfo.CurrentCulture, "{0}{1}{0}", Marker, settingValue.Trim())
+                      .NonNull();
 
             // Check for bad things in the name and make them regex safe
             var sanitizedName =
-                settingName.Replace(@"\", "").Replace(")", @"\)").Replace("(", @"\(").Replace(".", @"\.").Trim();
+                settingName.Replace(@"\", "")
+                           .Replace(")", @"\)")
+                           .Replace("(", @"\(")
+                           .Replace(".", @"\.")
+                           .Trim();
 
             // Replaces the variable settingName with the setting value
-            var pattern = $"{WordBoundary}{sanitizedName}{WordBoundary}";
+            var pattern =
+                string.Format(CultureInfo.CurrentCulture, "{0}{1}{0}", WordBoundary, sanitizedName)
+                      .NonNull();
 
             return Regex.Replace(input, pattern, replacement, RegexOptions.IgnoreCase);
         }

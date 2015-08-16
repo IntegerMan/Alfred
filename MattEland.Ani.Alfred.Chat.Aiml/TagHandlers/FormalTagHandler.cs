@@ -74,7 +74,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                 }
 
                 // Build out the new sentence with word breaks
-                stringBuilder.AppendFormat("{0} ", newWord);
+                stringBuilder.AppendFormat(Locale, "{0} ", newWord);
             }
 
             // Return Our New Sentence In Formal Case

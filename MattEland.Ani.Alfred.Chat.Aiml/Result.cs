@@ -77,21 +77,21 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// </summary>
         /// <value>The input sentences.</value>
         [NotNull]
-        public List<string> InputSentences { get; } = new List<string>();
+        public IList<string> InputSentences { get; } = new List<string>();
 
         /// <summary>
         ///     Gets the normalized paths.
         /// </summary>
         /// <value>The normalized paths.</value>
         [NotNull]
-        public List<string> NormalizedPaths { get; } = new List<string>();
+        public ICollection<string> NormalizedPaths { get; } = new List<string>();
 
         /// <summary>
         ///     Gets the output sentences.
         /// </summary>
         /// <value>The output sentences.</value>
         [NotNull]
-        public List<string> OutputSentences { get; } = new List<string>();
+        public IList<string> OutputSentences { get; } = new List<string>();
 
         /// <summary>
         ///     Gets the request.
@@ -105,7 +105,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// </summary>
         /// <value>The SubQueries.</value>
         [NotNull]
-        public List<SubQuery> SubQueries { get; } = new List<SubQuery>();
+        public ICollection<SubQuery> SubQueries { get; } = new List<SubQuery>();
 
         /// <summary>
         ///     Gets the user.
@@ -151,7 +151,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                 var stringBuilder = new StringBuilder();
                 foreach (var path in NormalizedPaths)
                 {
-                    stringBuilder.AppendFormat("{0}{1}", path, Environment.NewLine);
+                    stringBuilder.AppendFormat(ChatEngine.Locale, "{0}{1}", path, Environment.NewLine);
                 }
 
                 var message = string.Format(ChatEngine.Locale,
@@ -186,7 +186,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                     {
                         sentence += ".";
                     }
-                    stringBuilder.AppendFormat("{0} ", sentence);
+                    stringBuilder.AppendFormat(ChatEngine.Locale, "{0} ", sentence);
                 }
                 return stringBuilder.ToString().Trim();
             }
@@ -211,7 +211,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <returns>True if the sentence has the correct punctuation; false otherwise.</returns>
         private bool SentenceEndsWithPunctuation([NotNull] string sentence)
         {
-            return ChatEngine.SentenceSplitters.Any(splitter => sentence.Trim().EndsWith(splitter));
+            return ChatEngine.SentenceSplitters.Any(splitter => sentence.Trim().EndsWith(splitter, StringComparison.OrdinalIgnoreCase));
         }
 
         /// <summary>

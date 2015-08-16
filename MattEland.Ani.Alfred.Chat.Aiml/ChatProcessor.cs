@@ -135,6 +135,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <param name="request">The request.</param>
         /// <param name="query">The query.</param>
         /// <param name="result">The result.</param>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         [SuppressMessage("ReSharper", "CatchAllClause")]
         private void ProcessSubQuery([NotNull] Request request,
                                                  [NotNull] SubQuery query,
@@ -157,7 +158,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             try
             {
                 // Build an XML node out of the template the query traced to
-                var node = AimlTagHandler.GetNode(query.Template);
+                var node = AimlTagHandler.BuildNode(query.Template);
 
                 // If no template, there's nothing to do.
                 if (node == null)
@@ -256,7 +257,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
             // Build a node out of the output of the transform
             Debug.Assert(nodeContents != null);
-            var evaluatedNode = AimlTagHandler.GetNode(nodeContents);
+            var evaluatedNode = AimlTagHandler.BuildNode(nodeContents);
             if (evaluatedNode == null)
             {
                 return string.Empty;

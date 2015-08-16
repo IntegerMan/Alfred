@@ -56,14 +56,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                         var indiciesText = indexText.Split(",".ToCharArray());
 
                         //- Grab the output index - the nth last interaction result with the chat engine
-                        int outputIndex;
-                        int.TryParse(indiciesText[0]?.Trim(), out outputIndex);
+                        int outputIndex = indiciesText[0].AsInt();
 
                         //- Grab the sentence index referring to the sentence within the output - defaulting to 1 if not specified
                         var sentenceIndex = 1;
                         if (indiciesText.Length >= 2)
                         {
-                            int.TryParse(indiciesText[1]?.Trim(), out sentenceIndex);
+                            sentenceIndex = indiciesText[1].AsInt();
                         }
 
                         // Return the thing the chat engine said at the specified point in time

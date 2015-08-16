@@ -49,7 +49,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             if (node.InnerText.HasText())
             {
                 var substitutions = Librarian.FirstPersonToSecondPersonSubstitutions;
-                return TextSubstitutionTransformer.Substitute(substitutions, node.InnerText);
+                return TextSubstitutionHelper.Substitute(substitutions, node.InnerText);
             }
 
             // Evaluate everything else and set that as the inner text of this node and then process it

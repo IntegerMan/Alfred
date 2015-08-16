@@ -50,7 +50,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             ChatEngine = chatEngine;
 
             // Set up the variables collection
-            UserVariables = new SettingsDictionary();
+            UserVariables = new SettingsManager();
             UserVariables.Add("topic", "*");
         }
 
@@ -66,7 +66,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// </summary>
         /// <value>The predicates.</value>
         [NotNull]
-        public SettingsDictionary UserVariables { get; }
+        public SettingsManager UserVariables { get; }
 
         /// <summary>
         ///     Gets the user's identifier.

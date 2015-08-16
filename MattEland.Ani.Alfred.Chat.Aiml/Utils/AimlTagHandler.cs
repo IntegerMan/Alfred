@@ -101,19 +101,16 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// </summary>
         /// <param name="xml">The outer XML.</param>
         /// <returns>An XmlNode from the document</returns>
-        /// <remarks>
-        ///     TODO: This is only here for convenience. An extension method may be in order
-        /// </remarks>
-        /// <exception cref="ArgumentException">xml</exception>
+        /// <exception cref="ArgumentNullException">xml</exception>
         /// <exception cref="XmlException">
         ///     There is a load or parse error in the XML. In this case, the
         ///     document remains empty.
         /// </exception>
-        public static XmlNode GetNode([NotNull] string xml)
+        public static XmlNode BuildNode([NotNull] string xml)
         {
             if (string.IsNullOrWhiteSpace(xml))
             {
-                throw new ArgumentException(nameof(xml));
+                throw new ArgumentNullException(nameof(xml));
             }
 
             // Build out a document from the XML
@@ -147,11 +144,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// </summary>
         /// <returns>The star node.</returns>
         [NotNull]
-        protected XmlNode GetStarNode()
+        protected static XmlNode BuildStarNode()
         {
             try
             {
-                var starNode = GetNode("<star/>");
+                var starNode = BuildNode("<star/>");
                 Debug.Assert(starNode != null);
                 return starNode;
             }
@@ -172,7 +169,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         [NotNull]
         protected StarTagHandler BuildStarTagHandler()
         {
-            var node = GetStarNode();
+            var node = BuildStarNode();
             var parameters = GetTagHandlerParametersForNode(node);
 
             return new StarTagHandler(parameters);

@@ -32,9 +32,10 @@ namespace MattEland.Ani.Alfred.Chat
         private readonly ChatPage _chatPage;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
+        /// Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
         /// <param name="provider">The provider.</param>
+        /// <param name="console">The console.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
         public AlfredChatSubsystem([NotNull] IPlatformProvider provider,
                                    [CanBeNull] IConsole console) : base(provider, console)

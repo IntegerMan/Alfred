@@ -226,4 +226,22 @@
   <data name="ChatProcessNodeError" xml:space="preserve">
     <value>A problem was encountered when trying to process the input: {0} with the template: "{1}": {2}</value>
   </data>
+  <data name="SystemNotImplemented" xml:space="preserve">
+    <value>The SystemTagHandler tag is not implemented in this ChatEngine</value>
+  </data>
+  <data name="RequestTimedOut" xml:space="preserve">
+    <value>Request timeout. User: {0} raw input: "{1}"</value>
+  </data>
+  <data name="AimlLoaderProcessingFile" xml:space="preserve">
+    <value>Processing AIML file: {0}</value>
+  </data>
+  <data name="AimlLoaderErrorXmlException" xml:space="preserve">
+    <value>XML error reading file {0}</value>
+  </data>
+  <data name="AimlLoaderErrorIOException" xml:space="preserve">
+    <value>IO error reading file {0} {1}</value>
+  </data>
+  <data name="AimlLoaderErrorSecurityException" xml:space="preserve">
+    <value>Security error reading file {0} {1}</value>
+  </data>
 </root>

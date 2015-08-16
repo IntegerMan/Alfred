@@ -29,16 +29,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     public class RandomTagHandler : AimlTagHandler
     {
         [NotNull]
-        private static readonly Random _randomizer;
-
-        /// <summary>
-        ///     Initializes static members of the <see cref="RandomTagHandler" /> class.
-        /// </summary>
-        static RandomTagHandler()
-        {
-            // Reuse the same randomizer; You GetTagHandler more random results this way
-            _randomizer = new Random();
-        }
+        private static readonly Random _randomizer = new Random();
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="RandomTagHandler" /> class.

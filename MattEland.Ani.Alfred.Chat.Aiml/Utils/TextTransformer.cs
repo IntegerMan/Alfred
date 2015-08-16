@@ -29,9 +29,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         ///     Initializes a new instance of the <see cref="TextTransformer" /> class.
         /// </summary>
         /// <param name="chatEngine">The ChatEngine.</param>
-        /// <param name="inputString">The input string.</param>
+        /// <param name="input">The input string.</param>
         /// <exception cref="ArgumentNullException"><paramref name="chatEngine" /> is <see langword="null" />.</exception>
-        protected TextTransformer([NotNull] ChatEngine chatEngine, [CanBeNull] string inputString)
+        protected TextTransformer([NotNull] ChatEngine chatEngine, [CanBeNull] string input)
         {
             if (chatEngine == null)
             {
@@ -39,7 +39,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             }
 
             _chatEngine = chatEngine;
-            InputString = inputString;
+            InputString = input;
         }
 
         /// <summary>

@@ -10,6 +10,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Text;
 
 using JetBrains.Annotations;
@@ -29,10 +30,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         private readonly Dictionary<string, Node> _children = new Dictionary<string, Node>();
 
         /// <summary>
-        ///     Gets or sets the filename.
+        ///     Gets or sets the file name.
         /// </summary>
-        /// <value>The filename.</value>
-        public string Filename { get; set; } = string.Empty;
+        /// <value>The file name.</value>
+        public string FileName { get; set; } = string.Empty;
 
         /// <summary>
         ///     Gets or sets the template.
@@ -60,22 +61,21 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// </summary>
         /// <param name="path">The path.</param>
         /// <param name="template">The template.</param>
-        /// <param name="filename">The filename.</param>
+        /// <param name="fileName">The filename.</param>
         /// <exception cref="ArgumentNullException">A category has an  empty template tag.</exception>
-        public void AddCategory([CanBeNull] string path, [NotNull] string template, [CanBeNull] string filename)
+        public void AddCategory([CanBeNull] string path, [NotNull] string template, [CanBeNull] string fileName)
         {
             //- Validate Input
             if (string.IsNullOrEmpty(template))
             {
-                string message =
-                    $"The category with a pattern: {path} found in file: {filename} has an empty template tag. ABORTING";
+                var message = string.Format(CultureInfo.CurrentCulture, "The category with a pattern: {0} found in file: {1} has an empty template tag. Aborting.", path, fileName);
                 throw new ArgumentNullException(template, message);
             }
 
             if (string.IsNullOrWhiteSpace(path))
             {
                 Template = template;
-                Filename = filename;
+                FileName = fileName;
             }
             else
             {
@@ -101,7 +101,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
                     _children.Add(key, node);
                 }
 
-                node.AddCategory(restOfPath, template, filename);
+                node.AddCategory(restOfPath, template, fileName);
             }
         }
 

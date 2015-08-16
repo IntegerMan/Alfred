@@ -202,7 +202,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// <returns>True if the regex matched otherwise false.</returns>
         private static bool IsRegexMatch(string expected, string value)
         {
-            var regex = new Regex(value.NonNull().Replace(" ", "\\s").Replace("*", "[\\sA-Z0-9]+"), RegexOptions.IgnoreCase);
+            var regex = BuildValidationRegex(value);
 
             return regex.IsMatch(expected.NonNull());
         }

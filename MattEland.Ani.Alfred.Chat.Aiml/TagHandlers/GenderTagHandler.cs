@@ -43,7 +43,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             InnerText and find text that can be evaluated using substitution */
 
             //- Ensure this is the correct tag
-            if (TemplateNode.Name.ToLower() != "gender")
+            if (TemplateNode.Name.Matches("gender"))
             {
                 return string.Empty;
             }
@@ -55,16 +55,12 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                    inverts the gender on gender pronouns ("he" / "she" / etc.) */
 
                 var substitutions = Librarian.GenderSubstitutions;
-                return TextSubstitutionTransformer.Substitute(substitutions,
+                return TextSubstitutionHelper.Substitute(substitutions,
                                                               TemplateNode.InnerText);
             }
 
             // Apply an AIML "star" tag and store the results as our inner text
             var star = BuildStarTagHandler();
-            if (star == null)
-            {
-                return string.Empty;
-            }
             TemplateNode.InnerText = star.Transform().NonNull();
 
             //! If we still have text, we'll need to use recursion to evaluate our new value

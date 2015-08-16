@@ -2,7 +2,7 @@
 // Request.cs
 // 
 // Created on:      08/12/2015 at 10:22 PM
-// Last Modified:   08/13/2015 at 1:44 PM
+// Last Modified:   08/16/2015 at 5:17 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -12,6 +12,7 @@ using System;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml
 {
@@ -28,7 +29,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <param name="chatEngine">The chat engine.</param>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
-        public Request([NotNull] string rawInput, [NotNull] User user, [NotNull] ChatEngine chatEngine)
+        public Request([NotNull] string rawInput,
+                       [NotNull] User user,
+                       [NotNull] ChatEngine chatEngine)
             : this(rawInput, user, chatEngine, null)
         {
         }
@@ -105,7 +108,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         public string RawInput { get; }
 
         /// <summary>
-        /// Gets or sets the result of the request.
+        ///     Gets or sets the result of the request.
         /// </summary>
         /// <value>The result.</value>
         [CanBeNull]
@@ -153,12 +156,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         {
             if (!HasTimedOut)
             {
-                var timeLimit = ChatEngine.TimeOut;
+                var timeLimit = ChatEngine.Timeout;
                 HasTimedOut = StartedOn.AddMilliseconds(timeLimit) < DateTime.Now;
 
                 if (HasTimedOut)
                 {
-                    var message = string.Format("Request timeout. User: {0} raw input: \"{1}\"",
+                    var message = string.Format(ChatEngine.Locale,
+                                                Resources.RequestTimedOut.NonNull(),
                                                 User.Id,
                                                 RawInput);
 

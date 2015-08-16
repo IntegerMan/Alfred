@@ -108,7 +108,7 @@ namespace MattEland.Common
             int output;
 
             // Safely cast the input as an integer. Failure will not throw an exception
-            if (!int.TryParse(input, out output))
+            if (!int.TryParse(input?.Trim(), out output))
             {
                 // In case of failure, use our fallback value
                 output = fallbackValue;
@@ -128,7 +128,7 @@ namespace MattEland.Common
             double output;
 
             // Safely cast the input as an integer. Failure will not throw an exception
-            if (!double.TryParse(input, out output))
+            if (!double.TryParse(input?.Trim(), out output))
             {
                 // In case of failure, use our fallback value
                 output = fallbackValue;

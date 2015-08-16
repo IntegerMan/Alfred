@@ -40,7 +40,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         {
             if (TemplateNode.Name.Matches("size"))
             {
-                return Convert.ToString(ChatEngine.NodeCount);
+                return ChatEngine.NodeCount.ToString(Locale);
             }
 
             return string.Empty;

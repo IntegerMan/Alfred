@@ -56,7 +56,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 
             // Return the current time with formatting applied
             var now = DateTime.Now;
-            return now.ToString(formatString);
+            return now.ToString(formatString, Locale);
 
         }
     }

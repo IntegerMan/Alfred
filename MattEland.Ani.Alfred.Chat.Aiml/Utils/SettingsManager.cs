@@ -35,7 +35,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
     /// 
     /// TODO: Clean up this class by using more built in mechanisms
     /// </remarks>
-    public class SettingsDictionary
+    public class SettingsManager
     {
         [NotNull]
         [ItemNotNull]
@@ -106,7 +106,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <value>The setting names.</value>
         /// <remarks>TODO: I'd love to remove this or use IEnumerable instead</remarks>
         [NotNull]
-        public string[] Keys
+        public IEnumerable<string> Keys
         {
             get
             {
@@ -327,7 +327,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// </summary>
         /// <param name="target">The target dictionary.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public void CopyInto([NotNull] SettingsDictionary target)
+        public void CopyInto([NotNull] SettingsManager target)
         {
             if (target == null)
             {
@@ -368,23 +368,23 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             }
             catch (XmlException ex)
             {
-                logger?.Log(LogHeader, string.Format(Resources.SettingsLoadErrorXml.NonNull(), pathToSettings, ex.Message), LogLevel.Error);
+                logger?.Log(LogHeader, string.Format(locale, Resources.SettingsLoadErrorXml.NonNull(), pathToSettings, ex.Message), LogLevel.Error);
             }
             catch (FileNotFoundException)
             {
-                logger?.Log(LogHeader, string.Format(Resources.SettingsLoadErrorFileNotFound.NonNull(), pathToSettings), LogLevel.Error);
+                logger?.Log(LogHeader, string.Format(locale, Resources.SettingsLoadErrorFileNotFound.NonNull(), pathToSettings), LogLevel.Error);
             }
             catch (UnauthorizedAccessException ex)
             {
-                logger?.Log(LogHeader, string.Format(Resources.SettingsLoadErrorUnauthorized.NonNull(), pathToSettings, ex.Message), LogLevel.Error);
+                logger?.Log(LogHeader, string.Format(locale, Resources.SettingsLoadErrorUnauthorized.NonNull(), pathToSettings, ex.Message), LogLevel.Error);
             }
             catch (SecurityException ex)
             {
-                logger?.Log(LogHeader, string.Format(Resources.SettignsLoadErrorSecurity.NonNull(), pathToSettings, ex.Message), LogLevel.Error);
+                logger?.Log(LogHeader, string.Format(locale, Resources.SettignsLoadErrorSecurity.NonNull(), pathToSettings, ex.Message), LogLevel.Error);
             }
             catch (IOException ex)
             {
-                logger?.Log(LogHeader, string.Format(Resources.SettingsLoadErrorIOException.NonNull(), pathToSettings, ex.Message), LogLevel.Error);
+                logger?.Log(LogHeader, string.Format(locale, Resources.SettingsLoadErrorIOException.NonNull(), pathToSettings, ex.Message), LogLevel.Error);
             }
         }
     }

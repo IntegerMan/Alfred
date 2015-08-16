@@ -42,11 +42,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             _chatEngine = chatEngine;
 
             // Initialize settings dictionaries
-            GlobalSettings = new SettingsDictionary();
-            GenderSubstitutions = new SettingsDictionary();
-            SecondPersonToFirstPersonSubstitutions = new SettingsDictionary();
-            FirstPersonToSecondPersonSubstitutions = new SettingsDictionary();
-            Substitutions = new SettingsDictionary();
+            GlobalSettings = new SettingsManager();
+            GenderSubstitutions = new SettingsManager();
+            SecondPersonToFirstPersonSubstitutions = new SettingsManager();
+            FirstPersonToSecondPersonSubstitutions = new SettingsManager();
+            Substitutions = new SettingsManager();
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// </summary>
         /// <value>The substitutions.</value>
         [NotNull]
-        public SettingsDictionary Substitutions { get; }
+        public SettingsManager Substitutions { get; }
 
         /// <summary>
         ///     Gets the gender substitutions dictionary. This is a collection of male and female pronouns and
@@ -65,14 +65,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// </summary>
         /// <value>The gender substitutions dictionary.</value>
         [NotNull]
-        public SettingsDictionary GenderSubstitutions { get; }
+        public SettingsManager GenderSubstitutions { get; }
 
         /// <summary>
         ///     Gets the global settings dictionary.
         /// </summary>
         /// <value>The global settings.</value>
         [NotNull]
-        public SettingsDictionary GlobalSettings { get; }
+        public SettingsManager GlobalSettings { get; }
 
         /// <summary>
         ///     Gets the person substitutions settings dictionary for second person to first person
@@ -80,7 +80,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// </summary>
         /// <value>The person substitutions settings dictionary.</value>
         [NotNull]
-        public SettingsDictionary SecondPersonToFirstPersonSubstitutions { get; }
+        public SettingsManager SecondPersonToFirstPersonSubstitutions { get; }
 
         /// <summary>
         ///     Gets the person substitutions settings dictionary. This contains things related to moving from
@@ -88,7 +88,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// </summary>
         /// <value>The person substitutions settings dictionary.</value>
         [NotNull]
-        public SettingsDictionary FirstPersonToSecondPersonSubstitutions { get; }
+        public SettingsManager FirstPersonToSecondPersonSubstitutions { get; }
 
         /// <summary>
         /// Loads settings into the various dictionaries.
@@ -99,7 +99,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <exception cref="FileNotFoundException">The settings file was not found.</exception>
         /// <exception cref="SecurityException">Could not find a settings file at the given path</exception>
         /// <exception cref="UnauthorizedAccessException">The caller does not have the required permission.</exception>
-        /// <exception cref="DirectoryNotFoundException">Access to <paramref name="pathToSettings" /> is denied.</exception>
+        /// <exception cref="DirectoryNotFoundException">Access to <paramref name="pathToConfigFiles" /> is denied.</exception>
         /// <exception cref="IOException">The specified path is invalid (for example, it is on an unmapped drive).</exception>
         public void LoadSettings([NotNull] string pathToConfigFiles)
         {
