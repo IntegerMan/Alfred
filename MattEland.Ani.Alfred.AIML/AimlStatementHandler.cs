@@ -2,7 +2,7 @@
 // AimlStatementHandler.cs
 // 
 // Created on:      08/10/2015 at 12:51 AM
-// Last Modified:   08/14/2015 at 12:00 AM
+// Last Modified:   08/16/2015 at 1:20 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -64,7 +64,8 @@ namespace MattEland.Ani.Alfred.Chat
         /// <param name="settingsPath">The settings path.</param>
         /// <exception cref="ArgumentException"></exception>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
-            Justification = "I really don't trust third party libraries to advertise thrown exception types")]
+            Justification =
+                "I really don't trust third party libraries to advertise thrown exception types")]
         public AimlStatementHandler([CanBeNull] IConsole console, [NotNull] string settingsPath)
         {
             //- Validate / Store Settings
@@ -78,14 +79,14 @@ namespace MattEland.Ani.Alfred.Chat
             _console = console;
 
             //+ Set up the chat ChatEngine
-            _chatChatEngine = new ChatEngine { Logger = console };
+            _chatChatEngine = new ChatEngine {Logger = console};
 
             // TODO: Use the currently logged in user's name instead?
             _user = new User(Resources.ChatUserName.NonNull(), _chatChatEngine);
 
             try
             {
-                InitializeChatBot();
+                InitializeChatEngine();
             }
             catch (Exception ex)
             {
@@ -106,7 +107,9 @@ namespace MattEland.Ani.Alfred.Chat
             [DebuggerStepThrough]
             [UsedImplicitly]
             get
-            { return _console; }
+            {
+                return _console;
+            }
             [DebuggerStepThrough]
             set
             {
@@ -150,7 +153,9 @@ namespace MattEland.Ani.Alfred.Chat
             if (!string.IsNullOrWhiteSpace(template))
             {
                 _console?.Log(Resources.ChatOutputHeader,
-                              string.Format(CultureInfo.CurrentCulture, "Using Template: {0}", template),
+                              string.Format(CultureInfo.CurrentCulture,
+                                            "Using Template: {0}",
+                                            template),
                               LogLevel.Verbose);
             }
 
@@ -232,17 +237,13 @@ namespace MattEland.Ani.Alfred.Chat
         }
 
         /// <summary>
-        ///     Sets up the chat ChatEngine
+        ///     Sets up the chat engine
         /// </summary>
-        private void InitializeChatBot()
+        private void InitializeChatEngine()
         {
             _chatChatEngine.Logger = _console;
             _chatChatEngine.LoadSettings(_settingsPath);
-
-            //+ Load AIML files
-            _chatChatEngine.IsAcceptingUserInput = false;
-            _chatChatEngine.LoadAIMLFromFiles();
-            _chatChatEngine.IsAcceptingUserInput = true;
+            _chatChatEngine.LoadAimlFromFiles();
         }
 
         /// <summary>
@@ -250,7 +251,8 @@ namespace MattEland.Ani.Alfred.Chat
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed",
-            Justification = "Using CallerMemberName to auto-default this value from any property caller")]
+            Justification =
+                "Using CallerMemberName to auto-default this value from any property caller")]
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

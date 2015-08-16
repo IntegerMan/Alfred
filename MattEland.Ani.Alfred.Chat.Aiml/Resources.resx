@@ -162,4 +162,8 @@
   <data name="TopicStarErrorNoItems" xml:space="preserve">
     <value>Tried to process a topicstar node when query's TopicStar collection was empty: {0}</value>
   </data>
+  <data name="ChatEngineNotAcceptingUserInputMessage" xml:space="preserve">
+    <value>{0} is not currently available to talk.</value>
+    <comment>0 = Name</comment>
+  </data>
 </root>

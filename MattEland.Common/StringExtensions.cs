@@ -90,7 +90,6 @@ namespace MattEland.Common
         /// <param name="other">The other string.</param>
         /// <param name="comparison">The comparison type. Defaults to ordinal ignoring case.</param>
         /// <returns><c>true</c> if the strings are equal, <c>false</c> otherwise.</returns>
-        [NotNull]
         public static bool Matches([CanBeNull] this string input,
                                    [CanBeNull] string other,
                                    StringComparison comparison = StringComparison.OrdinalIgnoreCase)
@@ -110,6 +109,26 @@ namespace MattEland.Common
 
             // Safely cast the input as an integer. Failure will not throw an exception
             if (!int.TryParse(input, out output))
+            {
+                // In case of failure, use our fallback value
+                output = fallbackValue;
+            }
+
+            return output;
+        }
+
+        /// <summary>
+        /// Converts the input string to a double, falling back to the fallback value on parse error.
+        /// </summary>
+        /// <param name="input">The input string.</param>
+        /// <param name="fallbackValue">The fallback value. Defaults to 0.</param>
+        /// <returns>The parsed value or the fallback value in case of parse error.</returns>
+        public static double AsDouble(this string input, double fallbackValue = 0)
+        {
+            double output;
+
+            // Safely cast the input as an integer. Failure will not throw an exception
+            if (!double.TryParse(input, out output))
             {
                 // In case of failure, use our fallback value
                 output = fallbackValue;

@@ -61,6 +61,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} is not currently available to talk..
+        /// </summary>
+        internal static string ChatEngineNotAcceptingUserInputMessage {
+            get {
+                return ResourceManager.GetString("ChatEngineNotAcceptingUserInputMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An input tag with a badly formed index ({0}) was encountered processing the input: {1}.
         /// </summary>
         internal static string InputErrorBadlyFormedIndex {

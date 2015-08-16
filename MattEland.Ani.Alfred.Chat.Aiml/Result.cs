@@ -203,13 +203,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
         /// <summary>
         ///     Calculates whether the input sentence ends with proper punctuation
-        ///     according to the ChatEngine.Splitters collection.
+        ///     according to the ChatEngine.SentenceSplitters collection.
         /// </summary>
         /// <param name="sentence">The sentence.</param>
         /// <returns>True if the sentence has the correct punctuation; false otherwise.</returns>
         private bool SentenceEndsWithPunctuation([NotNull] string sentence)
         {
-            return ChatEngine.Splitters.Any(splitter => sentence.Trim().EndsWith(splitter));
+            return ChatEngine.SentenceSplitters.Any(splitter => sentence.Trim().EndsWith(splitter));
         }
 
         /// <summary>

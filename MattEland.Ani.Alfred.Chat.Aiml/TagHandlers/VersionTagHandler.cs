@@ -7,6 +7,8 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System;
+
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
@@ -15,7 +17,7 @@ using MattEland.Common;
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// <summary>
-    ///     An AIML tag handler for the AIML "version" tag. This outputs the bot's version.
+    ///     An AIML tag handler for the AIML "version" tag. This outputs the version of the chat engine.
     /// </summary>
     [HandlesAimlTag("version")]
     public class VersionTagHandler : AimlTagHandler
@@ -37,10 +39,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         {
             if (TemplateNode.Name.Matches("version"))
             {
-                // Return the version or our engine's assembly version if it's not set
-                var version = ChatEngine.GlobalSettings.GetValue("version");
-
-                return version.HasText() ? version : ChatEngine.GetAssemblyVersion().ToString();
+                return GetType().GetAssemblyVersion()?.ToString();
             }
 
             return string.Empty;

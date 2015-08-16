@@ -42,7 +42,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             }
 
             // Use the engine's splitters to split the input into sentences
-            var sentences = inputString.Split(chatEngine.Splitters.ToArray(), StringSplitOptions.RemoveEmptyEntries);
+            var sentences = inputString.Split(chatEngine.SentenceSplitters.ToArray(), StringSplitOptions.RemoveEmptyEntries);
 
             // Yield all sentences
             return sentences.Select(s => s?.Trim());

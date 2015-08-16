@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Security;
 using System.Xml;
 
 using JetBrains.Annotations;
@@ -119,6 +120,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <exception cref="XmlException"></exception>
         /// <exception cref="System.ArgumentException">pathToSettings did not have a value</exception>
         /// <exception cref="System.IO.FileNotFoundException">Could not find a settings file at the given path</exception>
+        /// <exception cref="SecurityException">The caller does not have the required permission. </exception>
+        /// <exception cref="UnauthorizedAccessException">Access to <paramref name="pathToSettings" /> is denied. </exception>
+        /// <exception cref="DirectoryNotFoundException">The specified path is invalid (for example, it is on an unmapped drive). </exception>
+        /// <exception cref="IOException">An I/O error occurred while opening the file. </exception>
         public void Load([NotNull] string pathToSettings)
         {
             if (pathToSettings == null)
@@ -147,6 +152,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// Clears current settings and loads settings from the document.
         /// </summary>
         /// <param name="document">The settings as XML.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="document"/> is <see langword="null" />.</exception>
         public void Load([NotNull] XmlDocument document)
         {
             if (document == null)
@@ -193,6 +199,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="value">The value.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null" />.</exception>
         public void Add([NotNull] string name, [CanBeNull] string value)
         {
             if (name == null)
@@ -216,6 +223,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// Removes an entry with the specified name
         /// </summary>
         /// <param name="name">The name.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null" />.</exception>
         public void Remove([NotNull] string name)
         {
             if (name == null)
@@ -311,11 +319,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        /// Clones the settings into the target dictionary.
+        /// Copies the settings in this dictionary into the target dictionary.
         /// </summary>
         /// <param name="target">The target dictionary.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public void Clone([NotNull] SettingsDictionary target)
+        public void CopyInto([NotNull] SettingsDictionary target)
         {
             if (target == null)
             {

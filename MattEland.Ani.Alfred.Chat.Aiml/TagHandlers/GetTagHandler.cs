@@ -53,7 +53,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             }
 
             // Return the value of the variable
-            return User.Predicates.GetValue(variableName);
+            return User.UserVariables.GetValue(variableName);
 
         }
     }

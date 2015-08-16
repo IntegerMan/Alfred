@@ -66,7 +66,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 
             // Grab the attribute values
             var name = element.GetAttribute("name");
-            var variableName = User.Predicates.GetValue(name).NonNull();
+            var variableName = User.UserVariables.GetValue(name).NonNull();
 
             // Handle a simple case with a single node with name and value attributes
             if (element.HasAttribute("value"))
@@ -110,7 +110,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                 var value = xmlNode.GetAttribute("value").NonNull();
 
                 // Check to see if we match the ConditionTagHandler. If we do, use that value
-                var input = User.Predicates.GetValue(name).NonNull();
+                var input = User.UserVariables.GetValue(name).NonNull();
                 if (IsRegexMatch(input, value))
                 {
                     return xmlNode.InnerXml;

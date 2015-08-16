@@ -67,7 +67,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// <returns>The sentence text for the input value</returns>
         private string ProcessSentenceText([CanBeNull] string input)
         {
-            ICollection<string> sentenceSplitters = ChatEngine.Splitters;
+            ICollection<string> sentenceSplitters = ChatEngine.SentenceSplitters;
 
             //- Declare loop variables
             var stringBuilder = new StringBuilder();

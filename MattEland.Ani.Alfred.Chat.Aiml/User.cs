@@ -49,11 +49,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             Id = id;
             ChatEngine = chatEngine;
 
-            // Set up Predicates by cloning the engine's collection
-            //? What are these for?
-            Predicates = new SettingsDictionary();
-            ChatEngine.DefaultPredicates.Clone(Predicates);
-            Predicates.Add("topic", "*");
+            // Set up the variables collection
+            UserVariables = new SettingsDictionary();
+            UserVariables.Add("topic", "*");
         }
 
         /// <summary>
@@ -64,11 +62,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         public ChatEngine ChatEngine { get; }
 
         /// <summary>
-        ///     Gets the predicates.
+        ///     Gets the predicates. These are variables pertaining to the user.
         /// </summary>
         /// <value>The predicates.</value>
         [NotNull]
-        public SettingsDictionary Predicates { get; }
+        public SettingsDictionary UserVariables { get; }
 
         /// <summary>
         ///     Gets the user's identifier.
@@ -83,7 +81,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <value>The topic.</value>
         public string Topic
         {
-            get { return Predicates.GetValue("topic"); }
+            get { return UserVariables.GetValue("topic"); }
         }
 
         /// <summary>

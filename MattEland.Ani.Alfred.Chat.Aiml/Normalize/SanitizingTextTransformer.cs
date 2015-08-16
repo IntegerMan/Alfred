@@ -1,11 +1,15 @@
 ﻿// ---------------------------------------------------------
 // SanitizingTextTransformer.cs
 // 
-// Created on:      08/12/2015 at 10:39 PM
-// Last Modified:   08/12/2015 at 11:59 PM
+// Created on:      08/13/2015 at 10:31 PM
+// Last Modified:   08/16/2015 at 1:02 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
+
+using System.Text.RegularExpressions;
+
+using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Common;
@@ -13,27 +17,35 @@ using MattEland.Common;
 namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
 {
     /// <summary>
-    /// A text transformer to remove illegal characters.
+    ///     A text transformer to remove illegal characters.
     /// </summary>
     public class SanitizingTextTransformer : TextTransformer
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TextTransformer" /> class.
+        ///     Initializes a new instance of the <see cref="TextTransformer" /> class.
         /// </summary>
         /// <param name="chatEngine">The ChatEngine.</param>
-        public SanitizingTextTransformer(ChatEngine chatEngine)
+        public SanitizingTextTransformer([NotNull] ChatEngine chatEngine)
             : base(chatEngine)
         {
         }
 
         /// <summary>
-        /// Processes the input text and returns the processed value.
+        ///     Gets or sets the illegal character stripper regex pattern.
+        /// </summary>
+        /// <value>The stripper regex pattern.</value>
+        [NotNull]
+        public string StripperRegexPattern { get; set; } = @"[^0-9a-zA-Z_]";
+
+        /// <summary>
+        ///     Processes the input text and returns the processed value.
         /// </summary>
         /// <returns>The processed output</returns>
         protected override string ProcessChange()
         {
             // Removes illegal characters and replaces them with spaces
-            return ChatEngine.Strippers.Replace(InputString.NonNull(), " ");
+            var regex = new Regex(StripperRegexPattern, RegexOptions.IgnorePatternWhitespace);
+            return regex.Replace(InputString.NonNull(), " ");
         }
     }
 }

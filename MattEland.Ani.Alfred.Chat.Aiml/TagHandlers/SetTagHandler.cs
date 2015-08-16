@@ -53,13 +53,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             if (innerText.HasText())
             {
                 // Add a setting for the specified value
-                User.Predicates.Add(settingName, innerText);
+                User.UserVariables.Add(settingName, innerText);
 
                 return innerText;
             }
 
             // We don't have text. Clear out the setting instead
-            User.Predicates.Remove(settingName);
+            User.UserVariables.Remove(settingName);
 
             return string.Empty;
         }
