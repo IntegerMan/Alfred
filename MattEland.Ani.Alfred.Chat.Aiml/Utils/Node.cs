@@ -11,11 +11,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
-using System.Xml;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Chat.Aiml.Normalize;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 {
@@ -62,6 +61,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <param name="path">The path.</param>
         /// <param name="template">The template.</param>
         /// <param name="filename">The filename.</param>
+        /// <exception cref="ArgumentNullException">A category has an  empty template tag.</exception>
         public void AddCategory([CanBeNull] string path, [NotNull] string template, [CanBeNull] string filename)
         {
             //- Validate Input
@@ -69,7 +69,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             {
                 string message =
                     $"The category with a pattern: {path} found in file: {filename} has an empty template tag. ABORTING";
-                throw new XmlException(message);
+                throw new ArgumentNullException(template, message);
             }
 
             if (string.IsNullOrWhiteSpace(path))
@@ -81,7 +81,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             {
                 // Grab our key as the first word from the path
                 var words = path.Trim().Split(" ".ToCharArray());
-                var key = words[0].ToUpperInvariant();
+                var key = words[0];
+                Debug.Assert(key != null);
+                key = key.ToUpperInvariant();
 
                 // Chop off the rest of the path string
                 var restOfPath = path.Substring(key.Length, path.Length - key.Length).Trim();
@@ -103,11 +105,26 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             }
         }
 
+        /// <summary>
+        /// Evaluates the specified path.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <param name="query">The query.</param>
+        /// <param name="request">The request.</param>
+        /// <param name="matchstate">The match state.</param>
+        /// <param name="wildcard">The wildcard.</param>
+        /// <returns>The path expression</returns>
+        /// <exception cref="ArgumentNullException">
+        ///   <paramref name="request" /> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException">
+        ///   <paramref name="wildcard" /> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException">
+        ///   <paramref name="query" /> is <see langword="null" />.</exception>
         public string Evaluate(string path,
-                                       SubQuery query,
-                                       [NotNull] Request request,
-                                       MatchState matchstate,
-                                       [NotNull] StringBuilder wildcard)
+                               [NotNull] SubQuery query,
+                               [NotNull] Request request,
+                               MatchState matchstate,
+                               [NotNull] StringBuilder wildcard)
         {
             //- Validate Inputs
             if (request == null)
@@ -117,6 +134,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             if (wildcard == null)
             {
                 throw new ArgumentNullException(nameof(wildcard));
+            }
+            if (query == null)
+            {
+                throw new ArgumentNullException(nameof(query));
             }
 
             // Ensure we haven't taken too long
@@ -158,99 +179,151 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 
             if (_children.ContainsKey("_"))
             {
-                string str1;
+                var underscorePath = EvaluateUnderscoreChild(query, request, matchstate, words, newPath);
 
-                if (EvaluateUnderscoreChild(query, request, matchstate, words, newPath, out str1))
+                if (underscorePath.HasText())
                 {
-                    return str1;
+                    return underscorePath;
                 }
             }
 
             if (_children.ContainsKey(key))
             {
-                string s1;
-                if (EvaluateKeyedChildNode(query, request, matchstate, key, newPath, out s1))
+                var keyedPath = EvaluateKeyedChildNode(query, request, matchstate, key, newPath);
+                if (keyedPath.HasText())
                 {
-                    return s1;
+                    return keyedPath;
                 }
             }
 
             if (_children.ContainsKey("*"))
             {
-                string str2;
-                if (EvaluateAsterixChildNode(query, request, matchstate, words, newPath, out str2))
-                    return str2;
+                var asterixPath = EvaluateAsterixChildNode(query, request, matchstate, words, newPath);
+                if (asterixPath.HasText())
+                {
+                    return asterixPath;
+                }
             }
 
             if (Word == "_" || Word == "*")
             {
                 AddWordToStringBuilder(words[0], wildcard);
+
                 return Evaluate(newPath, query, request, matchstate, wildcard);
             }
 
             return string.Empty;
         }
 
-        private bool EvaluateAsterixChildNode(SubQuery query,
-                                              Request request,
-                                              MatchState matchstate,
-                                              string[] words,
-                                              string newPath,
-                                              out string str2)
+        /// <summary>
+        /// Evaluates an asterix child node.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="request">The request.</param>
+        /// <param name="matchstate">The match state.</param>
+        /// <param name="words">The words.</param>
+        /// <param name="newPath">The new path.</param>
+        /// <returns>The result</returns>
+        private string EvaluateAsterixChildNode([NotNull] SubQuery query,
+                                                      [NotNull] Request request,
+                                                      MatchState matchstate,
+                                                      [NotNull] IReadOnlyList<string> words,
+                                                      string newPath)
         {
+            //- Validate
+            if (query == null)
+            {
+                throw new ArgumentNullException(nameof(query));
+            }
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+            if (words == null)
+            {
+                throw new ArgumentNullException(nameof(words));
+            }
+
+            var sbWildcard = new StringBuilder();
+            AddWordToStringBuilder(words[0], sbWildcard);
 
             var node = _children["*"];
-            var wildcard1 = new StringBuilder();
-            AddWordToStringBuilder(words[0], wildcard1);
-            var str = node.Evaluate(newPath, query, request, matchstate, wildcard1);
-            if (str.Length > 0)
+            Debug.Assert(node != null);
+
+            var path = node.Evaluate(newPath, query, request, matchstate, sbWildcard);
+            if (path.HasText())
             {
-                if (wildcard1.Length > 0)
+                if (sbWildcard.Length > 0)
                 {
                     switch (matchstate)
                     {
                         case MatchState.UserInput:
-                            query.InputStar.Add(wildcard1.ToString());
-                            wildcard1.Remove(0, wildcard1.Length);
+                            query.InputStar.Add(sbWildcard.ToString());
+                            sbWildcard.Remove(0, sbWildcard.Length);
                             break;
+
                         case MatchState.That:
-                            query.ThatStar.Add(wildcard1.ToString());
+                            query.ThatStar.Add(sbWildcard.ToString());
                             break;
+
                         case MatchState.Topic:
-                            query.TopicStar.Add(wildcard1.ToString());
+                            query.TopicStar.Add(sbWildcard.ToString());
                             break;
                     }
                 }
-                {
-                    str2 = str;
-                    return true;
-                }
+
+                return path;
             }
-            str2 = string.Empty;
-            return false;
+
+            return string.Empty;
         }
 
-        private bool EvaluateKeyedChildNode(SubQuery query,
-                                            Request request,
-                                            MatchState matchstate,
-                                            string key,
-                                            string newPath,
-                                            out string s1)
+        /// <summary>
+        /// Evaluates a keyed child node and returns its path result.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="request">The request.</param>
+        /// <param name="matchstate">The match state.</param>
+        /// <param name="key">The key.</param>
+        /// <param name="newPath">The new path.</param>
+        /// <returns>The path result</returns>
+        private string EvaluateKeyedChildNode([NotNull] SubQuery query,
+                                                    [NotNull] Request request,
+                                                    MatchState matchstate,
+                                                    [NotNull] string key,
+                                                    string newPath)
         {
+            if (query == null)
+            {
+                throw new ArgumentNullException(nameof(query));
+            }
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+            if (key == null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
 
             var matchstate1 = matchstate;
-            if (key == "<THAT>")
+            switch (key)
             {
-                matchstate1 = MatchState.That;
+                case "<THAT>":
+                    matchstate1 = MatchState.That;
+                    break;
+
+                case "<TOPIC>":
+                    matchstate1 = MatchState.Topic;
+                    break;
             }
-            else if (key == "<TOPIC>")
-            {
-                matchstate1 = MatchState.Topic;
-            }
-            var node = _children[key];
+
             var wildcard1 = new StringBuilder();
-            var str = node.Evaluate(newPath, query, request, matchstate1, wildcard1);
-            if (str.Length > 0)
+            var node = _children[key];
+            Debug.Assert(node != null);
+            var path = node.Evaluate(newPath, query, request, matchstate1, wildcard1);
+
+            if (path.HasText())
             {
                 if (wildcard1.Length > 0)
                 {
@@ -260,65 +333,86 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
                             query.InputStar.Add(wildcard1.ToString());
                             wildcard1.Remove(0, wildcard1.Length);
                             break;
+
                         case MatchState.That:
                             query.ThatStar.Add(wildcard1.ToString());
                             wildcard1.Remove(0, wildcard1.Length);
                             break;
+
                         case MatchState.Topic:
                             query.TopicStar.Add(wildcard1.ToString());
                             wildcard1.Remove(0, wildcard1.Length);
                             break;
                     }
                 }
-                {
-                    s1 = str;
-                    return true;
-                }
+
+                return path;
             }
-            s1 = string.Empty;
-            return false;
+
+            return string.Empty;
         }
 
-        private bool EvaluateUnderscoreChild(SubQuery query,
-                                             Request request,
-                                             MatchState matchstate,
-                                             string[] words,
-                                             string newPath,
-                                             out string str1)
+        /// <summary>
+        /// Evaluates an underscore child.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="request">The request.</param>
+        /// <param name="matchstate">The match state.</param>
+        /// <param name="words">The words.</param>
+        /// <param name="newPath">The new path.</param>
+        /// <returns>The path result</returns>
+        private string EvaluateUnderscoreChild([NotNull] SubQuery query,
+                                                     [NotNull] Request request,
+                                                     MatchState matchstate,
+                                                     [NotNull] IReadOnlyList<string> words,
+                                                     string newPath)
         {
+            if (query == null)
+            {
+                throw new ArgumentNullException(nameof(query));
+            }
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+            if (words == null)
+            {
+                throw new ArgumentNullException(nameof(words));
+            }
+
+            var sbWildcard = new StringBuilder();
+
+            AddWordToStringBuilder(words[0], sbWildcard);
 
             var node = _children["_"];
+            Debug.Assert(node != null);
+            var path = node.Evaluate(newPath, query, request, matchstate, sbWildcard);
 
-            var wildcard1 = new StringBuilder();
-
-            AddWordToStringBuilder(words[0], wildcard1);
-
-            var str = node.Evaluate(newPath, query, request, matchstate, wildcard1);
-            if (!string.IsNullOrEmpty(str))
+            if (path.HasText())
             {
-                if (wildcard1.Length > 0)
+                if (sbWildcard.Length > 0)
                 {
                     switch (matchstate)
                     {
                         case MatchState.UserInput:
-                            query.InputStar.Add(wildcard1.ToString());
-                            wildcard1.Remove(0, wildcard1.Length);
+                            query.InputStar.Add(sbWildcard.ToString());
+                            sbWildcard.Remove(0, sbWildcard.Length);
                             break;
+
                         case MatchState.That:
-                            query.ThatStar.Add(wildcard1.ToString());
+                            query.ThatStar.Add(sbWildcard.ToString());
                             break;
+
                         case MatchState.Topic:
-                            query.TopicStar.Add(wildcard1.ToString());
+                            query.TopicStar.Add(sbWildcard.ToString());
                             break;
                     }
                 }
-                {
-                    str1 = str;
-                    return true;
-                }
+
+                return path;
             }
-            str1 = string.Empty;
-            return false;
+
+            return string.Empty;
         }
 
         /// <summary>
