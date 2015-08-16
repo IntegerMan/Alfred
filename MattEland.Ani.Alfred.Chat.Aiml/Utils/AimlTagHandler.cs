@@ -57,6 +57,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         ///     Gets the query.
         /// </summary>
         /// <value>The query.</value>
+        [NotNull]
         public SubQuery Query { get; }
 
         /// <summary>
@@ -166,12 +167,12 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// </summary>
         /// <returns>A star tag handler.</returns>
         [NotNull]
-        protected star BuildStarTagHandler()
+        protected StarTagHandler BuildStarTagHandler()
         {
             var node = GetStarNode();
             var parameters = GetTagHandlerParametersForNode(node);
 
-            return new star(parameters);
+            return new StarTagHandler(parameters);
         }
     }
 }

@@ -151,6 +151,24 @@ namespace MattEland.Ani.Alfred.Chat.Aiml {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to InputStar out of bounds reference caused by input: {0}.
+        /// </summary>
+        internal static string StarErrorBadIndex {
+            get {
+                return ResourceManager.GetString("StarErrorBadIndex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A star tag tried to reference an empty InputStar collection when processing the input: {0}.
+        /// </summary>
+        internal static string StarErrorNoInputStarElements {
+            get {
+                return ResourceManager.GetString("StarErrorNoInputStarElements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The id cannot be empty.
         /// </summary>
         internal static string UserCtorNullId {

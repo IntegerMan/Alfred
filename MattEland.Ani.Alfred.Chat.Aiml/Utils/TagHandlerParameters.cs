@@ -2,11 +2,12 @@
 // TagHandlerParameters.cs
 // 
 // Created on:      08/14/2015 at 1:24 PM
-// Last Modified:   08/14/2015 at 1:43 PM
+// Last Modified:   08/15/2015 at 11:16 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Xml;
 
 using JetBrains.Annotations;
@@ -21,13 +22,19 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
     public class TagHandlerParameters
     {
         private readonly ChatEngine _chatEngine;
+
+        [NotNull]
         private readonly SubQuery _query;
+
+        [NotNull]
         private readonly Request _request;
+
         private readonly Result _result;
 
         [NotNull]
         private readonly XmlNode _templateNode;
 
+        [NotNull]
         private readonly User _user;
 
         /// <summary>
@@ -39,13 +46,36 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <param name="request">The request.</param>
         /// <param name="result">The result.</param>
         /// <param name="templateNode">The template node.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="query" />, <paramref name="request" />, <paramref name="user" />, or
+        ///     <paramref name="templateNode" /> are <see langword="null" />.
+        /// </exception>
         public TagHandlerParameters(ChatEngine chatEngine,
-                                    User user,
-                                    SubQuery query,
-                                    Request request,
+                                    [NotNull] User user,
+                                    [NotNull] SubQuery query,
+                                    [NotNull] Request request,
                                     Result result,
                                     [NotNull] XmlNode templateNode)
         {
+            //- Validate
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            if (query == null)
+            {
+                throw new ArgumentNullException(nameof(query));
+            }
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+            if (templateNode == null)
+            {
+                throw new ArgumentNullException(nameof(templateNode));
+            }
+
+            //- Set Properties
             _chatEngine = chatEngine;
             _user = user;
             _query = query;
@@ -77,6 +107,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         ///     Gets the query.
         /// </summary>
         /// <value>The query.</value>
+        [NotNull]
         public SubQuery Query
         {
             get { return _query; }

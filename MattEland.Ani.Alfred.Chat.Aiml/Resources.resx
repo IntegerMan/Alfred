@@ -150,4 +150,10 @@
   <data name="UserCtorNullId" xml:space="preserve">
     <value>The id cannot be empty</value>
   </data>
+  <data name="StarErrorBadIndex" xml:space="preserve">
+    <value>InputStar out of bounds reference caused by input: {0}</value>
+  </data>
+  <data name="StarErrorNoInputStarElements" xml:space="preserve">
+    <value>A star tag tried to reference an empty InputStar collection when processing the input: {0}</value>
+  </data>
 </root>

@@ -83,7 +83,7 @@
     <Compile Include="TagHandlers\SizeTagHandler.cs" />
     <Compile Include="TagHandlers\StarRedirectTagHandler.cs" />
     <Compile Include="TagHandlers\RedirectTagHandler.cs" />
-    <Compile Include="TagHandlers\star.cs" />
+    <Compile Include="TagHandlers\StarTagHandler.cs" />
     <Compile Include="TagHandlers\SystemTagHandler.cs" />
     <Compile Include="TagHandlers\OutputTagHandler.cs" />
     <Compile Include="TagHandlers\ThinkTagHandler.cs" />

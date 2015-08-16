@@ -97,5 +97,25 @@ namespace MattEland.Common
         {
             return string.Compare(input, other, comparison) == 0;
         }
+
+        /// <summary>
+        /// Converts the input string to an integer, falling back to the fallback value on parse error.
+        /// </summary>
+        /// <param name="input">The input string.</param>
+        /// <param name="fallbackValue">The fallback value. Defaults to 0.</param>
+        /// <returns>The parsed value or the fallback value in case of parse error.</returns>
+        public static int AsInt(this string input, int fallbackValue = 0)
+        {
+            int output;
+
+            // Safely cast the input as an integer. Failure will not throw an exception
+            if (!int.TryParse(input, out output))
+            {
+                // In case of failure, use our fallback value
+                output = fallbackValue;
+            }
+
+            return output;
+        }
     }
 }
