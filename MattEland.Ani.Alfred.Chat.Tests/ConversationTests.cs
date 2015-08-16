@@ -2,14 +2,15 @@
 // ConversationTests.cs
 // 
 // Created on:      08/10/2015 at 2:42 PM
-// Last Modified:   08/11/2015 at 2:57 PM
-// Original author: Matt Eland
+// Last Modified:   08/16/2015 at 4:47 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
+using System.IO;
+using System.Security;
 
 using JetBrains.Annotations;
 
@@ -31,6 +32,9 @@ namespace MattEland.Ani.Alfred.Chat.Tests
         /// <summary>
         ///     Sets up the testing environment prior to each test run.
         /// </summary>
+        /// <exception cref="IOException">An I/O error occurred.</exception>
+        /// <exception cref="DirectoryNotFoundException">Attempted to set a local path that cannot be found.</exception>
+        /// <exception cref="SecurityException">The caller does not have the appropriate permission.</exception>
         [SetUp]
         public void SetUp()
         {
@@ -108,38 +112,6 @@ namespace MattEland.Ani.Alfred.Chat.Tests
             return response.Template;
         }
 
-        /// <summary>
-        /// Asserts that asking chat for the date gives the correct date.
-        /// </summary>
-        /// <remarks>
-        /// Test for ALF-4
-        /// </remarks>
-        [Test]
-        public void AskingForCurrentDayContainsCurrentDay()
-        {
-            var now = DateTime.Now;
-            var reply = GetReply("Which day is it?");
-
-            var expected = now.ToString("D");
-            Assert.That(reply.Contains(expected), $"Asked for current day at {now} and got a reply of '{reply}' which did not contain {expected}");
-        }
-
-        /// <summary>
-        /// Asserts that asking chat for the time gives the correct time.
-        /// </summary>
-        /// <remarks>
-        /// Test for ALF-3
-        /// </remarks>
-        [Test]
-        public void AskingForCurrentTimeContainsCurrentTime()
-        {
-            var now = DateTime.Now;
-            var reply = GetReply("What time is it?");
-
-            var expected = now.ToString("t");
-            Assert.That(reply.Contains(expected), $"Asked for current time at {now} and got a reply of '{reply}' which did not contain {expected}");
-        }
-
         [TestCase("Shutdown", "tmp_shutdown")]
         [TestCase("Status", "tmp_status")]
         public void ChatCoreTests(string input, string templateId)
@@ -172,6 +144,40 @@ namespace MattEland.Ani.Alfred.Chat.Tests
 
             Assert.IsTrue(template.ToLowerInvariant().Contains(redirectFind),
                           $"The template {template} did not contain a redirect to {redirectTo}");
+        }
+
+        /// <summary>
+        ///     Asserts that asking chat for the date gives the correct date.
+        /// </summary>
+        /// <remarks>
+        ///     Test for ALF-4
+        /// </remarks>
+        [Test]
+        public void AskingForCurrentDayContainsCurrentDay()
+        {
+            var now = DateTime.Now;
+            var reply = GetReply("Which day is it?");
+
+            var expected = now.ToString("D");
+            Assert.That(reply.Contains(expected),
+                        $"Asked for current day at {now} and got a reply of '{reply}' which did not contain {expected}");
+        }
+
+        /// <summary>
+        ///     Asserts that asking chat for the time gives the correct time.
+        /// </summary>
+        /// <remarks>
+        ///     Test for ALF-3
+        /// </remarks>
+        [Test]
+        public void AskingForCurrentTimeContainsCurrentTime()
+        {
+            var now = DateTime.Now;
+            var reply = GetReply("What time is it?");
+
+            var expected = now.ToString("t");
+            Assert.That(reply.Contains(expected),
+                        $"Asked for current time at {now} and got a reply of '{reply}' which did not contain {expected}");
         }
     }
 }
