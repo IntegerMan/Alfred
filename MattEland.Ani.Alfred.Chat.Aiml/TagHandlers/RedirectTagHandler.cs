@@ -46,7 +46,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 
             // Spawn a new request as a child of this current request and execute it
             var request = new Request(TemplateNode.InnerText, User, ChatEngine, Request);
-            var result = ChatEngine.Chat(request);
+            var result = ChatEngine.ProcessRedirectChatRequest(request);
             Debug.Assert(result != null);
 
             // This could have taken awhile. Check it for timeout

@@ -440,6 +440,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <param name="input">The input.</param>
         /// <param name="isUserInput">The is user input.</param>
         /// <returns>The normalized input</returns>
+        [NotNull]
         public string Normalize([CanBeNull] string input, bool isUserInput)
         {
             // Do common substitutions

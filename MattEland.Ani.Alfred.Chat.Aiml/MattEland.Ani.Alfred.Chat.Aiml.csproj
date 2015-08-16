@@ -49,9 +49,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChatEngine.cs" />
-    <Compile Include="ChatEngine.Processing.cs" />
-    <Compile Include="ChatEngine.Loading.cs" />
     <Compile Include="ChatEngineLibrarian.cs" />
+    <Compile Include="ChatProcessor.cs" />
     <Compile Include="Normalize\TextSubstitutionTransformer.cs" />
     <Compile Include="Normalize\UppercaseTextTransformer.cs" />
     <Compile Include="Resources.Designer.cs">

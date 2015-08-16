@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
-// ChatEngine.Processing.cs
+// ChatProcessor.cs
 // 
-// Created on:      08/16/2015 at 12:52 AM
-// Last Modified:   08/16/2015 at 1:28 AM
+// Created on:      08/16/2015 at 3:33 PM
+// Last Modified:   08/16/2015 at 3:33 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -10,6 +10,7 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Xml;
@@ -23,61 +24,55 @@ using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml
 {
-    public partial class ChatEngine
+    /// <summary>
+    /// A helper class that handles the logic for processing a chat request for the chat engine.
+    /// </summary>
+    internal class ChatProcessor
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// </summary>
+        /// <exception cref="ArgumentNullException"><paramref name="chatEngine"/> is <see langword="null" />.</exception>
+        internal ChatProcessor([NotNull] ChatEngine chatEngine)
+        {
+            if (chatEngine == null)
+            {
+                throw new ArgumentNullException(nameof(chatEngine));
+            }
+
+            // Store helpers
+            _chatEngine = chatEngine;
+            _tagFactory = new TagHandlerFactory(chatEngine);
+            _aimlLoader = new AimlLoader(chatEngine);
+        }
+
         [NotNull]
         private readonly TagHandlerFactory _tagFactory;
 
-        /// <summary>
-        ///     Gets the time out limit for a request in milliseconds. Defaults to 2000 (2 seconds).
-        /// </summary>
-        /// <value>The time out.</value>
-        public double TimeOut { get; set; } = 2000;
 
-        /// <summary>
-        ///     Gets or sets the maximum size that can be used to hold a path in the that value.
-        /// </summary>
-        /// <value>The maximum size of the that.</value>
-        public int MaxThatSize { get; set; } = 256;
-
-        /// <summary>
-        ///     Gets or sets the root node of the Aiml knowledge graph.
-        /// </summary>
-        /// <value>The root node.</value>
         [NotNull]
-        public Node RootNode { get; set; }
+        private readonly ChatEngine _chatEngine;
+
+        [NotNull]
+        private readonly AimlLoader _aimlLoader;
 
         /// <summary>
-        ///     Gets the count of AIML nodes in memory.
+        /// Gets the locale.
         /// </summary>
-        /// <value>The count of AIML nodes.</value>
-        public int NodeCount
+        /// <value>The locale.</value>
+        private CultureInfo Locale
         {
-            get { return RootNode.ChildrenCount; }
+            get { return _chatEngine.Locale; }
         }
 
         /// <summary>
-        /// Accepts a chat message from the user and returns the chat engine's reply.
+        /// Logs the specified message to the error log.
         /// </summary>
-        /// <param name="input">The input chat message.</param>
-        /// <param name="user">The user.</param>
-        /// <returns>A result object containing the engine's reply.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="user"/> is <see langword="null" />.</exception>
-        /// <exception cref="ArgumentException">A chat message is required to interact with the system.</exception>
-        public Result Chat([NotNull] string input, [NotNull] User user)
+        /// <param name="message">The message.</param>
+        /// <param name="level">The level.</param>
+        private void Log(string message, LogLevel level)
         {
-            //- Validate
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            if (input.IsNullOrWhitespace())
-            {
-                throw new ArgumentException(Resources.ChatErrorNoMessage, nameof(input));
-            }
-
-            // Build a request that we can work with internally.
-            return Chat(new Request(input, user, this));
+            _chatEngine.Log(message, level);
         }
 
         /// <summary>
@@ -86,7 +81,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <param name="request">The request.</param>
         /// <returns>A result object containing the engine's reply.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null" />.</exception>
-        internal Result Chat([NotNull] Request request)
+        internal Result ProcessChatRequest([NotNull] Request request)
         {
             //- Validation
             if (request == null)
@@ -94,31 +89,41 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                 throw new ArgumentNullException(nameof(request));
             }
 
-            var result = new Result(request.User, this, request);
-            var aimlLoader = new AimlLoader(this);
-            foreach (var pattern in SplitSentenceHelper.Split(request.RawInput, this))
+            // Build a result for this request. This will link the two together.
+            var result = new Result(request.User, _chatEngine, request);
+
+            // Split the input into different sentences and build a path for each sentence.
+            foreach (var pattern in SplitSentenceHelper.Split(request.RawInput, _chatEngine))
             {
                 result.InputSentences.Add(pattern);
-                var str = aimlLoader.BuildPathString(pattern,
+                var str = _aimlLoader.BuildPathString(pattern,
                                                      request.User.LastChatOutput,
-                                                     request.User.Topic,
+                                                     request.User.Topic.NonNull(),
                                                      true);
                 result.NormalizedPaths.Add(str);
             }
-            foreach (var str in result.NormalizedPaths)
+
+            // Build out SubQueries with appropriate templates based on the paths detected
+            foreach (var path in result.NormalizedPaths)
             {
-                var query = new SubQuery(str);
-                query.Template = RootNode.Evaluate(str,
-                                                   query,
-                                                   request,
-                                                   MatchState.UserInput,
-                                                   new StringBuilder());
+                // Build out a query based on the path
+                var query = new SubQuery(path.NonNull());
+
+                // Search the node tree for the template most closely matched to this request
+                var template = _chatEngine.RootNode.Evaluate(path, query, request, MatchState.UserInput, new StringBuilder());
+                query.Template = template.NonNull();
+
+                // Now that the query is polished, add it to the subqueries
                 result.SubQueries.Add(query);
             }
+
+            // Process each SubQuery to build out the result text
             foreach (var query in result.SubQueries.Where(query => query != null && query.Template.HasText()))
             {
-                ProcessChatSubQuery(request, query, result);
+                ProcessSubQuery(request, query, result);
             }
+
+            // Complete the result and return everything
             result.Completed();
             request.User.AddResult(result);
             return result;
@@ -131,7 +136,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <param name="query">The query.</param>
         /// <param name="result">The result.</param>
         [SuppressMessage("ReSharper", "CatchAllClause")]
-        private void ProcessChatSubQuery([NotNull] Request request,
+        private void ProcessSubQuery([NotNull] Request request,
                                                  [NotNull] SubQuery query,
                                                  [NotNull] Result result)
         {
@@ -390,6 +395,5 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
             return sbOutput.ToString();
         }
-
     }
 }

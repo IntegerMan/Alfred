@@ -32,6 +32,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <param name="user">The user.</param>
         /// <param name="chatEngine">The chat engine.</param>
         /// <param name="request">The request.</param>
+        /// <exception cref="ArgumentNullException">user, chatEngine, request</exception>
         public Result([NotNull] User user, [NotNull] ChatEngine chatEngine, [NotNull] Request request)
         {
             //- Validation
@@ -219,6 +220,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         public void Completed()
         {
             Duration = DateTime.Now - Request.StartedOn;
+            IsComplete = true;
         }
+
+        /// <summary>
+        /// Gets or sets whether this result is complete.
+        /// </summary>
+        /// <value>The is complete.</value>
+        public bool IsComplete { get; set; }
     }
 }
