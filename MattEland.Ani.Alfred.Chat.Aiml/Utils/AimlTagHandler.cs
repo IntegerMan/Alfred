@@ -160,6 +160,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
                 Debug.Fail("GetStarNode cannot return a null value but encountered an XmlException: " + ex.Message);
 
                 // ReSharper disable once ExceptionNotDocumented
+                // ReSharper disable once HeuristicUnreachableCode
                 throw;
             }
         }

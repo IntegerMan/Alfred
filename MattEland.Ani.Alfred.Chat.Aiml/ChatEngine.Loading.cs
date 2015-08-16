@@ -10,6 +10,7 @@
 using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Security;
 using System.Xml;
 
 using JetBrains.Annotations;
@@ -49,7 +50,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             get
             {
                 return Path.Combine(_startDirectory,
-                                    GlobalSettings.GetValue("configdirectory"));
+                                    Librarian.GlobalSettings.GetValue("configdirectory"));
             }
         }
 
@@ -68,52 +69,29 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             _aimlLoader.LoadAimlFromXml(newAIML, filename);
         }
 
-        public void LoadSettings()
+        /// <summary>
+        /// Loads settings from the specified settings directory path.
+        /// There is assumed to be a settings.xml file in this directory.
+        /// </summary>
+        /// <param name="settingsDirectoryPath">The settings directory path.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="IOException"><paramref name="settingsDirectoryPath" /> is <see langword="null" />.</exception>
+        /// <exception cref="DirectoryNotFoundException">The specified path is invalid (for example, it is on an unmapped drive).</exception>
+        /// <exception cref="UnauthorizedAccessException">Access to <paramref name="settingsDirectoryPath" /> is denied.</exception>
+        /// <exception cref="SecurityException">The caller does not have the required permission.</exception>
+        /// <exception cref="FileNotFoundException">Could not find a settings file at the given path</exception>
+        /// <exception cref="XmlException">The settings file was not found.</exception>
+        public void LoadSettingsFromDirectory([NotNull] string settingsDirectoryPath)
         {
-            LoadSettings(Path.Combine(_startDirectory,
-                                      Path.Combine("config", "Settings.xml")));
-        }
+            //- Validate
+            if (settingsDirectoryPath == null)
+            {
+                throw new ArgumentNullException(nameof(settingsDirectoryPath));
+            }
 
-        public void LoadSettings(string pathToSettings)
-        {
-            GlobalSettings.Load(pathToSettings);
-            if (!GlobalSettings.Contains("splittersfile"))
-            {
-                GlobalSettings.Add("splittersfile", "Splitters.xml");
-            }
-            if (!GlobalSettings.Contains("person2substitutionsfile"))
-            {
-                GlobalSettings.Add("person2substitutionsfile", "Person2Substitutions.xml");
-            }
-            if (!GlobalSettings.Contains("personsubstitutionsfile"))
-            {
-                GlobalSettings.Add("personsubstitutionsfile", "PersonSubstitutions.xml");
-            }
-            if (!GlobalSettings.Contains("gendersubstitutionsfile"))
-            {
-                GlobalSettings.Add("gendersubstitutionsfile", "GenderSubstitutions.xml");
-            }
-            if (!GlobalSettings.Contains("substitutionsfile"))
-            {
-                GlobalSettings.Add("substitutionsfile", "Substitutions.xml");
-            }
-            if (!GlobalSettings.Contains("aimldirectory"))
-            {
-                GlobalSettings.Add("aimldirectory", "aiml");
-            }
-            if (!GlobalSettings.Contains("configdirectory"))
-            {
-                GlobalSettings.Add("configdirectory", "config");
-            }
-            SecondPersonToFirstPersonSubstitutions.Load(Path.Combine(PathToConfigFiles,
-                                                   GlobalSettings.GetValue(
-                                                                           "person2substitutionsfile")));
-            FirstPersonToSecondPersonSubstitutions.Load(Path.Combine(PathToConfigFiles,
-                                                  GlobalSettings.GetValue("personsubstitutionsfile")));
-            GenderSubstitutions.Load(Path.Combine(PathToConfigFiles,
-                                                  GlobalSettings.GetValue("gendersubstitutionsfile")));
-            Substitutions.Load(Path.Combine(PathToConfigFiles,
-                                            GlobalSettings.GetValue("substitutionsfile")));
+            // Invoke
+            Librarian.LoadSettings(settingsDirectoryPath);
         }
 
         /// <summary>
@@ -185,17 +163,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
             // Add it to the graph
             RootNode.AddCategory(path, node.OuterXml, filename);
-            /*
-            catch
-            {
-                Log(string.Format(Locale,
-                                  "Failed to load a new category into the graphmaster where the directoryPath = {0} and template = {1} produced by a category in the file: {2}",
-                                  path,
-                                  node.OuterXml,
-                                  filename),
-                    LogLevel.Error);
-            }
-            */
         }
 
     }

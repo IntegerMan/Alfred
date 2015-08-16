@@ -35,6 +35,21 @@ namespace MattEland.Ani.Alfred.Core
         private IEnumerable<IAlfredComponent> _childrenOnShutdown;
 
         /// <summary>
+        /// The logging console
+        /// </summary>
+        [CanBeNull]
+        private IConsole _console;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AlfredComponent"/> class.
+        /// </summary>
+        /// <param name="console">The console.</param>
+        protected AlfredComponent([CanBeNull] IConsole console = null)
+        {
+            _console = console;
+        }
+
+        /// <summary>
         /// Gets the alfred instance associated with this component.
         /// </summary>
         /// <value>The alfred instance.</value>
@@ -104,6 +119,7 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <param name="alfred">The alfred framework.</param>
         /// <exception cref="InvalidOperationException">Already online when told to initialize.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="alfred"/> is <see langword="null" />.</exception>
         public virtual void Initialize([NotNull] IAlfred alfred)
         {
             if (alfred == null)
@@ -151,8 +167,6 @@ namespace MattEland.Ani.Alfred.Core
         /// <summary>
         ///     Shuts down the component.
         /// </summary>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     Already offline when told to shut down.
         /// </exception>
@@ -194,6 +208,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <summary>
         ///     Handles updating the component as needed
         /// </summary>
+        /// <exception cref="InvalidOperationException">If this was called when Alfred was offline.</exception>
         public void Update()
         {
             if (Status == AlfredStatus.Offline)
@@ -281,6 +296,8 @@ namespace MattEland.Ani.Alfred.Core
         /// <param name="title">The title of the message.</param>
         /// <param name="message">The message body.</param>
         /// <param name="level">The logging level.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="message"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="title"/> is <see langword="null" />.</exception>
         protected void Log([NotNull] string title, [NotNull] string message, LogLevel level)
         {
             if (title == null)
@@ -293,10 +310,13 @@ namespace MattEland.Ani.Alfred.Core
             }
 
             // Grab the console as Alfred may not have had the console object set during this module's construction
-            var console = _alfred?.Console;
+            if (_console == null)
+            {
+                _console = _alfred?.Console;
+            }
 
             // Send it on to the console, if we have one. It'll figure it out from there
-            console?.Log(title, message, level);
+            _console?.Log(title, message, level);
 
         }
 
@@ -340,6 +360,8 @@ namespace MattEland.Ani.Alfred.Core
         /// Registers the chat provider as the framework's chat provider.
         /// </summary>
         /// <param name="chatProvider">The chat provider.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="chatProvider"/> is <see langword="null" />.</exception>
+        /// <exception cref="InvalidOperationException">If Register is called when Alfred is null (prior to initialization)</exception>
         protected void Register([NotNull] IChatProvider chatProvider)
         {
             if (chatProvider == null)

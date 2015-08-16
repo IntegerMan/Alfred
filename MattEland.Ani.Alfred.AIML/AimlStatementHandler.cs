@@ -14,6 +14,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Security;
 
 using JetBrains.Annotations;
 
@@ -32,13 +33,10 @@ namespace MattEland.Ani.Alfred.Chat
     /// </remarks>
     public sealed class AimlStatementHandler : IChatProvider, INotifyPropertyChanged
     {
-        [NotNull]
+        [CanBeNull]
         private readonly ChatEngine _chatChatEngine;
 
-        [NotNull]
-        private readonly string _settingsPath;
-
-        [NotNull]
+        [CanBeNull]
         private readonly User _user;
 
         [CanBeNull]
@@ -50,10 +48,14 @@ namespace MattEland.Ani.Alfred.Chat
         private UserStatementResponse _response;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
+        /// Initializes a new instance of the <see cref="T:System.Object" /> class using the current directory for the settings path.
         /// </summary>
-        public AimlStatementHandler()
-            : this(null, Path.Combine(Environment.CurrentDirectory, @"Chat\config\settings.xml"))
+        /// <param name="console">The console.</param>
+        /// <exception cref="IOException">An I/O error occurred.</exception>
+        /// <exception cref="DirectoryNotFoundException">Attempted to set a local path that cannot be found.</exception>
+        /// <exception cref="SecurityException">The caller does not have the appropriate permission.</exception>
+        public AimlStatementHandler([CanBeNull] IConsole console = null)
+            : this(console, Path.Combine(Environment.CurrentDirectory, @"Chat\config"))
         {
         }
 
@@ -62,10 +64,7 @@ namespace MattEland.Ani.Alfred.Chat
         /// </summary>
         /// <param name="console">The console.</param>
         /// <param name="settingsPath">The settings path.</param>
-        /// <exception cref="ArgumentException"></exception>
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
-            Justification =
-                "I really don't trust third party libraries to advertise thrown exception types")]
+        /// <exception cref="ArgumentException">settingsPath</exception>
         public AimlStatementHandler([CanBeNull] IConsole console, [NotNull] string settingsPath)
         {
             //- Validate / Store Settings
@@ -73,29 +72,47 @@ namespace MattEland.Ani.Alfred.Chat
             {
                 throw new ArgumentException(Resources.NoSettingsPathError, nameof(settingsPath));
             }
-            _settingsPath = settingsPath;
+
+            SettingsPath = settingsPath;
 
             //- Logging Housekeeping
             _console = console;
 
-            //+ Set up the chat ChatEngine
-            _chatChatEngine = new ChatEngine { Logger = console };
-
-            // TODO: Use the currently logged in user's name instead?
-            _user = new User(Resources.ChatUserName.NonNull(), _chatChatEngine);
-
+            //+ Set up the chat engine
             try
             {
+                _chatChatEngine = new ChatEngine(console);
+                _user = new User(Resources.ChatUserName.NonNull(), _chatChatEngine);
                 InitializeChatEngine();
             }
-            catch (Exception ex)
+            catch (IOException ex)
             {
-                var errorFormat = Resources.ErrorInitializingChat;
-                var message = string.Format(CultureInfo.CurrentCulture, errorFormat, ex.Message);
-                _console?.Log(Resources.ChatProcessingHeader, message, LogLevel.Error);
+                LogErrorInitializingChat(ex);
+            }
+            catch (SecurityException ex)
+            {
+                LogErrorInitializingChat(ex);
             }
 
         }
+
+        /// <summary>
+        /// Logs an error encountered initializing chat.
+        /// </summary>
+        /// <param name="ex">The ex.</param>
+        private void LogErrorInitializingChat([CanBeNull] Exception ex)
+        {
+            var errorFormat = Resources.ErrorInitializingChat;
+            var message = string.Format(CultureInfo.CurrentCulture, errorFormat, ex?.Message);
+            _console?.Log(Resources.ChatProcessingHeader, message, LogLevel.Error);
+        }
+
+        /// <summary>
+        /// Gets or sets the settings path.
+        /// </summary>
+        /// <value>The settings path.</value>
+        [NotNull]
+        public string SettingsPath { get; set; }
 
         /// <summary>
         ///     Gets or sets the console.
@@ -128,8 +145,14 @@ namespace MattEland.Ani.Alfred.Chat
         /// </summary>
         /// <param name="userInput">The user input.</param>
         /// <returns>The response to the user statement</returns>
+        /// <exception cref="InvalidOperationException">Cannot use the chat system when chat did not initialize properly</exception>
         public UserStatementResponse HandleUserStatement(string userInput)
         {
+            if (_chatChatEngine == null || _user == null)
+            {
+                throw new InvalidOperationException(Resources.AimlStatementHandlerChatOffline);
+            }
+
             //- Log the input to the diagnostic log.
             _console?.Log(Resources.ChatInputHeader, userInput, LogLevel.UserInput);
 
@@ -230,6 +253,11 @@ namespace MattEland.Ani.Alfred.Chat
         /// <returns>The result of the communication to the chat ChatEngine</returns>
         private Result GetChatResult([NotNull] string userInput)
         {
+            if (_chatChatEngine == null || _user == null)
+            {
+                throw new InvalidOperationException(Resources.AimlStatementHandlerChatOffline);
+            }
+
             var result = _chatChatEngine.Chat(userInput, _user);
 
             return result;
@@ -240,8 +268,13 @@ namespace MattEland.Ani.Alfred.Chat
         /// </summary>
         private void InitializeChatEngine()
         {
+            if (_chatChatEngine == null || _user == null)
+            {
+                throw new InvalidOperationException(Resources.AimlStatementHandlerChatOffline);
+            }
+
             _chatChatEngine.Logger = _console;
-            _chatChatEngine.LoadSettings(_settingsPath);
+            _chatChatEngine.LoadSettingsFromDirectory(SettingsPath);
             _chatChatEngine.LoadAimlFromDirectory();
         }
 

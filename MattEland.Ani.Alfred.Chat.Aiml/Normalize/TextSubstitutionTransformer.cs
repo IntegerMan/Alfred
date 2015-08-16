@@ -46,7 +46,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
             in the substitutions dictionary. This is useful for common words
             that are equivalent in meaning. */
 
-            return Substitute(ChatEngine.Substitutions, InputString);
+            return Substitute(Librarian.Substitutions, InputString);
         }
 
         /// <summary>
@@ -78,6 +78,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
             // Look for each setting settingName in the input string to replace it with our setting value
             foreach (var settingName in settingNames)
             {
+                if (settingName == null)
+                {
+                    continue;
+                }
+
                 var settingValue = dictionary.GetValue(settingName);
 
                 input = Substitute(input, settingName, settingValue);

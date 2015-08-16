@@ -2,8 +2,9 @@
 // AlfredSubSystem.cs
 // 
 // Created on:      08/07/2015 at 10:00 PM
-// Last Modified:   08/12/2015 at 3:52 PM
-// Original author: Matt Eland
+// Last Modified:   08/16/2015 at 2:21 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
@@ -13,13 +14,15 @@ using System.Linq;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Core
 {
     /// <summary>
-    ///     Represents a subsystem on the Alfred Framework. Subsystems are ways of providing multiple related modules and
+    ///     Represents a subsystem on the Alfred Framework. Subsystems are ways of providing multiple
+    ///     related modules and
     ///     capabilities to Alfred.
     /// </summary>
     public abstract class AlfredSubsystem : AlfredComponent, IAlfredSubsystem
@@ -32,8 +35,10 @@ namespace MattEland.Ani.Alfred.Core
         ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
         /// <param name="provider">The provider.</param>
+        /// <param name="console">The console.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        protected AlfredSubsystem([NotNull] IPlatformProvider provider)
+        protected AlfredSubsystem([NotNull] IPlatformProvider provider,
+                                  [CanBeNull] IConsole console = null) : base(console)
         {
             if (provider == null)
             {
@@ -53,7 +58,8 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     Gets the children of this component. Depending on the type of component this is, the children will
+        ///     Gets the children of this component. Depending on the type of component this is, the children
+        ///     will
         ///     vary in their own types.
         /// </summary>
         /// <value>The children.</value>
@@ -84,7 +90,8 @@ namespace MattEland.Ani.Alfred.Core
         /// <param name="command">The command.</param>
         /// <param name="result">The default system response. This should be modified and returned.</param>
         /// <returns><c>true</c> if the command was handled, <c>false</c> otherwise.</returns>
-        public virtual bool HandleChatCommand(ChatCommand command, [NotNull] AlfredCommandResult result)
+        public virtual bool HandleChatCommand(ChatCommand command,
+                                              [NotNull] AlfredCommandResult result)
         {
             return Pages.Any(page => page.HandleChatCommand(command, result));
         }
@@ -103,7 +110,8 @@ namespace MattEland.Ani.Alfred.Core
         ///     Registers a page.
         /// </summary>
         /// <param name="page">The page.</param>
-        [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0")]
+        [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods",
+            MessageId = "0")]
         protected void Register([NotNull] IAlfredPage page)
         {
             _pages.AddSafe(page);

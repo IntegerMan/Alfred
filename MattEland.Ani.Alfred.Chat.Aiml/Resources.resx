@@ -193,4 +193,31 @@
   <data name="LoadAimlErrorNoDirectoryPath" xml:space="preserve">
     <value>ChatEngine.AimlDirectoryPath was not set</value>
   </data>
+  <data name="LibrarianLoadSettingsErrorNoPath" xml:space="preserve">
+    <value>Path to settings must be provided.</value>
+  </data>
+  <data name="LibrarianLoadSettingsErrorNoConfigDirectory" xml:space="preserve">
+    <value>The path to the configuration files must be provided.</value>
+  </data>
+  <data name="SettingsLoadErrorXml" xml:space="preserve">
+    <value>XML error parsing settings file '{0}':{1}</value>
+  </data>
+  <data name="SettingsLoadErrorFileNotFound" xml:space="preserve">
+    <value>Could not load settings from non-existent file '{0}'</value>
+  </data>
+  <data name="SettingsLoadErrorUnauthorized" xml:space="preserve">
+    <value>Could not load settings from file without authorization from operating system '{0}': {1}</value>
+  </data>
+  <data name="SettignsLoadErrorSecurity" xml:space="preserve">
+    <value>Could not load settings from file '{0}' due to a security concern: {1}</value>
+  </data>
+  <data name="SettingsLoadErrorIOException" xml:space="preserve">
+    <value>IO exception encountered loading settings from file '{0}': {1}</value>
+  </data>
+  <data name="SettingsLoadErrorNoPathToSettings" xml:space="preserve">
+    <value>pathToSettings did not have a value</value>
+  </data>
+  <data name="SettingsLoadErrorFileNotFoundException" xml:space="preserve">
+    <value>Could not find a settings file at the given path</value>
+  </data>
 </root>

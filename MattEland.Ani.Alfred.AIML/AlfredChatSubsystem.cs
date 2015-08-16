@@ -12,6 +12,7 @@ using System.Linq;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
 
@@ -33,18 +34,12 @@ namespace MattEland.Ani.Alfred.Chat
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
-        public AlfredChatSubsystem() : this(new SimplePlatformProvider())
-        {
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
-        /// </summary>
         /// <param name="provider">The provider.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public AlfredChatSubsystem([NotNull] IPlatformProvider provider) : base(provider)
+        public AlfredChatSubsystem([NotNull] IPlatformProvider provider,
+                                   [CanBeNull] IConsole console) : base(provider, console)
         {
-            _chatHandler = new AimlStatementHandler();
+            _chatHandler = new AimlStatementHandler(console);
             _chatPage = new ChatPage(Res.ChatModuleName.NonNull(), _chatHandler);
         }
 

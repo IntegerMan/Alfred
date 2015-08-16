@@ -129,7 +129,7 @@ namespace MattEland.Ani.Alfred.WPF
 
             _alfredCoreSubsystem = new AlfredCoreSubsystem(provider);
             _systemMonitoringSubsystem = new SystemMonitoringSubsystem(provider);
-            _chatSubsystem = new AlfredChatSubsystem(provider);
+            _chatSubsystem = new AlfredChatSubsystem(provider, _alfred.Console);
 
             _alfred.Register(_alfredCoreSubsystem);
             _alfred.Register(_systemMonitoringSubsystem);

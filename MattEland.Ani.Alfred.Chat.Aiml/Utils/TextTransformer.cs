@@ -92,6 +92,16 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
+        /// Gets the librarian containing settings files.
+        /// </summary>
+        /// <value>The librarian.</value>
+        [NotNull]
+        public ChatEngineLibrarian Librarian
+        {
+            get { return ChatEngine.Librarian; }
+        }
+
+        /// <summary>
         ///     Transforms the specified input text into output text and returns it.
         ///     The input value then becomes InputString in this instance.
         /// </summary>
@@ -147,7 +157,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         {
             return null == settingName
                        ? string.Empty
-                       : _chatEngine.GlobalSettings.GetValue(settingName);
+                       : Librarian.GlobalSettings.GetValue(settingName);
 
         }
     }

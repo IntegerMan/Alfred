@@ -162,4 +162,7 @@
   <data name="OobRootNotAlfredXElement" xml:space="preserve">
     <value>OOB root element was not an alfred XElement</value>
   </data>
+  <data name="AimlStatementHandlerChatOffline" xml:space="preserve">
+    <value>Cannot use the chat system when chat did not initialize properly</value>
+  </data>
 </root>

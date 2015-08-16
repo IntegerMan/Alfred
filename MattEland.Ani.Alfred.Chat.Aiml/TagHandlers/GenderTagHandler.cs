@@ -54,7 +54,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                 /* Substitute occurrences of gender words with other values. This typically 
                    inverts the gender on gender pronouns ("he" / "she" / etc.) */
 
-                var substitutions = ChatEngine.GenderSubstitutions;
+                var substitutions = Librarian.GenderSubstitutions;
                 return TextSubstitutionTransformer.Substitute(substitutions,
                                                               TemplateNode.InnerText);
             }

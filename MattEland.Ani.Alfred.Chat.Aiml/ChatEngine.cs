@@ -33,13 +33,17 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
     public partial class ChatEngine
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="ChatEngine" /> class.
+        /// Initializes a new instance of the <see cref="ChatEngine" /> class.
         /// </summary>
+        /// <param name="logger">The logger.</param>
         /// <exception cref="IOException">An I/O error occurred.</exception>
         /// <exception cref="SecurityException">The caller does not have the appropriate permission.</exception>
         /// <exception cref="DirectoryNotFoundException">Attempted to set a local path that cannot be found.</exception>
-        public ChatEngine()
+        public ChatEngine([CanBeNull] IConsole logger = null)
         {
+            // Get logging online ASAP
+            Logger = logger;
+
             // Set Directory-related items
             _startDirectory = Environment.CurrentDirectory;
             _aimlDirectoryPath = Path.Combine(_startDirectory, @"chat\aiml");
@@ -48,13 +52,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             _tagFactory = new TagHandlerFactory(this);
             _aimlLoader = new AimlLoader(this);
             RootNode = new Node();
-
-            // Create standard dictionaries
-            GlobalSettings = new SettingsDictionary();
-            GenderSubstitutions = new SettingsDictionary();
-            SecondPersonToFirstPersonSubstitutions = new SettingsDictionary();
-            FirstPersonToSecondPersonSubstitutions = new SettingsDictionary();
-            Substitutions = new SettingsDictionary();
+            Librarian = new ChatEngineLibrarian(this);
 
             // Populate smaller value dictionaries
             SentenceSplitters = new List<string> { ".", "!", "?", ";" };
@@ -62,36 +60,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         }
 
         /// <summary>
-        ///     Gets the gender substitutions dictionary. This is a collection of male and female pronouns and
-        ///     their
-        ///     replacement values to use when the "gender" AIML tag is present.
+        /// Gets the librarian that manages settings.
         /// </summary>
-        /// <value>The gender substitutions dictionary.</value>
+        /// <value>The librarian.</value>
         [NotNull]
-        public SettingsDictionary GenderSubstitutions { get; }
-
-        /// <summary>
-        ///     Gets the global settings dictionary.
-        /// </summary>
-        /// <value>The global settings.</value>
-        [NotNull]
-        public SettingsDictionary GlobalSettings { get; }
-
-        /// <summary>
-        ///     Gets the person substitutions settings dictionary for second person to first person
-        ///     conversions.
-        /// </summary>
-        /// <value>The person substitutions settings dictionary.</value>
-        [NotNull]
-        public SettingsDictionary SecondPersonToFirstPersonSubstitutions { get; }
-
-        /// <summary>
-        ///     Gets the person substitutions settings dictionary. This contains things related to moving from
-        ///     the first person to the second person.
-        /// </summary>
-        /// <value>The person substitutions settings dictionary.</value>
-        [NotNull]
-        public SettingsDictionary FirstPersonToSecondPersonSubstitutions { get; }
+        internal ChatEngineLibrarian Librarian { get; }
 
         /// <summary>
         ///     Gets a list of sentence splitters. Sentence splitters are punctuation characters such as . or !
@@ -101,14 +74,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         [NotNull]
         [ItemNotNull]
         public List<string> SentenceSplitters { get; }
-
-        /// <summary>
-        ///     Gets the substitutions dictionary. Substitutions are common phrases that are condensed and
-        ///     translated to their equivalent meaning to increase bot flexibility and make content authoring
-        ///     easier.
-        /// </summary>
-        /// <value>The substitutions.</value>
-        public SettingsDictionary Substitutions { get; }
 
         /// <summary>
         ///     Gets the logger.
@@ -139,4 +104,5 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
 
     }
+
 }

@@ -443,17 +443,16 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         public string Normalize([CanBeNull] string input, bool isUserInput)
         {
             // Do common substitutions
-            input = TextSubstitutionTransformer.Substitute(_chatEngine.Substitutions, input);
+            input = TextSubstitutionTransformer.Substitute(_chatEngine.Librarian.Substitutions, input);
 
             // Grab the words in the input
             const string WordBoundaries = " \r\n\t";
             var words = input.Split(WordBoundaries.ToCharArray());
 
-            //? Loop through each substitution and...
+            // Loop through each word found and append it to the output string
             var stringBuilder = new StringBuilder();
             var illegalCharacters = new SanitizingTextTransformer(_chatEngine);
 
-            // Loop through each word found and append it to the output string
             foreach (var word in words)
             {
                 //- Sanity check

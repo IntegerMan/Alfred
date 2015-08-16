@@ -61,6 +61,15 @@ namespace MattEland.Ani.Alfred.Chat {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot use the chat system when chat did not initialize properly.
+        /// </summary>
+        internal static string AimlStatementHandlerChatOffline {
+            get {
+                return ResourceManager.GetString("AimlStatementHandlerChatOffline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Last Log Message:{0}.
         /// </summary>
         internal static string ChatErrorLastLogMessageFormat {

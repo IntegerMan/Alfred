@@ -187,6 +187,24 @@ namespace MattEland.Ani.Alfred.Chat.Aiml {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The path to the configuration files must be provided..
+        /// </summary>
+        internal static string LibrarianLoadSettingsErrorNoConfigDirectory {
+            get {
+                return ResourceManager.GetString("LibrarianLoadSettingsErrorNoConfigDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Path to settings must be provided..
+        /// </summary>
+        internal static string LibrarianLoadSettingsErrorNoPath {
+            get {
+                return ResourceManager.GetString("LibrarianLoadSettingsErrorNoPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The directory specified as the directoryPath to the AIML files ({0}) cannot be found by the AimlLoader object. Please make sure the directory where you think the AIML files are to be found is the same as the directory specified in the settings file..
         /// </summary>
         internal static string LoadAimlDirectoryNotFound {
@@ -228,6 +246,69 @@ namespace MattEland.Ani.Alfred.Chat.Aiml {
         internal static string LoadAimlStartingToLoad {
             get {
                 return ResourceManager.GetString("LoadAimlStartingToLoad", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not load settings from file &apos;{0}&apos; due to a security concern: {1}.
+        /// </summary>
+        internal static string SettignsLoadErrorSecurity {
+            get {
+                return ResourceManager.GetString("SettignsLoadErrorSecurity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not load settings from non-existent file &apos;{0}&apos;.
+        /// </summary>
+        internal static string SettingsLoadErrorFileNotFound {
+            get {
+                return ResourceManager.GetString("SettingsLoadErrorFileNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find a settings file at the given path.
+        /// </summary>
+        internal static string SettingsLoadErrorFileNotFoundException {
+            get {
+                return ResourceManager.GetString("SettingsLoadErrorFileNotFoundException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IO exception encountered loading settings from file &apos;{0}&apos;: {1}.
+        /// </summary>
+        internal static string SettingsLoadErrorIOException {
+            get {
+                return ResourceManager.GetString("SettingsLoadErrorIOException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to pathToSettings did not have a value.
+        /// </summary>
+        internal static string SettingsLoadErrorNoPathToSettings {
+            get {
+                return ResourceManager.GetString("SettingsLoadErrorNoPathToSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not load settings from file without authorization from operating system &apos;{0}&apos;: {1}.
+        /// </summary>
+        internal static string SettingsLoadErrorUnauthorized {
+            get {
+                return ResourceManager.GetString("SettingsLoadErrorUnauthorized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to XML error parsing settings file &apos;{0}&apos;:{1}.
+        /// </summary>
+        internal static string SettingsLoadErrorXml {
+            get {
+                return ResourceManager.GetString("SettingsLoadErrorXml", resourceCulture);
             }
         }
         

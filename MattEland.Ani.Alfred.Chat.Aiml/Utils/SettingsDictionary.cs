@@ -10,11 +10,15 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Security;
 using System.Xml;
 
 using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 {
@@ -132,13 +136,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             }
             if (string.IsNullOrWhiteSpace(pathToSettings))
             {
-                throw new ArgumentException("pathToSettings did not have a value", nameof(pathToSettings));
+                throw new ArgumentException(Resources.SettingsLoadErrorNoPathToSettings, nameof(pathToSettings));
             }
 
             // Verify the settings file exists
             if (!new FileInfo(pathToSettings).Exists)
             {
-                throw new FileNotFoundException("Could not find a settings file at the given path", pathToSettings);
+                throw new FileNotFoundException(Resources.SettingsLoadErrorFileNotFoundException, pathToSettings);
             }
 
             // Build out an XML document from the path
@@ -333,6 +337,54 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             foreach (var name in _orderedKeys)
             {
                 target.Add(name, GetValue(name));
+            }
+        }
+
+        /// <summary>
+        /// Loads files from the specified settings path and logs any encountered errors to the logger. This method will not throw exceptions due to failures while loading the dictionary.
+        /// </summary>
+        /// <param name="pathToSettings">The path to settings.</param>
+        /// <param name="logger">The logger.</param>
+        /// <param name="locale">The locale.</param>
+        /// <exception cref="ArgumentNullException">pathToSettings, locale</exception>
+        public void LoadSafe([NotNull] string pathToSettings, [CanBeNull] IConsole logger,
+                             [NotNull] CultureInfo locale)
+        {
+            //- Validate
+            if (pathToSettings == null)
+            {
+                throw new ArgumentNullException(nameof(pathToSettings));
+            }
+            if (locale == null)
+            {
+                throw new ArgumentNullException(nameof(locale));
+            }
+
+            // Farm out the load to the load method, but handle all expected exceptions by logging.
+            const string LogHeader = "LoadSettings";
+            try
+            {
+                Load(pathToSettings);
+            }
+            catch (XmlException ex)
+            {
+                logger?.Log(LogHeader, string.Format(Resources.SettingsLoadErrorXml.NonNull(), pathToSettings, ex.Message), LogLevel.Error);
+            }
+            catch (FileNotFoundException)
+            {
+                logger?.Log(LogHeader, string.Format(Resources.SettingsLoadErrorFileNotFound.NonNull(), pathToSettings), LogLevel.Error);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                logger?.Log(LogHeader, string.Format(Resources.SettingsLoadErrorUnauthorized.NonNull(), pathToSettings, ex.Message), LogLevel.Error);
+            }
+            catch (SecurityException ex)
+            {
+                logger?.Log(LogHeader, string.Format(Resources.SettignsLoadErrorSecurity.NonNull(), pathToSettings, ex.Message), LogLevel.Error);
+            }
+            catch (IOException ex)
+            {
+                logger?.Log(LogHeader, string.Format(Resources.SettingsLoadErrorIOException.NonNull(), pathToSettings, ex.Message), LogLevel.Error);
             }
         }
     }
