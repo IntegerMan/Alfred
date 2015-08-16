@@ -21,6 +21,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
     /// </summary>
     public class TagHandlerParameters
     {
+        [NotNull]
         private readonly ChatEngine _chatEngine;
 
         [NotNull]
@@ -47,10 +48,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <param name="result">The result.</param>
         /// <param name="templateNode">The template node.</param>
         /// <exception cref="ArgumentNullException">
-        ///     <paramref name="query" />, <paramref name="request" />, <paramref name="user" />, or
+        ///     <paramref name="query" />, <paramref name="request" />, <paramref name="user" />, <paramref name="chatEngine" />, or
         ///     <paramref name="templateNode" /> are <see langword="null" />.
         /// </exception>
-        public TagHandlerParameters(ChatEngine chatEngine,
+        public TagHandlerParameters([NotNull] ChatEngine chatEngine,
                                     [NotNull] User user,
                                     [NotNull] SubQuery query,
                                     [NotNull] Request request,
@@ -88,6 +89,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         ///     Gets the chat engine.
         /// </summary>
         /// <value>The chat engine.</value>
+        [NotNull]
         public ChatEngine ChatEngine
         {
             get { return _chatEngine; }
