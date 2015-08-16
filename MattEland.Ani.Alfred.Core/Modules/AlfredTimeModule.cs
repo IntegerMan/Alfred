@@ -232,26 +232,5 @@ namespace MattEland.Ani.Alfred.Core.Modules
         {
             CurrentTime = DateTime.MinValue;
         }
-
-        /// <summary>
-        ///     Handles a chat command that may be intended for this module.
-        /// </summary>
-        /// <param name="command">The command.</param>
-        /// <param name="result">The default system response. This should be modified and returned.</param>
-        /// <returns><c>true</c> if the command was handled, <c>false</c> otherwise.</returns>
-        public override bool HandleChatCommand(ChatCommand command, AlfredCommandResult result)
-        {
-            // Respond to time commands
-            if (command.Command.Matches("CurrentTime"))
-            {
-                // This requires that NewLastOutput has {0} in it
-                result.NewLastOutput = string.Format(CultureInfo.CurrentCulture, result.NewLastOutput.IfNull("{0}"), DateTime.Now);
-
-                return true;
-            }
-
-            // Can't handle it; let the base module take it
-            return base.HandleChatCommand(command, result);
-        }
     }
 }

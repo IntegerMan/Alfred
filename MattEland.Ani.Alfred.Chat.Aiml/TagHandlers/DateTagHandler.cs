@@ -8,6 +8,7 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Xml;
 
 using JetBrains.Annotations;
 
@@ -37,12 +38,25 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// <returns>The processed output</returns>
         protected override string ProcessChange()
         {
-            var isDateNode = TemplateNode.Name.Matches("date");
+            var element = TemplateElement;
 
-            // Format using long date formatting for the culture
-            const string DateFormatString = "D"; // TODO: Add support for a format attribute
+            // If we can't report on this, abort
+            if (!(element != null && element.Name.Matches("date")))
+            {
+                return string.Empty;
+            }
 
-            return isDateNode ? DateTime.Now.ToString(DateFormatString, Locale) : string.Empty;
+            string formatString = "f"; // Full date and time string
+
+            // By default we'll use the full date and time, but look for a format attribute to provide a custom format
+            if (element.HasAttribute("format"))
+            {
+                formatString = element.GetAttribute("format");
+            }
+
+            // Return the current time with formatting applied
+            var now = DateTime.Now;
+            return now.ToString(formatString);
 
         }
     }

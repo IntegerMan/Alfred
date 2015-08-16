@@ -14,11 +14,11 @@ This provides handling for time and date queries
     <pattern>TIME</pattern>
     <template id="tmp_time">
       <random>
-        <li>The time is now {0}.</li>
-        <li>It is currently {0}.</li>
-        <li>It is now {0}.</li>
+        <li>The time is now </li>
+        <li>It is currently </li>
+        <li>It is now </li>
       </random>
-      <oob><alfred subsystem="core" command="CurrentTime" /></oob>
+      <date format="t" />
     </template>
   </category>
 
@@ -63,7 +63,7 @@ This provides handling for time and date queries
         <li>This is </li>
         <li>The current date is </li>
       </random>
-      <date />
+      <date format="D" />
     </template>
   </category>
 
