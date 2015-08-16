@@ -33,7 +33,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
     public partial class ChatEngine
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ChatEngine" /> class.
+        /// Initializes a new instance of the <see cref="ChatEngine" /> class. 
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <exception cref="IOException">An I/O error occurred.</exception>

@@ -115,6 +115,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A problem was encountered when trying to process the input: {0} with the template: &quot;{1}&quot;: {2}.
+        /// </summary>
+        internal static string ChatProcessNodeError {
+            get {
+                return ResourceManager.GetString("ChatProcessNodeError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An input tag with a badly formed index ({0}) was encountered processing the input: {1}.
         /// </summary>
         internal static string InputErrorBadlyFormedIndex {

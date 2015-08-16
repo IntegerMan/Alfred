@@ -55,25 +55,32 @@ namespace MattEland.Ani.Alfred.Chat
         /// <exception cref="DirectoryNotFoundException">Attempted to set a local path that cannot be found.</exception>
         /// <exception cref="SecurityException">The caller does not have the appropriate permission.</exception>
         public AimlStatementHandler([CanBeNull] IConsole console = null)
-            : this(console, Path.Combine(Environment.CurrentDirectory, @"Chat\config"))
+            : this(console, Path.Combine(Environment.CurrentDirectory, @"Chat\config"), Path.Combine(Environment.CurrentDirectory, @"Chat\aiml"))
         {
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
+        /// Initializes a new instance of the <see cref="T:System.Object" /> class.
         /// </summary>
         /// <param name="console">The console.</param>
-        /// <param name="settingsPath">The settings path.</param>
-        /// <exception cref="ArgumentException">settingsPath</exception>
-        public AimlStatementHandler([CanBeNull] IConsole console, [NotNull] string settingsPath)
+        /// <param name="settingsDirectoryPath">The settings path.</param>
+        /// <param name="aimlDirectoryPath">The aiml directory path.</param>
+        /// <exception cref="System.ArgumentException"></exception>
+        /// <exception cref="ArgumentException">settingsPath, aimlDirectoryPath</exception>
+        public AimlStatementHandler([CanBeNull] IConsole console, [NotNull] string settingsDirectoryPath, [NotNull] string aimlDirectoryPath)
         {
             //- Validate / Store Settings
-            if (string.IsNullOrWhiteSpace(settingsPath))
+            if (string.IsNullOrWhiteSpace(settingsDirectoryPath))
             {
-                throw new ArgumentException(Resources.NoSettingsPathError, nameof(settingsPath));
+                throw new ArgumentException(Resources.NoSettingsPathError, nameof(settingsDirectoryPath));
+            }
+            if (string.IsNullOrWhiteSpace(aimlDirectoryPath))
+            {
+                throw new ArgumentException(Resources.NoSettingsPathError, nameof(aimlDirectoryPath));
             }
 
-            SettingsPath = settingsPath;
+            SettingsDirectoryPath = settingsDirectoryPath;
+            AimlDirectoryPath = aimlDirectoryPath;
 
             //- Logging Housekeeping
             _console = console;
@@ -112,7 +119,14 @@ namespace MattEland.Ani.Alfred.Chat
         /// </summary>
         /// <value>The settings path.</value>
         [NotNull]
-        public string SettingsPath { get; set; }
+        public string SettingsDirectoryPath { get; set; }
+
+        /// <summary>
+        /// Gets or sets the aiml directory path.
+        /// </summary>
+        /// <value>The aiml directory path.</value>
+        [NotNull]
+        public string AimlDirectoryPath { get; set; }
 
         /// <summary>
         ///     Gets or sets the console.
@@ -274,8 +288,8 @@ namespace MattEland.Ani.Alfred.Chat
             }
 
             _chatChatEngine.Logger = _console;
-            _chatChatEngine.LoadSettingsFromDirectory(SettingsPath);
-            _chatChatEngine.LoadAimlFromDirectory();
+            _chatChatEngine.LoadSettingsFromDirectory(SettingsDirectoryPath);
+            _chatChatEngine.LoadAimlFromDirectory(AimlDirectoryPath);
         }
 
         /// <summary>

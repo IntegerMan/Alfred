@@ -8,6 +8,8 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text;
 using System.Xml;
 
@@ -53,74 +55,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             get { return RootNode.ChildrenCount; }
         }
 
-        private string ProcessNode([NotNull] XmlNode node,
-                                   SubQuery query,
-                                   [NotNull] Request request,
-                                   Result result,
-                                   User user)
-        {
-            //- Validation
-            if (node == null)
-            {
-                throw new ArgumentNullException(nameof(node));
-            }
-            if (request == null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
-
-            if (request.CheckForTimedOut())
-            {
-                return string.Empty;
-            }
-            var str = node.Name.ToLower();
-            if (str == "template")
-            {
-                var stringBuilder = new StringBuilder();
-                if (node.HasChildNodes)
-                {
-                    foreach (XmlNode node1 in node.ChildNodes)
-                    {
-                        stringBuilder.Append(ProcessNode(node1, query, request, result, user));
-                    }
-                }
-                return stringBuilder.ToString();
-            }
-
-            var handler = _tagFactory.Build(node, query, request, result, user, str);
-
-            if (Equals(null, handler))
-            {
-                return node.InnerText;
-            }
-
-            if (handler.IsRecursive)
-            {
-                if (node.HasChildNodes)
-                {
-                    foreach (XmlNode node1 in node.ChildNodes)
-                    {
-                        if (node1.NodeType != XmlNodeType.Text)
-                        {
-                            node1.InnerXml = ProcessNode(node1, query, request, result, user);
-                        }
-                    }
-                }
-                return handler.Transform();
-            }
-            var node2 = AimlTagHandler.GetNode("<node>" + handler.Transform() + "</node>");
-            if (!node2.HasChildNodes)
-            {
-                return node2.InnerXml;
-            }
-            var stringBuilder1 = new StringBuilder();
-            foreach (XmlNode node1 in node2.ChildNodes)
-            {
-                stringBuilder1.Append(ProcessNode(node1, query, request, result, user));
-            }
-            return stringBuilder1.ToString();
-        }
-
         /// <summary>
         /// Accepts a chat message from the user and returns the chat engine's reply.
         /// </summary>
@@ -141,6 +75,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                 throw new ArgumentException(Resources.ChatErrorNoMessage, nameof(input));
             }
 
+            // Build a request that we can work with internally.
             return Chat(new Request(input, user, this));
         }
 
@@ -179,35 +114,182 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                                                    new StringBuilder());
                 result.SubQueries.Add(query);
             }
-            foreach (var query in result.SubQueries)
+            foreach (var query in result.SubQueries.Where(query => query != null && query.Template.HasText()))
             {
-                if (query.Template.Length > 0)
-                {
-                    try
-                    {
-                        var node = AimlTagHandler.GetNode(query.Template);
-                        var str = ProcessNode(node,
-                                              query,
-                                              request,
-                                              result,
-                                              request.User);
-                        if (str.Length > 0)
-                        {
-                            result.OutputSentences.Add(str);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Log("A problem was encountered when trying to process the input: " +
-                            request.RawInput + " with the template: \"" + query.Template +
-                            "\": " + ex.Message,
-                            LogLevel.Error);
-                    }
-                }
+                ProcessChatSubQuery(request, query, result);
             }
             result.Completed();
             request.User.AddResult(result);
             return result;
         }
+
+        [SuppressMessage("ReSharper", "CatchAllClause")]
+        private void ProcessChatSubQuery([NotNull] Request request,
+                                         [NotNull] SubQuery query,
+                                         [NotNull] Result result)
+        {
+            //- Validate
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+            if (query == null)
+            {
+                throw new ArgumentNullException(nameof(query));
+            }
+            if (result == null)
+            {
+                throw new ArgumentNullException(nameof(result));
+            }
+
+            try
+            {
+                var node = AimlTagHandler.GetNode(query.Template);
+                var str = ProcessNode(node,
+                                      query,
+                                      request,
+                                      result,
+                                      request.User);
+                if (str.Length > 0)
+                {
+                    result.OutputSentences.Add(str);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(string.Format(Locale, Resources.ChatProcessNodeError, request.RawInput, query.Template, ex.Message),
+                    LogLevel.Error);
+            }
+        }
+
+        private string ProcessNode([NotNull] XmlNode node,
+                                   [NotNull] SubQuery query,
+                                   [NotNull] Request request,
+                                   [NotNull] Result result,
+                                   [NotNull] User user)
+        {
+            //- Validation
+            if (node == null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+            if (query == null)
+            {
+                throw new ArgumentNullException(nameof(query));
+            }
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+            if (result == null)
+            {
+                throw new ArgumentNullException(nameof(result));
+            }
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            // If we've already timed out, give up on this.
+            // This is important for iterative operations on complex queries.
+            if (request.CheckForTimedOut())
+            {
+                return string.Empty;
+            }
+
+            // Farm out handling for template nodes
+            if (node.Name.Matches("template"))
+            {
+                return ProcessTemplateNode(node, query, request, result, user);
+            }
+
+            // We need a handler for this type of node. Grab it from the registered tag handlers
+            var handler = _tagFactory.Build(node, query, request, result, user, node.Name.ToLowerInvariant());
+
+            // We can encounter nodes of unknown types. These will not have handlers
+            if (handler == null)
+            {
+                //? Does the AIML specification call for string.Empty here?
+                return node.InnerText;
+            }
+
+            // Farm out handling to recursive node handling function
+            if (handler.IsRecursive)
+            {
+                return ProcessRecursiveNode(node, query, request, result, user, handler);
+            }
+
+            // Execute the transformation and build a new node XML string from the result
+            var nodeContents = string.Format(Locale, "<node>{0}</node>", handler.Transform());
+
+            // Build a node out of the output of the transform
+            var evaluatedNode = AimlTagHandler.GetNode(nodeContents);
+            if (evaluatedNode == null)
+            {
+                return string.Empty;
+            }
+
+            // If it's simple, just return it
+            if (!evaluatedNode.HasChildNodes)
+            {
+                return evaluatedNode.InnerXml;
+            }
+
+            // Recursively process each child node and build out our output from their values.
+            var sbOutput = new StringBuilder();
+            foreach (XmlNode childNode in evaluatedNode.ChildNodes)
+            {
+                if (childNode != null)
+                {
+                    sbOutput.Append(ProcessNode(childNode, query, request, result, user));
+                }
+            }
+
+            return sbOutput.ToString();
+        }
+
+        private string ProcessRecursiveNode(XmlNode node,
+                                            SubQuery query,
+                                            Request request,
+                                            Result result,
+                                            User user,
+                                            [NotNull] TextTransformer handler)
+        {
+            if (handler == null)
+            {
+                throw new ArgumentNullException(nameof(handler));
+            }
+
+            if (node.HasChildNodes)
+            {
+                foreach (XmlNode node1 in node.ChildNodes)
+                {
+                    if (node1.NodeType != XmlNodeType.Text)
+                    {
+                        node1.InnerXml = ProcessNode(node1, query, request, result, user);
+                    }
+                }
+            }
+            return handler.Transform();
+        }
+
+        private string ProcessTemplateNode(XmlNode node,
+                                           SubQuery query,
+                                           Request request,
+                                           Result result,
+                                           User user)
+        {
+
+            var stringBuilder = new StringBuilder();
+            if (node.HasChildNodes)
+            {
+                foreach (XmlNode node1 in node.ChildNodes)
+                {
+                    stringBuilder.Append(ProcessNode(node1, query, request, result, user));
+                }
+            }
+            return stringBuilder.ToString();
+        }
+
     }
 }
