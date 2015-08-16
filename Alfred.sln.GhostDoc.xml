@@ -9,6 +9,7 @@
     <IgnoreExtensions>
     </IgnoreExtensions>
     <IgnoreFiles>
+      <IgnoreFile>.\MattEland.Ani.Alfred.Chat.Aiml\TagHandlers\thatstar.cs</IgnoreFile>
     </IgnoreFiles>
   </SpellChecker>
 <HelpConfigurations selected="HelpFile">

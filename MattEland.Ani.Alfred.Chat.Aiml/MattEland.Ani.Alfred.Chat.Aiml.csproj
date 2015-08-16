@@ -63,7 +63,7 @@
     <Compile Include="Request.cs" />
     <Compile Include="Result.cs" />
     <Compile Include="TagHandlers\BotTagHandler.cs" />
-    <Compile Include="TagHandlers\thatstar.cs" />
+    <Compile Include="TagHandlers\ThatStarTagHandler.cs" />
     <Compile Include="TagHandlers\ConditionTagHandler.cs" />
     <Compile Include="TagHandlers\DateTagHandler.cs" />
     <Compile Include="TagHandlers\FormalTagHandler.cs" />
