@@ -79,7 +79,7 @@ namespace MattEland.Ani.Alfred.Chat
             _console = console;
 
             //+ Set up the chat ChatEngine
-            _chatChatEngine = new ChatEngine {Logger = console};
+            _chatChatEngine = new ChatEngine { Logger = console };
 
             // TODO: Use the currently logged in user's name instead?
             _user = new User(Resources.ChatUserName.NonNull(), _chatChatEngine);
@@ -230,8 +230,7 @@ namespace MattEland.Ani.Alfred.Chat
         /// <returns>The result of the communication to the chat ChatEngine</returns>
         private Result GetChatResult([NotNull] string userInput)
         {
-            var request = new Request(userInput, _user, _chatChatEngine);
-            var result = _chatChatEngine.Chat(request);
+            var result = _chatChatEngine.Chat(userInput, _user);
 
             return result;
         }

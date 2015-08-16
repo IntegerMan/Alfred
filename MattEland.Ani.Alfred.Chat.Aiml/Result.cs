@@ -17,6 +17,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml
 {
@@ -142,7 +143,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                 // If it timed out, we'll use the timeout message
                 if (Request.HasTimedOut)
                 {
-                    return ChatEngine.TimeOutMessage;
+                    return Resources.ChatEngineRequestTimedOut.NonNull();
                 }
 
                 // No response and it didn't time out. Log it and return a different message.
@@ -153,14 +154,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                 }
 
                 var message = string.Format(ChatEngine.Locale,
-                                            "The ChatEngine could not find any response for the input: {0} with the path(s): {1}{2} from the user with an id: {3}",
+                                            Resources.ChatEngineErrorCouldNotFindResponse.NonNull(),
                                             RawInput,
                                             Environment.NewLine,
                                             stringBuilder,
                                             User.Id);
                 ChatEngine.Log(message, LogLevel.Warning);
 
-                return "I'm sorry but I don't understand. Can you try asking differently?";
+                return Resources.ChatEngineDontUnderstandFallback.NonNull();
             }
         }
 

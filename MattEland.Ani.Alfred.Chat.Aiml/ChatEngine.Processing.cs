@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
-// ChatEngine.Loading.cs
+// ChatEngine.Processing.cs
 // 
-// Created on:      08/16/2015 at 12:51 AM
-// Last Modified:   08/16/2015 at 12:51 AM
+// Created on:      08/16/2015 at 12:52 AM
+// Last Modified:   08/16/2015 at 1:28 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -22,44 +22,20 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 {
     public partial class ChatEngine
     {
-
+        [NotNull]
+        private readonly TagHandlerFactory _tagFactory;
 
         /// <summary>
-        /// Gets the time out limit for a request in milliseconds. Defaults to 2000 (2 seconds).
+        ///     Gets the time out limit for a request in milliseconds. Defaults to 2000 (2 seconds).
         /// </summary>
         /// <value>The time out.</value>
         public double TimeOut { get; set; } = 2000;
 
         /// <summary>
-        ///     Gets the timeout message.
-        ///     This message is used when a request takes too long and times out.
-        /// </summary>
-        /// <value>The timeout message.</value>
-        [NotNull]
-        public string TimeOutMessage
-        {
-            get
-            {
-                var timeoutMessage = GlobalSettings.GetValue("timeoutmessage");
-
-                if (string.IsNullOrEmpty(timeoutMessage))
-                {
-                    return "Your request has timed out. Please try again or phrase your sentence differently.";
-                }
-
-                // ReSharper disable once AssignNullToNotNullAttribute
-                return timeoutMessage;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the maximum size that can be used to hold a path in the that value.
+        ///     Gets or sets the maximum size that can be used to hold a path in the that value.
         /// </summary>
         /// <value>The maximum size of the that.</value>
         public int MaxThatSize { get; set; } = 256;
-
-        [NotNull]
-        private readonly TagHandlerFactory _tagFactory;
 
         /// <summary>
         ///     Gets or sets the root node of the Aiml knowledge graph.
@@ -67,6 +43,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <value>The root node.</value>
         [NotNull]
         public Node RootNode { get; set; }
+
+        /// <summary>
+        ///     Gets the count of AIML nodes in memory.
+        /// </summary>
+        /// <value>The count of AIML nodes.</value>
+        public int NodeCount
+        {
+            get { return RootNode.ChildrenCount; }
+        }
 
         private string ProcessNode([NotNull] XmlNode node,
                                    SubQuery query,
@@ -136,13 +121,43 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             return stringBuilder1.ToString();
         }
 
-        public Result Chat(string rawInput, string UserGUID)
+        /// <summary>
+        /// Accepts a chat message from the user and returns the chat engine's reply.
+        /// </summary>
+        /// <param name="input">The input chat message.</param>
+        /// <param name="user">The user.</param>
+        /// <returns>A result object containing the engine's reply.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="user"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentException">A chat message is required to interact with the system.</exception>
+        public Result Chat([NotNull] string input, [NotNull] User user)
         {
-            return Chat(new Request(rawInput, new User(UserGUID, this), this));
+            //- Validate
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            if (input.IsNullOrWhitespace())
+            {
+                throw new ArgumentException(Resources.ChatErrorNoMessage, nameof(input));
+            }
+
+            return Chat(new Request(input, user, this));
         }
 
-        public Result Chat(Request request)
+        /// <summary>
+        /// Accepts a chat message from the user and returns the chat engine's reply.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns>A result object containing the engine's reply.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null" />.</exception>
+        internal Result Chat([NotNull] Request request)
         {
+            //- Validation
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+
             var result = new Result(request.User, this, request);
             var aimlLoader = new AimlLoader(this);
             foreach (var pattern in SplitSentenceHelper.Split(request.RawInput, this))
@@ -194,15 +209,5 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             request.User.AddResult(result);
             return result;
         }
-
-        /// <summary>
-        ///     Gets the count of AIML nodes in memory.
-        /// </summary>
-        /// <value>The count of AIML nodes.</value>
-        public int NodeCount
-        {
-            get { return RootNode.ChildrenCount; }
-        }
-
     }
 }

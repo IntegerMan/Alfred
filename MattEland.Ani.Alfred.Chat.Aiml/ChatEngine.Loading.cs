@@ -88,10 +88,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             {
                 GlobalSettings.Add("configdirectory", "config");
             }
-            Person2Substitutions.Load(Path.Combine(PathToConfigFiles,
+            SecondPersonToFirstPersonSubstitutions.Load(Path.Combine(PathToConfigFiles,
                                                    GlobalSettings.GetValue(
                                                                            "person2substitutionsfile")));
-            PersonSubstitutions.Load(Path.Combine(PathToConfigFiles,
+            FirstPersonToSecondPersonSubstitutions.Load(Path.Combine(PathToConfigFiles,
                                                   GlobalSettings.GetValue("personsubstitutionsfile")));
             GenderSubstitutions.Load(Path.Combine(PathToConfigFiles,
                                                   GlobalSettings.GetValue("gendersubstitutionsfile")));

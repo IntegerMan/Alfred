@@ -37,10 +37,12 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             _tagFactory = new TagHandlerFactory(this);
             GlobalSettings = new SettingsDictionary();
             GenderSubstitutions = new SettingsDictionary();
-            Person2Substitutions = new SettingsDictionary();
-            PersonSubstitutions = new SettingsDictionary();
+            SecondPersonToFirstPersonSubstitutions = new SettingsDictionary();
+            FirstPersonToSecondPersonSubstitutions = new SettingsDictionary();
             Substitutions = new SettingsDictionary();
+
             SentenceSplitters = new List<string> { ".", "!", "?", ";" };
+
             RootNode = new Node();
         }
 
@@ -66,7 +68,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// </summary>
         /// <value>The person substitutions settings dictionary.</value>
         [NotNull]
-        public SettingsDictionary Person2Substitutions { get; }
+        public SettingsDictionary SecondPersonToFirstPersonSubstitutions { get; }
 
         /// <summary>
         ///     Gets the person substitutions settings dictionary. This contains things related to moving from
@@ -74,7 +76,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// </summary>
         /// <value>The person substitutions settings dictionary.</value>
         [NotNull]
-        public SettingsDictionary PersonSubstitutions { get; }
+        public SettingsDictionary FirstPersonToSecondPersonSubstitutions { get; }
 
         /// <summary>
         ///     Gets a list of sentence splitters. Sentence splitters are punctuation characters such as . or !

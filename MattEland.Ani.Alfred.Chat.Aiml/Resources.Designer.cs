@@ -61,11 +61,47 @@ namespace MattEland.Ani.Alfred.Chat.Aiml {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to I&apos;m sorry but I don&apos;t understand. Can you try asking differently?.
+        /// </summary>
+        internal static string ChatEngineDontUnderstandFallback {
+            get {
+                return ResourceManager.GetString("ChatEngineDontUnderstandFallback", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The ChatEngine could not find any response for the input: {0} with the path(s): {1}{2} from the user with an id: {3}.
+        /// </summary>
+        internal static string ChatEngineErrorCouldNotFindResponse {
+            get {
+                return ResourceManager.GetString("ChatEngineErrorCouldNotFindResponse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} is not currently available to talk..
         /// </summary>
         internal static string ChatEngineNotAcceptingUserInputMessage {
             get {
                 return ResourceManager.GetString("ChatEngineNotAcceptingUserInputMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your request has timed out. Please try again or phrase your sentence differently..
+        /// </summary>
+        internal static string ChatEngineRequestTimedOut {
+            get {
+                return ResourceManager.GetString("ChatEngineRequestTimedOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A chat message is required to interact with the system..
+        /// </summary>
+        internal static string ChatErrorNoMessage {
+            get {
+                return ResourceManager.GetString("ChatErrorNoMessage", resourceCulture);
             }
         }
         

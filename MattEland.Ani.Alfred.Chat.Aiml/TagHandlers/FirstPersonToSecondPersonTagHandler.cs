@@ -48,7 +48,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             // Substitute entries of "I am" with "You are" and the like
             if (node.InnerText.HasText())
             {
-                var substitutions = ChatEngine.PersonSubstitutions;
+                var substitutions = ChatEngine.FirstPersonToSecondPersonSubstitutions;
                 return TextSubstitutionTransformer.Substitute(substitutions, node.InnerText);
             }
 

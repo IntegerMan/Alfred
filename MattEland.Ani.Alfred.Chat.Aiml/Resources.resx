@@ -166,4 +166,16 @@
     <value>{0} is not currently available to talk.</value>
     <comment>0 = Name</comment>
   </data>
+  <data name="ChatEngineRequestTimedOut" xml:space="preserve">
+    <value>Your request has timed out. Please try again or phrase your sentence differently.</value>
+  </data>
+  <data name="ChatEngineDontUnderstandFallback" xml:space="preserve">
+    <value>I'm sorry but I don't understand. Can you try asking differently?</value>
+  </data>
+  <data name="ChatEngineErrorCouldNotFindResponse" xml:space="preserve">
+    <value>The ChatEngine could not find any response for the input: {0} with the path(s): {1}{2} from the user with an id: {3}</value>
+  </data>
+  <data name="ChatErrorNoMessage" xml:space="preserve">
+    <value>A chat message is required to interact with the system.</value>
+  </data>
 </root>
