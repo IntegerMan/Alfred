@@ -45,15 +45,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             set { _aimlDirectoryPath = value; }
         }
 
-        public string PathToConfigFiles
-        {
-            get
-            {
-                return Path.Combine(_startDirectory,
-                                    Librarian.GlobalSettings.GetValue("configdirectory"));
-            }
-        }
-
         public void LoadAimlFromDirectory()
         {
             _aimlLoader.LoadAiml(AimlDirectoryPath);
