@@ -2,7 +2,7 @@
 // TextTransformer.cs
 // 
 // Created on:      08/12/2015 at 10:36 PM
-// Last Modified:   08/13/2015 at 12:02 AM
+// Last Modified:   08/16/2015 at 12:33 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -22,13 +22,22 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
     /// </summary>
     public abstract class TextTransformer
     {
+        [NotNull]
+        private readonly ChatEngine _chatEngine;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="TextTransformer" /> class.
         /// </summary>
         /// <param name="chatEngine">The ChatEngine.</param>
         /// <param name="inputString">The input string.</param>
-        protected TextTransformer([CanBeNull] ChatEngine chatEngine, [CanBeNull] string inputString)
+        /// <exception cref="ArgumentNullException"><paramref name="chatEngine" /> is <see langword="null" />.</exception>
+        protected TextTransformer([NotNull] ChatEngine chatEngine, [CanBeNull] string inputString)
         {
+            if (chatEngine == null)
+            {
+                throw new ArgumentNullException(nameof(chatEngine));
+            }
+
             _chatEngine = chatEngine;
             InputString = inputString;
         }
@@ -37,26 +46,23 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         ///     Initializes a new instance of the <see cref="TextTransformer" /> class.
         /// </summary>
         /// <param name="chatEngine">The ChatEngine.</param>
-        protected TextTransformer([CanBeNull] ChatEngine chatEngine) : this(chatEngine, null)
+        /// <exception cref="ArgumentNullException"><paramref name="chatEngine" /> is <see langword="null" />.</exception>
+        protected TextTransformer([NotNull] ChatEngine chatEngine) : this(chatEngine, null)
         {
         }
-
-        private ChatEngine _chatEngine;
 
         /// <summary>
         ///     Gets the chat ChatEngine associated with this transformer.
         /// </summary>
         /// <value>The ChatEngine.</value>
-        [CanBeNull]
-        [Obsolete("It'd be good to not need to use this anymore and rely on pass-throughs")]
+        [NotNull]
         public ChatEngine ChatEngine
         {
             [DebuggerStepThrough]
             get
-            { return _chatEngine; }
-            [DebuggerStepThrough]
-            internal set
-            { _chatEngine = value; }
+            {
+                return _chatEngine;
+            }
         }
 
         /// <summary>
@@ -66,7 +72,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         [NotNull]
         protected CultureInfo Locale
         {
-            get { return _chatEngine?.Locale ?? CultureInfo.CurrentCulture; }
+            get { return _chatEngine.Locale; }
         }
 
         /// <summary>
@@ -123,23 +129,25 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         protected abstract string ProcessChange();
 
         /// <summary>
-        /// Logs the specified message to the logger.
+        ///     Logs the specified message to the logger.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="level">The log level.</param>
         protected void Log(string message, LogLevel level)
         {
-            _chatEngine?.Log(message, level);
+            _chatEngine.Log(message, level);
         }
 
         /// <summary>
-        /// Gets the global setting with the specified name.
+        ///     Gets the global setting with the specified name.
         /// </summary>
         /// <param name="settingName">Name of the setting.</param>
         /// <returns>The value of the setting or string.Empty if no setting found</returns>
         protected string GetGlobalSetting([CanBeNull] string settingName)
         {
-            return null == settingName ? string.Empty : _chatEngine?.GlobalSettings.GetValue(settingName);
+            return null == settingName
+                       ? string.Empty
+                       : _chatEngine.GlobalSettings.GetValue(settingName);
 
         }
     }

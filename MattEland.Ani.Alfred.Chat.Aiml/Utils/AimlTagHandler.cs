@@ -14,7 +14,6 @@ using System.Xml;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
-using MattEland.Ani.Alfred.Core.Console;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 {
@@ -152,13 +151,16 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         {
             try
             {
-                return GetNode("<star/>");
+                var starNode = GetNode("<star/>");
+                Debug.Assert(starNode != null);
+                return starNode;
             }
             catch (XmlException ex)
             {
                 Debug.Fail("GetStarNode cannot return a null value but encountered an XmlException: " + ex.Message);
 
-                throw ex;
+                // ReSharper disable once ExceptionNotDocumented
+                throw;
             }
         }
 
