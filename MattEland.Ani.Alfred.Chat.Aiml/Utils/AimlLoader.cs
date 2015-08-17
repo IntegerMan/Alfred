@@ -180,26 +180,20 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             doc.Load(path);
 
             // Load the Aiml resources from the document
-            LoadAimlFromXml(doc, path);
+            LoadAimlFromXml(doc);
         }
 
         /// <summary>
         ///     Loads the AIML from an XML Document.
         /// </summary>
         /// <param name="doc">The document.</param>
-        /// <param name="fileName">The directoryPath.</param>
         /// <exception cref="ArgumentNullException"><paramref name="doc" /> is <see langword="null" />.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="fileName" /> is <see langword="null" />.</exception>
-        public void LoadAimlFromXml([NotNull] XmlDocument doc, [NotNull] string fileName)
+        public void LoadAimlFromXml([NotNull] XmlDocument doc)
         {
             //- Validate
             if (doc == null)
             {
                 throw new ArgumentNullException(nameof(doc));
-            }
-            if (fileName == null)
-            {
-                throw new ArgumentNullException(nameof(fileName));
             }
 
             // Grab the nodes from the document
@@ -221,11 +215,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
                 switch (node.Name.ToUpperInvariant())
                 {
                     case "TOPIC":
-                        ProcessTopic(node, fileName);
+                        ProcessTopic(node);
                         break;
 
                     case "CATEGORY":
-                        ProcessCategory(node, "*", fileName);
+                        ProcessCategory(node, "*");
                         break;
                 }
             }
@@ -235,17 +229,12 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         ///     Processes a topic node.
         /// </summary>
         /// <param name="node">The node.</param>
-        /// <param name="filename">The filename.</param>
-        private void ProcessTopic([NotNull] XmlNode node, [NotNull] string filename)
+        private void ProcessTopic([NotNull] XmlNode node)
         {
             //- Validation
             if (node == null)
             {
                 throw new ArgumentNullException(nameof(node));
-            }
-            if (filename == null)
-            {
-                throw new ArgumentNullException(nameof(filename));
             }
 
             // Loop through child categories and process them
@@ -253,7 +242,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             {
                 if (childNode != null && childNode.Name.Matches("category"))
                 {
-                    ProcessCategory(childNode, GetNameFromNode(node), filename);
+                    ProcessCategory(childNode, GetNameFromNode(node));
                 }
             }
         }
@@ -292,10 +281,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// </summary>
         /// <param name="node">The node.</param>
         /// <param name="topicName">Name of the topic.</param>
-        /// <param name="filename">The filename.</param>
+        /// <exception cref="ArgumentNullException">node, topicName</exception>
         private void ProcessCategory([NotNull] XmlNode node,
-                                     [NotNull] string topicName,
-                                     [NotNull] string filename)
+                                     [NotNull] string topicName)
         {
             //- Validation
             if (node == null)
@@ -306,18 +294,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             {
                 throw new ArgumentNullException(nameof(topicName));
             }
-            if (filename == null)
-            {
-                throw new ArgumentNullException(nameof(filename));
-            }
 
             // GetValue the pattern node
             var patternNode = FindChildNode("pattern", node);
             if (patternNode == null)
             {
                 throw new XmlException(string.Format(Locale,
-                                                     "Missing pattern tag in a node found in {0}",
-                                                     filename));
+                                                     "Missing pattern tag in a node found in topic {0}",
+                                                     topicName));
             }
 
             // GetValue the template node
@@ -325,14 +309,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             if (Equals(null, templateNode))
             {
                 throw new XmlException(string.Format(Locale,
-                                                     "Missing template tag in the node with pattern: {0} found in {1}",
+                                                     "Missing template tag in the node with pattern: {0} found in topic {1}",
                                                      patternNode.InnerText,
-                                                     filename));
+                                                     topicName));
             }
 
             // Figure out our path for logging and validation purposes
             var path = BuildPathString(node, topicName, false);
-            _chatEngine.AddCategoryToGraph(templateNode, path, filename);
+            _chatEngine.AddCategoryToGraph(templateNode, path);
         }
 
         /// <summary>

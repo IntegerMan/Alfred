@@ -61,6 +61,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The category with a pattern: {0} has an empty template tag. Aborting..
+        /// </summary>
+        internal static string AddCategoryErrorEmptyTemplateTag {
+            get {
+                return ResourceManager.GetString("AddCategoryErrorEmptyTemplateTag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to IO error reading file {0} {1}.
         /// </summary>
         internal static string AimlLoaderErrorIOException {
@@ -97,7 +106,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Attempted to load a new category with an empty pattern where the directoryPath = {0} and template = {1} produced by a category in the file: {2}.
+        ///   Looks up a localized string similar to Attempted to load a new category with an empty pattern where the directoryPath = {0} and template = {1} produced by a category..
         /// </summary>
         internal static string ChatEngineAddCategoryErrorNoPath {
             get {

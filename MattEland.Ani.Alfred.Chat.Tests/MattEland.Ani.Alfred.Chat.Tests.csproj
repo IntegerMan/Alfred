@@ -63,6 +63,10 @@
       <Project>{3a25074a-351a-471e-aaf8-171a0e66f83a}</Project>
       <Name>MattEland.Ani.Alfred.Chat</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MattEland.Ani.Alfred.Chat.Aiml\MattEland.Ani.Alfred.Chat.Aiml.csproj">
+      <Project>{818801e4-7862-409a-8e92-4f66800324eb}</Project>
+      <Name>MattEland.Ani.Alfred.Chat.Aiml</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MattEland.Ani.Alfred.Core\MattEland.Ani.Alfred.Core.csproj">
       <Project>{549F22E5-1F66-4420-89BF-9460603F9516}</Project>
       <Name>MattEland.Ani.Alfred.Core</Name>

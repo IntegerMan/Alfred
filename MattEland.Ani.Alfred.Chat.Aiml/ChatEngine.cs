@@ -210,24 +210,33 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         ///     Loads a specific aiml file.
         /// </summary>
         /// <param name="aimlFile">The aiml file.</param>
-        /// <param name="filename">The filename.</param>
         /// <exception cref="ArgumentNullException"><paramref name="aimlFile" /> is <see langword="null" />.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="filename" /> is <see langword="null" />.</exception>
-        internal void LoadAimlFile([NotNull] XmlDocument aimlFile, [NotNull] string filename)
+        public void LoadAimlFile([NotNull] XmlDocument aimlFile)
         {
             //- Validate
             if (aimlFile == null)
             {
                 throw new ArgumentNullException(nameof(aimlFile));
             }
-            if (filename == null)
-            {
-                throw new ArgumentNullException(nameof(filename));
-            }
 
             // Load the file
-            _aimlLoader.LoadAimlFromXml(aimlFile, filename);
+            _aimlLoader.LoadAimlFromXml(aimlFile);
         }
+
+        /// <summary>
+        /// Loads AIML assets from a string containing the contents of an AIML file.
+        /// </summary>
+        /// <param name="aiml">The aiml.</param>
+        /// <exception cref="XmlException">There is a load or parse error in the XML. In this case, a <see cref="T:System.IO.FileNotFoundException" /> is raised. </exception>
+        /// <exception cref="IOException">An I/O error occurred while opening the file. </exception>
+        public void LoadAimlFromString(string aiml)
+        {
+            var document = new XmlDocument();
+            document.LoadXml(aiml);
+
+            LoadAimlFile(document);
+        }
+
 
         /// <summary>
         ///     Loads settings from the specified settings directory path.
@@ -265,20 +274,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// </summary>
         /// <param name="node">The template node.</param>
         /// <param name="path">The path.</param>
-        /// <param name="fileName">The filename.</param>
         /// <exception cref="ArgumentNullException">
-        ///     <paramref name="fileName" />, <paramref name="path" />, or
-        ///     <paramref name="node" /> is <see langword="null" />.
+        ///     <paramref name="path" />, or <paramref name="node" /> is <see langword="null" />.
         /// </exception>
         public void AddCategoryToGraph([NotNull] XmlNode node,
-                                       [NotNull] string path,
-                                       [NotNull] string fileName)
+                                       [NotNull] string path)
         {
             //- Validate
-            if (fileName == null)
-            {
-                throw new ArgumentNullException(nameof(fileName));
-            }
             if (path == null)
             {
                 throw new ArgumentNullException(nameof(path));
@@ -294,16 +296,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                 var message = string.Format(Locale,
                                             Resources.ChatEngineAddCategoryErrorNoPath,
                                             path,
-                                            node.OuterXml,
-                                            fileName);
+                                            node.OuterXml);
                 Log(message, LogLevel.Warning);
                 return;
             }
 
             // Add the node to the graph
-            RootNode.AddCategory(path, node.OuterXml, fileName);
+            RootNode.AddCategory(path, node.OuterXml);
         }
-
     }
 
 }

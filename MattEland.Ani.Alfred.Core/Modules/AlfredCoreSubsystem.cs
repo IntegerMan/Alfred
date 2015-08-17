@@ -56,7 +56,6 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <exception cref="System.ArgumentNullException"></exception>
         public AlfredCoreSubsystem([NotNull] IPlatformProvider provider) : base(provider)
         {
-
             _controlPage = new AlfredModuleListPage(provider, ControlPageName);
 
             // Instantiate the modules

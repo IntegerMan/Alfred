@@ -165,4 +165,29 @@
   <data name="AimlStatementHandlerChatOffline" xml:space="preserve">
     <value>Cannot use the chat system when chat did not initialize properly</value>
   </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="AimlCoreDateTime" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\AimlCoreDateTime.aiml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="AimlCorePower" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\AimlCorePower.aiml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="AimlFallback" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\AimlFallback.aiml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="AimlGod" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\AimlGod.aiml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="AimlGreeting" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\AimlGreeting.aiml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="AimlHelp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\AimlHelp.aiml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="AimlShellNavigation" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\AimlShellNavigation.aiml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="AimlThanks" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\AimlThanks.aiml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
 </root>

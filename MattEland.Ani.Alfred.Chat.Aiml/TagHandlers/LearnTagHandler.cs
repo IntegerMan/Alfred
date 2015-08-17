@@ -59,7 +59,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                         newAiml.Load(innerText);
 
                         // We've got a document in a decent state - send it to the engine to learn
-                        ChatEngine.LoadAimlFile(newAiml, innerText);
+                        ChatEngine.LoadAimlFile(newAiml);
 
                         //- Log for diagnostics
                         Log(string.Format(Locale, "Learn tag invoked on file {0}", fileInfo.FullName), LogLevel.Info);

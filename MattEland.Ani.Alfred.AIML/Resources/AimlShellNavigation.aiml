@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+Copyright (c) 2015 Matt Eland
+
+This provides handling for navigating to UI areas
+-->
+
+<aiml>
+
+  <!-- Root verb with no parameters -->
+  <category>
+    <pattern>NAVIGATE</pattern>
+    <template>
+      Where would you like to navigate to?<br />
+      For a list of destinations, try "Navigate Help"
+    </template>
+  </category>
+
+  <!-- Navigate Help -->
+  <category>
+    <pattern>Navigate Help</pattern>
+    <template>
+      Presently you can navigate to:
+      Core
+      Event Log
+      System
+    </template>
+  </category>
+
+  <!-- Navigation Completed - invoked after navigation has succeeded -->
+  <category>
+    <pattern>Navigate Success</pattern>
+    <template>
+      <random>
+      <li>Okay, you're there.</li>
+      <li>Your wish is my command.</li>
+      <li>Done.</li>
+      <li>Looks like we're there.</li>
+      <li>All done.</li>
+      <li>Okay.</li>
+      </random>
+    </template>
+  </category>
+
+  <!-- Navigation Failure - Invoked when the system couldn't respond to the navigation -->
+  <category>
+    <pattern>Navigate Error *</pattern>
+    <template>
+      Navigation failed: <star />
+    </template>
+  </category>
+
+  <!-- Navigate System -->
+  <category>
+    <pattern>Navigate System</pattern>
+    <template>
+      <alfred subsystem="ui" command="nav" data="System" />
+    </template>
+  </category>
+  <category>
+    <pattern>Navigate System Monitoring</pattern>
+    <template>
+      <alfred subsystem="ui" command="nav" data="System" />
+    </template>
+  </category>
+  <category>
+    <pattern>Navigate System Monitor</pattern>
+    <template>
+      <alfred subsystem="ui" command="nav" data="System" />
+    </template>
+  </category>
+  
+  <!-- Navigate Core (or Home) -->
+  <category>
+    <pattern>Navigate Core</pattern>
+    <template>
+      <alfred subsystem="ui" command="nav" data="Core" />
+    </template>
+  </category>
+  <category>
+    <pattern>Navigate Home</pattern>
+    <template>
+      <alfred subsystem="ui" command="nav" data="Core" />
+    </template>
+  </category>
+  
+  <!-- Navigate Event -->
+  <category>
+    <pattern>Navigate Event Log</pattern>
+    <template>
+      <alfred subsystem="ui" command="nav" data="Event Log" />
+    </template>
+  </category>
+  <category>
+    <pattern>Navigate Log</pattern>
+    <template>
+      <alfred subsystem="ui" command="nav" data="Event Log" />
+    </template>
+  </category>
+  
+  <!-- Navigate Unknown -->
+  <category>
+    <pattern>Navigate *</pattern>
+    <template>
+      I'm sorry, but <star/> is not a valid destination.
+    </template>
+  </category>
+
+  <!-- Word Replacement for System -->
+  <category>
+    <pattern>* Sys</pattern>
+    <template>
+      <srai>* System</srai>
+    </template>
+  </category>
+
+  <!-- Allow Abbreviating Navigate as Nav -->
+  <category>
+    <pattern>Nav *</pattern>
+    <template>
+      <srai>Navigate <star /></srai>
+    </template>
+  </category>
+
+</aiml>

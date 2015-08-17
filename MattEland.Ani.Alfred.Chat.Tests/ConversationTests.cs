@@ -86,6 +86,15 @@ namespace MattEland.Ani.Alfred.Chat.Tests
         }
 
         /// <summary>
+        /// Tests that the chat engine has nodes associated with it
+        /// </summary>
+        [Test]
+        public void ChatEngineHasNodes()
+        {
+            Assert.Greater(_chat.ChatEngine.NodeCount, 0, "Chat engine did not have any nodes");
+        }
+
+        /// <summary>
         ///     Gets the response to the chat message.
         /// </summary>
         /// <param name="text">The text.</param>

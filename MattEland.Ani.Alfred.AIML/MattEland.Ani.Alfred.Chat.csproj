@@ -89,6 +89,14 @@
   <ItemGroup>
     <None Include="AlfredAppTestCertificate.snk" />
     <None Include="packages.config" />
+    <None Include="Resources\AimlCoreDateTime.aiml" />
+    <None Include="Resources\AimlCorePower.aiml" />
+    <None Include="Resources\AimlFallback.aiml" />
+    <None Include="Resources\AimlGod.aiml" />
+    <None Include="Resources\AimlGreeting.aiml" />
+    <None Include="Resources\AimlHelp.aiml" />
+    <None Include="Resources\AimlThanks.aiml" />
+    <None Include="Resources\AimlShellNavigation.aiml" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

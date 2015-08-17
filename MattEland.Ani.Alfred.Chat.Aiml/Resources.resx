@@ -221,7 +221,7 @@
     <value>Could not find a settings file at the given path</value>
   </data>
   <data name="ChatEngineAddCategoryErrorNoPath" xml:space="preserve">
-    <value>Attempted to load a new category with an empty pattern where the directoryPath = {0} and template = {1} produced by a category in the file: {2}</value>
+    <value>Attempted to load a new category with an empty pattern where the directoryPath = {0} and template = {1} produced by a category.</value>
   </data>
   <data name="ChatProcessNodeError" xml:space="preserve">
     <value>A problem was encountered when trying to process the input: {0} with the template: "{1}": {2}</value>
@@ -243,5 +243,8 @@
   </data>
   <data name="AimlLoaderErrorSecurityException" xml:space="preserve">
     <value>Security error reading file {0} {1}</value>
+  </data>
+  <data name="AddCategoryErrorEmptyTemplateTag" xml:space="preserve">
+    <value>The category with a pattern: {0} has an empty template tag. Aborting.</value>
   </data>
 </root>

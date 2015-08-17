@@ -100,7 +100,6 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Chat\Aiml\core_DateTime.aiml" />
     <None Include="Chat\Aiml\core_power.aiml" />
     <Content Include="Chat\config\DefaultPredicates.xml" />
     <Content Include="Chat\config\GenderSubstitutions.xml" />

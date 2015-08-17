@@ -61,21 +61,19 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// </summary>
         /// <param name="path">The path.</param>
         /// <param name="template">The template.</param>
-        /// <param name="fileName">The filename.</param>
         /// <exception cref="ArgumentNullException">A category has an  empty template tag.</exception>
-        public void AddCategory([CanBeNull] string path, [NotNull] string template, [CanBeNull] string fileName)
+        public void AddCategory([CanBeNull] string path, [NotNull] string template)
         {
             //- Validate Input
             if (string.IsNullOrEmpty(template))
             {
-                var message = string.Format(CultureInfo.CurrentCulture, "The category with a pattern: {0} found in file: {1} has an empty template tag. Aborting.", path, fileName);
+                var message = string.Format(CultureInfo.CurrentCulture, Resources.AddCategoryErrorEmptyTemplateTag, path);
                 throw new ArgumentNullException(template, message);
             }
 
             if (string.IsNullOrWhiteSpace(path))
             {
                 Template = template;
-                FileName = fileName;
             }
             else
             {
@@ -101,7 +99,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
                     _children.Add(key, node);
                 }
 
-                node.AddCategory(restOfPath, template, fileName);
+                node.AddCategory(restOfPath, template);
             }
         }
 
