@@ -45,6 +45,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
             // Set simple properties
             MaxThatSize = 256;
+
+            // Timeout should not occur during debugging as it makes debugging chat difficult
 #if DEBUG
             Timeout = -1;
 #else
