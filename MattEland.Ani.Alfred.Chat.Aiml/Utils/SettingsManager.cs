@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
-// SettingsDictionary.cs
+// SettingsManager.cs
 // 
 // Created on:      08/12/2015 at 10:28 PM
-// Last Modified:   08/12/2015 at 11:59 PM
+// Last Modified:   08/17/2015 at 12:21 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -23,17 +23,17 @@ using MattEland.Common;
 namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 {
     /// <summary>
-    /// A dictionary for holding setting values
+    ///     A dictionary for holding setting values
     /// </summary>
     /// <remarks>
-    /// This is a lot of code that seems like it could be replaced with a standard dictionary.
+    ///     This is a lot of code that seems like it could be replaced with a standard dictionary.
     /// 
-    /// It's odd that it doesn't implement any IEnumerable or ICollection or IDictionary interfaces.
+    ///     It's odd that it doesn't implement any IEnumerable or ICollection or IDictionary interfaces.
     /// 
-    /// The only unique thing about this dictionary is the upper / lowercase management and the ordered
-    /// nature of the keys
+    ///     The only unique thing about this dictionary is the upper / lowercase management and the ordered
+    ///     nature of the keys
     /// 
-    /// TODO: Clean up this class by using more built in mechanisms
+    ///     TODO: Clean up this class by using more built in mechanisms
     /// </remarks>
     public class SettingsManager
     {
@@ -45,7 +45,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         private readonly Dictionary<string, string> _settingsHash = new Dictionary<string, string>();
 
         /// <summary>
-        /// Gets the number of keys in the keys collection.
+        ///     Gets the number of keys in the keys collection.
         /// </summary>
         /// <value>The keys.</value>
         public int Count
@@ -54,7 +54,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        /// Gets an XML representation of this dictionary.
+        ///     Gets an XML representation of this dictionary.
         /// </summary>
         /// <value>An XML representation of this dictionary</value>
         /// <remarks>TODO: This would be nice to either remove or make use XElement / XDocument</remarks>
@@ -101,7 +101,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        /// Gets the setting names as an array.
+        ///     Gets the setting names as an array.
         /// </summary>
         /// <value>The setting names.</value>
         /// <remarks>TODO: I'd love to remove this or use IEnumerable instead</remarks>
@@ -117,7 +117,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        /// Clears current values and loads values into the dictionary from a settings file at the specified path.
+        ///     Clears current values and loads values into the dictionary from a settings file at the
+        ///     specified path.
         /// </summary>
         /// <param name="pathToSettings">The path to the settings file.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
@@ -125,8 +126,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <exception cref="System.ArgumentException">pathToSettings did not have a value</exception>
         /// <exception cref="System.IO.FileNotFoundException">Could not find a settings file at the given path</exception>
         /// <exception cref="SecurityException">The caller does not have the required permission. </exception>
-        /// <exception cref="UnauthorizedAccessException">Access to <paramref name="pathToSettings" /> is denied. </exception>
-        /// <exception cref="DirectoryNotFoundException">The specified path is invalid (for example, it is on an unmapped drive). </exception>
+        /// <exception cref="UnauthorizedAccessException">
+        ///     Access to <paramref name="pathToSettings" /> is
+        ///     denied.
+        /// </exception>
+        /// <exception cref="DirectoryNotFoundException">
+        ///     The specified path is invalid (for example, it is on
+        ///     an unmapped drive).
+        /// </exception>
         /// <exception cref="IOException">An I/O error occurred while opening the file. </exception>
         public void Load([NotNull] string pathToSettings)
         {
@@ -136,13 +143,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             }
             if (string.IsNullOrWhiteSpace(pathToSettings))
             {
-                throw new ArgumentException(Resources.SettingsLoadErrorNoPathToSettings, nameof(pathToSettings));
+                throw new ArgumentException(Resources.SettingsLoadErrorNoPathToSettings,
+                                            nameof(pathToSettings));
             }
 
             // Verify the settings file exists
             if (!new FileInfo(pathToSettings).Exists)
             {
-                throw new FileNotFoundException(Resources.SettingsLoadErrorFileNotFoundException, pathToSettings);
+                throw new FileNotFoundException(Resources.SettingsLoadErrorFileNotFoundException,
+                                                pathToSettings);
             }
 
             // Build out an XML document from the path
@@ -153,10 +162,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        /// Clears current settings and loads settings from the document.
+        ///     Clears current settings and loads settings from the document.
         /// </summary>
         /// <param name="document">The settings as XML.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="document"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="document" /> is <see langword="null" />.</exception>
         public void Load([NotNull] XmlDocument document)
         {
             if (document == null)
@@ -199,11 +208,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        /// Adds an entry with the specified name and value
+        ///     Adds an entry with the specified name and value
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="value">The value.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="name" /> is <see langword="null" />.</exception>
         public void Add([NotNull] string name, [CanBeNull] string value)
         {
             if (name == null)
@@ -224,10 +233,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        /// Removes an entry with the specified name
+        ///     Removes an entry with the specified name
         /// </summary>
         /// <param name="name">The name.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="name" /> is <see langword="null" />.</exception>
         public void Remove([NotNull] string name)
         {
             if (name == null)
@@ -243,7 +252,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        /// Removes the name entry from the settings dictionary.
+        ///     Removes the name entry from the settings dictionary.
         /// </summary>
         /// <param name="name">The name.</param>
         private void RemoveFromHash([NotNull] string name)
@@ -252,7 +261,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        /// Updates the entry under name with the specified value.
+        ///     Updates the entry under name with the specified value.
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="value">The value.</param>
@@ -280,7 +289,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        /// Clears the dictionary.
+        ///     Clears the dictionary.
         /// </summary>
         public void Clear()
         {
@@ -289,7 +298,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        /// Gets the value under the specified name or string.Empty if no entry was found.
+        ///     Gets the value under the specified name or string.Empty if no entry was found.
         /// </summary>
         /// <param name="name">The name of the key.</param>
         /// <returns>The value in the dictionary</returns>
@@ -307,7 +316,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        /// Determines whether this dictionary contains an entry under the given name
+        ///     Determines whether this dictionary contains an entry under the given name
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns><c>true</c> if there is an entry for name; otherwise, <c>false</c>.</returns>
@@ -323,7 +332,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        /// Copies the settings in this dictionary into the target dictionary.
+        ///     Copies the settings in this dictionary into the target dictionary.
         /// </summary>
         /// <param name="target">The target dictionary.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
@@ -341,13 +350,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        /// Loads files from the specified settings path and logs any encountered errors to the logger. This method will not throw exceptions due to failures while loading the dictionary.
+        ///     Loads files from the specified settings path and logs any encountered errors to the logger.
+        ///     This method will not throw exceptions due to failures while loading the dictionary.
         /// </summary>
         /// <param name="pathToSettings">The path to settings.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="locale">The locale.</param>
         /// <exception cref="ArgumentNullException">pathToSettings, locale</exception>
-        public void LoadSafe([NotNull] string pathToSettings, [CanBeNull] IConsole logger,
+        public void LoadSafe([NotNull] string pathToSettings,
+                             [CanBeNull] IConsole logger,
                              [NotNull] CultureInfo locale)
         {
             //- Validate
@@ -368,24 +379,104 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             }
             catch (XmlException ex)
             {
-                logger?.Log(LogHeader, string.Format(locale, Resources.SettingsLoadErrorXml.NonNull(), pathToSettings, ex.Message), LogLevel.Error);
+                logger?.Log(LogHeader,
+                            string.Format(locale,
+                                          Resources.SettingsLoadErrorXml.NonNull(),
+                                          pathToSettings,
+                                          ex.Message),
+                            LogLevel.Error);
             }
             catch (FileNotFoundException)
             {
-                logger?.Log(LogHeader, string.Format(locale, Resources.SettingsLoadErrorFileNotFound.NonNull(), pathToSettings), LogLevel.Error);
+                logger?.Log(LogHeader,
+                            string.Format(locale,
+                                          Resources.SettingsLoadErrorFileNotFound.NonNull(),
+                                          pathToSettings),
+                            LogLevel.Error);
             }
             catch (UnauthorizedAccessException ex)
             {
-                logger?.Log(LogHeader, string.Format(locale, Resources.SettingsLoadErrorUnauthorized.NonNull(), pathToSettings, ex.Message), LogLevel.Error);
+                logger?.Log(LogHeader,
+                            string.Format(locale,
+                                          Resources.SettingsLoadErrorUnauthorized.NonNull(),
+                                          pathToSettings,
+                                          ex.Message),
+                            LogLevel.Error);
             }
             catch (SecurityException ex)
             {
-                logger?.Log(LogHeader, string.Format(locale, Resources.SettignsLoadErrorSecurity.NonNull(), pathToSettings, ex.Message), LogLevel.Error);
+                logger?.Log(LogHeader,
+                            string.Format(locale,
+                                          Resources.SettignsLoadErrorSecurity.NonNull(),
+                                          pathToSettings,
+                                          ex.Message),
+                            LogLevel.Error);
             }
             catch (IOException ex)
             {
-                logger?.Log(LogHeader, string.Format(locale, Resources.SettingsLoadErrorIOException.NonNull(), pathToSettings, ex.Message), LogLevel.Error);
+                logger?.Log(LogHeader,
+                            string.Format(locale,
+                                          Resources.SettingsLoadErrorIOException.NonNull(),
+                                          pathToSettings,
+                                          ex.Message),
+                            LogLevel.Error);
             }
+        }
+
+        /// <summary>
+        /// Loads settings values from an XML source and logs any exceptions encountered without rethrowing
+        /// them.
+        /// </summary>
+        /// <param name="xml">The XML. This is the actual XML and not a file path.</param>
+        /// <param name="logger">The logger.</param>
+        /// <param name="locale">The locale.</param>
+        /// <exception cref="ArgumentNullException">
+        ///   <paramref name="xml" /> is <see langword="null" />.</exception>
+        public void LoadXmlSafe([NotNull] string xml,
+                                [CanBeNull] IConsole logger,
+                                [CanBeNull] CultureInfo locale)
+        {
+            if (xml == null)
+            {
+                throw new ArgumentNullException(nameof(xml));
+            }
+            try
+            {
+                LoadXml(xml);
+            }
+            catch (XmlException ex)
+            {
+                locale = locale ?? CultureInfo.CurrentCulture;
+                logger?.Log("LoadSettingsXml",
+                            string.Format(locale,
+                                          Resources.LoadSettingsXmlXmlException.NonNull(),
+                                          ex.Message),
+                            LogLevel.Error);
+            }
+        }
+
+        /// <summary>
+        ///     Loads settings values from an XML source.
+        /// </summary>
+        /// <param name="xml">The XML. This is the actual XML and not a file path.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="xml" /> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="XmlException">
+        ///     There is a load or parse error in the XML. In this case, the
+        ///     document remains empty.
+        /// </exception>
+        public void LoadXml([NotNull] string xml)
+        {
+            if (xml == null)
+            {
+                throw new ArgumentNullException(nameof(xml));
+            }
+
+            var document = new XmlDocument();
+            document.LoadXml(xml);
+
+            Load(document);
         }
     }
 }

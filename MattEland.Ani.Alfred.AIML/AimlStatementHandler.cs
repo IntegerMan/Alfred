@@ -162,7 +162,7 @@ namespace MattEland.Ani.Alfred.Chat
             }
 
             //- Log the input to the diagnostic log.
-            _console?.Log(Resources.ChatInputHeader, userInput, LogLevel.UserInput);
+            Console?.Log(Resources.ChatInputHeader, userInput, LogLevel.UserInput);
 
             // Give our input to the chat ChatEngine
             var result = GetChatResult(userInput);
@@ -177,19 +177,19 @@ namespace MattEland.Ani.Alfred.Chat
             var template = AimlCommandParser.GetResponseTemplate(result);
 
             // Grab the command from the template, if one was present
-            var command = AimlCommandParser.GetCommandFromTemplate(template, _console);
+            var command = AimlCommandParser.GetCommandFromTemplate(template, Console);
 
             // Interpret the response 
             var output = result.Output;
             if (!string.IsNullOrWhiteSpace(output))
             {
-                _console?.Log(Resources.ChatOutputHeader, output, LogLevel.ChatResponse);
+                Console?.Log(Resources.ChatOutputHeader, output, LogLevel.ChatResponse);
             }
 
             //- Log the output to the diagnostic log. Sometimes - for redirect commands / etc. there's no response
             if (!string.IsNullOrWhiteSpace(template))
             {
-                _console?.Log(Resources.ChatOutputHeader,
+                Console?.Log(Resources.ChatOutputHeader,
                               string.Format(CultureInfo.CurrentCulture,
                                             "Using Template: {0}",
                                             template),
@@ -299,63 +299,9 @@ namespace MattEland.Ani.Alfred.Chat
                 throw new InvalidOperationException(Resources.AimlStatementHandlerChatOffline);
             }
 
-            InitializeChatEngineSettings();
+            _chatEngine.LoadSettingsFromXml(Resources.ChatBotSettings, Resources.ChatBotPersonSubstitutions, Resources.ChatBotPerson2Substitutions, Resources.ChatBotGenderSubstitutions, Resources.ChatBotSubstitutions);
 
             AddApplicationAimlResourcesToChatEngine(_chatEngine);
-        }
-
-        private void InitializeChatEngineSettings()
-        {
-            if (_chatEngine == null)
-            {
-                throw new InvalidOperationException(Resources.AimlStatementHandlerChatOffline);
-            }
-
-            try
-            {
-                _chatEngine.LoadSettingsFromDirectory(SettingsDirectoryPath);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                _console?.Log("ChatEngine.Initialize",
-                              string.Format(CultureInfo.CurrentCulture,
-                                            "Unauthorized access exception initializing chat settings: {0}",
-                                            ex.Message),
-                              LogLevel.Error);
-            }
-            catch (SecurityException ex)
-            {
-                _console?.Log("ChatEngine.Initialize",
-                              string.Format(CultureInfo.CurrentCulture,
-                                            "Security exception initializing chat settings: {0}",
-                                            ex.Message),
-                              LogLevel.Error);
-            }
-            catch (FileNotFoundException ex)
-            {
-                _console?.Log("ChatEngine.Initialize",
-                              string.Format(CultureInfo.CurrentCulture,
-                                            "File not found on file '{1}' initializing chat settings: {0}",
-                                            ex.Message,
-                                            ex.FileName),
-                              LogLevel.Error);
-            }
-            catch (DirectoryNotFoundException ex)
-            {
-                _console?.Log("ChatEngine.Initialize",
-                              string.Format(CultureInfo.CurrentCulture,
-                                            "Directory not found initializing chat settings: {0}",
-                                            ex.Message),
-                              LogLevel.Error);
-            }
-            catch (IOException ex)
-            {
-                _console?.Log("ChatEngine.Initialize",
-                              string.Format(CultureInfo.CurrentCulture,
-                                            "IO exception initializing chat settings: {0}",
-                                            ex.Message),
-                              LogLevel.Error);
-            }
         }
 
         /// <summary>
@@ -372,7 +318,7 @@ namespace MattEland.Ani.Alfred.Chat
         ///     There is a load or parse error in the XML. In this case, a
         ///     <see cref="T:System.IO.FileNotFoundException" /> is raised.
         /// </exception>
-        /// <exception cref="IOException">An I/O error occurred while opening the file.</exception>
+        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public static void AddApplicationAimlResourcesToChatEngine([NotNull] ChatEngine engine)
         {
             if (engine == null)

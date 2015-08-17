@@ -315,6 +315,110 @@ namespace MattEland.Ani.Alfred.Chat {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+        ///&lt;root&gt;
+        ///  &lt;item name=&quot; HE &quot; value=&quot; she &quot; /&gt;
+        ///  &lt;item name=&quot; SHE &quot; value=&quot; he &quot; /&gt;
+        ///  &lt;item name=&quot; TO HIM &quot; value=&quot; to her &quot; /&gt;
+        ///  &lt;item name=&quot; FOR HIM &quot; value=&quot; for her &quot; /&gt;
+        ///  &lt;item name=&quot; WITH HIM &quot; value=&quot; with her &quot; /&gt;
+        ///  &lt;item name=&quot; ON HIM &quot; value=&quot; on her &quot; /&gt;
+        ///  &lt;item name=&quot; IN HIM &quot; value=&quot; in her &quot; /&gt;
+        ///  &lt;item name=&quot; TO HER &quot; value=&quot; to him &quot; /&gt;
+        ///  &lt;item name=&quot; FOR HER &quot; value=&quot; for him &quot; /&gt;
+        ///  &lt;item name=&quot; WITH HER &quot; value=&quot; with him &quot; /&gt;
+        ///  &lt;item name=&quot;  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string ChatBotGenderSubstitutions {
+            get {
+                return ResourceManager.GetString("ChatBotGenderSubstitutions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+        ///&lt;root&gt;
+        ///  &lt;item name=&quot; WITH YOU &quot; value=&quot; with me &quot; /&gt;
+        ///  &lt;item name=&quot; WITH ME &quot; value=&quot; with you &quot; /&gt;
+        ///  &lt;item name=&quot; TO YOU &quot; value=&quot; to me &quot; /&gt;
+        ///  &lt;item name=&quot; TO ME &quot; value=&quot; to you &quot; /&gt;
+        ///  &lt;item name=&quot; OF YOU &quot; value=&quot; of me &quot; /&gt;
+        ///  &lt;item name=&quot; OF ME &quot; value=&quot; of you &quot; /&gt;
+        ///  &lt;item name=&quot; FOR YOU &quot; value=&quot; for me &quot; /&gt;
+        ///  &lt;item name=&quot; FOR ME &quot; value=&quot; for you &quot; /&gt;
+        ///  &lt;item name=&quot; GIVE YOU &quot; value=&quot; give me &quot; /&gt;
+        ///  &lt;item name=&quot; GIVE ME &quot; value=&quot; give you &quot; /&gt;
+        ///  &lt; [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string ChatBotPerson2Substitutions {
+            get {
+                return ResourceManager.GetString("ChatBotPerson2Substitutions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+        ///&lt;root&gt;
+        ///  &lt;item name=&quot; I WAS &quot; value=&quot; he or she was &quot; /&gt;
+        ///  &lt;item name=&quot; I AM &quot; value=&quot; he or she is &quot; /&gt;
+        ///  &lt;item name=&quot; I &quot; value=&quot; he or she &quot; /&gt;
+        ///  &lt;item name=&quot; HE WAS &quot; value=&quot; I was &quot; /&gt;
+        ///  &lt;item name=&quot; SHE WAS &quot; value=&quot; I was &quot; /&gt;
+        ///  &lt;item name=&quot; ME &quot; value=&quot; him or her &quot; /&gt;
+        ///  &lt;item name=&quot; MY &quot; value=&quot; his or her &quot; /&gt;
+        ///  &lt;item name=&quot; MYSELF &quot; value=&quot; him or herself &quot; /&gt;
+        ///&lt;/root&gt;
+        ///.
+        /// </summary>
+        internal static string ChatBotPersonSubstitutions {
+            get {
+                return ResourceManager.GetString("ChatBotPersonSubstitutions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+        ///&lt;root&gt;
+        ///  &lt;item name=&quot;aimldirectory&quot; value=&quot;chat/Aiml&quot;/&gt;
+        ///  &lt;item name=&quot;configdirectory&quot; value=&quot;chat/config&quot;/&gt;
+        ///  
+        ///  &lt;item name=&quot;logdirectory&quot; value=&quot;logs&quot;/&gt;
+        ///  &lt;item name=&quot;splittersfile&quot; value=&quot;Splitters.xml&quot;/&gt;
+        ///  &lt;item name=&quot;person2substitutionsfile&quot; value=&quot;Person2Substitutions.xml&quot;/&gt;
+        ///  &lt;item name=&quot;personsubstitutionsfile&quot; value=&quot;PersonSubstitutions.xml&quot;/&gt;
+        ///  &lt;item name=&quot;gendersubstitutionsfile&quot; value=&quot;GenderSubstitutions.xml&quot;/&gt;
+        ///  &lt;item name=&quot;defaultpredicates&quot;  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string ChatBotSettings {
+            get {
+                return ResourceManager.GetString("ChatBotSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+        ///&lt;root&gt;
+        ///  &lt;item name=&quot;=REPLY&quot; value=&quot;&quot; /&gt;
+        ///  &lt;item name=&quot;NAME=RESET&quot; value=&quot;&quot; /&gt;
+        ///  &lt;item name=&quot;:-)&quot; value=&quot; smile &quot; /&gt;
+        ///  &lt;item name=&quot;:)&quot; value=&quot; smile &quot; /&gt;
+        ///  &lt;item name=&quot;,)&quot; value=&quot; smile &quot; /&gt;
+        ///  &lt;item name=&quot;;)&quot; value=&quot; smile &quot; /&gt;
+        ///  &lt;item name=&quot;;-)&quot; value=&quot; smile &quot; /&gt;
+        ///  &lt;item name=&quot;&amp;quot;&quot; value=&quot;&quot; /&gt;
+        ///  &lt;item name=&quot;/&quot; value=&quot; &quot; /&gt;
+        ///  &lt;item name=&quot;&amp;gt;&quot; value=&quot; gt &quot; /&gt;
+        ///  &lt;item name=&quot;&amp;lt;&quot; value=&quot; lt &quot; /&gt;
+        ///  &lt;item name=&quot;(&quot; value=&quot; &quot; /&gt;
+        ///  &lt;item name=&quot;)&quot; value=&quot; &quot; [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string ChatBotSubstitutions {
+            get {
+                return ResourceManager.GetString("ChatBotSubstitutions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Last Log Message:{0}.
         /// </summary>
         internal static string ChatErrorLastLogMessageFormat {

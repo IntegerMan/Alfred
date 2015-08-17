@@ -247,4 +247,7 @@
   <data name="AddCategoryErrorEmptyTemplateTag" xml:space="preserve">
     <value>The category with a pattern: {0} has an empty template tag. Aborting.</value>
   </data>
+  <data name="LoadSettingsXmlXmlException" xml:space="preserve">
+    <value>Xml Error Encountered: {0}</value>
+  </data>
 </root>

@@ -190,4 +190,19 @@
   <data name="AimlThanks" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\AimlThanks.aiml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="ChatBotGenderSubstitutions" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\GenderSubstitutions.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="ChatBotPerson2Substitutions" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Person2Substitutions.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="ChatBotPersonSubstitutions" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\PersonSubstitutions.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="ChatBotSettings" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Settings.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="ChatBotSubstitutions" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Substitutions.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
 </root>

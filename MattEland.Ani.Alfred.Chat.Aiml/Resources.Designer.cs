@@ -313,6 +313,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Xml Error Encountered: {0}.
+        /// </summary>
+        internal static string LoadSettingsXmlXmlException {
+            get {
+                return ResourceManager.GetString("LoadSettingsXmlXmlException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Request timeout. User: {0} raw input: &quot;{1}&quot;.
         /// </summary>
         internal static string RequestTimedOut {

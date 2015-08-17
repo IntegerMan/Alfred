@@ -2,12 +2,13 @@
 // ChatEngineLibrarian.cs
 // 
 // Created on:      08/16/2015 at 1:16 PM
-// Last Modified:   08/16/2015 at 1:20 PM
+// Last Modified:   08/17/2015 at 12:24 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Security;
 using System.Xml;
@@ -30,7 +31,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <summary>
         ///     Initializes a new instance of the <see cref="ChatEngineLibrarian" /> class.
         /// </summary>
-        /// <exception cref="ArgumentNullException"><paramref name="chatEngine"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="chatEngine" /> is <see langword="null" />.</exception>
         public ChatEngineLibrarian([NotNull] ChatEngine chatEngine)
         {
             //-Validate
@@ -91,7 +92,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         public SettingsManager FirstPersonToSecondPersonSubstitutions { get; }
 
         /// <summary>
-        /// Loads settings into the various dictionaries.
+        ///     Loads settings into the various dictionaries.
         /// </summary>
         /// <param name="pathToConfigFiles">The path to the configuration files directory.</param>
         /// <exception cref="ArgumentException">Path to settings must be provided.</exception>
@@ -99,14 +100,21 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <exception cref="FileNotFoundException">The settings file was not found.</exception>
         /// <exception cref="SecurityException">Could not find a settings file at the given path</exception>
         /// <exception cref="UnauthorizedAccessException">The caller does not have the required permission.</exception>
-        /// <exception cref="DirectoryNotFoundException">Access to <paramref name="pathToConfigFiles" /> is denied.</exception>
-        /// <exception cref="IOException">The specified path is invalid (for example, it is on an unmapped drive).</exception>
-        public void LoadSettings([NotNull] string pathToConfigFiles)
+        /// <exception cref="DirectoryNotFoundException">
+        ///     Access to <paramref name="pathToConfigFiles" /> is
+        ///     denied.
+        /// </exception>
+        /// <exception cref="IOException">
+        ///     The specified path is invalid (for example, it is on an unmapped
+        ///     drive).
+        /// </exception>
+        public void LoadSettingsFromConfigDirectory([NotNull] string pathToConfigFiles)
         {
             // Validate
             if (pathToConfigFiles.IsEmpty())
             {
-                throw new ArgumentException(Resources.LibrarianLoadSettingsErrorNoConfigDirectory, nameof(pathToConfigFiles));
+                throw new ArgumentException(Resources.LibrarianLoadSettingsErrorNoConfigDirectory,
+                                            nameof(pathToConfigFiles));
             }
 
             // Load global settings and ensure default values are present
@@ -115,25 +123,77 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             AddDefaultSettings();
 
             // Load the indiviual dictionaries. If any one of these fail, the failure will be logged but things will move on
-            var person2path = Path.Combine(pathToConfigFiles, GlobalSettings.GetValue("person2substitutionsfile"));
-            SecondPersonToFirstPersonSubstitutions.LoadSafe(person2path, _chatEngine.Logger, _chatEngine.Locale);
+            var person2Path = Path.Combine(pathToConfigFiles,
+                                           GlobalSettings.GetValue("person2substitutionsfile").NonNull());
+            SecondPersonToFirstPersonSubstitutions.LoadSafe(person2Path,
+                                                            _chatEngine.Logger,
+                                                            _chatEngine.Locale);
 
-            var person1path = Path.Combine(pathToConfigFiles, GlobalSettings.GetValue("personsubstitutionsfile"));
-            FirstPersonToSecondPersonSubstitutions.LoadSafe(person1path, _chatEngine.Logger, _chatEngine.Locale);
+            var person1Path = Path.Combine(pathToConfigFiles,
+                                           GlobalSettings.GetValue("personsubstitutionsfile").NonNull());
+            FirstPersonToSecondPersonSubstitutions.LoadSafe(person1Path,
+                                                            _chatEngine.Logger,
+                                                            _chatEngine.Locale);
 
-            var genderPath = Path.Combine(pathToConfigFiles, GlobalSettings.GetValue("gendersubstitutionsfile"));
+            var genderPath = Path.Combine(pathToConfigFiles,
+                                          GlobalSettings.GetValue("gendersubstitutionsfile").NonNull());
             GenderSubstitutions.LoadSafe(genderPath, _chatEngine.Logger, _chatEngine.Locale);
 
-            var substitutionPath = Path.Combine(pathToConfigFiles, GlobalSettings.GetValue("substitutionsfile"));
+            var substitutionPath = Path.Combine(pathToConfigFiles,
+                                                GlobalSettings.GetValue("substitutionsfile").NonNull());
             Substitutions.LoadSafe(substitutionPath, _chatEngine.Logger, _chatEngine.Locale);
         }
 
         /// <summary>
-        /// Adds default settings to the global settings file.
+        ///     Loads various settings from XML files. Input parameters are all optional and should be the
+        ///     actual XML and not a file path.
+        /// </summary>
+        /// <param name="globalXml">The global XML.</param>
+        /// <param name="firstPersonXml">The first person XML.</param>
+        /// <param name="secondPersonXml">The second person XML.</param>
+        /// <param name="genderXml">The gender XML.</param>
+        /// <param name="substitutionsXml">The substitutions XML.</param>
+        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
+        public void LoadSettingsFromXml([CanBeNull] string globalXml = null,
+                                        [CanBeNull] string firstPersonXml = null,
+                                        [CanBeNull] string secondPersonXml = null,
+                                        [CanBeNull] string genderXml = null,
+                                        [CanBeNull] string substitutionsXml = null)
+        {
+            if (globalXml.HasText())
+            {
+                GlobalSettings.LoadXmlSafe(globalXml, _chatEngine.Logger, _chatEngine.Locale);
+            }
+
+            AddDefaultSettings();
+
+            if (firstPersonXml.HasText())
+            {
+                FirstPersonToSecondPersonSubstitutions.LoadXmlSafe(firstPersonXml,
+                                                                   _chatEngine.Logger,
+                                                                   _chatEngine.Locale);
+            }
+            if (secondPersonXml.HasText())
+            {
+                SecondPersonToFirstPersonSubstitutions.LoadXmlSafe(secondPersonXml,
+                                                                   _chatEngine.Logger,
+                                                                   _chatEngine.Locale);
+            }
+            if (genderXml.HasText())
+            {
+                GenderSubstitutions.LoadXmlSafe(genderXml, _chatEngine.Logger, _chatEngine.Locale);
+            }
+            if (substitutionsXml.HasText())
+            {
+                Substitutions.LoadXmlSafe(substitutionsXml, _chatEngine.Logger, _chatEngine.Locale);
+            }
+        }
+
+        /// <summary>
+        ///     Adds default settings to the global settings file.
         /// </summary>
         private void AddDefaultSettings()
         {
-            AddSettingIfMissing("splittersfile", "Splitters.xml");
             AddSettingIfMissing("person2substitutionsfile", "Person2Substitutions.xml");
             AddSettingIfMissing("personsubstitutionsfile", "PersonSubstitutions.xml");
             AddSettingIfMissing("gendersubstitutionsfile", "GenderSubstitutions.xml");
@@ -143,7 +203,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         }
 
         /// <summary>
-        /// Adds a setting to the global settings dictionary if that setting is not present.
+        ///     Adds a setting to the global settings dictionary if that setting is not present.
         /// </summary>
         /// <param name="settingName">Name of the setting.</param>
         /// <param name="defaultValue">The default value.</param>
@@ -161,6 +221,5 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                 GlobalSettings.Add(settingName, defaultValue);
             }
         }
-
     }
 }

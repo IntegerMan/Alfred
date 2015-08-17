@@ -2,7 +2,7 @@
 // ChatEngine.cs
 // 
 // Created on:      08/12/2015 at 9:45 PM
-// Last Modified:   08/16/2015 at 3:51 PM
+// Last Modified:   08/17/2015 at 12:24 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -31,6 +31,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
     /// </remarks>
     public class ChatEngine
     {
+        [NotNull]
+        private readonly AimlLoader _aimlLoader;
+
         [NotNull]
         private readonly ChatProcessor _chatProcessor;
 
@@ -68,7 +71,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// </summary>
         /// <value>The librarian.</value>
         [NotNull]
-        internal ChatEngineLibrarian Librarian { get; }
+        public ChatEngineLibrarian Librarian { get; }
 
         /// <summary>
         ///     Gets a list of sentence splitters. Sentence splitters are punctuation characters such as . or !
@@ -125,6 +128,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         }
 
         /// <summary>
+        ///     Gets a value indicating whether input in AIML files should be trusted.
+        ///     If false the input will go through the full normalization process.
+        /// </summary>
+        /// <value>Whether or not AIML files are trusted.</value>
+        public bool TrustAiml { get; } = true;
+
+        /// <summary>
         ///     Logs the specified message to the logger.
         /// </summary>
         /// <param name="message">The message.</param>
@@ -159,12 +169,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         }
 
         /// <summary>
-        /// Handles a redirect chat request from srai aiml elements.
+        ///     Handles a redirect chat request from srai aiml elements.
         /// </summary>
         /// <param name="request">The request.</param>
         /// <returns>The result of the request.</returns>
         /// <exception cref="ArgumentNullException">
-        ///   <paramref name="request" /> is <see langword="null" />.</exception>
+        ///     <paramref name="request" /> is <see langword="null" />.
+        /// </exception>
         internal Result ProcessRedirectChatRequest([NotNull] Request request)
         {
             if (request == null)
@@ -174,16 +185,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
             return _chatProcessor.ProcessChatRequest(request);
         }
-
-        [NotNull]
-        private readonly AimlLoader _aimlLoader;
-
-        /// <summary>
-        ///     Gets a value indicating whether input in AIML files should be trusted.
-        ///     If false the input will go through the full normalization process.
-        /// </summary>
-        /// <value>Whether or not AIML files are trusted.</value>
-        public bool TrustAiml { get; } = true;
 
         /// <summary>
         ///     Loads all .aiml files from a directory.
@@ -230,11 +231,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         }
 
         /// <summary>
-        /// Loads AIML assets from a string containing the contents of an AIML file.
+        ///     Loads AIML assets from a string containing the contents of an AIML file.
         /// </summary>
         /// <param name="aiml">The aiml.</param>
-        /// <exception cref="XmlException">There is a load or parse error in the XML. In this case, a <see cref="T:System.IO.FileNotFoundException" /> is raised. </exception>
-        /// <exception cref="ArgumentNullException"><paramref name="aiml"/> is <see langword="null" />.</exception>
+        /// <exception cref="XmlException">
+        ///     There is a load or parse error in the XML. In this case, a
+        ///     <see cref="T:System.IO.FileNotFoundException" /> is raised.
+        /// </exception>
+        /// <exception cref="ArgumentNullException"><paramref name="aiml" /> is <see langword="null" />.</exception>
         public void LoadAimlFromString([NotNull] string aiml)
         {
             if (aiml.IsEmpty())
@@ -247,7 +251,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
             LoadAimlFile(document);
         }
-
 
         /// <summary>
         ///     Loads settings from the specified settings directory path.
@@ -277,7 +280,29 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             }
 
             // Invoke
-            Librarian.LoadSettings(settingsDirectoryPath);
+            Librarian.LoadSettingsFromConfigDirectory(settingsDirectoryPath);
+        }
+
+        /// <summary>
+        ///     Loads various settings from XML files. Input parameters are all optional and should be the
+        ///     actual XML and not a file path.
+        /// </summary>
+        /// <param name="globalXml">The global XML.</param>
+        /// <param name="firstPersonXml">The first person XML.</param>
+        /// <param name="secondPersonXml">The second person XML.</param>
+        /// <param name="genderXml">The gender XML.</param>
+        /// <param name="substitutionsXml">The substitutions XML.</param>
+        public void LoadSettingsFromXml([CanBeNull] string globalXml = null,
+                                        [CanBeNull] string firstPersonXml = null,
+                                        [CanBeNull] string secondPersonXml = null,
+                                        [CanBeNull] string genderXml = null,
+                                        [CanBeNull] string substitutionsXml = null)
+        {
+            Librarian.LoadSettingsFromXml(globalXml,
+                                          firstPersonXml,
+                                          secondPersonXml,
+                                          genderXml,
+                                          substitutionsXml);
         }
 
         /// <summary>
