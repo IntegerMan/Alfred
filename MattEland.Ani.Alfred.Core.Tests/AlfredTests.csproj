@@ -107,13 +107,11 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>C:\Dev\TeamCity\buildAgent\tools\dotCover\dotCover.exe c /TargetExecutable="C:\Program Files (x86)\NUnit 2.6.4\bin\nunit-console.exe" /TargetArguments="$(TargetPath)" /Output="$(SolutionDir)Coverage\AlfredCoverage.xml" /WorkingDir="$(SolutionDir)Coverage" /ReportType="NDependXML"
-C:\Dev\TeamCity\buildAgent\tools\dotCover\dotCover.exe a /TargetExecutable="C:\Program Files (x86)\NUnit 2.6.4\bin\nunit-console.exe" /TargetArguments="$(TargetPath)" /Output="$(SolutionDir)Coverage\AlfredCoverage.html" /WorkingDir="$(SolutionDir)Coverage" /ReportType="HTML"</PostBuildEvent>
+    <PostBuildEvent>C:\Dev\TeamCity\buildAgent\tools\dotCover\dotCover.exe a /TargetExecutable="C:\Program Files (x86)\NUnit 2.6.4\bin\nunit-console.exe" /TargetArguments="$(TargetPath)" /Output="$(SolutionDir)AlfredCoverage.xml" /WorkingDir="$(SolutionDir)Coverage" /ReportType="NDependXML" /SymbolSearchPaths="$(TargetDir)*.pdb"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>
-
-</PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

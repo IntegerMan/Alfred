@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CoverageParams>
+  <TargetExecutable>C:\Program Files (x86)\NUnit 2.6.4\bin\nunit-console.exe</TargetExecutable>
+  <TargetArguments>MattEland.Ani.Alfred.Core.Tests\bin\Debug\MattEland.Ani.Alfred.Tests.dll</TargetArguments>
+  <TargetWorkingDir>Coverage</TargetWorkingDir>
+  <Output>AlfredTests.xml</Output>
+  <ReportType>NDependXML</ReportType>
+</CoverageParams>

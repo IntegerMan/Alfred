@@ -9,6 +9,7 @@
     <Name>MattEland.Ani.Alfred.Chat</Name>
     <Name>MattEland.Ani.Alfred.Chat.Aiml</Name>
     <Name>MattEland.Common</Name>
+    <Name>MattEland.Ani.Alfred.Tests</Name>
   </Assemblies>
   <FrameworkAssemblies>
     <Name>mscorlib</Name>
@@ -21,6 +22,7 @@
     <Name>System.Speech</Name>
     <Name>System.Xml.Linq</Name>
     <Name>System.Xml</Name>
+    <Name>nunit.framework</Name>
   </FrameworkAssemblies>
   <Dirs>
     <Dir>C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319</Dir>
@@ -41,7 +43,7 @@
   <BuildComparisonSetting ProjectMode="CurrentProject" BuildMode="MostRecentAnalysisResultAvailable" ProjectFileToCompareWith="C:\Dev\Alfred\Alfred\Alfred.ndproj" BuildFileToCompareWith="C:\Dev\Alfred\Alfred\NDependOut\NDependAnalysisResult_Alfred_2015Aug10_23h08.ndar" NDaysAgo="1" FocusOnRecentRulesViolations="False" />
   <BaselineInUISetting ProjectMode="CurrentProject" BuildMode="MostRecentAnalysisResultAvailable" ProjectFileToCompareWith="C:\Dev\Alfred\Alfred\Alfred.ndproj" BuildFileToCompareWith="C:\Dev\Alfred\Alfred\NDependOut\NDependAnalysisResult_Alfred_2015Aug10_23h08.ndar" NDaysAgo="1" FocusOnRecentRulesViolations="False" />
   <CoverageFiles CoverageDir="" UncoverableAttribute="">
-    <CoverageFile MergeMode="Or">C:\Dev\Alfred\Alfred\AlfredTests.xml</CoverageFile>
+    <CoverageFile MergeMode="Or">C:\Dev\Alfred\Alfred\AlfredCoverage.xml</CoverageFile>
   </CoverageFiles>
   <TrendMetrics UseCustomLog="False" LogRecurrence="3" LogLabel="2" UseCustomDir="False" CustomDir="">
     <Chart Name="Lines of Code" ShowInReport="True">
@@ -8088,4 +8090,8 @@ select new { n, n.NbLinesOfCode }
 //</HowToFix>]]></Query>
       </Group>
     </Group>
-  </Queries></NDepend>
+  </Queries><WarnFilter>
+    <DontWarn>Invalid coverage file {C:\Dev\Alfred\Alfred\Coverage\AlfredCoverage.xml}</DontWarn>
+    <DontWarn>Coverage file extension must be in : .xml  .nccov  .coveragexml    {C:\Dev\Alfred\Alfred\Coverage\AlfredCoverage.html}</DontWarn>
+    <DontWarn>Invalid coverage file {C:\Dev\Alfred\Alfred\Coverage\TestResult.xml}</DontWarn>
+  </WarnFilter></NDepend>
