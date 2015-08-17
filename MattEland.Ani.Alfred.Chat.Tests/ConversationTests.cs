@@ -14,6 +14,7 @@ using System.Security;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Chat.Aiml;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
 
@@ -40,10 +41,14 @@ namespace MattEland.Ani.Alfred.Chat.Tests
         public void SetUp()
         {
             _chat = new AimlStatementHandler();
+            _chatEngine = _chat.ChatEngine;
         }
 
         [NotNull]
         private AimlStatementHandler _chat;
+
+        [NotNull]
+        private ChatEngine _chatEngine;
 
         /// <summary>
         ///     Asserts that the chat input gets a reply template with the specified ID.
@@ -91,7 +96,37 @@ namespace MattEland.Ani.Alfred.Chat.Tests
         [Test]
         public void ChatEngineHasNodes()
         {
-            Assert.Greater(_chat.ChatEngine.NodeCount, 0, "Chat engine did not have any nodes");
+            Assert.Greater(_chatEngine.NodeCount, 0, "Chat engine did not have any nodes");
+        }
+
+        [Test]
+        public void GenderSubstitutionsHasEntries()
+        {
+            Assert.Greater(_chatEngine.Librarian.GenderSubstitutions.Count, 0, "Settings were not present");
+        }
+
+        [Test]
+        public void GlobalSettingsHaveEntries()
+        {
+            Assert.Greater(_chatEngine.Librarian.GlobalSettings.Count, 0, "Settings were not present");
+        }
+
+        [Test]
+        public void FirstPersonSubstitutionsHasEntries()
+        {
+            Assert.Greater(_chatEngine.Librarian.FirstPersonToSecondPersonSubstitutions.Count, 0, "Settings were not present");
+        }
+
+        [Test]
+        public void SecondPersonSubstitutionsHasEntries()
+        {
+            Assert.Greater(_chatEngine.Librarian.SecondPersonToFirstPersonSubstitutions.Count, 0, "Settings were not present");
+        }
+
+        [Test]
+        public void SubstitutionsHasEntries()
+        {
+            Assert.Greater(_chatEngine.Librarian.Substitutions.Count, 0, "Settings were not present");
         }
 
         /// <summary>
