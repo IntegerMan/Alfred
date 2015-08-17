@@ -67,6 +67,10 @@
       <Project>{549F22E5-1F66-4420-89BF-9460603F9516}</Project>
       <Name>MattEland.Ani.Alfred.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MattEland.Common\MattEland.Common.csproj">
+      <Project>{514CB422-A6EF-4C75-B925-92AB599BA1BE}</Project>
+      <Name>MattEland.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

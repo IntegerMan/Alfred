@@ -15,6 +15,7 @@ using System.Security;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common;
 
 using NUnit.Framework;
 
@@ -110,6 +111,22 @@ namespace MattEland.Ani.Alfred.Chat.Tests
         {
             var response = GetResponse(text);
             return response.Template;
+        }
+
+        [Test]
+        public void StartupResultsInGreeting()
+        {
+            var reply = GetReplyTemplate("EVT_STARTUP");
+
+            Assert.That(reply.Contains("tmp_hi"), "Startup did not give proper template. Actual template was: " + reply);
+        }
+
+        [Test]
+        public void StartupLeavesLastInputClear()
+        {
+            GetReply("EVT_STARTUP");
+
+            Assert.That(!_chat.LastInput.HasText(), $"Startup did not clear last input. Actual was: {_chat.LastInput}");
         }
 
         [TestCase("Shutdown", "tmp_shutdown")]
