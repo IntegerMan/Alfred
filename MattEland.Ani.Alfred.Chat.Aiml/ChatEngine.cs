@@ -29,7 +29,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
     /// <remarks>
     ///     NOTE: This class is now a partial class. Check the other partial classes for more details
     /// </remarks>
-    public partial class ChatEngine
+    public class ChatEngine
     {
         [NotNull]
         private readonly ChatProcessor _chatProcessor;
@@ -45,7 +45,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
             // Set simple properties
             MaxThatSize = 256;
+#if DEBUG
+            Timeout = -1;
+#else
             Timeout = 2000;
+#endif
             RootNode = new Node();
 
             // Build helper components
@@ -228,9 +232,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// </summary>
         /// <param name="aiml">The aiml.</param>
         /// <exception cref="XmlException">There is a load or parse error in the XML. In this case, a <see cref="T:System.IO.FileNotFoundException" /> is raised. </exception>
-        /// <exception cref="IOException">An I/O error occurred while opening the file. </exception>
-        public void LoadAimlFromString(string aiml)
+        /// <exception cref="ArgumentNullException"><paramref name="aiml"/> is <see langword="null" />.</exception>
+        public void LoadAimlFromString([NotNull] string aiml)
         {
+            if (aiml.IsEmpty())
+            {
+                throw new ArgumentNullException(nameof(aiml));
+            }
+
             var document = new XmlDocument();
             document.LoadXml(aiml);
 
@@ -277,8 +286,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="path" />, or <paramref name="node" /> is <see langword="null" />.
         /// </exception>
-        public void AddCategoryToGraph([NotNull] XmlNode node,
-                                       [NotNull] string path)
+        public void AddCategoryToGraph([NotNull] XmlNode node, [NotNull] string path)
         {
             //- Validate
             if (path == null)

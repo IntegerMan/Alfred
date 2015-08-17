@@ -170,24 +170,36 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         ///     Checks to see if this has timed out and returns true if that has happened. This will also log
         ///     if the request timed out and update HasTimedOut.
         /// </summary>
+        /// <remarks>
+        /// If ChatEngine.Timeout is set to 0 or negative values, timeout will never occur
+        /// </remarks>
         /// <returns><c>true</c> if the request has timed out, <c>false</c> otherwise.</returns>
         public bool CheckForTimedOut()
         {
-            if (!HasTimedOut)
+            if (HasTimedOut)
             {
-                var timeLimit = ChatEngine.Timeout;
-                HasTimedOut = StartedOn.AddMilliseconds(timeLimit) < DateTime.Now;
+                return HasTimedOut;
+            }
+            var timeLimit = ChatEngine.Timeout;
 
-                if (HasTimedOut)
-                {
-                    var message = string.Format(ChatEngine.Locale,
-                                                Resources.RequestTimedOut.NonNull(),
-                                                User.Id,
-                                                RawInput);
+            // Allow disabling timeout by setting it to <= 0 values
+            if (!(timeLimit > 0))
+            {
+                return HasTimedOut;
+            }
 
-                    ChatEngine.Log(message, LogLevel.Warning);
-                }
+            // Calculate timeout based on start time and now
+            HasTimedOut = StartedOn.AddMilliseconds(timeLimit) < DateTime.Now;
 
+            // Do appropriate logging on new timeouts
+            if (HasTimedOut)
+            {
+                var message = string.Format(ChatEngine.Locale,
+                                            Resources.RequestTimedOut.NonNull(),
+                                            User.Id,
+                                            RawInput);
+
+                ChatEngine.Log(message, LogLevel.Warning);
             }
 
             return HasTimedOut;
