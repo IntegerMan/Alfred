@@ -116,6 +116,7 @@ namespace MattEland.Ani.Alfred.Chat.Tests
         [Test]
         public void StartupResultsInGreeting()
         {
+            // In reality, this should be _chat.DoInitialGreeting, but it's easier to test the template this way
             var reply = GetReplyTemplate("EVT_STARTUP");
 
             Assert.That(reply.Contains("tmp_hi"), "Startup did not give proper template. Actual template was: " + reply);
@@ -124,7 +125,7 @@ namespace MattEland.Ani.Alfred.Chat.Tests
         [Test]
         public void StartupLeavesLastInputClear()
         {
-            GetReply("EVT_STARTUP");
+            _chat.DoInitialGreeting();
 
             Assert.That(!_chat.LastInput.HasText(), $"Startup did not clear last input. Actual was: {_chat.LastInput}");
         }
