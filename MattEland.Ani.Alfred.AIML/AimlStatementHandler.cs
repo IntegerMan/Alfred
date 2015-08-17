@@ -2,7 +2,7 @@
 // AimlStatementHandler.cs
 // 
 // Created on:      08/10/2015 at 12:51 AM
-// Last Modified:   08/16/2015 at 1:20 AM
+// Last Modified:   08/16/2015 at 11:49 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -49,7 +49,8 @@ namespace MattEland.Ani.Alfred.Chat
         private UserStatementResponse _response;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:System.Object" /> class using the current directory for the settings path.
+        ///     Initializes a new instance of the <see cref="T:System.Object" /> class using the current
+        ///     directory for the settings path.
         /// </summary>
         /// <param name="console">The console.</param>
         /// <exception cref="IOException">An I/O error occurred.</exception>
@@ -61,18 +62,20 @@ namespace MattEland.Ani.Alfred.Chat
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:System.Object" /> class.
+        ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
         /// </summary>
         /// <param name="console">The console.</param>
         /// <param name="settingsDirectoryPath">The settings path.</param>
         /// <exception cref="System.ArgumentException"></exception>
         /// <exception cref="ArgumentException">settingsPath, aimlDirectoryPath</exception>
-        public AimlStatementHandler([CanBeNull] IConsole console, [CanBeNull] string settingsDirectoryPath)
+        public AimlStatementHandler([CanBeNull] IConsole console,
+                                    [CanBeNull] string settingsDirectoryPath)
         {
             //- Validate / Store Settings
             if (string.IsNullOrWhiteSpace(settingsDirectoryPath))
             {
-                throw new ArgumentException(Resources.NoSettingsPathError, nameof(settingsDirectoryPath));
+                throw new ArgumentException(Resources.NoSettingsPathError,
+                                            nameof(settingsDirectoryPath));
             }
 
             SettingsDirectoryPath = settingsDirectoryPath;
@@ -99,18 +102,7 @@ namespace MattEland.Ani.Alfred.Chat
         }
 
         /// <summary>
-        /// Logs an error encountered initializing chat.
-        /// </summary>
-        /// <param name="ex">The ex.</param>
-        private void LogErrorInitializingChat([CanBeNull] Exception ex)
-        {
-            var errorFormat = Resources.ErrorInitializingChat;
-            var message = string.Format(CultureInfo.CurrentCulture, errorFormat, ex?.Message);
-            _console?.Log(Resources.ChatProcessingHeader, message, LogLevel.Error);
-        }
-
-        /// <summary>
-        /// Gets or sets the settings path.
+        ///     Gets or sets the settings path.
         /// </summary>
         /// <value>The settings path.</value>
         [NotNull]
@@ -143,11 +135,25 @@ namespace MattEland.Ani.Alfred.Chat
         }
 
         /// <summary>
+        ///     Gets the chat engine.
+        /// </summary>
+        /// <remarks>This is present largely for testing</remarks>
+        /// <value>The chat engine.</value>
+        [CanBeNull]
+        public ChatEngine ChatEngine
+        {
+            get { return _chatEngine; }
+        }
+
+        /// <summary>
         ///     Handles a user statement.
         /// </summary>
         /// <param name="userInput">The user input.</param>
         /// <returns>The response to the user statement</returns>
-        /// <exception cref="InvalidOperationException">Cannot use the chat system when chat did not initialize properly</exception>
+        /// <exception cref="InvalidOperationException">
+        ///     Cannot use the chat system when chat did not initialize
+        ///     properly
+        /// </exception>
         public UserStatementResponse HandleUserStatement(string userInput)
         {
             if (_chatEngine == null || _user == null)
@@ -158,17 +164,23 @@ namespace MattEland.Ani.Alfred.Chat
             //- Log the input to the diagnostic log.
             _console?.Log(Resources.ChatInputHeader, userInput, LogLevel.UserInput);
 
-            //! Give our input to the chat ChatEngine
+            // Give our input to the chat ChatEngine
             var result = GetChatResult(userInput);
 
-            //+ GetValue the template out of the response so we can see if there are any OOB instructions
+            //- If it's a catastrophic failure, return a blankish object
+            if (result == null)
+            {
+                return new UserStatementResponse(userInput, Resources.DefaultFailureResponseText, string.Empty, ChatCommand.Empty);
+            }
+
+            // Get the template out of the response so we can see if there are any OOB instructions
             var template = AimlCommandParser.GetResponseTemplate(result);
 
-            //! Grab the command from the template, if one was present
+            // Grab the command from the template, if one was present
             var command = AimlCommandParser.GetCommandFromTemplate(template, _console);
 
-            // Interpret the response keeping in mind it could have messed up
-            var output = result?.Output ?? Resources.DefaultFailureResponseText;
+            // Interpret the response 
+            var output = result.Output;
             if (!string.IsNullOrWhiteSpace(output))
             {
                 _console?.Log(Resources.ChatOutputHeader, output, LogLevel.ChatResponse);
@@ -231,17 +243,6 @@ namespace MattEland.Ani.Alfred.Chat
         }
 
         /// <summary>
-        /// Gets the chat engine.
-        /// </summary>
-        /// <remarks>This is present largely for testing</remarks>
-        /// <value>The chat engine.</value>
-        [CanBeNull]
-        public ChatEngine ChatEngine
-        {
-            get { return _chatEngine; }
-        }
-
-        /// <summary>
         ///     Performs an initial greeting by sending hi to the conversation system
         ///     and erasing it from the last input so the user sees Alfred greeting them.
         /// </summary>
@@ -260,10 +261,22 @@ namespace MattEland.Ani.Alfred.Chat
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
+        ///     Logs an error encountered initializing chat.
+        /// </summary>
+        /// <param name="ex">The ex.</param>
+        private void LogErrorInitializingChat([CanBeNull] Exception ex)
+        {
+            var errorFormat = Resources.ErrorInitializingChat;
+            var message = string.Format(CultureInfo.CurrentCulture, errorFormat, ex?.Message);
+            _console?.Log(Resources.ChatProcessingHeader, message, LogLevel.Error);
+        }
+
+        /// <summary>
         ///     Gets the chat result.
         /// </summary>
         /// <param name="userInput">The user input.</param>
         /// <returns>The result of the communication to the chat ChatEngine</returns>
+        [CanBeNull]
         private Result GetChatResult([NotNull] string userInput)
         {
             if (_chatEngine == null || _user == null)
@@ -286,23 +299,79 @@ namespace MattEland.Ani.Alfred.Chat
                 throw new InvalidOperationException(Resources.AimlStatementHandlerChatOffline);
             }
 
-            _chatEngine.Logger = _console;
-
-            _chatEngine.LoadSettingsFromDirectory(SettingsDirectoryPath);
+            InitializeChatEngineSettings();
 
             AddApplicationAimlResourcesToChatEngine(_chatEngine);
         }
 
+        private void InitializeChatEngineSettings()
+        {
+            if (_chatEngine == null)
+            {
+                throw new InvalidOperationException(Resources.AimlStatementHandlerChatOffline);
+            }
+
+            try
+            {
+                _chatEngine.LoadSettingsFromDirectory(SettingsDirectoryPath);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                _console?.Log("ChatEngine.Initialize",
+                              string.Format(CultureInfo.CurrentCulture,
+                                            "Unauthorized access exception initializing chat settings: {0}",
+                                            ex.Message),
+                              LogLevel.Error);
+            }
+            catch (SecurityException ex)
+            {
+                _console?.Log("ChatEngine.Initialize",
+                              string.Format(CultureInfo.CurrentCulture,
+                                            "Security exception initializing chat settings: {0}",
+                                            ex.Message),
+                              LogLevel.Error);
+            }
+            catch (FileNotFoundException ex)
+            {
+                _console?.Log("ChatEngine.Initialize",
+                              string.Format(CultureInfo.CurrentCulture,
+                                            "File not found on file '{1}' initializing chat settings: {0}",
+                                            ex.Message,
+                                            ex.FileName),
+                              LogLevel.Error);
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                _console?.Log("ChatEngine.Initialize",
+                              string.Format(CultureInfo.CurrentCulture,
+                                            "Directory not found initializing chat settings: {0}",
+                                            ex.Message),
+                              LogLevel.Error);
+            }
+            catch (IOException ex)
+            {
+                _console?.Log("ChatEngine.Initialize",
+                              string.Format(CultureInfo.CurrentCulture,
+                                            "IO exception initializing chat settings: {0}",
+                                            ex.Message),
+                              LogLevel.Error);
+            }
+        }
+
         /// <summary>
-        /// Adds Alfred application AIML resources to the chat engine from the internal resource files.
+        ///     Adds Alfred application AIML resources to the chat engine from the internal resource files.
         /// </summary>
         /// <remarks>
-        /// This method is public and static so that it can be easily accessed by testing libraries.
+        ///     This method is public and static so that it can be easily accessed by testing libraries.
         /// </remarks>
         /// <param name="engine">The chat engine.</param>
         /// <exception cref="ArgumentNullException">
-        ///   <paramref name="engine" /> is <see langword="null" />.</exception>
-        /// <exception cref="XmlException">There is a load or parse error in the XML. In this case, a <see cref="T:System.IO.FileNotFoundException" /> is raised.</exception>
+        ///     <paramref name="engine" /> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="XmlException">
+        ///     There is a load or parse error in the XML. In this case, a
+        ///     <see cref="T:System.IO.FileNotFoundException" /> is raised.
+        /// </exception>
         /// <exception cref="IOException">An I/O error occurred while opening the file.</exception>
         public static void AddApplicationAimlResourcesToChatEngine([NotNull] ChatEngine engine)
         {
