@@ -12,12 +12,13 @@ using System.Linq;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Ani.Alfred.Core.Pages;
 
 using NUnit.Framework;
 
-namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
+namespace MattEland.Ani.Alfred.Tests.SubSystems
 {
     /// <summary>
     /// A series of tests related to the System Monitoring SubSystem

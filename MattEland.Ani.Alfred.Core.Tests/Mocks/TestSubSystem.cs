@@ -11,10 +11,11 @@ using System.Collections.Generic;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Pages;
 
-namespace MattEland.Ani.Alfred.Core.Tests.Mocks
+namespace MattEland.Ani.Alfred.Tests.Mocks
 {
     public class TestSubsystem : AlfredSubsystem
     {

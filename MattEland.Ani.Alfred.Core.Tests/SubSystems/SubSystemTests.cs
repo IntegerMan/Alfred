@@ -11,12 +11,13 @@ using System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Tests.Mocks;
+using MattEland.Ani.Alfred.Tests.Mocks;
 
 using NUnit.Framework;
 
-namespace MattEland.Ani.Alfred.Core.Tests.SubSystems
+namespace MattEland.Ani.Alfred.Tests.SubSystems
 {
     /// <summary>
     /// Tests oriented around testing the subsystem update pumps and related functions

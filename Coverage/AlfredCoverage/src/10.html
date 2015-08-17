@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\subsystems\systemsubsystemtests.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// SystemSubSystemTests.cs
+// 
+// Created on:      08/07/2015 at 10:01 PM
+// Last Modified:   08/07/2015 at 10:01 PM
+// Original author: Matt Eland
+// ---------------------------------------------------------
+
+using System.Collections;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+
+using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
+using MattEland.Ani.Alfred.Core.Pages;
+
+using NUnit.Framework;
+
+namespace MattEland.Ani.Alfred.Tests.SubSystems
+{
+    /// &lt;summary&gt;
+    /// A series of tests related to the System Monitoring SubSystem
+    /// &lt;/summary&gt;
+    [TestFixture]
+    [SuppressMessage(&quot;ReSharper&quot;, &quot;NotNullMemberIsNotInitialized&quot;)]
+    public class SystemSubSystemTests
+    {
+        [NotNull]
+        private SystemMonitoringSubsystem _subsystem;
+
+        [NotNull]
+        private AlfredApplication _alfred;
+
+        [SetUp]
+        public void TestSetup()
+        {
+            _subsystem = new SystemMonitoringSubsystem();
+
+            var bootstrapper = new AlfredBootstrapper();
+            _alfred = bootstrapper.Create();
+        }
+
+        [Test]
+        public void SystemMonitoringSubsystemCanBeRegisteredInAlfred()
+        {
+            _alfred.Register(_subsystem);
+
+            Assert.AreEqual(1, _alfred.Subsystems.Count(), &quot;Subsystem was not registered&quot;);
+            Assert.Contains(_subsystem, _alfred.Subsystems as ICollection, &quot;The subsystem was not found in the collection&quot;);
+        }
+
+        [Test]
+        public void SystemMonitoringSubsystemContainsModules()
+        {
+            _alfred.Register(_subsystem);
+
+            var page = _subsystem.Pages.First() as AlfredModuleListPage;
+            Assert.NotNull(page);
+
+            Assert.IsTrue(page.Modules.Any(m =&gt; m is CpuMonitorModule), &quot;CPU Monitor not found&quot;);
+            Assert.IsTrue(page.Modules.Any(m =&gt; m is MemoryMonitorModule), &quot;Memory Monitor not found&quot;);
+            Assert.IsTrue(page.Modules.Any(m =&gt; m is DiskMonitorModule), &quot;Disk Monitor not found&quot;);
+        }
+
+        [Test]
+        public void SubSystemContainsAPageAfterRegistration()
+        {
+            Assert.AreEqual(0, _subsystem.Pages.Count());
+
+            _alfred.Register(_subsystem);
+            _alfred.Initialize();
+
+            Assert.AreEqual(1, _subsystem.Pages.Count());
+        }
+
+        [Test]
+        public void AlfredContainsAPageAfterRegistration()
+        {
+            var pages = _alfred.RootPages.Count();
+
+            _alfred.Register(_subsystem);
+            _alfred.Initialize();
+
+            Assert.AreEqual(pages + 1, _alfred.RootPages.Count());
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[38,9,38,10,1],[39,13,39,58,1],[41,13,41,57,1],[42,13,42,45,1],[43,9,43,10,1],[47,9,47,10,1],[48,13,48,42,1],[50,13,50,92,1],[51,13,51,125,1],[52,9,52,10,1],[56,9,56,10,1],[57,13,57,42,1],[59,13,59,73,1],[60,13,60,34,1],[62,13,62,49,1],[62,70,62,98,1],[63,13,63,49,1],[63,73,63,104,1],[64,13,64,49,1],[64,71,64,100,1],[65,9,65,10,1],[69,9,69,10,1],[70,13,70,58,1],[72,13,72,42,1],[73,13,73,34,1],[75,13,75,58,1],[76,9,76,10,1],[80,9,80,10,1],[81,13,81,51,1],[83,13,83,42,1],[84,13,84,34,1],[86,13,86,67,1],[87,9,87,10,1],[62,49,62,70,1],[63,49,63,73,1],[64,49,64,71,1]]);
+    </script>
+  </body>
+</html>

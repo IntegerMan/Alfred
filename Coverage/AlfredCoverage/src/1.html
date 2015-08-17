@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\conversationtests.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// ConversationTests.cs
+// 
+// Created on:      08/10/2015 at 2:42 PM
+// Last Modified:   08/16/2015 at 4:47 PM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Security;
+
+using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Chat;
+using MattEland.Ani.Alfred.Chat.Aiml;
+using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common;
+
+using NUnit.Framework;
+
+namespace MattEland.Ani.Alfred.Tests
+{
+    /// &lt;summary&gt;
+    ///     Tests for conversational inquiries on the Alfred chat system.
+    /// &lt;/summary&gt;
+    [TestFixture]
+    [SuppressMessage(&quot;ReSharper&quot;, &quot;NotNullMemberIsNotInitialized&quot;)]
+    [SuppressMessage(&quot;ReSharper&quot;, &quot;AssignNullToNotNullAttribute&quot;)]
+    [SuppressMessage(&quot;ReSharper&quot;, &quot;UnusedParameter.Local&quot;)]
+    public class ConversationTests
+    {
+        /// &lt;summary&gt;
+        ///     Sets up the testing environment prior to each test run.
+        /// &lt;/summary&gt;
+        /// &lt;exception cref=&quot;IOException&quot;&gt;An I/O error occurred.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;DirectoryNotFoundException&quot;&gt;Attempted to set a local path that cannot be found.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;SecurityException&quot;&gt;The caller does not have the appropriate permission.&lt;/exception&gt;
+        [SetUp]
+        public void SetUp()
+        {
+            _chat = new AimlStatementHandler();
+            _chatEngine = _chat.ChatEngine;
+        }
+
+        [NotNull]
+        private AimlStatementHandler _chat;
+
+        [NotNull]
+        private ChatEngine _chatEngine;
+
+        /// &lt;summary&gt;
+        ///     Asserts that the chat input gets a reply template with the specified ID.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input.&lt;/param&gt;
+        /// &lt;param name=&quot;templateId&quot;&gt;The template identifier.&lt;/param&gt;
+        private void AssertMessageGetsReplyTemplate(string input, string templateId)
+        {
+            var template = GetReplyTemplate(input);
+
+            AssertTemplateId(template, templateId);
+        }
+
+        /// &lt;summary&gt;
+        ///     Asserts that the template identifier is found in the response template.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;template&quot;&gt;The template.&lt;/param&gt;
+        /// &lt;param name=&quot;id&quot;&gt;The template identifier.&lt;/param&gt;
+        private static void AssertTemplateId([NotNull] string template, [NotNull] string id)
+        {
+            var idString = $&quot;id=\&quot;{id.ToLowerInvariant()}\&quot;&quot;;
+
+            Assert.IsTrue(template.ToLowerInvariant().Contains(idString),
+                          $&quot;ID &#39;{idString}&#39; was not found. Template was: {template}&quot;);
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets a reply from the chat system on a specified inquiry.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;text&quot;&gt;The inquiry text.&lt;/param&gt;
+        /// &lt;returns&gt;The reply&lt;/returns&gt;
+        [NotNull]
+        private string GetReply([CanBeNull] string text)
+        {
+            var response = GetResponse(text);
+
+            Assert.IsNotNull(response.ResponseText, &quot;Response text was null&quot;);
+
+            return response.ResponseText;
+        }
+
+        /// &lt;summary&gt;
+        /// Tests that the chat engine has nodes associated with it
+        /// &lt;/summary&gt;
+        [Test]
+        public void ChatEngineHasNodes()
+        {
+            Assert.Greater(_chatEngine.NodeCount, 0, &quot;Chat engine did not have any nodes&quot;);
+        }
+
+        [Test]
+        public void GenderSubstitutionsHasEntries()
+        {
+            Assert.Greater(_chatEngine.Librarian.GenderSubstitutions.Count, 0, &quot;Settings were not present&quot;);
+        }
+
+        [Test]
+        public void GlobalSettingsHaveEntries()
+        {
+            Assert.Greater(_chatEngine.Librarian.GlobalSettings.Count, 0, &quot;Settings were not present&quot;);
+        }
+
+        [Test]
+        public void FirstPersonSubstitutionsHasEntries()
+        {
+            Assert.Greater(_chatEngine.Librarian.FirstPersonToSecondPersonSubstitutions.Count, 0, &quot;Settings were not present&quot;);
+        }
+
+        [Test]
+        public void SecondPersonSubstitutionsHasEntries()
+        {
+            Assert.Greater(_chatEngine.Librarian.SecondPersonToFirstPersonSubstitutions.Count, 0, &quot;Settings were not present&quot;);
+        }
+
+        [Test]
+        public void SubstitutionsHasEntries()
+        {
+            Assert.Greater(_chatEngine.Librarian.Substitutions.Count, 0, &quot;Settings were not present&quot;);
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the response to the chat message.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;text&quot;&gt;The text.&lt;/param&gt;
+        /// &lt;returns&gt;The response&lt;/returns&gt;
+        private UserStatementResponse GetResponse(string text)
+        {
+
+            var response = _chat.HandleUserStatement(text);
+
+            // Do some basic validity checks
+            Assert.NotNull(response, &quot;Response was null&quot;);
+            Assert.AreEqual(text, response.UserInput);
+            return response;
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets a reply from the chat system on a specified inquiry.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;text&quot;&gt;The inquiry text.&lt;/param&gt;
+        /// &lt;returns&gt;The reply&lt;/returns&gt;
+        [NotNull]
+        private string GetReplyTemplate([CanBeNull] string text)
+        {
+            var response = GetResponse(text);
+            return response.Template;
+        }
+
+        [Test]
+        public void StartupResultsInGreeting()
+        {
+            // In reality, this should be _chat.DoInitialGreeting, but it&#39;s easier to test the template this way
+            var reply = GetReplyTemplate(&quot;EVT_STARTUP&quot;);
+
+            Assert.That(reply.Contains(&quot;tmp_hi&quot;), &quot;Startup did not give proper template. Actual template was: &quot; + reply);
+        }
+
+        [Test]
+        public void StartupLeavesLastInputClear()
+        {
+            _chat.DoInitialGreeting();
+
+            Assert.That(!_chat.LastInput.HasText(), $&quot;Startup did not clear last input. Actual was: {_chat.LastInput}&quot;);
+        }
+
+        [TestCase(&quot;Shutdown&quot;, &quot;tmp_shutdown&quot;)]
+        [TestCase(&quot;Status&quot;, &quot;tmp_status&quot;)]
+        public void ChatCoreTests(string input, string templateId)
+        {
+            AssertMessageGetsReplyTemplate(input, templateId);
+        }
+
+        [TestCase(&quot;Thanks&quot;, &quot;tmp_thanks&quot;)]
+        [TestCase(&quot;Goodbye&quot;, &quot;tmp_bye&quot;)]
+        [TestCase(&quot;Hello&quot;, &quot;tmp_hi&quot;)]
+        [TestCase(&quot;Help&quot;, &quot;tmp_help&quot;)]
+        [TestCase(&quot;Help Commands&quot;, &quot;tmp_help_commands&quot;)]
+        [TestCase(&quot;Help Questions&quot;, &quot;tmp_help_questions&quot;)]
+        [TestCase(&quot;Help Other&quot;, &quot;tmp_help_other&quot;)]
+        [TestCase(&quot;ASDfasd&quot;, &quot;tmp_fallback&quot;, Description = &quot;Gibberish should hit fallback case&quot;)]
+        public void ChatTemplateTests(string input, string templateId)
+        {
+            AssertMessageGetsReplyTemplate(input, templateId);
+        }
+
+        [TestCase(&quot;Bye&quot;, &quot;tmp_bye&quot;)]
+        [TestCase(&quot;Hi&quot;, &quot;tmp_hi&quot;)]
+        [TestCase(&quot;Hey&quot;, &quot;tmp_hi&quot;)]
+        [TestCase(&quot;Thank You&quot;, &quot;tmp_thanks&quot;)]
+        public void ChatRedirectTests([NotNull] string input, [NotNull] string redirectTemplateId)
+        {
+            var template = GetReplyTemplate(input);
+
+            Assert.IsTrue(template.ToLowerInvariant().Contains(redirectTemplateId),
+                          $&quot;The template {template} did not redirect to the template with an Id tag of {redirectTemplateId}&quot;);
+        }
+
+        /// &lt;summary&gt;
+        ///     Asserts that asking chat for the date gives the correct date.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     Test for ALF-4
+        /// &lt;/remarks&gt;
+        [Test]
+        public void AskingForCurrentDayContainsCurrentDay()
+        {
+            var now = DateTime.Now;
+            var reply = GetReply(&quot;Which day is it?&quot;);
+
+            var expected = now.ToString(&quot;D&quot;);
+            Assert.That(reply.Contains(expected),
+                        $&quot;Asked for current day at {now} and got a reply of &#39;{reply}&#39; which did not contain {expected}&quot;);
+        }
+
+        /// &lt;summary&gt;
+        ///     Asserts that asking chat for the time gives the correct time.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     Test for ALF-3
+        /// &lt;/remarks&gt;
+        [Test]
+        public void AskingForCurrentTimeContainsCurrentTime()
+        {
+            var now = DateTime.Now;
+            var reply = GetReply(&quot;What time is it?&quot;);
+
+            var expected = now.ToString(&quot;t&quot;);
+            Assert.That(reply.Contains(expected),
+                        $&quot;Asked for current time at {now} and got a reply of &#39;{reply}&#39; which did not contain {expected}&quot;);
+        }
+        /// &lt;summary&gt;
+        ///     Asserts that when working through redirects, the engine can get the deepest redirect template.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     Test for ALF-10
+        /// &lt;/remarks&gt;
+        [Test]
+        public void AskingForCurrentTimeRevealsRedirectedTemplate()
+        {
+            var reply = GetReplyTemplate(&quot;What time is it?&quot;);
+
+            Assert.That(reply.Contains(&quot;&lt;date&quot;), $&quot;The reply template of {reply} did not contain a date tag. Redirects are likely broken.&quot;);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[43,9,43,10,1],[44,13,44,48,1],[45,13,45,44,1],[46,9,46,10,1],[60,9,60,10,1],[61,13,61,52,1],[63,13,63,52,1],[64,9,64,10,1],[72,9,72,10,1],[73,13,73,62,1],[75,13,76,87,1],[77,9,77,10,1],[86,9,86,10,1],[87,13,87,46,1],[89,13,89,79,1],[91,13,91,42,1],[92,9,92,10,1],[99,9,99,10,1],[100,13,100,92,1],[101,9,101,10,1],[105,9,105,10,1],[106,13,106,109,1],[107,9,107,10,1],[111,9,111,10,1],[112,13,112,104,1],[113,9,113,10,1],[117,9,117,10,1],[118,13,118,128,1],[119,9,119,10,1],[123,9,123,10,1],[124,13,124,128,1],[125,9,125,10,1],[129,9,129,10,1],[130,13,130,103,1],[131,9,131,10,1],[139,9,139,10,1],[141,13,141,60,1],[144,13,144,59,1],[145,13,145,55,1],[146,13,146,29,1],[147,9,147,10,1],[156,9,156,10,1],[157,13,157,46,1],[158,13,158,38,1],[159,9,159,10,1],[163,9,163,10,1],[165,13,165,57,1],[167,13,167,122,1],[168,9,168,10,1],[172,9,172,10,1],[173,13,173,39,1],[175,13,175,121,1],[176,9,176,10,1],[181,9,181,10,1],[182,13,182,63,1],[183,9,183,10,1],[194,9,194,10,1],[195,13,195,63,1],[196,9,196,10,1],[203,9,203,10,1],[204,13,204,52,1],[206,13,207,127,1],[208,9,208,10,1],[218,9,218,10,1],[219,13,219,36,1],[220,13,220,54,1],[222,13,222,46,1],[223,13,224,122,1],[225,9,225,10,1],[235,9,235,10,1],[236,13,236,36,1],[237,13,237,54,1],[239,13,239,46,1],[240,13,241,123,1],[242,9,242,10,1],[251,9,251,10,1],[252,13,252,62,1],[254,13,254,141,1],[255,9,255,10,1]]);
+    </script>
+  </body>
+</html>

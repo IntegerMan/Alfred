@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\systemtaghandler.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// SystemTagHandler.cs
+// 
+// Created on:      08/12/2015 at 10:57 PM
+// Last Modified:   08/15/2015 at 1:42 AM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Ani.Alfred.Core.Console;
+
+namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
+{
+    /// &lt;summary&gt;
+    ///     A tag handler for the AIML &quot;system&quot; tag. This tag currently does nothing.
+    /// &lt;/summary&gt;
+    [HandlesAimlTag(&quot;system&quot;)]
+    public class SystemTagHandler : AimlTagHandler
+    {
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
+        public SystemTagHandler([NotNull] TagHandlerParameters parameters)
+            : base(parameters)
+        {
+        }
+
+        /// &lt;summary&gt;
+        ///     Processes the input text and returns the processed value.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;The processed output&lt;/returns&gt;
+        protected override string ProcessChange()
+        {
+            /* TODO: I&#39;ll likely want to support this very very soon, unless I decide to go with 
+               a custom tag of a different type If a straight implementation was wanted, 
+               http://stackoverflow.com/questions/15234448/run-shell-commands-using-c-sharp-and-get-the-info-into-string 
+               is a nice starting place. */
+
+            Log(Resources.SystemNotImplemented, LogLevel.Warning);
+
+            return string.Empty;
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[28,15,28,31,0],[29,9,29,10,0],[30,9,30,10,0],[37,9,37,10,0],[43,13,43,67,0],[45,13,45,33,0],[46,9,46,10,0]]);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.system\systemmonitormodule.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// SystemMonitorModule.cs
+// 
+// Created on:      08/04/2015 at 10:04 PM
+// Last Modified:   08/04/2015 at 10:08 PM
+// Original author: Matt Eland
+// ---------------------------------------------------------
+
+using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Globalization;
+
+using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Core.Definitions;
+
+namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
+{
+    /// &lt;summary&gt;
+    ///     The SystemMonitorModule is an abstract class for modules commonly working with performance counters.
+    /// &lt;/summary&gt;
+    public abstract class SystemMonitorModule : AlfredModule
+    {
+        /// &lt;summary&gt;
+        ///     The performance counter instance name for total results
+        /// &lt;/summary&gt;
+        public const string TotalInstanceName = &quot;_Total&quot;;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;SystemMonitorModule&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
+        protected SystemMonitorModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
+        {
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the next counter value safely, defaulting to 0 on any error.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;counter&quot;&gt;The counter.&lt;/param&gt;
+        /// &lt;returns&gt;The value returned from the counter&lt;/returns&gt;
+        protected static float GetNextCounterValueSafe([CanBeNull] PerformanceCounter counter)
+        {
+            return GetNextCounterValueSafe(counter, 0);
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the next counter value safely, defaulting to the defaultValue on any error.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;counter&quot;&gt;The counter.&lt;/param&gt;
+        /// &lt;param name=&quot;defaultValue&quot;&gt;The default value.&lt;/param&gt;
+        /// &lt;returns&gt;The value returned from the counter&lt;/returns&gt;
+        protected static float GetNextCounterValueSafe([CanBeNull] PerformanceCounter counter, float defaultValue)
+        {
+            try
+            {
+                return counter?.NextValue() ?? 0;
+            }
+            catch (Win32Exception)
+            {
+                return defaultValue;
+            }
+            catch (PlatformNotSupportedException)
+            {
+                return defaultValue;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return defaultValue;
+            }
+            catch (InvalidOperationException)
+            {
+                return defaultValue;
+            }
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[44,9,44,10,0],[45,13,45,56,0],[46,9,46,10,0],[60,13,60,35,0],[61,13,61,14,0],[62,17,62,37,0],[64,13,64,50,0],[65,13,65,14,0],[66,17,66,37,0],[68,13,68,48,0],[69,13,69,14,0],[70,17,70,37,0],[72,13,72,46,0],[73,13,73,14,0],[74,17,74,37,0],[34,87,34,109,1],[35,9,35,10,1],[36,9,36,10,1],[55,9,55,10,1],[57,13,57,14,1],[58,17,58,50,1],[76,9,76,10,1]]);
+    </script>
+  </body>
+</html>

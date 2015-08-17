@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\widgets\alfredtextwidget.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// AlfredTextWidget.cs
+// 
+// Created on:      08/03/2015 at 2:46 PM
+// Last Modified:   08/04/2015 at 3:04 PM
+// Original author: Matt Eland
+// ---------------------------------------------------------
+
+using JetBrains.Annotations;
+
+namespace MattEland.Ani.Alfred.Core.Widgets
+{
+    /// &lt;summary&gt;
+    ///     Represents a widget that operates off of a Text field to present its contents.
+    /// &lt;/summary&gt;
+    public abstract class AlfredTextWidget : AlfredWidget
+    {
+        // Choosing to not include short-cut constructors to give base classes more freedom in defining their constructors
+
+        [CanBeNull]
+        private string _text;
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the text of the widget.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The text.&lt;/value&gt;
+        [CanBeNull]
+        public string Text
+        {
+            get { return _text; }
+            set
+            {
+                if (value != _text)
+                {
+                    _text = value;
+                    OnPropertyChanged(nameof(Text));
+                }
+            }
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[30,17,30,18,1],[30,19,30,32,1],[30,33,30,34,1],[32,13,32,14,1],[33,17,33,36,1],[34,17,34,18,1],[35,21,35,35,1],[36,21,36,53,1],[37,17,37,18,1],[38,13,38,14,1]]);
+    </script>
+  </body>
+</html>

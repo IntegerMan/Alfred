@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\alfred\matteland.common\integerextensions.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// IntegerExtensions.cs
+// 
+// Created on:      08/16/2015 at 12:01 AM
+// Last Modified:   08/16/2015 at 12:01 AM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+
+using JetBrains.Annotations;
+
+namespace MattEland.Common
+{
+    /// &lt;summary&gt;
+    /// A collection of extension methods related to integer operations.
+    /// &lt;/summary&gt;
+    public static class IntegerExtensions
+    {
+
+        /// &lt;summary&gt;
+        /// Determines whether an index is within the bounds of the specified collection.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;index&quot;&gt;The index.&lt;/param&gt;
+        /// &lt;param name=&quot;collection&quot;&gt;The collection. Cannot be null.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the index is within bounds of the specified collection; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;collection&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public static bool IsWithinBoundsOf(this int index, [NotNull] ICollection collection)
+        {
+            if (collection == null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            return index &gt;= 0 &amp;&amp; index &lt; collection.Count;
+        }
+
+        /// &lt;summary&gt;
+        /// Determines whether an index is within the bounds of the specified collection.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;index&quot;&gt;The index.&lt;/param&gt;
+        /// &lt;param name=&quot;collection&quot;&gt;The collection. Cannot be null.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the index is within bounds of the specified collection; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;collection&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public static bool IsWithinBoundsOf&lt;T&gt;(this int index, [NotNull] IList&lt;T&gt; collection)
+        {
+            if (collection == null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            return index &gt;= 0 &amp;&amp; index &lt; collection.Count;
+        }
+
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[33,9,33,10,0],[34,13,34,36,0],[35,13,35,14,0],[36,17,36,69,0],[39,13,39,59,0],[40,9,40,10,0],[51,9,51,10,0],[52,13,52,36,0],[53,13,53,14,0],[54,17,54,69,0],[57,13,57,59,0],[58,9,58,10,0]]);
+    </script>
+  </body>
+</html>

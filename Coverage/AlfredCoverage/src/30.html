@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\widgets\warningwidget.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using JetBrains.Annotations;
+
+namespace MattEland.Ani.Alfred.Core.Widgets
+{
+    /// &lt;summary&gt;
+    /// A widget used for displaying warnings or errors to the user.
+    /// &lt;/summary&gt;
+    public sealed class WarningWidget : AlfredTextWidget
+    {
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;WarningWidget&quot;/&gt; class.
+        /// &lt;/summary&gt;
+        public WarningWidget() : this(null)
+        {
+        }
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;WarningWidget&quot;/&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;text&quot;&gt;The text.&lt;/param&gt;
+        public WarningWidget([CanBeNull] string text)
+        {
+            Text = text;
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[13,34,13,44,1],[14,9,14,10,1],[15,9,15,10,1],[21,9,21,54,1],[22,9,22,10,1],[23,13,23,25,1],[24,9,24,10,1]]);
+    </script>
+  </body>
+</html>

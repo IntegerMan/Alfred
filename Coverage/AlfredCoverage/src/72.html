@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\taghandlerfactory.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// TagHandlerFactory.cs
+// 
+// Created on:      08/14/2015 at 12:14 AM
+// Last Modified:   08/16/2015 at 12:10 AM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using System;
+using System.Reflection;
+using System.Collections.Generic;
+using System.Linq;
+using System.Xml;
+
+using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Common;
+
+namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
+{
+    /// &lt;summary&gt;
+    ///     TagHandlerFactory is responsible for taking a set of input parameters and instantiating the
+    ///     appropriate class and providing that class the necessary parameters
+    /// &lt;/summary&gt;
+    public sealed class TagHandlerFactory
+    {
+        [NotNull]
+        private readonly ChatEngine _engine;
+
+        [NotNull]
+        [ItemNotNull]
+        private readonly IDictionary&lt;string, Type&gt; _handlerMapping = new Dictionary&lt;string, Type&gt;();
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;T:System.Object&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;engine&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public TagHandlerFactory([NotNull] ChatEngine engine)
+        {
+            //- Validate
+            if (engine == null)
+            {
+                throw new ArgumentNullException(nameof(engine));
+            }
+
+            //- Set fields
+            _engine = engine;
+
+            //+ Load types in this assembly that have the HandlesAimlTag attribute
+            RegisterTagHandlersInAppDomain();
+        }
+
+        /// &lt;summary&gt;
+        ///     Registers all AimlTagHandler derived types decorated with the HandlesAimlTag attribute in any
+        ///     assembly that is currently loaded.
+        /// &lt;/summary&gt;
+        private void RegisterTagHandlersInAppDomain()
+        {
+            // Grab all assemblies currently loaded
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+            // Loop through and register each tag handler found. This will make registration automatic
+            foreach (var assembly in assemblies.Where(assembly =&gt; assembly != null))
+            {
+                RegisterTagHandlersInAssembly(assembly);
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Loads and registers tag handlers in the given assembly. Valid tag handlers are non-abstract
+        ///     classes derived from
+        ///     AimlTagHandler and decorated with the HandlesAimlTag attribute.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;assembly&quot;&gt;The assembly.&lt;/param&gt;
+        private void RegisterTagHandlersInAssembly([NotNull] Assembly assembly)
+        {
+            //- Validation
+            if (assembly == null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            // Read all types in the provided assembly that have this attribute.
+            var types = assembly.GetTypesInAssemblyWithAttribute&lt;HandlesAimlTagAttribute&gt;(false);
+
+            //- Loop through each type and register it
+            foreach (var type in types)
+            {
+                // We can&#39;t instantiate an abstract type and we need AimlTagHandlers for this
+                if (type.IsAbstract || !type.IsSubclassOf(typeof(AimlTagHandler)))
+                {
+                    continue;
+                }
+
+                // Grab the attribute and exit early if it&#39;s not there
+                var attribute =
+                    type.GetCustomAttribute(typeof(HandlesAimlTagAttribute)) as
+                    HandlesAimlTagAttribute;
+                if (attribute == null)
+                {
+                    continue;
+                }
+
+                // The attribute is present. Add it to the dictionary as a type handler
+                var name = attribute.Name?.ToUpperInvariant();
+                if (!name.IsNullOrWhitespace())
+                {
+                    _handlerMapping.Add(name, type);
+                }
+
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Builds a tag handler for the specified node.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;node&quot;&gt;The node.&lt;/param&gt;
+        /// &lt;param name=&quot;query&quot;&gt;The query.&lt;/param&gt;
+        /// &lt;param name=&quot;request&quot;&gt;The request.&lt;/param&gt;
+        /// &lt;param name=&quot;result&quot;&gt;The result.&lt;/param&gt;
+        /// &lt;param name=&quot;user&quot;&gt;The user.&lt;/param&gt;
+        /// &lt;param name=&quot;tagName&quot;&gt;Name of the tag.&lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;node, query, request, user&lt;/exception&gt;
+        /// &lt;returns&gt;The tag handler.&lt;/returns&gt;
+        [CanBeNull]
+        public AimlTagHandler Build([NotNull] XmlNode node,
+                                    [NotNull] SubQuery query,
+                                    [NotNull] Request request,
+                                    Result result,
+                                    [NotNull] User user,
+                                    [CanBeNull] string tagName)
+        {
+            //- Validate
+            if (node == null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+            if (query == null)
+            {
+                throw new ArgumentNullException(nameof(query));
+            }
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            if (tagName == null)
+            {
+                return null;
+            }
+
+            //- All construction will require these parameters so build them now
+            // TODO: Would thee be better suited for outside of this method and passed in as parameters?
+            var parameters = new TagHandlerParameters(_engine, user, query, request, result, node);
+
+            // Use dynamic invocation to create a TagHandler based on usage of the HandlesAimlTag attribute.
+            return BuildTagHandlerDynamic(tagName, parameters);
+        }
+
+        /// &lt;summary&gt;
+        ///     Builds a tag handler using dynamic invocation and reflection relying on the HandlesAimlTag
+        ///     attribute.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tagName&quot;&gt;Name of the tag.&lt;/param&gt;
+        /// &lt;param name=&quot;parameters&quot;&gt;The construction parameters.&lt;/param&gt;
+        /// &lt;returns&gt;The tag handler.&lt;/returns&gt;
+        [CanBeNull]
+        private AimlTagHandler BuildTagHandlerDynamic([NotNull] string tagName,
+                                                      [NotNull] TagHandlerParameters parameters)
+        {
+            if (parameters == null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+
+            //- Ensure we have the requested tag. If we don&#39;t exit now.
+            var tagKey = tagName.ToUpperInvariant();
+            if (!_handlerMapping.ContainsKey(tagKey))
+            {
+                return null;
+            }
+
+            //- Grab the type definition
+            var type = _handlerMapping[tagKey];
+            if (type == null)
+            {
+                return null;
+            }
+
+            string logMessage;
+
+            try
+            {
+                /* Execute dynamic activation using reflection. This assumes the needed constructor
+                   will be present on the type and, if not, a TargetInvocationException will be 
+                   thrown. */
+
+                var instance = Activator.CreateInstance(type, parameters);
+
+                // The result doesn&#39;t have to be an AimlTagHandler. Do a safe cast and check.
+                var handler = instance as AimlTagHandler;
+                if (handler != null)
+                {
+                    return handler;
+                }
+
+                //- The item is not of the right type. Prepare the log
+                logMessage =
+                    string.Format(_engine.Locale,
+                                  &quot;Dynamic tag handler for {0} instantiated an instance of type {1} that was not an AimlTagHandler. Disabling this handler.&quot;,
+                                  tagName,
+                                  type.FullName);
+
+            }
+            catch (TargetInvocationException ex)
+            {
+                //- Error handling for errors encountered during invocation
+                logMessage = string.Format(_engine.Locale,
+                                           &quot;Dynamic tag handler for {0} encountered an invocation error instantiating type {1}: {2}\n Disabling this handler.&quot;,
+                                           tagName,
+                                           type.FullName,
+                                           ex.Message);
+
+            }
+            catch (MissingMethodException ex)
+            {
+                //- This happens if the constructor wasn&#39;t found with the right parameters
+                logMessage = string.Format(_engine.Locale,
+                                           &quot;Dynamic tag handler for {0} encountered a missing method error instantiating type {1}: {2}\n Disabling this handler.&quot;,
+                                           tagName,
+                                           type.FullName,
+                                           ex.Message);
+
+            }
+
+            // If we got here, it didn&#39;t work; unregister it.
+            _engine.Log(logMessage, LogLevel.Error);
+            _handlerMapping.Remove(tagKey);
+
+            return null;
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[45,13,45,14,0],[46,17,46,65,0],[82,13,82,14,0],[83,17,83,67,0],[94,17,94,18,0],[95,21,95,30,0],[103,17,103,18,0],[104,21,104,30,0],[138,13,138,14,0],[139,17,139,63,0],[142,13,142,14,0],[143,17,143,64,0],[146,13,146,14,0],[147,17,147,66,0],[150,13,150,14,0],[151,17,151,63,0],[154,13,154,14,0],[155,17,155,29,0],[178,13,178,14,0],[179,17,179,69,0],[192,13,192,14,0],[193,17,193,29,0],[214,17,218,50,0],[220,13,220,14,0],[221,13,221,49,0],[222,13,222,14,0],[224,17,228,56,0],[230,13,230,14,0],[231,13,231,46,0],[232,13,232,14,0],[234,17,238,56,0],[240,13,240,14,0],[243,13,243,53,0],[244,13,244,44,0],[246,13,246,25,0],[35,9,35,101,1],[41,9,41,62,1],[42,9,42,10,1],[44,13,44,32,1],[50,13,50,30,1],[53,13,53,46,1],[54,9,54,10,1],[61,9,61,10,1],[63,13,63,70,1],[66,13,66,20,1],[66,38,66,67,1],[66,83,66,84,1],[66,22,66,34,1],[67,13,67,14,1],[68,17,68,57,1],[69,13,69,14,1],[66,35,66,37,1],[70,9,70,10,1],[79,9,79,10,1],[81,13,81,34,1],[87,13,87,98,1],[90,13,90,20,1],[90,34,90,39,1],[90,22,90,30,1],[91,13,91,14,1],[93,17,93,83,1],[99,17,101,45,1],[102,17,102,39,1],[108,17,108,63,1],[109,17,109,48,1],[110,17,110,18,1],[111,21,111,53,1],[112,17,112,18,1],[114,13,114,14,1],[90,31,90,33,1],[115,9,115,10,1],[135,9,135,10,1],[137,13,137,30,1],[141,13,141,31,1],[145,13,145,33,1],[149,13,149,30,1],[153,13,153,33,1],[160,13,160,100,1],[163,13,163,64,1],[164,9,164,10,1],[176,9,176,10,1],[177,13,177,36,1],[183,13,183,53,1],[184,13,184,54,1],[185,13,185,14,1],[186,17,186,29,1],[190,13,190,48,1],[191,13,191,30,1],[199,13,199,14,1],[204,17,204,75,1],[207,17,207,58,1],[208,17,208,37,1],[209,17,209,18,1],[210,21,210,36,1],[247,9,247,10,1],[66,67,66,83,1]]);
+    </script>
+  </body>
+</html>

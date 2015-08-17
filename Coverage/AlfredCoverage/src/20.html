@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\alfredstatuscontroller.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// AlfredStatusController.cs
+// 
+// Created on:      08/03/2015 at 3:09 PM
+// Last Modified:   08/09/2015 at 9:38 PM
+// Original author: Matt Eland
+// ---------------------------------------------------------
+
+using System;
+using System.Globalization;
+
+using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common;
+
+namespace MattEland.Ani.Alfred.Core
+{
+    /// &lt;summary&gt;
+    ///     A utility class that helps control Alfred&#39;s status and monitors the initialization and shutdown processes.
+    /// &lt;/summary&gt;
+    public sealed class AlfredStatusController : IStatusController
+    {
+        [CanBeNull]
+        private IAlfred _alfred;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredStatusController&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        public AlfredStatusController() : this(null)
+        {
+        }
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredStatusController&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;alfred&quot;&gt;The alfred provider.&lt;/param&gt;
+        public AlfredStatusController([CanBeNull] IAlfred alfred)
+        {
+            Alfred = alfred;
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the alfred framework.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The alfred framework.&lt;/value&gt;
+        public IAlfred Alfred
+        {
+            get { return _alfred; }
+            set { _alfred = value; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Tells Alfred it&#39;s okay to start itself up and begin operating.
+        /// &lt;/summary&gt;
+        /// &lt;exception cref=&quot;InvalidOperationException&quot;&gt;
+        ///     Thrown if Alfred is already Online
+        /// &lt;/exception&gt;
+        public void Initialize()
+        {
+            var alfred = Alfred;
+            if (alfred == null)
+            {
+                throw new InvalidOperationException(&quot;Alfred is not set. Please set Alfred first&quot;);
+            }
+
+            var header = Resources.AlfredStatusController_Initialize_LogHeader.NonNull();
+
+            var console = alfred.Console;
+
+            // Handle case on initialize but already initializing or online
+            EnsureAlfredOffline(alfred, console, header);
+
+            // Inform things that we&#39;re setting up right now
+            console?.Log(header, Resources.AlfredStatusController_Initialize_Initializing.NonNull(), LogLevel.Verbose);
+            alfred.Status = AlfredStatus.Initializing;
+
+            // Boot up items and give them a provider
+            foreach (var item in alfred.Subsystems)
+            {
+                InitializeComponent(console, item, header);
+            }
+
+            // We&#39;re done. Let the world know.
+            alfred.Status = AlfredStatus.Online;
+            console?.Log(header,
+                         Resources.AlfredStatusController_Initialize_InitilizationCompleted.NonNull(),
+                         LogLevel.Verbose);
+
+            // Notify each item that startup was completed
+            foreach (var item in alfred.Subsystems)
+            {
+                item.OnInitializationCompleted();
+            }
+
+            // Log the completion
+            console?.Log(header, Resources.AlfredStatusController_Initialize_AlfredOnline.NonNull(), LogLevel.Info);
+        }
+
+        /// &lt;summary&gt;
+        ///     Tells Alfred to go ahead and shut down.
+        /// &lt;/summary&gt;
+        /// &lt;exception cref=&quot;InvalidOperationException&quot;&gt;
+        ///     Thrown if Alfred is already Offline
+        /// &lt;/exception&gt;
+        public void Shutdown()
+        {
+            var alfred = Alfred;
+            if (alfred == null)
+            {
+                throw new InvalidOperationException(&quot;Alfred is not set. Please set Alfred first&quot;);
+            }
+
+            var header = Resources.AlfredStatusController_Shutdown_LogHeader.NonNull();
+
+            var console = alfred.Console;
+
+            // Handle cases where shutdown shouldn&#39;t be allowed
+            EnsureAlfredOnline(alfred, console, header);
+
+            // Indicate status so the UI can keep busy
+            console?.Log(header, Resources.AlfredStatusController_Shutdown_Shutting_down.NonNull(), LogLevel.Verbose);
+            alfred.Status = AlfredStatus.Terminating;
+
+            // Shut down items and decouple them from Alfred
+            foreach (var item in alfred.Subsystems)
+            {
+                ShutdownComponent(console, item, header);
+            }
+
+            // We&#39;re done here. Tell the world.
+            alfred.Status = AlfredStatus.Offline;
+            console?.Log(header, Resources.AlfredStatusController_Shutdown_Completed.NonNull(), LogLevel.Info);
+
+            // Notify each item that shutdown was completed
+            foreach (var item in alfred.Subsystems)
+            {
+                item.OnShutdownCompleted();
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Ensures that alfred is offline and throws an InvalidOperationException if it isn&#39;t.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;alfred&quot;&gt;The alfred.&lt;/param&gt;
+        /// &lt;param name=&quot;console&quot;&gt;The console.&lt;/param&gt;
+        /// &lt;param name=&quot;header&quot;&gt;The header.&lt;/param&gt;
+        private static void EnsureAlfredOffline([NotNull] IAlfred alfred,
+                                                [CanBeNull] IConsole console,
+                                                [NotNull] string header)
+        {
+            if (alfred.Status == AlfredStatus.Online)
+            {
+                var message = Resources.AlfredStatusController_Initialize_ErrorAlreadyOnline.NonNull();
+                console?.Log(header, message, LogLevel.Verbose);
+
+                throw new InvalidOperationException(message);
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Initializes the component.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;console&quot;&gt;The console.&lt;/param&gt;
+        /// &lt;param name=&quot;item&quot;&gt;The item.&lt;/param&gt;
+        /// &lt;param name=&quot;header&quot;&gt;The header.&lt;/param&gt;
+        private void InitializeComponent([CanBeNull] IConsole console,
+                                         [NotNull] IAlfredComponent item,
+                                         [NotNull] string header)
+        {
+
+            // Log the initialization
+            var initLogFormat = Resources.AlfredStatusController_InitializingComponent.NonNull();
+            console?.Log(header,
+                         string.Format(CultureInfo.CurrentCulture, initLogFormat, item.NameAndVersion),
+                         LogLevel.Verbose);
+
+            // Actually initialize the component
+            item.Initialize(Alfred);
+
+            // Log the completion
+            var initializedLogFormat = Resources.AlfredStatusController_InitializeComponentInitialized.NonNull();
+            console?.Log(header,
+                         string.Format(CultureInfo.CurrentCulture, initializedLogFormat, item.NameAndVersion),
+                         LogLevel.Verbose);
+        }
+
+        /// &lt;summary&gt;
+        ///     Shutdowns the subsystem.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;console&quot;&gt;The console.&lt;/param&gt;
+        /// &lt;param name=&quot;item&quot;&gt;The item.&lt;/param&gt;
+        /// &lt;param name=&quot;header&quot;&gt;The header.&lt;/param&gt;
+        private static void ShutdownComponent([CanBeNull] IConsole console,
+                                              [NotNull] IAlfredComponent item,
+                                              [NotNull] string header)
+        {
+
+            var culture = CultureInfo.CurrentCulture;
+
+            var shuttingDownMessage = Resources.AlfredStatusController_ShuttingDownComponent.NonNull();
+            console?.Log(header, string.Format(culture, shuttingDownMessage, item.NameAndVersion), LogLevel.Verbose);
+
+            item.Shutdown();
+
+            var shutDownMessage = Resources.AlfredStatusController_ComponentOffline.NonNull();
+            console?.Log(header, string.Format(culture, shutDownMessage, item.NameAndVersion), LogLevel.Verbose);
+        }
+
+        /// &lt;summary&gt;
+        ///     Ensures that alfred online.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;alfred&quot;&gt;The alfred.&lt;/param&gt;
+        /// &lt;param name=&quot;console&quot;&gt;The console.&lt;/param&gt;
+        /// &lt;param name=&quot;header&quot;&gt;The header.&lt;/param&gt;
+        private static void EnsureAlfredOnline([NotNull] IAlfred alfred,
+                                               [CanBeNull] IConsole console,
+                                               [NotNull] string header)
+        {
+            switch (alfred.Status)
+            {
+                case AlfredStatus.Offline:
+                    var offlineMessage = Resources.AlfredStatusController_Shutdown_ErrorAlreadyOffline.NonNull();
+                    console?.Log(header, offlineMessage, LogLevel.Verbose);
+
+                    throw new InvalidOperationException(offlineMessage);
+
+                case AlfredStatus.Terminating:
+                    var terminatingMessage = Resources.AlfredStatusController_Shutdown_ErrorAlreadyTerminating.NonNull();
+                    console?.Log(header, terminatingMessage, LogLevel.Verbose);
+
+                    throw new InvalidOperationException(terminatingMessage);
+            }
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[64,13,64,14,0],[65,17,65,99,0],[111,13,111,14,0],[112,17,112,99,0],[230,21,230,122,0],[231,21,231,80,0],[233,21,233,77,0],[31,43,31,53,1],[32,9,32,10,1],[33,9,33,10,1],[39,9,39,66,1],[40,9,40,10,1],[41,13,41,29,1],[42,9,42,10,1],[50,17,50,18,1],[50,19,50,34,1],[50,35,50,36,1],[51,17,51,18,1],[51,19,51,35,1],[51,36,51,37,1],[61,9,61,10,1],[62,13,62,33,1],[63,13,63,32,1],[68,13,68,90,1],[70,13,70,42,1],[73,13,73,58,1],[76,13,76,120,1],[77,13,77,55,1],[80,13,80,20,1],[80,34,80,51,1],[80,22,80,30,1],[81,13,81,14,1],[82,17,82,60,1],[83,13,83,14,1],[80,31,80,33,1],[86,13,86,49,1],[87,13,89,44,1],[92,13,92,20,1],[92,34,92,51,1],[92,22,92,30,1],[93,13,93,14,1],[94,17,94,50,1],[95,13,95,14,1],[92,31,92,33,1],[98,13,98,117,1],[99,9,99,10,1],[108,9,108,10,1],[109,13,109,33,1],[110,13,110,32,1],[115,13,115,88,1],[117,13,117,42,1],[120,13,120,57,1],[123,13,123,119,1],[124,13,124,54,1],[127,13,127,20,1],[127,34,127,51,1],[127,22,127,30,1],[128,13,128,14,1],[129,17,129,58,1],[130,13,130,14,1],[127,31,127,33,1],[133,13,133,50,1],[134,13,134,112,1],[137,13,137,20,1],[137,34,137,51,1],[137,22,137,30,1],[138,13,138,14,1],[139,17,139,44,1],[140,13,140,14,1],[137,31,137,33,1],[141,9,141,10,1],[152,9,152,10,1],[153,13,153,54,1],[154,13,154,14,1],[155,17,155,104,1],[156,17,156,65,1],[158,17,158,62,1],[160,9,160,10,1],[171,9,171,10,1],[174,13,174,98,1],[175,13,177,44,1],[180,13,180,37,1],[183,13,183,114,1],[184,13,186,44,1],[187,9,187,10,1],[198,9,198,10,1],[200,13,200,54,1],[202,13,202,104,1],[203,13,203,118,1],[205,13,205,29,1],[207,13,207,95,1],[208,13,208,114,1],[209,9,209,10,1],[220,9,220,10,1],[221,13,221,35,1],[224,21,224,114,1],[225,21,225,76,1],[227,21,227,73,1],[235,9,235,10,1]]);
+    </script>
+  </body>
+</html>

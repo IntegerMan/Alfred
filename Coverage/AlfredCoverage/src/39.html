@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\modules\alfredmodule.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// AlfredModule.cs
+// 
+// Created on:      08/11/2015 at 9:44 PM
+// Last Modified:   08/12/2015 at 3:43 PM
+// Original author: Matt Eland
+// ---------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Core.Widgets;
+using MattEland.Common;
+
+namespace MattEland.Ani.Alfred.Core.Modules
+{
+
+    /// &lt;summary&gt;
+    ///     Represents a module within Alfred. Modules contain different bits of information to present to the user.
+    /// &lt;/summary&gt;
+    public abstract class AlfredModule : AlfredComponent, IAlfredModule
+    {
+        [NotNull]
+        [ItemNotNull]
+        private readonly ICollection&lt;AlfredWidget&gt; _widgets;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredModule&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        protected AlfredModule([NotNull] IPlatformProvider platformProvider)
+        {
+            if (platformProvider == null)
+            {
+                throw new ArgumentNullException(nameof(platformProvider));
+            }
+
+            _widgets = platformProvider.CreateCollection&lt;AlfredWidget&gt;();
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets whether or not the module is visible to the user interface.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;Whether or not the module is visible.&lt;/value&gt;
+        public override bool IsVisible
+        {
+            get { return _widgets.Any(w =&gt; w.IsVisible); }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the children of this component. Depending on the type of component this is, the children will
+        ///     vary in their own types.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The children.&lt;/value&gt;
+        public override IEnumerable&lt;IAlfredComponent&gt; Children
+        {
+            get { yield break; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Handles a chat command that may be intended for this module.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;command&quot;&gt;The command.&lt;/param&gt;
+        /// &lt;param name=&quot;result&quot;&gt;The default system response. This should be modified and returned.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the command was handled, &lt;c&gt;false&lt;/c&gt; otherwise.&lt;/returns&gt;
+        public virtual bool HandleChatCommand(ChatCommand command, [NotNull] AlfredCommandResult result)
+        {
+            return false;
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the user interface widgets for the module.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The user interface widgets.&lt;/value&gt;
+        [NotNull]
+        public IEnumerable&lt;AlfredWidget&gt; Widgets
+        {
+            get { return _widgets; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Clears all child collections
+        /// &lt;/summary&gt;
+        protected override void ClearChildCollections()
+        {
+            base.ClearChildCollections();
+
+            _widgets.Clear();
+            OnPropertyChanged(nameof(Widgets));
+        }
+
+        /// &lt;summary&gt;
+        ///     Registers a widget for the module.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;widget&quot;&gt;
+        ///     The widget.
+        /// &lt;/param&gt;
+        protected void Register([NotNull] AlfredWidget widget)
+        {
+            _widgets.AddSafe(widget);
+
+            OnPropertyChanged(nameof(IsVisible));
+            OnPropertyChanged(nameof(Widgets));
+        }
+
+        /// &lt;summary&gt;
+        ///     Registers multiple widgets at once.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;widgets&quot;&gt;
+        ///     The widgets.
+        /// &lt;/param&gt;
+        protected void Register([NotNull] IEnumerable&lt;AlfredWidget&gt; widgets)
+        {
+            if (widgets == null)
+            {
+                throw new ArgumentNullException(nameof(widgets));
+            }
+
+            foreach (var widget in widgets)
+            {
+                // ReSharper disable once AssignNullToNotNullAttribute - for testing purposes we&#39;ll allow this
+                Register(widget);
+            }
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[39,13,39,14,0],[40,17,40,75,0],[52,17,52,18,0],[52,19,52,44,0],[52,55,52,57,0],[52,58,52,59,0],[72,9,72,10,0],[73,13,73,26,0],[74,9,74,10,0],[120,13,120,14,0],[121,17,121,66,0],[52,44,52,55,0],[36,9,36,77,1],[37,9,37,10,1],[38,13,38,42,1],[43,13,43,74,1],[44,9,44,10,1],[83,17,83,18,1],[83,19,83,35,1],[83,36,83,37,1],[90,9,90,10,1],[91,13,91,42,1],[93,13,93,30,1],[94,13,94,48,1],[95,9,95,10,1],[104,9,104,10,1],[105,13,105,38,1],[107,13,107,50,1],[108,13,108,48,1],[109,9,109,10,1],[118,9,118,10,1],[119,13,119,33,1],[124,13,124,20,1],[124,36,124,43,1],[124,22,124,32,1],[125,13,125,14,1],[127,17,127,34,1],[128,13,128,14,1],[124,33,124,35,1],[129,9,129,10,1],[62,17,62,18,1],[62,19,62,31,1]]);
+    </script>
+  </body>
+</html>

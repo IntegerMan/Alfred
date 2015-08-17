@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.aiml\chatpage.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+
+using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Core.Pages;
+
+namespace MattEland.Ani.Alfred.Chat
+{
+    /// &lt;summary&gt;
+    /// A custom page for interacting with Alfred via Chat
+    /// &lt;/summary&gt;
+    public sealed class ChatPage : AlfredPage
+    {
+        [NotNull]
+        private readonly IChatProvider _chatHandler;
+
+        /// &lt;summary&gt;
+        /// Gets the chat handler.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The chat handler.&lt;/value&gt;
+        [NotNull]
+        public IChatProvider ChatHandler
+        {
+            [DebuggerStepThrough]
+            get
+            { return _chatHandler; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredPage&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;name&quot;&gt;The name.&lt;/param&gt;
+        /// &lt;param name=&quot;chatHandler&quot;&gt;The input handler&lt;/param&gt;
+        public ChatPage([NotNull] string name, [NotNull] IChatProvider chatHandler) : base(name)
+        {
+            _chatHandler = chatHandler;
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the children of this component. Depending on the type of component this is, the children will
+        /// vary in their own types.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The children.&lt;/value&gt;
+        public override IEnumerable&lt;IAlfredComponent&gt; Children
+        {
+            get { yield break; }
+        }
+
+    }
+
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[30,13,30,14,0],[30,15,30,35,0],[30,36,30,37,0],[38,87,38,97,0],[39,9,39,10,0],[40,13,40,40,0],[41,9,41,10,0],[50,17,50,18,0],[50,19,50,31,0]]);
+    </script>
+  </body>
+</html>

@@ -13,14 +13,15 @@ using System.Linq;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Pages;
-using MattEland.Ani.Alfred.Core.Tests.Mocks;
+using MattEland.Ani.Alfred.Tests.Mocks;
 
 using NUnit.Framework;
 
-namespace MattEland.Ani.Alfred.Core.Tests.Modules
+namespace MattEland.Ani.Alfred.Tests.Modules
 {
     /// <summary>
     ///     Tests for the

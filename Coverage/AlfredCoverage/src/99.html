@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\uppercasetaghandler.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// uppercase.cs
+// 
+// Created on:      08/12/2015 at 11:00 PM
+// Last Modified:   08/12/2015 at 11:59 PM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Common;
+
+namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
+{
+    /// &lt;summary&gt;
+    /// A tag handler for the AIML &quot;uppercase&quot; tag. This outputs its text in upper case.
+    /// &lt;/summary&gt;
+    [HandlesAimlTag(&quot;uppercase&quot;)]
+    public class UppercaseTagHandler : AimlTagHandler
+    {
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
+        public UppercaseTagHandler([NotNull] TagHandlerParameters parameters)
+            : base(parameters)
+        {
+        }
+
+        /// &lt;summary&gt;
+        /// Processes the input text and returns the processed value.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;The processed output&lt;/returns&gt;
+        protected override string ProcessChange()
+        {
+            if (TemplateNode.Name.Matches(&quot;uppercase&quot;))
+            {
+                return TemplateNode.InnerText.ToUpper(Locale);
+            }
+
+            return string.Empty;
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[28,15,28,31,0],[29,9,29,10,0],[30,9,30,10,0],[37,9,37,10,0],[38,13,38,56,0],[39,13,39,14,0],[40,17,40,63,0],[43,13,43,33,0],[44,9,44,10,0]]);
+    </script>
+  </body>
+</html>
