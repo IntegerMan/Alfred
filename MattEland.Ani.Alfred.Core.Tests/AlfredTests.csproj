@@ -57,6 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Chat\RedirectTagHandlerTests.cs" />
     <Compile Include="Chat\AlfredTagHandlerTests.cs" />
     <Compile Include="Chat\ChatCommandTests.cs" />
     <Compile Include="Chat\ChatTestsBase.cs" />

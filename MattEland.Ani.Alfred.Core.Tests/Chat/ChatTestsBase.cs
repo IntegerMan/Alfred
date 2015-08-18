@@ -202,12 +202,14 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             get { return _alfred; }
         }
 
+        [NotNull]
         protected TagHandlerParameters BuildTagHandlerParameters(string xml)
         {
             var node = AimlTagHandler.BuildNode(xml);
             return BuildTagHandlerParameters("Testing is fun", node);
         }
 
+        [NotNull]
         private TagHandlerParameters BuildTagHandlerParameters(string input, XmlNode node)
         {
             var query = new SubQuery(input);
