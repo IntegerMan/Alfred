@@ -92,29 +92,6 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        ///     Handles a chat command that may be intended for this module.
-        /// </summary>
-        /// <param name="command">The command.</param>
-        /// <param name="result">The default system response. This should be modified and returned.</param>
-        /// <returns><c>true</c> if the command was handled, <c>false</c> otherwise.</returns>
-        public override bool HandleChatCommand(ChatCommand command, AlfredCommandResult result)
-        {
-            // Verify this this is a message we can answer
-            if (command.Command.Matches("SHUTDOWN"))
-            {
-                ExecuteShutdownCommand();
-
-                // Have Alfred say goodbye
-                result.RedirectToChat = "Bye";
-
-                return true;
-            }
-
-            // Can't handle it; let the base module take it
-            return base.HandleChatCommand(command, result);
-        }
-
-        /// <summary>
         ///     Handles the initialize command by initializing Alfred
         /// </summary>
         internal void ExecuteInitializeCommand()

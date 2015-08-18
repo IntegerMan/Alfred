@@ -26,13 +26,5 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// </summary>
         /// <value>The user interface widgets.</value>
         IEnumerable<AlfredWidget> Widgets { get; }
-
-        /// <summary>
-        ///     Handles a chat command that may be intended for this module.
-        /// </summary>
-        /// <param name="command">The command.</param>
-        /// <param name="result">The default system response. This should be modified and returned.</param>
-        /// <returns><c>true</c> if the command was handled, <c>false</c> otherwise.</returns>
-        bool HandleChatCommand(ChatCommand command, AlfredCommandResult result);
     }
 }

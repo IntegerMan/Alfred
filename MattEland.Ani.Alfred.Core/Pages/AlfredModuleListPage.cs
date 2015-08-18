@@ -96,17 +96,5 @@ namespace MattEland.Ani.Alfred.Core.Pages
         {
             get { return base.IsVisible && Modules.Any(m => m.Widgets.Any(w => w.IsVisible)); }
         }
-
-        /// <summary>
-        ///     Handles a chat command that may be intended for a module on this page.
-        /// </summary>
-        /// <param name="command">The command.</param>
-        /// <param name="result">The default system response. This should be modified and returned.</param>
-        /// <returns><c>true</c> if the command was handled, <c>false</c> otherwise.</returns>
-        public override bool HandleChatCommand(ChatCommand command, AlfredCommandResult result)
-        {
-            return Modules.Any(module => module.HandleChatCommand(command, result));
-
-        }
     }
 }

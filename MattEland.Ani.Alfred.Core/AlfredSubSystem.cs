@@ -85,18 +85,6 @@ namespace MattEland.Ani.Alfred.Core
         public abstract string Id { get; }
 
         /// <summary>
-        ///     Handles a chat command that may be intended for this subsystem.
-        /// </summary>
-        /// <param name="command">The command.</param>
-        /// <param name="result">The default system response. This should be modified and returned.</param>
-        /// <returns><c>true</c> if the command was handled, <c>false</c> otherwise.</returns>
-        public virtual bool HandleChatCommand(ChatCommand command,
-                                              [NotNull] AlfredCommandResult result)
-        {
-            return Pages.Any(page => page.HandleChatCommand(command, result));
-        }
-
-        /// <summary>
         ///     Gets the pages associated with this subsystem
         /// </summary>
         /// <value>The pages.</value>
