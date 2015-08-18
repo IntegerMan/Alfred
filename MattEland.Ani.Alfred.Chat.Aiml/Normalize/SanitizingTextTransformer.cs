@@ -28,6 +28,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
         public SanitizingTextTransformer([NotNull] ChatEngine chatEngine)
             : base(chatEngine)
         {
+            StripperRegexPattern = @"[^0-9a-zA-Z_]";
         }
 
         /// <summary>
@@ -35,7 +36,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
         /// </summary>
         /// <value>The stripper regex pattern.</value>
         [NotNull]
-        public string StripperRegexPattern { get; set; } = @"[^0-9a-zA-Z_]";
+        public string StripperRegexPattern { get; set; }
 
         /// <summary>
         ///     Processes the input text and returns the processed value.
@@ -45,6 +46,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
         {
             // Removes illegal characters and replaces them with spaces
             var regex = new Regex(StripperRegexPattern, RegexOptions.IgnorePatternWhitespace);
+
             return regex.Replace(InputString.NonNull(), " ");
         }
     }
