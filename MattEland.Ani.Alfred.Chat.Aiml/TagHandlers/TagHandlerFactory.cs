@@ -2,7 +2,7 @@
 // TagHandlerFactory.cs
 // 
 // Created on:      08/14/2015 at 12:14 AM
-// Last Modified:   08/16/2015 at 12:10 AM
+// Last Modified:   08/18/2015 at 4:03 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -167,16 +167,25 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         ///     Builds a tag handler using dynamic invocation and reflection relying on the HandlesAimlTag
         ///     attribute.
         /// </summary>
+        /// <remarks>
+        ///     This method is public for testability
+        /// </remarks>
         /// <param name="tagName">Name of the tag.</param>
         /// <param name="parameters">The construction parameters.</param>
         /// <returns>The tag handler.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="tagName" /> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="parameters" /> is <see langword="null" />.</exception>
         [CanBeNull]
-        private AimlTagHandler BuildTagHandlerDynamic([NotNull] string tagName,
-                                                      [NotNull] TagHandlerParameters parameters)
+        public AimlTagHandler BuildTagHandlerDynamic([NotNull] string tagName,
+                                                     [NotNull] TagHandlerParameters parameters)
         {
             if (parameters == null)
             {
                 throw new ArgumentNullException(nameof(parameters));
+            }
+            if (tagName.IsEmpty())
+            {
+                throw new ArgumentNullException(nameof(tagName));
             }
 
             //- Ensure we have the requested tag. If we don't exit now.

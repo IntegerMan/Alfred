@@ -14,6 +14,7 @@ using System.Xml;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 {
@@ -108,7 +109,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// </exception>
         public static XmlNode BuildNode([NotNull] string xml)
         {
-            if (string.IsNullOrWhiteSpace(xml))
+            if (xml.IsEmpty())
             {
                 throw new ArgumentNullException(nameof(xml));
             }
