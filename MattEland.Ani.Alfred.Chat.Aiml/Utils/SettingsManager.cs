@@ -105,7 +105,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// </summary>
         /// <value>The setting names.</value>
         /// <remarks>TODO: I'd love to remove this or use IEnumerable instead</remarks>
-        [NotNull]
+        [NotNull, ItemNotNull]
         public IEnumerable<string> Keys
         {
             get

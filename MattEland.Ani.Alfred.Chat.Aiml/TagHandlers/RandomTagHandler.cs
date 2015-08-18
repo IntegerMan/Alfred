@@ -2,7 +2,7 @@
 // RandomTagHandler.cs
 // 
 // Created on:      08/12/2015 at 10:52 PM
-// Last Modified:   08/14/2015 at 1:50 PM
+// Last Modified:   08/18/2015 at 4:41 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -15,7 +15,6 @@ using System.Xml;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
-using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
@@ -23,7 +22,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     ///     A tag handler that handles the AIML random tag.
     /// </summary>
     /// <remarks>
-    ///     See http://www.alicebot.org/documentation/aiml-reference.html#random for more information on the random tag.
+    ///     See "http://www.alicebot.org/documentation/aiml-reference.html#random" for more information on
+    ///     the random tag.
     /// </remarks>
     [HandlesAimlTag("random")]
     public class RandomTagHandler : AimlTagHandler

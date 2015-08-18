@@ -13,6 +13,7 @@ using System.Linq;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Chat.Aiml.Normalize;
 using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
@@ -69,6 +70,64 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             // Ensure that the results are what we expect
             var result = handler.Transform();
             Assert.That(result.IsEmpty(), $"Tag Handler result of '{result}' was not empty as expected.");
+        }
+
+        [Test]
+        public void TextSubstitutionHelperWithNullSettingsReturnsInput()
+        {
+            var input = "foo";
+            var output = TextSubstitutionHelper.Substitute(null, input);
+
+            Assert.AreEqual(input, output);
+        }
+
+        [Test]
+        public void TextSubstitutionHelperWithNullInputReturnsEmpty()
+        {
+            var output = TextSubstitutionHelper.Substitute(null, null);
+
+            Assert.IsNotNull(output);
+            Assert.That(output.IsEmpty());
+        }
+
+        [Test]
+        public void TextSubstitutionHelperSubstitutesText()
+        {
+            var subs = new SettingsManager();
+            subs.Add("Foo", "Bar");
+            var output = TextSubstitutionHelper.Substitute(subs, "Foo");
+
+            Assert.AreEqual("Bar", output);
+        }
+
+        [Test]
+        public void TextSubstitutionHelperHandlesEmptyEntries()
+        {
+            var subs = new SettingsManager();
+            subs.Add("Foo", "Bar");
+            subs.Add("Frodo", null);
+
+            var input = "Baggins";
+            var output = TextSubstitutionHelper.Substitute(subs, input);
+
+            Assert.AreEqual(input, output);
+        }
+
+        [Test]
+        public void TextSubstitutionHelperHandlesNullInput()
+        {
+            var output = TextSubstitutionHelper.Substitute(null, "Bubba", "Gump");
+
+            Assert.IsNotNull(output);
+            Assert.That(output.IsEmpty());
+        }
+
+        [Test]
+        public void TextSubstitutionHelperHandlesReplacement()
+        {
+            var output = TextSubstitutionHelper.Substitute("Bubbark Shrimp ZeBubba Bubbazar Bubba Gump", "Bubba", "Gump");
+
+            Assert.AreEqual("Bubbark Shrimp ZeBubba Bubbazar Gump Gump", output);
         }
 
     }

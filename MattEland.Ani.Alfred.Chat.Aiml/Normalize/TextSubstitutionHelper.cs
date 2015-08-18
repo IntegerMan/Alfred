@@ -2,12 +2,11 @@
 // TextSubstitutionHelper.cs
 // 
 // Created on:      08/12/2015 at 10:37 PM
-// Last Modified:   08/16/2015 at 5:25 PM
+// Last Modified:   08/18/2015 at 4:57 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -23,7 +22,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
     ///     A text transformation helper class that replaces found occurrences of strings
     ///     with their values found in the settings provider.
     /// </summary>
-    internal static class TextSubstitutionHelper
+    public static class TextSubstitutionHelper
     {
         private const string Marker = "zzMARKERzz";
         private const string WordBoundary = @"\b";
@@ -35,20 +34,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
         /// <param name="settings">The settings manager.</param>
         /// <param name="input">The input.</param>
         /// <returns>A modified version of the input string.</returns>
-        /// <exception cref="System.ArgumentNullException">
-        /// </exception>
         [NotNull]
-        internal static string Substitute([NotNull] SettingsManager settings,
-                                          [CanBeNull] string input)
+        public static string Substitute([CanBeNull] SettingsManager settings,
+                                        [CanBeNull] string input)
         {
             //- Validate
-            if (input == null)
-            {
-                input = string.Empty;
-            }
+            input = input.NonNull();
             if (settings == null)
             {
-                throw new ArgumentNullException(nameof(settings));
+                return input;
             }
 
             //- Grab our setting names
@@ -57,18 +51,12 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
             // Look for each setting settingName in the input string to replace it with our setting value
             foreach (var settingName in settingNames)
             {
-                if (settingName == null)
-                {
-                    continue;
-                }
-
                 var settingValue = settings.GetValue(settingName);
 
                 input = Substitute(input, settingName, settingValue);
             }
 
-            // Remove our marker string from the string
-            return input.Replace(Marker, string.Empty);
+            return input;
         }
 
         /// <summary>
@@ -77,11 +65,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
         /// <param name="input">The input.</param>
         /// <param name="settingName">Name of the setting.</param>
         /// <param name="settingValue">The setting value.</param>
-        /// <returns>System.String.</returns>
+        /// <returns>A string with words substituted</returns>
         [NotNull]
-        private static string Substitute([CanBeNull] string input,
-                                         [CanBeNull] string settingName,
-                                         [CanBeNull] string settingValue)
+        public static string Substitute([CanBeNull] string input,
+                                        [CanBeNull] string settingName,
+                                        [CanBeNull] string settingValue)
         {
             //- Sanity check
             if (input == null)
@@ -93,9 +81,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
                 return input;
             }
 
+            var locale = CultureInfo.CurrentCulture;
+
             // Surround the setting with our marker string
             var replacement =
-                string.Format(CultureInfo.CurrentCulture, "{0}{1}{0}", Marker, settingValue.Trim())
+                string.Format(locale, "{0}{1}{0}", Marker, settingValue.Trim())
                       .NonNull();
 
             // Check for bad things in the name and make them regex safe
@@ -108,10 +98,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
 
             // Replaces the variable settingName with the setting value
             var pattern =
-                string.Format(CultureInfo.CurrentCulture, "{0}{1}{0}", WordBoundary, sanitizedName)
+                string.Format(locale, "{0}{1}{0}", WordBoundary, sanitizedName)
                       .NonNull();
 
-            return Regex.Replace(input, pattern, replacement, RegexOptions.IgnoreCase);
+            var substitute = Regex.Replace(input, pattern, replacement, RegexOptions.IgnoreCase);
+
+            // Remove the marker string from the string
+            return substitute.Replace(Marker, string.Empty);
         }
     }
 }
