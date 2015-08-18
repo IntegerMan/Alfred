@@ -6,8 +6,7 @@
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
-using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 
 using JetBrains.Annotations;
 
@@ -27,6 +26,18 @@ namespace MattEland.Ani.Alfred.Chat
     {
         [NotNull]
         private readonly AimlStatementHandler _chatHandler;
+
+        /// <summary>
+        /// Gets the chat handler.
+        /// </summary>
+        /// <value>The chat handler.</value>
+        [NotNull]
+        public AimlStatementHandler ChatHandler
+        {
+            [DebuggerStepThrough]
+            get
+            { return _chatHandler; }
+        }
 
         [NotNull]
         private readonly ChatPage _chatPage;

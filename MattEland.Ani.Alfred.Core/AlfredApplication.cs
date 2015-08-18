@@ -237,6 +237,7 @@ namespace MattEland.Ani.Alfred.Core
         ///     Registers the chat provider as the framework's chat provider.
         /// </summary>
         /// <param name="chatProvider">The chat provider.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="chatProvider"/> is <see langword="null" />.</exception>
         public void Register([NotNull] IChatProvider chatProvider)
         {
             if (chatProvider == null)
@@ -283,8 +284,14 @@ namespace MattEland.Ani.Alfred.Core
         ///     Registers a sub system with Alfred.
         /// </summary>
         /// <param name="subsystem">The subsystem.</param>
+        /// <exception cref="InvalidOperationException">If a subsystem was registered when Alfred was offline.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="subsystem"/> is <see langword="null" />.</exception>
         public void Register([NotNull] AlfredSubsystem subsystem)
         {
+            if (subsystem == null)
+            {
+                throw new ArgumentNullException(nameof(subsystem));
+            }
             if (Status != AlfredStatus.Offline)
             {
                 throw new InvalidOperationException(Resources.AlfredProvider_AssertMustBeOffline_ErrorNotOffline);

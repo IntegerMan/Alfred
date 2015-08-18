@@ -6,6 +6,7 @@
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 
 using JetBrains.Annotations;
@@ -76,11 +77,33 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// </summary>
         /// <value>The chat provider.</value>
         IChatProvider ChatProvider { get; }
+
+        /// <summary>
+        /// Gets the platform provider.
+        /// </summary>
+        /// <value>The platform provider.</value>
+        [NotNull]
+        IPlatformProvider PlatformProvider { get; }
+
         /// <summary>
         /// Registers the user statement handler as the framework's user statement handler.
         /// </summary>
         /// <param name="chatProvider">The user statement handler.</param>
         void Register([NotNull] IChatProvider chatProvider);
+
+        /// <summary>
+        ///     Registers a sub system with Alfred.
+        /// </summary>
+        /// <param name="subsystem">The subsystem.</param>
+        void Register([NotNull] AlfredSubsystem subsystem);
+
+        /// <summary>
+        ///     Tells modules to take a look at their content and update as needed.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">
+        ///     Thrown if Alfred is not Online
+        /// </exception>
+        void Update();
     }
 
 }

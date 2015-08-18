@@ -21,74 +21,24 @@ using MattEland.Common;
 
 using NUnit.Framework;
 
-namespace MattEland.Ani.Alfred.Tests
+namespace MattEland.Ani.Alfred.Tests.Chat
 {
     /// <summary>
-    ///     Tests for conversational inquiries on the Alfred chat system.
+    /// Tests for conversational inquiries on the Alfred chat system.
     /// </summary>
     [TestFixture]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
     [SuppressMessage("ReSharper", "UnusedParameter.Local")]
-    public class ConversationTests
+    public class ConversationTests : ChatTestsBase
     {
         /// <summary>
         ///     Sets up the testing environment prior to each test run.
         /// </summary>
-        /// <exception cref="IOException">An I/O error occurred.</exception>
-        /// <exception cref="DirectoryNotFoundException">Attempted to set a local path that cannot be found.</exception>
-        /// <exception cref="SecurityException">The caller does not have the appropriate permission.</exception>
         [SetUp]
         public void SetUp()
         {
-            _chat = new AimlStatementHandler();
-            _chatEngine = _chat.ChatEngine;
-        }
-
-        [NotNull]
-        private AimlStatementHandler _chat;
-
-        [NotNull]
-        private ChatEngine _chatEngine;
-
-        /// <summary>
-        ///     Asserts that the chat input gets a reply template with the specified ID.
-        /// </summary>
-        /// <param name="input">The input.</param>
-        /// <param name="templateId">The template identifier.</param>
-        private void AssertMessageGetsReplyTemplate(string input, string templateId)
-        {
-            var template = GetReplyTemplate(input);
-
-            AssertTemplateId(template, templateId);
-        }
-
-        /// <summary>
-        ///     Asserts that the template identifier is found in the response template.
-        /// </summary>
-        /// <param name="template">The template.</param>
-        /// <param name="id">The template identifier.</param>
-        private static void AssertTemplateId([NotNull] string template, [NotNull] string id)
-        {
-            var idString = $"id=\"{id.ToLowerInvariant()}\"";
-
-            Assert.IsTrue(template.ToLowerInvariant().Contains(idString),
-                          $"ID '{idString}' was not found. Template was: {template}");
-        }
-
-        /// <summary>
-        ///     Gets a reply from the chat system on a specified inquiry.
-        /// </summary>
-        /// <param name="text">The inquiry text.</param>
-        /// <returns>The reply</returns>
-        [NotNull]
-        private string GetReply([CanBeNull] string text)
-        {
-            var response = GetResponse(text);
-
-            Assert.IsNotNull(response.ResponseText, "Response text was null");
-
-            return response.ResponseText;
+            InitChatSystem();
         }
 
         /// <summary>
@@ -97,65 +47,37 @@ namespace MattEland.Ani.Alfred.Tests
         [Test]
         public void ChatEngineHasNodes()
         {
-            Assert.Greater(_chatEngine.NodeCount, 0, "Chat engine did not have any nodes");
+            Assert.Greater(Engine.NodeCount, 0, "Chat engine did not have any nodes");
         }
 
         [Test]
         public void GenderSubstitutionsHasEntries()
         {
-            Assert.Greater(_chatEngine.Librarian.GenderSubstitutions.Count, 0, "Settings were not present");
+            Assert.Greater(Engine.Librarian.GenderSubstitutions.Count, 0, "Settings were not present");
         }
 
         [Test]
         public void GlobalSettingsHaveEntries()
         {
-            Assert.Greater(_chatEngine.Librarian.GlobalSettings.Count, 0, "Settings were not present");
+            Assert.Greater(Engine.Librarian.GlobalSettings.Count, 0, "Settings were not present");
         }
 
         [Test]
         public void FirstPersonSubstitutionsHasEntries()
         {
-            Assert.Greater(_chatEngine.Librarian.FirstPersonToSecondPersonSubstitutions.Count, 0, "Settings were not present");
+            Assert.Greater(Engine.Librarian.FirstPersonToSecondPersonSubstitutions.Count, 0, "Settings were not present");
         }
 
         [Test]
         public void SecondPersonSubstitutionsHasEntries()
         {
-            Assert.Greater(_chatEngine.Librarian.SecondPersonToFirstPersonSubstitutions.Count, 0, "Settings were not present");
+            Assert.Greater(Engine.Librarian.SecondPersonToFirstPersonSubstitutions.Count, 0, "Settings were not present");
         }
 
         [Test]
         public void SubstitutionsHasEntries()
         {
-            Assert.Greater(_chatEngine.Librarian.Substitutions.Count, 0, "Settings were not present");
-        }
-
-        /// <summary>
-        ///     Gets the response to the chat message.
-        /// </summary>
-        /// <param name="text">The text.</param>
-        /// <returns>The response</returns>
-        private UserStatementResponse GetResponse(string text)
-        {
-
-            var response = _chat.HandleUserStatement(text);
-
-            // Do some basic validity checks
-            Assert.NotNull(response, "Response was null");
-            Assert.AreEqual(text, response.UserInput);
-            return response;
-        }
-
-        /// <summary>
-        ///     Gets a reply from the chat system on a specified inquiry.
-        /// </summary>
-        /// <param name="text">The inquiry text.</param>
-        /// <returns>The reply</returns>
-        [NotNull]
-        private string GetReplyTemplate([CanBeNull] string text)
-        {
-            var response = GetResponse(text);
-            return response.Template;
+            Assert.Greater(Engine.Librarian.Substitutions.Count, 0, "Settings were not present");
         }
 
         [Test]
@@ -170,9 +92,10 @@ namespace MattEland.Ani.Alfred.Tests
         [Test]
         public void StartupLeavesLastInputClear()
         {
-            _chat.DoInitialGreeting();
+            var chat = new AimlStatementHandler();
+            chat.DoInitialGreeting();
 
-            Assert.That(!_chat.LastInput.HasText(), $"Startup did not clear last input. Actual was: {_chat.LastInput}");
+            Assert.That(!chat.LastInput.HasText(), $"Startup did not clear last input. Actual was: {chat.LastInput}");
         }
 
         [TestCase("Shutdown", "tmp_shutdown")]

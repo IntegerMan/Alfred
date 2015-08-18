@@ -53,33 +53,8 @@ namespace MattEland.Ani.Alfred.Chat
         ///     directory for the settings path.
         /// </summary>
         /// <param name="console">The console.</param>
-        /// <exception cref="IOException">An I/O error occurred.</exception>
-        /// <exception cref="DirectoryNotFoundException">Attempted to set a local path that cannot be found.</exception>
-        /// <exception cref="SecurityException">The caller does not have the appropriate permission.</exception>
         public AimlStatementHandler([CanBeNull] IConsole console = null)
-            : this(console, Path.Combine(Environment.CurrentDirectory, @"Chat\config"))
         {
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
-        /// </summary>
-        /// <param name="console">The console.</param>
-        /// <param name="settingsDirectoryPath">The settings path.</param>
-        /// <exception cref="System.ArgumentException"></exception>
-        /// <exception cref="ArgumentException">settingsPath, aimlDirectoryPath</exception>
-        public AimlStatementHandler([CanBeNull] IConsole console,
-                                    [CanBeNull] string settingsDirectoryPath)
-        {
-            //- Validate / Store Settings
-            if (string.IsNullOrWhiteSpace(settingsDirectoryPath))
-            {
-                throw new ArgumentException(Resources.NoSettingsPathError,
-                                            nameof(settingsDirectoryPath));
-            }
-
-            SettingsDirectoryPath = settingsDirectoryPath;
-
             //- Logging Housekeeping
             _console = console;
 
@@ -100,13 +75,6 @@ namespace MattEland.Ani.Alfred.Chat
             }
 
         }
-
-        /// <summary>
-        ///     Gets or sets the settings path.
-        /// </summary>
-        /// <value>The settings path.</value>
-        [NotNull]
-        public string SettingsDirectoryPath { get; set; }
 
         /// <summary>
         ///     Gets or sets the console.
