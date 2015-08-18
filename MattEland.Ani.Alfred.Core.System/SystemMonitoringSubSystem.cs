@@ -130,14 +130,22 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             if (data.IsEmpty() || data.Matches("CPU"))
             {
                 sb.AppendFormat(CultureInfo.CurrentCulture,
-                                "There {3} {0} CPU {1} with an average of {2:0.0} % utilization.",
+                                "There {3} {0} CPU {1} with an average of {2:F1} % utilization. ",
                                 _cpuModule.NumberOfCores,
                                 _cpuModule.NumberOfCores.Pluralize("core", "cores"),
                                 _cpuModule.AverageCpuUtilization,
                                 _cpuModule.NumberOfCores.Pluralize("is", "are"));
             }
 
-            // TODO: Add modules from other areas
+            if (data.IsEmpty() || data.Matches("Memory"))
+            {
+                sb.AppendFormat(CultureInfo.CurrentCulture,
+                                "The system is currently utilizing {0:F1} % of all available memory.",
+                                _memoryModule.MemoryUtilization);
+
+            }
+
+            // TODO: Add disk
 
 
             return sb.ToString();

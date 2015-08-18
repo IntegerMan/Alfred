@@ -65,6 +65,15 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         }
 
         /// <summary>
+        /// Gets the percent of memory that is utilized.
+        /// </summary>
+        /// <value>The memory utilization percentage.</value>
+        public float MemoryUtilization
+        {
+            get { return _memUsedBytesCounter.NextValue(); }
+        }
+
+        /// <summary>
         ///     Disposes this instance.
         /// </summary>
         public void Dispose()

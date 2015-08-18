@@ -12,12 +12,15 @@
 // ChatCommandTests.cs
 // 
 // Created on:      08/17/2015 at 9:56 PM
-// Last Modified:   08/18/2015 at 11:26 AM
+// Last Modified:   08/18/2015 at 3:04 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System.Collections.Generic;
 using System.Linq;
+
+using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 
 using NUnit.Framework;
 
@@ -38,6 +41,69 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             InitChatSystem();
         }
 
+        /// &lt;summary&gt;
+        ///     Builds a list of fake counter names with a total instance included as well.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;count&quot;&gt;The count of fake items to build.&lt;/param&gt;
+        /// &lt;returns&gt;A list of fake counters&lt;/returns&gt;
+        private IEnumerable&lt;string&gt; BuildInstanceNamesWithTotal(int count)
+        {
+            for (var i = 1; i &lt;= count; i++)
+            {
+                yield return $&quot;Item {i}&quot;;
+            }
+
+            yield return SystemMonitorModule.TotalInstanceName;
+        }
+
+        /// &lt;summary&gt;
+        ///     Tests that the CPU Status command includes the expected CPU information.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     See ALF-5, ALF-27, and ALF-28
+        /// &lt;/remarks&gt;
+        [Test]
+        public void CpuStatusIsAccurate()
+        {
+            Alfred.Shutdown();
+            MetricProviderFactory.DefaultValue = 42.0f;
+            MetricProviderFactory.CategoryInstanceNames.Add(CpuMonitorModule.CpuCategoryName,
+                                                            BuildInstanceNamesWithTotal(72));
+            Alfred.Initialize();
+
+            var reply = GetReply(&quot;CPU STATUS&quot;);
+
+            string expected = $&quot;There are 72 CPU cores with an average of 42.0 % utilization.&quot;;
+            Assert.That(reply.Contains(expected),
+                        $&quot;Reply &#39;{reply}&#39; did not match expected value of {expected}.&quot;);
+        }
+
+        /// &lt;summary&gt;
+        ///     Tests that the CPU Status command includes the expected CPU information.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     See ALF-5, ALF-27, and ALF-28
+        /// &lt;/remarks&gt;
+        [Test]
+        public void MemoryStatusIsAccurate()
+        {
+            Alfred.Shutdown();
+            MetricProviderFactory.DefaultValue = 42.0f;
+            Alfred.Initialize();
+
+            var reply = GetReply(&quot;MEMORY STATUS&quot;);
+
+            string expected = $&quot;The system is currently utilizing 42.0 % of all available memory.&quot;;
+            Assert.That(reply.Contains(expected),
+                        $&quot;Reply &#39;{reply}&#39; did not match expected value of {expected}.&quot;);
+        }
+
+        /// &lt;summary&gt;
+        ///     Ensure that the shutdown command causes alfred to be offline.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     See ALF-21
+        /// &lt;/remarks&gt;
         [Test]
         public void ShutdownCausesAlfredToBeOffline()
         {
@@ -46,13 +112,21 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             Assert.IsFalse(Alfred.IsOnline, &quot;Alfred was not offline after shutdown was handled.&quot;);
         }
 
+        /// &lt;summary&gt;
+        ///     Tests that the Status command includes the expected basic system information.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     See ALF-27
+        /// &lt;/remarks&gt;
         [Test]
         public void StatusYieldsRelevantInformation()
         {
             var reply = GetReply(&quot;Status&quot;);
             var count = Alfred.Subsystems.Count();
 
-            Assert.That(reply.Contains($&quot;The System is Online with a total of {count} Subsystems Present.&quot;),
+            Assert.That(
+                        reply.Contains(
+                                       $&quot;The System is Online with a total of {count} Subsystems Present.&quot;),
                         $&quot;{reply} did not contain the expected system status text.&quot;);
         }
 

@@ -69,6 +69,26 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         }
 
         /// <summary>
+        ///     Tests that the CPU Status command includes the expected CPU information.
+        /// </summary>
+        /// <remarks>
+        ///     See ALF-5, ALF-27, and ALF-28
+        /// </remarks>
+        [Test]
+        public void MemoryStatusIsAccurate()
+        {
+            Alfred.Shutdown();
+            MetricProviderFactory.DefaultValue = 42.0f;
+            Alfred.Initialize();
+
+            var reply = GetReply("MEMORY STATUS");
+
+            string expected = $"The system is currently utilizing 42.0 % of all available memory.";
+            Assert.That(reply.Contains(expected),
+                        $"Reply '{reply}' did not match expected value of {expected}.");
+        }
+
+        /// <summary>
         ///     Ensure that the shutdown command causes alfred to be offline.
         /// </summary>
         /// <remarks>
