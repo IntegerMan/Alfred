@@ -8,6 +8,7 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 using System.Xml;
 
 using JetBrains.Annotations;
@@ -39,12 +40,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         protected override string ProcessChange()
         {
             var element = TemplateElement;
-
-            // If we can't report on this, abort
-            if (!(element != null && element.Name.Matches("date")))
-            {
-                return string.Empty;
-            }
 
             string formatString = "f"; // Full date and time string
 

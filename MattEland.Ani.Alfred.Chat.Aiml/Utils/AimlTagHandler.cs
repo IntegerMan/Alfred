@@ -91,10 +91,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         ///     Gets the template node as an XmlElement.
         /// </summary>
         /// <value>The template element.</value>
-        [CanBeNull]
+        [NotNull]
         protected XmlElement TemplateElement
         {
-            get { return TemplateNode as XmlElement; }
+            get { return (XmlElement)TemplateNode; }
         }
 
         /// <summary>
