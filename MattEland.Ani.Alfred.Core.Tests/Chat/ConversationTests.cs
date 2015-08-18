@@ -9,14 +9,10 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Security;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat;
-using MattEland.Ani.Alfred.Chat.Aiml;
-using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
 
 using NUnit.Framework;
@@ -86,6 +82,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             // In reality, this should be _chat.DoInitialGreeting, but it's easier to test the template this way
             var reply = GetReplyTemplate("EVT_STARTUP");
 
+            Assert.IsNotNull(reply);
             Assert.That(reply.Contains("tmp_hi"), "Startup did not give proper template. Actual template was: " + reply);
         }
 
@@ -98,7 +95,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             Assert.That(!chat.LastInput.HasText(), $"Startup did not clear last input. Actual was: {chat.LastInput}");
         }
 
-        [TestCase("Shutdown", "tmp_shutdown")]
+        [TestCase("Shutdown", "tmp_bye")]
         [TestCase("Status", "tmp_status")]
         public void ChatCoreTests(string input, string templateId)
         {
@@ -125,6 +122,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         public void ChatRedirectTests([NotNull] string input, [NotNull] string redirectTemplateId)
         {
             var template = GetReplyTemplate(input);
+            Assert.IsNotNull(template);
 
             Assert.IsTrue(template.ToLowerInvariant().Contains(redirectTemplateId),
                           $"The template {template} did not redirect to the template with an Id tag of {redirectTemplateId}");

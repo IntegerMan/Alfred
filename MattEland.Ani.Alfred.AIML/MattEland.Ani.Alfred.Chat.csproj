@@ -56,6 +56,7 @@
     <Compile Include="AimlCommandParser.cs" />
     <Compile Include="AimlStatementHandler.cs" />
     <Compile Include="AlfredChatSubsystem.cs" />
+    <Compile Include="AlfredTagHandler.cs" />
     <Compile Include="ChatPage.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

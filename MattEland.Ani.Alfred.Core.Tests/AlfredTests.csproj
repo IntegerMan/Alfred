@@ -57,6 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Chat\AlfredTagHandlerTests.cs" />
     <Compile Include="Chat\ChatCommandTests.cs" />
     <Compile Include="Chat\ChatTestsBase.cs" />
     <Compile Include="Chat\ConversationTests.cs" />
@@ -109,7 +110,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>C:\Dev\TeamCity\buildAgent\tools\dotCover\dotCover.exe a /TargetExecutable="C:\Program Files (x86)\NUnit 2.6.4\bin\nunit-console.exe" /TargetArguments="$(TargetPath)" /Output="$(SolutionDir)AlfredCoverage.xml" /WorkingDir="$(SolutionDir)Coverage" /ReportType="NDependXML" /SymbolSearchPaths="$(TargetDir)*.pdb"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>

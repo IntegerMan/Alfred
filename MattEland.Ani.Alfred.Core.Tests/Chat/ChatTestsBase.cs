@@ -9,11 +9,13 @@
 
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Xml;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat;
 using MattEland.Ani.Alfred.Chat.Aiml;
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
@@ -36,6 +38,31 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         private IAlfred _alfred;
         private AlfredChatSubsystem _chatSubsystem;
         private AlfredCoreSubsystem _coreSubsystem;
+
+        [NotNull]
+        private User _user;
+
+        [NotNull]
+        public User User
+        {
+            [DebuggerStepThrough]
+            get
+            { return _user; }
+        }
+
+        public AlfredCoreSubsystem CoreSubsystem
+        {
+            [DebuggerStepThrough]
+            get
+            { return _coreSubsystem; }
+        }
+
+        public AlfredChatSubsystem ChatSubsystem
+        {
+            [DebuggerStepThrough]
+            get
+            { return _chatSubsystem; }
+        }
 
         /// <summary>
         /// Gets or sets the chat engine.
@@ -86,7 +113,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         /// <param name="text">The inquiry text.</param>
         /// <returns>The reply</returns>
         [NotNull]
-        protected string GetReply([CanBeNull] string text)
+        protected string GetReply([NotNull] string text)
         {
             var response = GetResponse(text);
 
@@ -95,7 +122,11 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             return response.ResponseText;
         }
 
-        protected void Say(string message)
+        /// <summary>
+        /// Says the specified message to Alfred.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        protected void Say([NotNull] string message)
         {
             GetResponse(message);
         }
@@ -105,7 +136,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         /// </summary>
         /// <param name="text">The text.</param>
         /// <returns>The response</returns>
-        private UserStatementResponse GetResponse(string text)
+        private UserStatementResponse GetResponse([NotNull] string text)
         {
 
             var chatProvider = _alfred.ChatProvider;
@@ -154,6 +185,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             _chat = chatHandler;
             Assert.IsNotNull(chatHandler.ChatEngine, "Chat Engine was null");
             Engine = chatHandler.ChatEngine;
+            _user = new User("Test User", Engine);
 
             // Start Alfred - doesn't make sense to have a chat test that doesn't need Alfred online first.
             _alfred.Initialize();
@@ -168,6 +200,20 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         protected IAlfred Alfred
         {
             get { return _alfred; }
+        }
+
+        protected TagHandlerParameters BuildTagHandlerParameters(string xml)
+        {
+            var node = AimlTagHandler.BuildNode(xml);
+            return BuildTagHandlerParameters("Testing is fun", node);
+        }
+
+        private TagHandlerParameters BuildTagHandlerParameters(string input, XmlNode node)
+        {
+            var query = new SubQuery(input);
+            var request = new Request(input, User, Engine);
+            var result = new Result(User, Engine, request);
+            return new TagHandlerParameters(Engine, User, query, request, result, node);
         }
     }
 }
