@@ -54,6 +54,14 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         private ValueMetricProviderFactory _metricProviderFactory;
 
         [NotNull]
+        public ValueMetricProviderFactory MetricProviderFactory
+        {
+            [DebuggerStepThrough]
+            get
+            { return _metricProviderFactory; }
+        }
+
+        [NotNull]
         public User User
         {
             [DebuggerStepThrough]

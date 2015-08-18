@@ -116,10 +116,26 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             }
 
             var sb = new StringBuilder();
-            sb.AppendFormat(CultureInfo.CurrentCulture,
-                                 "The System is {0} with a total of {1} Subsystems Present. ",
-                                 alfred.Status,
-                                 alfred.Subsystems.Count());
+
+            // Alfred status command
+            if (data.IsEmpty() || data.Matches("Alfred"))
+            {
+                sb.AppendFormat(CultureInfo.CurrentCulture,
+                                "The System is {0} with a total of {1} Subsystems Present. ",
+                                alfred.Status,
+                                alfred.Subsystems.Count());
+            }
+
+            // CPU status command
+            if (data.IsEmpty() || data.Matches("CPU"))
+            {
+                sb.AppendFormat(CultureInfo.CurrentCulture,
+                                "There {3} {0} CPU {1} with an average of {2:0.0} % utilization.",
+                                _cpuModule.NumberOfCores,
+                                _cpuModule.NumberOfCores.Pluralize("core", "cores"),
+                                _cpuModule.AverageCpuUtilization,
+                                _cpuModule.NumberOfCores.Pluralize("is", "are"));
+            }
 
             // TODO: Add modules from other areas
 

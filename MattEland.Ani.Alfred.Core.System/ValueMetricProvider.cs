@@ -7,6 +7,10 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System;
+
+using JetBrains.Annotations;
+
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
     /// <summary>
@@ -18,19 +22,34 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
     /// </remarks>
     public sealed class ValueMetricProvider : MetricProviderBase
     {
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="ValueMetricProvider" /> class.
         /// </summary>
         /// <param name="name">The name of the metric.</param>
-        public ValueMetricProvider(string name) : base(name)
+        /// <exception cref="ArgumentNullException"><paramref name="factory"/> is <see langword="null" />.</exception>
+        public ValueMetricProvider([NotNull] ValueMetricProviderFactory factory, string name) : base(name)
         {
+            if (factory == null)
+            {
+                throw new ArgumentNullException(nameof(factory));
+            }
+
+            Factory = factory;
         }
+
+        /// <summary>
+        /// Gets or sets the value provider factory.
+        /// </summary>
+        /// <value>The factory.</value>
+        [NotNull]
+        public ValueMetricProviderFactory Factory { get; set; }
 
         /// <summary>
         ///     Gets or sets the value that will be provided the next time NextValue() is called.
         /// </summary>
         /// <value>The value.</value>
-        public float Value { get; set; }
+        public float? Value { get; set; }
 
         /// <summary>
         ///     Gets the next value from the metric provider
@@ -38,7 +57,12 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <returns>The next value</returns>
         public override float NextValue()
         {
-            return Value;
+            if (Value.HasValue)
+            {
+                return Value.Value;
+            }
+
+            return Factory.DefaultValue;
         }
     }
 }

@@ -2,115 +2,76 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.system\systemmonitoringsubsystem.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.system\performancecountermetricprovider.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// SystemMonitoringSubsystem.cs
+// PerformanceCounterMetricProvider.cs
 // 
-// Created on:      08/07/2015 at 10:12 PM
-// Last Modified:   08/07/2015 at 10:36 PM
-// Original author: Matt Eland
+// Created on:      08/18/2015 at 11:29 AM
+// Last Modified:   08/18/2015 at 11:29 AM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
+using System.ComponentModel;
+using System.Diagnostics;
 
 using JetBrains.Annotations;
-
-using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Pages;
-using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
     /// &lt;summary&gt;
-    ///     This is a subsystem for the Alfred Framework that allows for monitoring system performance
-    ///     and surfacing alerts on critical events.
+    /// A metric provider based on a performance counter.
     /// &lt;/summary&gt;
-    public sealed class SystemMonitoringSubsystem : AlfredSubsystem, IDisposable
+    public sealed class CounterMetricProvider : MetricProviderBase
     {
         [NotNull]
-        private readonly AlfredModuleListPage _page;
-
-        [NotNull]
-        private readonly CpuMonitorModule _cpuModule;
-
-        [NotNull]
-        private readonly MemoryMonitorModule _memoryModule;
-
-        [NotNull]
-        private readonly DiskMonitorModule _diskModule;
+        private readonly PerformanceCounter _counter;
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredSubsystem&quot; /&gt; class.
+        /// Initializes a new instance of the &lt;see cref=&quot;CounterMetricProvider&quot;/&gt; class.
         /// &lt;/summary&gt;
-        public SystemMonitoringSubsystem() : this(new SimplePlatformProvider())
+        /// &lt;param name=&quot;categoryName&quot;&gt;Name of the category.&lt;/param&gt;
+        /// &lt;param name=&quot;counterName&quot;&gt;Name of the counter.&lt;/param&gt;
+        /// &lt;param name=&quot;instance&quot;&gt;The instance.&lt;/param&gt;
+        /// &lt;exception cref=&quot;Win32Exception&quot;&gt;An error occurred when accessing a system API.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;UnauthorizedAccessException&quot;&gt;Code that is executing without administrative privileges attempted to read a performance counter.&lt;/exception&gt;
+        public CounterMetricProvider(string categoryName, string counterName, string instance = null) : base(instance ?? counterName)
         {
+            _counter = new PerformanceCounter(categoryName, counterName, instance, true);
         }
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredSubsystem&quot; /&gt; class.
+        /// Gets the next value from the metric provider
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;provider&quot;&gt;The provider.&lt;/param&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
-        public SystemMonitoringSubsystem([NotNull] IPlatformProvider provider) : base(provider)
+        /// &lt;returns&gt;The next vaue&lt;/returns&gt;
+        /// &lt;exception cref=&quot;Win32Exception&quot;&gt;An error occurred when accessing a system API.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;UnauthorizedAccessException&quot;&gt;Code that is executing without administrative privileges attempted to read a performance counter.&lt;/exception&gt;
+        public override float NextValue()
         {
-            _cpuModule = new CpuMonitorModule(provider);
-            _memoryModule = new MemoryMonitorModule(provider);
-            _diskModule = new DiskMonitorModule(provider);
-
-            _page = new AlfredModuleListPage(provider, Resources.SystemMonitoringSystem_Name.NonNull());
+            return _counter.NextValue();
         }
 
         /// &lt;summary&gt;
-        /// Registers the controls for this component.
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// &lt;/summary&gt;
-        protected override void RegisterControls()
+        public override void Dispose()
         {
-            Register(_page);
+            base.Dispose();
 
-            _page.ClearModules();
-            _page.Register(_cpuModule);
-            _page.Register(_memoryModule);
-            _page.Register(_diskModule);
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the name of the subsystems.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The name.&lt;/value&gt;
-        [NotNull]
-        public override sealed string Name
-        {
-            get { return Resources.SystemMonitoringSystem_Name.NonNull(); }
-        }
-
-        /// &lt;summary&gt;
-        /// Disposes of allocated resources
-        /// &lt;/summary&gt;
-        public void Dispose()
-        {
-            _cpuModule.Dispose();
-            _memoryModule.Dispose();
-            _diskModule.Dispose();
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the identifier for the subsystem to be used in command routing.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The identifier for the subsystem.&lt;/value&gt;
-        public override string Id
-        {
-            get { return &quot;Sys&quot;; }
+            _counter.Dispose();
         }
     }
+
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[78,17,78,18,0],[78,19,78,74,0],[78,75,78,76,0],[85,9,85,10,0],[86,13,86,34,0],[87,13,87,37,0],[88,13,88,35,0],[89,9,89,10,0],[97,17,97,18,0],[97,19,97,32,0],[97,33,97,34,0],[40,46,40,80,1],[41,9,41,10,1],[42,9,42,10,1],[49,82,49,96,1],[50,9,50,10,1],[51,13,51,57,1],[52,13,52,63,1],[53,13,53,59,1],[55,13,55,105,1],[56,9,56,10,1],[62,9,62,10,1],[63,13,63,29,1],[65,13,65,34,1],[66,13,66,40,1],[67,13,67,43,1],[68,13,68,41,1],[69,9,69,10,1]]);
+      highlightRanges([[34,105,34,134,0],[35,9,35,10,0],[36,13,36,90,0],[37,9,37,10,0],[46,9,46,10,0],[47,13,47,41,0],[48,9,48,10,0],[54,9,54,10,0],[55,13,55,28,0],[57,13,57,32,0],[58,9,58,10,0]]);
     </script>
   </body>
 </html>

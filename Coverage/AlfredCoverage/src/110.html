@@ -17,6 +17,7 @@
 // ---------------------------------------------------------
 
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 
 using JetBrains.Annotations;
@@ -36,25 +37,27 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         private const string DiskWriteCounterName = &quot;% Disk Write Time&quot;;
 
         [NotNull]
-        private readonly PerformanceCounter _diskReadCounter;
+        private readonly MetricProviderBase _diskReadCounter;
 
         [NotNull]
         private readonly AlfredProgressBarWidget _diskReadWidget;
 
         [NotNull]
-        private readonly PerformanceCounter _diskWriteCounter;
+        private readonly MetricProviderBase _diskWriteCounter;
 
         [NotNull]
         private readonly AlfredProgressBarWidget _diskWriteWidget;
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;MemoryMonitorModule&quot; /&gt; class.
+        /// Initializes a new instance of the &lt;see cref=&quot;MemoryMonitorModule&quot; /&gt; class.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
-        public DiskMonitorModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
+        /// &lt;param name=&quot;factory&quot;&gt;The metric provider factory&lt;/param&gt;
+        public DiskMonitorModule([NotNull] IPlatformProvider platformProvider,
+                                 [NotNull] IMetricProviderFactory factory) : base(platformProvider, factory)
         {
-            _diskReadCounter = new PerformanceCounter(DiskCategoryName, DiskReadCounterName, TotalInstanceName, true);
-            _diskWriteCounter = new PerformanceCounter(DiskCategoryName, DiskWriteCounterName, TotalInstanceName, true);
+            _diskReadCounter = MetricProvider.Build(DiskCategoryName, DiskReadCounterName, TotalInstanceName);
+            _diskWriteCounter = MetricProvider.Build(DiskCategoryName, DiskWriteCounterName, TotalInstanceName);
 
             _diskReadWidget = CreatePercentWidget();
             _diskReadWidget.Text = Resources.DiskReadLabel;
@@ -136,7 +139,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[66,17,66,18,0],[66,19,66,52,0],[66,53,66,54,0],[73,9,73,10,0],[74,13,74,40,0],[75,13,75,41,0],[76,9,76,10,0],[99,9,99,10,0],[100,13,100,39,0],[101,13,101,40,0],[102,9,102,10,0],[118,9,118,10,0],[119,13,119,73,0],[120,13,120,75,0],[122,13,122,49,0],[123,13,123,51,0],[124,9,124,10,0],[44,82,44,104,1],[45,9,45,10,1],[46,13,46,119,1],[47,13,47,121,1],[49,13,49,53,1],[50,13,50,60,1],[52,13,52,54,1],[53,13,53,62,1],[55,9,55,10,1],[84,9,84,10,1],[85,13,90,15,1],[92,13,92,27,1],[93,9,93,10,1],[109,9,109,10,1],[110,13,110,39,1],[111,13,111,40,1],[112,9,112,10,1]]);
+      highlightRanges([[69,17,69,18,0],[69,19,69,52,0],[69,53,69,54,0],[76,9,76,10,0],[77,13,77,40,0],[78,13,78,41,0],[79,9,79,10,0],[47,78,47,109,1],[48,9,48,10,1],[49,13,49,111,1],[50,13,50,113,1],[52,13,52,53,1],[53,13,53,60,1],[55,13,55,54,1],[56,13,56,62,1],[58,9,58,10,1],[87,9,87,10,1],[88,13,93,15,1],[95,13,95,27,1],[96,9,96,10,1],[102,9,102,10,1],[103,13,103,39,1],[104,13,104,40,1],[105,9,105,10,1],[112,9,112,10,1],[113,13,113,39,1],[114,13,114,40,1],[115,9,115,10,1],[121,9,121,10,1],[122,13,122,73,1],[123,13,123,75,1],[125,13,125,49,1],[126,13,126,51,1],[127,9,127,10,1]]);
     </script>
   </body>
 </html>

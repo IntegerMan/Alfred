@@ -2,113 +2,47 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.system\memorymonitormodule.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.system\imetricproviderfactory.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// MemoryMonitorModule.cs
+// IMetricProviderFactory.cs
 // 
-// Created on:      08/04/2015 at 9:50 PM
-// Last Modified:   08/04/2015 at 10:05 PM
-// Original author: Matt Eland
+// Created on:      08/18/2015 at 1:54 PM
+// Last Modified:   08/18/2015 at 1:58 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
-using System.Diagnostics;
-
 using JetBrains.Annotations;
-
-using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Widgets;
 
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
     /// &lt;summary&gt;
-    ///     A module that displays information on the system&#39;s memory utilization percentage
+    ///     Represents a piece of capability that can build metric providers
     /// &lt;/summary&gt;
-    public sealed class MemoryMonitorModule : SystemMonitorModule, IDisposable
+    public interface IMetricProviderFactory
     {
-        private const string MemoryCategoryName = &quot;Memory&quot;;
-        private const string MemoryUtilizationBytesCounterName = &quot;% Committed Bytes in Use&quot;;
-
+        /// &lt;summary&gt;
+        ///     Builds a metric provider for the specified type.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;categoryName&quot;&gt;Name of the category.&lt;/param&gt;
+        /// &lt;param name=&quot;counterName&quot;&gt;Name of the counter.&lt;/param&gt;
+        /// &lt;param name=&quot;instanceName&quot;&gt;Name of the instance.&lt;/param&gt;
+        /// &lt;returns&gt;A metric provider&lt;/returns&gt;
         [NotNull]
-        private readonly PerformanceCounter _memUsedBytesCounter;
-
-        [NotNull]
-        private readonly AlfredProgressBarWidget _memWidget;
-
-        /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;MemoryMonitorModule&quot; /&gt; class.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
-        public MemoryMonitorModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
-        {
-            _memUsedBytesCounter = new PerformanceCounter(MemoryCategoryName, MemoryUtilizationBytesCounterName, true);
-
-            _memWidget = new AlfredProgressBarWidget
-            {
-                Minimum = 0,
-                Maximum = 100,
-                Text = Resources.MemoryMonitorModule_LabelName,
-                ValueFormatString = &quot;{0:F2} %&quot;
-            };
-
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the name of the module.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;
-        ///     The name of the module.
-        /// &lt;/value&gt;
-        public override string Name
-        {
-            // ReSharper disable once AssignNullToNotNullAttribute
-            get { return Resources.MemoryMonitorModule_Name; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles module shutdown events
-        /// &lt;/summary&gt;
-        protected override void ShutdownProtected()
-        {
-            _memWidget.Value = 0;
-        }
-
-        /// &lt;summary&gt;
-        /// Handles module initialization events
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;alfred&quot;&gt;The alfred instance.&lt;/param&gt;
-        protected override void InitializeProtected(IAlfred alfred)
-        {
-            Register(_memWidget);
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles updating the module as needed
-        /// &lt;/summary&gt;
-        protected override void UpdateProtected()
-        {
-            var usedMemory = GetNextCounterValueSafe(_memUsedBytesCounter);
-
-            _memWidget.Value = usedMemory;
-        }
-
-        /// &lt;summary&gt;
-        /// Disposes this instance.
-        /// &lt;/summary&gt;
-        public void Dispose()
-        {
-            _memUsedBytesCounter.Dispose();
-        }
+        MetricProviderBase Build(string categoryName,
+                                    string counterName,
+                                    string instanceName = null);
     }
+
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[60,17,60,18,0],[60,19,60,61,0],[60,62,60,63,0],[67,9,67,10,0],[68,13,68,34,0],[69,9,69,10,0],[84,9,84,10,0],[85,13,85,76,0],[87,13,87,43,0],[88,9,88,10,0],[94,9,94,10,0],[95,13,95,44,0],[96,9,96,10,0],[37,84,37,106,1],[38,9,38,10,1],[39,13,39,120,1],[41,13,47,15,1],[49,9,49,10,1],[76,9,76,10,1],[77,13,77,34,1],[78,9,78,10,1]]);
+      highlightRanges([[53,9,53,10,0],[54,13,54,87,0],[55,9,55,10,0]]);
     </script>
   </body>
 </html>

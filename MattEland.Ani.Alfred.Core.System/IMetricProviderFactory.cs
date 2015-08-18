@@ -7,6 +7,8 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System.Collections.Generic;
+
 using JetBrains.Annotations;
 
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
@@ -27,6 +29,14 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         MetricProviderBase Build(string categoryName,
                                     string counterName,
                                     string instanceName = null);
+
+        /// <summary>
+        /// Gets the names of each counter instance in a category.
+        /// </summary>
+        /// <param name="categoryName">Name of the category.</param>
+        /// <returns>A collection of counter instance names</returns>
+        [NotNull]
+        IEnumerable<string> GetCategoryInstanceNames([NotNull] string categoryName);
     }
 
 }

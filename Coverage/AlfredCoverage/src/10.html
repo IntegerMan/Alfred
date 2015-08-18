@@ -16,13 +16,16 @@
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Collections;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Ani.Alfred.Core.Pages;
 
@@ -43,10 +46,18 @@ namespace MattEland.Ani.Alfred.Tests.SubSystems
         [NotNull]
         private AlfredApplication _alfred;
 
+        private ValueMetricProviderFactory _metricProviderFactory;
+
+        /// &lt;summary&gt;
+        /// Sets up the test environment
+        /// &lt;/summary&gt;
+        /// &lt;exception cref=&quot;UnauthorizedAccessException&quot;&gt;Code that is executing without administrative privileges attempted to read a performance counter.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;Win32Exception&quot;&gt;A call to an underlying system API failed.&lt;/exception&gt;
         [SetUp]
         public void TestSetup()
         {
-            _subsystem = new SystemMonitoringSubsystem();
+            _metricProviderFactory = new ValueMetricProviderFactory();
+            _subsystem = new SystemMonitoringSubsystem(new SimplePlatformProvider(), _metricProviderFactory);
 
             var bootstrapper = new AlfredBootstrapper();
             _alfred = bootstrapper.Create();
@@ -99,7 +110,7 @@ namespace MattEland.Ani.Alfred.Tests.SubSystems
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[38,9,38,10,1],[39,13,39,58,1],[41,13,41,57,1],[42,13,42,45,1],[43,9,43,10,1],[47,9,47,10,1],[48,13,48,42,1],[50,13,50,92,1],[51,13,51,125,1],[52,9,52,10,1],[56,9,56,10,1],[57,13,57,42,1],[59,13,59,73,1],[60,13,60,34,1],[62,13,62,49,1],[62,70,62,98,1],[63,13,63,49,1],[63,73,63,104,1],[64,13,64,49,1],[64,71,64,100,1],[65,9,65,10,1],[69,9,69,10,1],[70,13,70,58,1],[72,13,72,42,1],[73,13,73,34,1],[75,13,75,58,1],[76,9,76,10,1],[80,9,80,10,1],[81,13,81,51,1],[83,13,83,42,1],[84,13,84,34,1],[86,13,86,67,1],[87,9,87,10,1],[62,49,62,70,1],[63,49,63,73,1],[64,49,64,71,1]]);
+      highlightRanges([[48,9,48,10,1],[49,13,49,71,1],[50,13,50,110,1],[52,13,52,57,1],[53,13,53,45,1],[54,9,54,10,1],[58,9,58,10,1],[59,13,59,42,1],[61,13,61,92,1],[62,13,62,125,1],[63,9,63,10,1],[67,9,67,10,1],[68,13,68,42,1],[70,13,70,73,1],[71,13,71,34,1],[73,13,73,49,1],[73,70,73,98,1],[74,13,74,49,1],[74,73,74,104,1],[75,13,75,49,1],[75,71,75,100,1],[76,9,76,10,1],[80,9,80,10,1],[81,13,81,58,1],[83,13,83,42,1],[84,13,84,34,1],[86,13,86,58,1],[87,9,87,10,1],[91,9,91,10,1],[92,13,92,51,1],[94,13,94,42,1],[95,13,95,34,1],[97,13,97,67,1],[98,9,98,10,1],[73,49,73,70,1],[74,49,74,73,1],[75,49,75,71,1]]);
     </script>
   </body>
 </html>

@@ -57,5 +57,17 @@ namespace MattEland.Common
             return index >= 0 && index < collection.Count;
         }
 
+        /// <summary>
+        /// Returns the singular value if count is 1. Otherwise plural is returned.
+        /// </summary>
+        /// <param name="count">The count.</param>
+        /// <param name="singular">The singular return value.</param>
+        /// <param name="plural">The plural return value.</param>
+        /// <returns>The singular value if count is 1. Otherwise plural is returned.</returns>
+        [NotNull]
+        public static string Pluralize(this int count, string singular, string plural)
+        {
+            return count == 1 ? singular.NonNull() : plural.NonNull();
+        }
     }
 }

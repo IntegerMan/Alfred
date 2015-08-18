@@ -26,7 +26,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
     /// </summary>
     public sealed class CpuMonitorModule : SystemMonitorModule, IDisposable
     {
-        private const string CpuCategoryName = "Processor";
+        public const string CpuCategoryName = "Processor";
         private const string CpuUsageCounterName = "% Processor Time";
 
         // ReSharper disable once AssignNullToNotNullAttribute
@@ -46,20 +46,9 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// </summary>
         /// <param name="platformProvider">The platform provider.</param>
         /// <param name="factory">The metric provider factory.</param>
-        /// <exception cref="Win32Exception">A call to an underlying system API failed.</exception>
-        /// <exception cref="UnauthorizedAccessException">Code that is executing without administrative privileges attempted to read a performance counter.</exception>
         public CpuMonitorModule([NotNull] IPlatformProvider platformProvider,
                                 [NotNull] IMetricProviderFactory factory) : base(platformProvider, factory)
         {
-            var cpuCategory = new PerformanceCounterCategory(CpuCategoryName);
-
-            var cpuInstanceNames = cpuCategory.GetInstanceNames();
-
-            // Add counters for each CPU instance we're using
-            foreach (var instance in cpuInstanceNames)
-            {
-                _processorCounters.Add(MetricProvider.Build(CpuCategoryName, CpuUsageCounterName, instance));
-            }
         }
 
         /// <summary>
@@ -75,14 +64,45 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         }
 
         /// <summary>
+        /// Gets the number of CPU cores detected.
+        /// </summary>
+        /// <value>The number of CPU cores.</value>
+        public int NumberOfCores
+        {
+            get
+            {
+                // Don't include the aggregate counter
+                return _processorCounters.Count(c => c.Name != TotalInstanceName);
+            }
+        }
+
+        /// <summary>
+        /// Gets the average CPU utilization.
+        /// </summary>
+        /// <value>The average CPU utilization.</value>
+        public float AverageCpuUtilization
+        {
+            get
+            {
+                // Grab the total counter and get its value
+                var aggregateCounter = _processorCounters.FirstOrDefault(c => c.Name == TotalInstanceName);
+                return aggregateCounter?.NextValue() ?? 0;
+            }
+        }
+
+        /// <summary>
         ///     Handles module shutdown events
         /// </summary>
         protected override void ShutdownProtected()
         {
-            _cpuWidgets.Clear();
+            // Clear out the counters, bearing in mind that they're disposable
+            foreach (var counter in _processorCounters)
+            {
+                counter.Dispose();
+            }
+            _processorCounters.Clear();
 
-            // _processorCounters is not cleared since it's only populated at startup and its
-            // values are used during initialize. Fields will be disposed during Dispose.
+            _cpuWidgets.Clear();
         }
 
         /// <summary>
@@ -91,6 +111,8 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <param name="alfred"></param>
         protected override void InitializeProtected(IAlfred alfred)
         {
+            BuildCounters();
+
             _cpuWidgets.Clear();
 
             var core = 1;
@@ -117,6 +139,21 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
                 Register(widget);
 
                 core++;
+            }
+        }
+
+        /// <summary>
+        /// Builds the list of processor counters
+        /// </summary>
+        private void BuildCounters()
+        {
+            var cpuInstanceNames = MetricProvider.GetCategoryInstanceNames(CpuCategoryName);
+
+            // Add counters for each CPU instance we're using
+            foreach (var instance in cpuInstanceNames)
+            {
+                var provider = MetricProvider.Build(CpuCategoryName, CpuUsageCounterName, instance);
+                _processorCounters.Add(provider);
             }
         }
 
