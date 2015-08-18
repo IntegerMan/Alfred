@@ -2,14 +2,14 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\mocks\testsubsystem.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\mocks\testpage.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// TestSubsystem.cs
+// TestSubSystem.cs
 // 
 // Created on:      08/07/2015 at 11:07 PM
 // Last Modified:   08/08/2015 at 1:43 AM
@@ -19,63 +19,34 @@
 using System;
 using System.Collections.Generic;
 
-using JetBrains.Annotations;
-
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Pages;
 
 namespace MattEland.Ani.Alfred.Tests.Mocks
 {
-    public class TestSubsystem : AlfredSubsystem
+    /// &lt;summary&gt;
+    /// A test page for testing the AlfredPage update pumps
+    /// &lt;/summary&gt;
+    public class TestPage : AlfredPage
     {
-        [NotNull, ItemNotNull]
-        private readonly ICollection&lt;AlfredPage&gt; _registerPages;
-
         /// &lt;summary&gt;
         ///     Initializes a new instance of the &lt;see cref=&quot;AlfredSubsystem&quot; /&gt; class.
         /// &lt;/summary&gt;
-        public TestSubsystem() : this(new SimplePlatformProvider())
+        public TestPage() : base(&quot;Test Page&quot;)
         {
-        }
-
-        public TestSubsystem([NotNull] IPlatformProvider provider) : base(provider)
-        {
-            if (provider == null)
-            {
-                throw new ArgumentNullException(nameof(provider));
-            }
-
-            _registerPages = provider.CreateCollection&lt;AlfredPage&gt;();
         }
 
         /// &lt;summary&gt;
-        ///     Gets the name of the subsystems.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The name.&lt;/value&gt;
-        public override string Name
-        {
-            get { return &quot;Test SubSystem&quot;; }
-        }
-
-        /// &lt;summary&gt;
-        /// Registers the controls for this component.
-        /// &lt;/summary&gt;
-        protected override void RegisterControls()
-        {
-            // Live up to our promise and auto-register some pages
-            foreach (var page in _registerPages)
-            {
-                Register(page);
-            }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets or sets the last time this module was updated.
+        ///     Gets or sets the last time this page was updated.
         /// &lt;/summary&gt;
         /// &lt;value&gt;The last time the module was updated.&lt;/value&gt;
         public DateTime LastUpdated { get; set; }
 
+        /// &lt;summary&gt;
+        /// Gets or sets the last time this page was notified initialization completed.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The last initialization completed.&lt;/value&gt;
         public DateTime LastInitializationCompleted { get; set; }
 
         /// &lt;summary&gt;
@@ -149,33 +120,25 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
             base.UpdateProtected();
         }
 
+
         /// &lt;summary&gt;
-        /// Adds a page to be automatically registered on initialization
+        /// Gets the children of this component. Depending on the type of component this is, the children will
+        /// vary in their own types.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;page&quot;&gt;The page.&lt;/param&gt;
-        public void AddAutoRegisterPage([NotNull] AlfredPage page)
+        /// &lt;value&gt;The children.&lt;/value&gt;
+        public override IEnumerable&lt;IAlfredComponent&gt; Children
         {
-            if (page == null)
+            get
             {
-                throw new ArgumentNullException(nameof(page));
+                yield break;
             }
-
-            _registerPages.Add(page);
         }
 
-        /// &lt;summary&gt;
-        ///     Gets the identifier for the subsystem to be used in command routing.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The identifier for the subsystem.&lt;/value&gt;
-        public override string Id
-        {
-            get { return &quot;Test&quot;; }
-        }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[35,13,35,14,0],[36,17,36,67,0],[149,13,149,14,0],[150,17,150,63,0],[162,17,162,18,0],[162,19,162,33,0],[162,34,162,35,0],[28,34,28,68,1],[29,9,29,10,1],[30,9,30,10,1],[32,70,32,84,1],[33,9,33,10,1],[34,13,34,34,1],[39,13,39,70,1],[40,9,40,10,1],[48,17,48,18,1],[48,19,48,43,1],[48,44,48,45,1],[55,9,55,10,1],[57,13,57,20,1],[57,34,57,48,1],[57,22,57,30,1],[58,13,58,14,1],[59,17,59,32,1],[60,13,60,14,1],[57,31,57,33,1],[61,9,61,10,1],[67,39,67,43,1],[67,44,67,48,1],[69,55,69,59,1],[69,60,69,64,1],[75,49,75,53,1],[75,54,75,58,1],[81,40,81,44,1],[81,45,81,49,1],[87,43,87,47,1],[87,48,87,52,1],[94,9,94,10,1],[95,13,95,56,1],[97,13,97,46,1],[98,9,98,10,1],[105,9,105,10,1],[106,13,106,50,1],[108,13,108,40,1],[109,9,109,10,1],[115,9,115,10,1],[116,13,116,41,1],[118,13,118,38,1],[119,9,119,10,1],[126,9,126,10,1],[127,13,127,44,1],[129,13,129,46,1],[130,9,130,10,1],[136,9,136,10,1],[137,13,137,40,1],[139,13,139,36,1],[140,9,140,10,1],[147,9,147,10,1],[148,13,148,30,1],[153,13,153,38,1],[154,9,154,10,1]]);
+      highlightRanges([[26,29,26,46,1],[27,9,27,10,1],[28,9,28,10,1],[34,39,34,43,1],[34,44,34,48,1],[40,55,40,59,1],[40,60,40,64,1],[46,49,46,53,1],[46,54,46,58,1],[52,40,52,44,1],[52,45,52,49,1],[58,43,58,47,1],[58,48,58,52,1],[65,9,65,10,1],[66,13,66,56,1],[68,13,68,46,1],[69,9,69,10,1],[76,9,76,10,1],[77,13,77,50,1],[79,13,79,40,1],[80,9,80,10,1],[86,9,86,10,1],[87,13,87,41,1],[89,13,89,38,1],[90,9,90,10,1],[97,9,97,10,1],[98,13,98,44,1],[100,13,100,46,1],[101,9,101,10,1],[107,9,107,10,1],[108,13,108,40,1],[110,13,110,36,1],[111,9,111,10,1],[122,13,122,14,1],[123,17,123,29,1]]);
     </script>
   </body>
 </html>

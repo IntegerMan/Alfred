@@ -2,115 +2,113 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.system\systemmonitoringsubsystem.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.system\memorymonitormodule.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// SystemMonitoringSubsystem.cs
+// MemoryMonitorModule.cs
 // 
-// Created on:      08/07/2015 at 10:12 PM
-// Last Modified:   08/07/2015 at 10:36 PM
+// Created on:      08/04/2015 at 9:50 PM
+// Last Modified:   08/04/2015 at 10:05 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Pages;
-using MattEland.Common;
+using MattEland.Ani.Alfred.Core.Widgets;
 
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
     /// &lt;summary&gt;
-    ///     This is a subsystem for the Alfred Framework that allows for monitoring system performance
-    ///     and surfacing alerts on critical events.
+    ///     A module that displays information on the system&#39;s memory utilization percentage
     /// &lt;/summary&gt;
-    public sealed class SystemMonitoringSubsystem : AlfredSubsystem, IDisposable
+    public sealed class MemoryMonitorModule : SystemMonitorModule, IDisposable
     {
-        [NotNull]
-        private readonly AlfredModuleListPage _page;
+        private const string MemoryCategoryName = &quot;Memory&quot;;
+        private const string MemoryUtilizationBytesCounterName = &quot;% Committed Bytes in Use&quot;;
 
         [NotNull]
-        private readonly CpuMonitorModule _cpuModule;
+        private readonly PerformanceCounter _memUsedBytesCounter;
 
         [NotNull]
-        private readonly MemoryMonitorModule _memoryModule;
-
-        [NotNull]
-        private readonly DiskMonitorModule _diskModule;
+        private readonly AlfredProgressBarWidget _memWidget;
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredSubsystem&quot; /&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;MemoryMonitorModule&quot; /&gt; class.
         /// &lt;/summary&gt;
-        public SystemMonitoringSubsystem() : this(new SimplePlatformProvider())
+        /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
+        public MemoryMonitorModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
         {
+            _memUsedBytesCounter = new PerformanceCounter(MemoryCategoryName, MemoryUtilizationBytesCounterName, true);
+
+            _memWidget = new AlfredProgressBarWidget
+            {
+                Minimum = 0,
+                Maximum = 100,
+                Text = Resources.MemoryMonitorModule_LabelName,
+                ValueFormatString = &quot;{0:F2} %&quot;
+            };
+
         }
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredSubsystem&quot; /&gt; class.
+        ///     Gets the name of the module.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;provider&quot;&gt;The provider.&lt;/param&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
-        public SystemMonitoringSubsystem([NotNull] IPlatformProvider provider) : base(provider)
+        /// &lt;value&gt;
+        ///     The name of the module.
+        /// &lt;/value&gt;
+        public override string Name
         {
-            _cpuModule = new CpuMonitorModule(provider);
-            _memoryModule = new MemoryMonitorModule(provider);
-            _diskModule = new DiskMonitorModule(provider);
-
-            _page = new AlfredModuleListPage(provider, Resources.SystemMonitoringSystem_Name.NonNull());
+            // ReSharper disable once AssignNullToNotNullAttribute
+            get { return Resources.MemoryMonitorModule_Name; }
         }
 
         /// &lt;summary&gt;
-        /// Registers the controls for this component.
+        ///     Handles module shutdown events
         /// &lt;/summary&gt;
-        protected override void RegisterControls()
+        protected override void ShutdownProtected()
         {
-            Register(_page);
-
-            _page.ClearModules();
-            _page.Register(_cpuModule);
-            _page.Register(_memoryModule);
-            _page.Register(_diskModule);
+            _memWidget.Value = 0;
         }
 
         /// &lt;summary&gt;
-        ///     Gets the name of the subsystems.
+        /// Handles module initialization events
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The name.&lt;/value&gt;
-        [NotNull]
-        public override sealed string Name
+        /// &lt;param name=&quot;alfred&quot;&gt;The alfred instance.&lt;/param&gt;
+        protected override void InitializeProtected(IAlfred alfred)
         {
-            get { return Resources.SystemMonitoringSystem_Name.NonNull(); }
+            Register(_memWidget);
         }
 
         /// &lt;summary&gt;
-        /// Disposes of allocated resources
+        ///     Handles updating the module as needed
+        /// &lt;/summary&gt;
+        protected override void UpdateProtected()
+        {
+            var usedMemory = GetNextCounterValueSafe(_memUsedBytesCounter);
+
+            _memWidget.Value = usedMemory;
+        }
+
+        /// &lt;summary&gt;
+        /// Disposes this instance.
         /// &lt;/summary&gt;
         public void Dispose()
         {
-            _cpuModule.Dispose();
-            _memoryModule.Dispose();
-            _diskModule.Dispose();
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the identifier for the subsystem to be used in command routing.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The identifier for the subsystem.&lt;/value&gt;
-        public override string Id
-        {
-            get { return &quot;Sys&quot;; }
+            _memUsedBytesCounter.Dispose();
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[78,17,78,18,0],[78,19,78,74,0],[78,75,78,76,0],[85,9,85,10,0],[86,13,86,34,0],[87,13,87,37,0],[88,13,88,35,0],[89,9,89,10,0],[97,17,97,18,0],[97,19,97,32,0],[97,33,97,34,0],[40,46,40,80,1],[41,9,41,10,1],[42,9,42,10,1],[49,82,49,96,1],[50,9,50,10,1],[51,13,51,57,1],[52,13,52,63,1],[53,13,53,59,1],[55,13,55,105,1],[56,9,56,10,1],[62,9,62,10,1],[63,13,63,29,1],[65,13,65,34,1],[66,13,66,40,1],[67,13,67,43,1],[68,13,68,41,1],[69,9,69,10,1]]);
+      highlightRanges([[60,17,60,18,0],[60,19,60,61,0],[60,62,60,63,0],[67,9,67,10,0],[68,13,68,34,0],[69,9,69,10,0],[84,9,84,10,0],[85,13,85,76,0],[87,13,87,43,0],[88,9,88,10,0],[94,9,94,10,0],[95,13,95,44,0],[96,9,96,10,0],[37,84,37,106,1],[38,9,38,10,1],[39,13,39,120,1],[41,13,47,15,1],[49,9,49,10,1],[76,9,76,10,1],[77,13,77,34,1],[78,9,78,10,1]]);
     </script>
   </body>
 </html>

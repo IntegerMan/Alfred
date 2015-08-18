@@ -2,24 +2,27 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\modules\alfredpowermodule.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\modules\alfredsubsystemlistmodule.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlfredPowerModule.cs
+// AlfredSubsystemListModule.cs
 // 
-// Created on:      08/02/2015 at 4:56 PM
-// Last Modified:   08/12/2015 at 3:52 PM
+// Created on:      08/07/2015 at 11:56 PM
+// Last Modified:   08/07/2015 at 11:56 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Common;
@@ -27,236 +30,132 @@ using MattEland.Common;
 namespace MattEland.Ani.Alfred.Core.Modules
 {
     /// &lt;summary&gt;
-    ///     A module intended for the control and monitoring of Alfred&#39;s status
+    /// A module that lists installed subsystems
     /// &lt;/summary&gt;
-    public sealed class AlfredPowerModule : AlfredModule
+    public sealed class AlfredSubsystemListModule : AlfredModule
     {
-        [NotNull]
-        private readonly ButtonWidget _initializeButton;
 
-        [NotNull]
-        private readonly ButtonWidget _shutdownButton;
-
-        [NotNull]
-        private readonly TextWidget _statusWidget;
+        [NotNull, ItemNotNull]
+        private readonly ICollection&lt;AlfredWidget&gt; _widgets;
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the
-        ///     &lt;see cref=&quot;AlfredPowerModule&quot; /&gt;
-        ///     class.
+        /// Initializes a new instance of the &lt;see cref=&quot;AlfredSubsystemListModule&quot;/&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;
-        /// &lt;/exception&gt;
-        /// &lt;param name=&quot;platformProvider&quot;&gt;
-        ///     The platform provider.
-        /// &lt;/param&gt;
-        public AlfredPowerModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
+        /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        public AlfredSubsystemListModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
         {
-            _statusWidget = new TextWidget(Resources.AlfredCoreModule_AlfredNotSet);
-
-            var initializeCommand = platformProvider.CreateCommand(ExecuteInitializeCommand);
-            _initializeButton = new ButtonWidget(Resources.InitializeButtonText, initializeCommand);
-
-            var shutdownCommand = platformProvider.CreateCommand(ExecuteShutdownCommand);
-            _shutdownButton = new ButtonWidget(Resources.ShutdownButtonText, shutdownCommand);
+            _widgets = platformProvider.CreateCollection&lt;AlfredWidget&gt;();
         }
 
         /// &lt;summary&gt;
         ///     Gets the name of the module.
         /// &lt;/summary&gt;
         /// &lt;value&gt;The name of the module.&lt;/value&gt;
-        [NotNull]
         public override string Name
         {
-            get { return Resources.AlfredCoreModule_Name.NonNull(); }
+            get { return &quot;Subsystems&quot;; }
         }
 
         /// &lt;summary&gt;
-        ///     Gets the alfred status widget.
+        ///     Updates the component
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The alfred status widget.&lt;/value&gt;
-        [NotNull]
-        public TextWidget AlfredStatusWidget
+        protected override void UpdateProtected()
         {
-            get { return _statusWidget; }
+            foreach (var widget in _widgets)
+            {
+                var textWidget = widget as AlfredTextWidget;
+
+                if (textWidget == null)
+                {
+                    continue;
+                }
+
+                // Interpret the DataContext and update its text if it&#39;s a component based on the
+                // component status. If no component context, it&#39;s assumed to be the no items label.
+                var component = widget.DataContext as IAlfredComponent;
+                if (component != null)
+                {
+                    UpdateWidgetText(textWidget, component);
+                }
+                else
+                {
+                    textWidget.Text = Resources.AlfredSubSystemListModule_NoSubsystemsDetected;
+                }
+            }
         }
 
         /// &lt;summary&gt;
-        ///     Gets the initialize button.
+        ///     Handles shutdown events
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The initialize button.&lt;/value&gt;
-        [NotNull]
-        public ButtonWidget InitializeButton
+        protected override void ShutdownProtected()
         {
-            get { return _initializeButton; }
+            _widgets.Clear();
         }
 
         /// &lt;summary&gt;
-        ///     Gets the shutdown button.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The shutdown button.&lt;/value&gt;
-        [NotNull]
-        public ButtonWidget ShutdownButton
-        {
-            get { return _shutdownButton; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles the initialize command by initializing Alfred
-        /// &lt;/summary&gt;
-        internal void ExecuteInitializeCommand()
-        {
-            AlfredInstance?.Initialize();
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles the shutdown command by shutting down Alfred
-        /// &lt;/summary&gt;
-        internal void ExecuteShutdownCommand()
-        {
-            AlfredInstance?.Shutdown();
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles module initialization events
+        ///     Handles initialization events
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;alfred&quot;&gt;&lt;/param&gt;
         protected override void InitializeProtected(IAlfred alfred)
         {
-            AddOnlineWidgets();
-        }
+            _widgets.Clear();
 
-        /// &lt;summary&gt;
-        ///     Adds the widgets used while in online mode.
-        /// &lt;/summary&gt;
-        private void AddOnlineWidgets()
-        {
-            ClearChildCollections();
-            Register(_statusWidget);
-            Register(ShutdownButton);
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles module shutdown events
-        /// &lt;/summary&gt;
-        protected override void ShutdownProtected()
-        {
-            // We&#39;re going to re-register the status widget since it&#39;s always present - even when the system is offline
-            AddOfflineWidgets();
-
-            // We need to do this so that buttons render properly
-            UpdateAlfredProviderStatus();
-        }
-
-        /// &lt;summary&gt;
-        ///     Adds the widgets used in offline mode.
-        /// &lt;/summary&gt;
-        private void AddOfflineWidgets()
-        {
-            ClearChildCollections();
-            Register(_statusWidget);
-            Register(InitializeButton);
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles updating the module as needed
-        /// &lt;/summary&gt;
-        protected override void UpdateProtected()
-        {
-            UpdateAlfredProviderStatus();
-        }
-
-        /// &lt;summary&gt;
-        ///     Called when the component is registered.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;alfred&quot;&gt;The alfred.&lt;/param&gt;
-        public override void OnRegistered(IAlfred alfred)
-        {
-            base.OnRegistered(alfred);
-
-            UpdateAlfredProviderStatus();
-
+            // Read the subsystems from Alfred
             if (AlfredInstance != null)
             {
-                // Add the appropriate UI elements
-                if (AlfredInstance.Status == AlfredStatus.Online)
+                foreach (var item in AlfredInstance.Subsystems)
                 {
-                    AddOnlineWidgets();
-                }
-                else
-                {
-                    AddOfflineWidgets();
+                    var widget = new TextWidget { DataContext = item };
+                    UpdateWidgetText(widget, item);
+
+                    _widgets.Add(widget);
+
+                    Register(widget);
                 }
             }
-        }
 
-        /// &lt;summary&gt;
-        ///     Updates the alfred provider status text.
-        /// &lt;/summary&gt;
-        private void UpdateAlfredProviderStatus()
-        {
-            if (AlfredInstance == null)
+            // We&#39;ll want to display a fallback for no subsystems
+            if (_widgets.Count == 0)
             {
-                // Update Text Message to a Nobody&#39;s Home sort of thing
-                _statusWidget.Text = Resources.NoAlfredText;
+                var noSubsystemsDetected = Resources.AlfredSubSystemListModule_NoSubsystemsDetected.NonNull();
 
-                // Update Button Visibilities to hidden
-                if (_shutdownButton.ClickCommand != null)
-                {
-                    _shutdownButton.ClickCommand.IsEnabled = false;
-                }
-                if (_initializeButton.ClickCommand != null)
-                {
-                    _initializeButton.ClickCommand.IsEnabled = false;
-                }
+                Log(&quot;Subsystems.Initialize&quot;, noSubsystemsDetected, LogLevel.Warning);
+
+                var widget = new TextWidget(noSubsystemsDetected);
+                _widgets.Add(widget);
+
+                Register(widget);
             }
-            else
+        }
+
+        /// &lt;summary&gt;
+        /// Updates the widget&#39;s text to that matching the detected component.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;widget&quot;&gt;The widget.&lt;/param&gt;
+        /// &lt;param name=&quot;component&quot;&gt;The component.&lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;
+        /// &lt;/exception&gt;
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(&quot;Microsoft.Globalization&quot;, &quot;CA1303:Do not pass literals as localized parameters&quot;, MessageId = &quot;MattEland.Ani.Alfred.Core.Widgets.AlfredTextWidget.set_Text(System.String)&quot;)]
+        private static void UpdateWidgetText([NotNull] AlfredTextWidget widget, [NotNull] IAlfredComponent component)
+        {
+            if (widget == null)
             {
-                // Display the current status
-                var statusFormat = Resources.AlfredCoreModule_AlfredStatusText.NonNull();
-                _statusWidget.Text = string.Format(CultureInfo.CurrentCulture,
-                                                   statusFormat,
-                                                   AlfredInstance.Name,
-                                                   AlfredInstance.Status);
-
-                // Show the shutdown button while online and initialize button while offline
-                if (_shutdownButton.ClickCommand != null)
-                {
-                    _shutdownButton.ClickCommand.IsEnabled = AlfredInstance.Status == AlfredStatus.Online;
-                }
-                if (_initializeButton.ClickCommand != null)
-                {
-                    _initializeButton.ClickCommand.IsEnabled = AlfredInstance.Status == AlfredStatus.Offline;
-                }
+                throw new ArgumentNullException(nameof(widget));
             }
-        }
+            if (component == null)
+            {
+                throw new ArgumentNullException(nameof(component));
+            }
 
-        /// &lt;summary&gt;
-        ///     A notification method that is invoked when initialization for Alfred is complete so the UI can be fully enabled or
-        ///     adjusted
-        /// &lt;/summary&gt;
-        public override void OnInitializationCompleted()
-        {
-            base.OnInitializationCompleted();
-
-            UpdateAlfredProviderStatus();
-        }
-
-        /// &lt;summary&gt;
-        ///     A notification method that is invoked when shutdown for Alfred is complete so the UI can be fully enabled or
-        ///     adjusted
-        /// &lt;/summary&gt;
-        public override void OnShutdownCompleted()
-        {
-            base.OnShutdownCompleted();
-
-            UpdateAlfredProviderStatus();
+            widget.Text = string.Format(CultureInfo.CurrentCulture, &quot;{0}: {1}&quot;, component.NameAndVersion, component.Status);
         }
     }
+
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[61,17,61,18,0],[61,19,61,68,0],[61,69,61,70,0],[173,17,173,18,0],[174,21,174,40,0],[175,17,175,18,0],[189,13,189,14,0],[191,17,191,61,0],[194,17,194,58,0],[195,17,195,18,0],[196,21,196,68,0],[197,17,197,18,0],[198,17,198,60,0],[199,17,199,18,0],[200,21,200,70,0],[201,17,201,18,0],[202,13,202,14,0],[43,82,43,104,1],[44,9,44,10,1],[45,13,45,85,1],[47,13,47,94,1],[48,13,48,101,1],[50,13,50,90,1],[51,13,51,95,1],[52,9,52,10,1],[71,17,71,18,1],[71,19,71,40,1],[71,41,71,42,1],[81,17,81,18,1],[81,19,81,44,1],[81,45,81,46,1],[91,17,91,18,1],[91,19,91,42,1],[91,43,91,44,1],[98,9,98,10,1],[99,13,99,42,1],[100,9,100,10,1],[106,9,106,10,1],[107,13,107,40,1],[108,9,108,10,1],[115,9,115,10,1],[116,13,116,32,1],[117,9,117,10,1],[123,9,123,10,1],[124,13,124,37,1],[125,13,125,37,1],[126,13,126,38,1],[127,9,127,10,1],[133,9,133,10,1],[135,13,135,33,1],[138,13,138,42,1],[139,9,139,10,1],[145,9,145,10,1],[146,13,146,37,1],[147,13,147,37,1],[148,13,148,40,1],[149,9,149,10,1],[155,9,155,10,1],[156,13,156,42,1],[157,9,157,10,1],[164,9,164,10,1],[165,13,165,39,1],[167,13,167,42,1],[169,13,169,40,1],[170,13,170,14,1],[172,17,172,66,1],[177,17,177,18,1],[178,21,178,41,1],[179,17,179,18,1],[180,13,180,14,1],[181,9,181,10,1],[187,9,187,10,1],[188,13,188,40,1],[204,13,204,14,1],[206,17,206,90,1],[207,17,210,75,1],[213,17,213,58,1],[214,17,214,18,1],[215,21,215,107,1],[216,17,216,18,1],[217,17,217,60,1],[218,17,218,18,1],[219,21,219,110,1],[220,17,220,18,1],[221,13,221,14,1],[222,9,222,10,1],[229,9,229,10,1],[230,13,230,46,1],[232,13,232,42,1],[233,9,233,10,1],[240,9,240,10,1],[241,13,241,40,1],[243,13,243,42,1],[244,9,244,10,1]]);
+      highlightRanges([[47,17,47,18,0],[47,19,47,39,0],[47,40,47,41,0],[60,17,60,18,0],[61,21,61,30,0],[72,17,72,18,0],[73,21,73,96,0],[74,17,74,18,0],[110,13,110,14,0],[111,17,111,111,0],[113,17,113,86,0],[115,17,115,67,0],[116,17,116,38,0],[118,17,118,34,0],[119,13,119,14,0],[133,13,133,14,0],[134,17,134,65,0],[137,13,137,14,0],[138,17,138,68,0],[36,90,36,112,1],[37,9,37,10,1],[38,13,38,74,1],[39,9,39,10,1],[54,9,54,10,1],[55,13,55,20,1],[55,36,55,44,1],[55,22,55,32,1],[56,13,56,14,1],[57,17,57,61,1],[59,17,59,40,1],[66,17,66,72,1],[67,17,67,39,1],[68,17,68,18,1],[69,21,69,61,1],[70,17,70,18,1],[75,13,75,14,1],[55,33,55,35,1],[76,9,76,10,1],[82,9,82,10,1],[83,13,83,30,1],[84,9,84,10,1],[91,9,91,10,1],[92,13,92,30,1],[95,13,95,40,1],[96,13,96,14,1],[97,17,97,24,1],[97,38,97,63,1],[97,26,97,34,1],[98,17,98,18,1],[99,21,99,72,1],[100,21,100,52,1],[102,21,102,42,1],[104,21,104,38,1],[105,17,105,18,1],[97,35,97,37,1],[106,13,106,14,1],[109,13,109,37,1],[120,9,120,10,1],[131,9,131,10,1],[132,13,132,32,1],[136,13,136,35,1],[141,13,141,125,1],[142,9,142,10,1]]);
     </script>
   </body>
 </html>

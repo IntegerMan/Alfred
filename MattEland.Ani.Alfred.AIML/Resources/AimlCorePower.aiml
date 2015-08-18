@@ -23,14 +23,6 @@ This provides handling for the Goodbye, Shutdown and Status verbs
     </template>
   </category>
 
-  <!-- Handle status requests with an obvious status response -->
-  <category>
-    <pattern>STATUS</pattern>
-    <template id="tmp_status">
-      <alfred subsystem="core" command="status" />
-    </template>
-  </category>
-
   <!-- Shutdown -->
   <category>
     <pattern>SHUTDOWN</pattern>

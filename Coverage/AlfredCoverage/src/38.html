@@ -2,144 +2,95 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\modules\alfredcoresubsystem.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\pages\alfredpage.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlfredCoreSubsystem.cs
+// AlfredPage.cs
 // 
-// Created on:      08/08/2015 at 6:12 PM
-// Last Modified:   08/08/2015 at 6:58 PM
+// Created on:      08/11/2015 at 9:44 PM
+// Last Modified:   08/11/2015 at 9:45 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
-using System.Linq;
+using System;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Pages;
 
-namespace MattEland.Ani.Alfred.Core.Modules
+namespace MattEland.Ani.Alfred.Core.Pages
 {
     /// &lt;summary&gt;
-    ///     The core subsystem provides essential monitoring and control functionality for Alfred such as the Alfred control
-    ///     page, an event log page, etc. as well as monitoring of the current time and date.
+    ///     A page that can be used in Alfred
     /// &lt;/summary&gt;
-    /// &lt;remarks&gt;
-    /// TODO: Once Alfred has a calendar subsystem, the time / date functionality may need to move there
-    /// &lt;/remarks&gt;
-    public sealed class AlfredCoreSubsystem : AlfredSubsystem
+    public abstract class AlfredPage : AlfredComponent, IAlfredPage
     {
         [NotNull]
-        private readonly AlfredModuleListPage _controlPage;
-
-        [CanBeNull]
-        private AlfredEventLogPage _eventLogPage;
-
-        [NotNull]
-        private readonly AlfredPowerModule _powerModule;
-
-        [NotNull]
-        private readonly AlfredTimeModule _timeModule;
-
-        [NotNull]
-        private readonly AlfredSubsystemListModule _systemsModule;
-
-        [NotNull]
-        private readonly AlfredPagesListModule _pagesModule;
+        private readonly string _name;
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredSubsystem&quot; /&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredPage&quot; /&gt; class.
         /// &lt;/summary&gt;
-        public AlfredCoreSubsystem() : this(new SimplePlatformProvider())
+        /// &lt;param name=&quot;name&quot;&gt;The name.&lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;name&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        protected AlfredPage([NotNull] string name)
         {
-        }
-
-        /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredSubsystem&quot; /&gt; class.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;provider&quot;&gt;The provider.&lt;/param&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
-        public AlfredCoreSubsystem([NotNull] IPlatformProvider provider) : base(provider)
-        {
-            _controlPage = new AlfredModuleListPage(provider, ControlPageName);
-
-            // Instantiate the modules
-            _powerModule = new AlfredPowerModule(provider);
-            _timeModule = new AlfredTimeModule(provider);
-            _systemsModule = new AlfredSubsystemListModule(provider);
-            _pagesModule = new AlfredPagesListModule(provider);
-
-        }
-
-        /// &lt;summary&gt;
-        /// Registers the controls for this component.
-        /// &lt;/summary&gt;
-        protected override void RegisterControls()
-        {
-            Register(_controlPage);
-
-            // Build out our control page
-            _controlPage.ClearModules();
-            _controlPage.Register(_powerModule);
-            _controlPage.Register(_timeModule);
-            _controlPage.Register(_systemsModule);
-            _controlPage.Register(_pagesModule);
-
-            // Don&#39;t include the event log page if there are no events
-            if (AlfredInstance?.Console != null)
+            if (name == null)
             {
-                _eventLogPage = new AlfredEventLogPage(AlfredInstance.Console, EventLogPageName);
-                Register(_eventLogPage);
+                throw new ArgumentNullException(nameof(name));
             }
+
+            _name = name;
         }
 
         /// &lt;summary&gt;
-        ///     Gets the name of the control page.
+        ///     Gets whether or not the component is visible to the user interface.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The name of the control page.&lt;/value&gt;
-        [NotNull]
-        public static string ControlPageName
+        /// &lt;value&gt;Whether or not the component is visible.&lt;/value&gt;
+        public override bool IsVisible
         {
-            get { return &quot;Alfred Core&quot;; }
+            get { return Status == AlfredStatus.Online; }
         }
 
         /// &lt;summary&gt;
-        ///     Gets the name of the event log page.
+        ///     Gets or sets the name of the page.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The name of the event log page.&lt;/value&gt;
+        /// &lt;value&gt;The name.&lt;/value&gt;
         [NotNull]
-        public static string EventLogPageName
-        {
-            get { return &quot;Event Log&quot;; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the name of the module.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The name of the module.&lt;/value&gt;
         public override string Name
         {
-            get { return Resources.AlfredControlSubSystem_Name; }
+            get { return _name; }
         }
 
         /// &lt;summary&gt;
-        ///     Gets the identifier for the subsystem to be used in command routing.
+        ///     Gets a value indicating whether this is a root level page that should show on the navigator.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The identifier for the subsystem.&lt;/value&gt;
-        public override string Id
+        /// &lt;value&gt;&lt;c&gt;true&lt;/c&gt; if this page is root level; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/value&gt;
+        public bool IsRootLevel
         {
-            get { return &quot;Core&quot;; }
+            get { return true; }
+        }
+
+        /// &lt;summary&gt;
+        /// Processes an Alfred Command. If the command is handled, result should be modified accordingly and the method should return true. Returning false will not stop the message from being propogated.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;command&quot;&gt;The command.&lt;/param&gt;
+        /// &lt;param name=&quot;result&quot;&gt;The result. If the command was handled, this should be updated.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;True&lt;/c&gt; if the command was handled; otherwise false.&lt;/returns&gt;
+        public virtual bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
+        {
+            return false;
         }
     }
+
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[126,17,126,18,0],[126,19,126,33,0],[126,34,126,35,0],[48,40,48,74,1],[49,9,49,10,1],[50,9,50,10,1],[57,76,57,90,1],[58,9,58,10,1],[59,13,59,80,1],[62,13,62,60,1],[63,13,63,58,1],[64,13,64,70,1],[65,13,65,64,1],[67,9,67,10,1],[73,9,73,10,1],[74,13,74,36,1],[77,13,77,41,1],[78,13,78,49,1],[79,13,79,48,1],[80,13,80,51,1],[81,13,81,49,1],[84,13,84,49,1],[85,13,85,14,1],[86,17,86,98,1],[87,17,87,41,1],[88,13,88,14,1],[89,9,89,10,1],[98,17,98,18,1],[98,19,98,40,1],[98,41,98,42,1],[108,17,108,18,1],[108,19,108,38,1],[108,39,108,40,1],[117,17,117,18,1],[117,19,117,64,1],[117,65,117,66,1]]);
+      highlightRanges([[33,13,33,14,0],[34,17,34,63,0],[46,17,46,18,0],[46,19,46,56,0],[46,57,46,58,0],[75,9,75,10,0],[76,13,76,26,0],[77,9,77,10,0],[30,9,30,52,1],[31,9,31,10,1],[32,13,32,30,1],[37,13,37,26,1],[38,9,38,10,1],[56,17,56,18,1],[56,19,56,32,1],[56,33,56,34,1],[65,17,65,18,1],[65,19,65,31,1],[65,32,65,33,1]]);
     </script>
   </body>
 </html>

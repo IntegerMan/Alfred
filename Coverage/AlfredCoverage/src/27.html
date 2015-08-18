@@ -2,130 +2,324 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\widgets\alfredprogressbarwidget.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\alfredapplication.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlfredProgressBarWidget.cs
+// AlfredApplication.cs
 // 
-// Created on:      08/04/2015 at 3:34 PM
-// Last Modified:   08/04/2015 at 4:04 PM
+// Created on:      07/25/2015 at 11:30 PM
+// Last Modified:   08/11/2015 at 7:02 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Linq;
 
 using JetBrains.Annotations;
 
-namespace MattEland.Ani.Alfred.Core.Widgets
+using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common;
+
+namespace MattEland.Ani.Alfred.Core
 {
     /// &lt;summary&gt;
-    /// A progress bar widget to be interpreted at the user interface layer
+    ///     Coordinates providing personal assistance to a user interface and receiving settings and queries back from the user
+    ///     interface.
     /// &lt;/summary&gt;
-    public sealed class AlfredProgressBarWidget : AlfredTextWidget
+    public sealed class AlfredApplication : INotifyPropertyChanged, IAlfred
     {
-        private float _maximum = 100;
-        private float _minimum;
-        private float _value;
+        /// &lt;summary&gt;
+        ///     The platform provider
+        /// &lt;/summary&gt;
+        [NotNull]
+        private readonly IPlatformProvider _platformProvider;
 
         /// &lt;summary&gt;
-        ///     Gets or sets the minimum value to display on the bar.
+        ///     The status controller
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The minimum.&lt;/value&gt;
-        public float Minimum
+        [NotNull]
+        private readonly IStatusController _statusController;
+
+        [NotNull]
+        private readonly ICollection&lt;IAlfredSubsystem&gt; _subsystems;
+
+        [CanBeNull]
+        private IChatProvider _chatProvider;
+
+        /// &lt;summary&gt;
+        ///     The status
+        /// &lt;/summary&gt;
+        private AlfredStatus _status;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredApplication&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     Initialization should come from AlfredBootstrapper
+        /// &lt;/remarks&gt;
+        /// &lt;param name=&quot;provider&quot;&gt;The provider.&lt;/param&gt;
+        /// &lt;param name=&quot;controller&quot;&gt;The controller.&lt;/param&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;provider&lt;/exception&gt;
+        internal AlfredApplication([NotNull] IPlatformProvider provider, [CanBeNull] IStatusController controller)
         {
-            get { return _minimum; }
-            set
+            // Set the controller
+            if (controller == null)
             {
-                if (!value.Equals(_minimum))
+                controller = new AlfredStatusController(this);
+            }
+            _statusController = controller;
+            _statusController.Alfred = this;
+
+            // Set the provider
+            if (provider == null)
+            {
+                throw new ArgumentNullException(nameof(provider));
+            }
+            _platformProvider = provider;
+
+            // Build out sub-collections
+            _subsystems = provider.CreateCollection&lt;IAlfredSubsystem&gt;();
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the chat provider.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The chat provider.&lt;/value&gt;
+        [CanBeNull]
+        public IChatProvider ChatProvider
+        {
+            [DebuggerStepThrough]
+            get
+            { return _chatProvider; }
+            private set
+            {
+                if (Equals(value, _chatProvider))
                 {
-                    _minimum = value;
-                    OnPropertyChanged(nameof(Minimum));
+                    return;
                 }
+
+                _chatProvider = value;
+                OnPropertyChanged(nameof(ChatProvider));
             }
         }
 
         /// &lt;summary&gt;
-        ///     Gets or sets the maximum value to display on the bar.
+        ///     Gets the name and version of Alfred.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The maximum value.&lt;/value&gt;
-        public float Maximum
+        /// &lt;value&gt;The name and version.&lt;/value&gt;
+        [NotNull]
+        public string NameAndVersion
         {
-            get { return _maximum; }
-            set
-            {
-                if (!value.Equals(_maximum))
-                {
-                    _maximum = value;
-                    OnPropertyChanged(nameof(Maximum));
-                }
-            }
+            get { return string.Format(CultureInfo.CurrentCulture, &quot;{0} {1}&quot;, Name, Version); }
         }
 
         /// &lt;summary&gt;
-        ///     Gets or sets the current value.
+        ///     Gets the name of the framework.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The value.&lt;/value&gt;
-        public float Value
-        {
-            get { return _value; }
-            set
-            {
-                if (!value.Equals(_value))
-                {
-                    _value = value;
-
-                    OnPropertyChanged(nameof(Value));
-                    OnPropertyChanged(nameof(ValueText));
-                }
-            }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the value to display in the user interface for the ToolTip.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;A textual representation of the Value field.&lt;/value&gt;
-        public string ValueText
+        /// &lt;value&gt;The name.&lt;/value&gt;
+        [NotNull]
+        public string Version
         {
             get
             {
-                var formatString = _valueFormatString ?? &quot;{0}&quot;;
-
-                return string.Format(CultureInfo.CurrentCulture, formatString, Value);
+                // We&#39;ll base this off of the AssemblyVersion.
+                var version = this.GetAssemblyVersion();
+                return version?.ToString() ?? string.Empty;
             }
         }
 
-        [CanBeNull]
-        private string _valueFormatString;
+        /// &lt;summary&gt;
+        ///     Gets the collection provider used for cross platform portability.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The collection provider.&lt;/value&gt;
+        [NotNull]
+        public IPlatformProvider PlatformProvider
+        {
+            get { return _platformProvider; }
+        }
 
         /// &lt;summary&gt;
-        /// Gets or sets the value format string. This is used for driving the ValueText field.
-        /// This can be null for default representation. Use {0} to represent the value.
+        ///     Gets or sets the console provider. This can be null.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The value format string.&lt;/value&gt;
+        /// &lt;value&gt;The console.&lt;/value&gt;
         [CanBeNull]
-        public string ValueFormatString
+        public IConsole Console { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Gets the name of the framework.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The name.&lt;/value&gt;
+        [NotNull]
+        public string Name
         {
-            get { return _valueFormatString; }
+            get { return Resources.AlfredProvider_Name.NonNull(); }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the status.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The status.&lt;/value&gt;
+        public AlfredStatus Status
+        {
+            get { return _status; }
             set
             {
-                if (value != _valueFormatString)
+                if (value != _status)
                 {
-                    _valueFormatString = value;
-
-                    OnPropertyChanged(nameof(ValueFormatString));
-                    OnPropertyChanged(nameof(ValueText));
+                    _status = value;
+                    OnPropertyChanged(nameof(Status));
+                    OnPropertyChanged(nameof(IsOnline));
                 }
             }
         }
+
+        /// &lt;summary&gt;
+        ///     Gets the sub systems associated wih Alfred.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The sub systems.&lt;/value&gt;
+        [NotNull]
+        [ItemNotNull]
+        public IEnumerable&lt;IAlfredSubsystem&gt; Subsystems
+        {
+            get { return _subsystems; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the user interface pages registered to the Alfred Framework at root level.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The pages.&lt;/value&gt;
+        [NotNull]
+        [ItemNotNull]
+        [SuppressMessage(&quot;ReSharper&quot;, &quot;AssignNullToNotNullAttribute&quot;)]
+        public IEnumerable&lt;IAlfredPage&gt; RootPages
+        {
+            get
+            {
+                // Give me all pages in subsystems that are root level pages
+                return Subsystems.SelectMany(subSystem =&gt; subSystem.RootPages);
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets Whether or not Alfred is online.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The is online.&lt;/value&gt;
+        public bool IsOnline
+        {
+            get { return Status == AlfredStatus.Online; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Tells Alfred it&#39;s okay to start itself up and begin operating.
+        /// &lt;/summary&gt;
+        /// &lt;exception cref=&quot;InvalidOperationException&quot;&gt;
+        ///     Thrown if Alfred is already Online
+        /// &lt;/exception&gt;
+        public void Initialize()
+        {
+            // This logic is a bit lengthy, so we&#39;ll have the status controller take care of it
+            _statusController.Initialize();
+        }
+
+        /// &lt;summary&gt;
+        ///     Tells Alfred to go ahead and shut down.
+        /// &lt;/summary&gt;
+        /// &lt;exception cref=&quot;InvalidOperationException&quot;&gt;
+        ///     Thrown if Alfred is already Offline
+        /// &lt;/exception&gt;
+        public void Shutdown()
+        {
+            // This process is a little lengthy so we&#39;ll have the status controller handle it
+            _statusController.Shutdown();
+        }
+
+        /// &lt;summary&gt;
+        ///     Registers the chat provider as the framework&#39;s chat provider.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;chatProvider&quot;&gt;The chat provider.&lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;chatProvider&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public void Register([NotNull] IChatProvider chatProvider)
+        {
+            if (chatProvider == null)
+            {
+                throw new ArgumentNullException(nameof(chatProvider));
+            }
+
+            ChatProvider = chatProvider;
+        }
+
+        /// &lt;summary&gt;
+        ///     Occurs when a property changes.
+        /// &lt;/summary&gt;
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// &lt;summary&gt;
+        ///     Tells modules to take a look at their content and update as needed.
+        /// &lt;/summary&gt;
+        /// &lt;exception cref=&quot;InvalidOperationException&quot;&gt;
+        ///     Thrown if Alfred is not Online
+        /// &lt;/exception&gt;
+        public void Update()
+        {
+            // Error check
+            if (Status != AlfredStatus.Online)
+            {
+                throw new InvalidOperationException(Resources.AlfredProvider_Update_ErrorMustBeOnline);
+            }
+
+            // Update every system
+            foreach (var item in Subsystems)
+            {
+                item.Update();
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Registers a sub system with Alfred.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;subsystem&quot;&gt;The subsystem.&lt;/param&gt;
+        /// &lt;exception cref=&quot;InvalidOperationException&quot;&gt;If a subsystem was registered when Alfred was offline.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;subsystem&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public void Register([NotNull] AlfredSubsystem subsystem)
+        {
+            if (subsystem == null)
+            {
+                throw new ArgumentNullException(nameof(subsystem));
+            }
+            if (Status != AlfredStatus.Offline)
+            {
+                throw new InvalidOperationException(Resources.AlfredProvider_AssertMustBeOffline_ErrorNotOffline);
+            }
+
+            _subsystems.AddSafe(subsystem);
+            subsystem.OnRegistered(this);
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when a property changes.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;propertyName&quot;&gt;Name of the property.&lt;/param&gt;
+        [NotifyPropertyChangedInvocator]
+        private void OnPropertyChanged([CanBeNull] string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
+
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[30,17,30,18,0],[30,19,30,35,0],[30,36,30,37,0],[34,17,34,18,0],[35,21,35,38,0],[36,21,36,56,0],[37,17,37,18,0],[47,17,47,18,0],[47,19,47,35,0],[47,36,47,37,0],[51,17,51,18,0],[52,21,52,38,0],[53,21,53,56,0],[54,17,54,18,0],[64,17,64,18,0],[64,19,64,33,0],[64,34,64,35,0],[68,17,68,18,0],[69,21,69,36,0],[71,21,71,54,0],[72,21,72,58,0],[73,17,73,18,0],[84,13,84,14,0],[85,17,85,64,0],[87,17,87,87,0],[88,13,88,14,0],[102,17,102,18,0],[102,19,102,45,0],[102,46,102,47,0],[32,13,32,14,1],[33,17,33,45,1],[38,13,38,14,1],[49,13,49,14,1],[50,17,50,45,1],[55,13,55,14,1],[66,13,66,14,1],[67,17,67,43,1],[74,13,74,14,1],[104,13,104,14,1],[105,17,105,49,1],[106,17,106,18,1],[107,21,107,48,1],[109,21,109,66,1],[110,21,110,58,1],[111,17,111,18,1],[112,13,112,14,1],[20,9,20,38,1]]);
+      highlightRanges([[67,13,67,14,0],[68,17,68,63,0],[69,13,69,14,0],[75,13,75,14,0],[76,17,76,67,0],[93,13,93,14,0],[93,15,93,36,0],[93,37,93,38,0],[95,13,95,14,0],[96,17,96,50,0],[97,17,97,18,0],[98,21,98,28,0],[101,17,101,39,0],[102,17,102,57,0],[103,13,103,14,0],[113,17,113,18,0],[113,19,113,94,0],[113,95,113,96,0],[124,13,124,14,0],[126,17,126,57,0],[127,17,127,60,0],[128,13,128,14,0],[209,17,209,18,0],[209,19,209,56,0],[209,57,209,58,0],[242,9,242,10,0],[243,13,243,38,0],[244,13,244,14,0],[245,17,245,71,0],[248,13,248,41,0],[249,9,249,10,0],[63,9,63,115,1],[64,9,64,10,1],[66,13,66,36,1],[70,13,70,44,1],[71,13,71,45,1],[74,13,74,34,1],[78,13,78,42,1],[81,13,81,73,1],[82,9,82,10,1],[138,17,138,18,1],[138,19,138,44,1],[138,45,138,46,1],[146,35,146,39,1],[146,40,146,44,1],[155,17,155,18,1],[155,19,155,66,1],[155,67,155,68,1],[164,17,164,18,1],[164,19,164,34,1],[164,35,164,36,1],[166,13,166,14,1],[167,17,167,38,1],[168,17,168,18,1],[169,21,169,37,1],[170,21,170,55,1],[171,21,171,57,1],[172,17,172,18,1],[173,13,173,14,1],[184,17,184,18,1],[184,19,184,38,1],[184,39,184,40,1],[197,13,197,14,1],[199,17,199,59,1],[199,78,199,80,1],[200,13,200,14,1],[219,9,219,10,1],[221,13,221,44,1],[222,9,222,10,1],[231,9,231,10,1],[233,13,233,42,1],[234,9,234,10,1],[263,9,263,10,1],[265,13,265,47,1],[266,13,266,14,1],[267,17,267,104,1],[271,13,271,20,1],[271,34,271,44,1],[271,22,271,30,1],[272,13,272,14,1],[273,17,273,31,1],[274,13,274,14,1],[271,31,271,33,1],[275,9,275,10,1],[284,9,284,10,1],[285,13,285,35,1],[286,13,286,14,1],[287,17,287,68,1],[289,13,289,48,1],[290,13,290,14,1],[291,17,291,115,1],[294,13,294,44,1],[295,13,295,42,1],[296,9,296,10,1],[304,9,304,10,1],[305,13,305,87,1],[306,9,306,10,1],[199,59,199,78,1]]);
     </script>
   </body>
 </html>

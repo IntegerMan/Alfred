@@ -2,137 +2,148 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.common\assemblyextensions.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\definitions\userstatementresponse.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AssemblyExtensions.cs
+// UserStatementResponse.cs
 // 
-// Created on:      08/14/2015 at 12:38 AM
-// Last Modified:   08/14/2015 at 12:59 AM
-// 
-// Last Modified by: Matt Eland
+// Created on:      08/10/2015 at 5:01 PM
+// Last Modified:   08/11/2015 at 1:41 PM
+// Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Linq;
-using System.Reflection;
 
 using JetBrains.Annotations;
 
-namespace MattEland.Common
+namespace MattEland.Ani.Alfred.Core.Definitions
 {
-    public static class AssemblyHelper
+    /// &lt;summary&gt;
+    ///     A response to a user statement
+    /// &lt;/summary&gt;
+    public struct UserStatementResponse : IEquatable&lt;UserStatementResponse&gt;
     {
         /// &lt;summary&gt;
-        ///     Gets the types in an assembly with an attribute applied to them.
+        ///     Initializes a new instance of the &lt;see cref=&quot;T:UserStatementResponse&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;typeparam name=&quot;TAttribute&quot;&gt;The attribute to search for.&lt;/typeparam&gt;
-        /// &lt;param name=&quot;assembly&quot;&gt;The assembly.&lt;/param&gt;
-        /// &lt;param name=&quot;inherit&quot;&gt;
-        ///     true to search the type&#39;s inheritance chain to find the attributes; otherwise, false.
-        /// &lt;/param&gt;
-        /// &lt;returns&gt;The types in the assembly with the requested attribute&lt;/returns&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        /// &lt;param name=&quot;userInput&quot;&gt;The user input.&lt;/param&gt;
+        /// &lt;param name=&quot;responseText&quot;&gt;The response text.&lt;/param&gt;
+        /// &lt;param name=&quot;template&quot;&gt;The template.&lt;/param&gt;
+        /// &lt;param name=&quot;command&quot;&gt;The Command.&lt;/param&gt;
+        public UserStatementResponse([CanBeNull] string userInput,
+                                     [CanBeNull] string responseText,
+                                     string template,
+                                     ChatCommand command)
+        {
+            UserInput = userInput ?? string.Empty;
+            ResponseText = responseText ?? string.Empty;
+            Template = template;
+            Command = command;
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the original user input text.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The user input.&lt;/value&gt;
         [NotNull]
-        [ItemNotNull]
-        [UsedImplicitly]
-        public static IEnumerable&lt;Type&gt; GetTypesInAssemblyWithAttribute&lt;TAttribute&gt;([NotNull] this Assembly assembly,
-                                                                                    bool inherit)
-            where TAttribute : Attribute
-        {
-            if (assembly == null)
-            {
-                throw new ArgumentNullException(nameof(assembly));
-            }
-
-            var types = assembly.GetTypes();
-            return GetTypesWithAttributes&lt;TAttribute&gt;(types, inherit);
-        }
+        public string UserInput { get; }
 
         /// &lt;summary&gt;
-        ///     Gets the types in a group of types that have an attribute applied to them.
+        ///     Gets the response text.
         /// &lt;/summary&gt;
-        /// &lt;typeparam name=&quot;TAttribute&quot;&gt;The attribute to search for.&lt;/typeparam&gt;
-        /// &lt;param name=&quot;types&quot;&gt;The set of types&lt;/param&gt;
-        /// &lt;param name=&quot;inherit&quot;&gt;
-        ///     true to search the type&#39;s inheritance chain to find the attributes; otherwise, false.
-        /// &lt;/param&gt;
-        /// &lt;returns&gt;The types in the set of types that have the requested attribute&lt;/returns&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
-        [SuppressMessage(&quot;ReSharper&quot;, &quot;PossibleNullReferenceException&quot;)]
+        /// &lt;value&gt;The response text.&lt;/value&gt;
         [NotNull]
-        [ItemNotNull]
-        [UsedImplicitly]
-        public static IEnumerable&lt;Type&gt; GetTypesWithAttributes&lt;TAttribute&gt;([NotNull] IEnumerable&lt;Type&gt; types,
-                                                                           bool inherit) where TAttribute : Attribute
-        {
-            if (types == null)
-            {
-                throw new ArgumentNullException(nameof(types));
-            }
-
-            return types.Where(t =&gt; t.HasAttribute&lt;TAttribute&gt;(inherit));
-        }
+        public string ResponseText { get; }
 
         /// &lt;summary&gt;
-        ///     Determines whether the specified member has a particular attribute applied to it.
+        ///     Gets the AIML template used to generate a response.
         /// &lt;/summary&gt;
-        /// &lt;typeparam name=&quot;TAttribute&quot;&gt;The type of the attribute.&lt;/typeparam&gt;
-        /// &lt;param name=&quot;member&quot;&gt;The member.&lt;/param&gt;
-        /// &lt;param name=&quot;inherit&quot;&gt;
-        ///     true to search the type&#39;s inheritance chain to find the attributes; otherwise, false.
-        /// &lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the specified inherit has the attribute; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
-        [UsedImplicitly]
-        public static bool HasAttribute&lt;TAttribute&gt;([NotNull] this MemberInfo member, bool inherit)
-            where TAttribute : Attribute
-        {
-            if (member == null)
-            {
-                throw new ArgumentNullException(nameof(member));
-            }
-
-            return member.IsDefined(typeof(TAttribute), inherit);
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the Version of this module&#39;s assembly based on the AssemblyVersionAttribute.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;caller&quot;&gt;The caller.&lt;/param&gt;
-        /// &lt;returns&gt;The Version of this module&#39;s assembly&lt;/returns&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;caller&lt;/exception&gt;
+        /// &lt;value&gt;The template.&lt;/value&gt;
         [CanBeNull]
-        public static Version GetAssemblyVersion([NotNull] this object caller)
-        {
-            if (caller == null)
-            {
-                throw new ArgumentNullException(nameof(caller));
-            }
+        public string Template { get; }
 
-            try
+        /// &lt;summary&gt;
+        ///     Gets the system Command to execute.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The Command.&lt;/value&gt;
+        public ChatCommand Command { get; }
+
+        /// &lt;summary&gt;
+        ///     Determines if this instance is equivalent to the other instance
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;other&quot;&gt;The other instance.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the instances are equivalent, &lt;c&gt;false&lt;/c&gt; otherwise.&lt;/returns&gt;
+        public bool Equals(UserStatementResponse other)
+        {
+            return string.Equals(UserInput, other.UserInput) &amp;&amp; string.Equals(ResponseText, other.ResponseText) &amp;&amp;
+                   string.Equals(Template, other.Template) &amp;&amp; Command == other.Command;
+        }
+
+        /// &lt;summary&gt;
+        ///     Determines whether the specified &lt;see cref=&quot;System.Object&quot; /&gt; is equal to this instance.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;obj&quot;&gt;The object to compare with the current instance.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the specified &lt;see cref=&quot;System.Object&quot; /&gt; is equal to this instance; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
             {
-                var assembly = caller.GetType().Assembly;
-                var assemblyName = new AssemblyName(assembly.FullName);
-                return assemblyName.Version;
+                return false;
             }
-            catch (IOException)
+            return obj is UserStatementResponse &amp;&amp; Equals((UserStatementResponse)obj);
+        }
+
+        /// &lt;summary&gt;
+        ///     Returns a hash code for this instance.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.&lt;/returns&gt;
+        [SuppressMessage(&quot;ReSharper&quot;, &quot;ConstantNullCoalescingCondition&quot;)]
+        public override int GetHashCode()
+        {
+            unchecked
             {
-                return null;
+                // ?? Guards against GetHashCode getting called unexpectedly - maybe in constructor? Saw errors with
+                // unknown stack when this was not present
+                var hashCode = (UserInput ?? string.Empty).GetHashCode();
+                hashCode = (hashCode * 397) ^ (ResponseText ?? string.Empty).GetHashCode();
+                hashCode = (hashCode * 397) ^ (Template ?? string.Empty).GetHashCode();
+                hashCode = (hashCode * 397) ^ Command.GetHashCode();
+
+                return hashCode;
             }
+        }
+
+        /// &lt;summary&gt;
+        ///     Implements the == operator.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;left&quot;&gt;The left.&lt;/param&gt;
+        /// &lt;param name=&quot;right&quot;&gt;The right.&lt;/param&gt;
+        /// &lt;returns&gt;The result of the operator.&lt;/returns&gt;
+        public static bool operator ==(UserStatementResponse left, UserStatementResponse right)
+        {
+            return left.Equals(right);
+        }
+
+        /// &lt;summary&gt;
+        ///     Implements the != operator.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;left&quot;&gt;The left.&lt;/param&gt;
+        /// &lt;param name=&quot;right&quot;&gt;The right.&lt;/param&gt;
+        /// &lt;returns&gt;The result of the operator.&lt;/returns&gt;
+        public static bool operator !=(UserStatementResponse left, UserStatementResponse right)
+        {
+            return !left.Equals(right);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[41,13,41,14,0],[42,17,42,67,0],[67,13,67,14,0],[68,17,68,64,0],[89,13,89,14,0],[90,17,90,65,0],[106,13,106,14,0],[107,17,107,65,0],[116,13,116,32,0],[117,13,117,14,0],[118,17,118,29,0],[39,9,39,10,1],[40,13,40,34,1],[45,13,45,45,1],[46,13,46,71,1],[47,9,47,10,1],[65,9,65,10,1],[66,13,66,31,1],[71,13,71,37,1],[71,72,71,74,1],[72,9,72,10,1],[87,9,87,10,1],[88,13,88,32,1],[93,13,93,66,1],[94,9,94,10,1],[104,9,104,10,1],[105,13,105,32,1],[111,13,111,14,1],[112,17,112,58,1],[113,17,113,72,1],[114,17,114,45,1],[120,9,120,10,1],[71,37,71,72,1]]);
+      highlightRanges([[64,38,64,42,0],[85,13,85,14,0],[86,17,86,30,0],[97,9,97,10,0],[99,13,99,14,0],[102,17,102,74,0],[103,17,103,92,0],[104,17,104,88,0],[105,17,105,69,0],[107,17,107,33,0],[109,9,109,10,0],[118,9,118,10,0],[119,13,119,39,0],[120,9,120,10,0],[129,9,129,10,0],[130,13,130,40,0],[131,9,131,10,0],[32,9,32,10,1],[33,13,33,51,1],[34,13,34,57,1],[35,13,35,33,1],[36,13,36,31,1],[37,9,37,10,1],[44,35,44,39,1],[51,38,51,42,1],[58,34,58,38,1],[72,9,72,10,1],[73,13,74,88,1],[75,9,75,10,1],[83,9,83,10,1],[84,13,84,44,1],[88,13,88,87,1],[89,9,89,10,1]]);
     </script>
   </body>
 </html>

@@ -2,194 +2,515 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\user.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\utils\aimlloader.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// User.cs
+// AimlLoader.cs
 // 
-// Created on:      08/12/2015 at 10:24 PM
-// Last Modified:   08/13/2015 at 3:45 PM
+// Created on:      08/12/2015 at 10:25 PM
+// Last Modified:   08/16/2015 at 4:49 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Security;
+using System.Text;
+using System.Xml;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Ani.Alfred.Chat.Aiml.Normalize;
+using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Common;
 
-namespace MattEland.Ani.Alfred.Chat.Aiml
+namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 {
     /// &lt;summary&gt;
-    ///     Represents a user the chat engine interacts with
+    ///     A class used for building AIML resources
     /// &lt;/summary&gt;
-    public class User
+    public class AimlLoader
     {
         [NotNull]
-        [ItemNotNull]
-        private readonly List&lt;Result&gt; _results = new List&lt;Result&gt;();
+        private readonly ChatEngine _chatEngine;
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;User&quot; /&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;AimlLoader&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;id&quot;&gt;The identifier.&lt;/param&gt;
         /// &lt;param name=&quot;chatEngine&quot;&gt;The chat engine.&lt;/param&gt;
-        /// &lt;exception cref=&quot;ArgumentOutOfRangeException&quot;&gt;The id cannot be empty&lt;/exception&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;chatEngine&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        public User([NotNull] string id, [NotNull] ChatEngine chatEngine)
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;chatEngine&lt;/exception&gt;
+        public AimlLoader([NotNull] ChatEngine chatEngine)
         {
-            //- Validation
             if (chatEngine == null)
             {
                 throw new ArgumentNullException(nameof(chatEngine));
             }
-            if (string.IsNullOrWhiteSpace(id))
+
+            _chatEngine = chatEngine;
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the locale we&#39;re using for the chat engine.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The locale.&lt;/value&gt;
+        public CultureInfo Locale
+        {
+            get { return _chatEngine.Locale; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Loads AIML resources from a file.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;directoryPath&quot;&gt;The path to the directory containing the .AIML files.&lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;
+        ///     &lt;paramref name=&quot;directoryPath&quot; /&gt; is
+        ///     &lt;see langword=&quot;null&quot; /&gt;.
+        /// &lt;/exception&gt;
+        /// &lt;exception cref=&quot;DirectoryNotFoundException&quot;&gt;The directory specified does not exist.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;UnauthorizedAccessException&quot;&gt;The caller does not have the required permission. &lt;/exception&gt;
+        /// &lt;exception cref=&quot;IOException&quot;&gt;
+        ///     &lt;paramref name=&quot;directoryPath&quot; /&gt; led to an invalid file name.-or-A
+        ///     network error has occurred.
+        /// &lt;/exception&gt;
+        public void LoadAiml([NotNull] string directoryPath)
+        {
+            //- Parameter validation
+            if (directoryPath == null)
             {
-                throw new ArgumentOutOfRangeException(nameof(id), Resources.UserCtorNullId);
+                throw new ArgumentNullException(nameof(directoryPath));
             }
 
-            Id = id;
-            ChatEngine = chatEngine;
+            if (!Directory.Exists(directoryPath))
+            {
+                var message = string.Format(Locale,
+                                            Resources.LoadAimlDirectoryNotFound,
+                                            directoryPath);
+                throw new DirectoryNotFoundException(message);
+            }
 
-            // Set up the variables collection
-            UserVariables = new SettingsManager();
-            UserVariables.Add(&quot;topic&quot;, &quot;*&quot;);
+            // Grab all files in the directory that should meet our needs
+            Log(string.Format(Locale, Resources.LoadAimlStartingToLoad, directoryPath),
+                LogLevel.Verbose);
+
+            var files = Directory.GetFiles(directoryPath, &quot;*.aiml&quot;);
+            if (files.Length &lt;= 0)
+            {
+                Log(string.Format(Locale, Resources.LoadAimlNoFilesInDirectory, directoryPath),
+                    LogLevel.Error);
+                return;
+            }
+
+            // Load each file we&#39;ve found
+            foreach (var filename in files)
+            {
+                if (filename != null)
+                {
+                    try
+                    {
+                        LoadAimlFile(filename);
+                    }
+                    catch (XmlException)
+                    {
+                        Log(string.Format(Locale, Resources.AimlLoaderErrorXmlException.NonNull(), filename), LogLevel.Error);
+                    }
+                    catch (IOException ex)
+                    {
+                        Log(string.Format(Locale, Resources.AimlLoaderErrorIOException.NonNull(), filename, ex.Message), LogLevel.Error);
+                    }
+                    catch (SecurityException ex)
+                    {
+                        Log(string.Format(Locale, Resources.AimlLoaderErrorSecurityException.NonNull(), filename, ex.Message),
+                            LogLevel.Error);
+                    }
+                }
+            }
+
+            Log(string.Format(Locale,
+                              Resources.LoadAimlFinishedLoading,
+                              _chatEngine.NodeCount),
+                LogLevel.Verbose);
         }
 
         /// &lt;summary&gt;
-        ///     Gets the chat engine.
+        ///     Logs the specified message to the log.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The chat engine.&lt;/value&gt;
-        [NotNull]
-        public ChatEngine ChatEngine { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets the predicates. These are variables pertaining to the user.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The predicates.&lt;/value&gt;
-        [NotNull]
-        public SettingsManager UserVariables { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets the user&#39;s identifier.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The user&#39;s identifier.&lt;/value&gt;
-        [NotNull]
-        public string Id { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets the topic.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The topic.&lt;/value&gt;
-        public string Topic
+        /// &lt;param name=&quot;message&quot;&gt;The message.&lt;/param&gt;
+        /// &lt;param name=&quot;level&quot;&gt;The log level.&lt;/param&gt;
+        private void Log(string message, LogLevel level)
         {
-            get { return UserVariables.GetValue(&quot;topic&quot;); }
+            if (message != null)
+            {
+                _chatEngine.Log(message, level);
+            }
         }
 
         /// &lt;summary&gt;
-        ///     Gets the last result.
+        ///     Loads AIML resources from a file with the specified directoryPath.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The last result.&lt;/value&gt;
+        /// &lt;param name=&quot;path&quot;&gt;The directoryPath.&lt;/param&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        /// &lt;exception cref=&quot;XmlException&quot;&gt;
+        ///     There is a load or parse error in the XML. In this case, a
+        ///     &lt;see cref=&quot;T:System.IO.FileNotFoundException&quot; /&gt; is raised.
+        /// &lt;/exception&gt;
+        /// &lt;exception cref=&quot;DirectoryNotFoundException&quot;&gt;
+        ///     The specified path is invalid (for example, it is on
+        ///     an unmapped drive).
+        /// &lt;/exception&gt;
+        /// &lt;exception cref=&quot;IOException&quot;&gt;An I/O error occurred while opening the file. &lt;/exception&gt;
+        /// &lt;exception cref=&quot;UnauthorizedAccessException&quot;&gt;
+        ///     &lt;paramref name=&quot;path&quot; /&gt; specified a file that is
+        ///     read-only.-or- This operation is not supported on the current platform.-or-
+        ///     &lt;paramref name=&quot;path&quot; /&gt; specified a directory.-or- The caller does not have the required
+        ///     permission.
+        /// &lt;/exception&gt;
+        /// &lt;exception cref=&quot;FileNotFoundException&quot;&gt;
+        ///     The file specified in &lt;paramref name=&quot;path&quot; /&gt; was not
+        ///     found.
+        /// &lt;/exception&gt;
+        /// &lt;exception cref=&quot;SecurityException&quot;&gt;The caller does not have the required permission. &lt;/exception&gt;
+        public void LoadAimlFile([NotNull] string path)
+        {
+            if (path == null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            Log(string.Format(Locale, Resources.AimlLoaderProcessingFile.NonNull(), path), LogLevel.Verbose);
+
+            // Load the document. Loads of XmlExceptions can be thrown here
+            var doc = new XmlDocument();
+            doc.Load(path);
+
+            // Load the Aiml resources from the document
+            LoadAimlFromXml(doc);
+        }
+
+        /// &lt;summary&gt;
+        ///     Loads the AIML from an XML Document.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;doc&quot;&gt;The document.&lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;doc&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public void LoadAimlFromXml([NotNull] XmlDocument doc)
+        {
+            //- Validate
+            if (doc == null)
+            {
+                throw new ArgumentNullException(nameof(doc));
+            }
+
+            // Grab the nodes from the document
+            var nodes = doc.DocumentElement?.ChildNodes.Cast&lt;XmlNode&gt;();
+            if (nodes == null)
+            {
+                return;
+            }
+
+            //- Handle each node in turn
+            foreach (var node in nodes)
+            {
+                if (node == null)
+                {
+                    continue;
+                }
+
+                // At the root level we support Topics and Categories
+                switch (node.Name.ToUpperInvariant())
+                {
+                    case &quot;TOPIC&quot;:
+                        ProcessTopic(node);
+                        break;
+
+                    case &quot;CATEGORY&quot;:
+                        ProcessCategory(node, &quot;*&quot;);
+                        break;
+                }
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Processes a topic node.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;node&quot;&gt;The node.&lt;/param&gt;
+        private void ProcessTopic([NotNull] XmlNode node)
+        {
+            //- Validation
+            if (node == null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+
+            // Loop through child categories and process them
+            foreach (XmlNode childNode in node.ChildNodes)
+            {
+                if (childNode != null &amp;&amp; childNode.Name.Matches(&quot;category&quot;))
+                {
+                    ProcessCategory(childNode, GetNameFromNode(node));
+                }
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets a name from node&#39;s name attribute defaulting to &quot;*&quot; when name is not found.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;node&quot;&gt;The node.&lt;/param&gt;
+        /// &lt;returns&gt;The name value&lt;/returns&gt;
+        [NotNull]
+        private static string GetNameFromNode([NotNull] XmlNode node)
+        {
+            if (node == null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+
+            var nameValue = &quot;*&quot;;
+            var attributes = node.Attributes;
+            if (attributes != null &amp;&amp; attributes.Count == 1 &amp; attributes[0]?.Name == &quot;name&quot;)
+            {
+                // Grab the name from the node and use that as our topic
+                var nameAttribute = attributes[&quot;name&quot;];
+                if (nameAttribute?.Value != null)
+                {
+                    nameValue = nameAttribute.Value;
+                }
+
+            }
+
+            return nameValue;
+        }
+
+        /// &lt;summary&gt;
+        ///     Processes a category node and adds it to the ChatEngine.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;node&quot;&gt;The node.&lt;/param&gt;
+        /// &lt;param name=&quot;topicName&quot;&gt;Name of the topic.&lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;node, topicName&lt;/exception&gt;
+        private void ProcessCategory([NotNull] XmlNode node,
+                                     [NotNull] string topicName)
+        {
+            //- Validation
+            if (node == null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+            if (topicName == null)
+            {
+                throw new ArgumentNullException(nameof(topicName));
+            }
+
+            // GetValue the pattern node
+            var patternNode = FindChildNode(&quot;pattern&quot;, node);
+            if (patternNode == null)
+            {
+                throw new XmlException(string.Format(Locale,
+                                                     &quot;Missing pattern tag in a node found in topic {0}&quot;,
+                                                     topicName));
+            }
+
+            // GetValue the template node
+            var templateNode = FindChildNode(&quot;template&quot;, node);
+            if (Equals(null, templateNode))
+            {
+                throw new XmlException(string.Format(Locale,
+                                                     &quot;Missing template tag in the node with pattern: {0} found in topic {1}&quot;,
+                                                     patternNode.InnerText,
+                                                     topicName));
+            }
+
+            // Figure out our path for logging and validation purposes
+            var path = BuildPathString(node, topicName, false);
+            _chatEngine.AddCategoryToGraph(templateNode, path);
+        }
+
+        /// &lt;summary&gt;
+        ///     Builds the path string from a node given a topic name.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;node&quot;&gt;The node.&lt;/param&gt;
+        /// &lt;param name=&quot;topicName&quot;&gt;Name of the topic.&lt;/param&gt;
+        /// &lt;param name=&quot;isUserInput&quot;&gt;The is user input.&lt;/param&gt;
+        /// &lt;returns&gt;The path string&lt;/returns&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;node&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;topicName&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        [NotNull]
+        public string BuildPathString([NotNull] XmlNode node,
+                                      [NotNull] string topicName,
+                                      bool isUserInput)
+        {
+            //- Validation
+            if (node == null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+            if (topicName == null)
+            {
+                throw new ArgumentNullException(nameof(topicName));
+            }
+
+            // GetValue the pattern from the node
+            var patternNode = FindChildNode(&quot;pattern&quot;, node);
+            var pattern = patternNode?.InnerText ?? string.Empty;
+
+            // GetValue the &quot;that&quot; value from the node
+            var thatNode = FindChildNode(&quot;that&quot;, node);
+            var that = thatNode?.InnerText ?? &quot;*&quot;;
+
+            // Delegate path building
+            return BuildPathString(pattern, that, topicName, isUserInput);
+        }
+
+        /// &lt;summary&gt;
+        ///     Finds a child node with the specified name from the node specified.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;name&quot;&gt;The name.&lt;/param&gt;
+        /// &lt;param name=&quot;node&quot;&gt;The node.&lt;/param&gt;
+        /// &lt;returns&gt;System.Xml.XmlNode.&lt;/returns&gt;
         [CanBeNull]
-        public Result LastResult
+        private static XmlNode FindChildNode([NotNull] string name, [NotNull] XmlNode node)
         {
-            get { return _results.FirstOrDefault(); }
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (node == null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+
+            return node.ChildNodes.Cast&lt;XmlNode&gt;().FirstOrDefault(xmlNode =&gt; xmlNode?.Name == name);
         }
 
         /// &lt;summary&gt;
-        ///     Gets the last chat result&#39;s raw output
+        ///     Builds a directoryPath string representing a compound state involving a pattern, &quot;that&quot; value,
+        ///     and topic.
         /// &lt;/summary&gt;
-        /// &lt;returns&gt;The last result&#39;s raw output&lt;/returns&gt;
+        /// &lt;param name=&quot;pattern&quot;&gt;The pattern.&lt;/param&gt;
+        /// &lt;param name=&quot;that&quot;&gt;The that value.&lt;/param&gt;
+        /// &lt;param name=&quot;topicName&quot;&gt;Name of the topic.&lt;/param&gt;
+        /// &lt;param name=&quot;isUserInput&quot;&gt;Whether or not this is user input.&lt;/param&gt;
+        /// &lt;returns&gt;A directoryPath string representing the pattern, that, and topicName values.&lt;/returns&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;pattern&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;that&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;topicName&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
         [NotNull]
-        public string LastChatOutput
+        public string BuildPathString([NotNull] string pattern,
+                                      [NotNull] string that,
+                                      [NotNull] string topicName,
+                                      bool isUserInput)
         {
-            get { return LastResult?.RawOutput ?? &quot;*&quot;; }
-        }
+            //- Validate inputs
+            if (pattern == null)
+            {
+                throw new ArgumentNullException(nameof(pattern));
+            }
+            if (that == null)
+            {
+                throw new ArgumentNullException(nameof(that));
+            }
+            if (topicName == null)
+            {
+                throw new ArgumentNullException(nameof(topicName));
+            }
 
-        /// &lt;summary&gt;
-        ///     Gets the output sentence from the specified result and sentence.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;resultIndex&quot;&gt;Index of the result. Defaults to 1.&lt;/param&gt;
-        /// &lt;param name=&quot;sentenceIndex&quot;&gt;Index of the sentence. Defaults to 1.&lt;/param&gt;
-        /// &lt;returns&gt;The output sentence&lt;/returns&gt;
-        public string GetOutputSentence(int resultIndex = 1, int sentenceIndex = 1)
-        {
-            //- Ensure we&#39;re not grabbing out of range
-            var isValidResult = resultIndex &gt;= 0 &amp; resultIndex &lt; _results.Count;
-            if (!isValidResult)
+            // Determine if we&#39;ll sanitize input or not
+            var trustInput = _chatEngine.TrustAiml &amp; !isUserInput;
+
+            // Build pattern string
+            pattern = trustInput ? pattern.Trim() : Normalize(pattern, isUserInput).Trim();
+            if (string.IsNullOrEmpty(pattern))
             {
                 return string.Empty;
             }
 
-            // Get the result
-            var result = _results[resultIndex];
-            Debug.Assert(result != null);
-
-            // Grab the output sentence at the specified index
-            if (sentenceIndex &gt;= 0 &amp; sentenceIndex &lt; result.OutputSentences.Count)
+            // Build &quot;that&quot; display string
+            that = trustInput ? that.Trim() : Normalize(that, isUserInput).Trim();
+            if (string.IsNullOrEmpty(that))
             {
-                return result.OutputSentences[sentenceIndex];
+                that = &quot;*&quot;;
+            }
+            else if (that.Length &gt; _chatEngine.MaxThatSize)
+            {
+                that = &quot;*&quot;;
             }
 
-            return string.Empty;
+            // Build Topic display string
+            topicName = trustInput ? topicName.Trim() : Normalize(topicName, isUserInput).Trim();
+            if (string.IsNullOrEmpty(topicName))
+            {
+                topicName = &quot;*&quot;;
+            }
+
+            // Build and return the Path String
+            var stringBuilder = new StringBuilder();
+            stringBuilder.Append(pattern);
+            stringBuilder.Append(&quot; &lt;that&gt; &quot;);
+            stringBuilder.Append(that);
+            stringBuilder.Append(&quot; &lt;topic&gt; &quot;);
+            stringBuilder.Append(topicName);
+
+            return stringBuilder.ToString();
         }
 
         /// &lt;summary&gt;
-        ///     Gets the specified input sentence from the specified result.
+        ///     Normalizes the input by stripping out illegal characters and applying common substitutions.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;resultIndex&quot;&gt;Index of the result. Defaults to 1.&lt;/param&gt;
-        /// &lt;param name=&quot;sentenceIndex&quot;&gt;Index of the sentenceIndex. Defaults to 1.&lt;/param&gt;
-        /// &lt;returns&gt;The specified sentenceIndex.&lt;/returns&gt;
-        public string GetInputSentence(int resultIndex = 1, int sentenceIndex = 1)
+        /// &lt;param name=&quot;input&quot;&gt;The input.&lt;/param&gt;
+        /// &lt;param name=&quot;isUserInput&quot;&gt;The is user input.&lt;/param&gt;
+        /// &lt;returns&gt;The normalized input&lt;/returns&gt;
+        [NotNull]
+        public string Normalize([CanBeNull] string input, bool isUserInput)
         {
-            //- Ensure we&#39;re grabbing at an acceptable resultIndex
-            var isValidResult = resultIndex &gt;= 0 &amp; resultIndex &lt; _results.Count;
-            if (!isValidResult)
+            // Do common substitutions
+            input = TextSubstitutionHelper.Substitute(_chatEngine.Librarian.Substitutions,
+                                                           input);
+
+            // Grab the words in the input
+            const string WordBoundaries = &quot; \r\n\t&quot;;
+            var words = input.Split(WordBoundaries.ToCharArray());
+
+            // Loop through each word found and append it to the output string
+            var stringBuilder = new StringBuilder();
+            var illegalCharacters = new SanitizingTextTransformer(_chatEngine);
+
+            foreach (var word in words)
             {
-                return string.Empty;
+                //- Sanity check
+                if (string.IsNullOrEmpty(word))
+                {
+                    continue;
+                }
+
+                // Sanitize the input keeping in mind that this could be a dividing wildcard character
+                string result;
+                if (isUserInput)
+                {
+                    result = illegalCharacters.Transform(word);
+                }
+                else
+                {
+                    const string Wildcards = &quot;*_&quot;;
+                    result = Wildcards.Contains(word) ? word : illegalCharacters.Transform(word);
+                }
+
+                //- Add it to the output
+                stringBuilder.AppendFormat(Locale, &quot;{0} &quot;, result?.Trim());
             }
 
-            //- Grab the result
-            var result = _results[resultIndex];
-            Debug.Assert(result != null);
-
-            // Grab the appropriate sentenceIndex
-            if (sentenceIndex &gt;= 0 &amp; sentenceIndex &lt; result.InputSentences.Count)
-            {
-                return result.InputSentences[sentenceIndex];
-            }
-
-            //- Invalid results yield nothing
-            return string.Empty;
-        }
-
-        /// &lt;summary&gt;
-        ///     Adds a result to the user&#39;s results.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;latestResult&quot;&gt;The latest chat result.&lt;/param&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;latestResult&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        public void AddResult([NotNull] Result latestResult)
-        {
-            if (latestResult == null)
-            {
-                throw new ArgumentNullException(nameof(latestResult));
-            }
-
-            _results.Insert(0, latestResult);
+            //- Send the result back
+            return stringBuilder.ToString().Replace(&quot;  &quot;, &quot; &quot;);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[41,13,41,14,0],[42,17,42,69,0],[45,13,45,14,0],[46,17,46,93,0],[62,40,62,44,0],[114,9,114,10,0],[116,13,116,81,0],[117,13,117,32,0],[118,13,118,14,0],[119,17,119,37,0],[123,13,123,48,0],[124,13,124,42,0],[127,13,127,83,0],[128,13,128,14,0],[129,17,129,62,0],[132,13,132,33,0],[133,9,133,10,0],[142,9,142,10,0],[144,13,144,81,0],[145,13,145,32,0],[146,13,146,14,0],[147,17,147,37,0],[151,13,151,48,0],[152,13,152,42,0],[155,13,155,82,0],[156,13,156,14,0],[157,17,157,61,0],[161,13,161,33,0],[162,9,162,10,0],[172,13,172,14,0],[173,17,173,71,0],[28,9,28,69,1],[37,9,37,74,1],[38,9,38,10,1],[40,13,40,36,1],[44,13,44,47,1],[49,13,49,21,1],[50,13,50,37,1],[53,13,53,51,1],[54,13,54,45,1],[55,9,55,10,1],[69,48,69,52,1],[76,28,76,32,1],[84,17,84,18,1],[84,19,84,58,1],[84,59,84,60,1],[94,17,94,18,1],[94,19,94,52,1],[94,53,94,54,1],[104,17,104,18,1],[104,19,104,55,1],[104,56,104,57,1],[170,9,170,10,1],[171,13,171,38,1],[176,13,176,46,1],[177,9,177,10,1]]);
+      highlightRanges([[42,13,42,14,0],[43,17,43,69,0],[73,9,73,10,0],[75,13,75,39,0],[76,13,76,14,0],[77,17,77,72,0],[80,13,80,50,0],[81,13,81,14,0],[82,17,84,60,0],[85,17,85,63,0],[89,13,90,35,0],[92,13,92,69,0],[93,13,93,35,0],[94,13,94,14,0],[95,17,96,37,0],[97,17,97,24,0],[101,13,101,20,0],[101,38,101,43,0],[101,22,101,34,0],[102,13,102,14,0],[103,17,103,38,0],[104,17,104,18,0],[106,21,106,22,0],[107,25,107,48,0],[108,21,108,22,0],[109,21,109,41,0],[110,21,110,22,0],[111,25,111,127,0],[112,21,112,22,0],[113,21,113,43,0],[114,21,114,22,0],[115,25,115,138,0],[116,21,116,22,0],[117,21,117,49,0],[118,21,118,22,0],[119,25,120,45,0],[121,21,121,22,0],[122,17,122,18,0],[123,13,123,14,0],[101,35,101,37,0],[125,13,128,35,0],[129,9,129,10,0],[137,9,137,10,0],[138,13,138,33,0],[139,13,139,14,0],[140,17,140,49,0],[141,13,141,14,0],[142,9,142,10,0],[170,9,170,10,0],[171,13,171,30,0],[172,13,172,14,0],[173,17,173,63,0],[176,13,176,110,0],[179,13,179,41,0],[180,13,180,28,0],[183,13,183,34,0],[184,9,184,10,0],[195,13,195,14,0],[196,17,196,62,0],[202,13,202,14,0],[203,17,203,24,0],[210,17,210,18,0],[211,21,211,30,0],[218,25,218,44,0],[219,25,219,31,0],[233,9,233,10,0],[235,13,235,30,0],[236,13,236,14,0],[237,17,237,63,0],[241,13,241,20,0],[241,43,241,58,0],[241,22,241,39,0],[242,13,242,14,0],[243,17,243,77,0],[244,17,244,18,0],[245,21,245,71,0],[246,17,246,18,0],[247,13,247,14,0],[241,40,241,42,0],[248,9,248,10,0],[257,9,257,10,0],[258,13,258,30,0],[259,13,259,14,0],[260,17,260,63,0],[263,13,263,33,0],[264,13,264,46,0],[265,13,265,93,0],[266,13,266,14,0],[268,17,268,56,0],[269,17,269,50,0],[270,17,270,18,0],[271,21,271,53,0],[272,17,272,18,0],[274,13,274,14,0],[276,13,276,30,0],[277,9,277,10,0],[290,13,290,14,0],[291,17,291,63,0],[294,13,294,14,0],[295,17,295,68,0],[301,13,301,14,0],[302,17,304,66,0],[310,13,310,14,0],[311,17,314,66,0],[338,13,338,14,0],[339,17,339,63,0],[342,13,342,14,0],[343,17,343,68,0],[368,13,368,14,0],[369,17,369,63,0],[373,13,373,14,0],[374,17,374,63,0],[400,13,400,14,0],[401,17,401,66,0],[404,13,404,14,0],[405,17,405,63,0],[408,13,408,14,0],[409,17,409,68,0],[418,13,418,14,0],[419,17,419,37,0],[429,13,429,14,0],[430,17,430,28,0],[431,13,431,14,0],[476,17,476,18,0],[477,21,477,30,0],[487,17,487,18,0],[489,21,489,98,0],[490,17,490,18,0],[39,9,39,59,1],[40,9,40,10,1],[41,13,41,36,1],[46,13,46,38,1],[47,9,47,10,1],[55,17,55,18,1],[55,19,55,45,1],[55,46,55,47,1],[192,9,192,10,1],[194,13,194,29,1],[200,13,200,73,1],[201,13,201,31,1],[207,13,207,20,1],[207,34,207,39,1],[207,22,207,30,1],[208,13,208,14,1],[209,17,209,34,1],[215,17,215,54,1],[222,25,222,52,1],[223,25,223,31,1],[225,13,225,14,1],[207,31,207,33,1],[226,9,226,10,1],[287,9,287,10,1],[289,13,289,30,1],[293,13,293,35,1],[299,13,299,62,1],[300,13,300,37,1],[308,13,308,64,1],[309,13,309,44,1],[318,13,318,64,1],[319,13,319,64,1],[320,9,320,10,1],[335,9,335,10,1],[337,13,337,30,1],[341,13,341,35,1],[347,13,347,62,1],[348,13,348,66,1],[351,13,351,56,1],[352,13,352,51,1],[355,13,355,75,1],[356,9,356,10,1],[366,9,366,10,1],[367,13,367,30,1],[372,13,372,30,1],[377,13,377,78,1],[377,99,377,101,1],[378,9,378,10,1],[397,9,397,10,1],[399,13,399,33,1],[403,13,403,30,1],[407,13,407,35,1],[413,13,413,67,1],[416,13,416,92,1],[417,13,417,47,1],[423,13,423,83,1],[424,13,424,44,1],[425,13,425,14,1],[426,17,426,28,1],[427,13,427,14,1],[428,18,428,60,1],[434,13,434,98,1],[435,13,435,49,1],[436,13,436,14,1],[437,17,437,33,1],[438,13,438,14,1],[441,13,441,53,1],[442,13,442,43,1],[443,13,443,46,1],[444,13,444,40,1],[445,13,445,47,1],[446,13,446,45,1],[448,13,448,45,1],[449,9,449,10,1],[459,9,459,10,1],[461,13,462,67,1],[466,13,466,67,1],[469,13,469,53,1],[470,13,470,80,1],[472,13,472,20,1],[472,34,472,39,1],[472,22,472,30,1],[473,13,473,14,1],[475,17,475,48,1],[482,17,482,33,1],[483,17,483,18,1],[484,21,484,64,1],[485,17,485,18,1],[493,17,493,76,1],[494,13,494,14,1],[472,31,472,33,1],[497,13,497,64,1],[498,9,498,10,1],[377,78,377,99,1]]);
     </script>
   </body>
 </html>

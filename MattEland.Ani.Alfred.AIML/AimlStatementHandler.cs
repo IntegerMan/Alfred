@@ -312,6 +312,8 @@ namespace MattEland.Ani.Alfred.Chat
                 throw new ArgumentNullException(nameof(engine));
             }
 
+            // TODO: Each assembly should provide their own set of resources
+
             engine.LoadAimlFromString(Resources.AimlCoreDateTime);
             engine.LoadAimlFromString(Resources.AimlCorePower);
             engine.LoadAimlFromString(Resources.AimlFallback);
@@ -320,6 +322,7 @@ namespace MattEland.Ani.Alfred.Chat
             engine.LoadAimlFromString(Resources.AimlThanks);
             engine.LoadAimlFromString(Resources.AimlHelp);
             engine.LoadAimlFromString(Resources.AimlShellNavigation);
+            engine.LoadAimlFromString(Resources.AimlSysStatus);
         }
 
         /// <summary>

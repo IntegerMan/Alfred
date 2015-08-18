@@ -2,104 +2,129 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\subsystems\systemsubsystemtests.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\subsystems\subsystemtests.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// SystemSubSystemTests.cs
+// SubSystemTests.cs
 // 
-// Created on:      08/07/2015 at 10:01 PM
-// Last Modified:   08/07/2015 at 10:01 PM
+// Created on:      08/09/2015 at 12:12 AM
+// Last Modified:   08/09/2015 at 12:12 AM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
-using System.Collections;
+using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core;
-using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
-using MattEland.Ani.Alfred.Core.Pages;
+using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Tests.Mocks;
 
 using NUnit.Framework;
 
 namespace MattEland.Ani.Alfred.Tests.SubSystems
 {
     /// &lt;summary&gt;
-    /// A series of tests related to the System Monitoring SubSystem
+    /// Tests oriented around testing the subsystem update pumps and related functions
     /// &lt;/summary&gt;
     [TestFixture]
     [SuppressMessage(&quot;ReSharper&quot;, &quot;NotNullMemberIsNotInitialized&quot;)]
-    public class SystemSubSystemTests
+    public class SubSystemTests
     {
-        [NotNull]
-        private SystemMonitoringSubsystem _subsystem;
-
         [NotNull]
         private AlfredApplication _alfred;
 
-        [SetUp]
-        public void TestSetup()
-        {
-            _subsystem = new SystemMonitoringSubsystem();
+        [NotNull]
+        private TestSubsystem _subsystem;
 
+        [SetUp]
+        public void Setup()
+        {
             var bootstrapper = new AlfredBootstrapper();
             _alfred = bootstrapper.Create();
+
+            _subsystem = new TestSubsystem();
         }
 
-        [Test]
-        public void SystemMonitoringSubsystemCanBeRegisteredInAlfred()
-        {
-            _alfred.Register(_subsystem);
-
-            Assert.AreEqual(1, _alfred.Subsystems.Count(), &quot;Subsystem was not registered&quot;);
-            Assert.Contains(_subsystem, _alfred.Subsystems as ICollection, &quot;The subsystem was not found in the collection&quot;);
-        }
 
         [Test]
-        public void SystemMonitoringSubsystemContainsModules()
+        public void InitializeCausesRegisteredSubSystemsToInitialize()
         {
-            _alfred.Register(_subsystem);
+            var testSubsystem = new TestSubsystem();
 
-            var page = _subsystem.Pages.First() as AlfredModuleListPage;
-            Assert.NotNull(page);
+            _alfred.Register(testSubsystem);
 
-            Assert.IsTrue(page.Modules.Any(m =&gt; m is CpuMonitorModule), &quot;CPU Monitor not found&quot;);
-            Assert.IsTrue(page.Modules.Any(m =&gt; m is MemoryMonitorModule), &quot;Memory Monitor not found&quot;);
-            Assert.IsTrue(page.Modules.Any(m =&gt; m is DiskMonitorModule), &quot;Disk Monitor not found&quot;);
-        }
-
-        [Test]
-        public void SubSystemContainsAPageAfterRegistration()
-        {
-            Assert.AreEqual(0, _subsystem.Pages.Count());
-
-            _alfred.Register(_subsystem);
             _alfred.Initialize();
 
-            Assert.AreEqual(1, _subsystem.Pages.Count());
+            Assert.IsTrue(testSubsystem.LastInitialized &gt; DateTime.MinValue, &quot;Subsystem was not initialized&quot;);
+            Assert.IsTrue(testSubsystem.LastInitializationCompleted &gt; DateTime.MinValue,
+                          &quot;Subsystem was not notified initialized completed&quot;);
         }
 
         [Test]
-        public void AlfredContainsAPageAfterRegistration()
+        public void InitializeCausesSubSystemsToGoOnline()
         {
-            var pages = _alfred.RootPages.Count();
+            var testSubsystem = new TestSubsystem();
 
-            _alfred.Register(_subsystem);
+            _alfred.Register(testSubsystem);
+
             _alfred.Initialize();
 
-            Assert.AreEqual(pages + 1, _alfred.RootPages.Count());
+            Assert.AreEqual(AlfredStatus.Online, testSubsystem.Status);
         }
+
+        [Test]
+        public void UpdateCausesRegisteredSubSystemsToUpdate()
+        {
+            var testSubsystem = new TestSubsystem();
+
+            _alfred.Register(testSubsystem);
+
+            _alfred.Initialize();
+            _alfred.Update();
+
+            Assert.IsTrue(testSubsystem.LastUpdated &gt; DateTime.MinValue, &quot;Subsystem was not updated&quot;);
+        }
+
+        [Test]
+        public void ShutdownCausesRegisteredSubSystemsToShutdown()
+        {
+            var testSubsystem = new TestSubsystem();
+
+            _alfred.Register(testSubsystem);
+
+            _alfred.Initialize();
+            _alfred.Update();
+            _alfred.Shutdown();
+
+            Assert.IsTrue(testSubsystem.LastShutdown &gt; DateTime.MinValue, &quot;Subsystem was not shut down&quot;);
+            Assert.IsTrue(testSubsystem.LastShutdownCompleted &gt; DateTime.MinValue, &quot;Subsystem was not notified of shut down completion&quot;);
+        }
+
+        [Test]
+        public void ShutdownCausesRegisteredSubSystemsToGoOffline()
+        {
+            var testSubsystem = new TestSubsystem();
+
+            _alfred.Register(testSubsystem);
+
+            _alfred.Initialize();
+            _alfred.Update();
+            _alfred.Shutdown();
+
+            Assert.AreEqual(AlfredStatus.Offline, testSubsystem.Status);
+        }
+
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[38,9,38,10,1],[39,13,39,58,1],[41,13,41,57,1],[42,13,42,45,1],[43,9,43,10,1],[47,9,47,10,1],[48,13,48,42,1],[50,13,50,92,1],[51,13,51,125,1],[52,9,52,10,1],[56,9,56,10,1],[57,13,57,42,1],[59,13,59,73,1],[60,13,60,34,1],[62,13,62,49,1],[62,70,62,98,1],[63,13,63,49,1],[63,73,63,104,1],[64,13,64,49,1],[64,71,64,100,1],[65,9,65,10,1],[69,9,69,10,1],[70,13,70,58,1],[72,13,72,42,1],[73,13,73,34,1],[75,13,75,58,1],[76,9,76,10,1],[80,9,80,10,1],[81,13,81,51,1],[83,13,83,42,1],[84,13,84,34,1],[86,13,86,67,1],[87,9,87,10,1],[62,49,62,70,1],[63,49,63,73,1],[64,49,64,71,1]]);
+      highlightRanges([[37,9,37,10,1],[38,13,38,57,1],[39,13,39,45,1],[41,13,41,46,1],[42,9,42,10,1],[47,9,47,10,1],[48,13,48,53,1],[50,13,50,45,1],[52,13,52,34,1],[54,13,54,111,1],[55,13,56,79,1],[57,9,57,10,1],[61,9,61,10,1],[62,13,62,53,1],[64,13,64,45,1],[66,13,66,34,1],[68,13,68,72,1],[69,9,69,10,1],[73,9,73,10,1],[74,13,74,53,1],[76,13,76,45,1],[78,13,78,34,1],[79,13,79,30,1],[81,13,81,103,1],[82,9,82,10,1],[86,9,86,10,1],[87,13,87,53,1],[89,13,89,45,1],[91,13,91,34,1],[92,13,92,30,1],[93,13,93,32,1],[95,13,95,106,1],[96,13,96,138,1],[97,9,97,10,1],[101,9,101,10,1],[102,13,102,53,1],[104,13,104,45,1],[106,13,106,34,1],[107,13,107,30,1],[108,13,108,32,1],[110,13,110,73,1],[111,9,111,10,1]]);
     </script>
   </body>
 </html>

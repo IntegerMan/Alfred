@@ -2,78 +2,65 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\chat\chatcommandtests.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\chat\alfredtesttaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// ConversationTests.cs
+// AlfredTestTagHandler.cs
 // 
-// Created on:      08/10/2015 at 2:42 PM
-// Last Modified:   08/16/2015 at 4:47 PM
+// Created on:      08/17/2015 at 11:36 PM
+// Last Modified:   08/17/2015 at 11:36 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Security;
+using System;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Chat;
-using MattEland.Ani.Alfred.Chat.Aiml;
-
-using NUnit.Framework;
+using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 
 namespace MattEland.Ani.Alfred.Tests.Chat
 {
     /// &lt;summary&gt;
-    ///     Tests for commands embedded in AIML that impact the functioning of the Alfred system.
+    /// A tag handler for testing. Not intended for actual product incorporation.
     /// &lt;/summary&gt;
-    [TestFixture]
-    public class ChatCommandTests : ChatTestsBase
+    [HandlesAimlTag(&quot;alfredtest&quot;)]
+    public class AlfredTestTagHandler : AimlTagHandler
     {
+
         /// &lt;summary&gt;
-        ///     Sets up the testing environment prior to each test run.
+        ///     Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
-        [SetUp]
-        public void SetUp()
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;parameters&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public AlfredTestTagHandler([NotNull] TagHandlerParameters parameters) : base(parameters)
         {
-            InitChatSystem();
         }
 
-        [Test]
-        [Ignore(&quot;Currently working on this&quot;)]
-        public void ShutdownCausesAlfredToBeOffline()
+        /// &lt;summary&gt;
+        ///     Processes the input text and returns the processed value.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;The processed output&lt;/returns&gt;
+        protected override string ProcessChange()
         {
-            Say(&quot;Shutdown&quot;);
-
-            Assert.IsFalse(Alfred.IsOnline, &quot;Alfred was not offline after shutdown was handled.&quot;);
+            WasInvoked = true;
+            return string.Empty;
         }
 
-        [Test]
-        public void TagHandlersAreInvokedWhenATestingTemplateIsInvoked()
-        {
-            Say(&quot;TEST TAG INVOKE&quot;);
-
-            Assert.IsTrue(AlfredTestTagHandler.WasInvoked);
-        }
-
-        [Test]
-        public void TagHandlersAreNotInvokedOnOtherInput()
-        {
-            Say(&quot;I like turtles&quot;);
-
-            Assert.IsFalse(AlfredTestTagHandler.WasInvoked);
-        }
+        /// &lt;summary&gt;
+        /// Gets or sets a value indicating whether the class&#39;s transform / process change method was called.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;&lt;c&gt;true&lt;/c&gt; if it was invoked; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/value&gt;
+        public static bool WasInvoked { get; set; }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[34,9,34,10,0],[35,13,35,30,0],[36,9,36,10,0],[41,9,41,10,0],[42,13,42,29,0],[44,13,44,99,0],[45,9,45,10,0]]);
+      highlightRanges([[30,82,30,98,1],[31,9,31,10,1],[32,9,32,10,1],[39,9,39,10,1],[40,13,40,31,1],[41,13,41,33,1],[42,9,42,10,1],[48,41,48,45,1],[48,46,48,50,1]]);
     </script>
   </body>
 </html>

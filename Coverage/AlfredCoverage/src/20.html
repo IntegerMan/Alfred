@@ -2,54 +2,248 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\alfredcommandresult.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\chat\chattestsbase.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-namespace MattEland.Ani.Alfred.Core
+// ---------------------------------------------------------
+// ChatTestsBase.cs
+// 
+// Created on:      08/17/2015 at 9:57 PM
+// Last Modified:   08/17/2015 at 10:02 PM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Xml;
+
+using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Chat;
+using MattEland.Ani.Alfred.Chat.Aiml;
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Core.Modules;
+using MattEland.Ani.Alfred.Tests.Mocks;
+using MattEland.Common;
+
+using NUnit.Framework;
+
+namespace MattEland.Ani.Alfred.Tests.Chat
 {
+
     /// &lt;summary&gt;
-    /// Represents the result of sending a command to a subsystem for handling
+    /// An abstract class providing testing capabilities related to chats and commanding
     /// &lt;/summary&gt;
-    public sealed class AlfredCommandResult
+    [SuppressMessage(&quot;ReSharper&quot;, &quot;NotNullMemberIsNotInitialized&quot;)]
+    [SuppressMessage(&quot;ReSharper&quot;, &quot;ExceptionNotDocumented&quot;)]
+    public class ChatTestsBase
     {
+        private IChatProvider _chat;
+
+        [NotNull]
+        private TestAlfred _alfred;
+        private AlfredChatSubsystem _chatSubsystem;
+        private AlfredCoreSubsystem _coreSubsystem;
+
+        [NotNull]
+        private User _user;
+
+        [NotNull]
+        private TestSubsystem _testSubsystem;
+
+        [NotNull]
+        public User User
+        {
+            [DebuggerStepThrough]
+            get
+            { return _user; }
+        }
+
+        public AlfredCoreSubsystem CoreSubsystem
+        {
+            [DebuggerStepThrough]
+            get
+            { return _coreSubsystem; }
+        }
+
+        public AlfredChatSubsystem ChatSubsystem
+        {
+            [DebuggerStepThrough]
+            get
+            { return _chatSubsystem; }
+        }
 
         /// &lt;summary&gt;
-        /// Gets or sets the value to set as the last input value.
-        /// This is what is displayed as the user&#39;s last sentence to the system.
-        /// 
-        /// Changing  this is a good way of hiding redirection searches.
+        /// Gets or sets the chat engine.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The new last input value.&lt;/value&gt;
-        public string NewLastInput { get; set; }
+        /// &lt;value&gt;The chat engine.&lt;/value&gt;
+        [NotNull]
+        protected ChatEngine Engine { get; set; }
 
         /// &lt;summary&gt;
-        /// Gets or sets the new last output value. This is what is
-        /// displayed as Alfred&#39;s response to the user&#39;s statement.
-        /// 
-        /// Changing this is a good way of handling dynamic information in queries
+        /// Gets the chat provider.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The new last output.&lt;/value&gt;
-        public string NewLastOutput { get; set; }
+        /// &lt;value&gt;The chat provider.&lt;/value&gt;
+        public IChatProvider Chat
+        {
+            [DebuggerStepThrough]
+            get
+            { return _chat; }
+        }
 
         /// &lt;summary&gt;
-        /// Gets or sets the chat redirection value.
-        /// If this is set and the command is handled, the system
-        /// will send a new chat message into the system with this
-        /// value. 
-        /// 
-        /// This is a good way to redirect to a common prompt
-        /// after executing a command.
+        ///     Asserts that the chat input gets a reply template with the specified ID.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The execute chat input.&lt;/value&gt;
-        public string RedirectToChat { get; set; }
+        /// &lt;param name=&quot;input&quot;&gt;The input.&lt;/param&gt;
+        /// &lt;param name=&quot;templateId&quot;&gt;The template identifier.&lt;/param&gt;
+        protected void AssertMessageGetsReplyTemplate(string input, string templateId)
+        {
+            var template = GetReplyTemplate(input);
+
+            AssertTemplateId(template, templateId);
+        }
+
+        /// &lt;summary&gt;
+        ///     Asserts that the template identifier is found in the response template.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;template&quot;&gt;The template.&lt;/param&gt;
+        /// &lt;param name=&quot;id&quot;&gt;The template identifier.&lt;/param&gt;
+        private static void AssertTemplateId([NotNull] string template, [NotNull] string id)
+        {
+            var idString = $&quot;id=\&quot;{id.ToLowerInvariant()}\&quot;&quot;;
+
+            Assert.IsTrue(template.ToLowerInvariant().Contains(idString),
+                          $&quot;ID &#39;{idString}&#39; was not found. Template was: {template}&quot;);
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets a reply from the chat system on a specified inquiry.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;text&quot;&gt;The inquiry text.&lt;/param&gt;
+        /// &lt;returns&gt;The reply&lt;/returns&gt;
+        [NotNull]
+        protected string GetReply([NotNull] string text)
+        {
+            var response = GetResponse(text);
+
+            Assert.IsNotNull(response.ResponseText, &quot;Response text was null&quot;);
+
+            return response.ResponseText;
+        }
+
+        /// &lt;summary&gt;
+        /// Says the specified message to Alfred.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;message&quot;&gt;The message.&lt;/param&gt;
+        protected void Say([NotNull] string message)
+        {
+            GetResponse(message);
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the response to the chat message.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;text&quot;&gt;The text.&lt;/param&gt;
+        /// &lt;returns&gt;The response&lt;/returns&gt;
+        private UserStatementResponse GetResponse([NotNull] string text)
+        {
+
+            var chatProvider = _alfred.ChatProvider;
+            Assert.NotNull(chatProvider, &quot;Alfred&#39;s chat provider was null when instructed to handle chat message&quot;);
+
+            var response = chatProvider.HandleUserStatement(text);
+
+            // Do some basic validity checks
+            Assert.NotNull(response, &quot;Response was null&quot;);
+            Assert.AreEqual(text, response.UserInput);
+            return response;
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets a reply from the chat system on a specified inquiry.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;text&quot;&gt;The inquiry text.&lt;/param&gt;
+        /// &lt;returns&gt;The reply&lt;/returns&gt;
+        [CanBeNull]
+        protected string GetReplyTemplate([CanBeNull] string text)
+        {
+            var response = GetResponse(text);
+
+            Assert.IsNotNull(response, &quot;Alfred&#39;s response was null&quot;);
+            return response.Template;
+        }
+
+        /// &lt;summary&gt;
+        ///     Initializes the chat system.
+        /// &lt;/summary&gt;
+        protected void InitChatSystem()
+        {
+            AlfredTestTagHandler.WasInvoked = false;
+
+            _alfred = new TestAlfred();
+
+            // Add Subsystems to alfred
+
+            _coreSubsystem = new AlfredCoreSubsystem(_alfred.PlatformProvider);
+            _alfred.Register(_coreSubsystem);
+
+            _chatSubsystem = new AlfredChatSubsystem(_alfred.PlatformProvider, _alfred.Console);
+            _alfred.Register(_chatSubsystem);
+
+            _testSubsystem = new TestSubsystem(_alfred.PlatformProvider);
+            _alfred.Register(_testSubsystem);
+
+            // Store Chat Handler Details
+            var chatHandler = _chatSubsystem.ChatHandler;
+            _chat = chatHandler;
+
+            // Store Engine
+            Assert.IsNotNull(chatHandler.ChatEngine, &quot;Chat Engine was null&quot;);
+            Engine = chatHandler.ChatEngine;
+            Engine.LoadAimlFromString(Resources.AimlTestAssets.NonNull());
+            _user = new User(&quot;Test User&quot;, Engine);
+
+            // Start Alfred - doesn&#39;t make sense to have a chat test that doesn&#39;t need Alfred online first.
+            _alfred.Initialize();
+            _alfred.Update();
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the alfred framework.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The alfred framework.&lt;/value&gt;
+        [NotNull]
+        protected TestAlfred Alfred
+        {
+            get { return _alfred; }
+        }
+
+        [NotNull]
+        protected TagHandlerParameters BuildTagHandlerParameters(string xml)
+        {
+            var node = AimlTagHandler.BuildNode(xml);
+            return BuildTagHandlerParameters(&quot;Testing is fun&quot;, node);
+        }
+
+        [NotNull]
+        private TagHandlerParameters BuildTagHandlerParameters(string input, XmlNode node)
+        {
+            var query = new SubQuery(input);
+            var request = new Request(input, User, Engine);
+            var result = new Result(User, Engine, request);
+            return new TagHandlerParameters(Engine, User, query, request, result, node);
+        }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[16,38,16,42,0],[16,43,16,47,0],[25,39,25,43,0],[25,44,25,48,0],[37,40,37,44,0],[37,45,37,49,0]]);
+      highlightRanges([[62,13,62,14,0],[62,15,62,37,0],[62,38,62,39,0],[69,13,69,14,0],[69,15,69,37,0],[69,38,69,39,0],[87,13,87,14,0],[87,15,87,28,0],[87,29,87,30,0],[55,13,55,14,1],[55,15,55,28,1],[55,29,55,30,1],[77,39,77,43,1],[77,44,77,48,1],[96,9,96,10,1],[97,13,97,52,1],[99,13,99,52,1],[100,9,100,10,1],[108,9,108,10,1],[109,13,109,62,1],[111,13,112,87,1],[113,9,113,10,1],[122,9,122,10,1],[123,13,123,46,1],[125,13,125,79,1],[127,13,127,42,1],[128,9,128,10,1],[135,9,135,10,1],[136,13,136,34,1],[137,9,137,10,1],[145,9,145,10,1],[147,13,147,53,1],[148,13,148,116,1],[150,13,150,67,1],[153,13,153,59,1],[154,13,154,55,1],[155,13,155,29,1],[156,9,156,10,1],[165,9,165,10,1],[166,13,166,46,1],[168,13,168,70,1],[169,13,169,38,1],[170,9,170,10,1],[176,9,176,10,1],[177,13,177,53,1],[179,13,179,40,1],[183,13,183,80,1],[184,13,184,46,1],[186,13,186,97,1],[187,13,187,46,1],[189,13,189,74,1],[190,13,190,46,1],[193,13,193,58,1],[194,13,194,33,1],[197,13,197,78,1],[198,13,198,45,1],[199,13,199,75,1],[200,13,200,51,1],[203,13,203,34,1],[204,13,204,30,1],[205,9,205,10,1],[214,17,214,18,1],[214,19,214,34,1],[214,35,214,36,1],[219,9,219,10,1],[220,13,220,54,1],[221,13,221,70,1],[222,9,222,10,1],[226,9,226,10,1],[227,13,227,45,1],[228,13,228,60,1],[229,13,229,60,1],[230,13,230,89,1],[231,9,231,10,1]]);
     </script>
   </body>
 </html>

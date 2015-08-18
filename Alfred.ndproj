@@ -20,7 +20,6 @@
     <Name>System.Xaml</Name>
     <Name>PresentationCore</Name>
     <Name>System.Speech</Name>
-    <Name>System.Xml.Linq</Name>
     <Name>System.Xml</Name>
     <Name>nunit.framework</Name>
   </FrameworkAssemblies>

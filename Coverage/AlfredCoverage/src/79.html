@@ -2,20 +2,25 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\inputtaghandler.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\learntaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// InputTagHandler.cs
+// learn.cs
 // 
-// Created on:      08/12/2015 at 10:47 PM
-// Last Modified:   08/15/2015 at 12:03 AM
+// Created on:      08/12/2015 at 10:49 PM
+// Last Modified:   08/12/2015 at 11:59 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
+
+using System;
+using System.IO;
+using System.Security;
+using System.Xml;
 
 using JetBrains.Annotations;
 
@@ -26,86 +31,85 @@ using MattEland.Common;
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// &lt;summary&gt;
-    /// A tag handler that handles the AIML &#39;input&#39; tag by grabbing historical input from the user and rendering that text.
+    /// A tag handler for the AIML &quot;learn&quot; tag that causes the engine to learn new AIML values from a provided file path.
     /// &lt;/summary&gt;
-    [HandlesAimlTag(&quot;input&quot;)]
-    public class InputTagHandler : AimlTagHandler
+    [HandlesAimlTag(&quot;learn&quot;)]
+    public class LearnTagHandler : AimlTagHandler
     {
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
+        /// Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
-        public InputTagHandler([NotNull] TagHandlerParameters parameters)
+        public LearnTagHandler([NotNull] TagHandlerParameters parameters)
             : base(parameters)
         {
         }
 
         /// &lt;summary&gt;
-        ///     Processes the input text and returns the processed value.
+        /// Processes the input text and returns the processed value.
         /// &lt;/summary&gt;
         /// &lt;returns&gt;The processed output&lt;/returns&gt;
+        /// &lt;exception cref=&quot;NotSupportedException&quot;&gt;file is in an invalid format. &lt;/exception&gt;
         protected override string ProcessChange()
         {
-            var element = TemplateElement;
-            if (element == null || !element.Name.Matches(&quot;input&quot;))
+            if (TemplateNode.Name.Matches(&quot;learn&quot;) &amp;&amp; TemplateNode.InnerText.HasText())
             {
-                return string.Empty;
-            }
-
-            // If we don&#39;t have an input tag, just get the default one
-            if (!element.HasAttribute(&quot;index&quot;))
-            {
-                return User.GetInputSentence();
-            }
-
-            // Grab and validate the index
-            var indexText = element.GetAttribute(&quot;index&quot;);
-            if (indexText.HasText())
-            {
-                // We can be either in a # format or a #,# format. Check to find out which
-                var indexes = indexText.Split(&quot;,&quot;.ToCharArray());
-
-                //- Grab values for the inputs. This refers to the nth last thing the user said to the engine
-                var inputIndex = indexes[0].AsInt();
-
-                //- Sentence index is optional. This refers to the sentence in the input referred to by inputIndex.
-                var sentenceIndex = 1;
-                if (indexes.Length &gt;= 2)
+                var innerText = TemplateNode.InnerText;
+                try
                 {
-                    sentenceIndex = indexes[1].AsInt();
-                }
+                    // This can cause some issues with IO, security, format, etc. catch handles all
+                    var fileInfo = new FileInfo(innerText);
 
-                // Grab the input X inputs ago and Y sentences into that input
-                if (inputIndex &gt; 0 &amp;&amp; sentenceIndex &gt; 0)
+                    //- Ensure the file exists
+                    if (fileInfo.Exists)
+                    {
+                        var newAiml = new XmlDocument();
+
+                        // This can cause loads of XML related exceptions. They&#39;re dealt with in catch
+                        newAiml.Load(innerText);
+
+                        // We&#39;ve got a document in a decent state - send it to the engine to learn
+                        ChatEngine.LoadAimlFile(newAiml);
+
+                        //- Log for diagnostics
+                        Log(string.Format(Locale, &quot;Learn tag invoked on file {0}&quot;, fileInfo.FullName), LogLevel.Info);
+                    }
+
+                }
+                catch (SecurityException ex)
                 {
-                    return User.GetInputSentence(inputIndex - 1, sentenceIndex - 1);
+                    Log(string.Format(Locale, Resources.LearnErrorSecurityException, innerText, ex.Message), LogLevel.Error);
+                }
+                catch (UnauthorizedAccessException ex)
+                {
+                    Log(string.Format(Locale, Resources.LearnErrorUnauthorizedException, innerText, ex.Message), LogLevel.Error);
+                }
+                catch (FileNotFoundException ex)
+                {
+                    Log(string.Format(Locale, Resources.LearnErrorFileNotFound, ex.FileName), LogLevel.Error);
+                }
+                catch (IOException ex)
+                {
+                    Log(string.Format(Locale, Resources.LearnErrorIOException, ex.GetType().Name, ex.Message, innerText), LogLevel.Error);
+                }
+                catch (XmlException ex)
+                {
+                    Log(string.Format(Locale, Resources.LearnErrorXmlException, ex.Message, innerText), LogLevel.Error);
+                }
+                catch (NotSupportedException)
+                {
+                    Log(string.Format(Locale, Resources.LearnErrorNotSupportedException, innerText), LogLevel.Error);
                 }
             }
 
-            // If we hit this point, it&#39;s bad input. Log and move on.
-            LogBadIndex(indexText);
-
+            // Learn never has any output
             return string.Empty;
-        }
-
-        /// &lt;summary&gt;
-        ///     Logs a bad index.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;indexText&quot;&gt;The index text.&lt;/param&gt;
-        private void LogBadIndex(string indexText)
-        {
-            var message = string.Format(Locale,
-                                           Resources.InputErrorBadlyFormedIndex,
-                                           indexText,
-                                           Request.RawInput);
-
-            Log(message, LogLevel.Error);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[29,15,29,31,0],[30,9,30,10,0],[31,9,31,10,0],[38,9,38,10,0],[39,13,39,43,0],[40,13,40,67,0],[41,13,41,14,0],[42,17,42,37,0],[46,13,46,48,0],[47,13,47,14,0],[48,17,48,48,0],[52,13,52,59,0],[53,13,53,37,0],[54,13,54,14,0],[56,17,56,66,0],[59,17,59,53,0],[62,17,62,39,0],[63,17,63,41,0],[64,17,64,18,0],[65,21,65,56,0],[66,17,66,18,0],[69,17,69,57,0],[70,17,70,18,0],[71,21,71,85,0],[73,13,73,14,0],[76,13,76,36,0],[78,13,78,33,0],[79,9,79,10,0],[86,9,86,10,0],[87,13,90,62,0],[92,13,92,42,0],[93,9,93,10,0]]);
+      highlightRanges([[34,15,34,31,0],[35,9,35,10,0],[36,9,36,10,0],[44,9,44,10,0],[45,13,45,88,0],[46,13,46,14,0],[47,17,47,56,0],[49,17,49,18,0],[51,21,51,60,0],[54,21,54,41,0],[55,21,55,22,0],[56,25,56,57,0],[59,25,59,49,0],[62,25,62,58,0],[65,25,65,119,0],[66,21,66,22,0],[68,17,68,18,0],[69,17,69,45,0],[70,17,70,18,0],[71,21,71,126,0],[72,17,72,18,0],[73,17,73,55,0],[74,17,74,18,0],[75,21,75,130,0],[76,17,76,18,0],[77,17,77,49,0],[78,17,78,18,0],[79,21,79,111,0],[80,17,80,18,0],[81,17,81,39,0],[82,17,82,18,0],[83,21,83,139,0],[84,17,84,18,0],[85,17,85,40,0],[86,17,86,18,0],[87,21,87,121,0],[88,17,88,18,0],[89,17,89,46,0],[90,17,90,18,0],[91,21,91,118,0],[92,17,92,18,0],[93,13,93,14,0],[96,13,96,33,0],[97,9,97,10,0]]);
     </script>
   </body>
 </html>

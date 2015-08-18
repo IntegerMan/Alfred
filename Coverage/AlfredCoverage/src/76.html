@@ -2,17 +2,17 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\gettaghandler.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\useridtaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// GetTagHandler.cs
+// UserIdTagHandler.cs
 // 
-// Created on:      08/12/2015 at 10:45 PM
-// Last Modified:   08/14/2015 at 10:15 PM
+// Created on:      08/12/2015 at 10:47 PM
+// Last Modified:   08/14/2015 at 11:28 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -25,16 +25,17 @@ using MattEland.Common;
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// &lt;summary&gt;
-    /// A TagHandler for the AIML &quot;get&quot; tag.
+    ///     A tag handler for the AIML &quot;id&quot; tag that outputs the user&#39;s identifier found in the User.Id
+    ///     property.
     /// &lt;/summary&gt;
-    [HandlesAimlTag(&quot;get&quot;)]
-    public class GetTagHandler : AimlTagHandler
+    [HandlesAimlTag(&quot;id&quot;)]
+    public class UserIdTagHandler : AimlTagHandler
     {
         /// &lt;summary&gt;
-        /// Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
-        public GetTagHandler([NotNull] TagHandlerParameters parameters)
+        public UserIdTagHandler([NotNull] TagHandlerParameters parameters)
             : base(parameters)
         {
         }
@@ -45,32 +46,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// &lt;returns&gt;The processed output&lt;/returns&gt;
         protected override string ProcessChange()
         {
-            var node = TemplateElement;
-
-            //- Ensure correct tag and that the node has the attribute we need
-            if (node == null || !node.Name.Matches(&quot;get&quot;) || !node.HasAttribute(&quot;name&quot;))
-            {
-                return string.Empty;
-            }
-
-            // Grab the name of the requested variable from the tag
-            var variableName = node.GetAttribute(&quot;name&quot;).NonNull();
-
-            //- Safety check for junk input
-            if (variableName.IsEmpty())
-            {
-                return string.Empty;
-            }
-
-            // Return the value of the variable
-            return User.UserVariables.GetValue(variableName);
+            // If it&#39;s the ID tag, use the user&#39;s ID, otherwise we don&#39;t care
+            return TemplateNode.Name.Matches(&quot;id&quot;) ? User.Id : string.Empty;
 
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[28,15,28,31,0],[29,9,29,10,0],[30,9,30,10,0],[37,9,37,10,0],[38,13,38,40,0],[41,13,41,89,0],[42,13,42,14,0],[43,17,43,37,0],[47,13,47,68,0],[50,13,50,40,0],[51,13,51,14,0],[52,17,52,37,0],[56,13,56,62,0],[58,9,58,10,0]]);
+      highlightRanges([[29,15,29,31,0],[30,9,30,10,0],[31,9,31,10,0],[38,9,38,10,0],[40,13,40,77,0],[42,9,42,10,0]]);
     </script>
   </body>
 </html>

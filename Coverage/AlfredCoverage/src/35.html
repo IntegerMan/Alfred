@@ -2,83 +2,41 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\pages\alfredpage.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\widgets\warningwidget.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-// ---------------------------------------------------------
-// AlfredPage.cs
-// 
-// Created on:      08/11/2015 at 9:44 PM
-// Last Modified:   08/11/2015 at 9:45 PM
-// Original author: Matt Eland
-// ---------------------------------------------------------
-
-using System;
-
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core.Definitions;
-
-namespace MattEland.Ani.Alfred.Core.Pages
+namespace MattEland.Ani.Alfred.Core.Widgets
 {
     /// &lt;summary&gt;
-    ///     A page that can be used in Alfred
+    /// A widget used for displaying warnings or errors to the user.
     /// &lt;/summary&gt;
-    public abstract class AlfredPage : AlfredComponent, IAlfredPage
+    public sealed class WarningWidget : AlfredTextWidget
     {
-        [NotNull]
-        private readonly string _name;
-
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredPage&quot; /&gt; class.
+        /// Initializes a new instance of the &lt;see cref=&quot;WarningWidget&quot;/&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;name&quot;&gt;The name.&lt;/param&gt;
-        protected AlfredPage([NotNull] string name)
+        public WarningWidget() : this(null)
         {
-            if (name == null)
-            {
-                throw new ArgumentNullException(nameof(name));
-            }
-
-            _name = name;
         }
 
         /// &lt;summary&gt;
-        ///     Gets whether or not the component is visible to the user interface.
+        /// Initializes a new instance of the &lt;see cref=&quot;WarningWidget&quot;/&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;Whether or not the component is visible.&lt;/value&gt;
-        public override bool IsVisible
+        /// &lt;param name=&quot;text&quot;&gt;The text.&lt;/param&gt;
+        public WarningWidget([CanBeNull] string text)
         {
-            get { return Status == AlfredStatus.Online; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets or sets the name of the page.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The name.&lt;/value&gt;
-        [NotNull]
-        public override string Name
-        {
-            get { return _name; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets a value indicating whether this is a root level page that should show on the navigator.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;&lt;c&gt;true&lt;/c&gt; if this page is root level; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/value&gt;
-        public bool IsRootLevel
-        {
-            get { return true; }
+            Text = text;
         }
     }
-
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[32,13,32,14,0],[33,17,33,63,0],[45,17,45,18,0],[45,19,45,56,0],[45,57,45,58,0],[29,9,29,52,1],[30,9,30,10,1],[31,13,31,30,1],[36,13,36,26,1],[37,9,37,10,1],[55,17,55,18,1],[55,19,55,32,1],[55,33,55,34,1],[64,17,64,18,1],[64,19,64,31,1],[64,32,64,33,1]]);
+      highlightRanges([[13,34,13,44,1],[14,9,14,10,1],[15,9,15,10,1],[21,9,21,54,1],[22,9,22,10,1],[23,13,23,25,1],[24,9,24,10,1]]);
     </script>
   </body>
 </html>

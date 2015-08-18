@@ -2,58 +2,74 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\handlesaimltagattribute.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\bottaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// HandlesAimlTagAttribute.cs
+// BotTagHandler.cs
 // 
-// Created on:      08/14/2015 at 1:01 AM
-// Last Modified:   08/14/2015 at 1:01 AM
+// Created on:      08/12/2015 at 10:40 PM
+// Last Modified:   08/14/2015 at 10:45 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
-using System.Diagnostics;
+using System.Xml;
 
 using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// &lt;summary&gt;
-    /// An attribute describing a class that can handle an AIML tag
+    /// An AIML Tag handler that handles the &quot;bot&quot; tag. This allows the system to interact with system variables.
     /// &lt;/summary&gt;
-    [AttributeUsage(AttributeTargets.Class), UsedImplicitly]
-    public sealed class HandlesAimlTagAttribute : Attribute
+    [HandlesAimlTag(&quot;bot&quot;)]
+    public class BotTagHandler : AimlTagHandler
     {
-
         /// &lt;summary&gt;
-        /// Initializes a new instance of the &lt;see cref=&quot;HandlesAimlTagAttribute&quot;/&gt; class.
+        /// Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;name&quot;&gt;The name of the tag this class handles.&lt;/param&gt;
-        public HandlesAimlTagAttribute(string name)
+        /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
+        public BotTagHandler([NotNull] TagHandlerParameters parameters)
+            : base(parameters)
         {
-            Name = name;
         }
 
         /// &lt;summary&gt;
-        /// Gets or sets the name of the tag this class handles.
+        ///     Processes the input text and returns the processed value.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The name.&lt;/value&gt;
-        public string Name
+        /// &lt;returns&gt;The processed output&lt;/returns&gt;
+        protected override string ProcessChange()
         {
-            [DebuggerStepThrough]
-            get;
+            var element = TemplateElement;
+
+            // Ensure we have an element to work with
+            if (element != null &amp;&amp;
+                element.Name.Matches(&quot;ChatEngine&quot;) &amp;&amp;
+                element.HasAttribute(&quot;name&quot;))
+            {
+                // Grab the attribute and use its value to GetTagHandler a setting value
+                var nameAttribute = element.Attributes[&quot;name&quot;];
+                if (nameAttribute != null)
+                {
+                    return GetGlobalSetting(nameAttribute.Value);
+                }
+            }
+
+            return string.Empty;
         }
+
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[28,9,28,52,1],[29,9,29,10,1],[30,13,30,25,1],[31,9,31,10,1],[39,13,40,17,1]]);
+      highlightRanges([[30,15,30,31,0],[31,9,31,10,0],[32,9,32,10,0],[39,9,39,10,0],[40,13,40,43,0],[43,13,45,46,0],[46,13,46,14,0],[48,17,48,64,0],[49,17,49,43,0],[50,17,50,18,0],[51,21,51,66,0],[53,13,53,14,0],[55,13,55,33,0],[56,9,56,10,0]]);
     </script>
   </body>
 </html>

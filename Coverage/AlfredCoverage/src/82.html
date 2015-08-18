@@ -2,63 +2,83 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\lowercasetaghandler.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\secondpersontofirstpersontaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// LowercaseTagHandler.cs
+// person2.cs
 // 
-// Created on:      08/12/2015 at 10:49 PM
-// Last Modified:   08/15/2015 at 12:38 AM
+// Created on:      08/12/2015 at 10:51 PM
+// Last Modified:   08/12/2015 at 11:59 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System.Xml;
+
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Chat.Aiml.Normalize;
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// &lt;summary&gt;
-    ///     A tag handler responding to the AIML &quot;lowercase&quot; tag. This formats all text in the node in
-    ///     lower case.
+    /// An AIML tag handler that handles converting from the second person &quot;You were&quot; to the first person &quot;I am&quot;.
     /// &lt;/summary&gt;
-    [HandlesAimlTag(&quot;lowercase&quot;)]
-    public class LowercaseTagHandler : AimlTagHandler
+    [HandlesAimlTag(&quot;person2&quot;)]
+    public class SecondPersonToFirstPersonTagHandler : AimlTagHandler
     {
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
+        /// Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
-        public LowercaseTagHandler([NotNull] TagHandlerParameters parameters)
+        public SecondPersonToFirstPersonTagHandler([NotNull] TagHandlerParameters parameters)
             : base(parameters)
         {
         }
 
         /// &lt;summary&gt;
-        ///     Processes the input text and returns the processed value.
+        /// Processes the input text and returns the processed value.
         /// &lt;/summary&gt;
         /// &lt;returns&gt;The processed output&lt;/returns&gt;
         protected override string ProcessChange()
         {
-            if (TemplateNode.Name.Matches(&quot;lowercase&quot;))
+            var node = TemplateNode;
+            if (!node.Name.Matches(&quot;person2&quot;))
             {
-                // This is a very simple operation using the user&#39;s locale
-                return TemplateNode.InnerText.ToLower(Locale);
+                return string.Empty;
+            }
+
+            // Substitute entries of &quot;You are&quot; with &quot;I am&quot; and the like
+            if (node.InnerText.HasText())
+            {
+                var substitutions = Librarian.SecondPersonToFirstPersonSubstitutions;
+                return TextSubstitutionHelper.Substitute(substitutions, node.InnerText);
+            }
+
+            // Evaluate everything else and set that as the inner text of this node and then process it
+            var star = BuildStarTagHandler();
+            node.InnerText = star.Transform().NonNull();
+
+            if (node.InnerText.HasText())
+            {
+                // Recursively process the input with the remainder of the inner text
+                return ProcessChange();
             }
 
             return string.Empty;
+
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[29,15,29,31,0],[30,9,30,10,0],[31,9,31,10,0],[38,9,38,10,0],[39,13,39,56,0],[40,13,40,14,0],[42,17,42,63,0],[45,13,45,33,0],[46,9,46,10,0]]);
+      highlightRanges([[31,15,31,31,0],[32,9,32,10,0],[33,9,33,10,0],[40,9,40,10,0],[41,13,41,37,0],[42,13,42,47,0],[43,13,43,14,0],[44,17,44,37,0],[48,13,48,42,0],[49,13,49,14,0],[50,17,50,86,0],[51,17,51,89,0],[55,13,55,46,0],[56,13,56,57,0],[58,13,58,42,0],[59,13,59,14,0],[61,17,61,40,0],[64,13,64,33,0],[66,9,66,10,0]]);
     </script>
   </body>
 </html>

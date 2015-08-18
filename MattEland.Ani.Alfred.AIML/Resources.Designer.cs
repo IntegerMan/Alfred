@@ -289,6 +289,36 @@ namespace MattEland.Ani.Alfred.Chat {
         ///&lt;!-- 
         ///Copyright (c) 2015 Matt Eland
         ///
+        ///This provides handling for the Goodbye, Shutdown and Status verbs
+        ///--&gt;
+        ///
+        ///&lt;aiml&gt;
+        ///
+        ///  &lt;!-- Handle status requests with a system status response --&gt;
+        ///  &lt;category&gt;
+        ///    &lt;pattern&gt;STATUS&lt;/pattern&gt;
+        ///    &lt;template id=&quot;tmp_status&quot;&gt;
+        ///      &lt;alfred subsystem=&quot;sys&quot; command=&quot;status&quot; /&gt;
+        ///    &lt;/template&gt;
+        ///  &lt;/category&gt;
+        ///  
+        ///  &lt;category&gt;
+        ///    &lt;pattern&gt;MEMORY STATUS&lt;/pattern&gt;
+        ///    &lt;template id=&quot;tmp_status_mem&quot;&gt;
+        ///      &lt;alfred subsystem=&quot;sys&quot; [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string AimlSysStatus {
+            get {
+                return ResourceManager.GetString("AimlSysStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+        ///
+        ///&lt;!-- 
+        ///Copyright (c) 2015 Matt Eland
+        ///
         ///This provides generic politeness and manners related to things such as &quot;THANKS&quot;
         ///--&gt;
         ///

@@ -2,22 +2,22 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\sizetaghandler.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\redirecttaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// size.cs
+// srai.cs
 // 
-// Created on:      08/12/2015 at 10:54 PM
+// Created on:      08/12/2015 at 10:55 PM
 // Last Modified:   08/12/2015 at 11:59 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
+using System.Diagnostics;
 using System.Xml;
 
 using JetBrains.Annotations;
@@ -28,16 +28,16 @@ using MattEland.Common;
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// &lt;summary&gt;
-    /// A tag handler responding to the AIML &quot;size&quot; tag. This returns the number of AIML template nodes in memory.
+    /// A tag handler for the AIML &quot;srai&quot; tag governing recursive / redirect style searches.
     /// &lt;/summary&gt;
-    [HandlesAimlTag(&quot;size&quot;)]
-    public class SizeTagHandler : AimlTagHandler
+    [HandlesAimlTag(&quot;srai&quot;)]
+    public class RedirectTagHandler : AimlTagHandler
     {
         /// &lt;summary&gt;
         /// Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
-        public SizeTagHandler([NotNull] TagHandlerParameters parameters)
+        public RedirectTagHandler([NotNull] TagHandlerParameters parameters)
             : base(parameters)
         {
         }
@@ -48,18 +48,28 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// &lt;returns&gt;The processed output&lt;/returns&gt;
         protected override string ProcessChange()
         {
-            if (TemplateNode.Name.Matches(&quot;size&quot;))
+            //- Basic validation
+            if (!TemplateNode.Name.Matches(&quot;srai&quot;) || TemplateNode.InnerText.IsEmpty())
             {
-                return ChatEngine.NodeCount.ToString(Locale);
+                return string.Empty;
             }
 
-            return string.Empty;
+            // Spawn a new request as a child of this current request and execute it
+            var request = new Request(TemplateNode.InnerText, User, ChatEngine, Request);
+            var result = ChatEngine.ProcessRedirectChatRequest(request);
+            Debug.Assert(result != null);
+
+            // This could have taken awhile. Check it for timeout
+            request.CheckForTimedOut();
+
+            // Return the result of the inner request
+            return result.Output;
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[31,15,31,31,0],[32,9,32,10,0],[33,9,33,10,0],[40,9,40,10,0],[41,13,41,51,0],[42,13,42,14,0],[43,17,43,62,0],[46,13,46,33,0],[47,9,47,10,0]]);
+      highlightRanges([[31,15,31,31,1],[32,9,32,10,1],[33,9,33,10,1],[40,9,40,10,1],[42,13,42,88,1],[43,13,43,14,1],[44,17,44,37,1],[48,13,48,90,1],[49,13,49,73,1],[50,13,50,42,1],[53,13,53,40,1],[56,13,56,34,1],[57,9,57,10,1]]);
     </script>
   </body>
 </html>

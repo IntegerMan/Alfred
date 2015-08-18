@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.system\resources.designer.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.aiml\resources.designer.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
@@ -18,7 +18,7 @@
 // &lt;/auto-generated&gt;
 //------------------------------------------------------------------------------
 
-namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor {
+namespace MattEland.Ani.Alfred.Chat {
     using System;
     
     
@@ -49,7 +49,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager(&quot;MattEland.Ani.Alfred.Core.Modules.SysMonitor.Resources&quot;, typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager(&quot;MattEland.Ani.Alfred.Chat.Resources&quot;, typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -71,74 +71,486 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor {
         }
         
         /// &lt;summary&gt;
-        ///   Looks up a localized string similar to CPU {0}.
+        ///   Looks up a localized string similar to &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot;?&amp;gt;
+        ///
+        ///&amp;lt;!-- 
+        ///Copyright (c) 2015 Matt Eland
+        ///
+        ///This provides handling for time and date queries
+        ///--&amp;gt;
+        ///
+        ///&amp;lt;aiml&amp;gt;
+        ///
+        ///  &amp;lt;!-- Time Handling --&amp;gt;
+        ///
+        ///  &amp;lt;category&amp;gt;
+        ///    &amp;lt;pattern&amp;gt;TIME&amp;lt;/pattern&amp;gt;
+        ///    &amp;lt;template id=&amp;quot;tmp_time&amp;quot;&amp;gt;
+        ///      &amp;lt;random&amp;gt;
+        ///        &amp;lt;li&amp;gt;The time is now &amp;lt;/li&amp;gt;
+        ///        &amp;lt;li&amp;gt;It is currently &amp;lt;/li&amp;gt;
+        ///        &amp;lt;li&amp;gt;It is now &amp;lt;/li&amp;gt;
+        ///      &amp;lt;/random&amp;gt;
+        ///      &amp;lt;date format=&amp;quot;t&amp;quot; /&amp;gt;
+        ///    &amp;lt;/template&amp;gt;
+        ///  &amp;lt;/category&amp;gt;
+        ///
+        ///  &amp;lt;!-- Time Redirects --&amp;gt;
+        ///  &amp;lt;category&amp;gt;
+        ///    &amp;lt;pattern&amp;gt;What TIME is it [rest of string was truncated]&amp;quot;;.
         /// &lt;/summary&gt;
-        internal static string CpuMonitorModule_Cpu_Label_Format {
+        internal static string AimlCoreDateTime {
             get {
-                return ResourceManager.GetString(&quot;CpuMonitorModule_Cpu_Label_Format&quot;, resourceCulture);
+                return ResourceManager.GetString(&quot;AimlCoreDateTime&quot;, resourceCulture);
             }
         }
         
         /// &lt;summary&gt;
-        ///   Looks up a localized string similar to CPU Monitor.
+        ///   Looks up a localized string similar to &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot;?&amp;gt;
+        ///
+        ///&amp;lt;!-- 
+        ///Copyright (c) 2015 Matt Eland
+        ///
+        ///This provides handling for the Goodbye, Shutdown and Status verbs
+        ///--&amp;gt;
+        ///
+        ///&amp;lt;aiml&amp;gt;
+        ///
+        ///  &amp;lt;!-- Goodbye --&amp;gt;
+        ///  &amp;lt;category&amp;gt;
+        ///    &amp;lt;pattern&amp;gt;GOODBYE&amp;lt;/pattern&amp;gt;
+        ///    &amp;lt;template id=&amp;quot;tmp_bye&amp;quot;&amp;gt;
+        ///      &amp;lt;random&amp;gt;
+        ///        &amp;lt;li&amp;gt;Goodbye!&amp;lt;/li&amp;gt;
+        ///        &amp;lt;li&amp;gt;Bye.&amp;lt;/li&amp;gt;
+        ///        &amp;lt;li&amp;gt;I&amp;apos;ll see you later.&amp;lt;/li&amp;gt;
+        ///        &amp;lt;li&amp;gt;Terminating now.&amp;lt;/li&amp;gt;
+        ///        &amp;lt;li&amp;gt;Shutting down.&amp;lt;/li&amp;gt;
+        ///        &amp;lt;li&amp;gt;I do hate powering off. Very well, then.&amp;lt;/li&amp;gt;
+        ///      &amp;lt;/random&amp;gt;      [rest of string was truncated]&amp;quot;;.
         /// &lt;/summary&gt;
-        internal static string CpuMonitorModule_Name {
+        internal static string AimlCorePower {
             get {
-                return ResourceManager.GetString(&quot;CpuMonitorModule_Name&quot;, resourceCulture);
+                return ResourceManager.GetString(&quot;AimlCorePower&quot;, resourceCulture);
             }
         }
         
         /// &lt;summary&gt;
-        ///   Looks up a localized string similar to Disk Monitor.
+        ///   Looks up a localized string similar to &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot;?&amp;gt;
+        ///
+        ///&amp;lt;!-- 
+        ///Copyright (c) 2015 Matt Eland
+        ///
+        ///This provides fallback functions to address any input not handled by other modules
+        ///--&amp;gt;
+        ///
+        ///&amp;lt;aiml&amp;gt;
+        ///
+        ///  &amp;lt;!-- Generic Fallback --&amp;gt;
+        ///  &amp;lt;category&amp;gt;
+        ///    &amp;lt;pattern&amp;gt;*&amp;lt;/pattern&amp;gt;
+        ///    &amp;lt;template id=&amp;quot;tmp_fallback&amp;quot;&amp;gt;
+        ///      &amp;lt;random&amp;gt;
+        ///        &amp;lt;li&amp;gt;I&amp;apos;m sorry but I&amp;apos;m not yet able to understand that command. For a list of commands, type &amp;quot;Help&amp;quot;.&amp;lt;/li&amp;gt;
+        ///      &amp;lt;/random&amp;gt;
+        ///    &amp;lt;/template&amp;gt;
+        ///  &amp;lt;/category&amp;gt;
+        ///
+        ///&amp;lt;/aiml&amp;gt;.
         /// &lt;/summary&gt;
-        internal static string DiskMonitorName {
+        internal static string AimlFallback {
             get {
-                return ResourceManager.GetString(&quot;DiskMonitorName&quot;, resourceCulture);
+                return ResourceManager.GetString(&quot;AimlFallback&quot;, resourceCulture);
             }
         }
         
         /// &lt;summary&gt;
-        ///   Looks up a localized string similar to Disk Read %:.
+        ///   Looks up a localized string similar to &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot;?&amp;gt;
+        ///
+        ///&amp;lt;!-- 
+        ///Copyright (c) 2015 Matt Eland
+        ///
+        ///This provides handling for sentences involving God, primarily in conjuction with &amp;quot;THANK&amp;quot;
+        ///--&amp;gt;
+        ///
+        ///&amp;lt;aiml&amp;gt;
+        ///
+        ///  &amp;lt;!-- Thank God special case --&amp;gt;
+        ///  &amp;lt;category&amp;gt;
+        ///    &amp;lt;pattern&amp;gt;THANK GOD&amp;lt;/pattern&amp;gt;
+        ///    &amp;lt;template id=&amp;quot;tmp_thank_god&amp;quot;&amp;gt;
+        ///      &amp;lt;random&amp;gt;
+        ///        &amp;lt;li&amp;gt;He is good.&amp;lt;/li&amp;gt;
+        ///        &amp;lt;li&amp;gt;My programmer has found He&amp;apos;s always there.&amp;lt;/li&amp;gt;
+        ///        &amp;lt;li&amp;gt;He, unlike me, will never leave you wanting.&amp;lt;/li&amp;gt;
+        ///      &amp;lt;/random&amp;gt;
+        ///    &amp;lt;/template&amp;gt;
+        ///  [rest of string was truncated]&amp;quot;;.
         /// &lt;/summary&gt;
-        internal static string DiskReadLabel {
+        internal static string AimlGod {
             get {
-                return ResourceManager.GetString(&quot;DiskReadLabel&quot;, resourceCulture);
+                return ResourceManager.GetString(&quot;AimlGod&quot;, resourceCulture);
             }
         }
         
         /// &lt;summary&gt;
-        ///   Looks up a localized string similar to Disk Write %:.
+        ///   Looks up a localized string similar to &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot;?&amp;gt;
+        ///
+        ///&amp;lt;!-- 
+        ///Copyright (c) 2015 Matt Eland
+        ///
+        ///This provides generic greeting capabilities both in startup greeting and in response to &amp;quot;HELLO&amp;quot; keywords 
+        ///--&amp;gt;
+        ///
+        ///&amp;lt;aiml&amp;gt;
+        ///
+        ///  &amp;lt;!-- Handle Greeting Functions --&amp;gt;
+        ///  &amp;lt;category&amp;gt;
+        ///    &amp;lt;pattern&amp;gt;HELLO&amp;lt;/pattern&amp;gt;
+        ///    &amp;lt;template id=&amp;quot;tmp_hi&amp;quot;&amp;gt;
+        ///      &amp;lt;random&amp;gt;
+        ///        &amp;lt;li&amp;gt;Hello, my name is Alfred.&amp;lt;/li&amp;gt;
+        ///        &amp;lt;li&amp;gt;Hi there. I&amp;apos;m Alfred.&amp;lt;/li&amp;gt;
+        ///        &amp;lt;li&amp;gt;My name is Alfred and it&amp;apos;s good to see you.&amp;lt;/li&amp;gt;
+        ///      &amp;lt;/random&amp;gt;
+        ///    &amp;lt;/template&amp;gt;
+        /// [rest of string was truncated]&amp;quot;;.
         /// &lt;/summary&gt;
-        internal static string DiskWriteLabel {
+        internal static string AimlGreeting {
             get {
-                return ResourceManager.GetString(&quot;DiskWriteLabel&quot;, resourceCulture);
+                return ResourceManager.GetString(&quot;AimlGreeting&quot;, resourceCulture);
             }
         }
         
         /// &lt;summary&gt;
-        ///   Looks up a localized string similar to Memory:.
+        ///   Looks up a localized string similar to &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot;?&amp;gt;
+        ///
+        ///&amp;lt;!-- 
+        ///Copyright (c) 2015 Matt Eland
+        ///
+        ///This provides functionality for the &amp;quot;HELP&amp;quot; command
+        ///--&amp;gt;
+        ///
+        ///&amp;lt;aiml&amp;gt;
+        ///
+        ///  &amp;lt;!-- Generic Fallback --&amp;gt;
+        ///  &amp;lt;category&amp;gt;
+        ///    &amp;lt;pattern&amp;gt;HELP&amp;lt;/pattern&amp;gt;
+        ///    &amp;lt;template id=&amp;quot;tmp_help&amp;quot;&amp;gt;
+        ///      For help on commands, type &amp;quot;Help Commands&amp;quot;.
+        ///      For a list of questions you can ask me type &amp;quot;Help Questions&amp;quot;.
+        ///      For a list of other things I respond to, type &amp;quot;Help Other&amp;quot;
+        ///    &amp;lt;/template&amp;gt;
+        ///  &amp;lt;/category&amp;gt;
+        ///  
+        ///  &amp;lt;category&amp;gt;
+        ///    &amp;lt;pattern&amp;gt;HELP COMMA [rest of string was truncated]&amp;quot;;.
         /// &lt;/summary&gt;
-        internal static string MemoryMonitorModule_LabelName {
+        internal static string AimlHelp {
             get {
-                return ResourceManager.GetString(&quot;MemoryMonitorModule_LabelName&quot;, resourceCulture);
+                return ResourceManager.GetString(&quot;AimlHelp&quot;, resourceCulture);
             }
         }
         
         /// &lt;summary&gt;
-        ///   Looks up a localized string similar to Memory Monitor.
+        ///   Looks up a localized string similar to &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot;?&amp;gt;
+        ///
+        ///&amp;lt;!-- 
+        ///Copyright (c) 2015 Matt Eland
+        ///
+        ///This provides handling for navigating to UI areas
+        ///--&amp;gt;
+        ///
+        ///&amp;lt;aiml&amp;gt;
+        ///
+        ///  &amp;lt;!-- Root verb with no parameters --&amp;gt;
+        ///  &amp;lt;category&amp;gt;
+        ///    &amp;lt;pattern&amp;gt;NAVIGATE&amp;lt;/pattern&amp;gt;
+        ///    &amp;lt;template&amp;gt;
+        ///      Where would you like to navigate to?&amp;lt;br /&amp;gt;
+        ///      For a list of destinations, try &amp;quot;Navigate Help&amp;quot;
+        ///    &amp;lt;/template&amp;gt;
+        ///  &amp;lt;/category&amp;gt;
+        ///
+        ///  &amp;lt;!-- Navigate Help --&amp;gt;
+        ///  &amp;lt;category&amp;gt;
+        ///    &amp;lt;pattern&amp;gt;Navigate Help&amp;lt;/pattern&amp;gt;
+        ///    &amp;lt;template&amp;gt;
+        ///      Presently you can n [rest of string was truncated]&amp;quot;;.
         /// &lt;/summary&gt;
-        internal static string MemoryMonitorModule_Name {
+        internal static string AimlShellNavigation {
             get {
-                return ResourceManager.GetString(&quot;MemoryMonitorModule_Name&quot;, resourceCulture);
+                return ResourceManager.GetString(&quot;AimlShellNavigation&quot;, resourceCulture);
             }
         }
         
         /// &lt;summary&gt;
-        ///   Looks up a localized string similar to System Monitoring.
+        ///   Looks up a localized string similar to Cannot use the chat system when chat did not initialize properly.
         /// &lt;/summary&gt;
-        internal static string SystemMonitoringSystem_Name {
+        internal static string AimlStatementHandlerChatOffline {
             get {
-                return ResourceManager.GetString(&quot;SystemMonitoringSystem_Name&quot;, resourceCulture);
+                return ResourceManager.GetString(&quot;AimlStatementHandlerChatOffline&quot;, resourceCulture);
+            }
+        }
+        
+        /// &lt;summary&gt;
+        ///   Looks up a localized string similar to &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot;?&amp;gt;
+        ///
+        ///&amp;lt;!-- 
+        ///Copyright (c) 2015 Matt Eland
+        ///
+        ///This provides generic politeness and manners related to things such as &amp;quot;THANKS&amp;quot;
+        ///--&amp;gt;
+        ///
+        ///&amp;lt;aiml&amp;gt;
+        ///
+        ///  &amp;lt;!-- Basic Thanks Handling --&amp;gt;
+        ///  &amp;lt;category&amp;gt;
+        ///    &amp;lt;pattern&amp;gt;THANKS&amp;lt;/pattern&amp;gt;
+        ///    &amp;lt;template id=&amp;quot;tmp_thanks&amp;quot;&amp;gt;
+        ///      &amp;lt;random&amp;gt;
+        ///        &amp;lt;li&amp;gt;Of course.&amp;lt;/li&amp;gt;
+        ///        &amp;lt;li&amp;gt;That&amp;apos;s what I&amp;apos;m here for.&amp;lt;/li&amp;gt;
+        ///        &amp;lt;li&amp;gt;I&amp;apos;m glad it helped.&amp;lt;/li&amp;gt;
+        ///        &amp;lt;li&amp;gt;It was no problem at all.&amp;lt;/li&amp;gt;
+        ///      &amp;lt;/random&amp;gt;
+        ///    &amp;lt;/template&amp;gt;
+        ///  &amp;lt;/category&amp;gt;
+        ///        /// [rest of string was truncated]&amp;quot;;.
+        /// &lt;/summary&gt;
+        internal static string AimlThanks {
+            get {
+                return ResourceManager.GetString(&quot;AimlThanks&quot;, resourceCulture);
+            }
+        }
+        
+        /// &lt;summary&gt;
+        ///   Looks up a localized string similar to &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot; ?&amp;gt;
+        ///&amp;lt;root&amp;gt;
+        ///  &amp;lt;item name=&amp;quot; HE &amp;quot; value=&amp;quot; she &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot; SHE &amp;quot; value=&amp;quot; he &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot; TO HIM &amp;quot; value=&amp;quot; to her &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot; FOR HIM &amp;quot; value=&amp;quot; for her &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot; WITH HIM &amp;quot; value=&amp;quot; with her &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot; ON HIM &amp;quot; value=&amp;quot; on her &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot; IN HIM &amp;quot; value=&amp;quot; in her &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot; TO HER &amp;quot; value=&amp;quot; to him &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot; FOR HER &amp;quot; value=&amp;quot; for him &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot; WITH HER &amp;quot; value=&amp;quot; with him &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot;  [rest of string was truncated]&amp;quot;;.
+        /// &lt;/summary&gt;
+        internal static string ChatBotGenderSubstitutions {
+            get {
+                return ResourceManager.GetString(&quot;ChatBotGenderSubstitutions&quot;, resourceCulture);
+            }
+        }
+        
+        /// &lt;summary&gt;
+        ///   Looks up a localized string similar to &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot; ?&amp;gt;
+        ///&amp;lt;root&amp;gt;
+        ///  &amp;lt;item name=&amp;quot; WITH YOU &amp;quot; value=&amp;quot; with me &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot; WITH ME &amp;quot; value=&amp;quot; with you &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot; TO YOU &amp;quot; value=&amp;quot; to me &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot; TO ME &amp;quot; value=&amp;quot; to you &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot; OF YOU &amp;quot; value=&amp;quot; of me &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot; OF ME &amp;quot; value=&amp;quot; of you &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot; FOR YOU &amp;quot; value=&amp;quot; for me &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot; FOR ME &amp;quot; value=&amp;quot; for you &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot; GIVE YOU &amp;quot; value=&amp;quot; give me &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot; GIVE ME &amp;quot; value=&amp;quot; give you &amp;quot; /&amp;gt;
+        ///  &amp;lt; [rest of string was truncated]&amp;quot;;.
+        /// &lt;/summary&gt;
+        internal static string ChatBotPerson2Substitutions {
+            get {
+                return ResourceManager.GetString(&quot;ChatBotPerson2Substitutions&quot;, resourceCulture);
+            }
+        }
+        
+        /// &lt;summary&gt;
+        ///   Looks up a localized string similar to &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot; ?&amp;gt;
+        ///&amp;lt;root&amp;gt;
+        ///  &amp;lt;item name=&amp;quot; I WAS &amp;quot; value=&amp;quot; he or she was &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot; I AM &amp;quot; value=&amp;quot; he or she is &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot; I &amp;quot; value=&amp;quot; he or she &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot; HE WAS &amp;quot; value=&amp;quot; I was &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot; SHE WAS &amp;quot; value=&amp;quot; I was &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot; ME &amp;quot; value=&amp;quot; him or her &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot; MY &amp;quot; value=&amp;quot; his or her &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot; MYSELF &amp;quot; value=&amp;quot; him or herself &amp;quot; /&amp;gt;
+        ///&amp;lt;/root&amp;gt;
+        ///.
+        /// &lt;/summary&gt;
+        internal static string ChatBotPersonSubstitutions {
+            get {
+                return ResourceManager.GetString(&quot;ChatBotPersonSubstitutions&quot;, resourceCulture);
+            }
+        }
+        
+        /// &lt;summary&gt;
+        ///   Looks up a localized string similar to &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot; ?&amp;gt;
+        ///&amp;lt;root&amp;gt;
+        ///  &amp;lt;item name=&amp;quot;aimldirectory&amp;quot; value=&amp;quot;chat/Aiml&amp;quot;/&amp;gt;
+        ///  &amp;lt;item name=&amp;quot;configdirectory&amp;quot; value=&amp;quot;chat/config&amp;quot;/&amp;gt;
+        ///  
+        ///  &amp;lt;item name=&amp;quot;logdirectory&amp;quot; value=&amp;quot;logs&amp;quot;/&amp;gt;
+        ///  &amp;lt;item name=&amp;quot;splittersfile&amp;quot; value=&amp;quot;Splitters.xml&amp;quot;/&amp;gt;
+        ///  &amp;lt;item name=&amp;quot;person2substitutionsfile&amp;quot; value=&amp;quot;Person2Substitutions.xml&amp;quot;/&amp;gt;
+        ///  &amp;lt;item name=&amp;quot;personsubstitutionsfile&amp;quot; value=&amp;quot;PersonSubstitutions.xml&amp;quot;/&amp;gt;
+        ///  &amp;lt;item name=&amp;quot;gendersubstitutionsfile&amp;quot; value=&amp;quot;GenderSubstitutions.xml&amp;quot;/&amp;gt;
+        ///  &amp;lt;item name=&amp;quot;defaultpredicates&amp;quot;  [rest of string was truncated]&amp;quot;;.
+        /// &lt;/summary&gt;
+        internal static string ChatBotSettings {
+            get {
+                return ResourceManager.GetString(&quot;ChatBotSettings&quot;, resourceCulture);
+            }
+        }
+        
+        /// &lt;summary&gt;
+        ///   Looks up a localized string similar to &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot; ?&amp;gt;
+        ///&amp;lt;root&amp;gt;
+        ///  &amp;lt;item name=&amp;quot;=REPLY&amp;quot; value=&amp;quot;&amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot;NAME=RESET&amp;quot; value=&amp;quot;&amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot;:-)&amp;quot; value=&amp;quot; smile &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot;:)&amp;quot; value=&amp;quot; smile &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot;,)&amp;quot; value=&amp;quot; smile &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot;;)&amp;quot; value=&amp;quot; smile &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot;;-)&amp;quot; value=&amp;quot; smile &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot;&amp;amp;quot;&amp;quot; value=&amp;quot;&amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot;/&amp;quot; value=&amp;quot; &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot;&amp;amp;gt;&amp;quot; value=&amp;quot; gt &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot;&amp;amp;lt;&amp;quot; value=&amp;quot; lt &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot;(&amp;quot; value=&amp;quot; &amp;quot; /&amp;gt;
+        ///  &amp;lt;item name=&amp;quot;)&amp;quot; value=&amp;quot; &amp;quot; [rest of string was truncated]&amp;quot;;.
+        /// &lt;/summary&gt;
+        internal static string ChatBotSubstitutions {
+            get {
+                return ResourceManager.GetString(&quot;ChatBotSubstitutions&quot;, resourceCulture);
+            }
+        }
+        
+        /// &lt;summary&gt;
+        ///   Looks up a localized string similar to Last Log Message:{0}.
+        /// &lt;/summary&gt;
+        internal static string ChatErrorLastLogMessageFormat {
+            get {
+                return ResourceManager.GetString(&quot;ChatErrorLastLogMessageFormat&quot;, resourceCulture);
+            }
+        }
+        
+        /// &lt;summary&gt;
+        ///   Looks up a localized string similar to Chat.Input.
+        /// &lt;/summary&gt;
+        internal static string ChatInputHeader {
+            get {
+                return ResourceManager.GetString(&quot;ChatInputHeader&quot;, resourceCulture);
+            }
+        }
+        
+        /// &lt;summary&gt;
+        ///   Looks up a localized string similar to Chat.
+        /// &lt;/summary&gt;
+        internal static string ChatModuleName {
+            get {
+                return ResourceManager.GetString(&quot;ChatModuleName&quot;, resourceCulture);
+            }
+        }
+        
+        /// &lt;summary&gt;
+        ///   Looks up a localized string similar to Chat.Output.
+        /// &lt;/summary&gt;
+        internal static string ChatOutputHeader {
+            get {
+                return ResourceManager.GetString(&quot;ChatOutputHeader&quot;, resourceCulture);
+            }
+        }
+        
+        /// &lt;summary&gt;
+        ///   Looks up a localized string similar to Chat.Processing.
+        /// &lt;/summary&gt;
+        internal static string ChatProcessingHeader {
+            get {
+                return ResourceManager.GetString(&quot;ChatProcessingHeader&quot;, resourceCulture);
+            }
+        }
+        
+        /// &lt;summary&gt;
+        ///   Looks up a localized string similar to Batman.
+        /// &lt;/summary&gt;
+        internal static string ChatUserName {
+            get {
+                return ResourceManager.GetString(&quot;ChatUserName&quot;, resourceCulture);
+            }
+        }
+        
+        /// &lt;summary&gt;
+        ///   Looks up a localized string similar to I&amp;apos;m afraid I can&amp;apos;t help you with that, sir..
+        /// &lt;/summary&gt;
+        internal static string DefaultFailureResponseText {
+            get {
+                return ResourceManager.GetString(&quot;DefaultFailureResponseText&quot;, resourceCulture);
+            }
+        }
+        
+        /// &lt;summary&gt;
+        ///   Looks up a localized string similar to Error initializing chat: {0}.
+        /// &lt;/summary&gt;
+        internal static string ErrorInitializingChat {
+            get {
+                return ResourceManager.GetString(&quot;ErrorInitializingChat&quot;, resourceCulture);
+            }
+        }
+        
+        /// &lt;summary&gt;
+        ///   Looks up a localized string similar to Error parsing OOB command: {0} for command: {1}.
+        /// &lt;/summary&gt;
+        internal static string ErrorParsingCommand {
+            get {
+                return ResourceManager.GetString(&quot;ErrorParsingCommand&quot;, resourceCulture);
+            }
+        }
+        
+        /// &lt;summary&gt;
+        ///   Looks up a localized string similar to Greetings sir. What can I do for you?.
+        /// &lt;/summary&gt;
+        internal static string InitialGreeting {
+            get {
+                return ResourceManager.GetString(&quot;InitialGreeting&quot;, resourceCulture);
+            }
+        }
+        
+        /// &lt;summary&gt;
+        ///   Looks up a localized string similar to Hi.
+        /// &lt;/summary&gt;
+        internal static string InitialGreetingText {
+            get {
+                return ResourceManager.GetString(&quot;InitialGreetingText&quot;, resourceCulture);
+            }
+        }
+        
+        /// &lt;summary&gt;
+        ///   Looks up a localized string similar to No end tag for OOB command: {0}.
+        /// &lt;/summary&gt;
+        internal static string NoEndTagForOobCommand {
+            get {
+                return ResourceManager.GetString(&quot;NoEndTagForOobCommand&quot;, resourceCulture);
+            }
+        }
+        
+        /// &lt;summary&gt;
+        ///   Looks up a localized string similar to Empty directoryPath to a settings file.
+        /// &lt;/summary&gt;
+        internal static string NoSettingsPathError {
+            get {
+                return ResourceManager.GetString(&quot;NoSettingsPathError&quot;, resourceCulture);
+            }
+        }
+        
+        /// &lt;summary&gt;
+        ///   Looks up a localized string similar to OOB root element was not an alfred XElement.
+        /// &lt;/summary&gt;
+        internal static string OobRootNotAlfredXElement {
+            get {
+                return ResourceManager.GetString(&quot;OobRootNotAlfredXElement&quot;, resourceCulture);
             }
         }
     }
@@ -146,7 +558,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor {
 
     </pre>
     <script type="text/javascript">
-      highlightRanges([[32,9,32,29,0],[32,30,32,31,0],[33,9,33,10,0],[55,17,55,18,0],[56,17,56,40,0],[57,13,57,14,0],[58,17,58,18,0],[59,17,59,41,0],[60,13,60,14,0],[76,17,76,18,0],[77,17,77,92,0],[78,13,78,14,0],[85,17,85,18,0],[86,17,86,86,0],[87,13,87,14,0],[121,17,121,18,0],[122,17,122,95,0],[123,13,123,14,0],[40,17,40,18,1],[41,17,41,63,1],[41,64,41,65,1],[42,21,42,200,1],[43,21,43,40,1],[44,17,44,18,1],[45,17,45,36,1],[46,13,46,14,1],[67,17,67,18,1],[68,17,68,104,1],[69,13,69,14,1],[94,17,94,18,1],[95,17,95,84,1],[96,13,96,14,1],[103,17,103,18,1],[104,17,104,85,1],[105,13,105,14,1],[112,17,112,18,1],[113,17,113,100,1],[114,13,114,14,1],[130,17,130,18,1],[131,17,131,98,1],[132,13,132,14,1]]);
+      highlightRanges([[32,9,32,29,0],[32,30,32,31,0],[33,9,33,10,0],[55,17,55,18,0],[56,17,56,40,0],[57,13,57,14,0],[58,17,58,18,0],[59,17,59,41,0],[60,13,60,14,0],[281,17,281,18,0],[282,17,282,102,0],[283,13,283,14,0],[426,17,426,18,0],[427,17,427,100,0],[428,13,428,14,0],[462,17,462,18,0],[463,17,463,91,0],[464,13,464,14,0],[480,17,480,18,0],[481,17,481,97,0],[482,13,482,14,0],[489,17,489,18,0],[490,17,490,92,0],[491,13,491,14,0],[498,17,498,18,0],[499,17,499,90,0],[500,13,500,14,0],[507,17,507,18,0],[508,17,508,86,0],[509,13,509,14,0],[525,17,525,18,0],[526,17,526,92,0],[527,13,527,14,0],[534,17,534,18,0],[535,17,535,90,0],[536,13,536,14,0],[543,17,543,18,0],[544,17,544,95,0],[545,13,545,14,0],[40,17,40,18,1],[41,17,41,63,1],[41,64,41,65,1],[42,21,42,181,1],[43,21,43,40,1],[44,17,44,18,1],[45,17,45,36,1],[46,13,46,14,1],[93,17,93,18,1],[94,17,94,87,1],[95,13,95,14,1],[123,17,123,18,1],[124,17,124,84,1],[125,13,125,14,1],[152,17,152,18,1],[153,17,153,83,1],[154,13,154,14,1],[181,17,181,18,1],[182,17,182,78,1],[183,13,183,14,1],[210,17,210,18,1],[211,17,211,83,1],[212,13,212,14,1],[240,17,240,18,1],[241,17,241,79,1],[242,13,242,14,1],[272,17,272,18,1],[273,17,273,90,1],[274,13,274,14,1],[313,17,313,18,1],[314,17,314,81,1],[315,13,315,14,1],[334,17,334,18,1],[335,17,335,97,1],[336,13,336,14,1],[355,17,355,18,1],[356,17,356,98,1],[357,13,357,14,1],[375,17,375,18,1],[376,17,376,97,1],[377,13,377,14,1],[394,17,394,18,1],[395,17,395,86,1],[396,13,396,14,1],[417,17,417,18,1],[418,17,418,91,1],[419,13,419,14,1],[435,17,435,18,1],[436,17,436,86,1],[437,13,437,14,1],[444,17,444,18,1],[445,17,445,85,1],[446,13,446,14,1],[453,17,453,18,1],[454,17,454,87,1],[455,13,455,14,1],[471,17,471,18,1],[472,17,472,83,1],[473,13,473,14,1],[516,17,516,18,1],[517,17,517,90,1],[518,13,518,14,1]]);
     </script>
   </body>
 </html>

@@ -96,6 +96,7 @@
     <None Include="Resources\AimlGod.aiml" />
     <None Include="Resources\AimlGreeting.aiml" />
     <None Include="Resources\AimlHelp.aiml" />
+    <None Include="Resources\AimlSysStatus.aiml" />
     <None Include="Resources\AimlThanks.aiml" />
     <None Include="Resources\AimlShellNavigation.aiml" />
   </ItemGroup>

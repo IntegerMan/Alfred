@@ -2,63 +2,75 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\versiontaghandler.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\normalize\uppercasetexttransformer.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// VersionTagHandler.cs
+// UppercaseTextTransformer.cs
 // 
-// Created on:      08/12/2015 at 11:01 PM
-// Last Modified:   08/15/2015 at 1:33 AM
+// Created on:      08/12/2015 at 10:38 PM
+// Last Modified:   08/12/2015 at 11:59 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
-
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
-using MattEland.Common;
 
-namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
+namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
 {
     /// &lt;summary&gt;
-    ///     An AIML tag handler for the AIML &quot;version&quot; tag. This outputs the version of the chat engine.
+    /// A text transformer that makes the input text be uppercase for comparison
     /// &lt;/summary&gt;
-    [HandlesAimlTag(&quot;version&quot;)]
-    public class VersionTagHandler : AimlTagHandler
+    public class UppercaseTextTransformer : TextTransformer
     {
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
+        /// Initializes a new instance of the &lt;see cref=&quot;TextTransformer&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
-        public VersionTagHandler([NotNull] TagHandlerParameters parameters)
-            : base(parameters)
+        /// &lt;param name=&quot;chatEngine&quot;&gt;The ChatEngine.&lt;/param&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
+        public UppercaseTextTransformer([NotNull] ChatEngine chatEngine, string input)
+            : base(chatEngine, input)
         {
         }
 
         /// &lt;summary&gt;
-        ///     Processes the input text and returns the processed value.
+        /// Initializes a new instance of the &lt;see cref=&quot;TextTransformer&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;chatEngine&quot;&gt;The ChatEngine.&lt;/param&gt;
+        public UppercaseTextTransformer([NotNull] ChatEngine chatEngine)
+            : base(chatEngine)
+        {
+        }
+
+        /// &lt;summary&gt;
+        /// Processes the input text and returns the processed value.
         /// &lt;/summary&gt;
         /// &lt;returns&gt;The processed output&lt;/returns&gt;
         protected override string ProcessChange()
         {
-            if (TemplateNode.Name.Matches(&quot;version&quot;))
-            {
-                return GetType().GetAssemblyVersion()?.ToString();
-            }
+            return TransformInput(InputString);
+        }
 
-            return string.Empty;
+        /// &lt;summary&gt;
+        /// Transforms the input to uppercase.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input.&lt;/param&gt;
+        /// &lt;returns&gt;The transformed input&lt;/returns&gt;
+        [CanBeNull]
+        public static string TransformInput([CanBeNull] string input)
+        {
+            return input?.ToUpperInvariant();
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[30,15,30,31,0],[31,9,31,10,0],[32,9,32,10,0],[39,9,39,10,0],[40,13,40,54,0],[41,13,41,14,0],[42,17,42,67,0],[45,13,45,33,0],[46,9,46,10,0]]);
+      highlightRanges([[27,15,27,38,0],[28,9,28,10,0],[29,9,29,10,0],[36,15,36,31,0],[37,9,37,10,0],[38,9,38,10,0],[45,9,45,10,0],[46,13,46,48,0],[47,9,47,10,0],[56,9,56,10,0],[57,13,57,46,0],[58,9,58,10,0]]);
     </script>
   </body>
 </html>

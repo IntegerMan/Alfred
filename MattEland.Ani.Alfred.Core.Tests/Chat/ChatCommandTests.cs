@@ -1,20 +1,13 @@
 ﻿// ---------------------------------------------------------
-// ConversationTests.cs
+// ChatCommandTests.cs
 // 
-// Created on:      08/10/2015 at 2:42 PM
-// Last Modified:   08/16/2015 at 4:47 PM
+// Created on:      08/17/2015 at 9:56 PM
+// Last Modified:   08/18/2015 at 11:26 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Security;
-
-using JetBrains.Annotations;
-
-using MattEland.Ani.Alfred.Chat;
-using MattEland.Ani.Alfred.Chat.Aiml;
+using System.Linq;
 
 using NUnit.Framework;
 
@@ -44,6 +37,16 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         }
 
         [Test]
+        public void StatusYieldsRelevantInformation()
+        {
+            var reply = GetReply("Status");
+            var count = Alfred.Subsystems.Count();
+
+            Assert.That(reply.Contains($"The System is Online with a total of {count} Subsystems Present."),
+                        $"{reply} did not contain the expected system status text.");
+        }
+
+        [Test]
         public void TagHandlersAreInvokedWhenATestingTemplateIsInvoked()
         {
             Say("TEST TAG INVOKE");
@@ -57,13 +60,6 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             Say("I like turtles");
 
             Assert.IsFalse(AlfredTestTagHandler.WasInvoked);
-        }
-
-        [Test]
-        public void StatusYieldsRelevantInformation()
-        {
-            var reply = GetReply("Status");
-            Assert.AreEqual("The System is Online with a total of 3 Subsystems Present.", reply);
         }
     }
 }

@@ -7,6 +7,9 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Globalization;
+using System.Linq;
+using System.Text;
 
 using JetBrains.Annotations;
 
@@ -86,6 +89,45 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             _cpuModule.Dispose();
             _memoryModule.Dispose();
             _diskModule.Dispose();
+        }
+
+
+        /// <summary>
+        /// Processes an Alfred Command. If the command is handled, result should be modified accordingly and the method should return true. Returning false will not stop the message from being propogated.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="result">The result. If the command was handled, this should be updated.</param>
+        /// <returns><c>True</c> if the command was handled; otherwise false.</returns>
+        public override bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
+        {
+            if (command.IsFor(this) && command.Name.Matches("Status"))
+            {
+                result.Output = GetStatusText(command.Data);
+                return true;
+            }
+
+            return base.ProcessAlfredCommand(command, result);
+        }
+
+        private string GetStatusText(string data)
+        {
+
+            var alfred = AlfredInstance;
+            if (alfred == null)
+            {
+                return "No Alfred integration is detected. The system may be offline.";
+            }
+
+            var sb = new StringBuilder();
+            sb.AppendFormat(CultureInfo.CurrentCulture,
+                                 "The System is {0} with a total of {1} Subsystems Present. ",
+                                 alfred.Status,
+                                 alfred.Subsystems.Count());
+
+            // TODO: Add modules from other areas
+
+
+            return sb.ToString();
         }
 
         /// <summary>

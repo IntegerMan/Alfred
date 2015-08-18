@@ -2,69 +2,144 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.common\collectionextensions.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\definitions\alfredcommand.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// CollectionExtensions.cs
+// AlfredCommand.cs
 // 
-// Created on:      08/14/2015 at 12:55 AM
-// Last Modified:   08/14/2015 at 12:59 AM
-// 
-// Last Modified by: Matt Eland
+// Created on:      08/03/2015 at 1:40 PM
+// Last Modified:   08/05/2015 at 3:06 PM
+// Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
 
-namespace MattEland.Common
+namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// &lt;summary&gt;
-    ///     A set of extension methods related to collections
+    ///     Represents a command that can be executed on the user interface layer
     /// &lt;/summary&gt;
-    public static class CollectionExtensions
+    /// &lt;remarks&gt;
+    ///     It would be fantastic if this could support System.Windows.Input.ICommand,
+    ///     but portable doesn&#39;t reference that assembly so clients will have to provide
+    ///     their own version to support MVVM bindings, etc.
+    /// &lt;/remarks&gt;
+    public class AlfredCommand
     {
         /// &lt;summary&gt;
-        ///     Adds an item to a collection safely. This is a convenience method that does null and duplicate checking
-        ///     based on the type of item / collection and will throw null reference or invalid operation exceptions if illegal
-        ///     circumstances are met.
+        ///     The Action invoked when the Execute method is called.
         /// &lt;/summary&gt;
-        /// &lt;typeparam name=&quot;T&quot;&gt;The type of item&lt;/typeparam&gt;
-        /// &lt;param name=&quot;item&quot;&gt;The item.&lt;/param&gt;
-        /// &lt;param name=&quot;collection&quot;&gt;The collection.&lt;/param&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;
-        ///     item, collection
-        /// &lt;/exception&gt;
-        /// &lt;exception cref=&quot;System.InvalidOperationException&quot;&gt;The specified item was already part of the collection&lt;/exception&gt;
-        public static void AddSafe&lt;T&gt;([NotNull] this ICollection&lt;T&gt; collection, [NotNull] T item)
+        [CanBeNull]
+        private Action _executeAction;
+
+        /// &lt;summary&gt;
+        ///     Whether or not the command is enabled
+        /// &lt;/summary&gt;
+        private bool _isEnabled = true;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the
+        ///     &lt;see cref=&quot;AlfredCommand&quot; /&gt;
+        ///     class.
+        /// &lt;/summary&gt;
+        public AlfredCommand() : this(null)
         {
-            if (item == null)
-            {
-                throw new ArgumentNullException(nameof(item));
-            }
-            if (collection == null)
-            {
-                throw new ArgumentNullException(nameof(collection));
-            }
+        }
 
-            // This shouldn&#39;t happen, but I want to check to make sure
-            if (collection.Contains(item))
-            {
-                throw new InvalidOperationException(Resources.ErrorItemAlreadyInCollection);
-            }
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the
+        ///     &lt;see cref=&quot;AlfredCommand&quot; /&gt;
+        ///     class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;executeAction&quot;&gt;
+        ///     The execute action.
+        /// &lt;/param&gt;
+        public AlfredCommand([CanBeNull] Action executeAction)
+        {
+            ExecuteAction = executeAction;
+        }
 
-            collection.Add(item);
+        /// &lt;summary&gt;
+        ///     Gets or sets the Action that is invoked when a command executes.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The executed Action.&lt;/value&gt;
+        [CanBeNull]
+        public Action ExecuteAction
+        {
+            get { return _executeAction; }
+            set { _executeAction = value; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets a value indicating whether this command is enabled.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;&lt;c&gt;true&lt;/c&gt; if this command is enabled; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/value&gt;
+        public bool IsEnabled
+        {
+            get { return _isEnabled; }
+            set
+            {
+                if (value != _isEnabled)
+                {
+                    _isEnabled = value;
+                    RaiseCanExecuteChanged();
+                }
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Defines the method that determines whether the command can execute in its current state.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;
+        ///     true if this command can be executed; otherwise, false.
+        /// &lt;/returns&gt;
+        /// &lt;param name=&quot;parameter&quot;&gt;
+        ///     Data used by the command.  If the command does not require data to be passed, this object can be set to null.
+        /// &lt;/param&gt;
+        [SuppressMessage(&quot;Microsoft.Usage&quot;, &quot;CA1801:ReviewUnusedParameters&quot;, MessageId = &quot;parameter&quot;,
+            Justification = &quot;This matches the XAML ICommand interface which makes for ease of porting&quot;)]
+        public bool CanExecute([CanBeNull] object parameter)
+        {
+            return IsEnabled;
+        }
+
+        /// &lt;summary&gt;
+        ///     Defines the method to be called when the command is invoked.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;parameter&quot;&gt;
+        ///     Data used by the command.  If the command does not require data to be passed, this object can be set to null.
+        /// &lt;/param&gt;
+        public virtual void Execute([CanBeNull] object parameter)
+        {
+            // TODO: I could support async invokes here. I&#39;d want to add a parameter for that, but it&#39;s possible.
+
+            ExecuteAction?.Invoke();
+        }
+
+        /// &lt;summary&gt;
+        ///     Occurs when the result of CanExecute changes and should be re-evaluated.
+        /// &lt;/summary&gt;
+        public event EventHandler CanExecuteChanged;
+
+        /// &lt;summary&gt;
+        ///     Raises the CanExecuteChanged event.
+        /// &lt;/summary&gt;
+        private void RaiseCanExecuteChanged()
+        {
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[37,13,37,14,0],[38,17,38,63,0],[41,13,41,14,0],[42,17,42,69,0],[35,9,35,10,1],[36,13,36,30,1],[40,13,40,36,1],[46,13,46,43,1],[47,13,47,14,1],[48,17,48,93,1],[51,13,51,34,1],[52,9,52,10,1]]);
+      highlightRanges([[42,34,42,44,1],[43,9,43,10,1],[44,9,44,10,1],[35,9,35,40,1],[54,9,54,63,1],[55,9,55,10,1],[56,13,56,43,1],[57,9,57,10,1],[66,17,66,18,1],[66,19,66,41,1],[66,42,66,43,1],[67,17,67,18,1],[67,19,67,42,1],[67,43,67,44,1],[76,17,76,18,1],[76,19,76,37,1],[76,38,76,39,1],[78,13,78,14,1],[79,17,79,41,1],[80,17,80,18,1],[81,21,81,40,1],[82,21,82,46,1],[83,17,83,18,1],[84,13,84,14,1],[99,9,99,10,1],[100,13,100,30,1],[101,9,101,10,1],[110,9,110,10,1],[113,13,113,37,1],[114,9,114,10,1],[125,9,125,10,1],[126,13,126,62,1],[127,9,127,10,1]]);
     </script>
   </body>
 </html>

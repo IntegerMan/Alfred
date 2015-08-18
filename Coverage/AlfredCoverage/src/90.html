@@ -2,74 +2,63 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\redirecttaghandler.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\systemtaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// srai.cs
+// SystemTagHandler.cs
 // 
-// Created on:      08/12/2015 at 10:55 PM
-// Last Modified:   08/12/2015 at 11:59 PM
+// Created on:      08/12/2015 at 10:57 PM
+// Last Modified:   08/15/2015 at 1:42 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System.Diagnostics;
-using System.Xml;
-
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
-using MattEland.Common;
+using MattEland.Ani.Alfred.Core.Console;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// &lt;summary&gt;
-    /// A tag handler for the AIML &quot;srai&quot; tag governing recursive / redirect style searches.
+    ///     A tag handler for the AIML &quot;system&quot; tag. This tag currently does nothing.
     /// &lt;/summary&gt;
-    [HandlesAimlTag(&quot;srai&quot;)]
-    public class RedirectTagHandler : AimlTagHandler
+    [HandlesAimlTag(&quot;system&quot;)]
+    public class SystemTagHandler : AimlTagHandler
     {
         /// &lt;summary&gt;
-        /// Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
-        public RedirectTagHandler([NotNull] TagHandlerParameters parameters)
+        public SystemTagHandler([NotNull] TagHandlerParameters parameters)
             : base(parameters)
         {
         }
 
         /// &lt;summary&gt;
-        /// Processes the input text and returns the processed value.
+        ///     Processes the input text and returns the processed value.
         /// &lt;/summary&gt;
         /// &lt;returns&gt;The processed output&lt;/returns&gt;
         protected override string ProcessChange()
         {
-            //- Basic validation
-            if (!TemplateNode.Name.Matches(&quot;srai&quot;) || TemplateNode.InnerText.IsEmpty())
-            {
-                return string.Empty;
-            }
+            /* TODO: I&#39;ll likely want to support this very very soon, unless I decide to go with 
+               a custom tag of a different type If a straight implementation was wanted, 
+               http://stackoverflow.com/questions/15234448/run-shell-commands-using-c-sharp-and-get-the-info-into-string 
+               is a nice starting place. */
 
-            // Spawn a new request as a child of this current request and execute it
-            var request = new Request(TemplateNode.InnerText, User, ChatEngine, Request);
-            var result = ChatEngine.ProcessRedirectChatRequest(request);
-            Debug.Assert(result != null);
+            Log(Resources.SystemNotImplemented, LogLevel.Warning);
 
-            // This could have taken awhile. Check it for timeout
-            request.CheckForTimedOut();
-
-            // Return the result of the inner request
-            return result.Output;
+            return string.Empty;
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[31,15,31,31,1],[32,9,32,10,1],[33,9,33,10,1],[40,9,40,10,1],[42,13,42,88,1],[43,13,43,14,1],[44,17,44,37,1],[48,13,48,90,1],[49,13,49,73,1],[50,13,50,42,1],[53,13,53,40,1],[56,13,56,34,1],[57,9,57,10,1]]);
+      highlightRanges([[28,15,28,31,0],[29,9,29,10,0],[30,9,30,10,0],[37,9,37,10,0],[43,13,43,67,0],[45,13,45,33,0],[46,9,46,10,0]]);
     </script>
   </body>
 </html>

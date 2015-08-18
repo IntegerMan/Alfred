@@ -2,72 +2,189 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\definitions\simpleplatformprovider.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\definitions\chatcommand.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// SimplePlatformProvider.cs
+// ChatCommand.cs
 // 
-// Created on:      07/26/2015 at 4:32 PM
-// Last Modified:   08/03/2015 at 2:04 PM
+// Created on:      08/11/2015 at 3:59 PM
+// Last Modified:   08/11/2015 at 10:18 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Globalization;
 
-using JetBrains.Annotations;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// &lt;summary&gt;
-    ///     A simplistic platform provider for testing purposes. This class cannot be inherited.
+    ///     Represents a command that the chat system is requesting Alfred execute.
+    ///     This command will be routed to a subsystem for processing
     /// &lt;/summary&gt;
-    public sealed class SimplePlatformProvider : IPlatformProvider
+    public struct ChatCommand : IEquatable&lt;ChatCommand&gt;
     {
         /// &lt;summary&gt;
-        ///     Generates a collection of the specified type.
+        ///     Gets the empty command for null-ish comparison.
         /// &lt;/summary&gt;
-        /// &lt;typeparam
-        ///     name=&quot;T&quot;&gt;
-        ///     The type
-        /// &lt;/typeparam&gt;
-        /// &lt;returns&gt;The collection.&lt;/returns&gt;
-        [NotNull]
-        public ICollection&lt;T&gt; CreateCollection&lt;T&gt;()
+        public static readonly ChatCommand Empty = new ChatCommand();
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;ChatCommand&quot; /&gt; struct.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;command&quot;&gt;The command.&lt;/param&gt;
+        public ChatCommand(string command) : this(null, command, null)
         {
-            return new Collection&lt;T&gt;();
         }
 
         /// &lt;summary&gt;
-        ///     Creates a platform-friendly version of an AlfredCommand.
+        ///     Initializes a new instance of the &lt;see cref=&quot;ChatCommand&quot; /&gt; struct.
         /// &lt;/summary&gt;
-        /// &lt;returns&gt;An AlfredCommand.&lt;/returns&gt;
-        [NotNull]
-        public AlfredCommand CreateCommand()
+        /// &lt;param name=&quot;subsystem&quot;&gt;The subsystem.&lt;/param&gt;
+        /// &lt;param name=&quot;command&quot;&gt;The command.&lt;/param&gt;
+        public ChatCommand(string subsystem, string command) : this(subsystem, command, null)
         {
-            return new AlfredCommand();
         }
 
         /// &lt;summary&gt;
-        /// Creates a platform-friendly version of an AlfredCommand with a pre-defined action.
+        ///     Initializes a new instance of the &lt;see cref=&quot;ChatCommand&quot; /&gt; struct.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;executeAction&quot;&gt;The action a button click should execute.&lt;/param&gt;
-        /// &lt;returns&gt;An AlfredCommand.&lt;/returns&gt;
-        [NotNull]
-        public AlfredCommand CreateCommand([CanBeNull] Action executeAction)
+        /// &lt;param name=&quot;subsystem&quot;&gt;The subsystem.&lt;/param&gt;
+        /// &lt;param name=&quot;command&quot;&gt;The command.&lt;/param&gt;
+        /// &lt;param name=&quot;data&quot;&gt;The data.&lt;/param&gt;
+        public ChatCommand(string subsystem, string command, string data) : this()
         {
-            return new AlfredCommand(executeAction);
+            Subsystem = subsystem;
+            Name = command;
+            Data = data;
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the subsystem the command is intended for.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The subsystem.&lt;/value&gt;
+        public string Subsystem { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets the name of the command to execute. This will be interpreted by the subsystem.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The name of the command.&lt;/value&gt;
+        public string Name { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets any extra data or parameters needed to execute the command.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The extra data.&lt;/value&gt;
+        public string Data { get; }
+
+        /// &lt;summary&gt;
+        ///     Determines if this instance is equal to another instance
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;other&quot;&gt;The other.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the instances are equal, &lt;c&gt;false&lt;/c&gt; otherwise.&lt;/returns&gt;
+        public bool Equals(ChatCommand other)
+        {
+            return string.Equals(Subsystem, other.Subsystem) &amp;&amp; string.Equals(Name, other.Name) &amp;&amp;
+                   string.Equals(Data, other.Data);
+        }
+
+        /// &lt;summary&gt;
+        ///     Returns a &lt;see cref=&quot;System.String&quot; /&gt; that represents this instance.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;A &lt;see cref=&quot;System.String&quot; /&gt; that represents this instance.&lt;/returns&gt;
+        public override string ToString()
+        {
+            // ReSharper disable once AssignNullToNotNullAttribute
+            return string.Format(CultureInfo.CurrentCulture, Resources.ChatCommandToString, Subsystem, Name, Data);
+        }
+
+
+        /// &lt;summary&gt;
+        ///     Determines whether the specified &lt;see cref=&quot;System.Object&quot; /&gt; is equal to this instance.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;obj&quot;&gt;The object to compare with the current instance.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the specified &lt;see cref=&quot;System.Object&quot; /&gt; is equal to this instance; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+            return obj is ChatCommand &amp;&amp; Equals((ChatCommand)obj);
+        }
+
+        /// &lt;summary&gt;
+        ///     Returns a hash code for this instance.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.&lt;/returns&gt;
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = Subsystem?.GetHashCode() ?? 0;
+                hashCode = (hashCode * 397) ^ (Name?.GetHashCode() ?? 0);
+                hashCode = (hashCode * 397) ^ (Data?.GetHashCode() ?? 0);
+                return hashCode;
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Implements the operator ==.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;left&quot;&gt;The left.&lt;/param&gt;
+        /// &lt;param name=&quot;right&quot;&gt;The right.&lt;/param&gt;
+        /// &lt;returns&gt;The result of the operator.&lt;/returns&gt;
+        public static bool operator ==(ChatCommand left, ChatCommand right)
+        {
+            return left.Equals(right);
+        }
+
+        /// &lt;summary&gt;
+        ///     Implements the operator !=.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;left&quot;&gt;The left.&lt;/param&gt;
+        /// &lt;param name=&quot;right&quot;&gt;The right.&lt;/param&gt;
+        /// &lt;returns&gt;The result of the operator.&lt;/returns&gt;
+        public static bool operator !=(ChatCommand left, ChatCommand right)
+        {
+            return !left.Equals(right);
+        }
+
+        /// &lt;summary&gt;
+        /// Determines whether this command is explicitly for the subsystem (not unaddressed).
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;subsystem&quot;&gt;The subsystem.&lt;/param&gt;
+        /// &lt;returns&gt;System.Boolean.&lt;/returns&gt;
+        public bool IsFor(IAlfredSubsystem subsystem)
+        {
+            return subsystem != null &amp;&amp; Subsystem.Matches(subsystem.Id);
+        }
+
+        /// &lt;summary&gt;
+        /// Whether or not this instance is explicitly addressed to a particular subsystem.
+        /// &lt;/summary&gt;
+        public bool IsAddressed
+        {
+            get { return Subsystem.HasText(); }
+        }
+
+        /// &lt;summary&gt;
+        /// Whether or not this instance is not addressed to a particular subsystem.
+        /// &lt;/summary&gt;
+        public bool IsUnaddressed
+        {
+            get { return Subsystem.IsEmpty(); }
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[32,9,32,10,1],[33,13,33,40,1],[34,9,34,10,1],[42,9,42,10,1],[43,13,43,40,1],[44,9,44,10,1],[53,9,53,10,1],[54,13,54,53,1],[55,9,55,10,1]]);
+      highlightRanges([[31,46,31,71,0],[32,9,32,10,0],[33,9,33,10,0],[40,64,40,94,0],[41,9,41,10,0],[42,9,42,10,0],[91,9,91,10,0],[93,13,93,116,0],[94,9,94,10,0],[103,9,103,10,0],[104,13,104,44,0],[105,13,105,14,0],[106,17,106,30,0],[108,13,108,67,0],[109,9,109,10,0],[116,9,116,10,0],[118,13,118,14,0],[119,17,119,62,0],[120,17,120,74,0],[121,17,121,74,0],[122,17,122,33,0],[124,9,124,10,0],[133,9,133,10,0],[134,13,134,39,0],[135,9,135,10,0],[163,17,163,18,0],[163,19,163,46,0],[163,47,163,48,0],[171,17,171,18,0],[171,19,171,46,0],[171,47,171,48,0],[50,77,50,83,1],[51,9,51,10,1],[52,13,52,35,1],[53,13,53,28,1],[54,13,54,25,1],[55,9,55,10,1],[61,35,61,39,1],[67,30,67,34,1],[73,30,73,34,1],[81,9,81,10,1],[82,13,83,52,1],[84,9,84,10,1],[144,9,144,10,1],[145,13,145,40,1],[146,9,146,10,1],[154,9,154,10,1],[155,13,155,73,1],[156,9,156,10,1],[25,9,25,70,1]]);
     </script>
   </body>
 </html>

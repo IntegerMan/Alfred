@@ -2,100 +2,66 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\request.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\user.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// Request.cs
+// User.cs
 // 
-// Created on:      08/12/2015 at 10:22 PM
-// Last Modified:   08/16/2015 at 5:46 PM
+// Created on:      08/12/2015 at 10:24 PM
+// Last Modified:   08/13/2015 at 3:45 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core.Console;
-using MattEland.Common;
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml
 {
     /// &lt;summary&gt;
-    ///     Represents a chat request or a sub-component of an existing request
+    ///     Represents a user the chat engine interacts with
     /// &lt;/summary&gt;
-    public class Request
+    public class User
     {
-        private Request _child;
+        [NotNull]
+        [ItemNotNull]
+        private readonly List&lt;Result&gt; _results = new List&lt;Result&gt;();
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;Request&quot; /&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;User&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;rawInput&quot;&gt;The raw input.&lt;/param&gt;
-        /// &lt;param name=&quot;user&quot;&gt;The user.&lt;/param&gt;
+        /// &lt;param name=&quot;id&quot;&gt;The identifier.&lt;/param&gt;
         /// &lt;param name=&quot;chatEngine&quot;&gt;The chat engine.&lt;/param&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;
-        /// &lt;/exception&gt;
-        public Request([NotNull] string rawInput,
-                       [NotNull] User user,
-                       [NotNull] ChatEngine chatEngine)
-            : this(rawInput, user, chatEngine, null)
+        /// &lt;exception cref=&quot;ArgumentOutOfRangeException&quot;&gt;The id cannot be empty&lt;/exception&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;chatEngine&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public User([NotNull] string id, [NotNull] ChatEngine chatEngine)
         {
-        }
-
-        /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;Request&quot; /&gt; class as a child of a prior Request
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;rawInput&quot;&gt;The raw input.&lt;/param&gt;
-        /// &lt;param name=&quot;user&quot;&gt;The user.&lt;/param&gt;
-        /// &lt;param name=&quot;chatEngine&quot;&gt;The chat engine.&lt;/param&gt;
-        /// &lt;param name=&quot;parent&quot;&gt;The parent.&lt;/param&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;
-        /// &lt;/exception&gt;
-        public Request([NotNull] string rawInput,
-                       [NotNull] User user,
-                       [NotNull] ChatEngine chatEngine,
-                       [CanBeNull] Request parent)
-        {
-            //- Validate
-            if (rawInput == null)
-            {
-                throw new ArgumentNullException(nameof(rawInput));
-            }
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
+            //- Validation
             if (chatEngine == null)
             {
                 throw new ArgumentNullException(nameof(chatEngine));
             }
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentOutOfRangeException(nameof(id), Resources.UserCtorNullId);
+            }
 
-            //- Set Properties
-            RawInput = rawInput;
-            User = user;
+            Id = id;
             ChatEngine = chatEngine;
 
-            if (parent != null)
-            {
-                // Set up the parent / child hierarchy
-                Parent = parent;
-                parent.RegisterChild(this);
-
-                // Copy some additional properties from the parent
-                StartedOn = parent.StartedOn;
-                HasTimedOut = parent.HasTimedOut;
-            }
-            else
-            {
-                // Set the current start time as the StartedOn field
-                StartedOn = DateTime.Now;
-            }
+            // Set up the variables collection
+            UserVariables = new SettingsManager();
+            UserVariables.Add(&quot;topic&quot;, &quot;*&quot;);
         }
 
         /// &lt;summary&gt;
@@ -106,119 +72,124 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         public ChatEngine ChatEngine { get; }
 
         /// &lt;summary&gt;
-        ///     Gets or sets a value indicating whether this instance has timed out.
-        ///     Call CheckForTimeOut to update this.
+        ///     Gets the predicates. These are variables pertaining to the user.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;&lt;c&gt;true&lt;/c&gt; if this instance has timed out; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/value&gt;
-        public bool HasTimedOut { get; private set; }
-
-        /// &lt;summary&gt;
-        ///     Gets the raw input.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The raw input.&lt;/value&gt;
+        /// &lt;value&gt;The predicates.&lt;/value&gt;
         [NotNull]
-        public string RawInput { get; }
+        public SettingsManager UserVariables { get; }
 
         /// &lt;summary&gt;
-        ///     Gets or sets the result of the request.
+        ///     Gets the user&#39;s identifier.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The result.&lt;/value&gt;
-        [CanBeNull]
-        public Result Result { get; set; }
-
-        /// &lt;summary&gt;
-        ///     Gets or sets when the request started.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The started on.&lt;/value&gt;
-        public DateTime StartedOn { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets the user associated with the request.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The user.&lt;/value&gt;
+        /// &lt;value&gt;The user&#39;s identifier.&lt;/value&gt;
         [NotNull]
-        public User User { get; }
+        public string Id { get; }
 
         /// &lt;summary&gt;
-        ///     Gets the parent request, if any.
+        ///     Gets the topic.
         /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        ///     Requests can have parents if they were spawned by a prior Request
-        /// &lt;/remarks&gt;
-        /// &lt;value&gt;The parent request.&lt;/value&gt;
-        [CanBeNull]
-        public Request Parent { get; private set; }
-
-        /// &lt;summary&gt;
-        ///     Gets the child request, if any.
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        ///     Requests can have children if they spawn an additional Request object
-        /// &lt;/remarks&gt;
-        /// &lt;value&gt;The child request.&lt;/value&gt;
-        [CanBeNull]
-        public Request Child
+        /// &lt;value&gt;The topic.&lt;/value&gt;
+        public string Topic
         {
-            get { return _child; }
+            get { return UserVariables.GetValue(&quot;topic&quot;); }
         }
 
         /// &lt;summary&gt;
-        ///     Registers a child request.
+        ///     Gets the last result.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;childRequest&quot;&gt;The child request.&lt;/param&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;childRequest&lt;/exception&gt;
-        private void RegisterChild([NotNull] Request childRequest)
+        /// &lt;value&gt;The last result.&lt;/value&gt;
+        [CanBeNull]
+        public Result LastResult
         {
-            if (childRequest == null)
-            {
-                throw new ArgumentNullException(nameof(childRequest));
-            }
-            _child = childRequest;
+            get { return _results.FirstOrDefault(); }
         }
 
         /// &lt;summary&gt;
-        ///     Checks to see if this has timed out and returns true if that has happened. This will also log
-        ///     if the request timed out and update HasTimedOut.
+        ///     Gets the last chat result&#39;s raw output
         /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        /// If ChatEngine.Timeout is set to 0 or negative values, timeout will never occur
-        /// &lt;/remarks&gt;
-        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the request has timed out, &lt;c&gt;false&lt;/c&gt; otherwise.&lt;/returns&gt;
-        public bool CheckForTimedOut()
+        /// &lt;returns&gt;The last result&#39;s raw output&lt;/returns&gt;
+        [NotNull]
+        public string LastChatOutput
         {
-            if (HasTimedOut)
+            get { return LastResult?.RawOutput ?? &quot;*&quot;; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the output sentence from the specified result and sentence.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;resultIndex&quot;&gt;Index of the result. Defaults to 1.&lt;/param&gt;
+        /// &lt;param name=&quot;sentenceIndex&quot;&gt;Index of the sentence. Defaults to 1.&lt;/param&gt;
+        /// &lt;returns&gt;The output sentence&lt;/returns&gt;
+        public string GetOutputSentence(int resultIndex = 1, int sentenceIndex = 1)
+        {
+            //- Ensure we&#39;re not grabbing out of range
+            var isValidResult = resultIndex &gt;= 0 &amp; resultIndex &lt; _results.Count;
+            if (!isValidResult)
             {
-                return HasTimedOut;
-            }
-            var timeLimit = ChatEngine.Timeout;
-
-            // Allow disabling timeout by setting it to &lt;= 0 values
-            if (!(timeLimit &gt; 0))
-            {
-                return HasTimedOut;
-            }
-
-            // Calculate timeout based on start time and now
-            HasTimedOut = StartedOn.AddMilliseconds(timeLimit) &lt; DateTime.Now;
-
-            // Do appropriate logging on new timeouts
-            if (HasTimedOut)
-            {
-                var message = string.Format(ChatEngine.Locale,
-                                            Resources.RequestTimedOut.NonNull(),
-                                            User.Id,
-                                            RawInput);
-
-                ChatEngine.Log(message, LogLevel.Warning);
+                return string.Empty;
             }
 
-            return HasTimedOut;
+            // Get the result
+            var result = _results[resultIndex];
+            Debug.Assert(result != null);
+
+            // Grab the output sentence at the specified index
+            if (sentenceIndex &gt;= 0 &amp; sentenceIndex &lt; result.OutputSentences.Count)
+            {
+                return result.OutputSentences[sentenceIndex];
+            }
+
+            return string.Empty;
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the specified input sentence from the specified result.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;resultIndex&quot;&gt;Index of the result. Defaults to 1.&lt;/param&gt;
+        /// &lt;param name=&quot;sentenceIndex&quot;&gt;Index of the sentenceIndex. Defaults to 1.&lt;/param&gt;
+        /// &lt;returns&gt;The specified sentenceIndex.&lt;/returns&gt;
+        public string GetInputSentence(int resultIndex = 1, int sentenceIndex = 1)
+        {
+            //- Ensure we&#39;re grabbing at an acceptable resultIndex
+            var isValidResult = resultIndex &gt;= 0 &amp; resultIndex &lt; _results.Count;
+            if (!isValidResult)
+            {
+                return string.Empty;
+            }
+
+            //- Grab the result
+            var result = _results[resultIndex];
+            Debug.Assert(result != null);
+
+            // Grab the appropriate sentenceIndex
+            if (sentenceIndex &gt;= 0 &amp; sentenceIndex &lt; result.InputSentences.Count)
+            {
+                return result.InputSentences[sentenceIndex];
+            }
+
+            //- Invalid results yield nothing
+            return string.Empty;
+        }
+
+        /// &lt;summary&gt;
+        ///     Adds a result to the user&#39;s results.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;latestResult&quot;&gt;The latest chat result.&lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;latestResult&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public void AddResult([NotNull] Result latestResult)
+        {
+            if (latestResult == null)
+            {
+                throw new ArgumentNullException(nameof(latestResult));
+            }
+
+            _results.Insert(0, latestResult);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[57,13,57,14,0],[58,17,58,67,0],[61,13,61,14,0],[62,17,62,63,0],[65,13,65,14,0],[66,17,66,69,0],[140,33,140,37,0],[163,13,163,14,0],[164,17,164,71,0],[180,13,180,14,0],[181,17,181,36,0],[192,13,192,79,0],[195,13,195,29,0],[196,13,196,14,0],[197,17,200,55,0],[202,17,202,59,0],[203,13,203,14,0],[205,13,205,32,0],[37,15,37,53,1],[38,9,38,10,1],[39,9,39,10,1],[50,9,53,51,1],[54,9,54,10,1],[56,13,56,34,1],[60,13,60,30,1],[64,13,64,36,1],[70,13,70,33,1],[71,13,71,25,1],[72,13,72,37,1],[74,13,74,32,1],[75,13,75,14,1],[77,17,77,33,1],[78,17,78,44,1],[81,17,81,46,1],[82,17,82,50,1],[83,13,83,14,1],[85,13,85,14,1],[87,17,87,42,1],[88,13,88,14,1],[89,9,89,10,1],[96,40,96,44,1],[103,35,103,39,1],[103,40,103,52,1],[110,34,110,38,1],[117,32,117,36,1],[117,37,117,41,1],[123,37,123,41,1],[130,28,130,32,1],[140,38,140,50,1],[152,17,152,18,1],[152,19,152,33,1],[152,34,152,35,1],[161,9,161,10,1],[162,13,162,38,1],[166,13,166,35,1],[167,9,167,10,1],[178,9,178,10,1],[179,13,179,29,1],[183,13,183,48,1],[186,13,186,34,1],[187,13,187,14,1],[188,17,188,36,1],[206,9,206,10,1]]);
+      highlightRanges([[41,13,41,14,0],[42,17,42,69,0],[45,13,45,14,0],[46,17,46,93,0],[62,40,62,44,0],[114,9,114,10,0],[116,13,116,81,0],[117,13,117,32,0],[118,13,118,14,0],[119,17,119,37,0],[123,13,123,48,0],[124,13,124,42,0],[127,13,127,83,0],[128,13,128,14,0],[129,17,129,62,0],[132,13,132,33,0],[133,9,133,10,0],[142,9,142,10,0],[144,13,144,81,0],[145,13,145,32,0],[146,13,146,14,0],[147,17,147,37,0],[151,13,151,48,0],[152,13,152,42,0],[155,13,155,82,0],[156,13,156,14,0],[157,17,157,61,0],[161,13,161,33,0],[162,9,162,10,0],[172,13,172,14,0],[173,17,173,71,0],[28,9,28,69,1],[37,9,37,74,1],[38,9,38,10,1],[40,13,40,36,1],[44,13,44,47,1],[49,13,49,21,1],[50,13,50,37,1],[53,13,53,51,1],[54,13,54,45,1],[55,9,55,10,1],[69,48,69,52,1],[76,28,76,32,1],[84,17,84,18,1],[84,19,84,58,1],[84,59,84,60,1],[94,17,94,18,1],[94,19,94,52,1],[94,53,94,54,1],[104,17,104,18,1],[104,19,104,55,1],[104,56,104,57,1],[170,9,170,10,1],[171,13,171,38,1],[176,13,176,46,1],[177,9,177,10,1]]);
     </script>
   </body>
 </html>
