@@ -52,7 +52,6 @@
     <Compile Include="AlfredBootstrapper.cs" />
     <Compile Include="AlfredCommandResult.cs" />
     <Compile Include="AlfredComponent.cs" />
-    <Compile Include="CommandDispatcher.cs" />
     <Compile Include="Definitions\ChatCommand.cs" />
     <Compile Include="Definitions\IAlfred.cs" />
     <Compile Include="Definitions\IAlfredModule.cs" />
@@ -62,7 +61,6 @@
     <Compile Include="Definitions\IStatusController.cs" />
     <Compile Include="Definitions\IChatProvider.cs" />
     <Compile Include="Definitions\UserStatementResponse.cs" />
-    <Compile Include="DelegatingChatProvider.cs" />
     <Compile Include="Modules\AlertVisibilityCalculator.cs" />
     <Compile Include="Modules\AlfredPagesListModule.cs" />
     <Compile Include="Definitions\IAlfredComponent.cs" />

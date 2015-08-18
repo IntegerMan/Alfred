@@ -63,17 +63,6 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        ///     Handles a chat command that may be intended for this module.
-        /// </summary>
-        /// <param name="command">The command.</param>
-        /// <param name="result">The default system response. This should be modified and returned.</param>
-        /// <returns><c>true</c> if the command was handled, <c>false</c> otherwise.</returns>
-        public virtual bool HandleChatCommand(ChatCommand command, [NotNull] AlfredCommandResult result)
-        {
-            return false;
-        }
-
-        /// <summary>
         ///     Gets the user interface widgets for the module.
         /// </summary>
         /// <value>The user interface widgets.</value>
