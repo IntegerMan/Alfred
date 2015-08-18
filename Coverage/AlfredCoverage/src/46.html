@@ -2,137 +2,144 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.common\assemblyextensions.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\definitions\alfredcommand.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AssemblyExtensions.cs
+// AlfredCommand.cs
 // 
-// Created on:      08/14/2015 at 12:38 AM
-// Last Modified:   08/14/2015 at 12:59 AM
-// 
-// Last Modified by: Matt Eland
+// Created on:      08/03/2015 at 1:40 PM
+// Last Modified:   08/05/2015 at 3:06 PM
+// Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Linq;
-using System.Reflection;
 
 using JetBrains.Annotations;
 
-namespace MattEland.Common
+namespace MattEland.Ani.Alfred.Core.Definitions
 {
-    public static class AssemblyHelper
+    /// &lt;summary&gt;
+    ///     Represents a command that can be executed on the user interface layer
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;
+    ///     It would be fantastic if this could support System.Windows.Input.ICommand,
+    ///     but portable doesn&#39;t reference that assembly so clients will have to provide
+    ///     their own version to support MVVM bindings, etc.
+    /// &lt;/remarks&gt;
+    public class AlfredCommand
     {
         /// &lt;summary&gt;
-        ///     Gets the types in an assembly with an attribute applied to them.
+        ///     The Action invoked when the Execute method is called.
         /// &lt;/summary&gt;
-        /// &lt;typeparam name=&quot;TAttribute&quot;&gt;The attribute to search for.&lt;/typeparam&gt;
-        /// &lt;param name=&quot;assembly&quot;&gt;The assembly.&lt;/param&gt;
-        /// &lt;param name=&quot;inherit&quot;&gt;
-        ///     true to search the type&#39;s inheritance chain to find the attributes; otherwise, false.
-        /// &lt;/param&gt;
-        /// &lt;returns&gt;The types in the assembly with the requested attribute&lt;/returns&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
-        [NotNull]
-        [ItemNotNull]
-        [UsedImplicitly]
-        public static IEnumerable&lt;Type&gt; GetTypesInAssemblyWithAttribute&lt;TAttribute&gt;([NotNull] this Assembly assembly,
-                                                                                    bool inherit)
-            where TAttribute : Attribute
-        {
-            if (assembly == null)
-            {
-                throw new ArgumentNullException(nameof(assembly));
-            }
-
-            var types = assembly.GetTypes();
-            return GetTypesWithAttributes&lt;TAttribute&gt;(types, inherit);
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the types in a group of types that have an attribute applied to them.
-        /// &lt;/summary&gt;
-        /// &lt;typeparam name=&quot;TAttribute&quot;&gt;The attribute to search for.&lt;/typeparam&gt;
-        /// &lt;param name=&quot;types&quot;&gt;The set of types&lt;/param&gt;
-        /// &lt;param name=&quot;inherit&quot;&gt;
-        ///     true to search the type&#39;s inheritance chain to find the attributes; otherwise, false.
-        /// &lt;/param&gt;
-        /// &lt;returns&gt;The types in the set of types that have the requested attribute&lt;/returns&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
-        [SuppressMessage(&quot;ReSharper&quot;, &quot;PossibleNullReferenceException&quot;)]
-        [NotNull]
-        [ItemNotNull]
-        [UsedImplicitly]
-        public static IEnumerable&lt;Type&gt; GetTypesWithAttributes&lt;TAttribute&gt;([NotNull] IEnumerable&lt;Type&gt; types,
-                                                                           bool inherit) where TAttribute : Attribute
-        {
-            if (types == null)
-            {
-                throw new ArgumentNullException(nameof(types));
-            }
-
-            return types.Where(t =&gt; t.HasAttribute&lt;TAttribute&gt;(inherit));
-        }
-
-        /// &lt;summary&gt;
-        ///     Determines whether the specified member has a particular attribute applied to it.
-        /// &lt;/summary&gt;
-        /// &lt;typeparam name=&quot;TAttribute&quot;&gt;The type of the attribute.&lt;/typeparam&gt;
-        /// &lt;param name=&quot;member&quot;&gt;The member.&lt;/param&gt;
-        /// &lt;param name=&quot;inherit&quot;&gt;
-        ///     true to search the type&#39;s inheritance chain to find the attributes; otherwise, false.
-        /// &lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the specified inherit has the attribute; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
-        [UsedImplicitly]
-        public static bool HasAttribute&lt;TAttribute&gt;([NotNull] this MemberInfo member, bool inherit)
-            where TAttribute : Attribute
-        {
-            if (member == null)
-            {
-                throw new ArgumentNullException(nameof(member));
-            }
-
-            return member.IsDefined(typeof(TAttribute), inherit);
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the Version of this module&#39;s assembly based on the AssemblyVersionAttribute.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;caller&quot;&gt;The caller.&lt;/param&gt;
-        /// &lt;returns&gt;The Version of this module&#39;s assembly&lt;/returns&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;caller&lt;/exception&gt;
         [CanBeNull]
-        public static Version GetAssemblyVersion([NotNull] this object caller)
-        {
-            if (caller == null)
-            {
-                throw new ArgumentNullException(nameof(caller));
-            }
+        private Action _executeAction;
 
-            try
+        /// &lt;summary&gt;
+        ///     Whether or not the command is enabled
+        /// &lt;/summary&gt;
+        private bool _isEnabled = true;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the
+        ///     &lt;see cref=&quot;AlfredCommand&quot; /&gt;
+        ///     class.
+        /// &lt;/summary&gt;
+        public AlfredCommand() : this(null)
+        {
+        }
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the
+        ///     &lt;see cref=&quot;AlfredCommand&quot; /&gt;
+        ///     class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;executeAction&quot;&gt;
+        ///     The execute action.
+        /// &lt;/param&gt;
+        public AlfredCommand([CanBeNull] Action executeAction)
+        {
+            ExecuteAction = executeAction;
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the Action that is invoked when a command executes.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The executed Action.&lt;/value&gt;
+        [CanBeNull]
+        public Action ExecuteAction
+        {
+            get { return _executeAction; }
+            set { _executeAction = value; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets a value indicating whether this command is enabled.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;&lt;c&gt;true&lt;/c&gt; if this command is enabled; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/value&gt;
+        public bool IsEnabled
+        {
+            get { return _isEnabled; }
+            set
             {
-                var assembly = caller.GetType().Assembly;
-                var assemblyName = new AssemblyName(assembly.FullName);
-                return assemblyName.Version;
+                if (value != _isEnabled)
+                {
+                    _isEnabled = value;
+                    RaiseCanExecuteChanged();
+                }
             }
-            catch (IOException)
-            {
-                return null;
-            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Defines the method that determines whether the command can execute in its current state.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;
+        ///     true if this command can be executed; otherwise, false.
+        /// &lt;/returns&gt;
+        /// &lt;param name=&quot;parameter&quot;&gt;
+        ///     Data used by the command.  If the command does not require data to be passed, this object can be set to null.
+        /// &lt;/param&gt;
+        [SuppressMessage(&quot;Microsoft.Usage&quot;, &quot;CA1801:ReviewUnusedParameters&quot;, MessageId = &quot;parameter&quot;,
+            Justification = &quot;This matches the XAML ICommand interface which makes for ease of porting&quot;)]
+        public bool CanExecute([CanBeNull] object parameter)
+        {
+            return IsEnabled;
+        }
+
+        /// &lt;summary&gt;
+        ///     Defines the method to be called when the command is invoked.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;parameter&quot;&gt;
+        ///     Data used by the command.  If the command does not require data to be passed, this object can be set to null.
+        /// &lt;/param&gt;
+        public virtual void Execute([CanBeNull] object parameter)
+        {
+            // TODO: I could support async invokes here. I&#39;d want to add a parameter for that, but it&#39;s possible.
+
+            ExecuteAction?.Invoke();
+        }
+
+        /// &lt;summary&gt;
+        ///     Occurs when the result of CanExecute changes and should be re-evaluated.
+        /// &lt;/summary&gt;
+        public event EventHandler CanExecuteChanged;
+
+        /// &lt;summary&gt;
+        ///     Raises the CanExecuteChanged event.
+        /// &lt;/summary&gt;
+        private void RaiseCanExecuteChanged()
+        {
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[41,13,41,14,0],[42,17,42,67,0],[67,13,67,14,0],[68,17,68,64,0],[89,13,89,14,0],[90,17,90,65,0],[106,13,106,14,0],[107,17,107,65,0],[116,13,116,32,0],[117,13,117,14,0],[118,17,118,29,0],[39,9,39,10,1],[40,13,40,34,1],[45,13,45,45,1],[46,13,46,71,1],[47,9,47,10,1],[65,9,65,10,1],[66,13,66,31,1],[71,13,71,37,1],[71,72,71,74,1],[72,9,72,10,1],[87,9,87,10,1],[88,13,88,32,1],[93,13,93,66,1],[94,9,94,10,1],[104,9,104,10,1],[105,13,105,32,1],[111,13,111,14,1],[112,17,112,58,1],[113,17,113,72,1],[114,17,114,45,1],[120,9,120,10,1],[71,37,71,72,1]]);
+      highlightRanges([[42,34,42,44,1],[43,9,43,10,1],[44,9,44,10,1],[35,9,35,40,1],[54,9,54,63,1],[55,9,55,10,1],[56,13,56,43,1],[57,9,57,10,1],[66,17,66,18,1],[66,19,66,41,1],[66,42,66,43,1],[67,17,67,18,1],[67,19,67,42,1],[67,43,67,44,1],[76,17,76,18,1],[76,19,76,37,1],[76,38,76,39,1],[78,13,78,14,1],[79,17,79,41,1],[80,17,80,18,1],[81,21,81,40,1],[82,21,82,46,1],[83,17,83,18,1],[84,13,84,14,1],[99,9,99,10,1],[100,13,100,30,1],[101,9,101,10,1],[110,9,110,10,1],[113,13,113,37,1],[114,9,114,10,1],[125,9,125,10,1],[126,13,126,62,1],[127,9,127,10,1]]);
     </script>
   </body>
 </html>

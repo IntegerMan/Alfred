@@ -2,24 +2,26 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\modules\alfredpowermodule.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\modules\alfredtimemodule.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlfredPowerModule.cs
+// AlfredTimeModule.cs
 // 
-// Created on:      08/02/2015 at 4:56 PM
-// Last Modified:   08/12/2015 at 3:52 PM
+// Created on:      07/26/2015 at 1:46 PM
+// Last Modified:   08/10/2015 at 10:52 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Globalization;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Common;
@@ -27,117 +29,111 @@ using MattEland.Common;
 namespace MattEland.Ani.Alfred.Core.Modules
 {
     /// &lt;summary&gt;
-    ///     A module intended for the control and monitoring of Alfred&#39;s status
+    ///     A module that keeps track of time and date information and presents it to the user.
     /// &lt;/summary&gt;
-    public sealed class AlfredPowerModule : AlfredModule
+    public sealed class AlfredTimeModule : AlfredModule
     {
-        [NotNull]
-        private readonly ButtonWidget _initializeButton;
+        /// &lt;summary&gt;
+        ///     The hour changed event&#39;s title message used for logging purposes.
+        /// &lt;/summary&gt;
+        public const string HourAlertEventTitle = &quot;Time.HourAlert&quot;;
 
-        [NotNull]
-        private readonly ButtonWidget _shutdownButton;
+        /// &lt;summary&gt;
+        ///     The half hour alert event title log message
+        /// &lt;/summary&gt;
+        public const string HalfHourAlertEventTitle = &quot;Time.HalfHourAlert&quot;;
 
-        [NotNull]
-        private readonly TextWidget _statusWidget;
+        private DateTime _time;
 
         /// &lt;summary&gt;
         ///     Initializes a new instance of the
-        ///     &lt;see cref=&quot;AlfredPowerModule&quot; /&gt;
+        ///     &lt;see cref=&quot;AlfredModule&quot; /&gt;
         ///     class.
         /// &lt;/summary&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;
-        /// &lt;/exception&gt;
         /// &lt;param name=&quot;platformProvider&quot;&gt;
         ///     The platform provider.
         /// &lt;/param&gt;
-        public AlfredPowerModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
+        public AlfredTimeModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
         {
-            _statusWidget = new TextWidget(Resources.AlfredCoreModule_AlfredNotSet);
+            CurrentDateWidget = new TextWidget();
+            CurrentTimeWidget = new TextWidget();
+            AlertWidget = new WarningWidget
+            {
+                IsVisible = false,
+                Text = Resources.AlfredTimeModule_AlfredTimeModule_BedtimeNagMessage
+            };
+            AlertHour = 21;
+            AlertMinute = 30;
+            AlertDurationInHours = 4;
+            IsAlertEnabled = true;
 
-            var initializeCommand = platformProvider.CreateCommand(ExecuteInitializeCommand);
-            _initializeButton = new ButtonWidget(Resources.InitializeButtonText, initializeCommand);
-
-            var shutdownCommand = platformProvider.CreateCommand(ExecuteShutdownCommand);
-            _shutdownButton = new ButtonWidget(Resources.ShutdownButtonText, shutdownCommand);
+            CurrentTime = DateTime.MinValue;
         }
 
         /// &lt;summary&gt;
         ///     Gets the name of the module.
         /// &lt;/summary&gt;
         /// &lt;value&gt;The name of the module.&lt;/value&gt;
-        [NotNull]
         public override string Name
         {
-            get { return Resources.AlfredCoreModule_Name.NonNull(); }
+            get { return Resources.AlfredTimeModule_Name.NonNull(); }
         }
 
         /// &lt;summary&gt;
-        ///     Gets the alfred status widget.
+        ///     Gets the current time user interface widget.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The alfred status widget.&lt;/value&gt;
+        /// &lt;value&gt;The current time user interface widget.&lt;/value&gt;
         [NotNull]
-        public TextWidget AlfredStatusWidget
-        {
-            get { return _statusWidget; }
-        }
+        public TextWidget CurrentTimeWidget { get; }
 
         /// &lt;summary&gt;
-        ///     Gets the initialize button.
+        ///     Gets the current date user interface widget.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The initialize button.&lt;/value&gt;
+        /// &lt;value&gt;The current date user interface widget.&lt;/value&gt;
         [NotNull]
-        public ButtonWidget InitializeButton
-        {
-            get { return _initializeButton; }
-        }
+        public TextWidget CurrentDateWidget { get; }
 
         /// &lt;summary&gt;
-        ///     Gets the shutdown button.
+        ///     Gets the bedtime alert widget.
+        ///     This widget alerts users to go to bed after a certain time
+        ///     and will be hidden until the user needs to go to bed.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The shutdown button.&lt;/value&gt;
+        /// &lt;value&gt;The bedtime alert widget.&lt;/value&gt;
         [NotNull]
-        public ButtonWidget ShutdownButton
-        {
-            get { return _shutdownButton; }
-        }
+        public WarningWidget AlertWidget { get; }
 
         /// &lt;summary&gt;
-        ///     Handles a chat command that may be intended for this module.
+        ///     Gets or sets the bedtime hour.  Defaults to 9 PM
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;command&quot;&gt;The command.&lt;/param&gt;
-        /// &lt;param name=&quot;result&quot;&gt;The default system response. This should be modified and returned.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the command was handled, &lt;c&gt;false&lt;/c&gt; otherwise.&lt;/returns&gt;
-        public override bool HandleChatCommand(ChatCommand command, AlfredCommandResult result)
-        {
-            // Verify this this is a message we can answer
-            if (command.Command.Matches(&quot;SHUTDOWN&quot;))
-            {
-                ExecuteShutdownCommand();
-
-                // Have Alfred say goodbye
-                result.RedirectToChat = &quot;Bye&quot;;
-
-                return true;
-            }
-
-            // Can&#39;t handle it; let the base module take it
-            return base.HandleChatCommand(command, result);
-        }
+        /// &lt;value&gt;The bedtime hour.&lt;/value&gt;
+        public int AlertHour { get; set; }
 
         /// &lt;summary&gt;
-        ///     Handles the initialize command by initializing Alfred
+        ///     Gets or sets the bedtime minute. Defaults to 30 minutes past the hour.
         /// &lt;/summary&gt;
-        internal void ExecuteInitializeCommand()
-        {
-            AlfredInstance?.Initialize();
-        }
+        /// &lt;value&gt;The bedtime minute.&lt;/value&gt;
+        public int AlertMinute { get; set; }
 
         /// &lt;summary&gt;
-        ///     Handles the shutdown command by shutting down Alfred
+        ///     Gets or sets the alert duration in hours.
         /// &lt;/summary&gt;
-        internal void ExecuteShutdownCommand()
+        /// &lt;value&gt;The alert duration in hours.&lt;/value&gt;
+        public int AlertDurationInHours { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets whether the alert is enabled.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The alert is enabled.&lt;/value&gt;
+        public bool IsAlertEnabled { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the last time recorded
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The current time.&lt;/value&gt;
+        private DateTime CurrentTime
         {
-            AlfredInstance?.Shutdown();
+            get { return _time; }
+            set { _time = value; }
         }
 
         /// &lt;summary&gt;
@@ -146,17 +142,84 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// &lt;param name=&quot;alfred&quot;&gt;&lt;/param&gt;
         protected override void InitializeProtected(IAlfred alfred)
         {
-            AddOnlineWidgets();
+            Register(CurrentDateWidget);
+            Register(CurrentTimeWidget);
+            Register(AlertWidget);
+
+            // Ensure it has some initial values so it doesn&#39;t &quot;blink&quot; or lag on start
+            ClearLastTimeRun();
+            Update(DateTime.Now);
         }
 
         /// &lt;summary&gt;
-        ///     Adds the widgets used while in online mode.
+        ///     Handles updating the module
         /// &lt;/summary&gt;
-        private void AddOnlineWidgets()
+        protected override void UpdateProtected()
         {
-            ClearChildCollections();
-            Register(_statusWidget);
-            Register(ShutdownButton);
+            // Call a new method with the current time. This helps this module be testable
+            Update(DateTime.Now);
+        }
+
+        /// &lt;summary&gt;
+        ///     Updates the module given the specified time.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;time&quot;&gt;
+        ///     The time. Date portions of this will be ignored.
+        /// &lt;/param&gt;
+        public void Update(DateTime time)
+        {
+            // Always update the date
+            CurrentDateWidget.Text = time.ToString(&quot;D&quot;, CultureInfo.CurrentCulture); // Thursday April 10, 2008
+
+            // Always update the time
+            var timeFormat = Resources.AlfredTimeModule_Update_CurrentTimeDisplayString.NonNull();
+            var timeText = string.Format(CultureInfo.CurrentCulture, timeFormat, time);
+            CurrentTimeWidget.Text = timeText;
+
+            // Update the visibility of the alert widget based on time of day
+            UpdateBedtimeAlertVisibility(time);
+
+            // Check to see if it&#39;s now a new hour and, if so, log it to the console
+            if (CurrentTime &gt; DateTime.MinValue)
+            {
+                if (time.Minute == 0 &amp;&amp; CurrentTime.Hour != time.Hour)
+                {
+                    // Let the user know it&#39;s now X
+                    Log(HourAlertEventTitle, timeText, LogLevel.ChatNotification);
+                }
+                else if (time.Minute == 30 &amp;&amp; CurrentTime.Minute != 30)
+                {
+                    // Let the user know it&#39;s now half after X
+                    Log(HalfHourAlertEventTitle, timeText, LogLevel.ChatNotification);
+                }
+            }
+
+            // Store the last time we processed so it can be referenced next iteration
+            CurrentTime = time;
+        }
+
+        /// &lt;summary&gt;
+        ///     Updates the bedtime alert visibility based on the given time.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;time&quot;&gt;
+        ///     The time.
+        /// &lt;/param&gt;
+        private void UpdateBedtimeAlertVisibility(DateTime time)
+        {
+            if (!IsAlertEnabled)
+            {
+                // Easy call; if it&#39;s disabled, don&#39;t show it
+                AlertWidget.IsVisible = false;
+            }
+            else
+            {
+                // Farm off the more complicated math to a dedicated class
+                AlertWidget.IsVisible = AlertVisibilityCalculator.CalculateAlertVisibility(time.Hour,
+                                                                                           time.Minute,
+                                                                                           AlertHour,
+                                                                                           AlertMinute,
+                                                                                           AlertDurationInHours);
+            }
         }
 
         /// &lt;summary&gt;
@@ -164,122 +227,26 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// &lt;/summary&gt;
         protected override void ShutdownProtected()
         {
-            // We&#39;re going to re-register the status widget since it&#39;s always present - even when the system is offline
-            AddOfflineWidgets();
-
-            // We need to do this so that buttons render properly
-            UpdateAlfredProviderStatus();
+            CurrentTimeWidget.Text = null;
+            ClearLastTimeRun();
         }
 
         /// &lt;summary&gt;
-        ///     Adds the widgets used in offline mode.
+        ///     Clears the last time the module was run.
         /// &lt;/summary&gt;
-        private void AddOfflineWidgets()
+        /// &lt;remarks&gt;
+        ///     This is intended for use in time-sensitive unit testing
+        ///     scenarios and is not intended for any normal usage
+        /// &lt;/remarks&gt;
+        public void ClearLastTimeRun()
         {
-            ClearChildCollections();
-            Register(_statusWidget);
-            Register(InitializeButton);
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles updating the module as needed
-        /// &lt;/summary&gt;
-        protected override void UpdateProtected()
-        {
-            UpdateAlfredProviderStatus();
-        }
-
-        /// &lt;summary&gt;
-        ///     Called when the component is registered.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;alfred&quot;&gt;The alfred.&lt;/param&gt;
-        public override void OnRegistered(IAlfred alfred)
-        {
-            base.OnRegistered(alfred);
-
-            UpdateAlfredProviderStatus();
-
-            if (AlfredInstance != null)
-            {
-                // Add the appropriate UI elements
-                if (AlfredInstance.Status == AlfredStatus.Online)
-                {
-                    AddOnlineWidgets();
-                }
-                else
-                {
-                    AddOfflineWidgets();
-                }
-            }
-        }
-
-        /// &lt;summary&gt;
-        ///     Updates the alfred provider status text.
-        /// &lt;/summary&gt;
-        private void UpdateAlfredProviderStatus()
-        {
-            if (AlfredInstance == null)
-            {
-                // Update Text Message to a Nobody&#39;s Home sort of thing
-                _statusWidget.Text = Resources.NoAlfredText;
-
-                // Update Button Visibilities to hidden
-                if (_shutdownButton.ClickCommand != null)
-                {
-                    _shutdownButton.ClickCommand.IsEnabled = false;
-                }
-                if (_initializeButton.ClickCommand != null)
-                {
-                    _initializeButton.ClickCommand.IsEnabled = false;
-                }
-            }
-            else
-            {
-                // Display the current status
-                var statusFormat = Resources.AlfredCoreModule_AlfredStatusText.NonNull();
-                _statusWidget.Text = string.Format(CultureInfo.CurrentCulture,
-                                                   statusFormat,
-                                                   AlfredInstance.Name,
-                                                   AlfredInstance.Status);
-
-                // Show the shutdown button while online and initialize button while offline
-                if (_shutdownButton.ClickCommand != null)
-                {
-                    _shutdownButton.ClickCommand.IsEnabled = AlfredInstance.Status == AlfredStatus.Online;
-                }
-                if (_initializeButton.ClickCommand != null)
-                {
-                    _initializeButton.ClickCommand.IsEnabled = AlfredInstance.Status == AlfredStatus.Offline;
-                }
-            }
-        }
-
-        /// &lt;summary&gt;
-        ///     A notification method that is invoked when initialization for Alfred is complete so the UI can be fully enabled or
-        ///     adjusted
-        /// &lt;/summary&gt;
-        public override void OnInitializationCompleted()
-        {
-            base.OnInitializationCompleted();
-
-            UpdateAlfredProviderStatus();
-        }
-
-        /// &lt;summary&gt;
-        ///     A notification method that is invoked when shutdown for Alfred is complete so the UI can be fully enabled or
-        ///     adjusted
-        /// &lt;/summary&gt;
-        public override void OnShutdownCompleted()
-        {
-            base.OnShutdownCompleted();
-
-            UpdateAlfredProviderStatus();
+            CurrentTime = DateTime.MinValue;
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[61,17,61,18,0],[61,19,61,68,0],[61,69,61,70,0],[101,9,101,10,0],[103,13,103,53,0],[104,13,104,14,0],[105,17,105,42,0],[108,17,108,47,0],[110,17,110,29,0],[114,13,114,60,0],[115,9,115,10,0],[196,17,196,18,0],[197,21,197,40,0],[198,17,198,18,0],[212,13,212,14,0],[214,17,214,61,0],[217,17,217,58,0],[218,17,218,18,0],[219,21,219,68,0],[220,17,220,18,0],[221,17,221,60,0],[222,17,222,18,0],[223,21,223,70,0],[224,17,224,18,0],[225,13,225,14,0],[43,82,43,104,1],[44,9,44,10,1],[45,13,45,85,1],[47,13,47,94,1],[48,13,48,101,1],[50,13,50,90,1],[51,13,51,95,1],[52,9,52,10,1],[71,17,71,18,1],[71,19,71,40,1],[71,41,71,42,1],[81,17,81,18,1],[81,19,81,44,1],[81,45,81,46,1],[91,17,91,18,1],[91,19,91,42,1],[91,43,91,44,1],[121,9,121,10,1],[122,13,122,42,1],[123,9,123,10,1],[129,9,129,10,1],[130,13,130,40,1],[131,9,131,10,1],[138,9,138,10,1],[139,13,139,32,1],[140,9,140,10,1],[146,9,146,10,1],[147,13,147,37,1],[148,13,148,37,1],[149,13,149,38,1],[150,9,150,10,1],[156,9,156,10,1],[158,13,158,33,1],[161,13,161,42,1],[162,9,162,10,1],[168,9,168,10,1],[169,13,169,37,1],[170,13,170,37,1],[171,13,171,40,1],[172,9,172,10,1],[178,9,178,10,1],[179,13,179,42,1],[180,9,180,10,1],[187,9,187,10,1],[188,13,188,39,1],[190,13,190,42,1],[192,13,192,40,1],[193,13,193,14,1],[195,17,195,66,1],[200,17,200,18,1],[201,21,201,41,1],[202,17,202,18,1],[203,13,203,14,1],[204,9,204,10,1],[210,9,210,10,1],[211,13,211,40,1],[227,13,227,14,1],[229,17,229,90,1],[230,17,233,75,1],[236,17,236,58,1],[237,17,237,18,1],[238,21,238,107,1],[239,17,239,18,1],[240,17,240,60,1],[241,17,241,18,1],[242,21,242,110,1],[243,17,243,18,1],[244,13,244,14,1],[245,9,245,10,1],[252,9,252,10,1],[253,13,253,46,1],[255,13,255,42,1],[256,9,256,10,1],[263,9,263,10,1],[264,13,264,40,1],[266,13,266,42,1],[267,9,267,10,1]]);
+      highlightRanges([[46,81,46,103,1],[47,9,47,10,1],[48,13,48,50,1],[49,13,49,50,1],[50,13,54,15,1],[55,13,55,28,1],[56,13,56,30,1],[57,13,57,38,1],[58,13,58,35,1],[60,13,60,45,1],[61,9,61,10,1],[69,17,69,18,1],[69,19,69,68,1],[69,69,69,70,1],[77,47,77,51,1],[84,47,84,51,1],[93,44,93,48,1],[99,32,99,36,1],[99,37,99,41,1],[105,34,105,38,1],[105,39,105,43,1],[111,43,111,47,1],[111,48,111,52,1],[117,38,117,42,1],[117,43,117,47,1],[125,17,125,18,1],[125,19,125,32,1],[125,33,125,34,1],[126,17,126,18,1],[126,19,126,33,1],[126,34,126,35,1],[134,9,134,10,1],[135,13,135,41,1],[136,13,136,41,1],[137,13,137,35,1],[140,13,140,32,1],[141,13,141,34,1],[142,9,142,10,1],[148,9,148,10,1],[150,13,150,34,1],[151,9,151,10,1],[160,9,160,10,1],[162,13,162,85,1],[165,13,165,99,1],[166,13,166,88,1],[167,13,167,47,1],[170,13,170,48,1],[173,13,173,49,1],[174,13,174,14,1],[175,17,175,71,1],[176,17,176,18,1],[178,21,178,83,1],[179,17,179,18,1],[180,22,180,72,1],[181,17,181,18,1],[183,21,183,87,1],[184,17,184,18,1],[185,13,185,14,1],[188,13,188,32,1],[189,9,189,10,1],[198,9,198,10,1],[199,13,199,33,1],[200,13,200,14,1],[202,17,202,47,1],[203,13,203,14,1],[205,13,205,14,1],[207,17,211,114,1],[212,13,212,14,1],[213,9,213,10,1],[219,9,219,10,1],[220,13,220,43,1],[221,13,221,32,1],[222,9,222,10,1],[232,9,232,10,1],[233,13,233,45,1],[234,9,234,10,1]]);
     </script>
   </body>
 </html>

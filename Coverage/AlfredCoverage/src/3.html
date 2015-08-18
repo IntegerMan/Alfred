@@ -2,17 +2,17 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\modules\alfredpowermoduletests.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\modules\timemoduletests.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlfredPowerModuleTests.cs
+// TimeModuleTests.cs
 // 
-// Created on:      08/02/2015 at 5:22 PM
-// Last Modified:   08/03/2015 at 1:56 PM
+// Created on:      08/08/2015 at 6:19 PM
+// Last Modified:   08/10/2015 at 10:55 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -24,6 +24,7 @@ using System.Linq;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Pages;
@@ -33,222 +34,397 @@ using NUnit.Framework;
 
 namespace MattEland.Ani.Alfred.Tests.Modules
 {
-    /// &lt;summary&gt;
-    ///     Tests for the
-    ///     &lt;see
-    ///         cref=&quot;AlfredPowerModule&quot; /&gt;
-    ///     module.
-    /// &lt;/summary&gt;
     [TestFixture]
     [SuppressMessage(&quot;ReSharper&quot;, &quot;NotNullMemberIsNotInitialized&quot;)]
-    public class AlfredPowerModuleTests
+    public sealed class TimeModuleTests
     {
-        /// &lt;summary&gt;
-        ///     Setups the tests.
-        /// &lt;/summary&gt;
         [SetUp]
-        public void SetupTests()
+        public void OnStartup()
         {
             var bootstrapper = new AlfredBootstrapper();
             _alfred = bootstrapper.Create();
-            _module = new AlfredPowerModule(_alfred.PlatformProvider);
 
-            RegisterTestModule(_alfred, _module);
-        }
+            _page = new AlfredModuleListPage(_alfred.PlatformProvider, &quot;Test&quot;);
+            _module = new AlfredTimeModule(_alfred.PlatformProvider);
+            _page.Register(_module);
+            _subsystem = new TestSubsystem();
+            _subsystem.AddAutoRegisterPage(_page);
 
-        /// &lt;summary&gt;
-        /// Registers the module to the Alfred instance using a test subsystem and simple page.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;alfred&quot;&gt;The alfred.&lt;/param&gt;
-        /// &lt;param name=&quot;module&quot;&gt;The module.&lt;/param&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;alfred, module
-        /// &lt;/exception&gt;
-        private void RegisterTestModule([NotNull] AlfredApplication alfred, [NotNull] AlfredModule module)
-        {
-            if (alfred == null)
-            {
-                throw new ArgumentNullException(nameof(alfred));
-            }
-            if (module == null)
-            {
-                throw new ArgumentNullException(nameof(module));
-            }
-
-            var subsystem = new TestSubsystem();
-
-            var page = new AlfredModuleListPage(alfred.PlatformProvider, &quot;Test Page&quot;);
-            subsystem.AddAutoRegisterPage(page);
-
-            alfred.Register(subsystem);
-
-            page.Register(module);
-
+            _alfred.Register(_subsystem);
         }
 
         [NotNull]
         private AlfredApplication _alfred;
 
         [NotNull]
-        private AlfredPowerModule _module;
+        private AlfredTimeModule _module;
+
+        [NotNull]
+        private TestSubsystem _subsystem;
+
+        [NotNull]
+        private AlfredModuleListPage _page;
+
+        private string GetTimeText()
+        {
+            var widget = _module.CurrentTimeWidget;
+
+            var displayed = widget.Text;
+            return displayed;
+        }
 
         [Test]
-        public void AfterShutdownSystemWidgetIsStillPresentInModule()
+        public void DisplayTextIsCorrectBeforeUpdate()
+        {
+            _alfred.Initialize();
+
+            var currentTimeString = DateTime.Now.ToShortTimeString();
+
+            var displayed = GetTimeText();
+
+            Assert.IsNotNull(displayed, &quot;Displayed time was null&quot;);
+            Assert.IsTrue(
+                          displayed.Contains(currentTimeString),
+                          $&quot;The time is displaying {displayed} when current time is {currentTimeString}&quot;);
+        }
+
+        [Test]
+        public void DisplayTextIsNullAfterShutdown()
         {
             _alfred.Initialize();
             _alfred.Update();
             _alfred.Shutdown();
 
-            Assert.IsNotNull(_module.Widgets, &quot;Module removed all widgets after shutdown&quot;);
-            Assert.Contains(_module.AlfredStatusWidget,
+            Assert.IsNull(GetTimeText(), &quot;UI text was not null after shutdown&quot;);
+        }
+
+        [Test]
+        public void ModuleIsOnlineAfterStartup()
+        {
+            _alfred.Initialize();
+
+            Assert.AreEqual(AlfredStatus.Online, _module.Status);
+        }
+
+        [Test]
+        public void ModuleReturnsCorrectTime()
+        {
+            _alfred.Initialize();
+
+            var currentTimeString = DateTime.Now.ToShortTimeString();
+            _alfred.Update();
+
+            var displayed = GetTimeText();
+
+            Assert.IsNotNull(displayed, &quot;Displayed time was null&quot;);
+            Assert.IsTrue(
+                          displayed.Contains(currentTimeString),
+                          $&quot;The time is displaying {displayed} when current time is {currentTimeString}&quot;);
+        }
+
+        [Test]
+        public void TimeModuleCautionWidgetHasText()
+        {
+            _module.IsAlertEnabled = false;
+
+            _alfred.Initialize();
+
+            // Feed in a time in the morning for testability purposes
+            var oneThirtyAm = new DateTime(1980, 9, 10, 1, 30, 0);
+            _module.Update(oneThirtyAm);
+
+            Assert.IsFalse(
+                           string.IsNullOrWhiteSpace(_module.AlertWidget.Text),
+                           &quot;Alert text is not set when alert is visible.&quot;);
+        }
+
+        [Test]
+        public void TimeModuleCautionWidgetIsHiddenDuringTheAfternoon()
+        {
+            _alfred.Initialize();
+
+            // Feed in a time in the afternoon for testability purposes
+            var oneThirtyPm = new DateTime(1980, 9, 10, 13, 30, 0);
+            _module.Update(oneThirtyPm);
+
+            Assert.IsFalse(
+                           _module.AlertWidget.IsVisible,
+                           &quot;It&#39;s the afternoon but the module is alerting that we&#39;re near bedtime.&quot;);
+        }
+
+        [Test]
+        public void TimeModuleCautionWidgetIsHiddenDuringTheMorning()
+        {
+            _alfred.Initialize();
+
+            // Feed in a time in the morning for testability purposes
+            var nineThirtyAm = new DateTime(1980, 9, 10, 9, 30, 0);
+            _module.Update(nineThirtyAm);
+
+            Assert.IsFalse(_module.AlertWidget.IsVisible,
+                           &quot;It&#39;s morning but the module is alerting that we&#39;re near bedtime.&quot;);
+        }
+
+        [Test]
+        public void TimeModuleCautionWidgetIsHiddenLateAtNightForNoonBedtimes()
+        {
+            _module.AlertHour = 12;
+            _module.AlertMinute = 0;
+            _module.AlertDurationInHours = 2;
+
+            _alfred.Initialize();
+
+            var evening = new DateTime(1980, 9, 10, 22, 0, 0);
+            _module.Update(evening);
+
+            Assert.IsFalse(_module.AlertWidget.IsVisible,
+                           &quot;It&#39;s late in the evening with a noon bedtime but the alert is still showing.&quot;);
+        }
+
+        [Test]
+        public void TimeModuleCautionWidgetIsNotVisibleAtNoon()
+        {
+            _alfred.Initialize();
+
+            // Feed in a time in the afternoon for testability purposes
+            var noon = new DateTime(1980, 9, 10, 12, 0, 0);
+            _module.Update(noon);
+
+            Assert.IsFalse(_module.AlertWidget.IsVisible,
+                           &quot;It&#39;s noon but the module is alerting that we&#39;re near bedtime.&quot;);
+        }
+
+        [Test]
+        public void TimeModuleCautionWidgetIsNotVisibleWhenDisabled()
+        {
+            _module.IsAlertEnabled = false;
+
+            _alfred.Initialize();
+
+            // Feed in a time in the morning for testability purposes
+            var oneThirtyAm = new DateTime(1980, 9, 10, 1, 30, 0);
+            _module.Update(oneThirtyAm);
+
+            Assert.IsFalse(_module.AlertWidget.IsVisible, &quot;Alerts are disabled but the alert is still visible.&quot;);
+        }
+
+        [Test]
+        public void TimeModuleCautionWidgetIsVisibleAfterAlarm()
+        {
+            _module.AlertMinute = 30;
+            _alfred.Initialize();
+
+            // This is just a minute after the alarm should start
+            var alarmTime = new DateTime(1980, 9, 10, _module.AlertHour, _module.AlertMinute + 1, 0);
+            _module.Update(alarmTime);
+
+            Assert.IsTrue(_module.AlertWidget.IsVisible,
+                          &quot;It&#39;s right after the alarm but the alarm is off.&quot;);
+        }
+
+        [Test]
+        public void TimeModuleCautionWidgetIsVisibleAtMidnight()
+        {
+            _alfred.Initialize();
+
+            // Feed in exactly midnight for testing purposes
+            var midnight = new DateTime(1980, 9, 10, 0, 0, 0);
+            _module.Update(midnight);
+
+            Assert.IsTrue(
+                          _module.AlertWidget.IsVisible,
+                          &quot;It&#39;s midnight but the module isn&#39;t alerting that we need to be in bed.&quot;);
+        }
+
+        [Test]
+        public void TimeModuleCautionWidgetIsVisibleBeforeEndOfAlarm()
+        {
+            _module.AlertHour = 12;
+            _module.AlertDurationInHours = 1;
+            _module.AlertMinute = 30;
+            _alfred.Initialize();
+
+            // Feed in a time right before the alarm should end
+            var endAlarmHour = new DateTime(1980, 9, 10, 13, 0, 0);
+            _module.Update(endAlarmHour);
+
+            Assert.IsTrue(_module.AlertWidget.IsVisible,
+                          &quot;It&#39;s right before the end of the alarm but the alarm is off.&quot;);
+        }
+
+        [Test]
+        public void TimeModuleCautionWidgetIsVisibleDuringTheEarlyMorning()
+        {
+            _alfred.Initialize();
+
+            // Feed in a time in the morning for testability purposes
+            var oneThirtyAm = new DateTime(1980, 9, 10, 1, 30, 0);
+            _module.Update(oneThirtyAm);
+
+            Assert.IsTrue(
+                          _module.AlertWidget.IsVisible,
+                          &quot;It&#39;s early morning but the module isn&#39;t alerting that we need to be in bed.&quot;);
+        }
+
+        [Test]
+        public void TimeModuleCautionWidgetIsVisibleDuringTheNight()
+        {
+            _alfred.Initialize();
+
+            // Feed in a time in the late evening for testability purposes
+            var elevenThirtyPm = new DateTime(1980, 9, 10, 23, 30, 0);
+            _module.Update(elevenThirtyPm);
+
+            Assert.IsTrue(
+                          _module.AlertWidget.IsVisible,
+                          &quot;It&#39;s nearly midnight but the module isn&#39;t alerting that we need to be in bed.&quot;);
+        }
+
+        [Test]
+        public void TimeModuleCurrentDateIsVisible()
+        {
+            _alfred.Initialize();
+
+            var evening = new DateTime(1980, 9, 10, 22, 0, 0);
+            _module.Update(evening);
+
+            Assert.IsTrue(_module.CurrentDateWidget.IsVisible, &quot;The current date was not visible&quot;);
+        }
+
+        [Test]
+        public void TimeModuleDoesNotLogWhenTheHourDoesNotChange()
+        {
+            var console = new SimpleConsole();
+            _alfred.Console = console;
+            _alfred.Initialize();
+
+            // This is a bit of a testing hack - since initialize causes the module to update, it&#39;ll update based on the current time.
+            // This is what it should do, but we want to force updates given specific times so we&#39;ll just clear out the
+            // stored value from the initial run
+            _module.ClearLastTimeRun();
+
+            _module.Update(new DateTime(1980, 9, 10, 9, 0, 0));
+            _module.Update(new DateTime(1980, 9, 10, 9, 0, 30));
+            _module.Update(new DateTime(1980, 9, 10, 9, 1, 0));
+
+            // This will error if 0 or &gt; 1 events are logged
+            Assert.IsFalse(
+                           console.Events.Any(e =&gt; e.Title == AlfredTimeModule.HourAlertEventTitle),
+                           &quot;Updating to times not in a new hour should not have logged&quot;);
+        }
+
+        /// &lt;summary&gt;
+        ///     Tests that the bedtime alert widget is in the object structure.
+        ///     This doesn&#39;t determine whether or not it&#39;s visible.
+        /// &lt;/summary&gt;
+        [Test]
+        public void TimeModuleHasCautionWidget()
+        {
+            _alfred.Initialize();
+
+            Assert.IsNotNull(_module.AlertWidget, &quot;The Bedtime alert widget was not present&quot;);
+            Assert.Contains(
+                            _module.AlertWidget,
                             _module.Widgets as ICollection,
-                            &quot;The Status Widget was not present after shutdown&quot;);
+                            &quot;The module did not contain a registered bedtime alert widget.&quot;);
         }
 
         [Test]
-        public void AtInitialStateInitializeIsVisible()
+        public void TimeModuleHasName()
         {
-            // Doing this again here to illustrate creation / configuration order more clearly
-            var bootstrapper = new AlfredBootstrapper();
-            _alfred = bootstrapper.Create();
-            _module = new AlfredPowerModule(_alfred.PlatformProvider);
-
-            RegisterTestModule(_alfred, _module);
-
-            Assert.IsNotNull(_module.AlfredInstance, &quot;Alfred was not set&quot;);
-            Assert.IsTrue(_module.InitializeButton.IsVisible, &quot;Initialize button was not visible while offline.&quot;);
-            Assert.IsNotNull(_module.Widgets, &quot;_module.Widgets was null&quot;);
-            Assert.IsTrue(_module.Widgets.Contains(_module.InitializeButton),
-                          &quot;The Initialize button was not part of the UI while offline&quot;);
+            Assert.IsNotNullOrEmpty(_module.Name);
         }
 
         [Test]
-        public void CoreModuleHasCurrentStatusAfterInitializeAndUpdate()
+        public void TimeModuleHasNoWidgetsWhenOffline()
         {
             _alfred.Initialize();
-
-            _alfred.Update();
-
-            var text = _module.AlfredStatusWidget.Text;
-            Assert.IsNotNull(text, &quot;Widget text was null&quot;);
-            Assert.IsTrue(text.EndsWith(&quot;Online&quot;),
-                          $&quot;Module did not indicate that Alfred was online after update. Instead indicated: {text}&quot;);
-        }
-
-        [Test]
-        public void CoreModuleHasNoProviderText()
-        {
-            var bootstrapper = new AlfredBootstrapper();
-            _alfred = bootstrapper.Create();
-            _module = new AlfredPowerModule(_alfred.PlatformProvider);
-
-            var text = _module.AlfredStatusWidget.Text;
-            Assert.IsNotNull(text, &quot;Widget text was null&quot;);
-            Assert.IsTrue(text.EndsWith(&quot;has not been set&quot;),
-                          $&quot;Component did not indicate that Alfred was not set. Instead indicated: {text}&quot;);
-        }
-
-        [Test]
-        public void WhenOfflineTheInitializeButtonAppears()
-        {
-            _alfred.Initialize();
-            _alfred.Update();
             _alfred.Shutdown();
 
-            Assert.IsTrue(_module.InitializeButton.IsVisible, &quot;Initialize button was not visible while offline.&quot;);
-            Assert.IsNotNull(_module.Widgets, &quot;_module.Widgets was null&quot;);
-            Assert.IsTrue(
-                          _module.Widgets.Contains(_module.InitializeButton),
-                          &quot;The Initialize button was not part of the UI while offline&quot;);
+            Assert.IsTrue(!_module.Widgets.Any(), &quot;Widgets were left over after shutdown&quot;);
         }
 
+        /// &lt;summary&gt;
+        ///     The time module must always be visible.
+        /// &lt;/summary&gt;
         [Test]
-        public void WhenOfflineTheShutdownButtonDoesNotAppear()
-        {
-            _alfred.Initialize();
-            _alfred.Update();
-            _alfred.Shutdown();
-
-            Assert.IsNotNull(_module.Widgets, &quot;_module.Widgets was null&quot;);
-            Assert.IsFalse(
-                           _module.Widgets.Contains(_module.ShutdownButton),
-                           &quot;The Shut Down button was part of the UI while offline&quot;);
-        }
-
-        [Test]
-        public void WhenOnlineTheShutdownButtonAppears()
+        public void TimeModuleHasTimeAlwaysVisible()
         {
             _alfred.Initialize();
 
-            Assert.IsTrue(_module.ShutdownButton.IsVisible, &quot;Shut down button was not visible while online.&quot;);
-            Assert.IsNotNull(_module.Widgets, &quot;_module.Widgets was null&quot;);
-            Assert.IsTrue(
-                          _module.Widgets.Contains(_module.ShutdownButton),
-                          &quot;The Shut Down button was not part of the UI while online&quot;);
+            Assert.IsTrue(_module.CurrentTimeWidget.IsVisible, &quot;The time widget was hidden.&quot;);
         }
 
         [Test]
-        public void WhenOnlineTheInitializeButtonDoesNotAppear()
+        public void TimeModuleHasWidgets()
         {
             _alfred.Initialize();
 
-            Assert.IsNotNull(_module.Widgets, &quot;_module.Widgets was null&quot;);
-            Assert.IsFalse(
-                           _module.Widgets.Contains(_module.InitializeButton),
-                           &quot;The Initialize button was part of the UI while online&quot;);
+            Assert.IsNotNull(_module.Widgets);
+            Assert.Greater(_module.Widgets.Count(), 0, &quot;The time module did not have any Widgets&quot;);
         }
 
         [Test]
-        public void ClickingTheInitializeButtonInitializesAlfredWhileOffline()
+        public void TimeModuleLogsOnHalfHourChanges()
         {
-            _module.InitializeButton.Click();
+            var console = new SimpleConsole();
+            _alfred.Console = console;
+            _alfred.Initialize();
 
-            Assert.AreEqual(AlfredStatus.Online, _alfred.Status, &quot;Alfred was not online after button click&quot;);
+            _module.Update(new DateTime(1980, 9, 10, 9, 29, 0));
+            _module.Update(new DateTime(1980, 9, 10, 9, 30, 0));
+
+            // This will error if 0 or &gt; 1 events are logged
+            var consoleEvent = console.Events.Single(e =&gt; e.Title == AlfredTimeModule.HalfHourAlertEventTitle);
+
+            //  We want to ensure it&#39;s an informational purposes
+            Assert.AreEqual(LogLevel.ChatNotification, consoleEvent.Level);
         }
 
         [Test]
-        public void ClickingTheShutdownButtonShutsDownAlfredWhileOnline()
+        public void TimeModuleLogsWhenTheHourChanges()
+        {
+            var console = new SimpleConsole();
+            _alfred.Console = console;
+            _alfred.Initialize();
+
+            _module.Update(new DateTime(1980, 9, 10, 8, 59, 0));
+            _module.Update(new DateTime(1980, 9, 10, 9, 0, 0));
+
+            // This will error if 0 or &gt; 1 events are logged
+            var consoleEvent = console.Events.Single(e =&gt; e.Title == AlfredTimeModule.HourAlertEventTitle);
+
+            //  We want to ensure it&#39;s an informational purposes
+            Assert.AreEqual(LogLevel.ChatNotification, consoleEvent.Level);
+        }
+
+        [Test]
+        public void TimeModuleShowsCurrentDate()
         {
             _alfred.Initialize();
-            _alfred.Update();
 
-            _module.ShutdownButton.Click();
+            var evening = new DateTime(1980, 9, 10, 22, 0, 0);
+            _module.Update(evening);
 
-            Assert.AreEqual(AlfredStatus.Offline, _alfred.Status, &quot;Alfred was not offline after button click&quot;);
+            const string Expected = &quot;Wednesday, September 10, 1980&quot;;
+            var currentDateString = _module.CurrentTimeWidget.Text;
+
+            Assert.AreEqual(
+                            Expected,
+                            _module.CurrentDateWidget.Text,
+                            $&quot;Expected &#39;{Expected}&#39; but was &#39;{currentDateString}&#39;&quot;);
         }
 
         [Test]
-        public void ClickingTheInitializeButtonReinitializesAlfredWhileOfflineAfterShutdown()
+        public void TimeModuleStartsOffline()
         {
-            _alfred.Initialize();
-            _alfred.Update();
-            _alfred.Shutdown();
-
-            _module.InitializeButton.Click();
-
-            Assert.AreEqual(AlfredStatus.Online, _alfred.Status, &quot;Alfred was not online after button click&quot;);
-        }
-
-        [Test]
-        public void WhenOfflineShutdownCannotExecute()
-        {
-            Assert.IsNotNull(_module.ShutdownButton.ClickCommand, &quot;_module.ShutdownButton.ClickCommand was null&quot;);
-            Assert.IsFalse(_module.ShutdownButton.ClickCommand.CanExecute(null), &quot;Could click shutdown while offline&quot;);
-        }
-
-        [Test]
-        public void WhenOnlineInitializeCannotExecute()
-        {
-            _alfred.Initialize();
-            _alfred.Update();
-
-            Assert.IsNotNull(_module.InitializeButton.ClickCommand, &quot;_module.InitializeButton.ClickCommand was null&quot;);
-            Assert.IsFalse(_module.InitializeButton.ClickCommand.CanExecute(null), &quot;Could click initialize while online&quot;);
+            Assert.AreEqual(AlfredStatus.Offline, _module.Status);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[59,13,59,14,0],[60,17,60,65,0],[63,13,63,14,0],[64,17,64,65,0],[41,9,41,10,1],[42,13,42,57,1],[43,13,43,45,1],[44,13,44,71,1],[46,13,46,50,1],[47,9,47,10,1],[57,9,57,10,1],[58,13,58,32,1],[62,13,62,32,1],[67,13,67,49,1],[69,13,69,87,1],[70,13,70,49,1],[72,13,72,40,1],[74,13,74,35,1],[76,9,76,10,1],[86,9,86,10,1],[87,13,87,34,1],[88,13,88,30,1],[89,13,89,32,1],[91,13,91,92,1],[92,13,94,81,1],[95,9,95,10,1],[99,9,99,10,1],[101,13,101,57,1],[102,13,102,45,1],[103,13,103,71,1],[105,13,105,50,1],[107,13,107,76,1],[108,13,108,115,1],[109,13,109,75,1],[110,13,111,89,1],[112,9,112,10,1],[116,9,116,10,1],[117,13,117,34,1],[119,13,119,30,1],[121,13,121,56,1],[122,13,122,60,1],[123,13,124,118,1],[125,9,125,10,1],[129,9,129,10,1],[130,13,130,57,1],[131,13,131,45,1],[132,13,132,71,1],[134,13,134,56,1],[135,13,135,60,1],[136,13,137,109,1],[138,9,138,10,1],[142,9,142,10,1],[143,13,143,34,1],[144,13,144,30,1],[145,13,145,32,1],[147,13,147,115,1],[148,13,148,75,1],[149,13,151,89,1],[152,9,152,10,1],[156,9,156,10,1],[157,13,157,34,1],[158,13,158,30,1],[159,13,159,32,1],[161,13,161,75,1],[162,13,164,85,1],[165,9,165,10,1],[169,9,169,10,1],[170,13,170,34,1],[172,13,172,111,1],[173,13,173,75,1],[174,13,176,87,1],[177,9,177,10,1],[181,9,181,10,1],[182,13,182,34,1],[184,13,184,75,1],[185,13,187,85,1],[188,9,188,10,1],[192,9,192,10,1],[193,13,193,46,1],[195,13,195,110,1],[196,9,196,10,1],[200,9,200,10,1],[201,13,201,34,1],[202,13,202,30,1],[204,13,204,44,1],[206,13,206,112,1],[207,9,207,10,1],[211,9,211,10,1],[212,13,212,34,1],[213,13,213,30,1],[214,13,214,32,1],[216,13,216,46,1],[218,13,218,110,1],[219,9,219,10,1],[223,9,223,10,1],[224,13,224,115,1],[225,13,225,120,1],[226,9,226,10,1],[230,9,230,10,1],[231,13,231,34,1],[232,13,232,30,1],[234,13,234,119,1],[235,13,235,123,1],[236,9,236,10,1]]);
+      highlightRanges([[33,9,33,10,1],[34,13,34,57,1],[35,13,35,45,1],[37,13,37,80,1],[38,13,38,70,1],[39,13,39,37,1],[40,13,40,46,1],[41,13,41,51,1],[43,13,43,42,1],[44,9,44,10,1],[59,9,59,10,1],[60,13,60,52,1],[62,13,62,41,1],[63,13,63,30,1],[64,9,64,10,1],[68,9,68,10,1],[69,13,69,34,1],[71,13,71,70,1],[73,13,73,43,1],[75,13,75,68,1],[76,13,78,107,1],[79,9,79,10,1],[83,9,83,10,1],[84,13,84,34,1],[85,13,85,30,1],[86,13,86,32,1],[88,13,88,81,1],[89,9,89,10,1],[93,9,93,10,1],[94,13,94,34,1],[96,13,96,66,1],[97,9,97,10,1],[101,9,101,10,1],[102,13,102,34,1],[104,13,104,70,1],[105,13,105,30,1],[107,13,107,43,1],[109,13,109,68,1],[110,13,112,107,1],[113,9,113,10,1],[117,9,117,10,1],[118,13,118,44,1],[120,13,120,34,1],[123,13,123,67,1],[124,13,124,41,1],[126,13,128,76,1],[129,9,129,10,1],[133,9,133,10,1],[134,13,134,34,1],[137,13,137,68,1],[138,13,138,41,1],[140,13,142,102,1],[143,9,143,10,1],[147,9,147,10,1],[148,13,148,34,1],[151,13,151,68,1],[152,13,152,42,1],[154,13,155,96,1],[156,9,156,10,1],[160,9,160,10,1],[161,13,161,36,1],[162,13,162,37,1],[163,13,163,46,1],[165,13,165,34,1],[167,13,167,63,1],[168,13,168,37,1],[170,13,171,108,1],[172,9,172,10,1],[176,9,176,10,1],[177,13,177,34,1],[180,13,180,60,1],[181,13,181,34,1],[183,13,184,93,1],[185,9,185,10,1],[189,9,189,10,1],[190,13,190,44,1],[192,13,192,34,1],[195,13,195,67,1],[196,13,196,41,1],[198,13,198,114,1],[199,9,199,10,1],[203,9,203,10,1],[204,13,204,38,1],[205,13,205,34,1],[208,13,208,102,1],[209,13,209,39,1],[211,13,212,79,1],[213,9,213,10,1],[217,9,217,10,1],[218,13,218,34,1],[221,13,221,63,1],[222,13,222,38,1],[224,13,226,101,1],[227,9,227,10,1],[231,9,231,10,1],[232,13,232,36,1],[233,13,233,46,1],[234,13,234,38,1],[235,13,235,34,1],[238,13,238,68,1],[239,13,239,42,1],[241,13,242,91,1],[243,9,243,10,1],[247,9,247,10,1],[248,13,248,34,1],[251,13,251,67,1],[252,13,252,41,1],[254,13,256,106,1],[257,9,257,10,1],[261,9,261,10,1],[262,13,262,34,1],[265,13,265,71,1],[266,13,266,44,1],[268,13,270,108,1],[271,9,271,10,1],[275,9,275,10,1],[276,13,276,34,1],[278,13,278,63,1],[279,13,279,37,1],[281,13,281,100,1],[282,9,282,10,1],[286,9,286,10,1],[287,13,287,47,1],[288,13,288,39,1],[289,13,289,34,1],[294,13,294,40,1],[296,13,296,64,1],[297,13,297,65,1],[298,13,298,64,1],[301,13,302,52,1],[302,99,303,90,1],[304,9,304,10,1],[312,9,312,10,1],[313,13,313,34,1],[315,13,315,95,1],[316,13,319,94,1],[320,9,320,10,1],[324,9,324,10,1],[325,13,325,51,1],[326,9,326,10,1],[330,9,330,10,1],[331,13,331,34,1],[332,13,332,32,1],[334,13,334,92,1],[335,9,335,10,1],[342,9,342,10,1],[343,13,343,34,1],[345,13,345,95,1],[346,9,346,10,1],[350,9,350,10,1],[351,13,351,34,1],[353,13,353,47,1],[354,13,354,100,1],[355,9,355,10,1],[359,9,359,10,1],[360,13,360,47,1],[361,13,361,39,1],[362,13,362,34,1],[364,13,364,65,1],[365,13,365,65,1],[368,13,368,59,1],[368,110,368,112,1],[371,13,371,76,1],[372,9,372,10,1],[376,9,376,10,1],[377,13,377,47,1],[378,13,378,39,1],[379,13,379,34,1],[381,13,381,65,1],[382,13,382,64,1],[385,13,385,59,1],[385,106,385,108,1],[388,13,388,76,1],[389,9,389,10,1],[393,9,393,10,1],[394,13,394,34,1],[396,13,396,63,1],[397,13,397,37,1],[400,13,400,68,1],[402,13,405,85,1],[406,9,406,10,1],[410,9,410,10,1],[411,13,411,67,1],[412,9,412,10,1],[302,52,302,99,1],[368,59,368,110,1],[385,59,385,106,1]]);
     </script>
   </body>
 </html>

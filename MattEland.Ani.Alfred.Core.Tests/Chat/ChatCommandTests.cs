@@ -44,5 +44,20 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             Assert.IsFalse(Alfred.IsOnline, "Alfred was not offline after shutdown was handled.");
         }
 
+        [Test]
+        public void TagHandlersAreInvokedWhenATestingTemplateIsInvoked()
+        {
+            Say("TEST TAG INVOKE");
+
+            Assert.IsTrue(AlfredTestTagHandler.WasInvoked);
+        }
+
+        [Test]
+        public void TagHandlersAreNotInvokedOnOtherInput()
+        {
+            Say("I like turtles");
+
+            Assert.IsFalse(AlfredTestTagHandler.WasInvoked);
+        }
     }
 }

@@ -2,66 +2,128 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\normalize\sanitizingtexttransformer.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.aiml\alfredchatsubsystem.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// SanitizingTextTransformer.cs
+// AlfredChatSubsystem.cs
 // 
-// Created on:      08/13/2015 at 10:31 PM
-// Last Modified:   08/16/2015 at 1:02 AM
-// 
-// Last Modified by: Matt Eland
+// Created on:      08/09/2015 at 11:09 PM
+// Last Modified:   08/12/2015 at 3:54 PM
+// Original author: Matt Eland
 // ---------------------------------------------------------
 
-using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
 
-namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
+using Res = MattEland.Ani.Alfred.Chat.Resources;
+
+namespace MattEland.Ani.Alfred.Chat
 {
     /// &lt;summary&gt;
-    ///     A text transformer to remove illegal characters.
+    ///     The Chat subsystem for Alfred. Presents a chatting mechanism using AIML powered conversation bots.
     /// &lt;/summary&gt;
-    public class SanitizingTextTransformer : TextTransformer
+    public sealed class AlfredChatSubsystem : AlfredSubsystem
     {
+        [NotNull]
+        private readonly AimlStatementHandler _chatHandler;
+
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;TextTransformer&quot; /&gt; class.
+        /// Gets the chat handler.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;chatEngine&quot;&gt;The ChatEngine.&lt;/param&gt;
-        public SanitizingTextTransformer([NotNull] ChatEngine chatEngine)
-            : base(chatEngine)
+        /// &lt;value&gt;The chat handler.&lt;/value&gt;
+        [NotNull]
+        public AimlStatementHandler ChatHandler
         {
+            [DebuggerStepThrough]
+            get
+            { return _chatHandler; }
+        }
+
+        [NotNull]
+        private readonly ChatPage _chatPage;
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;AlfredSubsystem&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;provider&quot;&gt;The provider.&lt;/param&gt;
+        /// &lt;param name=&quot;console&quot;&gt;The console.&lt;/param&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        public AlfredChatSubsystem([NotNull] IPlatformProvider provider,
+                                   [CanBeNull] IConsole console) : base(provider, console)
+        {
+            _chatHandler = new AimlStatementHandler(console);
+            _chatPage = new ChatPage(Res.ChatModuleName.NonNull(), _chatHandler);
         }
 
         /// &lt;summary&gt;
-        ///     Gets or sets the illegal character stripper regex pattern.
+        ///     Gets or sets whether the page should be registered. If not, the chat functionality will just be supplied to the
+        ///     system via the chat handler.
+        ///     Defaults to false.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The stripper regex pattern.&lt;/value&gt;
-        [NotNull]
-        public string StripperRegexPattern { get; set; } = @&quot;[^0-9a-zA-Z_]&quot;;
+        /// &lt;value&gt;Whether or not the page should be registered.&lt;/value&gt;
+        public bool RegisterPage { get; set; }
 
         /// &lt;summary&gt;
-        ///     Processes the input text and returns the processed value.
+        ///     Gets the name of the component.
         /// &lt;/summary&gt;
-        /// &lt;returns&gt;The processed output&lt;/returns&gt;
-        protected override string ProcessChange()
+        /// &lt;value&gt;The name of the component.&lt;/value&gt;
+        public override string Name
         {
-            // Removes illegal characters and replaces them with spaces
-            var regex = new Regex(StripperRegexPattern, RegexOptions.IgnorePatternWhitespace);
-            return regex.Replace(InputString.NonNull(), &quot; &quot;);
+            get { return Res.ChatModuleName.NonNull(); }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the identifier for the subsystem to be used in command routing.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The identifier for the subsystem.&lt;/value&gt;
+        public override string Id
+        {
+            get { return &quot;Chat&quot;; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Allows components to define controls
+        /// &lt;/summary&gt;
+        protected override void RegisterControls()
+        {
+            base.RegisterControls();
+
+            // We don&#39;t have console until we&#39;re registered, so update it here
+            _chatHandler.Console = AlfredInstance?.Console;
+
+            // Register with the rest of the system
+            if (RegisterPage)
+            {
+                Register(_chatPage);
+            }
+            Register(_chatHandler);
+        }
+
+        /// &lt;summary&gt;
+        ///     A notification method that is invoked when initialization for Alfred is complete so the UI can be fully enabled or
+        ///     adjusted
+        /// &lt;/summary&gt;
+        public override void OnInitializationCompleted()
+        {
+            // Say hi so Alfred greets the user
+            AlfredInstance?.ChatProvider?.DoInitialGreeting();
         }
     }
+
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[38,51,38,55,0],[38,60,38,76,1],[29,15,29,31,1],[30,9,30,10,1],[31,9,31,10,1],[38,46,38,50,1],[45,9,45,10,1],[47,13,47,95,1],[48,13,48,62,1],[49,9,49,10,1]]);
+      highlightRanges([[64,41,64,45,0],[81,17,81,18,0],[81,19,81,33,0],[81,34,81,35,0],[96,13,96,14,0],[97,17,97,37,0],[98,13,98,14,0],[39,13,39,14,1],[39,15,39,35,1],[39,36,39,37,1],[52,68,52,91,1],[53,9,53,10,1],[54,13,54,62,1],[55,13,55,82,1],[56,9,56,10,1],[64,36,64,40,1],[72,17,72,18,1],[72,19,72,55,1],[72,56,72,57,1],[88,9,88,10,1],[89,13,89,37,1],[92,13,92,60,1],[95,13,95,30,1],[99,13,99,36,1],[100,9,100,10,1],[107,9,107,10,1],[109,13,109,63,1],[110,9,110,10,1]]);
     </script>
   </body>
 </html>

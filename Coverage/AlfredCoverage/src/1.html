@@ -2,272 +2,339 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\conversationtests.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\alfredprovidertests.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// ConversationTests.cs
+// AlfredProviderTests.cs
 // 
-// Created on:      08/10/2015 at 2:42 PM
-// Last Modified:   08/16/2015 at 4:47 PM
-// 
-// Last Modified by: Matt Eland
+// Created on:      07/25/2015 at 11:43 PM
+// Last Modified:   08/10/2015 at 10:34 PM
+// Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Security;
+using System.Linq;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Chat;
-using MattEland.Ani.Alfred.Chat.Aiml;
+using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Common;
+using MattEland.Ani.Alfred.Core.Modules;
+using MattEland.Ani.Alfred.Core.Pages;
+using MattEland.Ani.Alfred.Core.Widgets;
+using MattEland.Ani.Alfred.Tests.Mocks;
 
 using NUnit.Framework;
 
 namespace MattEland.Ani.Alfred.Tests
 {
     /// &lt;summary&gt;
-    ///     Tests for conversational inquiries on the Alfred chat system.
+    ///     Tests AlfredApplication
     /// &lt;/summary&gt;
     [TestFixture]
     [SuppressMessage(&quot;ReSharper&quot;, &quot;NotNullMemberIsNotInitialized&quot;)]
-    [SuppressMessage(&quot;ReSharper&quot;, &quot;AssignNullToNotNullAttribute&quot;)]
-    [SuppressMessage(&quot;ReSharper&quot;, &quot;UnusedParameter.Local&quot;)]
-    public class ConversationTests
+    public sealed class AlfredProviderTests
     {
         /// &lt;summary&gt;
-        ///     Sets up the testing environment prior to each test run.
+        ///     Sets up the alfred provider&#39;s tests.
         /// &lt;/summary&gt;
-        /// &lt;exception cref=&quot;IOException&quot;&gt;An I/O error occurred.&lt;/exception&gt;
-        /// &lt;exception cref=&quot;DirectoryNotFoundException&quot;&gt;Attempted to set a local path that cannot be found.&lt;/exception&gt;
-        /// &lt;exception cref=&quot;SecurityException&quot;&gt;The caller does not have the appropriate permission.&lt;/exception&gt;
         [SetUp]
-        public void SetUp()
+        public void SetupAlfredProviderTests()
         {
-            _chat = new AimlStatementHandler();
-            _chatEngine = _chat.ChatEngine;
+            var bootstrapper = new AlfredBootstrapper();
+            _alfred = bootstrapper.Create();
+            _alfred.Console = new SimpleConsole();
+
+            _subsystem = new TestSubsystem(_alfred.PlatformProvider);
+            _page = new AlfredModuleListPage(_alfred.PlatformProvider, &quot;Test Page&quot;);
         }
 
         [NotNull]
-        private AimlStatementHandler _chat;
+        private AlfredApplication _alfred;
 
         [NotNull]
-        private ChatEngine _chatEngine;
+        private TestSubsystem _subsystem;
 
-        /// &lt;summary&gt;
-        ///     Asserts that the chat input gets a reply template with the specified ID.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input.&lt;/param&gt;
-        /// &lt;param name=&quot;templateId&quot;&gt;The template identifier.&lt;/param&gt;
-        private void AssertMessageGetsReplyTemplate(string input, string templateId)
-        {
-            var template = GetReplyTemplate(input);
-
-            AssertTemplateId(template, templateId);
-        }
-
-        /// &lt;summary&gt;
-        ///     Asserts that the template identifier is found in the response template.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;template&quot;&gt;The template.&lt;/param&gt;
-        /// &lt;param name=&quot;id&quot;&gt;The template identifier.&lt;/param&gt;
-        private static void AssertTemplateId([NotNull] string template, [NotNull] string id)
-        {
-            var idString = $&quot;id=\&quot;{id.ToLowerInvariant()}\&quot;&quot;;
-
-            Assert.IsTrue(template.ToLowerInvariant().Contains(idString),
-                          $&quot;ID &#39;{idString}&#39; was not found. Template was: {template}&quot;);
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets a reply from the chat system on a specified inquiry.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;text&quot;&gt;The inquiry text.&lt;/param&gt;
-        /// &lt;returns&gt;The reply&lt;/returns&gt;
         [NotNull]
-        private string GetReply([CanBeNull] string text)
+        private AlfredModuleListPage _page;
+
+        [Test]
+        public void AddingStandardModulesAddsModules()
         {
-            var response = GetResponse(text);
+            _alfred.Register(new AlfredCoreSubsystem(_alfred.PlatformProvider));
 
-            Assert.IsNotNull(response.ResponseText, &quot;Response text was null&quot;);
+            var numModules =
+                _alfred.Subsystems.SelectMany(subsystem =&gt; subsystem.Pages)
+                       .OfType&lt;AlfredModuleListPage&gt;()
+                       .Sum(modulePage =&gt; modulePage.Modules.Count());
 
-            return response.ResponseText;
+            Assert.Greater(numModules,
+                           0,
+                           &quot;Alfred did not have any modules after calling add standard modules.&quot;);
+        }
+
+        [Test]
+        public void AfterInitializationAlfredIsOnline()
+        {
+            _alfred.Initialize();
+
+            Assert.AreEqual(_alfred.Status, AlfredStatus.Online);
+        }
+
+        [Test]
+        public void AlfredStartsOffline()
+        {
+            Assert.AreEqual(_alfred.Status, AlfredStatus.Offline);
+        }
+
+        [Test]
+        public void AlfredStartsWithNoSubSystems()
+        {
+            Assert.AreEqual(0, _alfred.Subsystems.Count(), &quot;Alfred started with subsystems when none were expected.&quot;);
+        }
+
+        [Test]
+        public void InitializationWithoutConsoleWorks()
+        {
+            _alfred.Console = null;
+
+            _alfred.Initialize();
+
+            // Nothing to assert here - I&#39;m looking for errors encountered
         }
 
         /// &lt;summary&gt;
-        /// Tests that the chat engine has nodes associated with it
+        ///     Tests initialization of Alfred
         /// &lt;/summary&gt;
         [Test]
-        public void ChatEngineHasNodes()
+        public void InitializeAlfred()
         {
-            Assert.Greater(_chatEngine.NodeCount, 0, &quot;Chat engine did not have any nodes&quot;);
+            Assert.NotNull(_alfred, &quot;Alfred was not initialized&quot;);
         }
 
         [Test]
-        public void GenderSubstitutionsHasEntries()
+        public void InitializeAndShutdownResultsInShutdown()
         {
-            Assert.Greater(_chatEngine.Librarian.GenderSubstitutions.Count, 0, &quot;Settings were not present&quot;);
+            _alfred.Initialize();
+            _alfred.Shutdown();
+
+            Assert.AreEqual(_alfred.Status, AlfredStatus.Offline);
         }
 
         [Test]
-        public void GlobalSettingsHaveEntries()
+        public void InitializeCreatesEventsInLog()
         {
-            Assert.Greater(_chatEngine.Librarian.GlobalSettings.Count, 0, &quot;Settings were not present&quot;);
+            var console = _alfred.Console;
+            Assert.NotNull(console, &quot;Console was not present&quot;);
+
+            var numEvents = console.Events.Count();
+
+            _alfred.Initialize();
+
+            Assert.Greater(console.Events.Count(), numEvents, &quot;Initializing Alfred did not create any log entries.&quot;);
         }
 
         [Test]
-        public void FirstPersonSubstitutionsHasEntries()
+        public void InitializeWhileOnlineErrors()
         {
-            Assert.Greater(_chatEngine.Librarian.FirstPersonToSecondPersonSubstitutions.Count, 0, &quot;Settings were not present&quot;);
+            _alfred.Initialize();
+
+            try
+            {
+                _alfred.Initialize();
+
+                Assert.Fail(&quot;Expected an InvalidOperationException since Alfred was already initialized.&quot;);
+
+            }
+            catch (InvalidOperationException)
+            {
+                // No action
+            }
+
+            // Assert that we&#39;re still online.
+            Assert.AreEqual(_alfred.Status, AlfredStatus.Online);
         }
 
         [Test]
-        public void SecondPersonSubstitutionsHasEntries()
+        public void InitializingInitializesComponents()
         {
-            Assert.Greater(_chatEngine.Librarian.SecondPersonToFirstPersonSubstitutions.Count, 0, &quot;Settings were not present&quot;);
+            _alfred.Register(new AlfredCoreSubsystem(_alfred.PlatformProvider));
+
+            _alfred.Initialize();
+
+            foreach (var item in _alfred.Subsystems)
+            {
+                Assert.AreEqual(AlfredStatus.Online,
+                                item.Status,
+                                $&quot;{item.NameAndVersion} was not initialized during initialization.&quot;);
+            }
         }
 
         [Test]
-        public void SubstitutionsHasEntries()
+        public void LogToConsole()
         {
-            Assert.Greater(_chatEngine.Librarian.Substitutions.Count, 0, &quot;Settings were not present&quot;);
-        }
+            var console = _alfred.Console;
+            Assert.NotNull(console, &quot;Console was not present&quot;);
 
-        /// &lt;summary&gt;
-        ///     Gets the response to the chat message.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;text&quot;&gt;The text.&lt;/param&gt;
-        /// &lt;returns&gt;The response&lt;/returns&gt;
-        private UserStatementResponse GetResponse(string text)
-        {
+            var numEvents = console.Events.Count();
 
-            var response = _chat.HandleUserStatement(text);
+            console.Log(&quot;Alfred Test Framework&quot;, &quot;Testing logging to Alfred&quot;, LogLevel.Verbose);
 
-            // Do some basic validity checks
-            Assert.NotNull(response, &quot;Response was null&quot;);
-            Assert.AreEqual(text, response.UserInput);
-            return response;
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets a reply from the chat system on a specified inquiry.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;text&quot;&gt;The inquiry text.&lt;/param&gt;
-        /// &lt;returns&gt;The reply&lt;/returns&gt;
-        [NotNull]
-        private string GetReplyTemplate([CanBeNull] string text)
-        {
-            var response = GetResponse(text);
-            return response.Template;
+            Assert.AreEqual(numEvents + 1, console.Events.Count(), &quot;Event count did not increase after logging.&quot;);
         }
 
         [Test]
-        public void StartupResultsInGreeting()
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void ModulesCannotBeAddedWhileOnline()
         {
-            // In reality, this should be _chat.DoInitialGreeting, but it&#39;s easier to test the template this way
-            var reply = GetReplyTemplate(&quot;EVT_STARTUP&quot;);
-
-            Assert.That(reply.Contains(&quot;tmp_hi&quot;), &quot;Startup did not give proper template. Actual template was: &quot; + reply);
+            _alfred.Initialize();
+            _alfred.Register(new AlfredCoreSubsystem(_alfred.PlatformProvider));
         }
 
         [Test]
-        public void StartupLeavesLastInputClear()
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void ModulesCannotUpdateWhileOffline()
         {
-            _chat.DoInitialGreeting();
+            _alfred.Register(new AlfredCoreSubsystem(_alfred.PlatformProvider));
 
-            Assert.That(!_chat.LastInput.HasText(), $&quot;Startup did not clear last input. Actual was: {_chat.LastInput}&quot;);
+            _alfred.Update();
         }
 
-        [TestCase(&quot;Shutdown&quot;, &quot;tmp_shutdown&quot;)]
-        [TestCase(&quot;Status&quot;, &quot;tmp_status&quot;)]
-        public void ChatCoreTests(string input, string templateId)
-        {
-            AssertMessageGetsReplyTemplate(input, templateId);
-        }
-
-        [TestCase(&quot;Thanks&quot;, &quot;tmp_thanks&quot;)]
-        [TestCase(&quot;Goodbye&quot;, &quot;tmp_bye&quot;)]
-        [TestCase(&quot;Hello&quot;, &quot;tmp_hi&quot;)]
-        [TestCase(&quot;Help&quot;, &quot;tmp_help&quot;)]
-        [TestCase(&quot;Help Commands&quot;, &quot;tmp_help_commands&quot;)]
-        [TestCase(&quot;Help Questions&quot;, &quot;tmp_help_questions&quot;)]
-        [TestCase(&quot;Help Other&quot;, &quot;tmp_help_other&quot;)]
-        [TestCase(&quot;ASDfasd&quot;, &quot;tmp_fallback&quot;, Description = &quot;Gibberish should hit fallback case&quot;)]
-        public void ChatTemplateTests(string input, string templateId)
-        {
-            AssertMessageGetsReplyTemplate(input, templateId);
-        }
-
-        [TestCase(&quot;Bye&quot;, &quot;tmp_bye&quot;)]
-        [TestCase(&quot;Hi&quot;, &quot;tmp_hi&quot;)]
-        [TestCase(&quot;Hey&quot;, &quot;tmp_hi&quot;)]
-        [TestCase(&quot;Thank You&quot;, &quot;tmp_thanks&quot;)]
-        public void ChatRedirectTests([NotNull] string input, [NotNull] string redirectTemplateId)
-        {
-            var template = GetReplyTemplate(input);
-
-            Assert.IsTrue(template.ToLowerInvariant().Contains(redirectTemplateId),
-                          $&quot;The template {template} did not redirect to the template with an Id tag of {redirectTemplateId}&quot;);
-        }
-
-        /// &lt;summary&gt;
-        ///     Asserts that asking chat for the date gives the correct date.
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        ///     Test for ALF-4
-        /// &lt;/remarks&gt;
         [Test]
-        public void AskingForCurrentDayContainsCurrentDay()
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void RegisteringAWidgetMultipleTimesThrowsAnException()
         {
-            var now = DateTime.Now;
-            var reply = GetReply(&quot;Which day is it?&quot;);
+            var testModule = new AlfredTestModule();
 
-            var expected = now.ToString(&quot;D&quot;);
-            Assert.That(reply.Contains(expected),
-                        $&quot;Asked for current day at {now} and got a reply of &#39;{reply}&#39; which did not contain {expected}&quot;);
+            var textWidget = new TextWidget();
+            testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
+            testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
+
+            _alfred.Register(_subsystem);
+            _subsystem.AddAutoRegisterPage(_page);
+            _page.Register(testModule);
+
+            _alfred.Initialize();
         }
 
-        /// &lt;summary&gt;
-        ///     Asserts that asking chat for the time gives the correct time.
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        ///     Test for ALF-3
-        /// &lt;/remarks&gt;
         [Test]
-        public void AskingForCurrentTimeContainsCurrentTime()
+        [ExpectedException(typeof(ArgumentNullException))]
+        [SuppressMessage(&quot;ReSharper&quot;, &quot;AssignNullToNotNullAttribute&quot;)]
+        public void RegisteringNullSubsystemGeneratesNullRef()
         {
-            var now = DateTime.Now;
-            var reply = GetReply(&quot;What time is it?&quot;);
-
-            var expected = now.ToString(&quot;t&quot;);
-            Assert.That(reply.Contains(expected),
-                        $&quot;Asked for current time at {now} and got a reply of &#39;{reply}&#39; which did not contain {expected}&quot;);
+            AlfredSubsystem system = null;
+            _alfred.Register(system);
         }
-        /// &lt;summary&gt;
-        ///     Asserts that when working through redirects, the engine can get the deepest redirect template.
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        ///     Test for ALF-10
-        /// &lt;/remarks&gt;
-        [Test]
-        public void AskingForCurrentTimeRevealsRedirectedTemplate()
-        {
-            var reply = GetReplyTemplate(&quot;What time is it?&quot;);
 
-            Assert.That(reply.Contains(&quot;&lt;date&quot;), $&quot;The reply template of {reply} did not contain a date tag. Redirects are likely broken.&quot;);
+        [Test]
+        public void RegisteringWidgetAtInitializeAndShutdownLeavesOneCopyInListAtReinitialize()
+        {
+            var testModule = new AlfredTestModule();
+
+            var textWidget = new TextWidget();
+            testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
+            testModule.WidgetsToRegisterOnShutdown.Add(textWidget);
+
+            _alfred.Register(_subsystem);
+            _subsystem.AddAutoRegisterPage(_page);
+            _page.Register(testModule);
+
+            _alfred.Initialize();
+            _alfred.Update();
+            _alfred.Shutdown();
+            _alfred.Initialize();
+            _alfred.Update();
+
+            Assert.IsNotNull(testModule.Widgets, &quot;testModule.Widgets was null&quot;);
+            Assert.AreEqual(1,
+                            testModule.Widgets.Count(),
+                            &quot;Widgets were not properly cleared from list after re-initialize&quot;);
+
+        }
+
+        [Test]
+        public void RemoveAlfredConsole()
+        {
+            _alfred.Console = null;
+
+            Assert.IsNull(_alfred.Console, &quot;Could not remove Alfred&#39;s console&quot;);
+        }
+
+        [Test]
+        public void SetConsole()
+        {
+            Assert.IsNotNull(_alfred.Console, &quot;Alfred&#39;s console was null after creation&quot;);
+        }
+
+        [Test]
+        public void ShutdownCreatesEventsInLog()
+        {
+            // We need to be online to shut down or else we&#39;ll get errors
+            _alfred.Initialize();
+
+            var console = _alfred.Console;
+            Assert.NotNull(console, &quot;Console was not present&quot;);
+
+            var numEvents = console.Events.Count();
+
+            _alfred.Shutdown();
+
+            Assert.Greater(console.Events.Count(), numEvents, &quot;Shutting Alfred down did not create any log entries.&quot;);
+        }
+
+        [Test]
+        public void ShutdownWhileOfflineErrors()
+        {
+            try
+            {
+                _alfred.Shutdown();
+
+                Assert.Fail(&quot;Expected an InvalidOperationException since Alfred was already offline.&quot;);
+
+            }
+            catch (InvalidOperationException)
+            {
+                // No action
+            }
+
+            // Assert that we&#39;re now offline.
+            Assert.AreEqual(_alfred.Status, AlfredStatus.Offline);
+        }
+
+        [Test]
+        public void ShuttingDownShutsDownComponents()
+        {
+            _alfred.Register(new AlfredCoreSubsystem(_alfred.PlatformProvider));
+
+            _alfred.Initialize();
+            _alfred.Shutdown();
+
+            foreach (var item in _alfred.Subsystems)
+            {
+                Assert.AreEqual(AlfredStatus.Offline,
+                                item.Status,
+                                $&quot;{item.NameAndVersion} was not shut down during alfred shut down.&quot;);
+            }
+        }
+
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void UpdateWithNoModulesWhileOfflineStillGeneratesError()
+        {
+            _alfred.Update();
         }
     }
+
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[43,9,43,10,1],[44,13,44,48,1],[45,13,45,44,1],[46,9,46,10,1],[60,9,60,10,1],[61,13,61,52,1],[63,13,63,52,1],[64,9,64,10,1],[72,9,72,10,1],[73,13,73,62,1],[75,13,76,87,1],[77,9,77,10,1],[86,9,86,10,1],[87,13,87,46,1],[89,13,89,79,1],[91,13,91,42,1],[92,9,92,10,1],[99,9,99,10,1],[100,13,100,92,1],[101,9,101,10,1],[105,9,105,10,1],[106,13,106,109,1],[107,9,107,10,1],[111,9,111,10,1],[112,13,112,104,1],[113,9,113,10,1],[117,9,117,10,1],[118,13,118,128,1],[119,9,119,10,1],[123,9,123,10,1],[124,13,124,128,1],[125,9,125,10,1],[129,9,129,10,1],[130,13,130,103,1],[131,9,131,10,1],[139,9,139,10,1],[141,13,141,60,1],[144,13,144,59,1],[145,13,145,55,1],[146,13,146,29,1],[147,9,147,10,1],[156,9,156,10,1],[157,13,157,46,1],[158,13,158,38,1],[159,9,159,10,1],[163,9,163,10,1],[165,13,165,57,1],[167,13,167,122,1],[168,9,168,10,1],[172,9,172,10,1],[173,13,173,39,1],[175,13,175,121,1],[176,9,176,10,1],[181,9,181,10,1],[182,13,182,63,1],[183,9,183,10,1],[194,9,194,10,1],[195,13,195,63,1],[196,9,196,10,1],[203,9,203,10,1],[204,13,204,52,1],[206,13,207,127,1],[208,9,208,10,1],[218,9,218,10,1],[219,13,219,36,1],[220,13,220,54,1],[222,13,222,46,1],[223,13,224,122,1],[225,9,225,10,1],[235,9,235,10,1],[236,13,236,36,1],[237,13,237,54,1],[239,13,239,46,1],[240,13,241,123,1],[242,9,242,10,1],[251,9,251,10,1],[252,13,252,62,1],[254,13,254,141,1],[255,9,255,10,1]]);
+      highlightRanges([[142,17,142,108,0],[144,13,144,14,0],[188,9,188,10,0],[197,9,197,10,0],[214,9,214,10,0],[223,9,223,10,0],[288,17,288,104,0],[290,13,290,14,0],[321,9,321,10,0],[39,9,39,10,1],[40,13,40,57,1],[41,13,41,45,1],[42,13,42,51,1],[44,13,44,70,1],[45,13,45,85,1],[46,9,46,10,1],[59,9,59,10,1],[60,13,60,81,1],[62,13,63,60,1],[63,75,65,43,1],[65,69,65,71,1],[67,13,69,99,1],[70,9,70,10,1],[74,9,74,10,1],[75,13,75,34,1],[77,13,77,66,1],[78,9,78,10,1],[82,9,82,10,1],[83,13,83,67,1],[84,9,84,10,1],[88,9,88,10,1],[89,13,89,119,1],[90,9,90,10,1],[94,9,94,10,1],[95,13,95,36,1],[97,13,97,34,1],[100,9,100,10,1],[107,9,107,10,1],[108,13,108,67,1],[109,9,109,10,1],[113,9,113,10,1],[114,13,114,34,1],[115,13,115,32,1],[117,13,117,67,1],[118,9,118,10,1],[122,9,122,10,1],[123,13,123,43,1],[124,13,124,64,1],[126,13,126,52,1],[128,13,128,34,1],[130,13,130,118,1],[131,9,131,10,1],[135,9,135,10,1],[136,13,136,34,1],[139,13,139,14,1],[140,17,140,38,1],[145,13,145,46,1],[146,13,146,14,1],[148,13,148,14,1],[151,13,151,66,1],[152,9,152,10,1],[156,9,156,10,1],[157,13,157,81,1],[159,13,159,34,1],[161,13,161,20,1],[161,34,161,52,1],[161,22,161,30,1],[162,13,162,14,1],[163,17,165,102,1],[166,13,166,14,1],[161,31,161,33,1],[167,9,167,10,1],[171,9,171,10,1],[172,13,172,43,1],[173,13,173,64,1],[175,13,175,52,1],[177,13,177,97,1],[179,13,179,115,1],[180,9,180,10,1],[185,9,185,10,1],[186,13,186,34,1],[187,13,187,81,1],[193,9,193,10,1],[194,13,194,81,1],[196,13,196,30,1],[202,9,202,10,1],[203,13,203,53,1],[205,13,205,47,1],[206,13,206,70,1],[207,13,207,70,1],[209,13,209,42,1],[210,13,210,51,1],[211,13,211,40,1],[213,13,213,34,1],[220,9,220,10,1],[221,13,221,43,1],[222,13,222,38,1],[227,9,227,10,1],[228,13,228,53,1],[230,13,230,47,1],[231,13,231,70,1],[232,13,232,68,1],[234,13,234,42,1],[235,13,235,51,1],[236,13,236,40,1],[238,13,238,34,1],[239,13,239,30,1],[240,13,240,32,1],[241,13,241,34,1],[242,13,242,30,1],[244,13,244,81,1],[245,13,247,96,1],[249,9,249,10,1],[253,9,253,10,1],[254,13,254,36,1],[256,13,256,81,1],[257,9,257,10,1],[261,9,261,10,1],[262,13,262,91,1],[263,9,263,10,1],[267,9,267,10,1],[269,13,269,34,1],[271,13,271,43,1],[272,13,272,64,1],[274,13,274,52,1],[276,13,276,32,1],[278,13,278,119,1],[279,9,279,10,1],[283,9,283,10,1],[285,13,285,14,1],[286,17,286,36,1],[291,13,291,46,1],[292,13,292,14,1],[294,13,294,14,1],[297,13,297,67,1],[298,9,298,10,1],[302,9,302,10,1],[303,13,303,81,1],[305,13,305,34,1],[306,13,306,32,1],[308,13,308,20,1],[308,34,308,52,1],[308,22,308,30,1],[309,13,309,14,1],[310,17,312,102,1],[313,13,313,14,1],[308,31,308,33,1],[314,9,314,10,1],[319,9,319,10,1],[320,13,320,30,1],[63,60,63,75,1],[65,43,65,69,1]]);
     </script>
   </body>
 </html>

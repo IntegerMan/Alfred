@@ -2,206 +2,181 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\delegatingchatprovider.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\alfredbootstrapper.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// DelegatingChatProvider.cs
+// AlfredBootstrapper.cs
 // 
-// Created on:      08/11/2015 at 10:41 PM
-// Last Modified:   08/11/2015 at 11:08 PM
+// Created on:      08/09/2015 at 5:10 PM
+// Last Modified:   08/09/2015 at 5:29 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 
 namespace MattEland.Ani.Alfred.Core
 {
     /// &lt;summary&gt;
-    ///     A chat provider that intercepts responses before they get to the user and optionally executes/routes commands on
-    ///     behalf of Alfred. This lets us decorate an existing IChatProvider and route responses both to submodules and to the
-    ///     user.
+    ///     A utility class used for instantiating the Alfred Framework
     /// &lt;/summary&gt;
-    /// &lt;remarks&gt;
-    ///     This supports INotifyPropertyChanged to enable data binding
-    /// &lt;/remarks&gt;
-    internal sealed class DelegatingChatProvider : IChatProvider, INotifyPropertyChanged
+    public sealed class AlfredBootstrapper
     {
-        [NotNull]
-        private readonly IAlfred _alfred;
-
-        [NotNull]
-        private readonly IChatProvider _chatProvider;
-
         [CanBeNull]
-        private string _lastInput;
+        private IConsole _console;
 
-        private UserStatementResponse _lastResponse;
+        [NotNull]
+        private IPlatformProvider _platformProvider;
+
+        [NotNull]
+        private IStatusController _statusController;
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;DelegatingChatProvider&quot; /&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredBootstrapper&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;chatProvider&quot;&gt;The chat provider.&lt;/param&gt;
-        /// &lt;param name=&quot;alfred&quot;&gt;The alfred instance.&lt;/param&gt;
-        public DelegatingChatProvider([NotNull] IChatProvider chatProvider, [NotNull] IAlfred alfred)
+        public AlfredBootstrapper() : this(new SimplePlatformProvider(), new AlfredStatusController(), null)
         {
-            //- Validate for Sanity
-            if (chatProvider == null)
-            {
-                throw new ArgumentNullException(nameof(chatProvider));
-            }
-            if (alfred == null)
-            {
-                throw new ArgumentNullException(nameof(alfred));
-            }
-
-            //- Store our references
-            _chatProvider = chatProvider;
-            _alfred = alfred;
-
-            // Take delegated values as the last values from the chat provider
-            _lastInput = chatProvider.LastInput;
-            _lastResponse = chatProvider.LastResponse;
         }
 
         /// &lt;summary&gt;
-        ///     Gets the chat provider.
+        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredBootstrapper&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The chat provider.&lt;/value&gt;
+        /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
+        public AlfredBootstrapper([NotNull] IPlatformProvider platformProvider)
+            : this(platformProvider, new AlfredStatusController(), null)
+        {
+        }
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredBootstrapper&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;statusController&quot;&gt;The status controller.&lt;/param&gt;
+        public AlfredBootstrapper([NotNull] IStatusController statusController)
+            : this(new SimplePlatformProvider(), statusController, null)
+        {
+        }
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredBootstrapper&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
+        /// &lt;param name=&quot;statusController&quot;&gt;The status controller.&lt;/param&gt;
+        public AlfredBootstrapper([NotNull] IPlatformProvider platformProvider,
+                                  [NotNull] IStatusController statusController)
+            : this(platformProvider, statusController, null)
+        {
+        }
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredBootstrapper&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
+        /// &lt;param name=&quot;statusController&quot;&gt;The status controller.&lt;/param&gt;
+        /// &lt;param name=&quot;console&quot;&gt;The console.&lt;/param&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;
+        /// &lt;/exception&gt;
+        public AlfredBootstrapper([NotNull] IPlatformProvider platformProvider,
+                                  [NotNull] IStatusController statusController,
+                                  [CanBeNull] IConsole console)
+        {
+            if (platformProvider == null)
+            {
+                throw new ArgumentNullException(nameof(platformProvider));
+            }
+            if (statusController == null)
+            {
+                throw new ArgumentNullException(nameof(statusController));
+            }
+            _console = console;
+            _platformProvider = platformProvider;
+            _statusController = statusController;
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the platform provider.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The platform provider.&lt;/value&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
         [NotNull]
-        public IChatProvider ChatProvider
+        public IPlatformProvider PlatformProvider
         {
             [DebuggerStepThrough]
             get
-            { return _chatProvider; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the alfred instance.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The alfred instance.&lt;/value&gt;
-        [NotNull]
-        public IAlfred Alfred
-        {
+            { return _platformProvider; }
             [DebuggerStepThrough]
-            get
-            { return _alfred; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles a user statement.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;userInput&quot;&gt;The user input.&lt;/param&gt;
-        /// &lt;returns&gt;The response to the user statement&lt;/returns&gt;
-        public UserStatementResponse HandleUserStatement(string userInput)
-        {
-            //+ Delegate the actual work of processing the input to a chat provider
-            var response = ChatProvider.HandleUserStatement(userInput);
-
-            //+ Route this to Alfred&#39;s Subsystems to handle as a command
-            var result = CommandDispatcher.HandleChatCommand(response, Alfred);
-
-            if (!string.IsNullOrWhiteSpace(result.RedirectToChat))
-            {
-                //! Do a recursive call to HandleUserInput with the new redirect
-                response = HandleUserStatement(result.RedirectToChat);
-            }
-            else
-            {
-                // We&#39;ll stick our new values into the response as well so the command can change things
-                response = new UserStatementResponse(result.NewLastInput,
-                                                     result.NewLastOutput,
-                                                     response.Template,
-                                                     response.Command);
-            }
-
-            //- Update and return our values so the consumer can check or bind to this instance.
-            LastInput = response.UserInput;
-            LastResponse = response;
-
-            return response;
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the last response from the system.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The last response.&lt;/value&gt;
-        public UserStatementResponse LastResponse
-        {
-            get { return _lastResponse; }
             set
             {
-                if (value.Equals(_lastResponse))
+                if (value == null)
                 {
-                    return;
+                    throw new ArgumentNullException(nameof(value));
                 }
-                _lastResponse = value;
-                OnPropertyChanged(nameof(LastResponse));
+                _platformProvider = value;
             }
         }
 
         /// &lt;summary&gt;
-        ///     Gets the last input from the user.
+        ///     Gets or sets the status controller.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The last input.&lt;/value&gt;
-        public string LastInput
+        /// &lt;value&gt;The status controller.&lt;/value&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        [NotNull]
+        public IStatusController StatusController
         {
-            get { return _lastInput; }
-            private set
+            [DebuggerStepThrough]
+            get
+            { return _statusController; }
+            [DebuggerStepThrough]
+            set
             {
-                if (value == _lastInput)
+                if (value == null)
                 {
-                    return;
+                    throw new ArgumentNullException(nameof(value));
                 }
-                _lastInput = value;
-                OnPropertyChanged(nameof(LastInput));
+                _statusController = value;
             }
         }
 
         /// &lt;summary&gt;
-        /// Does an initial greeting to the user without requiring any input. This should set LastInput to null.
+        ///     Gets or sets the console.
         /// &lt;/summary&gt;
-        public void DoInitialGreeting()
+        /// &lt;value&gt;The console.&lt;/value&gt;
+        [CanBeNull]
+        public IConsole Console
         {
-            // Send an event to the chat system as if the user typed it. The data files will
-            // handle it from there as far as generating proper content.
-            const string StartupTopic = &quot;EVT_STARTUP&quot;;
-            HandleUserStatement(StartupTopic);
-
-            // Clear out any evidence of simulating the user talking to the chat system
-            LastInput = null;
+            [DebuggerStepThrough]
+            get
+            { return _console; }
+            [DebuggerStepThrough]
+            set
+            { _console = value; }
         }
 
         /// &lt;summary&gt;
-        ///     Occurs when a property changes.
+        ///     Creates a new instance of Alfred using this instance&#39;s properties and returns it.
         /// &lt;/summary&gt;
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// &lt;summary&gt;
-        ///     Called when a property changes and raises the property changed event
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;propertyName&quot;&gt;Name of the property.&lt;/param&gt;
-        [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged(string propertyName)
+        /// &lt;returns&gt;The Alfred instance.&lt;/returns&gt;
+        [NotNull]
+        public AlfredApplication Create()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            var alfred = new AlfredApplication(_platformProvider, _statusController);
+            alfred.Console = _console;
+
+            return alfred;
         }
     }
-
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[46,9,46,102,0],[47,9,47,10,0],[49,13,49,38,0],[50,13,50,14,0],[51,17,51,71,0],[53,13,53,32,0],[54,13,54,14,0],[55,17,55,65,0],[59,13,59,42,0],[60,13,60,30,0],[63,13,63,49,0],[64,13,64,55,0],[65,9,65,10,0],[76,13,76,14,0],[76,15,76,36,0],[76,37,76,38,0],[88,13,88,14,0],[88,15,88,30,0],[88,31,88,32,0],[97,9,97,10,0],[99,13,99,72,0],[102,13,102,80,0],[104,13,104,67,0],[105,13,105,14,0],[107,17,107,71,0],[108,13,108,14,0],[110,13,110,14,0],[112,17,115,72,0],[116,13,116,14,0],[119,13,119,44,0],[120,13,120,37,0],[122,13,122,29,0],[123,9,123,10,0],[131,17,131,18,0],[131,19,131,40,0],[131,41,131,42,0],[133,13,133,14,0],[134,17,134,49,0],[135,17,135,18,0],[136,21,136,28,0],[138,17,138,39,0],[139,17,139,57,0],[140,13,140,14,0],[149,17,149,18,0],[149,19,149,37,0],[149,38,149,39,0],[151,13,151,14,0],[152,17,152,41,0],[153,17,153,18,0],[154,21,154,28,0],[156,17,156,36,0],[157,17,157,54,0],[158,13,158,14,0],[165,9,165,10,0],[169,13,169,47,0],[172,13,172,30,0],[173,9,173,10,0],[186,9,186,10,0],[187,13,187,87,0],[188,9,188,10,0]]);
+      highlightRanges([[45,15,45,73,0],[46,9,46,10,0],[47,9,47,10,0],[54,15,54,73,0],[55,9,55,10,0],[56,9,56,10,0],[65,15,65,61,0],[66,9,66,10,0],[67,9,67,10,0],[82,13,82,14,0],[83,17,83,75,0],[86,13,86,14,0],[87,17,87,75,0],[104,13,104,14,0],[104,15,104,40,0],[104,41,104,42,0],[107,13,107,14,0],[108,17,108,35,0],[109,17,109,18,0],[110,21,110,68,0],[112,17,112,43,0],[113,13,113,14,0],[126,13,126,14,0],[126,15,126,40,0],[126,41,126,42,0],[129,13,129,14,0],[130,17,130,35,0],[131,17,131,18,0],[132,21,132,68,0],[134,17,134,43,0],[135,13,135,14,0],[147,13,147,14,0],[147,15,147,31,0],[147,32,147,33,0],[150,13,150,14,0],[150,15,150,32,0],[150,33,150,34,0],[36,39,36,109,1],[37,9,37,10,1],[38,9,38,10,1],[77,9,79,64,1],[80,9,80,10,1],[81,13,81,42,1],[85,13,85,42,1],[89,13,89,32,1],[90,13,90,50,1],[91,13,91,50,1],[92,9,92,10,1],[159,9,159,10,1],[160,13,160,86,1],[161,13,161,39,1],[163,13,163,27,1],[164,9,164,10,1]]);
     </script>
   </body>
 </html>

@@ -2,48 +2,45 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\conditiontaghandler.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\gendertaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// ConditionTagHandler.cs
+// GenderTagHandler.cs
 // 
-// Created on:      08/12/2015 at 10:42 PM
-// Last Modified:   08/14/2015 at 2:35 PM
+// Created on:      08/12/2015 at 10:45 PM
+// Last Modified:   08/14/2015 at 6:14 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Xml;
-
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Chat.Aiml.Normalize;
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// &lt;summary&gt;
-    /// This is an AimlTagHandler for the &quot;condition&quot; tag that is used for variable and branch evaluation
+    ///     A tag handler for the AIML &quot;gender&quot; tag that subsitutes gender pronouns for their equivalent
+    ///     value in the chat engine&#39;s GenderSubstitutions
+    /// 
+    ///     See &quot;http://www.alicebot.org/TR/2005/WD-aiml/#section-gender&quot; for more on the gender tag.
     /// &lt;/summary&gt;
-    [HandlesAimlTag(&quot;ConditionTagHandler&quot;)]
-    public class ConditionTagHandler : AimlTagHandler
+    [HandlesAimlTag(&quot;gender&quot;)]
+    public class GenderTagHandler : AimlTagHandler
     {
         /// &lt;summary&gt;
-        /// Initializes a new instance of the &lt;see cref=&quot;ConditionTagHandler&quot; /&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
-        public ConditionTagHandler([NotNull] TagHandlerParameters parameters)
+        public GenderTagHandler([NotNull] TagHandlerParameters parameters)
             : base(parameters)
         {
-            IsRecursive = false;
         }
 
         /// &lt;summary&gt;
@@ -52,190 +49,39 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// &lt;returns&gt;The processed output&lt;/returns&gt;
         protected override string ProcessChange()
         {
-            //- Work with an node instead of a node.
-            var element = TemplateElement;
-            if (element == null)
-            {
-                return null;
-            }
+            /* Note: this tag handler uses recursion to recursively iterate through 
+            InnerText and find text that can be evaluated using substitution */
 
-            //- Ensure we&#39;re working with the right node type
-            if (!element.Name.Matches(&quot;ConditionTagHandler&quot;))
+            //- Ensure this is the correct tag
+            if (TemplateNode.Name.Matches(&quot;gender&quot;))
             {
                 return string.Empty;
             }
 
-            /* There are three different scenarios depending on what attributes are present on the ConditionTagHandler.
-            This will work by checking the node&#39;s name and value attributes */
-
-            // In this case no name was provided on the ConditionTagHandler so the children will provide the rules
-            if (!element.HasAttribute(&quot;name&quot;))
+            // If we have text inside the gender tag, just transform and return that
+            if (TemplateNode.InnerText.HasText())
             {
-                return EvaluateLooseConditionWithChildNodes(element);
+                /* Substitute occurrences of gender words with other values. This typically 
+                   inverts the gender on gender pronouns (&quot;he&quot; / &quot;she&quot; / etc.) */
+
+                var substitutions = Librarian.GenderSubstitutions;
+                return TextSubstitutionHelper.Substitute(substitutions,
+                                                              TemplateNode.InnerText);
             }
 
-            // Grab the attribute values
-            var name = element.GetAttribute(&quot;name&quot;);
-            var variableName = User.UserVariables.GetValue(name).NonNull();
+            // Apply an AIML &quot;star&quot; tag and store the results as our inner text
+            var star = BuildStarTagHandler();
+            TemplateNode.InnerText = star.Transform().NonNull();
 
-            // Handle a simple case with a single node with name and value attributes
-            if (element.HasAttribute(&quot;value&quot;))
-            {
-                return EvaluateSimpleConditionNode(element, name, variableName);
-            }
-
-            // In this case we have an node with a name, but the child li elements have the values
-            return EvaluateConditionWithNameAndChildNodes(element, variableName);
+            //! If we still have text, we&#39;ll need to use recursion to evaluate our new value
+            return TemplateNode.InnerText.HasText() ? ProcessChange() : string.Empty;
         }
 
-        /// &lt;summary&gt;
-        /// Handles the scenario where you have a ConditionTagHandler node without name or value. In that case, the first
-        /// matching child node is used and many different conditions can be evaluated.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;node&quot;&gt;The node.&lt;/param&gt;
-        /// &lt;returns&gt;System.String.&lt;/returns&gt;
-        private string EvaluateLooseConditionWithChildNodes([NotNull] XmlNode node)
-        {
-            if (node == null)
-            {
-                throw new ArgumentNullException(nameof(node));
-            }
-
-            foreach (XmlElement xmlNode in node.ChildNodes)
-            {
-                //- Ensure we&#39;re looking at valid li&#39;s
-                if (xmlNode == null || !xmlNode.Name.Matches(&quot;li&quot;))
-                {
-                    continue;
-                }
-
-                // If it&#39;s an li with no name and value, this is our default option and it should be taken
-                if (!xmlNode.HasAttribute(&quot;name&quot;) || !xmlNode.HasAttribute(&quot;value&quot;))
-                {
-                    return xmlNode.InnerXml;
-                }
-
-                //- Grab our name / value
-                var name = xmlNode.GetAttribute(&quot;name&quot;).NonNull();
-                var value = xmlNode.GetAttribute(&quot;value&quot;).NonNull();
-
-                // Check to see if we match the ConditionTagHandler. If we do, use that value
-                var input = User.UserVariables.GetValue(name).NonNull();
-                if (IsRegexMatch(input, value))
-                {
-                    return xmlNode.InnerXml;
-                }
-            }
-
-            //- If we got here, no matches were found
-            return string.Empty;
-        }
-
-        /// &lt;summary&gt;
-        /// Evaluates the ConditionTagHandler with name and child nodes.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;node&quot;&gt;The node.&lt;/param&gt;
-        /// &lt;param name=&quot;variableName&quot;&gt;The variable name.&lt;/param&gt;
-        /// &lt;returns&gt;System.String.&lt;/returns&gt;
-        private static string EvaluateConditionWithNameAndChildNodes([NotNull] XmlNode node, string variableName)
-        {
-            if (node == null)
-            {
-                throw new ArgumentNullException(nameof(node));
-            }
-
-            // Select XmlElements from the children for each &quot;li&quot; choice
-            foreach (var child in from XmlElement xmlNode in node.ChildNodes
-                                  where xmlNode != null
-                                  where xmlNode.Name.Matches(&quot;li&quot;)
-                                  select xmlNode)
-            {
-                //- Sanity check
-                Debug.Assert(child?.Attributes != null);
-
-                // If it has a value node, we&#39;ll compare it to our variableName value
-                if (child.HasAttribute(&quot;value&quot;))
-                {
-                    var childValue = child.GetAttribute(&quot;value&quot;);
-
-                    // Is this the node we&#39;re looking for?
-                    if (IsRegexMatch(variableName, childValue))
-                    {
-                        return child.InnerXml;
-                    }
-                }
-                else
-                {
-                    // It&#39;s just a blank li with no value; let&#39;s take it as a default / fallback.
-                    return child.InnerXml;
-                }
-            }
-
-            return string.Empty;
-        }
-
-        /// &lt;summary&gt;
-        /// Evaluates a simple ConditionTagHandler node for a ConditionTagHandler tag with both a name and a value.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;element&quot;&gt;The node.&lt;/param&gt;
-        /// &lt;param name=&quot;name&quot;&gt;The name.&lt;/param&gt;
-        /// &lt;param name=&quot;variableName&quot;&gt;The variable name.&lt;/param&gt;
-        /// &lt;returns&gt;The results of the ConditionTagHandler or string.Empty if the ConditionTagHandler failed&lt;/returns&gt;
-        private static string EvaluateSimpleConditionNode([NotNull] XmlElement element, string name, string variableName)
-        {
-            if (element == null)
-            {
-                throw new ArgumentNullException(nameof(element));
-            }
-
-            // Grab our ConditionTagHandler&#39;s value
-            var value = element.GetAttribute(&quot;value&quot;);
-
-            //- Early exit for no value
-            if (name.IsNullOrWhitespace() || value.IsNullOrWhitespace())
-            {
-                return string.Empty;
-            }
-
-            // Build and evaluate a regex to see if our value matches the value
-            var isMatch = IsRegexMatch(variableName, value);
-
-            // If the match succeeded, use the contents
-            return isMatch ? element.InnerXml : string.Empty;
-        }
-
-        /// &lt;summary&gt;
-        /// Determines whether the two values match according to a test regex.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;expected&quot;&gt;The variableName.&lt;/param&gt;
-        /// &lt;param name=&quot;value&quot;&gt;The value.&lt;/param&gt;
-        /// &lt;returns&gt;True if the regex matched otherwise false.&lt;/returns&gt;
-        private static bool IsRegexMatch(string expected, string value)
-        {
-            var regex = BuildValidationRegex(value);
-
-            return regex.IsMatch(expected.NonNull());
-        }
-
-        /// &lt;summary&gt;
-        /// Builds a regular expression for validation purposes.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input value.&lt;/param&gt;
-        /// &lt;returns&gt;A regular expression&lt;/returns&gt;
-        [NotNull]
-        private static Regex BuildValidationRegex(string input)
-        {
-            const RegexOptions Options = RegexOptions.IgnoreCase;
-
-            var regex = new Regex(input.NonNull().Replace(&quot; &quot;, @&quot;\s&quot;).Replace(&quot;*&quot;, @&quot;[\sA-Z0-9]+&quot;),
-                                  Options);
-            return regex;
-        }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[34,15,34,31,0],[35,9,35,10,0],[36,13,36,33,0],[37,9,37,10,0],[44,9,44,10,0],[46,13,46,43,0],[47,13,47,33,0],[48,13,48,14,0],[49,17,49,29,0],[53,13,53,62,0],[54,13,54,14,0],[55,17,55,37,0],[62,13,62,47,0],[63,13,63,14,0],[64,17,64,70,0],[68,13,68,53,0],[69,13,69,76,0],[72,13,72,47,0],[73,13,73,14,0],[74,17,74,81,0],[78,13,78,82,0],[79,9,79,10,0],[88,9,88,10,0],[89,13,89,30,0],[90,13,90,14,0],[91,17,91,63,0],[94,13,94,20,0],[94,44,94,59,0],[94,22,94,40,0],[95,13,95,14,0],[97,17,97,68,0],[98,17,98,18,0],[99,21,99,30,0],[103,17,103,85,0],[104,17,104,18,0],[105,21,105,45,0],[109,17,109,67,0],[110,17,110,69,0],[113,17,113,73,0],[114,17,114,48,0],[115,17,115,18,0],[116,21,116,45,0],[118,13,118,14,0],[94,41,94,43,0],[121,13,121,33,0],[122,9,122,10,0],[131,9,131,10,0],[132,13,132,30,0],[133,13,133,14,0],[134,17,134,63,0],[138,13,138,20,0],[138,35,139,41,0],[139,56,140,41,0],[140,67,141,49,0],[138,22,138,31,0],[142,13,142,14,0],[144,17,144,57,0],[147,17,147,49,0],[148,17,148,18,0],[149,21,149,66,0],[152,21,152,64,0],[153,21,153,22,0],[154,25,154,47,0],[156,17,156,18,0],[158,17,158,18,0],[160,21,160,43,0],[162,13,162,14,0],[138,32,138,34,0],[164,13,164,33,0],[165,9,165,10,0],[175,9,175,10,0],[176,13,176,33,0],[177,13,177,14,0],[178,17,178,66,0],[182,13,182,55,0],[185,13,185,73,0],[186,13,186,14,0],[187,17,187,37,0],[191,13,191,61,0],[194,13,194,62,0],[195,9,195,10,0],[204,9,204,10,0],[205,13,205,53,0],[207,13,207,54,0],[208,9,208,10,0],[217,9,217,10,0],[220,13,221,44,0],[222,13,222,26,0],[223,9,223,10,0],[139,41,139,56,0],[140,41,140,67,0]]);
+      highlightRanges([[32,15,32,31,0],[33,9,33,10,0],[34,9,34,10,0],[41,9,41,10,0],[46,13,46,53,0],[47,13,47,14,0],[48,17,48,37,0],[52,13,52,50,0],[53,13,53,14,0],[57,17,57,67,0],[58,17,59,87,0],[63,13,63,46,0],[64,13,64,65,0],[67,13,67,86,0],[68,9,68,10,0]]);
     </script>
   </body>
 </html>

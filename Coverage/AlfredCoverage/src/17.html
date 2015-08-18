@@ -2,395 +2,236 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\alfredcomponent.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\chat\chattestsbase.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlfredComponent.cs
+// ChatTestsBase.cs
 // 
-// Created on:      08/07/2015 at 10:53 PM
-// Last Modified:   08/07/2015 at 11:43 PM
-// Original author: Matt Eland
+// Created on:      08/17/2015 at 9:57 PM
+// Last Modified:   08/17/2015 at 10:02 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
+using System.Diagnostics.CodeAnalysis;
+using System.Xml;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Chat;
+using MattEland.Ani.Alfred.Chat.Aiml;
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Common;
+using MattEland.Ani.Alfred.Core.Modules;
 
-namespace MattEland.Ani.Alfred.Core
+using NUnit.Framework;
+
+namespace MattEland.Ani.Alfred.Tests.Chat
 {
+
     /// &lt;summary&gt;
-    ///     An abstract class containing most common shared functionality between Subsystems and Modules
+    /// An abstract class providing testing capabilities related to chats and commanding
     /// &lt;/summary&gt;
-    public abstract class AlfredComponent : INotifyPropertyChanged
+    [SuppressMessage(&quot;ReSharper&quot;, &quot;NotNullMemberIsNotInitialized&quot;)]
+    [SuppressMessage(&quot;ReSharper&quot;, &quot;ExceptionNotDocumented&quot;)]
+    public class ChatTestsBase
     {
-        [CanBeNull]
+        private IChatProvider _chat;
+
+        [NotNull]
         private IAlfred _alfred;
+        private AlfredChatSubsystem _chatSubsystem;
+        private AlfredCoreSubsystem _coreSubsystem;
 
-        private AlfredStatus _status;
+        [NotNull]
+        private User _user;
 
-        [CanBeNull, ItemNotNull]
-        private IEnumerable&lt;IAlfredComponent&gt; _childrenOnShutdown;
-
-        /// &lt;summary&gt;
-        /// The logging console
-        /// &lt;/summary&gt;
-        [CanBeNull]
-        private IConsole _console;
-
-        /// &lt;summary&gt;
-        /// Initializes a new instance of the &lt;see cref=&quot;AlfredComponent&quot;/&gt; class.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;console&quot;&gt;The console.&lt;/param&gt;
-        protected AlfredComponent([CanBeNull] IConsole console = null)
-        {
-            _console = console;
-        }
-
-        /// &lt;summary&gt;
-        /// Gets the alfred instance associated with this component.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The alfred instance.&lt;/value&gt;
-        [CanBeNull]
-        public IAlfred AlfredInstance
+        [NotNull]
+        public User User
         {
             [DebuggerStepThrough]
             get
-            { return _alfred; }
+            { return _user; }
         }
 
-        /// &lt;summary&gt;
-        ///     Gets the name and version of the Module.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The name and version.&lt;/value&gt;
-        [NotNull]
-        public string NameAndVersion
+        public AlfredCoreSubsystem CoreSubsystem
         {
-            get { return string.Format(CultureInfo.CurrentCulture, &quot;{0} {1}&quot;, Name, Version); }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the version of the module.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The version.&lt;/value&gt;
-        [CanBeNull]
-        public virtual string Version
-        {
+            [DebuggerStepThrough]
             get
-            {
-                // We&#39;ll base this off of the AssemblyVersion.
-                return this.GetAssemblyVersion()?.ToString();
-            }
+            { return _coreSubsystem; }
+        }
+
+        public AlfredChatSubsystem ChatSubsystem
+        {
+            [DebuggerStepThrough]
+            get
+            { return _chatSubsystem; }
         }
 
         /// &lt;summary&gt;
-        ///     Gets the status of the Module.
+        /// Gets or sets the chat engine.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The status.&lt;/value&gt;
-        public AlfredStatus Status
+        /// &lt;value&gt;The chat engine.&lt;/value&gt;
+        [NotNull]
+        protected ChatEngine Engine { get; set; }
+
+        /// &lt;summary&gt;
+        /// Gets the chat provider.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The chat provider.&lt;/value&gt;
+        public IChatProvider Chat
         {
-            get { return _status; }
-            protected set
-            {
-                if (value != _status)
-                {
-                    _status = value;
-                    OnPropertyChanged(nameof(Status));
-                }
-            }
+            [DebuggerStepThrough]
+            get
+            { return _chat; }
         }
 
         /// &lt;summary&gt;
-        ///     Gets the name of the component.
+        ///     Asserts that the chat input gets a reply template with the specified ID.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The name of the component.&lt;/value&gt;
-        public abstract string Name { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets whether or not the component is visible to the user interface.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;Whether or not the component is visible.&lt;/value&gt;
-        public abstract bool IsVisible { get; }
-
-        /// &lt;summary&gt;
-        ///     Initializes the component.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;alfred&quot;&gt;The alfred framework.&lt;/param&gt;
-        /// &lt;exception cref=&quot;InvalidOperationException&quot;&gt;Already online when told to initialize.&lt;/exception&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;alfred&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        public virtual void Initialize([NotNull] IAlfred alfred)
+        /// &lt;param name=&quot;input&quot;&gt;The input.&lt;/param&gt;
+        /// &lt;param name=&quot;templateId&quot;&gt;The template identifier.&lt;/param&gt;
+        protected void AssertMessageGetsReplyTemplate(string input, string templateId)
         {
-            if (alfred == null)
-            {
-                throw new ArgumentNullException(nameof(alfred));
-            }
+            var template = GetReplyTemplate(input);
 
-            if (Status == AlfredStatus.Online)
-            {
-                var format = Resources.AlfredModule_InitializeAlreadyOnline.NonNull();
-                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture,
-                                                                  format,
-                                                                  NameAndVersion));
-            }
-
-            Status = AlfredStatus.Initializing;
-
-            _alfred = alfred;
-
-            // Reset our children collections so that other collections can be registered during shutdown
-            ClearChildCollections();
-
-            RegisterControls();
-
-            InitializeProtected(alfred);
-
-            // Pass on the message to the children
-            foreach (var child in Children)
-            {
-                child.Initialize(alfred);
-            }
-
-            Status = AlfredStatus.Online;
-
-            OnPropertyChanged(nameof(IsVisible));
+            AssertTemplateId(template, templateId);
         }
 
         /// &lt;summary&gt;
-        /// Allows components to define controls
+        ///     Asserts that the template identifier is found in the response template.
         /// &lt;/summary&gt;
-        protected virtual void RegisterControls()
+        /// &lt;param name=&quot;template&quot;&gt;The template.&lt;/param&gt;
+        /// &lt;param name=&quot;id&quot;&gt;The template identifier.&lt;/param&gt;
+        private static void AssertTemplateId([NotNull] string template, [NotNull] string id)
         {
+            var idString = $&quot;id=\&quot;{id.ToLowerInvariant()}\&quot;&quot;;
+
+            Assert.IsTrue(template.ToLowerInvariant().Contains(idString),
+                          $&quot;ID &#39;{idString}&#39; was not found. Template was: {template}&quot;);
         }
 
         /// &lt;summary&gt;
-        ///     Shuts down the component.
+        ///     Gets a reply from the chat system on a specified inquiry.
         /// &lt;/summary&gt;
-        /// &lt;exception cref=&quot;InvalidOperationException&quot;&gt;
-        ///     Already offline when told to shut down.
-        /// &lt;/exception&gt;
-        public virtual void Shutdown()
+        /// &lt;param name=&quot;text&quot;&gt;The inquiry text.&lt;/param&gt;
+        /// &lt;returns&gt;The reply&lt;/returns&gt;
+        [NotNull]
+        protected string GetReply([NotNull] string text)
         {
-            if (Status == AlfredStatus.Offline)
-            {
-                var format = Resources.AlfredComponent_ShutdownAlreadyOffline.NonNull();
-                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, format, NameAndVersion));
-            }
+            var response = GetResponse(text);
 
-            Status = AlfredStatus.Terminating;
+            Assert.IsNotNull(response.ResponseText, &quot;Response text was null&quot;);
 
-            // Pass on the message to the children
-            _childrenOnShutdown = Children.ToList();
-            foreach (var child in _childrenOnShutdown)
-            {
-                child?.Shutdown();
-            }
-
-            // Reset our children collections so that other collections can be registered during shutdown
-            ClearChildCollections();
-
-            // Tell the derived module that it&#39;s now time to do any special logic (e.g. registering widgets, shutting down resources, stopping timers, etc.)
-            ShutdownProtected();
-
-            Status = AlfredStatus.Offline;
-
-            OnPropertyChanged(nameof(IsVisible));
+            return response.ResponseText;
         }
 
         /// &lt;summary&gt;
-        /// Clears all child collections
+        /// Says the specified message to Alfred.
         /// &lt;/summary&gt;
-        protected virtual void ClearChildCollections()
+        /// &lt;param name=&quot;message&quot;&gt;The message.&lt;/param&gt;
+        protected void Say([NotNull] string message)
         {
+            GetResponse(message);
         }
 
         /// &lt;summary&gt;
-        ///     Handles updating the component as needed
+        ///     Gets the response to the chat message.
         /// &lt;/summary&gt;
-        /// &lt;exception cref=&quot;InvalidOperationException&quot;&gt;If this was called when Alfred was offline.&lt;/exception&gt;
-        public void Update()
+        /// &lt;param name=&quot;text&quot;&gt;The text.&lt;/param&gt;
+        /// &lt;returns&gt;The response&lt;/returns&gt;
+        private UserStatementResponse GetResponse([NotNull] string text)
         {
-            if (Status == AlfredStatus.Offline)
-            {
-                var message = string.Format(CultureInfo.CurrentCulture,
-                                            Resources.AlfredItemOfflineButToldToUpdate.NonNull(),
-                                            NameAndVersion);
-                throw new InvalidOperationException(message);
-            }
 
-            UpdateProtected();
+            var chatProvider = _alfred.ChatProvider;
+            Assert.NotNull(chatProvider, &quot;Alfred&#39;s chat provider was null when instructed to handle chat message&quot;);
 
-            // Pass on the message to the children
-            foreach (var child in Children)
-            {
-                child.Update();
-            }
+            var response = chatProvider.HandleUserStatement(text);
 
+            // Do some basic validity checks
+            Assert.NotNull(response, &quot;Response was null&quot;);
+            Assert.AreEqual(text, response.UserInput);
+            return response;
         }
 
         /// &lt;summary&gt;
-        ///     Updates the component
+        ///     Gets a reply from the chat system on a specified inquiry.
         /// &lt;/summary&gt;
-        protected virtual void UpdateProtected()
+        /// &lt;param name=&quot;text&quot;&gt;The inquiry text.&lt;/param&gt;
+        /// &lt;returns&gt;The reply&lt;/returns&gt;
+        [CanBeNull]
+        protected string GetReplyTemplate([CanBeNull] string text)
         {
+            var response = GetResponse(text);
+
+            Assert.IsNotNull(response, &quot;Alfred&#39;s response was null&quot;);
+            return response.Template;
         }
 
         /// &lt;summary&gt;
-        ///     A notification method that is invoked when initialization for Alfred is complete so the UI can be fully enabled or
-        ///     adjusted
+        ///     Initializes the chat system.
         /// &lt;/summary&gt;
-        public virtual void OnInitializationCompleted()
+        protected void InitChatSystem()
         {
-            // Pass on the message to the children
-            foreach (var child in Children)
-            {
-                child.OnInitializationCompleted();
-            }
+            var bootstrapper = new AlfredBootstrapper();
+            _alfred = bootstrapper.Create();
+
+            // Add Subsystems to alfred
+
+            _coreSubsystem = new AlfredCoreSubsystem(_alfred.PlatformProvider);
+            _alfred.Register(_coreSubsystem);
+
+            _chatSubsystem = new AlfredChatSubsystem(_alfred.PlatformProvider, _alfred.Console);
+            _alfred.Register(_chatSubsystem);
+
+            // Do some extra registration work with the chat engine as we want its components for testing
+            var chatHandler = _chatSubsystem.ChatHandler;
+            _chat = chatHandler;
+            Assert.IsNotNull(chatHandler.ChatEngine, &quot;Chat Engine was null&quot;);
+            Engine = chatHandler.ChatEngine;
+            _user = new User(&quot;Test User&quot;, Engine);
+
+            // Start Alfred - doesn&#39;t make sense to have a chat test that doesn&#39;t need Alfred online first.
+            _alfred.Initialize();
+            _alfred.Update();
         }
 
         /// &lt;summary&gt;
-        ///     A notification method that is invoked when shutdown for Alfred is complete so the UI can be fully enabled or
-        ///     adjusted
+        /// Gets the alfred framework.
         /// &lt;/summary&gt;
-        public virtual void OnShutdownCompleted()
+        /// &lt;value&gt;The alfred framework.&lt;/value&gt;
+        [NotNull]
+        protected IAlfred Alfred
         {
-            var notified = new HashSet&lt;IAlfredComponent&gt;();
-
-            // Pass on the message to the children
-            foreach (var child in Children)
-            {
-                child.OnShutdownCompleted();
-                notified.Add(child);
-            }
-
-            // Tell our old expatriated children that things ended
-            if (_childrenOnShutdown != null)
-            {
-                foreach (var child in _childrenOnShutdown.Where(child =&gt; !notified.Contains(child)))
-                {
-                    child?.OnShutdownCompleted();
-                    notified.Add(child);
-                }
-            }
+            get { return _alfred; }
         }
 
-        /// &lt;summary&gt;
-        ///     Handles shutdown events
-        /// &lt;/summary&gt;
-        protected virtual void ShutdownProtected()
+        [NotNull]
+        protected TagHandlerParameters BuildTagHandlerParameters(string xml)
         {
+            var node = AimlTagHandler.BuildNode(xml);
+            return BuildTagHandlerParameters(&quot;Testing is fun&quot;, node);
         }
 
-        /// &lt;summary&gt;
-        /// Handles initialization events
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;alfred&quot;&gt;The alfred instance.&lt;/param&gt;
-        protected virtual void InitializeProtected([CanBeNull] IAlfred alfred)
+        [NotNull]
+        private TagHandlerParameters BuildTagHandlerParameters(string input, XmlNode node)
         {
-        }
-
-        /// &lt;summary&gt;
-        ///     Logs an event to the console if a console was provided
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;title&quot;&gt;The title of the message.&lt;/param&gt;
-        /// &lt;param name=&quot;message&quot;&gt;The message body.&lt;/param&gt;
-        /// &lt;param name=&quot;level&quot;&gt;The logging level.&lt;/param&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;message&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;title&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        protected void Log([NotNull] string title, [NotNull] string message, LogLevel level)
-        {
-            if (title == null)
-            {
-                throw new ArgumentNullException(nameof(title));
-            }
-            if (message == null)
-            {
-                throw new ArgumentNullException(nameof(message));
-            }
-
-            // Grab the console as Alfred may not have had the console object set during this module&#39;s construction
-            if (_console == null)
-            {
-                _console = _alfred?.Console;
-            }
-
-            // Send it on to the console, if we have one. It&#39;ll figure it out from there
-            _console?.Log(title, message, level);
-
-        }
-
-        /// &lt;summary&gt;
-        /// Gets the children of this component. Depending on the type of component this is, the children will
-        /// vary in their own types.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The children.&lt;/value&gt;
-        [NotNull, ItemNotNull]
-        public abstract IEnumerable&lt;IAlfredComponent&gt; Children { get; }
-
-        /// &lt;summary&gt;
-        /// Called when the component is registered.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;alfred&quot;&gt;The alfred.&lt;/param&gt;
-        public virtual void OnRegistered([CanBeNull] IAlfred alfred)
-        {
-            // Hang on to the reference now so AlfredInstance doesn&#39;t lie and we can tell
-            // our children who Alfred is before the whole update process happens
-            _alfred = alfred;
-
-            RegisterControls();
-        }
-
-        /// &lt;summary&gt;
-        /// Occurs when a property changes.
-        /// &lt;/summary&gt;
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// &lt;summary&gt;
-        /// Called when a property changes.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;propertyName&quot;&gt;Name of the property.&lt;/param&gt;
-        [NotifyPropertyChangedInvocator]
-        protected void OnPropertyChanged([CanBeNull] string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        /// &lt;summary&gt;
-        /// Registers the chat provider as the framework&#39;s chat provider.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;chatProvider&quot;&gt;The chat provider.&lt;/param&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;chatProvider&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        /// &lt;exception cref=&quot;InvalidOperationException&quot;&gt;If Register is called when Alfred is null (prior to initialization)&lt;/exception&gt;
-        protected void Register([NotNull] IChatProvider chatProvider)
-        {
-            if (chatProvider == null)
-            {
-                throw new ArgumentNullException(nameof(chatProvider));
-            }
-
-            if (_alfred == null)
-            {
-                throw new InvalidOperationException(Resources.NoAlfredInstance);
-            }
-
-            _alfred.Register(chatProvider);
+            var query = new SubQuery(input);
+            var request = new Request(input, User, Engine);
+            var result = new Result(User, Engine, request);
+            return new TagHandlerParameters(Engine, User, query, request, result, node);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[126,13,126,14,0],[127,17,127,65,0],[131,13,131,14,0],[132,17,132,87,0],[133,17,135,84,0],[176,13,176,14,0],[177,17,177,89,0],[178,17,178,120,0],[215,13,215,14,0],[216,17,218,61,0],[219,17,219,62,0],[304,13,304,14,0],[305,17,305,64,0],[308,13,308,14,0],[309,17,309,66,0],[366,9,366,10,0],[367,13,367,38,0],[368,13,368,14,0],[369,17,369,71,0],[372,13,372,33,0],[373,13,373,14,0],[374,17,374,81,0],[377,13,377,44,0],[378,9,378,10,0],[47,9,47,71,1],[48,9,48,10,1],[49,13,49,32,1],[50,9,50,10,1],[61,13,61,14,1],[61,15,61,30,1],[61,31,61,32,1],[71,17,71,18,1],[71,19,71,94,1],[71,95,71,96,1],[82,13,82,14,1],[84,17,84,62,1],[85,13,85,14,1],[94,17,94,18,1],[94,19,94,34,1],[94,35,94,36,1],[96,13,96,14,1],[97,17,97,38,1],[98,17,98,18,1],[99,21,99,37,1],[100,21,100,55,1],[101,17,101,18,1],[102,13,102,14,1],[124,9,124,10,1],[125,13,125,32,1],[130,13,130,47,1],[138,13,138,48,1],[140,13,140,30,1],[143,13,143,37,1],[145,13,145,32,1],[147,13,147,41,1],[150,13,150,20,1],[150,35,150,43,1],[150,22,150,31,1],[151,13,151,14,1],[152,17,152,42,1],[153,13,153,14,1],[150,32,150,34,1],[155,13,155,42,1],[157,13,157,50,1],[158,9,158,10,1],[164,9,164,10,1],[165,9,165,10,1],[174,9,174,10,1],[175,13,175,48,1],[181,13,181,47,1],[184,13,184,53,1],[185,13,185,20,1],[185,35,185,54,1],[185,22,185,31,1],[186,13,186,14,1],[187,17,187,35,1],[188,13,188,14,1],[185,32,185,34,1],[191,13,191,37,1],[194,13,194,33,1],[196,13,196,43,1],[198,13,198,50,1],[199,9,199,10,1],[205,9,205,10,1],[206,9,206,10,1],[213,9,213,10,1],[214,13,214,48,1],[222,13,222,31,1],[225,13,225,20,1],[225,35,225,43,1],[225,22,225,31,1],[226,13,226,14,1],[227,17,227,32,1],[228,13,228,14,1],[225,32,225,34,1],[230,9,230,10,1],[236,9,236,10,1],[237,9,237,10,1],[244,9,244,10,1],[246,13,246,20,1],[246,35,246,43,1],[246,22,246,31,1],[247,13,247,14,1],[248,17,248,51,1],[249,13,249,14,1],[246,32,246,34,1],[250,9,250,10,1],[257,9,257,10,1],[258,13,258,60,1],[261,13,261,20,1],[261,35,261,43,1],[261,22,261,31,1],[262,13,262,14,1],[263,17,263,45,1],[264,17,264,37,1],[265,13,265,14,1],[261,32,261,34,1],[268,13,268,45,1],[269,13,269,14,1],[270,17,270,24,1],[270,39,270,74,1],[270,99,270,100,1],[270,26,270,35,1],[271,17,271,18,1],[272,21,272,50,1],[273,21,273,41,1],[274,17,274,18,1],[270,36,270,38,1],[275,13,275,14,1],[276,9,276,10,1],[282,9,282,10,1],[283,9,283,10,1],[290,9,290,10,1],[291,9,291,10,1],[302,9,302,10,1],[303,13,303,31,1],[307,13,307,33,1],[313,13,313,34,1],[314,13,314,14,1],[315,17,315,45,1],[316,13,316,14,1],[319,13,319,50,1],[321,9,321,10,1],[336,9,336,10,1],[339,13,339,30,1],[341,13,341,32,1],[342,9,342,10,1],[355,9,355,10,1],[356,13,356,87,1],[357,9,357,10,1],[270,74,270,99,1]]);
+      highlightRanges([[57,13,57,14,0],[57,15,57,37,0],[57,38,57,39,0],[64,13,64,14,0],[64,15,64,37,0],[64,38,64,39,0],[82,13,82,14,0],[82,15,82,28,0],[82,29,82,30,0],[130,9,130,10,0],[131,13,131,34,0],[132,9,132,10,0],[202,17,202,18,0],[202,19,202,34,0],[202,35,202,36,0],[50,13,50,14,1],[50,15,50,28,1],[50,29,50,30,1],[72,39,72,43,1],[72,44,72,48,1],[91,9,91,10,1],[92,13,92,52,1],[94,13,94,52,1],[95,9,95,10,1],[103,9,103,10,1],[104,13,104,62,1],[106,13,107,87,1],[108,9,108,10,1],[117,9,117,10,1],[118,13,118,46,1],[120,13,120,79,1],[122,13,122,42,1],[123,9,123,10,1],[140,9,140,10,1],[142,13,142,53,1],[143,13,143,116,1],[145,13,145,67,1],[148,13,148,59,1],[149,13,149,55,1],[150,13,150,29,1],[151,9,151,10,1],[160,9,160,10,1],[161,13,161,46,1],[163,13,163,70,1],[164,13,164,38,1],[165,9,165,10,1],[171,9,171,10,1],[172,13,172,57,1],[173,13,173,45,1],[177,13,177,80,1],[178,13,178,46,1],[180,13,180,97,1],[181,13,181,46,1],[184,13,184,58,1],[185,13,185,33,1],[186,13,186,78,1],[187,13,187,45,1],[188,13,188,51,1],[191,13,191,34,1],[192,13,192,30,1],[193,9,193,10,1],[207,9,207,10,1],[208,13,208,54,1],[209,13,209,70,1],[210,9,210,10,1],[214,9,214,10,1],[215,13,215,45,1],[216,13,216,60,1],[217,13,217,60,1],[218,13,218,89,1],[219,9,219,10,1]]);
     </script>
   </body>
 </html>

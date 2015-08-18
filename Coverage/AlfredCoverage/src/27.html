@@ -2,100 +2,130 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\widgets\alfredwidget.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\widgets\alfredprogressbarwidget.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlfredWidget.cs
+// AlfredProgressBarWidget.cs
 // 
-// Created on:      07/28/2015 at 12:18 PM
-// Last Modified:   08/04/2015 at 3:04 PM
+// Created on:      08/04/2015 at 3:34 PM
+// Last Modified:   08/04/2015 at 4:04 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
-using System.ComponentModel;
+using System.Globalization;
 
 using JetBrains.Annotations;
 
 namespace MattEland.Ani.Alfred.Core.Widgets
 {
     /// &lt;summary&gt;
-    ///     Any sort of user interface widget for representing a module.
-    ///     Widgets can range from simple text to interactive components.
-    ///     Widgets do not contain user interface elements but tell the
-    ///     client what user interface elements to create.
+    /// A progress bar widget to be interpreted at the user interface layer
     /// &lt;/summary&gt;
-    public abstract class AlfredWidget : INotifyPropertyChanged
+    public sealed class AlfredProgressBarWidget : AlfredTextWidget
     {
-        [CanBeNull]
-        private object _dataContext;
-
-        private bool _isVisible = true;
+        private float _maximum = 100;
+        private float _minimum;
+        private float _value;
 
         /// &lt;summary&gt;
-        ///     Gets or sets whether or not the widget is visible. This defaults to &lt;c&gt;true&lt;/c&gt;.
+        ///     Gets or sets the minimum value to display on the bar.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;&lt;c&gt;true&lt;/c&gt; if this widget is visible; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/value&gt;
-        public bool IsVisible
+        /// &lt;value&gt;The minimum.&lt;/value&gt;
+        public float Minimum
         {
-            get { return _isVisible; }
+            get { return _minimum; }
             set
             {
-                if (value == _isVisible)
+                if (!value.Equals(_minimum))
                 {
-                    return;
+                    _minimum = value;
+                    OnPropertyChanged(nameof(Minimum));
                 }
-                _isVisible = value;
-                OnPropertyChanged(nameof(IsVisible));
             }
         }
 
         /// &lt;summary&gt;
-        ///     Gets or sets the data context.
+        ///     Gets or sets the maximum value to display on the bar.
         /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        ///     The DataContext is used by some controls for data binding and can act as a tag value
-        ///     in others allowing the caller to put miscellaneous information related to what the widget represents so that the
-        ///     widget can be updated later.
-        /// &lt;/remarks&gt;
-        /// &lt;value&gt;The data context.&lt;/value&gt;
-        [CanBeNull]
-        public object DataContext
+        /// &lt;value&gt;The maximum value.&lt;/value&gt;
+        public float Maximum
         {
-            get { return _dataContext; }
+            get { return _maximum; }
             set
             {
-                if (Equals(value, _dataContext))
+                if (!value.Equals(_maximum))
                 {
-                    return;
+                    _maximum = value;
+                    OnPropertyChanged(nameof(Maximum));
                 }
-                _dataContext = value;
-                OnPropertyChanged(nameof(DataContext));
             }
         }
 
         /// &lt;summary&gt;
-        /// Occurs when a property changes.
+        ///     Gets or sets the current value.
         /// &lt;/summary&gt;
-        public event PropertyChangedEventHandler PropertyChanged;
+        /// &lt;value&gt;The value.&lt;/value&gt;
+        public float Value
+        {
+            get { return _value; }
+            set
+            {
+                if (!value.Equals(_value))
+                {
+                    _value = value;
+
+                    OnPropertyChanged(nameof(Value));
+                    OnPropertyChanged(nameof(ValueText));
+                }
+            }
+        }
 
         /// &lt;summary&gt;
-        /// Called when a property changes.
+        ///     Gets the value to display in the user interface for the ToolTip.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;propertyName&quot;&gt;Name of the property.&lt;/param&gt;
-        [NotifyPropertyChangedInvocator]
-        protected void OnPropertyChanged([CanBeNull] string propertyName)
+        /// &lt;value&gt;A textual representation of the Value field.&lt;/value&gt;
+        public string ValueText
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            get
+            {
+                var formatString = _valueFormatString ?? &quot;{0}&quot;;
+
+                return string.Format(CultureInfo.CurrentCulture, formatString, Value);
+            }
+        }
+
+        [CanBeNull]
+        private string _valueFormatString;
+
+        /// &lt;summary&gt;
+        /// Gets or sets the value format string. This is used for driving the ValueText field.
+        /// This can be null for default representation. Use {0} to represent the value.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The value format string.&lt;/value&gt;
+        [CanBeNull]
+        public string ValueFormatString
+        {
+            get { return _valueFormatString; }
+            set
+            {
+                if (value != _valueFormatString)
+                {
+                    _valueFormatString = value;
+
+                    OnPropertyChanged(nameof(ValueFormatString));
+                    OnPropertyChanged(nameof(ValueText));
+                }
+            }
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[62,17,62,18,0],[63,21,63,28,0],[34,17,34,18,1],[34,19,34,37,1],[34,38,34,39,1],[36,13,36,14,1],[37,17,37,41,1],[38,17,38,18,1],[39,21,39,28,1],[41,17,41,36,1],[42,17,42,54,1],[43,13,43,14,1],[58,17,58,18,1],[58,19,58,39,1],[58,40,58,41,1],[60,13,60,14,1],[61,17,61,49,1],[65,17,65,38,1],[66,17,66,56,1],[67,13,67,14,1],[81,9,81,10,1],[82,13,82,87,1],[83,9,83,10,1],[26,9,26,40,1]]);
+      highlightRanges([[30,17,30,18,0],[30,19,30,35,0],[30,36,30,37,0],[34,17,34,18,0],[35,21,35,38,0],[36,21,36,56,0],[37,17,37,18,0],[47,17,47,18,0],[47,19,47,35,0],[47,36,47,37,0],[51,17,51,18,0],[52,21,52,38,0],[53,21,53,56,0],[54,17,54,18,0],[64,17,64,18,0],[64,19,64,33,0],[64,34,64,35,0],[68,17,68,18,0],[69,21,69,36,0],[71,21,71,54,0],[72,21,72,58,0],[73,17,73,18,0],[84,13,84,14,0],[85,17,85,64,0],[87,17,87,87,0],[88,13,88,14,0],[102,17,102,18,0],[102,19,102,45,0],[102,46,102,47,0],[32,13,32,14,1],[33,17,33,45,1],[38,13,38,14,1],[49,13,49,14,1],[50,17,50,45,1],[55,13,55,14,1],[66,13,66,14,1],[67,17,67,43,1],[74,13,74,14,1],[104,13,104,14,1],[105,17,105,49,1],[106,17,106,18,1],[107,21,107,48,1],[109,21,109,66,1],[110,21,110,58,1],[111,17,111,18,1],[112,13,112,14,1],[20,9,20,38,1]]);
     </script>
   </body>
 </html>

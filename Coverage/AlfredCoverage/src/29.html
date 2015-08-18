@@ -2,51 +2,100 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\widgets\textwidget.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\widgets\alfredwidget.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// TextWidget.cs
+// AlfredWidget.cs
 // 
 // Created on:      07/28/2015 at 12:18 PM
-// Last Modified:   08/04/2015 at 3:03 PM
+// Last Modified:   08/04/2015 at 3:04 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
+
+using System.ComponentModel;
 
 using JetBrains.Annotations;
 
 namespace MattEland.Ani.Alfred.Core.Widgets
 {
     /// &lt;summary&gt;
-    ///     Represents a simple textual display on the user interface.
+    ///     Any sort of user interface widget for representing a module.
+    ///     Widgets can range from simple text to interactive components.
+    ///     Widgets do not contain user interface elements but tell the
+    ///     client what user interface elements to create.
     /// &lt;/summary&gt;
-    public sealed class TextWidget : AlfredTextWidget
+    public abstract class AlfredWidget : INotifyPropertyChanged
     {
+        [CanBeNull]
+        private object _dataContext;
+
+        private bool _isVisible = true;
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;TextWidget&quot; /&gt; class.
+        ///     Gets or sets whether or not the widget is visible. This defaults to &lt;c&gt;true&lt;/c&gt;.
         /// &lt;/summary&gt;
-        public TextWidget() : this(null)
+        /// &lt;value&gt;&lt;c&gt;true&lt;/c&gt; if this widget is visible; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/value&gt;
+        public bool IsVisible
         {
+            get { return _isVisible; }
+            set
+            {
+                if (value == _isVisible)
+                {
+                    return;
+                }
+                _isVisible = value;
+                OnPropertyChanged(nameof(IsVisible));
+            }
         }
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;TextWidget&quot; /&gt; class.
+        ///     Gets or sets the data context.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;text&quot;&gt;The text for the widget.&lt;/param&gt;
-        public TextWidget([CanBeNull] string text)
+        /// &lt;remarks&gt;
+        ///     The DataContext is used by some controls for data binding and can act as a tag value
+        ///     in others allowing the caller to put miscellaneous information related to what the widget represents so that the
+        ///     widget can be updated later.
+        /// &lt;/remarks&gt;
+        /// &lt;value&gt;The data context.&lt;/value&gt;
+        [CanBeNull]
+        public object DataContext
         {
-            Text = text;
+            get { return _dataContext; }
+            set
+            {
+                if (Equals(value, _dataContext))
+                {
+                    return;
+                }
+                _dataContext = value;
+                OnPropertyChanged(nameof(DataContext));
+            }
         }
 
+        /// &lt;summary&gt;
+        /// Occurs when a property changes.
+        /// &lt;/summary&gt;
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// &lt;summary&gt;
+        /// Called when a property changes.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;propertyName&quot;&gt;Name of the property.&lt;/param&gt;
+        [NotifyPropertyChangedInvocator]
+        protected void OnPropertyChanged([CanBeNull] string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[22,31,22,41,1],[23,9,23,10,1],[24,9,24,10,1],[30,9,30,51,1],[31,9,31,10,1],[32,13,32,25,1],[33,9,33,10,1]]);
+      highlightRanges([[62,17,62,18,0],[63,21,63,28,0],[34,17,34,18,1],[34,19,34,37,1],[34,38,34,39,1],[36,13,36,14,1],[37,17,37,41,1],[38,17,38,18,1],[39,21,39,28,1],[41,17,41,36,1],[42,17,42,54,1],[43,13,43,14,1],[58,17,58,18,1],[58,19,58,39,1],[58,40,58,41,1],[60,13,60,14,1],[61,17,61,49,1],[65,17,65,38,1],[66,17,66,56,1],[67,13,67,14,1],[81,9,81,10,1],[82,13,82,87,1],[83,9,83,10,1],[26,9,26,40,1]]);
     </script>
   </body>
 </html>

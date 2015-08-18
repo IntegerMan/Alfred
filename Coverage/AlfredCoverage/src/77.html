@@ -2,100 +2,67 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\formaltaghandler.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\gossiptaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// FormalTagHandler.cs
+// GossipTagHandler.cs
 // 
-// Created on:      08/12/2015 at 10:44 PM
-// Last Modified:   08/14/2015 at 5:50 PM
+// Created on:      08/12/2015 at 10:46 PM
+// Last Modified:   08/12/2015 at 11:59 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System.Text;
-
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// &lt;summary&gt;
-    ///     A tag handler that handles the &quot;formal&quot; AIML tag by taking the inner text and
-    ///     Returning It In Formal Case.
+    /// A tag handler for the AIML &quot;gossip&quot; tag. 
     /// 
-    ///     See &quot;http://www.alicebot.org/TR/2005/WD-aiml/#section-formal&quot; for more on the formal tag
+    /// This implementation simply logs the contents of the gossip tag to the logger.
     /// &lt;/summary&gt;
-    [HandlesAimlTag(&quot;formal&quot;)]
-    public class FormalTagHandler : AimlTagHandler
+    [HandlesAimlTag(&quot;gossip&quot;)]
+    public class GossipTagHandler : AimlTagHandler
     {
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
+        /// Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
-        public FormalTagHandler([NotNull] TagHandlerParameters parameters)
+        public GossipTagHandler([NotNull] TagHandlerParameters parameters)
             : base(parameters)
         {
         }
 
         /// &lt;summary&gt;
-        ///     Processes the input text and returns the processed value.
+        /// Processes the input text and returns the processed value.
         /// &lt;/summary&gt;
         /// &lt;returns&gt;The processed output&lt;/returns&gt;
         protected override string ProcessChange()
         {
-            //- Ensure we&#39;re looking at the correct tag
             var node = TemplateNode;
-            var innerText = node.InnerText;
-            if (!node.Name.Matches(&quot;formal&quot;) || innerText.IsEmpty())
+
+            //- Ensure we have something to care about
+            if (node.Name.Matches(&quot;gossip&quot;) &amp;&amp; node.InnerText.HasText())
             {
-                return string.Empty;
+                Log(string.Format(Locale, &quot;GOSSIP from user: {0}, &#39;{1}&#39;&quot;, User.Id, node.InnerText), LogLevel.Info);
             }
 
-            var stringBuilder = new StringBuilder();
-
-            // Start lowercase
-            innerText = innerText.ToLower(Locale);
-
-            // Cycle through each word in the string
-            foreach (var word in innerText.Split())
-            {
-                //- Sanity check
-                if (word == null)
-                {
-                    continue;
-                }
-
-                //? ALF-19: It&#39;d be cool to optionally NOT formal case &quot;a&quot; &quot;it&quot; &quot;is&quot; etc.
-
-                // Grab the first letter
-                var newWord = word.Substring(0, 1).ToUpper(Locale);
-
-                // Tack on the rest of the word
-                if (word.Length &gt; 1)
-                {
-                    newWord += word.Substring(1);
-                }
-
-                // Build out the new sentence with word breaks
-                stringBuilder.AppendFormat(Locale, &quot;{0} &quot;, newWord);
-            }
-
-            // Return Our New Sentence In Formal Case
-            //- The trim will kill the trailing space the last appendFormat added
-            return stringBuilder.ToString().Trim();
+            return string.Empty;
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[33,15,33,31,0],[34,9,34,10,0],[35,9,35,10,0],[42,9,42,10,0],[44,13,44,37,0],[45,13,45,44,0],[46,13,46,69,0],[47,13,47,14,0],[48,17,48,37,0],[51,13,51,53,0],[54,13,54,51,0],[57,13,57,20,0],[57,34,57,51,0],[57,22,57,30,0],[58,13,58,14,0],[60,17,60,34,0],[61,17,61,18,0],[62,21,62,30,0],[68,17,68,68,0],[71,17,71,37,0],[72,17,72,18,0],[73,21,73,50,0],[74,17,74,18,0],[77,17,77,69,0],[78,13,78,14,0],[57,31,57,33,0],[82,13,82,52,0],[83,9,83,10,0]]);
+      highlightRanges([[31,15,31,31,0],[32,9,32,10,0],[33,9,33,10,0],[40,9,40,10,0],[41,13,41,37,0],[44,13,44,73,0],[45,13,45,14,0],[46,17,46,116,0],[47,13,47,14,0],[49,13,49,33,0],[50,9,50,10,0]]);
     </script>
   </body>
 </html>

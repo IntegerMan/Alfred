@@ -2,88 +2,132 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\topicstartaghandler.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\normalize\textsubstitutionhelper.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// topicstar.cs
+// TextSubstitutionHelper.cs
 // 
-// Created on:      08/12/2015 at 10:59 PM
-// Last Modified:   08/12/2015 at 11:59 PM
+// Created on:      08/12/2015 at 10:37 PM
+// Last Modified:   08/16/2015 at 5:25 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System.Collections.Generic;
+using System;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
-using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Common;
 
-namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
+namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
 {
+
     /// &lt;summary&gt;
-    /// A tag handler for the AIML &quot;topicstar&quot; tag. This returns the output of the specified * value within the topic node.
+    ///     A text transformation helper class that replaces found occurrences of strings
+    ///     with their values found in the settings provider.
     /// &lt;/summary&gt;
-    [HandlesAimlTag(&quot;topicstar&quot;)]
-    public class TopicStarTagHandler : AimlTagHandler
+    internal static class TextSubstitutionHelper
     {
+        private const string Marker = &quot;zzMARKERzz&quot;;
+        private const string WordBoundary = @&quot;\b&quot;;
+
         /// &lt;summary&gt;
-        /// Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
+        ///     Substitutes all occurrences of the words in the settings provider found in input with the
+        ///     replacement values stored in that provider.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
-        public TopicStarTagHandler([NotNull] TagHandlerParameters parameters)
-            : base(parameters)
+        /// &lt;param name=&quot;settings&quot;&gt;The settings manager.&lt;/param&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input.&lt;/param&gt;
+        /// &lt;returns&gt;A modified version of the input string.&lt;/returns&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;
+        /// &lt;/exception&gt;
+        [NotNull]
+        internal static string Substitute([NotNull] SettingsManager settings,
+                                          [CanBeNull] string input)
         {
+            //- Validate
+            if (input == null)
+            {
+                input = string.Empty;
+            }
+            if (settings == null)
+            {
+                throw new ArgumentNullException(nameof(settings));
+            }
+
+            //- Grab our setting names
+            var settingNames = settings.Keys;
+
+            // Look for each setting settingName in the input string to replace it with our setting value
+            foreach (var settingName in settingNames)
+            {
+                if (settingName == null)
+                {
+                    continue;
+                }
+
+                var settingValue = settings.GetValue(settingName);
+
+                input = Substitute(input, settingName, settingValue);
+            }
+
+            // Remove our marker string from the string
+            return input.Replace(Marker, string.Empty);
         }
 
         /// &lt;summary&gt;
-        /// Processes the input text and returns the processed value.
+        ///     Substitutes whole word instances of settingName in input with settingValue.
         /// &lt;/summary&gt;
-        /// &lt;returns&gt;The processed output&lt;/returns&gt;
-        protected override string ProcessChange()
+        /// &lt;param name=&quot;input&quot;&gt;The input.&lt;/param&gt;
+        /// &lt;param name=&quot;settingName&quot;&gt;Name of the setting.&lt;/param&gt;
+        /// &lt;param name=&quot;settingValue&quot;&gt;The setting value.&lt;/param&gt;
+        /// &lt;returns&gt;System.String.&lt;/returns&gt;
+        [NotNull]
+        private static string Substitute([CanBeNull] string input,
+                                         [CanBeNull] string settingName,
+                                         [CanBeNull] string settingValue)
         {
-            var element = TemplateElement;
-            if (element != null &amp;&amp; element.Name.Matches(&quot;topicstar&quot;))
+            //- Sanity check
+            if (input == null)
             {
-                // Validate that we have TopicStar items to work with
-                var topicStar = Query.TopicStar;
-                if (topicStar.Count &lt;= 0)
-                {
-                    Log(string.Format(Locale, Resources.TopicStarErrorNoItems, Request.RawInput), LogLevel.Error);
-
-                    return string.Empty;
-                }
-
-                // When no index is specified return the first item.
-                if (!element.HasAttribute(&quot;index&quot;))
-                {
-                    return topicStar[0];
-                }
-
-                // Grab the item at the specified array index
-                var index = element.GetAttribute(&quot;index&quot;).AsInt();
-                if (index.IsWithinBoundsOf(topicStar))
-                {
-                    return topicStar[index - 1];
-                }
-
-                // Log the out of range failure
-                Log(string.Format(Locale, Resources.TopicStarErrorOutOfRange, index, Request.RawInput), LogLevel.Error);
+                input = string.Empty;
+            }
+            if (settingName == null || settingValue == null)
+            {
+                return input;
             }
 
-            return string.Empty;
+            // Surround the setting with our marker string
+            var replacement =
+                string.Format(CultureInfo.CurrentCulture, &quot;{0}{1}{0}&quot;, Marker, settingValue.Trim())
+                      .NonNull();
+
+            // Check for bad things in the name and make them regex safe
+            var sanitizedName =
+                settingName.Replace(@&quot;\&quot;, &quot;&quot;)
+                           .Replace(&quot;)&quot;, @&quot;\)&quot;)
+                           .Replace(&quot;(&quot;, @&quot;\(&quot;)
+                           .Replace(&quot;.&quot;, @&quot;\.&quot;)
+                           .Trim();
+
+            // Replaces the variable settingName with the setting value
+            var pattern =
+                string.Format(CultureInfo.CurrentCulture, &quot;{0}{1}{0}&quot;, WordBoundary, sanitizedName)
+                      .NonNull();
+
+            return Regex.Replace(input, pattern, replacement, RegexOptions.IgnoreCase);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[31,15,31,31,0],[32,9,32,10,0],[33,9,33,10,0],[40,9,40,10,0],[41,13,41,43,0],[42,13,42,70,0],[43,13,43,14,0],[45,17,45,49,0],[46,17,46,42,0],[47,17,47,18,0],[48,21,48,115,0],[50,21,50,41,0],[54,17,54,52,0],[55,17,55,18,0],[56,21,56,41,0],[60,17,60,67,0],[61,17,61,55,0],[62,17,62,18,0],[63,21,63,49,0],[67,17,67,121,0],[68,13,68,14,0],[70,13,70,33,0],[71,9,71,10,0]]);
+      highlightRanges([[46,13,46,14,0],[47,17,47,38,0],[48,13,48,14,0],[50,13,50,14,0],[51,17,51,67,0],[61,17,61,18,0],[62,21,62,30,0],[88,13,88,14,0],[89,17,89,38,0],[90,13,90,14,0],[92,13,92,14,0],[93,17,93,30,0],[43,9,43,10,1],[45,13,45,31,1],[49,13,49,34,1],[55,13,55,46,1],[58,13,58,20,1],[58,41,58,53,1],[58,22,58,37,1],[59,13,59,14,1],[60,17,60,41,1],[65,17,65,67,1],[67,17,67,70,1],[68,13,68,14,1],[58,38,58,40,1],[71,13,71,56,1],[72,9,72,10,1],[85,9,85,10,1],[87,13,87,31,1],[91,13,91,61,1],[97,13,99,34,1],[102,13,107,36,1],[110,13,112,34,1],[114,13,114,88,1],[115,9,115,10,1]]);
     </script>
   </body>
 </html>

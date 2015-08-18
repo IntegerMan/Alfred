@@ -2,339 +2,253 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\alfredprovidertests.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\modules\alfredpowermoduletests.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlfredProviderTests.cs
+// AlfredPowerModuleTests.cs
 // 
-// Created on:      07/25/2015 at 11:43 PM
-// Last Modified:   08/10/2015 at 10:34 PM
+// Created on:      08/02/2015 at 5:22 PM
+// Last Modified:   08/03/2015 at 1:56 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
+using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core;
-using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Pages;
-using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Ani.Alfred.Tests.Mocks;
 
 using NUnit.Framework;
 
-namespace MattEland.Ani.Alfred.Tests
+namespace MattEland.Ani.Alfred.Tests.Modules
 {
     /// &lt;summary&gt;
-    ///     Tests AlfredApplication
+    ///     Tests for the
+    ///     &lt;see
+    ///         cref=&quot;AlfredPowerModule&quot; /&gt;
+    ///     module.
     /// &lt;/summary&gt;
     [TestFixture]
     [SuppressMessage(&quot;ReSharper&quot;, &quot;NotNullMemberIsNotInitialized&quot;)]
-    public sealed class AlfredProviderTests
+    public class AlfredPowerModuleTests
     {
         /// &lt;summary&gt;
-        ///     Sets up the alfred provider&#39;s tests.
+        ///     Setups the tests.
         /// &lt;/summary&gt;
         [SetUp]
-        public void SetupAlfredProviderTests()
+        public void SetupTests()
         {
             var bootstrapper = new AlfredBootstrapper();
             _alfred = bootstrapper.Create();
-            _alfred.Console = new SimpleConsole();
+            _module = new AlfredPowerModule(_alfred.PlatformProvider);
 
-            _subsystem = new TestSubsystem(_alfred.PlatformProvider);
-            _page = new AlfredModuleListPage(_alfred.PlatformProvider, &quot;Test Page&quot;);
+            RegisterTestModule(_alfred, _module);
+        }
+
+        /// &lt;summary&gt;
+        /// Registers the module to the Alfred instance using a test subsystem and simple page.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;alfred&quot;&gt;The alfred.&lt;/param&gt;
+        /// &lt;param name=&quot;module&quot;&gt;The module.&lt;/param&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;alfred, module
+        /// &lt;/exception&gt;
+        private void RegisterTestModule([NotNull] AlfredApplication alfred, [NotNull] AlfredModule module)
+        {
+            if (alfred == null)
+            {
+                throw new ArgumentNullException(nameof(alfred));
+            }
+            if (module == null)
+            {
+                throw new ArgumentNullException(nameof(module));
+            }
+
+            var subsystem = new TestSubsystem();
+
+            var page = new AlfredModuleListPage(alfred.PlatformProvider, &quot;Test Page&quot;);
+            subsystem.AddAutoRegisterPage(page);
+
+            alfred.Register(subsystem);
+
+            page.Register(module);
+
         }
 
         [NotNull]
         private AlfredApplication _alfred;
 
         [NotNull]
-        private TestSubsystem _subsystem;
-
-        [NotNull]
-        private AlfredModuleListPage _page;
+        private AlfredPowerModule _module;
 
         [Test]
-        public void AddingStandardModulesAddsModules()
+        public void AfterShutdownSystemWidgetIsStillPresentInModule()
         {
-            _alfred.Register(new AlfredCoreSubsystem(_alfred.PlatformProvider));
-
-            var numModules =
-                _alfred.Subsystems.SelectMany(subsystem =&gt; subsystem.Pages)
-                       .OfType&lt;AlfredModuleListPage&gt;()
-                       .Sum(modulePage =&gt; modulePage.Modules.Count());
-
-            Assert.Greater(numModules,
-                           0,
-                           &quot;Alfred did not have any modules after calling add standard modules.&quot;);
-        }
-
-        [Test]
-        public void AfterInitializationAlfredIsOnline()
-        {
-            _alfred.Initialize();
-
-            Assert.AreEqual(_alfred.Status, AlfredStatus.Online);
-        }
-
-        [Test]
-        public void AlfredStartsOffline()
-        {
-            Assert.AreEqual(_alfred.Status, AlfredStatus.Offline);
-        }
-
-        [Test]
-        public void AlfredStartsWithNoSubSystems()
-        {
-            Assert.AreEqual(0, _alfred.Subsystems.Count(), &quot;Alfred started with subsystems when none were expected.&quot;);
-        }
-
-        [Test]
-        public void InitializationWithoutConsoleWorks()
-        {
-            _alfred.Console = null;
-
-            _alfred.Initialize();
-
-            // Nothing to assert here - I&#39;m looking for errors encountered
-        }
-
-        /// &lt;summary&gt;
-        ///     Tests initialization of Alfred
-        /// &lt;/summary&gt;
-        [Test]
-        public void InitializeAlfred()
-        {
-            Assert.NotNull(_alfred, &quot;Alfred was not initialized&quot;);
-        }
-
-        [Test]
-        public void InitializeAndShutdownResultsInShutdown()
-        {
-            _alfred.Initialize();
-            _alfred.Shutdown();
-
-            Assert.AreEqual(_alfred.Status, AlfredStatus.Offline);
-        }
-
-        [Test]
-        public void InitializeCreatesEventsInLog()
-        {
-            var console = _alfred.Console;
-            Assert.NotNull(console, &quot;Console was not present&quot;);
-
-            var numEvents = console.Events.Count();
-
-            _alfred.Initialize();
-
-            Assert.Greater(console.Events.Count(), numEvents, &quot;Initializing Alfred did not create any log entries.&quot;);
-        }
-
-        [Test]
-        public void InitializeWhileOnlineErrors()
-        {
-            _alfred.Initialize();
-
-            try
-            {
-                _alfred.Initialize();
-
-                Assert.Fail(&quot;Expected an InvalidOperationException since Alfred was already initialized.&quot;);
-
-            }
-            catch (InvalidOperationException)
-            {
-                // No action
-            }
-
-            // Assert that we&#39;re still online.
-            Assert.AreEqual(_alfred.Status, AlfredStatus.Online);
-        }
-
-        [Test]
-        public void InitializingInitializesComponents()
-        {
-            _alfred.Register(new AlfredCoreSubsystem(_alfred.PlatformProvider));
-
-            _alfred.Initialize();
-
-            foreach (var item in _alfred.Subsystems)
-            {
-                Assert.AreEqual(AlfredStatus.Online,
-                                item.Status,
-                                $&quot;{item.NameAndVersion} was not initialized during initialization.&quot;);
-            }
-        }
-
-        [Test]
-        public void LogToConsole()
-        {
-            var console = _alfred.Console;
-            Assert.NotNull(console, &quot;Console was not present&quot;);
-
-            var numEvents = console.Events.Count();
-
-            console.Log(&quot;Alfred Test Framework&quot;, &quot;Testing logging to Alfred&quot;, LogLevel.Verbose);
-
-            Assert.AreEqual(numEvents + 1, console.Events.Count(), &quot;Event count did not increase after logging.&quot;);
-        }
-
-        [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void ModulesCannotBeAddedWhileOnline()
-        {
-            _alfred.Initialize();
-            _alfred.Register(new AlfredCoreSubsystem(_alfred.PlatformProvider));
-        }
-
-        [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void ModulesCannotUpdateWhileOffline()
-        {
-            _alfred.Register(new AlfredCoreSubsystem(_alfred.PlatformProvider));
-
-            _alfred.Update();
-        }
-
-        [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void RegisteringAWidgetMultipleTimesThrowsAnException()
-        {
-            var testModule = new AlfredTestModule();
-
-            var textWidget = new TextWidget();
-            testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
-            testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
-
-            _alfred.Register(_subsystem);
-            _subsystem.AddAutoRegisterPage(_page);
-            _page.Register(testModule);
-
-            _alfred.Initialize();
-        }
-
-        [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
-        [SuppressMessage(&quot;ReSharper&quot;, &quot;AssignNullToNotNullAttribute&quot;)]
-        public void RegisteringNullSubsystemGeneratesNullRef()
-        {
-            AlfredSubsystem system = null;
-            _alfred.Register(system);
-        }
-
-        [Test]
-        public void RegisteringWidgetAtInitializeAndShutdownLeavesOneCopyInListAtReinitialize()
-        {
-            var testModule = new AlfredTestModule();
-
-            var textWidget = new TextWidget();
-            testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
-            testModule.WidgetsToRegisterOnShutdown.Add(textWidget);
-
-            _alfred.Register(_subsystem);
-            _subsystem.AddAutoRegisterPage(_page);
-            _page.Register(testModule);
-
             _alfred.Initialize();
             _alfred.Update();
             _alfred.Shutdown();
+
+            Assert.IsNotNull(_module.Widgets, &quot;Module removed all widgets after shutdown&quot;);
+            Assert.Contains(_module.AlfredStatusWidget,
+                            _module.Widgets as ICollection,
+                            &quot;The Status Widget was not present after shutdown&quot;);
+        }
+
+        [Test]
+        public void AtInitialStateInitializeIsVisible()
+        {
+            // Doing this again here to illustrate creation / configuration order more clearly
+            var bootstrapper = new AlfredBootstrapper();
+            _alfred = bootstrapper.Create();
+            _module = new AlfredPowerModule(_alfred.PlatformProvider);
+
+            RegisterTestModule(_alfred, _module);
+
+            Assert.IsNotNull(_module.AlfredInstance, &quot;Alfred was not set&quot;);
+            Assert.IsTrue(_module.InitializeButton.IsVisible, &quot;Initialize button was not visible while offline.&quot;);
+            Assert.IsNotNull(_module.Widgets, &quot;_module.Widgets was null&quot;);
+            Assert.IsTrue(_module.Widgets.Contains(_module.InitializeButton),
+                          &quot;The Initialize button was not part of the UI while offline&quot;);
+        }
+
+        [Test]
+        public void CoreModuleHasCurrentStatusAfterInitializeAndUpdate()
+        {
+            _alfred.Initialize();
+
+            _alfred.Update();
+
+            var text = _module.AlfredStatusWidget.Text;
+            Assert.IsNotNull(text, &quot;Widget text was null&quot;);
+            Assert.IsTrue(text.EndsWith(&quot;Online&quot;),
+                          $&quot;Module did not indicate that Alfred was online after update. Instead indicated: {text}&quot;);
+        }
+
+        [Test]
+        public void CoreModuleHasNoProviderText()
+        {
+            var bootstrapper = new AlfredBootstrapper();
+            _alfred = bootstrapper.Create();
+            _module = new AlfredPowerModule(_alfred.PlatformProvider);
+
+            var text = _module.AlfredStatusWidget.Text;
+            Assert.IsNotNull(text, &quot;Widget text was null&quot;);
+            Assert.IsTrue(text.EndsWith(&quot;has not been set&quot;),
+                          $&quot;Component did not indicate that Alfred was not set. Instead indicated: {text}&quot;);
+        }
+
+        [Test]
+        public void WhenOfflineTheInitializeButtonAppears()
+        {
+            _alfred.Initialize();
+            _alfred.Update();
+            _alfred.Shutdown();
+
+            Assert.IsTrue(_module.InitializeButton.IsVisible, &quot;Initialize button was not visible while offline.&quot;);
+            Assert.IsNotNull(_module.Widgets, &quot;_module.Widgets was null&quot;);
+            Assert.IsTrue(
+                          _module.Widgets.Contains(_module.InitializeButton),
+                          &quot;The Initialize button was not part of the UI while offline&quot;);
+        }
+
+        [Test]
+        public void WhenOfflineTheShutdownButtonDoesNotAppear()
+        {
+            _alfred.Initialize();
+            _alfred.Update();
+            _alfred.Shutdown();
+
+            Assert.IsNotNull(_module.Widgets, &quot;_module.Widgets was null&quot;);
+            Assert.IsFalse(
+                           _module.Widgets.Contains(_module.ShutdownButton),
+                           &quot;The Shut Down button was part of the UI while offline&quot;);
+        }
+
+        [Test]
+        public void WhenOnlineTheShutdownButtonAppears()
+        {
+            _alfred.Initialize();
+
+            Assert.IsTrue(_module.ShutdownButton.IsVisible, &quot;Shut down button was not visible while online.&quot;);
+            Assert.IsNotNull(_module.Widgets, &quot;_module.Widgets was null&quot;);
+            Assert.IsTrue(
+                          _module.Widgets.Contains(_module.ShutdownButton),
+                          &quot;The Shut Down button was not part of the UI while online&quot;);
+        }
+
+        [Test]
+        public void WhenOnlineTheInitializeButtonDoesNotAppear()
+        {
+            _alfred.Initialize();
+
+            Assert.IsNotNull(_module.Widgets, &quot;_module.Widgets was null&quot;);
+            Assert.IsFalse(
+                           _module.Widgets.Contains(_module.InitializeButton),
+                           &quot;The Initialize button was part of the UI while online&quot;);
+        }
+
+        [Test]
+        public void ClickingTheInitializeButtonInitializesAlfredWhileOffline()
+        {
+            _module.InitializeButton.Click();
+
+            Assert.AreEqual(AlfredStatus.Online, _alfred.Status, &quot;Alfred was not online after button click&quot;);
+        }
+
+        [Test]
+        public void ClickingTheShutdownButtonShutsDownAlfredWhileOnline()
+        {
             _alfred.Initialize();
             _alfred.Update();
 
-            Assert.IsNotNull(testModule.Widgets, &quot;testModule.Widgets was null&quot;);
-            Assert.AreEqual(1,
-                            testModule.Widgets.Count(),
-                            &quot;Widgets were not properly cleared from list after re-initialize&quot;);
+            _module.ShutdownButton.Click();
 
+            Assert.AreEqual(AlfredStatus.Offline, _alfred.Status, &quot;Alfred was not offline after button click&quot;);
         }
 
         [Test]
-        public void RemoveAlfredConsole()
+        public void ClickingTheInitializeButtonReinitializesAlfredWhileOfflineAfterShutdown()
         {
-            _alfred.Console = null;
-
-            Assert.IsNull(_alfred.Console, &quot;Could not remove Alfred&#39;s console&quot;);
-        }
-
-        [Test]
-        public void SetConsole()
-        {
-            Assert.IsNotNull(_alfred.Console, &quot;Alfred&#39;s console was null after creation&quot;);
-        }
-
-        [Test]
-        public void ShutdownCreatesEventsInLog()
-        {
-            // We need to be online to shut down or else we&#39;ll get errors
             _alfred.Initialize();
-
-            var console = _alfred.Console;
-            Assert.NotNull(console, &quot;Console was not present&quot;);
-
-            var numEvents = console.Events.Count();
-
-            _alfred.Shutdown();
-
-            Assert.Greater(console.Events.Count(), numEvents, &quot;Shutting Alfred down did not create any log entries.&quot;);
-        }
-
-        [Test]
-        public void ShutdownWhileOfflineErrors()
-        {
-            try
-            {
-                _alfred.Shutdown();
-
-                Assert.Fail(&quot;Expected an InvalidOperationException since Alfred was already offline.&quot;);
-
-            }
-            catch (InvalidOperationException)
-            {
-                // No action
-            }
-
-            // Assert that we&#39;re now offline.
-            Assert.AreEqual(_alfred.Status, AlfredStatus.Offline);
-        }
-
-        [Test]
-        public void ShuttingDownShutsDownComponents()
-        {
-            _alfred.Register(new AlfredCoreSubsystem(_alfred.PlatformProvider));
-
-            _alfred.Initialize();
-            _alfred.Shutdown();
-
-            foreach (var item in _alfred.Subsystems)
-            {
-                Assert.AreEqual(AlfredStatus.Offline,
-                                item.Status,
-                                $&quot;{item.NameAndVersion} was not shut down during alfred shut down.&quot;);
-            }
-        }
-
-        [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void UpdateWithNoModulesWhileOfflineStillGeneratesError()
-        {
             _alfred.Update();
+            _alfred.Shutdown();
+
+            _module.InitializeButton.Click();
+
+            Assert.AreEqual(AlfredStatus.Online, _alfred.Status, &quot;Alfred was not online after button click&quot;);
+        }
+
+        [Test]
+        public void WhenOfflineShutdownCannotExecute()
+        {
+            Assert.IsNotNull(_module.ShutdownButton.ClickCommand, &quot;_module.ShutdownButton.ClickCommand was null&quot;);
+            Assert.IsFalse(_module.ShutdownButton.ClickCommand.CanExecute(null), &quot;Could click shutdown while offline&quot;);
+        }
+
+        [Test]
+        public void WhenOnlineInitializeCannotExecute()
+        {
+            _alfred.Initialize();
+            _alfred.Update();
+
+            Assert.IsNotNull(_module.InitializeButton.ClickCommand, &quot;_module.InitializeButton.ClickCommand was null&quot;);
+            Assert.IsFalse(_module.InitializeButton.ClickCommand.CanExecute(null), &quot;Could click initialize while online&quot;);
         }
     }
-
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[142,17,142,108,0],[144,13,144,14,0],[188,9,188,10,0],[197,9,197,10,0],[214,9,214,10,0],[223,9,223,10,0],[288,17,288,104,0],[290,13,290,14,0],[321,9,321,10,0],[39,9,39,10,1],[40,13,40,57,1],[41,13,41,45,1],[42,13,42,51,1],[44,13,44,70,1],[45,13,45,85,1],[46,9,46,10,1],[59,9,59,10,1],[60,13,60,81,1],[62,13,63,60,1],[63,75,65,43,1],[65,69,65,71,1],[67,13,69,99,1],[70,9,70,10,1],[74,9,74,10,1],[75,13,75,34,1],[77,13,77,66,1],[78,9,78,10,1],[82,9,82,10,1],[83,13,83,67,1],[84,9,84,10,1],[88,9,88,10,1],[89,13,89,119,1],[90,9,90,10,1],[94,9,94,10,1],[95,13,95,36,1],[97,13,97,34,1],[100,9,100,10,1],[107,9,107,10,1],[108,13,108,67,1],[109,9,109,10,1],[113,9,113,10,1],[114,13,114,34,1],[115,13,115,32,1],[117,13,117,67,1],[118,9,118,10,1],[122,9,122,10,1],[123,13,123,43,1],[124,13,124,64,1],[126,13,126,52,1],[128,13,128,34,1],[130,13,130,118,1],[131,9,131,10,1],[135,9,135,10,1],[136,13,136,34,1],[139,13,139,14,1],[140,17,140,38,1],[145,13,145,46,1],[146,13,146,14,1],[148,13,148,14,1],[151,13,151,66,1],[152,9,152,10,1],[156,9,156,10,1],[157,13,157,81,1],[159,13,159,34,1],[161,13,161,20,1],[161,34,161,52,1],[161,22,161,30,1],[162,13,162,14,1],[163,17,165,102,1],[166,13,166,14,1],[161,31,161,33,1],[167,9,167,10,1],[171,9,171,10,1],[172,13,172,43,1],[173,13,173,64,1],[175,13,175,52,1],[177,13,177,97,1],[179,13,179,115,1],[180,9,180,10,1],[185,9,185,10,1],[186,13,186,34,1],[187,13,187,81,1],[193,9,193,10,1],[194,13,194,81,1],[196,13,196,30,1],[202,9,202,10,1],[203,13,203,53,1],[205,13,205,47,1],[206,13,206,70,1],[207,13,207,70,1],[209,13,209,42,1],[210,13,210,51,1],[211,13,211,40,1],[213,13,213,34,1],[220,9,220,10,1],[221,13,221,43,1],[222,13,222,38,1],[227,9,227,10,1],[228,13,228,53,1],[230,13,230,47,1],[231,13,231,70,1],[232,13,232,68,1],[234,13,234,42,1],[235,13,235,51,1],[236,13,236,40,1],[238,13,238,34,1],[239,13,239,30,1],[240,13,240,32,1],[241,13,241,34,1],[242,13,242,30,1],[244,13,244,81,1],[245,13,247,96,1],[249,9,249,10,1],[253,9,253,10,1],[254,13,254,36,1],[256,13,256,81,1],[257,9,257,10,1],[261,9,261,10,1],[262,13,262,91,1],[263,9,263,10,1],[267,9,267,10,1],[269,13,269,34,1],[271,13,271,43,1],[272,13,272,64,1],[274,13,274,52,1],[276,13,276,32,1],[278,13,278,119,1],[279,9,279,10,1],[283,9,283,10,1],[285,13,285,14,1],[286,17,286,36,1],[291,13,291,46,1],[292,13,292,14,1],[294,13,294,14,1],[297,13,297,67,1],[298,9,298,10,1],[302,9,302,10,1],[303,13,303,81,1],[305,13,305,34,1],[306,13,306,32,1],[308,13,308,20,1],[308,34,308,52,1],[308,22,308,30,1],[309,13,309,14,1],[310,17,312,102,1],[313,13,313,14,1],[308,31,308,33,1],[314,9,314,10,1],[319,9,319,10,1],[320,13,320,30,1],[63,60,63,75,1],[65,43,65,69,1]]);
+      highlightRanges([[59,13,59,14,0],[60,17,60,65,0],[63,13,63,14,0],[64,17,64,65,0],[41,9,41,10,1],[42,13,42,57,1],[43,13,43,45,1],[44,13,44,71,1],[46,13,46,50,1],[47,9,47,10,1],[57,9,57,10,1],[58,13,58,32,1],[62,13,62,32,1],[67,13,67,49,1],[69,13,69,87,1],[70,13,70,49,1],[72,13,72,40,1],[74,13,74,35,1],[76,9,76,10,1],[86,9,86,10,1],[87,13,87,34,1],[88,13,88,30,1],[89,13,89,32,1],[91,13,91,92,1],[92,13,94,81,1],[95,9,95,10,1],[99,9,99,10,1],[101,13,101,57,1],[102,13,102,45,1],[103,13,103,71,1],[105,13,105,50,1],[107,13,107,76,1],[108,13,108,115,1],[109,13,109,75,1],[110,13,111,89,1],[112,9,112,10,1],[116,9,116,10,1],[117,13,117,34,1],[119,13,119,30,1],[121,13,121,56,1],[122,13,122,60,1],[123,13,124,118,1],[125,9,125,10,1],[129,9,129,10,1],[130,13,130,57,1],[131,13,131,45,1],[132,13,132,71,1],[134,13,134,56,1],[135,13,135,60,1],[136,13,137,109,1],[138,9,138,10,1],[142,9,142,10,1],[143,13,143,34,1],[144,13,144,30,1],[145,13,145,32,1],[147,13,147,115,1],[148,13,148,75,1],[149,13,151,89,1],[152,9,152,10,1],[156,9,156,10,1],[157,13,157,34,1],[158,13,158,30,1],[159,13,159,32,1],[161,13,161,75,1],[162,13,164,85,1],[165,9,165,10,1],[169,9,169,10,1],[170,13,170,34,1],[172,13,172,111,1],[173,13,173,75,1],[174,13,176,87,1],[177,9,177,10,1],[181,9,181,10,1],[182,13,182,34,1],[184,13,184,75,1],[185,13,187,85,1],[188,9,188,10,1],[192,9,192,10,1],[193,13,193,46,1],[195,13,195,110,1],[196,9,196,10,1],[200,9,200,10,1],[201,13,201,34,1],[202,13,202,30,1],[204,13,204,44,1],[206,13,206,112,1],[207,9,207,10,1],[211,9,211,10,1],[212,13,212,34,1],[213,13,213,30,1],[214,13,214,32,1],[216,13,216,46,1],[218,13,218,110,1],[219,9,219,10,1],[223,9,223,10,1],[224,13,224,115,1],[225,13,225,120,1],[226,9,226,10,1],[230,9,230,10,1],[231,13,231,34,1],[232,13,232,30,1],[234,13,234,119,1],[235,13,235,123,1],[236,9,236,10,1]]);
     </script>
   </body>
 </html>

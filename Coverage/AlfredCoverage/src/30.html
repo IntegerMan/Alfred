@@ -2,41 +2,119 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\widgets\warningwidget.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\widgets\buttonwidget.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// ButtonWidget.cs
+// 
+// Created on:      08/03/2015 at 1:10 AM
+// Last Modified:   08/03/2015 at 2:16 PM
+// Original author: Matt Eland
+// ---------------------------------------------------------
+
+using System;
+
 using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Core.Definitions;
 
 namespace MattEland.Ani.Alfred.Core.Widgets
 {
     /// &lt;summary&gt;
-    /// A widget used for displaying warnings or errors to the user.
+    ///     Represents a button that&#39;s clickable in the user interface.
     /// &lt;/summary&gt;
-    public sealed class WarningWidget : AlfredTextWidget
+    public sealed class ButtonWidget : AlfredTextWidget
     {
         /// &lt;summary&gt;
-        /// Initializes a new instance of the &lt;see cref=&quot;WarningWidget&quot;/&gt; class.
+        ///     The command that is executed when the button is clicked.
         /// &lt;/summary&gt;
-        public WarningWidget() : this(null)
+        [CanBeNull]
+        private AlfredCommand _clickCommand;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the
+        ///     &lt;see
+        ///         cref=&quot;ButtonWidget&quot; /&gt;
+        ///     class.
+        /// &lt;/summary&gt;
+        public ButtonWidget() : this(null, null)
         {
         }
 
         /// &lt;summary&gt;
-        /// Initializes a new instance of the &lt;see cref=&quot;WarningWidget&quot;/&gt; class.
+        /// Initializes a new instance of the &lt;see cref=&quot;ButtonWidget&quot;/&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;clickCommand&quot;&gt;The command.&lt;/param&gt;
+        public ButtonWidget([CanBeNull] AlfredCommand clickCommand) : this(null, clickCommand)
+        {
+        }
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;ButtonWidget&quot;/&gt; class.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;text&quot;&gt;The text.&lt;/param&gt;
-        public WarningWidget([CanBeNull] string text)
+        public ButtonWidget([CanBeNull] string text) : this(text, null)
         {
+        }
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;ButtonWidget&quot;/&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;text&quot;&gt;The text.&lt;/param&gt;
+        /// &lt;param name=&quot;clickCommand&quot;&gt;The click command.&lt;/param&gt;
+        public ButtonWidget([CanBeNull] string text, [CanBeNull] AlfredCommand clickCommand)
+        {
+            ClickCommand = clickCommand;
             Text = text;
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the command that is executed when the button is clicked.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The click command.&lt;/value&gt;
+        [CanBeNull]
+        public AlfredCommand ClickCommand
+        {
+            get { return _clickCommand; }
+            set
+            {
+                if (!Equals(value, _clickCommand))
+                {
+                    _clickCommand = value;
+                    OnPropertyChanged(nameof(ClickCommand));
+                }
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Simulates a button click
+        /// &lt;/summary&gt;
+        /// &lt;exception
+        ///     cref=&quot;System.InvalidOperationException&quot;&gt;
+        ///     Tried to click the button when CanExecute on ClickCommand returned false.
+        /// &lt;/exception&gt;
+        public void Click()
+        {
+            if (ClickCommand != null)
+            {
+                if (!ClickCommand.CanExecute(this))
+                {
+                    throw new InvalidOperationException(
+                        &quot;Tried to click the button when CanExecute on ClickCommand returned false.&quot;);
+                }
+
+                ClickCommand.Execute(this);
+            }
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[13,34,13,44,1],[14,9,14,10,1],[15,9,15,10,1],[21,9,21,54,1],[22,9,22,10,1],[23,13,23,25,1],[24,9,24,10,1]]);
+      highlightRanges([[95,17,95,18,0],[96,21,97,102,0],[34,33,34,49,1],[35,9,35,10,1],[36,9,36,10,1],[42,71,42,95,1],[43,9,43,10,1],[44,9,44,10,1],[50,56,50,72,1],[51,9,51,10,1],[52,9,52,10,1],[59,9,59,93,1],[60,9,60,10,1],[61,13,61,41,1],[62,13,62,25,1],[63,9,63,10,1],[72,17,72,18,1],[72,19,72,40,1],[72,41,72,42,1],[74,13,74,14,1],[75,17,75,51,1],[76,17,76,18,1],[77,21,77,43,1],[78,21,78,61,1],[79,17,79,18,1],[80,13,80,14,1],[91,9,91,10,1],[92,13,92,38,1],[93,13,93,14,1],[94,17,94,52,1],[100,17,100,44,1],[101,13,101,14,1],[102,9,102,10,1]]);
     </script>
   </body>
 </html>

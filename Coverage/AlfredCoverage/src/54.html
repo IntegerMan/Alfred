@@ -2,70 +2,240 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.aiml\chatpage.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\chatenginelibrarian.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// ChatEngineLibrarian.cs
+// 
+// Created on:      08/16/2015 at 1:16 PM
+// Last Modified:   08/17/2015 at 12:24 AM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Security;
+using System.Xml;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core;
-using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Pages;
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Common;
 
-namespace MattEland.Ani.Alfred.Chat
+namespace MattEland.Ani.Alfred.Chat.Aiml
 {
     /// &lt;summary&gt;
-    /// A custom page for interacting with Alfred via Chat
+    ///     The librarian is a helper class that manages settings for the Chat Engine
     /// &lt;/summary&gt;
-    public sealed class ChatPage : AlfredPage
+    public class ChatEngineLibrarian
     {
         [NotNull]
-        private readonly IChatProvider _chatHandler;
+        private readonly ChatEngine _chatEngine;
 
         /// &lt;summary&gt;
-        /// Gets the chat handler.
+        ///     Initializes a new instance of the &lt;see cref=&quot;ChatEngineLibrarian&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The chat handler.&lt;/value&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;chatEngine&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public ChatEngineLibrarian([NotNull] ChatEngine chatEngine)
+        {
+            //-Validate
+            if (chatEngine == null)
+            {
+                throw new ArgumentNullException(nameof(chatEngine));
+            }
+
+            _chatEngine = chatEngine;
+
+            // Initialize settings dictionaries
+            GlobalSettings = new SettingsManager();
+            GenderSubstitutions = new SettingsManager();
+            SecondPersonToFirstPersonSubstitutions = new SettingsManager();
+            FirstPersonToSecondPersonSubstitutions = new SettingsManager();
+            Substitutions = new SettingsManager();
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the substitutions dictionary. Substitutions are common phrases that are condensed and
+        ///     translated to their equivalent meaning to increase bot flexibility and make content authoring
+        ///     easier.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The substitutions.&lt;/value&gt;
         [NotNull]
-        public IChatProvider ChatHandler
+        public SettingsManager Substitutions { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets the gender substitutions dictionary. This is a collection of male and female pronouns and
+        ///     their
+        ///     replacement values to use when the &quot;gender&quot; AIML tag is present.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The gender substitutions dictionary.&lt;/value&gt;
+        [NotNull]
+        public SettingsManager GenderSubstitutions { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets the global settings dictionary.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The global settings.&lt;/value&gt;
+        [NotNull]
+        public SettingsManager GlobalSettings { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets the person substitutions settings dictionary for second person to first person
+        ///     conversions.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The person substitutions settings dictionary.&lt;/value&gt;
+        [NotNull]
+        public SettingsManager SecondPersonToFirstPersonSubstitutions { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets the person substitutions settings dictionary. This contains things related to moving from
+        ///     the first person to the second person.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The person substitutions settings dictionary.&lt;/value&gt;
+        [NotNull]
+        public SettingsManager FirstPersonToSecondPersonSubstitutions { get; }
+
+        /// &lt;summary&gt;
+        ///     Loads settings into the various dictionaries.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;pathToConfigFiles&quot;&gt;The path to the configuration files directory.&lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentException&quot;&gt;Path to settings must be provided.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;XmlException&quot;&gt;Path to settings must be provided.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;FileNotFoundException&quot;&gt;The settings file was not found.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;SecurityException&quot;&gt;Could not find a settings file at the given path&lt;/exception&gt;
+        /// &lt;exception cref=&quot;UnauthorizedAccessException&quot;&gt;The caller does not have the required permission.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;DirectoryNotFoundException&quot;&gt;
+        ///     Access to &lt;paramref name=&quot;pathToConfigFiles&quot; /&gt; is
+        ///     denied.
+        /// &lt;/exception&gt;
+        /// &lt;exception cref=&quot;IOException&quot;&gt;
+        ///     The specified path is invalid (for example, it is on an unmapped
+        ///     drive).
+        /// &lt;/exception&gt;
+        public void LoadSettingsFromConfigDirectory([NotNull] string pathToConfigFiles)
         {
-            [DebuggerStepThrough]
-            get
-            { return _chatHandler; }
+            // Validate
+            if (pathToConfigFiles.IsEmpty())
+            {
+                throw new ArgumentException(Resources.LibrarianLoadSettingsErrorNoConfigDirectory,
+                                            nameof(pathToConfigFiles));
+            }
+
+            // Load global settings and ensure default values are present
+            var pathToSettings = Path.Combine(pathToConfigFiles, &quot;Settings.xml&quot;);
+            GlobalSettings.Load(pathToSettings);
+            AddDefaultSettings();
+
+            // Load the indiviual dictionaries. If any one of these fail, the failure will be logged but things will move on
+            var person2Path = Path.Combine(pathToConfigFiles,
+                                           GlobalSettings.GetValue(&quot;person2substitutionsfile&quot;).NonNull());
+            SecondPersonToFirstPersonSubstitutions.LoadSafe(person2Path,
+                                                            _chatEngine.Logger,
+                                                            _chatEngine.Locale);
+
+            var person1Path = Path.Combine(pathToConfigFiles,
+                                           GlobalSettings.GetValue(&quot;personsubstitutionsfile&quot;).NonNull());
+            FirstPersonToSecondPersonSubstitutions.LoadSafe(person1Path,
+                                                            _chatEngine.Logger,
+                                                            _chatEngine.Locale);
+
+            var genderPath = Path.Combine(pathToConfigFiles,
+                                          GlobalSettings.GetValue(&quot;gendersubstitutionsfile&quot;).NonNull());
+            GenderSubstitutions.LoadSafe(genderPath, _chatEngine.Logger, _chatEngine.Locale);
+
+            var substitutionPath = Path.Combine(pathToConfigFiles,
+                                                GlobalSettings.GetValue(&quot;substitutionsfile&quot;).NonNull());
+            Substitutions.LoadSafe(substitutionPath, _chatEngine.Logger, _chatEngine.Locale);
         }
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredPage&quot; /&gt; class.
+        ///     Loads various settings from XML files. Input parameters are all optional and should be the
+        ///     actual XML and not a file path.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;name&quot;&gt;The name.&lt;/param&gt;
-        /// &lt;param name=&quot;chatHandler&quot;&gt;The input handler&lt;/param&gt;
-        public ChatPage([NotNull] string name, [NotNull] IChatProvider chatHandler) : base(name)
+        /// &lt;param name=&quot;globalXml&quot;&gt;The global XML.&lt;/param&gt;
+        /// &lt;param name=&quot;firstPersonXml&quot;&gt;The first person XML.&lt;/param&gt;
+        /// &lt;param name=&quot;secondPersonXml&quot;&gt;The second person XML.&lt;/param&gt;
+        /// &lt;param name=&quot;genderXml&quot;&gt;The gender XML.&lt;/param&gt;
+        /// &lt;param name=&quot;substitutionsXml&quot;&gt;The substitutions XML.&lt;/param&gt;
+        [SuppressMessage(&quot;ReSharper&quot;, &quot;AssignNullToNotNullAttribute&quot;)]
+        public void LoadSettingsFromXml([CanBeNull] string globalXml = null,
+                                        [CanBeNull] string firstPersonXml = null,
+                                        [CanBeNull] string secondPersonXml = null,
+                                        [CanBeNull] string genderXml = null,
+                                        [CanBeNull] string substitutionsXml = null)
         {
-            _chatHandler = chatHandler;
+            if (globalXml.HasText())
+            {
+                GlobalSettings.LoadXmlSafe(globalXml, _chatEngine.Logger, _chatEngine.Locale);
+            }
+
+            AddDefaultSettings();
+
+            if (firstPersonXml.HasText())
+            {
+                FirstPersonToSecondPersonSubstitutions.LoadXmlSafe(firstPersonXml,
+                                                                   _chatEngine.Logger,
+                                                                   _chatEngine.Locale);
+            }
+            if (secondPersonXml.HasText())
+            {
+                SecondPersonToFirstPersonSubstitutions.LoadXmlSafe(secondPersonXml,
+                                                                   _chatEngine.Logger,
+                                                                   _chatEngine.Locale);
+            }
+            if (genderXml.HasText())
+            {
+                GenderSubstitutions.LoadXmlSafe(genderXml, _chatEngine.Logger, _chatEngine.Locale);
+            }
+            if (substitutionsXml.HasText())
+            {
+                Substitutions.LoadXmlSafe(substitutionsXml, _chatEngine.Logger, _chatEngine.Locale);
+            }
         }
 
         /// &lt;summary&gt;
-        /// Gets the children of this component. Depending on the type of component this is, the children will
-        /// vary in their own types.
+        ///     Adds default settings to the global settings file.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The children.&lt;/value&gt;
-        public override IEnumerable&lt;IAlfredComponent&gt; Children
+        private void AddDefaultSettings()
         {
-            get { yield break; }
+            AddSettingIfMissing(&quot;person2substitutionsfile&quot;, &quot;Person2Substitutions.xml&quot;);
+            AddSettingIfMissing(&quot;personsubstitutionsfile&quot;, &quot;PersonSubstitutions.xml&quot;);
+            AddSettingIfMissing(&quot;gendersubstitutionsfile&quot;, &quot;GenderSubstitutions.xml&quot;);
+            AddSettingIfMissing(&quot;substitutionsfile&quot;, &quot;Substitutions.xml&quot;);
+            AddSettingIfMissing(&quot;aimldirectory&quot;, &quot;aiml&quot;);
+            AddSettingIfMissing(&quot;configdirectory&quot;, &quot;config&quot;);
         }
 
+        /// &lt;summary&gt;
+        ///     Adds a setting to the global settings dictionary if that setting is not present.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;settingName&quot;&gt;Name of the setting.&lt;/param&gt;
+        /// &lt;param name=&quot;defaultValue&quot;&gt;The default value.&lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;settingName&lt;/exception&gt;
+        private void AddSettingIfMissing([NotNull] string settingName,
+                                         [CanBeNull] string defaultValue)
+        {
+            if (settingName == null)
+            {
+                throw new ArgumentNullException(nameof(settingName));
+            }
+
+            if (!GlobalSettings.Contains(settingName))
+            {
+                GlobalSettings.Add(settingName, defaultValue);
+            }
+        }
     }
-
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[30,13,30,14,0],[30,15,30,35,0],[30,36,30,37,0],[38,87,38,97,0],[39,9,39,10,0],[40,13,40,40,0],[41,9,41,10,0],[50,17,50,18,0],[50,19,50,31,0]]);
+      highlightRanges([[39,13,39,14,0],[40,17,40,69,0],[112,9,112,10,0],[114,13,114,45,0],[115,13,115,14,0],[116,17,117,72,0],[121,13,121,82,0],[122,13,122,49,0],[123,13,123,34,0],[126,13,127,107,0],[128,13,130,81,0],[132,13,133,106,0],[134,13,136,81,0],[138,13,139,105,0],[140,13,140,94,0],[142,13,143,105,0],[144,13,144,94,0],[145,9,145,10,0],[215,13,215,14,0],[216,17,216,70,0],[220,13,220,14,0],[221,17,221,63,0],[222,13,222,14,0],[35,9,35,68,1],[36,9,36,10,1],[38,13,38,36,1],[43,13,43,38,1],[46,13,46,52,1],[47,13,47,57,1],[48,13,48,76,1],[49,13,49,76,1],[50,13,50,51,1],[51,9,51,10,1],[60,48,60,52,1],[69,54,69,58,1],[76,49,76,53,1],[84,73,84,77,1],[92,73,92,77,1],[162,9,162,10,1],[163,13,163,37,1],[164,13,164,14,1],[165,17,165,95,1],[166,13,166,14,1],[168,13,168,34,1],[170,13,170,42,1],[171,13,171,14,1],[172,17,174,88,1],[175,13,175,14,1],[176,13,176,43,1],[177,13,177,14,1],[178,17,180,88,1],[181,13,181,14,1],[182,13,182,37,1],[183,13,183,14,1],[184,17,184,100,1],[185,13,185,14,1],[186,13,186,44,1],[187,13,187,14,1],[188,17,188,101,1],[189,13,189,14,1],[190,9,190,10,1],[196,9,196,10,1],[197,13,197,89,1],[198,13,198,87,1],[199,13,199,87,1],[200,13,200,75,1],[201,13,201,58,1],[202,13,202,62,1],[203,9,203,10,1],[213,9,213,10,1],[214,13,214,37,1],[219,13,219,55,1],[223,9,223,10,1]]);
     </script>
   </body>
 </html>

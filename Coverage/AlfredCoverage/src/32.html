@@ -2,127 +2,41 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\pages\alfredmodulelistpage.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\widgets\warningwidget.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-// ---------------------------------------------------------
-// AlfredModuleListPage.cs
-// 
-// Created on:      08/08/2015 at 7:17 PM
-// Last Modified:   08/09/2015 at 10:03 PM
-// Original author: Matt Eland
-// ---------------------------------------------------------
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Common;
-
-namespace MattEland.Ani.Alfred.Core.Pages
+namespace MattEland.Ani.Alfred.Core.Widgets
 {
     /// &lt;summary&gt;
-    ///     A page grouping together multiple module collections of widgets
+    /// A widget used for displaying warnings or errors to the user.
     /// &lt;/summary&gt;
-    public sealed class AlfredModuleListPage : AlfredPage
+    public sealed class WarningWidget : AlfredTextWidget
     {
-        [NotNull]
-        [ItemNotNull]
-        private readonly ICollection&lt;IAlfredModule&gt; _modules;
-
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredModuleListPage&quot; /&gt; class.
+        /// Initializes a new instance of the &lt;see cref=&quot;WarningWidget&quot;/&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;provider&quot;&gt;The provider.&lt;/param&gt;
-        /// &lt;param name=&quot;name&quot;&gt;The name.&lt;/param&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
-        public AlfredModuleListPage([NotNull] IPlatformProvider provider, [NotNull] string name) : base(name)
+        public WarningWidget() : this(null)
         {
-            if (provider == null)
-            {
-                throw new ArgumentNullException(nameof(provider));
-            }
-
-            _modules = provider.CreateCollection&lt;IAlfredModule&gt;();
         }
 
         /// &lt;summary&gt;
-        ///     Gets the modules.
+        /// Initializes a new instance of the &lt;see cref=&quot;WarningWidget&quot;/&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The modules.&lt;/value&gt;
-        [NotNull]
-        [ItemNotNull]
-        public IEnumerable&lt;IAlfredModule&gt; Modules
+        /// &lt;param name=&quot;text&quot;&gt;The text.&lt;/param&gt;
+        public WarningWidget([CanBeNull] string text)
         {
-            get { return _modules; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the children of this component. Depending on the type of component this is, the children will
-        ///     vary in their own types.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The children.&lt;/value&gt;
-        public override IEnumerable&lt;IAlfredComponent&gt; Children
-        {
-            get
-            {
-                foreach (var module in _modules)
-                {
-                    yield return module;
-                }
-            }
-        }
-
-        /// &lt;summary&gt;
-        ///     Registers the specified module.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;module&quot;&gt;The module.&lt;/param&gt;
-        [System.Diagnostics.CodeAnalysis.SuppressMessage(&quot;Microsoft.Design&quot;, &quot;CA1062:Validate arguments of public methods&quot;, MessageId = &quot;0&quot;)]
-        public void Register([NotNull] IAlfredModule module)
-        {
-            _modules.AddSafe(module);
-            module.OnRegistered(AlfredInstance);
-        }
-
-        /// &lt;summary&gt;
-        ///     Clears the modules list.
-        /// &lt;/summary&gt;
-        public void ClearModules()
-        {
-            _modules.Clear();
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets whether or not the component is visible to the user interface.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;Whether or not the component is visible.&lt;/value&gt;
-        public override bool IsVisible
-        {
-            get { return base.IsVisible &amp;&amp; Modules.Any(m =&gt; m.Widgets.Any(w =&gt; w.IsVisible)); }
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles a chat command that may be intended for a module on this page.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;command&quot;&gt;The command.&lt;/param&gt;
-        /// &lt;param name=&quot;result&quot;&gt;The default system response. This should be modified and returned.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the command was handled, &lt;c&gt;false&lt;/c&gt; otherwise.&lt;/returns&gt;
-        public override bool HandleChatCommand(ChatCommand command, AlfredCommandResult result)
-        {
-            return Modules.Any(module =&gt; module.HandleChatCommand(command, result));
-
+            Text = text;
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[38,13,38,14,0],[39,17,39,67,0],[97,17,97,18,0],[97,19,97,61,0],[97,92,97,94,0],[97,95,97,96,0],[107,9,107,10,0],[108,13,108,42,0],[108,83,108,85,0],[110,9,110,10,0],[97,61,97,80,0],[97,91,97,92,0],[97,80,97,91,0],[108,42,108,83,0],[35,100,35,110,1],[36,9,36,10,1],[37,13,37,34,1],[42,13,42,67,1],[43,9,43,10,1],[53,17,53,18,1],[53,19,53,35,1],[53,36,53,37,1],[78,9,78,10,1],[79,13,79,38,1],[80,13,80,49,1],[81,9,81,10,1],[87,9,87,10,1],[88,13,88,30,1],[89,9,89,10,1],[64,13,64,14,1],[65,17,65,24,1],[65,40,65,48,1],[65,26,65,36,1],[66,17,66,18,1],[67,21,67,41,1],[68,17,68,18,1],[65,37,65,39,1],[69,13,69,14,1]]);
+      highlightRanges([[13,34,13,44,1],[14,9,14,10,1],[15,9,15,10,1],[21,9,21,54,1],[22,9,22,10,1],[23,13,23,25,1],[24,9,24,10,1]]);
     </script>
   </body>
 </html>

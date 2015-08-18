@@ -2,141 +2,58 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.system\diskmonitormodule.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.aiml\alfredtaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// DiskMonitorModule.cs
+// AlfredTagHandler.cs
 // 
-// Created on:      08/05/2015 at 1:03 AM
-// Last Modified:   08/05/2015 at 3:10 PM
-// Original author: Matt Eland
+// Created on:      08/17/2015 at 10:57 PM
+// Last Modified:   08/17/2015 at 10:59 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Diagnostics;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Widgets;
+using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 
-namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
+namespace MattEland.Ani.Alfred.Chat
 {
     /// &lt;summary&gt;
-    ///     A module that displays information on the system&#39;s disk input / output operations
+    ///     A tag handler that handles the custom &quot;alfred&quot; tag that integrates Alfred into the AIML system
+    ///     and allows AIML files to issue commands to Alfred modules.
     /// &lt;/summary&gt;
-    public sealed class DiskMonitorModule : SystemMonitorModule, IDisposable
+    [HandlesAimlTag(&quot;alfred&quot;)]
+    public class AlfredTagHandler : AimlTagHandler
     {
-        private const string DiskCategoryName = &quot;PhysicalDisk&quot;;
-        private const string DiskReadCounterName = &quot;% Disk Read Time&quot;;
-        private const string DiskWriteCounterName = &quot;% Disk Write Time&quot;;
-
-        [NotNull]
-        private readonly PerformanceCounter _diskReadCounter;
-
-        [NotNull]
-        private readonly AlfredProgressBarWidget _diskReadWidget;
-
-        [NotNull]
-        private readonly PerformanceCounter _diskWriteCounter;
-
-        [NotNull]
-        private readonly AlfredProgressBarWidget _diskWriteWidget;
-
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;MemoryMonitorModule&quot; /&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
-        public DiskMonitorModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;parameters&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public AlfredTagHandler([NotNull] TagHandlerParameters parameters) : base(parameters)
         {
-            _diskReadCounter = new PerformanceCounter(DiskCategoryName, DiskReadCounterName, TotalInstanceName, true);
-            _diskWriteCounter = new PerformanceCounter(DiskCategoryName, DiskWriteCounterName, TotalInstanceName, true);
-
-            _diskReadWidget = CreatePercentWidget();
-            _diskReadWidget.Text = Resources.DiskReadLabel;
-
-            _diskWriteWidget = CreatePercentWidget();
-            _diskWriteWidget.Text = Resources.DiskWriteLabel;
-
         }
 
         /// &lt;summary&gt;
-        ///     Gets the name of the module.
+        ///     Processes the input text and returns the processed value.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;
-        ///     The name of the module.
-        /// &lt;/value&gt;
-        public override string Name
+        /// &lt;returns&gt;The processed output&lt;/returns&gt;
+        protected override string ProcessChange()
         {
-            // ReSharper disable once AssignNullToNotNullAttribute
-            get { return Resources.DiskMonitorName; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// &lt;/summary&gt;
-        public void Dispose()
-        {
-            _diskReadCounter.Dispose();
-            _diskWriteCounter.Dispose();
-        }
-
-        /// &lt;summary&gt;
-        ///     Creates a percentage progress bar widget.
-        /// &lt;/summary&gt;
-        /// &lt;returns&gt;A percentage progress bar widget&lt;/returns&gt;
-        [NotNull]
-        private static AlfredProgressBarWidget CreatePercentWidget()
-        {
-            var widget = new AlfredProgressBarWidget
-            {
-                Minimum = 0,
-                Maximum = 100,
-                ValueFormatString = &quot;{0:F2} %&quot;
-            };
-
-            return widget;
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles module shutdown events
-        /// &lt;/summary&gt;
-        protected override void ShutdownProtected()
-        {
-            _diskReadWidget.Value = 0;
-            _diskWriteWidget.Value = 0;
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles module initialization events
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;alfred&quot;&gt;&lt;/param&gt;
-        protected override void InitializeProtected(IAlfred alfred)
-        {
-            Register(_diskReadWidget);
-            Register(_diskWriteWidget);
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles updating the module as needed
-        /// &lt;/summary&gt;
-        protected override void UpdateProtected()
-        {
-            var readPercent = GetNextCounterValueSafe(_diskReadCounter);
-            var writePercent = GetNextCounterValueSafe(_diskWriteCounter);
-
-            _diskReadWidget.Value = readPercent;
-            _diskWriteWidget.Value = writePercent;
+            throw new NotImplementedException(&quot;Working on it...&quot;);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[66,17,66,18,0],[66,19,66,52,0],[66,53,66,54,0],[73,9,73,10,0],[74,13,74,40,0],[75,13,75,41,0],[76,9,76,10,0],[99,9,99,10,0],[100,13,100,39,0],[101,13,101,40,0],[102,9,102,10,0],[118,9,118,10,0],[119,13,119,73,0],[120,13,120,75,0],[122,13,122,49,0],[123,13,123,51,0],[124,9,124,10,0],[44,82,44,104,1],[45,9,45,10,1],[46,13,46,119,1],[47,13,47,121,1],[49,13,49,53,1],[50,13,50,60,1],[52,13,52,54,1],[53,13,53,62,1],[55,9,55,10,1],[84,9,84,10,1],[85,13,90,15,1],[92,13,92,27,1],[93,9,93,10,1],[109,9,109,10,1],[110,13,110,39,1],[111,13,111,40,1],[112,9,112,10,1]]);
+      highlightRanges([[30,78,30,94,1],[31,9,31,10,1],[32,9,32,10,1],[39,9,39,10,1],[40,13,40,67,1]]);
     </script>
   </body>
 </html>

@@ -19,6 +19,7 @@ using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
+using MattEland.Common;
 
 using NUnit.Framework;
 
@@ -169,6 +170,8 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         /// </summary>
         protected void InitChatSystem()
         {
+            AlfredTestTagHandler.WasInvoked = false;
+
             var bootstrapper = new AlfredBootstrapper();
             _alfred = bootstrapper.Create();
 
@@ -180,11 +183,14 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             _chatSubsystem = new AlfredChatSubsystem(_alfred.PlatformProvider, _alfred.Console);
             _alfred.Register(_chatSubsystem);
 
-            // Do some extra registration work with the chat engine as we want its components for testing
+            // Store Chat Handler Details
             var chatHandler = _chatSubsystem.ChatHandler;
             _chat = chatHandler;
+
+            // Store Engine
             Assert.IsNotNull(chatHandler.ChatEngine, "Chat Engine was null");
             Engine = chatHandler.ChatEngine;
+            Engine.LoadAimlFromString(Resources.AimlTestAssets.NonNull());
             _user = new User("Test User", Engine);
 
             // Start Alfred - doesn't make sense to have a chat test that doesn't need Alfred online first.

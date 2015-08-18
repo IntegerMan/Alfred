@@ -2,181 +2,76 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\alfredbootstrapper.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\chat\alfredtaghandlertests.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlfredBootstrapper.cs
+// AlfredTagHandlerTests.cs
 // 
-// Created on:      08/09/2015 at 5:10 PM
-// Last Modified:   08/09/2015 at 5:29 PM
-// Original author: Matt Eland
+// Created on:      08/17/2015 at 10:55 PM
+// Last Modified:   08/17/2015 at 10:55 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
+using System.Xml;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core.Console;
-using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Chat;
+using MattEland.Ani.Alfred.Chat.Aiml;
+using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 
-namespace MattEland.Ani.Alfred.Core
+using NUnit.Framework;
+
+namespace MattEland.Ani.Alfred.Tests.Chat
 {
     /// &lt;summary&gt;
-    ///     A utility class used for instantiating the Alfred Framework
+    /// A class to test tag handlers for Alfred commands.
     /// &lt;/summary&gt;
-    public sealed class AlfredBootstrapper
+    [TestFixture]
+    [SuppressMessage(&quot;ReSharper&quot;, &quot;NotNullMemberIsNotInitialized&quot;)]
+    public class AlfredTagHandlerTests : ChatTestsBase
     {
-        [CanBeNull]
-        private IConsole _console;
-
         [NotNull]
-        private IPlatformProvider _platformProvider;
-
-        [NotNull]
-        private IStatusController _statusController;
+        private AlfredTagHandler _handler;
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredBootstrapper&quot; /&gt; class.
+        /// Sets up the test fixture for each test.
         /// &lt;/summary&gt;
-        public AlfredBootstrapper() : this(new SimplePlatformProvider(), new AlfredStatusController(), null)
+        [SetUp]
+        public void SetUp()
         {
+            InitChatSystem();
+
+            var parameters = BuildTagHandlerParameters(&quot;&lt;alfred submodule=\&quot;core\&quot; command=\&quot;shutdown\&quot; /&gt;&quot;);
+            _handler = new AlfredTagHandler(parameters);
         }
 
-        /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredBootstrapper&quot; /&gt; class.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
-        public AlfredBootstrapper([NotNull] IPlatformProvider platformProvider)
-            : this(platformProvider, new AlfredStatusController(), null)
+        [Test]
+        [SuppressMessage(&quot;ReSharper&quot;, &quot;ExceptionNotDocumented&quot;)]
+        public void AlfredTagHandlerHasHandlesAttribute()
         {
+
+            var type = _handler.GetType();
+            var attribute = type.GetCustomAttribute(typeof(HandlesAimlTagAttribute)) as HandlesAimlTagAttribute;
+
+            Assert.IsNotNull(attribute, &quot;Handler did not have the HandlesAimlTag attribute&quot;);
+            Assert.AreEqual(&quot;alfred&quot;, attribute.Name, &quot;Handler did not handle the expected type&quot;);
         }
 
-        /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredBootstrapper&quot; /&gt; class.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;statusController&quot;&gt;The status controller.&lt;/param&gt;
-        public AlfredBootstrapper([NotNull] IStatusController statusController)
-            : this(new SimplePlatformProvider(), statusController, null)
-        {
-        }
-
-        /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredBootstrapper&quot; /&gt; class.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
-        /// &lt;param name=&quot;statusController&quot;&gt;The status controller.&lt;/param&gt;
-        public AlfredBootstrapper([NotNull] IPlatformProvider platformProvider,
-                                  [NotNull] IStatusController statusController)
-            : this(platformProvider, statusController, null)
-        {
-        }
-
-        /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredBootstrapper&quot; /&gt; class.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
-        /// &lt;param name=&quot;statusController&quot;&gt;The status controller.&lt;/param&gt;
-        /// &lt;param name=&quot;console&quot;&gt;The console.&lt;/param&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;
-        /// &lt;/exception&gt;
-        public AlfredBootstrapper([NotNull] IPlatformProvider platformProvider,
-                                  [NotNull] IStatusController statusController,
-                                  [CanBeNull] IConsole console)
-        {
-            if (platformProvider == null)
-            {
-                throw new ArgumentNullException(nameof(platformProvider));
-            }
-            if (statusController == null)
-            {
-                throw new ArgumentNullException(nameof(statusController));
-            }
-            _console = console;
-            _platformProvider = platformProvider;
-            _statusController = statusController;
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets or sets the platform provider.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The platform provider.&lt;/value&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
-        [NotNull]
-        public IPlatformProvider PlatformProvider
-        {
-            [DebuggerStepThrough]
-            get
-            { return _platformProvider; }
-            [DebuggerStepThrough]
-            set
-            {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
-                _platformProvider = value;
-            }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets or sets the status controller.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The status controller.&lt;/value&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
-        [NotNull]
-        public IStatusController StatusController
-        {
-            [DebuggerStepThrough]
-            get
-            { return _statusController; }
-            [DebuggerStepThrough]
-            set
-            {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
-                _statusController = value;
-            }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets or sets the console.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The console.&lt;/value&gt;
-        [CanBeNull]
-        public IConsole Console
-        {
-            [DebuggerStepThrough]
-            get
-            { return _console; }
-            [DebuggerStepThrough]
-            set
-            { _console = value; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Creates a new instance of Alfred using this instance&#39;s properties and returns it.
-        /// &lt;/summary&gt;
-        /// &lt;returns&gt;The Alfred instance.&lt;/returns&gt;
-        [NotNull]
-        public AlfredApplication Create()
-        {
-            var alfred = new AlfredApplication(_platformProvider, _statusController);
-            alfred.Console = _console;
-
-            return alfred;
-        }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[45,15,45,73,0],[46,9,46,10,0],[47,9,47,10,0],[54,15,54,73,0],[55,9,55,10,0],[56,9,56,10,0],[65,15,65,61,0],[66,9,66,10,0],[67,9,67,10,0],[82,13,82,14,0],[83,17,83,75,0],[86,13,86,14,0],[87,17,87,75,0],[104,13,104,14,0],[104,15,104,40,0],[104,41,104,42,0],[107,13,107,14,0],[108,17,108,35,0],[109,17,109,18,0],[110,21,110,68,0],[112,17,112,43,0],[113,13,113,14,0],[126,13,126,14,0],[126,15,126,40,0],[126,41,126,42,0],[129,13,129,14,0],[130,17,130,35,0],[131,17,131,18,0],[132,21,132,68,0],[134,17,134,43,0],[135,13,135,14,0],[147,13,147,14,0],[147,15,147,31,0],[147,32,147,33,0],[150,13,150,14,0],[150,15,150,32,0],[150,33,150,34,0],[36,39,36,109,1],[37,9,37,10,1],[38,9,38,10,1],[77,9,79,64,1],[80,9,80,10,1],[81,13,81,42,1],[85,13,85,42,1],[89,13,89,32,1],[90,13,90,50,1],[91,13,91,50,1],[92,9,92,10,1],[159,9,159,10,1],[160,13,160,86,1],[161,13,161,39,1],[163,13,163,27,1],[164,9,164,10,1]]);
+      highlightRanges([[41,9,41,10,1],[42,13,42,30,1],[44,13,44,110,1],[45,13,45,57,1],[46,9,46,10,1],[51,9,51,10,1],[53,13,53,43,1],[54,13,54,113,1],[56,13,56,94,1],[57,13,57,99,1],[58,9,58,10,1]]);
     </script>
   </body>
 </html>

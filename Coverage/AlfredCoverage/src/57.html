@@ -2,240 +2,223 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\chatenginelibrarian.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\request.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// ChatEngineLibrarian.cs
+// Request.cs
 // 
-// Created on:      08/16/2015 at 1:16 PM
-// Last Modified:   08/17/2015 at 12:24 AM
+// Created on:      08/12/2015 at 10:22 PM
+// Last Modified:   08/16/2015 at 5:46 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Security;
-using System.Xml;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml
 {
     /// &lt;summary&gt;
-    ///     The librarian is a helper class that manages settings for the Chat Engine
+    ///     Represents a chat request or a sub-component of an existing request
     /// &lt;/summary&gt;
-    public class ChatEngineLibrarian
+    public class Request
     {
-        [NotNull]
-        private readonly ChatEngine _chatEngine;
+        private Request _child;
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;ChatEngineLibrarian&quot; /&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;Request&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;chatEngine&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        public ChatEngineLibrarian([NotNull] ChatEngine chatEngine)
+        /// &lt;param name=&quot;rawInput&quot;&gt;The raw input.&lt;/param&gt;
+        /// &lt;param name=&quot;user&quot;&gt;The user.&lt;/param&gt;
+        /// &lt;param name=&quot;chatEngine&quot;&gt;The chat engine.&lt;/param&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;
+        /// &lt;/exception&gt;
+        public Request([NotNull] string rawInput,
+                       [NotNull] User user,
+                       [NotNull] ChatEngine chatEngine)
+            : this(rawInput, user, chatEngine, null)
         {
-            //-Validate
+        }
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;Request&quot; /&gt; class as a child of a prior Request
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;rawInput&quot;&gt;The raw input.&lt;/param&gt;
+        /// &lt;param name=&quot;user&quot;&gt;The user.&lt;/param&gt;
+        /// &lt;param name=&quot;chatEngine&quot;&gt;The chat engine.&lt;/param&gt;
+        /// &lt;param name=&quot;parent&quot;&gt;The parent.&lt;/param&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;
+        /// &lt;/exception&gt;
+        public Request([NotNull] string rawInput,
+                       [NotNull] User user,
+                       [NotNull] ChatEngine chatEngine,
+                       [CanBeNull] Request parent)
+        {
+            //- Validate
+            if (rawInput == null)
+            {
+                throw new ArgumentNullException(nameof(rawInput));
+            }
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
             if (chatEngine == null)
             {
                 throw new ArgumentNullException(nameof(chatEngine));
             }
 
-            _chatEngine = chatEngine;
+            //- Set Properties
+            RawInput = rawInput;
+            User = user;
+            ChatEngine = chatEngine;
 
-            // Initialize settings dictionaries
-            GlobalSettings = new SettingsManager();
-            GenderSubstitutions = new SettingsManager();
-            SecondPersonToFirstPersonSubstitutions = new SettingsManager();
-            FirstPersonToSecondPersonSubstitutions = new SettingsManager();
-            Substitutions = new SettingsManager();
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the substitutions dictionary. Substitutions are common phrases that are condensed and
-        ///     translated to their equivalent meaning to increase bot flexibility and make content authoring
-        ///     easier.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The substitutions.&lt;/value&gt;
-        [NotNull]
-        public SettingsManager Substitutions { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets the gender substitutions dictionary. This is a collection of male and female pronouns and
-        ///     their
-        ///     replacement values to use when the &quot;gender&quot; AIML tag is present.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The gender substitutions dictionary.&lt;/value&gt;
-        [NotNull]
-        public SettingsManager GenderSubstitutions { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets the global settings dictionary.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The global settings.&lt;/value&gt;
-        [NotNull]
-        public SettingsManager GlobalSettings { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets the person substitutions settings dictionary for second person to first person
-        ///     conversions.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The person substitutions settings dictionary.&lt;/value&gt;
-        [NotNull]
-        public SettingsManager SecondPersonToFirstPersonSubstitutions { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets the person substitutions settings dictionary. This contains things related to moving from
-        ///     the first person to the second person.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The person substitutions settings dictionary.&lt;/value&gt;
-        [NotNull]
-        public SettingsManager FirstPersonToSecondPersonSubstitutions { get; }
-
-        /// &lt;summary&gt;
-        ///     Loads settings into the various dictionaries.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;pathToConfigFiles&quot;&gt;The path to the configuration files directory.&lt;/param&gt;
-        /// &lt;exception cref=&quot;ArgumentException&quot;&gt;Path to settings must be provided.&lt;/exception&gt;
-        /// &lt;exception cref=&quot;XmlException&quot;&gt;Path to settings must be provided.&lt;/exception&gt;
-        /// &lt;exception cref=&quot;FileNotFoundException&quot;&gt;The settings file was not found.&lt;/exception&gt;
-        /// &lt;exception cref=&quot;SecurityException&quot;&gt;Could not find a settings file at the given path&lt;/exception&gt;
-        /// &lt;exception cref=&quot;UnauthorizedAccessException&quot;&gt;The caller does not have the required permission.&lt;/exception&gt;
-        /// &lt;exception cref=&quot;DirectoryNotFoundException&quot;&gt;
-        ///     Access to &lt;paramref name=&quot;pathToConfigFiles&quot; /&gt; is
-        ///     denied.
-        /// &lt;/exception&gt;
-        /// &lt;exception cref=&quot;IOException&quot;&gt;
-        ///     The specified path is invalid (for example, it is on an unmapped
-        ///     drive).
-        /// &lt;/exception&gt;
-        public void LoadSettingsFromConfigDirectory([NotNull] string pathToConfigFiles)
-        {
-            // Validate
-            if (pathToConfigFiles.IsEmpty())
+            if (parent != null)
             {
-                throw new ArgumentException(Resources.LibrarianLoadSettingsErrorNoConfigDirectory,
-                                            nameof(pathToConfigFiles));
+                // Set up the parent / child hierarchy
+                Parent = parent;
+                parent.RegisterChild(this);
+
+                // Copy some additional properties from the parent
+                StartedOn = parent.StartedOn;
+                HasTimedOut = parent.HasTimedOut;
             }
-
-            // Load global settings and ensure default values are present
-            var pathToSettings = Path.Combine(pathToConfigFiles, &quot;Settings.xml&quot;);
-            GlobalSettings.Load(pathToSettings);
-            AddDefaultSettings();
-
-            // Load the indiviual dictionaries. If any one of these fail, the failure will be logged but things will move on
-            var person2Path = Path.Combine(pathToConfigFiles,
-                                           GlobalSettings.GetValue(&quot;person2substitutionsfile&quot;).NonNull());
-            SecondPersonToFirstPersonSubstitutions.LoadSafe(person2Path,
-                                                            _chatEngine.Logger,
-                                                            _chatEngine.Locale);
-
-            var person1Path = Path.Combine(pathToConfigFiles,
-                                           GlobalSettings.GetValue(&quot;personsubstitutionsfile&quot;).NonNull());
-            FirstPersonToSecondPersonSubstitutions.LoadSafe(person1Path,
-                                                            _chatEngine.Logger,
-                                                            _chatEngine.Locale);
-
-            var genderPath = Path.Combine(pathToConfigFiles,
-                                          GlobalSettings.GetValue(&quot;gendersubstitutionsfile&quot;).NonNull());
-            GenderSubstitutions.LoadSafe(genderPath, _chatEngine.Logger, _chatEngine.Locale);
-
-            var substitutionPath = Path.Combine(pathToConfigFiles,
-                                                GlobalSettings.GetValue(&quot;substitutionsfile&quot;).NonNull());
-            Substitutions.LoadSafe(substitutionPath, _chatEngine.Logger, _chatEngine.Locale);
-        }
-
-        /// &lt;summary&gt;
-        ///     Loads various settings from XML files. Input parameters are all optional and should be the
-        ///     actual XML and not a file path.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;globalXml&quot;&gt;The global XML.&lt;/param&gt;
-        /// &lt;param name=&quot;firstPersonXml&quot;&gt;The first person XML.&lt;/param&gt;
-        /// &lt;param name=&quot;secondPersonXml&quot;&gt;The second person XML.&lt;/param&gt;
-        /// &lt;param name=&quot;genderXml&quot;&gt;The gender XML.&lt;/param&gt;
-        /// &lt;param name=&quot;substitutionsXml&quot;&gt;The substitutions XML.&lt;/param&gt;
-        [SuppressMessage(&quot;ReSharper&quot;, &quot;AssignNullToNotNullAttribute&quot;)]
-        public void LoadSettingsFromXml([CanBeNull] string globalXml = null,
-                                        [CanBeNull] string firstPersonXml = null,
-                                        [CanBeNull] string secondPersonXml = null,
-                                        [CanBeNull] string genderXml = null,
-                                        [CanBeNull] string substitutionsXml = null)
-        {
-            if (globalXml.HasText())
+            else
             {
-                GlobalSettings.LoadXmlSafe(globalXml, _chatEngine.Logger, _chatEngine.Locale);
-            }
-
-            AddDefaultSettings();
-
-            if (firstPersonXml.HasText())
-            {
-                FirstPersonToSecondPersonSubstitutions.LoadXmlSafe(firstPersonXml,
-                                                                   _chatEngine.Logger,
-                                                                   _chatEngine.Locale);
-            }
-            if (secondPersonXml.HasText())
-            {
-                SecondPersonToFirstPersonSubstitutions.LoadXmlSafe(secondPersonXml,
-                                                                   _chatEngine.Logger,
-                                                                   _chatEngine.Locale);
-            }
-            if (genderXml.HasText())
-            {
-                GenderSubstitutions.LoadXmlSafe(genderXml, _chatEngine.Logger, _chatEngine.Locale);
-            }
-            if (substitutionsXml.HasText())
-            {
-                Substitutions.LoadXmlSafe(substitutionsXml, _chatEngine.Logger, _chatEngine.Locale);
+                // Set the current start time as the StartedOn field
+                StartedOn = DateTime.Now;
             }
         }
 
         /// &lt;summary&gt;
-        ///     Adds default settings to the global settings file.
+        ///     Gets the chat engine.
         /// &lt;/summary&gt;
-        private void AddDefaultSettings()
+        /// &lt;value&gt;The chat engine.&lt;/value&gt;
+        [NotNull]
+        public ChatEngine ChatEngine { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets a value indicating whether this instance has timed out.
+        ///     Call CheckForTimeOut to update this.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;&lt;c&gt;true&lt;/c&gt; if this instance has timed out; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/value&gt;
+        public bool HasTimedOut { get; private set; }
+
+        /// &lt;summary&gt;
+        ///     Gets the raw input.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The raw input.&lt;/value&gt;
+        [NotNull]
+        public string RawInput { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the result of the request.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The result.&lt;/value&gt;
+        [CanBeNull]
+        public Result Result { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets when the request started.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The started on.&lt;/value&gt;
+        public DateTime StartedOn { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets the user associated with the request.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The user.&lt;/value&gt;
+        [NotNull]
+        public User User { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets the parent request, if any.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     Requests can have parents if they were spawned by a prior Request
+        /// &lt;/remarks&gt;
+        /// &lt;value&gt;The parent request.&lt;/value&gt;
+        [CanBeNull]
+        public Request Parent { get; private set; }
+
+        /// &lt;summary&gt;
+        ///     Gets the child request, if any.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     Requests can have children if they spawn an additional Request object
+        /// &lt;/remarks&gt;
+        /// &lt;value&gt;The child request.&lt;/value&gt;
+        [CanBeNull]
+        public Request Child
         {
-            AddSettingIfMissing(&quot;person2substitutionsfile&quot;, &quot;Person2Substitutions.xml&quot;);
-            AddSettingIfMissing(&quot;personsubstitutionsfile&quot;, &quot;PersonSubstitutions.xml&quot;);
-            AddSettingIfMissing(&quot;gendersubstitutionsfile&quot;, &quot;GenderSubstitutions.xml&quot;);
-            AddSettingIfMissing(&quot;substitutionsfile&quot;, &quot;Substitutions.xml&quot;);
-            AddSettingIfMissing(&quot;aimldirectory&quot;, &quot;aiml&quot;);
-            AddSettingIfMissing(&quot;configdirectory&quot;, &quot;config&quot;);
+            get { return _child; }
         }
 
         /// &lt;summary&gt;
-        ///     Adds a setting to the global settings dictionary if that setting is not present.
+        ///     Registers a child request.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;settingName&quot;&gt;Name of the setting.&lt;/param&gt;
-        /// &lt;param name=&quot;defaultValue&quot;&gt;The default value.&lt;/param&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;settingName&lt;/exception&gt;
-        private void AddSettingIfMissing([NotNull] string settingName,
-                                         [CanBeNull] string defaultValue)
+        /// &lt;param name=&quot;childRequest&quot;&gt;The child request.&lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;childRequest&lt;/exception&gt;
+        private void RegisterChild([NotNull] Request childRequest)
         {
-            if (settingName == null)
+            if (childRequest == null)
             {
-                throw new ArgumentNullException(nameof(settingName));
+                throw new ArgumentNullException(nameof(childRequest));
+            }
+            _child = childRequest;
+        }
+
+        /// &lt;summary&gt;
+        ///     Checks to see if this has timed out and returns true if that has happened. This will also log
+        ///     if the request timed out and update HasTimedOut.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        /// If ChatEngine.Timeout is set to 0 or negative values, timeout will never occur
+        /// &lt;/remarks&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the request has timed out, &lt;c&gt;false&lt;/c&gt; otherwise.&lt;/returns&gt;
+        public bool CheckForTimedOut()
+        {
+            if (HasTimedOut)
+            {
+                return HasTimedOut;
+            }
+            var timeLimit = ChatEngine.Timeout;
+
+            // Allow disabling timeout by setting it to &lt;= 0 values
+            if (!(timeLimit &gt; 0))
+            {
+                return HasTimedOut;
             }
 
-            if (!GlobalSettings.Contains(settingName))
+            // Calculate timeout based on start time and now
+            HasTimedOut = StartedOn.AddMilliseconds(timeLimit) &lt; DateTime.Now;
+
+            // Do appropriate logging on new timeouts
+            if (HasTimedOut)
             {
-                GlobalSettings.Add(settingName, defaultValue);
+                var message = string.Format(ChatEngine.Locale,
+                                            Resources.RequestTimedOut.NonNull(),
+                                            User.Id,
+                                            RawInput);
+
+                ChatEngine.Log(message, LogLevel.Warning);
             }
+
+            return HasTimedOut;
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[39,13,39,14,0],[40,17,40,69,0],[112,9,112,10,0],[114,13,114,45,0],[115,13,115,14,0],[116,17,117,72,0],[121,13,121,82,0],[122,13,122,49,0],[123,13,123,34,0],[126,13,127,107,0],[128,13,130,81,0],[132,13,133,106,0],[134,13,136,81,0],[138,13,139,105,0],[140,13,140,94,0],[142,13,143,105,0],[144,13,144,94,0],[145,9,145,10,0],[215,13,215,14,0],[216,17,216,70,0],[220,13,220,14,0],[221,17,221,63,0],[222,13,222,14,0],[35,9,35,68,1],[36,9,36,10,1],[38,13,38,36,1],[43,13,43,38,1],[46,13,46,52,1],[47,13,47,57,1],[48,13,48,76,1],[49,13,49,76,1],[50,13,50,51,1],[51,9,51,10,1],[60,48,60,52,1],[69,54,69,58,1],[76,49,76,53,1],[84,73,84,77,1],[92,73,92,77,1],[162,9,162,10,1],[163,13,163,37,1],[164,13,164,14,1],[165,17,165,95,1],[166,13,166,14,1],[168,13,168,34,1],[170,13,170,42,1],[171,13,171,14,1],[172,17,174,88,1],[175,13,175,14,1],[176,13,176,43,1],[177,13,177,14,1],[178,17,180,88,1],[181,13,181,14,1],[182,13,182,37,1],[183,13,183,14,1],[184,17,184,100,1],[185,13,185,14,1],[186,13,186,44,1],[187,13,187,14,1],[188,17,188,101,1],[189,13,189,14,1],[190,9,190,10,1],[196,9,196,10,1],[197,13,197,89,1],[198,13,198,87,1],[199,13,199,87,1],[200,13,200,75,1],[201,13,201,58,1],[202,13,202,62,1],[203,9,203,10,1],[213,9,213,10,1],[214,13,214,37,1],[219,13,219,55,1],[223,9,223,10,1]]);
+      highlightRanges([[57,13,57,14,0],[58,17,58,67,0],[61,13,61,14,0],[62,17,62,63,0],[65,13,65,14,0],[66,17,66,69,0],[140,33,140,37,0],[163,13,163,14,0],[164,17,164,71,0],[180,13,180,14,0],[181,17,181,36,0],[192,13,192,79,0],[195,13,195,29,0],[196,13,196,14,0],[197,17,200,55,0],[202,17,202,59,0],[203,13,203,14,0],[205,13,205,32,0],[37,15,37,53,1],[38,9,38,10,1],[39,9,39,10,1],[50,9,53,51,1],[54,9,54,10,1],[56,13,56,34,1],[60,13,60,30,1],[64,13,64,36,1],[70,13,70,33,1],[71,13,71,25,1],[72,13,72,37,1],[74,13,74,32,1],[75,13,75,14,1],[77,17,77,33,1],[78,17,78,44,1],[81,17,81,46,1],[82,17,82,50,1],[83,13,83,14,1],[85,13,85,14,1],[87,17,87,42,1],[88,13,88,14,1],[89,9,89,10,1],[96,40,96,44,1],[103,35,103,39,1],[103,40,103,52,1],[110,34,110,38,1],[117,32,117,36,1],[117,37,117,41,1],[123,37,123,41,1],[130,28,130,32,1],[140,38,140,50,1],[152,17,152,18,1],[152,19,152,33,1],[152,34,152,35,1],[161,9,161,10,1],[162,13,162,38,1],[166,13,166,35,1],[167,9,167,10,1],[178,9,178,10,1],[179,13,179,29,1],[183,13,183,48,1],[186,13,186,34,1],[187,13,187,14,1],[188,17,188,36,1],[206,9,206,10,1]]);
     </script>
   </body>
 </html>

@@ -2,16 +2,16 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\uppercasetaghandler.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\normalize\uppercasetexttransformer.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// uppercase.cs
+// UppercaseTextTransformer.cs
 // 
-// Created on:      08/12/2015 at 11:00 PM
+// Created on:      08/12/2015 at 10:38 PM
 // Last Modified:   08/12/2015 at 11:59 PM
 // 
 // Last Modified by: Matt Eland
@@ -20,22 +20,30 @@
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
-using MattEland.Common;
 
-namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
+namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
 {
     /// &lt;summary&gt;
-    /// A tag handler for the AIML &quot;uppercase&quot; tag. This outputs its text in upper case.
+    /// A text transformer that makes the input text be uppercase for comparison
     /// &lt;/summary&gt;
-    [HandlesAimlTag(&quot;uppercase&quot;)]
-    public class UppercaseTagHandler : AimlTagHandler
+    public class UppercaseTextTransformer : TextTransformer
     {
         /// &lt;summary&gt;
-        /// Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
+        /// Initializes a new instance of the &lt;see cref=&quot;TextTransformer&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
-        public UppercaseTagHandler([NotNull] TagHandlerParameters parameters)
-            : base(parameters)
+        /// &lt;param name=&quot;chatEngine&quot;&gt;The ChatEngine.&lt;/param&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
+        public UppercaseTextTransformer([NotNull] ChatEngine chatEngine, string input)
+            : base(chatEngine, input)
+        {
+        }
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;TextTransformer&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;chatEngine&quot;&gt;The ChatEngine.&lt;/param&gt;
+        public UppercaseTextTransformer([NotNull] ChatEngine chatEngine)
+            : base(chatEngine)
         {
         }
 
@@ -45,18 +53,24 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// &lt;returns&gt;The processed output&lt;/returns&gt;
         protected override string ProcessChange()
         {
-            if (TemplateNode.Name.Matches(&quot;uppercase&quot;))
-            {
-                return TemplateNode.InnerText.ToUpper(Locale);
-            }
+            return TransformInput(InputString);
+        }
 
-            return string.Empty;
+        /// &lt;summary&gt;
+        /// Transforms the input to uppercase.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input.&lt;/param&gt;
+        /// &lt;returns&gt;The transformed input&lt;/returns&gt;
+        [CanBeNull]
+        public static string TransformInput([CanBeNull] string input)
+        {
+            return input?.ToUpperInvariant();
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[28,15,28,31,0],[29,9,29,10,0],[30,9,30,10,0],[37,9,37,10,0],[38,13,38,56,0],[39,13,39,14,0],[40,17,40,63,0],[43,13,43,33,0],[44,9,44,10,0]]);
+      highlightRanges([[27,15,27,38,0],[28,9,28,10,0],[29,9,29,10,0],[36,15,36,31,0],[37,9,37,10,0],[38,9,38,10,0],[45,9,45,10,0],[46,13,46,48,0],[47,9,47,10,0],[56,9,56,10,0],[57,13,57,46,0],[58,9,58,10,0]]);
     </script>
   </body>
 </html>

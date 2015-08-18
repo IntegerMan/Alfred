@@ -2,75 +2,336 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\normalize\uppercasetexttransformer.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.aiml\aimlstatementhandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// UppercaseTextTransformer.cs
+// AimlStatementHandler.cs
 // 
-// Created on:      08/12/2015 at 10:38 PM
-// Last Modified:   08/12/2015 at 11:59 PM
+// Created on:      08/10/2015 at 12:51 AM
+// Last Modified:   08/16/2015 at 11:49 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Runtime.CompilerServices;
+using System.Security;
+using System.Xml;
+
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Ani.Alfred.Chat.Aiml;
+using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common;
 
-namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
+namespace MattEland.Ani.Alfred.Chat
 {
     /// &lt;summary&gt;
-    /// A text transformer that makes the input text be uppercase for comparison
+    ///     Handles user statements by parsing the statement through an open source AIML engine
     /// &lt;/summary&gt;
-    public class UppercaseTextTransformer : TextTransformer
+    /// &lt;remarks&gt;
+    ///     AIML stands for Artificial Intelligence Markup Language
+    /// &lt;/remarks&gt;
+    public sealed class AimlStatementHandler : IChatProvider, INotifyPropertyChanged
     {
-        /// &lt;summary&gt;
-        /// Initializes a new instance of the &lt;see cref=&quot;TextTransformer&quot; /&gt; class.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;chatEngine&quot;&gt;The ChatEngine.&lt;/param&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
-        public UppercaseTextTransformer([NotNull] ChatEngine chatEngine, string input)
-            : base(chatEngine, input)
-        {
-        }
-
-        /// &lt;summary&gt;
-        /// Initializes a new instance of the &lt;see cref=&quot;TextTransformer&quot; /&gt; class.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;chatEngine&quot;&gt;The ChatEngine.&lt;/param&gt;
-        public UppercaseTextTransformer([NotNull] ChatEngine chatEngine)
-            : base(chatEngine)
-        {
-        }
-
-        /// &lt;summary&gt;
-        /// Processes the input text and returns the processed value.
-        /// &lt;/summary&gt;
-        /// &lt;returns&gt;The processed output&lt;/returns&gt;
-        protected override string ProcessChange()
-        {
-            return TransformInput(InputString);
-        }
-
-        /// &lt;summary&gt;
-        /// Transforms the input to uppercase.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input.&lt;/param&gt;
-        /// &lt;returns&gt;The transformed input&lt;/returns&gt;
         [CanBeNull]
-        public static string TransformInput([CanBeNull] string input)
+        private readonly ChatEngine _chatEngine;
+
+        [CanBeNull]
+        private readonly User _user;
+
+        [CanBeNull]
+        private IConsole _console;
+
+        [CanBeNull]
+        private string _input;
+
+        private UserStatementResponse _response;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;T:System.Object&quot; /&gt; class using the current
+        ///     directory for the settings path.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;console&quot;&gt;The console.&lt;/param&gt;
+        public AimlStatementHandler([CanBeNull] IConsole console = null)
         {
-            return input?.ToUpperInvariant();
+            //- Logging Housekeeping
+            _console = console;
+
+            //+ Set up the chat engine
+            try
+            {
+                _chatEngine = new ChatEngine(console);
+                _user = new User(Resources.ChatUserName.NonNull(), _chatEngine);
+                InitializeChatEngine();
+            }
+            catch (IOException ex)
+            {
+                LogErrorInitializingChat(ex);
+            }
+            catch (SecurityException ex)
+            {
+                LogErrorInitializingChat(ex);
+            }
+
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the console.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The console.&lt;/value&gt;
+        [CanBeNull]
+        public IConsole Console
+        {
+            [DebuggerStepThrough]
+            [UsedImplicitly]
+            get
+            {
+                return _console;
+            }
+            [DebuggerStepThrough]
+            set
+            {
+                if (Equals(value, _console))
+                {
+                    return;
+                }
+
+                _console = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the chat engine.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;This is present largely for testing&lt;/remarks&gt;
+        /// &lt;value&gt;The chat engine.&lt;/value&gt;
+        [CanBeNull]
+        public ChatEngine ChatEngine
+        {
+            get { return _chatEngine; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Handles a user statement.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;userInput&quot;&gt;The user input.&lt;/param&gt;
+        /// &lt;returns&gt;The response to the user statement&lt;/returns&gt;
+        /// &lt;exception cref=&quot;InvalidOperationException&quot;&gt;
+        ///     Cannot use the chat system when chat did not initialize
+        ///     properly
+        /// &lt;/exception&gt;
+        public UserStatementResponse HandleUserStatement(string userInput)
+        {
+            if (_chatEngine == null || _user == null)
+            {
+                throw new InvalidOperationException(Resources.AimlStatementHandlerChatOffline);
+            }
+
+            //- Log the input to the diagnostic log.
+            Console?.Log(Resources.ChatInputHeader, userInput, LogLevel.UserInput);
+
+            // Give our input to the chat ChatEngine
+            var result = GetChatResult(userInput);
+
+            //- If it&#39;s a catastrophic failure, return a blankish object
+            if (result == null)
+            {
+                return new UserStatementResponse(userInput, Resources.DefaultFailureResponseText, string.Empty, ChatCommand.Empty);
+            }
+
+            // Get the template out of the response so we can see if there are any OOB instructions
+            var template = AimlCommandParser.GetResponseTemplate(result);
+
+            // Grab the command from the template, if one was present
+            var command = AimlCommandParser.GetCommandFromTemplate(template, Console);
+
+            // Interpret the response 
+            var output = result.Output;
+            if (!string.IsNullOrWhiteSpace(output))
+            {
+                Console?.Log(Resources.ChatOutputHeader, output, LogLevel.ChatResponse);
+            }
+
+            //- Log the output to the diagnostic log. Sometimes - for redirect commands / etc. there&#39;s no response
+            if (!string.IsNullOrWhiteSpace(template))
+            {
+                Console?.Log(Resources.ChatOutputHeader,
+                              string.Format(CultureInfo.CurrentCulture,
+                                            &quot;Using Template: {0}&quot;,
+                                            template),
+                              LogLevel.Verbose);
+            }
+
+            //- Update query properties and return the result
+            var response = new UserStatementResponse(userInput, output, template, command);
+            LastResponse = response;
+            LastInput = userInput;
+
+            return response;
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the last response from the system.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The last response.&lt;/value&gt;
+        [CanBeNull]
+        public UserStatementResponse LastResponse
+        {
+            get { return _response; }
+            private set
+            {
+                if (Equals(value, _response))
+                {
+                    return;
+                }
+                _response = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the last input from the user.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The last input.&lt;/value&gt;
+        [CanBeNull]
+        public string LastInput
+        {
+            get { return _input; }
+            private set
+            {
+                if (value == _input)
+                {
+                    return;
+                }
+                _input = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Performs an initial greeting by sending hi to the conversation system
+        ///     and erasing it from the last input so the user sees Alfred greeting them.
+        /// &lt;/summary&gt;
+        public void DoInitialGreeting()
+        {
+            // Send a &quot;hi&quot; into the system
+            HandleUserStatement(Resources.InitialGreetingText.NonNull());
+
+            // Clear out the input so it doesn&#39;t look like the user typed it
+            LastInput = string.Empty;
+        }
+
+        /// &lt;summary&gt;
+        ///     Occurs when a property changes.
+        /// &lt;/summary&gt;
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// &lt;summary&gt;
+        ///     Logs an error encountered initializing chat.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;ex&quot;&gt;The ex.&lt;/param&gt;
+        private void LogErrorInitializingChat([CanBeNull] Exception ex)
+        {
+            var errorFormat = Resources.ErrorInitializingChat;
+            var message = string.Format(CultureInfo.CurrentCulture, errorFormat, ex?.Message);
+            _console?.Log(Resources.ChatProcessingHeader, message, LogLevel.Error);
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the chat result.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;userInput&quot;&gt;The user input.&lt;/param&gt;
+        /// &lt;returns&gt;The result of the communication to the chat ChatEngine&lt;/returns&gt;
+        [CanBeNull]
+        private Result GetChatResult([NotNull] string userInput)
+        {
+            if (_chatEngine == null || _user == null)
+            {
+                throw new InvalidOperationException(Resources.AimlStatementHandlerChatOffline);
+            }
+
+            var result = _chatEngine.Chat(userInput, _user);
+
+            return result;
+        }
+
+        /// &lt;summary&gt;
+        ///     Sets up the chat engine
+        /// &lt;/summary&gt;
+        private void InitializeChatEngine()
+        {
+            if (_chatEngine == null || _user == null)
+            {
+                throw new InvalidOperationException(Resources.AimlStatementHandlerChatOffline);
+            }
+
+            _chatEngine.LoadSettingsFromXml(Resources.ChatBotSettings, Resources.ChatBotPersonSubstitutions, Resources.ChatBotPerson2Substitutions, Resources.ChatBotGenderSubstitutions, Resources.ChatBotSubstitutions);
+
+            AddApplicationAimlResourcesToChatEngine(_chatEngine);
+        }
+
+        /// &lt;summary&gt;
+        ///     Adds Alfred application AIML resources to the chat engine from the internal resource files.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     This method is public and static so that it can be easily accessed by testing libraries.
+        /// &lt;/remarks&gt;
+        /// &lt;param name=&quot;engine&quot;&gt;The chat engine.&lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;
+        ///     &lt;paramref name=&quot;engine&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.
+        /// &lt;/exception&gt;
+        /// &lt;exception cref=&quot;XmlException&quot;&gt;
+        ///     There is a load or parse error in the XML. In this case, a
+        ///     &lt;see cref=&quot;T:System.IO.FileNotFoundException&quot; /&gt; is raised.
+        /// &lt;/exception&gt;
+        [SuppressMessage(&quot;ReSharper&quot;, &quot;AssignNullToNotNullAttribute&quot;)]
+        public static void AddApplicationAimlResourcesToChatEngine([NotNull] ChatEngine engine)
+        {
+            if (engine == null)
+            {
+                throw new ArgumentNullException(nameof(engine));
+            }
+
+            engine.LoadAimlFromString(Resources.AimlCoreDateTime);
+            engine.LoadAimlFromString(Resources.AimlCorePower);
+            engine.LoadAimlFromString(Resources.AimlFallback);
+            engine.LoadAimlFromString(Resources.AimlGod);
+            engine.LoadAimlFromString(Resources.AimlGreeting);
+            engine.LoadAimlFromString(Resources.AimlThanks);
+            engine.LoadAimlFromString(Resources.AimlHelp);
+            engine.LoadAimlFromString(Resources.AimlShellNavigation);
+        }
+
+        /// &lt;summary&gt;
+        ///     Called when a property changes.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;propertyName&quot;&gt;Name of the property.&lt;/param&gt;
+        [SuppressMessage(&quot;Microsoft.Design&quot;, &quot;CA1026:DefaultParametersShouldNotBeUsed&quot;,
+            Justification =
+                &quot;Using CallerMemberName to auto-default this value from any property caller&quot;)]
+        [NotifyPropertyChangedInvocator]
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
+
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[27,15,27,38,0],[28,9,28,10,0],[29,9,29,10,0],[36,15,36,31,0],[37,9,37,10,0],[38,9,38,10,0],[45,9,45,10,0],[46,13,46,48,0],[47,9,47,10,0],[56,9,56,10,0],[57,13,57,46,0],[58,9,58,10,0]]);
+      highlightRanges([[68,13,68,35,0],[69,13,69,14,0],[70,17,70,46,0],[71,13,71,14,0],[72,13,72,41,0],[73,13,73,14,0],[74,17,74,46,0],[75,13,75,14,0],[100,17,100,34,0],[101,17,101,37,0],[128,13,128,14,0],[129,17,129,96,0],[140,13,140,14,0],[141,17,141,132,0],[182,17,182,18,0],[182,19,182,36,0],[182,37,182,38,0],[186,17,186,18,0],[187,21,187,28,0],[205,17,205,18,0],[206,21,206,28,0],[236,9,236,10,0],[237,13,237,63,0],[238,13,238,95,0],[239,13,239,84,0],[240,9,240,10,0],[251,13,251,14,0],[252,17,252,96,0],[266,13,266,14,0],[267,17,267,96,0],[293,13,293,14,0],[294,17,294,65,0],[56,9,56,73,1],[57,9,57,10,1],[59,13,59,32,1],[63,13,63,14,1],[64,17,64,55,1],[65,17,65,81,1],[66,17,66,40,1],[67,13,67,14,1],[77,9,77,10,1],[89,13,89,14,1],[90,17,90,33,1],[91,13,91,14,1],[94,13,94,14,1],[95,17,95,45,1],[96,17,96,18,1],[97,21,97,28,1],[102,13,102,14,1],[113,17,113,18,1],[113,19,113,38,1],[113,39,113,40,1],[126,9,126,10,1],[127,13,127,54,1],[133,13,133,84,1],[136,13,136,51,1],[139,13,139,32,1],[145,13,145,74,1],[148,13,148,87,1],[151,13,151,40,1],[152,13,152,52,1],[153,13,153,14,1],[154,17,154,89,1],[155,13,155,14,1],[158,13,158,54,1],[159,13,159,14,1],[160,17,164,49,1],[165,13,165,14,1],[168,13,168,92,1],[169,13,169,37,1],[170,13,170,35,1],[172,13,172,29,1],[173,9,173,10,1],[184,13,184,14,1],[185,17,185,46,1],[189,17,189,35,1],[190,17,190,37,1],[191,13,191,14,1],[201,17,201,18,1],[201,19,201,33,1],[201,34,201,35,1],[203,13,203,14,1],[204,17,204,37,1],[208,17,208,32,1],[209,17,209,37,1],[210,13,210,14,1],[218,9,218,10,1],[220,13,220,74,1],[223,13,223,38,1],[224,9,224,10,1],[249,9,249,10,1],[250,13,250,54,1],[255,13,255,61,1],[257,13,257,27,1],[258,9,258,10,1],[264,9,264,10,1],[265,13,265,54,1],[270,13,270,219,1],[272,13,272,66,1],[273,9,273,10,1],[291,9,291,10,1],[292,13,292,32,1],[297,13,297,67,1],[298,13,298,64,1],[299,13,299,63,1],[300,13,300,58,1],[301,13,301,63,1],[302,13,302,61,1],[303,13,303,59,1],[304,13,304,70,1],[305,9,305,10,1],[316,9,316,10,1],[317,13,317,87,1],[318,9,318,10,1]]);
     </script>
   </body>
 </html>

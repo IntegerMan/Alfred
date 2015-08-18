@@ -2,17 +2,17 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\outputtaghandler.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\uppercasetaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// OutputTagHandler.cs
+// uppercase.cs
 // 
-// Created on:      08/12/2015 at 10:57 PM
-// Last Modified:   08/15/2015 at 11:06 PM
+// Created on:      08/12/2015 at 11:00 PM
+// Last Modified:   08/12/2015 at 11:59 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -20,90 +20,43 @@
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
-using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// &lt;summary&gt;
-    ///     An AIML tag handler that handles the &quot;that&quot; tag and refers to the nTh last thing the bot said
-    ///     to the user.
+    /// A tag handler for the AIML &quot;uppercase&quot; tag. This outputs its text in upper case.
     /// &lt;/summary&gt;
-    [HandlesAimlTag(&quot;that&quot;)]
-    public class OutputTagHandler : AimlTagHandler
+    [HandlesAimlTag(&quot;uppercase&quot;)]
+    public class UppercaseTagHandler : AimlTagHandler
     {
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
+        /// Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
-        public OutputTagHandler([NotNull] TagHandlerParameters parameters)
+        public UppercaseTagHandler([NotNull] TagHandlerParameters parameters)
             : base(parameters)
         {
         }
 
         /// &lt;summary&gt;
-        ///     Processes the input text and returns the processed value.
+        /// Processes the input text and returns the processed value.
         /// &lt;/summary&gt;
         /// &lt;returns&gt;The processed output&lt;/returns&gt;
         protected override string ProcessChange()
         {
-            var element = TemplateElement;
-            if (element != null &amp;&amp; element.Name.Matches(&quot;that&quot;))
+            if (TemplateNode.Name.Matches(&quot;uppercase&quot;))
             {
-                // If we just said that, grab the first sentence of the first output.
-                if (element.Attributes.Count == 0)
-                {
-                    return User.GetOutputSentence();
-                }
-
-                if (element.HasAttribute(&quot;index&quot;))
-                {
-                    var indexText = element.GetAttribute(&quot;index&quot;);
-
-                    if (indexText.HasText())
-                    {
-                        //- Interpret what the user said
-                        var indiciesText = indexText.Split(&quot;,&quot;.ToCharArray());
-
-                        //- Grab the output index - the nth last interaction result with the chat engine
-                        int outputIndex = indiciesText[0].AsInt();
-
-                        //- Grab the sentence index referring to the sentence within the output - defaulting to 1 if not specified
-                        var sentenceIndex = 1;
-                        if (indiciesText.Length &gt;= 2)
-                        {
-                            sentenceIndex = indiciesText[1].AsInt();
-                        }
-
-                        // Return the thing the chat engine said at the specified point in time
-                        if (outputIndex &gt; 0 &amp; sentenceIndex &gt; 0)
-                        {
-                            return User.GetOutputSentence(outputIndex - 1, sentenceIndex - 1);
-                        }
-
-                        // If we got here we were invalid but did have some text. Log it.
-                        Log(
-                            string.Format(Locale,
-                                          &quot;An input tag with a badly formed index ({0}) was encountered processing the input: {1}&quot;,
-                                          indiciesText,
-                                          Request.RawInput),
-                            LogLevel.Error);
-
-                    }
-
-                }
-
+                return TemplateNode.InnerText.ToUpper(Locale);
             }
 
             return string.Empty;
-
         }
     }
-
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[30,15,30,31,0],[31,9,31,10,0],[32,9,32,10,0],[39,9,39,10,0],[40,13,40,43,0],[41,13,41,65,0],[42,13,42,14,0],[44,17,44,51,0],[45,17,45,18,0],[46,21,46,53,0],[49,17,49,51,0],[50,17,50,18,0],[51,21,51,67,0],[53,21,53,45,0],[54,21,54,22,0],[56,25,56,79,0],[59,25,59,67,0],[62,25,62,47,0],[63,25,63,54,0],[64,25,64,26,0],[65,29,65,69,0],[66,25,66,26,0],[69,25,69,65,0],[70,25,70,26,0],[71,29,71,95,0],[75,25,80,45,0],[82,21,82,22,0],[84,17,84,18,0],[86,13,86,14,0],[88,13,88,33,0],[90,9,90,10,0]]);
+      highlightRanges([[28,15,28,31,0],[29,9,29,10,0],[30,9,30,10,0],[37,9,37,10,0],[38,13,38,56,0],[39,13,39,14,0],[40,17,40,63,0],[43,13,43,33,0],[44,9,44,10,0]]);
     </script>
   </body>
 </html>
