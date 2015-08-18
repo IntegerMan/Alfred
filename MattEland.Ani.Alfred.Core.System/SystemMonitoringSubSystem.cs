@@ -121,9 +121,10 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             if (data.IsEmpty() || data.Matches("Alfred"))
             {
                 sb.AppendFormat(CultureInfo.CurrentCulture,
-                                "The System is {0} with a total of {1} Subsystems Present. ",
-                                alfred.Status,
-                                alfred.Subsystems.Count());
+                                "The system is {0} with a total of {1} {2} Present. ",
+                                alfred.Status.ToString().ToLowerInvariant(),
+                                alfred.Subsystems.Count(),
+                                alfred.Subsystems.Pluralize("Subsystem", "Subsystems"));
             }
 
             // CPU status command
@@ -141,7 +142,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             if (data.IsEmpty() || data.Matches("Memory"))
             {
                 sb.AppendFormat(CultureInfo.CurrentCulture,
-                                "The system is currently utilizing {0:F1} % of all available memory.",
+                                "The system is currently utilizing {0:F1} % of all available memory. ",
                                 _memoryModule.MemoryUtilization);
             }
 
@@ -149,14 +150,11 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             if (data.IsEmpty() || data.Matches("Disk"))
             {
                 sb.AppendFormat(CultureInfo.CurrentCulture,
-                                "Disk read speed is currently utilized at {0:F1} % and disk write utilization is at {1:F1} %.",
+                                "Disk read speed is currently utilized at {0:F1} % and disk write utilization is at {1:F1} %. ",
                                 _diskModule.ReadUtilization,
                                 _diskModule.WriteUtilization);
 
             }
-
-            // TODO: Add disk
-
 
             return sb.ToString();
         }

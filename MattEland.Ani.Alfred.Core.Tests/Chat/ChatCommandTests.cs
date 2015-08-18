@@ -105,6 +105,22 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         }
 
         /// <summary>
+        ///     Tests that the Alfred Status command includes the expected information.
+        /// </summary>
+        /// <remarks>
+        ///     See ALF-5
+        /// </remarks>
+        [Test]
+        public void AlfredStatusIsAccurate()
+        {
+            var reply = GetReply("ALFRED STATUS");
+            var count = Alfred.Subsystems.Count();
+
+            Assert.That(reply.Contains($"The system is online with a total of {count} Subsystems Present."),
+                        $"'{reply}' did not contain the expected system status text.");
+        }
+
+        /// <summary>
         ///     Ensure that the shutdown command causes alfred to be offline.
         /// </summary>
         /// <remarks>
@@ -119,21 +135,20 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         }
 
         /// <summary>
-        ///     Tests that the Status command includes the expected basic system information.
+        ///     Tests that the generic Status command includes the expected system information from various counters.
         /// </summary>
         /// <remarks>
-        ///     See ALF-27
+        ///     See ALF-5, ALF-27, and ALF-28
         /// </remarks>
         [Test]
         public void StatusYieldsRelevantInformation()
         {
             var reply = GetReply("Status");
-            var count = Alfred.Subsystems.Count();
 
-            Assert.That(
-                        reply.Contains(
-                                       $"The System is Online with a total of {count} Subsystems Present."),
-                        $"{reply} did not contain the expected system status text.");
+            Assert.That(reply.Contains("system is online"), $"System online status was missing from '{reply}'");
+            Assert.That(reply.Contains("Disk read speed"), $"Disk status was missing from '{reply}'");
+            Assert.That(reply.Contains("available memory"), $"Memory status was missing from '{reply}'");
+            Assert.That(reply.Contains("CPU core"), $"CPU status was missing from '{reply}'");
         }
 
         [Test]

@@ -109,9 +109,25 @@ namespace MattEland.Ani.Alfred.Tests.Chat
 
             var reply = GetReply(&quot;DISK STATUS&quot;);
 
-            string expected = $&quot;The system is currently utilizing 42.0 % of all available memory.&quot;;
+            string expected = $&quot;Disk read speed is currently utilized at 42.0 % and disk write utilization is at 42.0 %.&quot;;
             Assert.That(reply.Contains(expected),
                         $&quot;Reply &#39;{reply}&#39; did not match expected value of {expected}.&quot;);
+        }
+
+        /// &lt;summary&gt;
+        ///     Tests that the Alfred Status command includes the expected information.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     See ALF-5
+        /// &lt;/remarks&gt;
+        [Test]
+        public void AlfredStatusIsAccurate()
+        {
+            var reply = GetReply(&quot;ALFRED STATUS&quot;);
+            var count = Alfred.Subsystems.Count();
+
+            Assert.That(reply.Contains($&quot;The System is Online with a total of {count} Subsystems Present.&quot;),
+                        $&quot;{reply} did not contain the expected system status text.&quot;);
         }
 
         /// &lt;summary&gt;
@@ -140,9 +156,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             var reply = GetReply(&quot;Status&quot;);
             var count = Alfred.Subsystems.Count();
 
-            Assert.That(
-                        reply.Contains(
-                                       $&quot;The System is Online with a total of {count} Subsystems Present.&quot;),
+            Assert.That(reply.Contains($&quot;The System is Online with a total of {count} Subsystems Present.&quot;),
                         $&quot;{reply} did not contain the expected system status text.&quot;);
         }
 
