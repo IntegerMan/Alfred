@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security;
 using System.Xml;
@@ -142,10 +143,7 @@ namespace MattEland.Ani.Alfred.Chat
             }
 
             // Get the template out of the response so we can see if there are any OOB instructions
-            var template = AimlCommandParser.GetResponseTemplate(result);
-
-            // Grab the command from the template, if one was present
-            var command = AimlCommandParser.GetCommandFromTemplate(template, Console);
+            var template = GetResponseTemplate(result);
 
             // Interpret the response 
             var output = result.Output;
@@ -165,7 +163,7 @@ namespace MattEland.Ani.Alfred.Chat
             }
 
             //- Update query properties and return the result
-            var response = new UserStatementResponse(userInput, output, template, command);
+            var response = new UserStatementResponse(userInput, output, template, ChatCommand.Empty);
             LastResponse = response;
             LastInput = userInput;
 
@@ -315,6 +313,43 @@ namespace MattEland.Ani.Alfred.Chat
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+
+        /// <summary>
+        ///     Gets the response template from the last request spawned in the AIML chat message result.
+        /// </summary>
+        /// <param name="result">The result of a chat message to the AIML interpreter.</param>
+        /// <returns>The response template</returns>
+        /// <remarks>
+        ///     Result is not CLSCompliant so this method should not be made public
+        /// </remarks>
+        /// <exception cref="ArgumentNullException"><paramref name="result"/> is <see langword="null" />.</exception>
+        [CanBeNull]
+        private static string GetResponseTemplate([NotNull] Result result)
+        {
+            if (result == null)
+            {
+                throw new ArgumentNullException(nameof(result));
+            }
+
+            // We want the last template as the other templates have redirected to it
+            string template = string.Empty;
+            var request = result.Request;
+            while (request != null)
+            {
+                // Grab the template used for this request
+                var query = request.Result?.SubQueries.FirstOrDefault();
+                if (query != null)
+                {
+                    template = query.Template;
+                }
+
+                // If it has an inner request, we'll use that for next iteration, otherwise we're done.
+                request = request.Child;
+            }
+
+            return template;
         }
     }
 
