@@ -15,6 +15,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat;
 using MattEland.Ani.Alfred.Chat.Aiml;
+using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
@@ -275,6 +276,27 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             var request = new Request(input, User, Engine);
             var result = new Result(User, Engine, request);
             return new TagHandlerParameters(Engine, User, query, request, result, node);
+        }
+
+        /// <summary>
+        /// Builds a strongly typed tag handler for the given tag name from the given XML using a Tag Handler Factory and dynamic creation.
+        /// </summary>
+        /// <typeparam name="T">The type of tag handler</typeparam>
+        /// <param name="tagName">Name of the tag.</param>
+        /// <param name="xml">The XML.</param>
+        /// <returns>The strongly typed tag handler.</returns>
+        [NotNull]
+        protected T BuildTagHandler<T>([NotNull] string tagName, [NotNull] string xml) where T : AimlTagHandler
+        {
+            var factory = new TagHandlerFactory(Engine);
+
+            var dynamicHandler = factory.BuildTagHandlerDynamic(tagName, BuildTagHandlerParameters(xml));
+            Assert.IsNotNull(dynamicHandler);
+
+            var typeHandler = (T)dynamicHandler;
+            Assert.IsNotNull(typeHandler);
+
+            return typeHandler;
         }
     }
 

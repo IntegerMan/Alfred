@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Chat\AlfredTestTagHandler.cs" />
+    <Compile Include="Chat\TagHandlerTests.cs" />
     <Compile Include="Chat\TagHandlerFactoryTests.cs" />
     <Compile Include="Chat\RedirectTagHandlerTests.cs" />
     <Compile Include="Chat\AlfredTagHandlerTests.cs" />

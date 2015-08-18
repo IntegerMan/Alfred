@@ -48,8 +48,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// <returns>The processed output</returns>
         protected override string ProcessChange()
         {
-            //- Basic validation on run circumstances
-            if (!TemplateNode.Name.Matches("random") || !TemplateNode.HasChildNodes)
+            // Don't return anything if there aren't any children.
+            if (!TemplateNode.HasChildNodes)
             {
                 return string.Empty;
             }
