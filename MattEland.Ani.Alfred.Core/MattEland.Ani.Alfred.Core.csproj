@@ -54,6 +54,7 @@
     <Compile Include="AlfredComponent.cs" />
     <Compile Include="Definitions\ChatCommand.cs" />
     <Compile Include="Definitions\IAlfred.cs" />
+    <Compile Include="Definitions\IAlfredCommandRecipient.cs" />
     <Compile Include="Definitions\IAlfredModule.cs" />
     <Compile Include="Definitions\IAlfredPage.cs" />
     <Compile Include="Definitions\IAlfredSubsystem.cs" />

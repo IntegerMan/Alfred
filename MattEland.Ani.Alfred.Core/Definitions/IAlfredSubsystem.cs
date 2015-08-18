@@ -10,12 +10,14 @@ using System.Collections.Generic;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Chat;
+
 namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>
     ///     A subsystem of Alfred
     /// </summary>
-    public interface IAlfredSubsystem : IAlfredComponent
+    public interface IAlfredSubsystem : IAlfredComponent, IAlfredCommandRecipient
     {
         /// <summary>
         ///     Gets the pages.

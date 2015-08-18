@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="AimlStatementHandler.cs" />
     <Compile Include="AlfredChatSubsystem.cs" />
+    <Compile Include="AlfredCommandRouter.cs" />
     <Compile Include="AlfredTagHandler.cs" />
     <Compile Include="ChatPage.cs" />
     <Compile Include="GlobalSuppressions.cs" />

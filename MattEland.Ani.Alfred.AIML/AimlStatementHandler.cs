@@ -2,7 +2,7 @@
 // AimlStatementHandler.cs
 // 
 // Created on:      08/10/2015 at 12:51 AM
-// Last Modified:   08/16/2015 at 11:49 PM
+// Last Modified:   08/18/2015 at 12:23 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -139,7 +139,10 @@ namespace MattEland.Ani.Alfred.Chat
             //- If it's a catastrophic failure, return a blankish object
             if (result == null)
             {
-                return new UserStatementResponse(userInput, Resources.DefaultFailureResponseText, string.Empty, ChatCommand.Empty);
+                return new UserStatementResponse(userInput,
+                                                 Resources.DefaultFailureResponseText,
+                                                 string.Empty,
+                                                 ChatCommand.Empty);
             }
 
             // Get the template out of the response so we can see if there are any OOB instructions
@@ -156,10 +159,10 @@ namespace MattEland.Ani.Alfred.Chat
             if (!string.IsNullOrWhiteSpace(template))
             {
                 Console?.Log(Resources.ChatOutputHeader,
-                              string.Format(CultureInfo.CurrentCulture,
-                                            "Using Template: {0}",
-                                            template),
-                              LogLevel.Verbose);
+                             string.Format(CultureInfo.CurrentCulture,
+                                           "Using Template: {0}",
+                                           template),
+                             LogLevel.Verbose);
             }
 
             //- Update query properties and return the result
@@ -227,6 +230,19 @@ namespace MattEland.Ani.Alfred.Chat
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
+        ///     Updates the owner of the chat engine. Setting the owner allows Alfred Commands to reach Alfred
+        ///     from the chat engine.
+        /// </summary>
+        /// <param name="owner">The owner.</param>
+        public void UpdateOwner(IAlfredCommandRecipient owner)
+        {
+            if (_chatEngine != null)
+            {
+                _chatEngine.Owner = owner;
+            }
+        }
+
+        /// <summary>
         ///     Logs an error encountered initializing chat.
         /// </summary>
         /// <param name="ex">The ex.</param>
@@ -265,7 +281,11 @@ namespace MattEland.Ani.Alfred.Chat
                 throw new InvalidOperationException(Resources.AimlStatementHandlerChatOffline);
             }
 
-            _chatEngine.LoadSettingsFromXml(Resources.ChatBotSettings, Resources.ChatBotPersonSubstitutions, Resources.ChatBotPerson2Substitutions, Resources.ChatBotGenderSubstitutions, Resources.ChatBotSubstitutions);
+            _chatEngine.LoadSettingsFromXml(Resources.ChatBotSettings,
+                                            Resources.ChatBotPersonSubstitutions,
+                                            Resources.ChatBotPerson2Substitutions,
+                                            Resources.ChatBotGenderSubstitutions,
+                                            Resources.ChatBotSubstitutions);
 
             AddApplicationAimlResourcesToChatEngine(_chatEngine);
         }
@@ -315,7 +335,6 @@ namespace MattEland.Ani.Alfred.Chat
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-
         /// <summary>
         ///     Gets the response template from the last request spawned in the AIML chat message result.
         /// </summary>
@@ -324,7 +343,7 @@ namespace MattEland.Ani.Alfred.Chat
         /// <remarks>
         ///     Result is not CLSCompliant so this method should not be made public
         /// </remarks>
-        /// <exception cref="ArgumentNullException"><paramref name="result"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="result" /> is <see langword="null" />.</exception>
         [CanBeNull]
         private static string GetResponseTemplate([NotNull] Result result)
         {
@@ -334,7 +353,7 @@ namespace MattEland.Ani.Alfred.Chat
             }
 
             // We want the last template as the other templates have redirected to it
-            string template = string.Empty;
+            var template = string.Empty;
             var request = result.Request;
             while (request != null)
             {

@@ -103,6 +103,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <param name="widgets">
         ///     The widgets.
         /// </param>
+        /// <exception cref="ArgumentNullException"><paramref name="widgets"/> is <see langword="null" />.</exception>
         protected void Register([NotNull] IEnumerable<AlfredWidget> widgets)
         {
             if (widgets == null)
@@ -115,6 +116,17 @@ namespace MattEland.Ani.Alfred.Core.Modules
                 // ReSharper disable once AssignNullToNotNullAttribute - for testing purposes we'll allow this
                 Register(widget);
             }
+        }
+
+        /// <summary>
+        /// Processes an Alfred Command. If the command is handled, result should be modified accordingly and the method should return true. Returning false will not stop the message from being propogated.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="result">The result. If the command was handled, this should be updated.</param>
+        /// <returns><c>True</c> if the command was handled; otherwise false.</returns>
+        public virtual bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
+        {
+            return false;
         }
     }
 }

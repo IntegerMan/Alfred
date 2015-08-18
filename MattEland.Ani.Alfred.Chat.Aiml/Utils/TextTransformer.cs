@@ -10,10 +10,12 @@
 using System;
 using System.Diagnostics;
 using System.Globalization;
+using System.Xml;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 {
@@ -159,6 +161,24 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
                        ? string.Empty
                        : Librarian.GlobalSettings.GetValue(settingName);
 
+        }
+
+        /// <summary>
+        /// Gets an attribute from an XML node and returns string.empty if the attribute isn't present.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <param name="name">The name.</param>
+        /// <returns>The attribute value or string.Empty as a fallback.</returns>
+        [NotNull]
+        protected static string GetAttributeSafe([CanBeNull] XmlElement element,
+                                               [CanBeNull] string name)
+        {
+            if (element != null && name.HasText() && element.HasAttribute(name))
+            {
+                return element.GetAttribute(name);
+            }
+
+            return string.Empty;
         }
     }
 }

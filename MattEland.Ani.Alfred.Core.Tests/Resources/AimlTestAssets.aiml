@@ -15,4 +15,11 @@ These are testing assets for testing Alfred
 	</template>
 	</category>
 
+	<category>
+	<pattern>TEST COMMAND INVOKE</pattern>
+	<template id="tmp_testcommandinvoke">
+		<alfred subsystem="test" command="invoketest" />
+	</template>
+	</category>
+
 </aiml>

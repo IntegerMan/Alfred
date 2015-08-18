@@ -42,6 +42,29 @@ namespace MattEland.Ani.Alfred.Chat
         [NotNull]
         private readonly ChatPage _chatPage;
 
+        [NotNull]
+        private readonly AlfredCommandRouter _commandRouter = new AlfredCommandRouter();
+
+        /// <summary>
+        /// Handles initialization events
+        /// </summary>
+        /// <param name="alfred">The alfred instance.</param>
+        protected override void InitializeProtected(IAlfred alfred)
+        {
+            // Tell the chat engine where to send its mail
+            _commandRouter.Alfred = alfred;
+            _chatHandler.UpdateOwner(_commandRouter);
+        }
+
+        /// <summary>
+        ///     Handles shutdown events
+        /// </summary>
+        protected override void ShutdownProtected()
+        {
+            // Clear out the owner just in case
+            _chatHandler.UpdateOwner(null);
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>

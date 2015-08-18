@@ -160,5 +160,23 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
                 subsystem.Update();
             }
         }
+
+        /// <summary>
+        /// Handles a chat command.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        public void HandleChatCommand(ChatCommand command)
+        {
+            LastCommand = command;
+        }
+
+        /// <summary>
+        /// Gets or sets the last command received.
+        /// </summary>
+        /// <value>The last command.</value>
+        public ChatCommand LastCommand
+        {
+            get; set;
+        }
     }
 }

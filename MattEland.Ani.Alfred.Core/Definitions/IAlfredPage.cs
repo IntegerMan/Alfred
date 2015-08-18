@@ -6,12 +6,14 @@
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
+using MattEland.Ani.Alfred.Chat;
+
 namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>
     ///     Defines an alfred page
     /// </summary>
-    public interface IAlfredPage : IAlfredComponent
+    public interface IAlfredPage : IAlfredComponent, IAlfredCommandRecipient
     {
         /// <summary>
         ///     Gets a value indicating whether this page is root level.

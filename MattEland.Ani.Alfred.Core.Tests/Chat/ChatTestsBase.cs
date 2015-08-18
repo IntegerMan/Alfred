@@ -37,12 +37,15 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         private IChatProvider _chat;
 
         [NotNull]
-        private IAlfred _alfred;
+        private TestAlfred _alfred;
         private AlfredChatSubsystem _chatSubsystem;
         private AlfredCoreSubsystem _coreSubsystem;
 
         [NotNull]
         private User _user;
+
+        [NotNull]
+        private TestSubsystem _testSubsystem;
 
         [NotNull]
         public User User
@@ -183,6 +186,9 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             _chatSubsystem = new AlfredChatSubsystem(_alfred.PlatformProvider, _alfred.Console);
             _alfred.Register(_chatSubsystem);
 
+            _testSubsystem = new TestSubsystem(_alfred.PlatformProvider);
+            _alfred.Register(_testSubsystem);
+
             // Store Chat Handler Details
             var chatHandler = _chatSubsystem.ChatHandler;
             _chat = chatHandler;
@@ -203,7 +209,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         /// </summary>
         /// <value>The alfred framework.</value>
         [NotNull]
-        protected IAlfred Alfred
+        protected TestAlfred Alfred
         {
             get { return _alfred; }
         }

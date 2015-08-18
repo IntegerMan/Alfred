@@ -96,5 +96,25 @@ namespace MattEland.Ani.Alfred.Core.Pages
         {
             get { return base.IsVisible && Modules.Any(m => m.Widgets.Any(w => w.IsVisible)); }
         }
+
+        /// <summary>
+        /// Processes an Alfred Command. If the command is handled, result should be modified accordingly and the method should return true. Returning false will not stop the message from being propogated.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="result">The result. If the command was handled, this should be updated.</param>
+        /// <returns><c>True</c> if the command was handled; otherwise false.</returns>
+        public override bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
+        {
+
+            foreach (IAlfredModule module in this.Modules)
+            {
+                if (module.ProcessAlfredCommand(command, result))
+                {
+                    return true;
+                }
+            }
+
+            return base.ProcessAlfredCommand(command, result);
+        }
     }
 }

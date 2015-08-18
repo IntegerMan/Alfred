@@ -8,6 +8,7 @@
 
 using System.Collections.Generic;
 
+using MattEland.Ani.Alfred.Chat;
 using MattEland.Ani.Alfred.Core.Widgets;
 
 namespace MattEland.Ani.Alfred.Core.Definitions
@@ -15,11 +16,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
     /// <summary>
     ///     Represents a module belonging to a page or subsystem in Alfred.
     /// </summary>
-    /// <remarks>
-    ///     TODO: This is a marker interface at present. I'd like to see some methods or reasons not to just use
-    ///     IAlfredComponent
-    /// </remarks>
-    public interface IAlfredModule : IAlfredComponent
+    public interface IAlfredModule : IAlfredComponent, IAlfredCommandRecipient
     {
         /// <summary>
         ///     Gets the user interface widgets for the module.

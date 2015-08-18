@@ -2,7 +2,7 @@
 // ChatEngine.cs
 // 
 // Created on:      08/12/2015 at 9:45 PM
-// Last Modified:   08/17/2015 at 12:24 AM
+// Last Modified:   08/18/2015 at 12:21 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -133,6 +133,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// </summary>
         /// <value>Whether or not AIML files are trusted.</value>
         public bool TrustAiml { get; } = true;
+
+        /// <summary>
+        ///     Gets or sets the owner of this chat engine. This can be used by tag handlers to get custom
+        ///     information back out of the chat engine to other systems.
+        /// </summary>
+        /// <value>The owner.</value>
+        [CanBeNull]
+        public object Owner { get; set; }
 
         /// <summary>
         ///     Logs the specified message to the logger.

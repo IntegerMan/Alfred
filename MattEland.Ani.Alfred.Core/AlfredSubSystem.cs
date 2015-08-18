@@ -115,6 +115,29 @@ namespace MattEland.Ani.Alfred.Core
 
             _pages.Clear();
         }
+
+        /// <summary>
+        /// Processes an Alfred Command. If the command is handled, result should be modified accordingly and the method should return true. Returning false will not stop the message from being propogated.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="result">The result. If the command was handled, this should be updated.</param>
+        /// <returns><c>True</c> if the command was handled; otherwise false.</returns>
+        public virtual bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
+        {
+            // Only route messages to sub-components if they are for this subsystem or unaddressed
+            if (command.Subsystem.IsEmpty() || command.Subsystem.Matches(Id))
+            {
+                foreach (var page in Pages)
+                {
+                    if (page.ProcessAlfredCommand(command, result))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
     }
 
 }

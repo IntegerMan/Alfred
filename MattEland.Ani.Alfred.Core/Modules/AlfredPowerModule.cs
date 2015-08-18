@@ -222,6 +222,23 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
+        /// Processes an Alfred Command. If the command is handled, result should be modified accordingly and the method should return true. Returning false will not stop the message from being propogated.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="result">The result. If the command was handled, this should be updated.</param>
+        /// <returns><c>True</c> if the command was handled; otherwise false.</returns>
+        public override bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
+        {
+            if (command.Command.Matches("Shutdown"))
+            {
+                ExecuteShutdownCommand();
+                return true;
+            }
+
+            return base.ProcessAlfredCommand(command, result);
+        }
+
+        /// <summary>
         ///     A notification method that is invoked when initialization for Alfred is complete so the UI can be fully enabled or
         ///     adjusted
         /// </summary>

@@ -36,7 +36,6 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         }
 
         [Test]
-        [Ignore("Currently working on this")]
         public void ShutdownCausesAlfredToBeOffline()
         {
             Say("Shutdown");
