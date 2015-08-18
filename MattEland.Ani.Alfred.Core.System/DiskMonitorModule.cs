@@ -70,6 +70,24 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         }
 
         /// <summary>
+        /// Gets the disk read utilization percentage.
+        /// </summary>
+        /// <value>The read utilization.</value>
+        public float ReadUtilization
+        {
+            get { return _diskReadCounter.NextValue(); }
+        }
+
+        /// <summary>
+        /// Gets the write utilization percentage.
+        /// </summary>
+        /// <value>The write utilization.</value>
+        public float WriteUtilization
+        {
+            get { return _diskWriteCounter.NextValue(); }
+        }
+
+        /// <summary>
         ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public void Dispose()

@@ -137,11 +137,21 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
                                 _cpuModule.NumberOfCores.Pluralize("is", "are"));
             }
 
+            // Memory Status Command
             if (data.IsEmpty() || data.Matches("Memory"))
             {
                 sb.AppendFormat(CultureInfo.CurrentCulture,
                                 "The system is currently utilizing {0:F1} % of all available memory.",
                                 _memoryModule.MemoryUtilization);
+            }
+
+            // Disk Status Command
+            if (data.IsEmpty() || data.Matches("Disk"))
+            {
+                sb.AppendFormat(CultureInfo.CurrentCulture,
+                                "Disk read speed is currently utilized at {0:F1} % and disk write utilization is at {1:F1} %.",
+                                _diskModule.ReadUtilization,
+                                _diskModule.WriteUtilization);
 
             }
 

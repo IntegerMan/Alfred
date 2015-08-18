@@ -79,7 +79,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         }
 
         /// &lt;summary&gt;
-        ///     Tests that the CPU Status command includes the expected CPU information.
+        ///     Tests that the Memory Status command includes the expected Memory information.
         /// &lt;/summary&gt;
         /// &lt;remarks&gt;
         ///     See ALF-5, ALF-27, and ALF-28
@@ -87,11 +87,27 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         [Test]
         public void MemoryStatusIsAccurate()
         {
-            Alfred.Shutdown();
             MetricProviderFactory.DefaultValue = 42.0f;
-            Alfred.Initialize();
 
             var reply = GetReply(&quot;MEMORY STATUS&quot;);
+
+            string expected = $&quot;The system is currently utilizing 42.0 % of all available memory.&quot;;
+            Assert.That(reply.Contains(expected),
+                        $&quot;Reply &#39;{reply}&#39; did not match expected value of {expected}.&quot;);
+        }
+
+        /// &lt;summary&gt;
+        ///     Tests that the Disk Status command includes the expected Disk information.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     See ALF-5, ALF-27, and ALF-28
+        /// &lt;/remarks&gt;
+        [Test]
+        public void DiskStatusIsAccurate()
+        {
+            MetricProviderFactory.DefaultValue = 42.0f;
+
+            var reply = GetReply(&quot;DISK STATUS&quot;);
 
             string expected = $&quot;The system is currently utilizing 42.0 % of all available memory.&quot;;
             Assert.That(reply.Contains(expected),
