@@ -8,8 +8,11 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Xml;
+
+using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat;
 using MattEland.Ani.Alfred.Chat.Aiml;
@@ -24,8 +27,10 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     /// A class to test tag handlers for Alfred commands.
     /// </summary>
     [TestFixture]
+    [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public class AlfredTagHandlerTests : ChatTestsBase
     {
+        [NotNull]
         private AlfredTagHandler _handler;
 
         /// <summary>
@@ -41,6 +46,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         }
 
         [Test]
+        [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
         public void AlfredTagHandlerHasHandlesAttribute()
         {
 
