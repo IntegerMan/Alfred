@@ -6,13 +6,16 @@
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Collections;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Ani.Alfred.Core.Pages;
 
@@ -33,10 +36,18 @@ namespace MattEland.Ani.Alfred.Tests.SubSystems
         [NotNull]
         private AlfredApplication _alfred;
 
+        private ValueMetricProviderFactory _metricProviderFactory;
+
+        /// <summary>
+        /// Sets up the test environment
+        /// </summary>
+        /// <exception cref="UnauthorizedAccessException">Code that is executing without administrative privileges attempted to read a performance counter.</exception>
+        /// <exception cref="Win32Exception">A call to an underlying system API failed.</exception>
         [SetUp]
         public void TestSetup()
         {
-            _subsystem = new SystemMonitoringSubsystem();
+            _metricProviderFactory = new ValueMetricProviderFactory();
+            _subsystem = new SystemMonitoringSubsystem(new SimplePlatformProvider(), _metricProviderFactory);
 
             var bootstrapper = new AlfredBootstrapper();
             _alfred = bootstrapper.Create();

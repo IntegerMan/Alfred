@@ -51,6 +51,9 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         private User _user;
 
         [NotNull]
+        private ValueMetricProviderFactory _metricProviderFactory;
+
+        [NotNull]
         public User User
         {
             [DebuggerStepThrough]
@@ -231,7 +234,8 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             _testSubsystem = new TestSubsystem(_alfred.PlatformProvider);
             _alfred.Register(_testSubsystem);
 
-            _sysSubsystem = new SystemMonitoringSubsystem(_alfred.PlatformProvider);
+            _metricProviderFactory = new ValueMetricProviderFactory();
+            _sysSubsystem = new SystemMonitoringSubsystem(_alfred.PlatformProvider, _metricProviderFactory);
             _alfred.Register(_sysSubsystem);
 
             // Store Chat Handler Details

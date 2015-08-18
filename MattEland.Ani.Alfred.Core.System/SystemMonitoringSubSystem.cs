@@ -7,6 +7,7 @@
 // ---------------------------------------------------------
 
 using System;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -40,20 +41,16 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
-        public SystemMonitoringSubsystem() : this(new SimplePlatformProvider())
-        {
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
-        /// </summary>
         /// <param name="provider">The provider.</param>
+        /// <param name="factory"></param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public SystemMonitoringSubsystem([NotNull] IPlatformProvider provider) : base(provider)
+        /// <exception cref="Win32Exception">A call to an underlying system API failed.</exception>
+        /// <exception cref="UnauthorizedAccessException">Code that is executing without administrative privileges attempted to read a performance counter.</exception>
+        public SystemMonitoringSubsystem([NotNull] IPlatformProvider provider, [NotNull] IMetricProviderFactory factory) : base(provider)
         {
-            _cpuModule = new CpuMonitorModule(provider);
-            _memoryModule = new MemoryMonitorModule(provider);
-            _diskModule = new DiskMonitorModule(provider);
+            _cpuModule = new CpuMonitorModule(provider, factory);
+            _memoryModule = new MemoryMonitorModule(provider, factory);
+            _diskModule = new DiskMonitorModule(provider, factory);
 
             _page = new AlfredModuleListPage(provider, Resources.SystemMonitoringSystem_Name.NonNull());
         }
@@ -76,7 +73,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// </summary>
         /// <value>The name.</value>
         [NotNull]
-        public override sealed string Name
+        public override string Name
         {
             get { return Resources.SystemMonitoringSystem_Name.NonNull(); }
         }

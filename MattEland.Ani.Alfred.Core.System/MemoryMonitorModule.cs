@@ -2,12 +2,12 @@
 // MemoryMonitorModule.cs
 // 
 // Created on:      08/04/2015 at 9:50 PM
-// Last Modified:   08/04/2015 at 10:05 PM
-// Original author: Matt Eland
+// Last Modified:   08/18/2015 at 2:06 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Diagnostics;
 
 using JetBrains.Annotations;
 
@@ -25,7 +25,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         private const string MemoryUtilizationBytesCounterName = "% Committed Bytes in Use";
 
         [NotNull]
-        private readonly PerformanceCounter _memUsedBytesCounter;
+        private readonly MetricProviderBase _memUsedBytesCounter;
 
         [NotNull]
         private readonly AlfredProgressBarWidget _memWidget;
@@ -34,9 +34,13 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         ///     Initializes a new instance of the <see cref="MemoryMonitorModule" /> class.
         /// </summary>
         /// <param name="platformProvider">The platform provider.</param>
-        public MemoryMonitorModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
+        /// <param name="factory">The metric provider factory.</param>
+        public MemoryMonitorModule([NotNull] IPlatformProvider platformProvider,
+                                   [NotNull] IMetricProviderFactory factory)
+            : base(platformProvider, factory)
         {
-            _memUsedBytesCounter = new PerformanceCounter(MemoryCategoryName, MemoryUtilizationBytesCounterName, true);
+            _memUsedBytesCounter = MetricProvider.Build(MemoryCategoryName,
+                                                        MemoryUtilizationBytesCounterName);
 
             _memWidget = new AlfredProgressBarWidget
             {
@@ -61,6 +65,14 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         }
 
         /// <summary>
+        ///     Disposes this instance.
+        /// </summary>
+        public void Dispose()
+        {
+            _memUsedBytesCounter.Dispose();
+        }
+
+        /// <summary>
         ///     Handles module shutdown events
         /// </summary>
         protected override void ShutdownProtected()
@@ -69,7 +81,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         }
 
         /// <summary>
-        /// Handles module initialization events
+        ///     Handles module initialization events
         /// </summary>
         /// <param name="alfred">The alfred instance.</param>
         protected override void InitializeProtected(IAlfred alfred)
@@ -85,14 +97,6 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             var usedMemory = GetNextCounterValueSafe(_memUsedBytesCounter);
 
             _memWidget.Value = usedMemory;
-        }
-
-        /// <summary>
-        /// Disposes this instance.
-        /// </summary>
-        public void Dispose()
-        {
-            _memUsedBytesCounter.Dispose();
         }
     }
 }

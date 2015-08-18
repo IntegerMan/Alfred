@@ -2,13 +2,16 @@
 // ApplicationManager.cs
 // 
 // Created on:      08/09/2015 at 11:21 PM
-// Last Modified:   08/09/2015 at 11:43 PM
-// Original author: Matt Eland
+// Last Modified:   08/18/2015 at 2:16 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 
 using JetBrains.Annotations;
 
@@ -56,7 +59,7 @@ namespace MattEland.Ani.Alfred.WPF
             // Give Alfred a way to talk to the user and the client a way to log events that are separate from Alfred
             _console = InitializeConsole(platformProvider);
 
-            InitializeModules();
+            InitializeSubsystems(_alfred.PlatformProvider);
         }
 
         /// <summary>
@@ -85,8 +88,10 @@ namespace MattEland.Ani.Alfred.WPF
         /// <summary>
         ///     Disposes of loose resources
         /// </summary>
-        [SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_console")]
-        [SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_systemMonitoringSubsystem")]
+        [SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed",
+            MessageId = "_console")]
+        [SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed",
+            MessageId = "_systemMonitoringSubsystem")]
         public void Dispose()
         {
             _systemMonitoringSubsystem?.Dispose();
@@ -121,20 +126,59 @@ namespace MattEland.Ani.Alfred.WPF
             return _console;
         }
 
-        private void InitializeModules()
+        /// <summary>
+        ///     Initializes and register's Alfred's subsystems
+        /// </summary>
+        /// <param name="platformProvider">The platform provider</param>
+        private void InitializeSubsystems([NotNull] IPlatformProvider platformProvider)
         {
-            _console?.Log("WinClient.Initialize", Res.InitializeModulesLogMessage.NonNull(), LogLevel.Verbose);
+            // Log header
+            const string LogHeader = "WinClient.Initialize";
+            _console?.Log(LogHeader, Res.InitializeModulesLogMessage.NonNull(), LogLevel.Verbose);
 
-            var provider = _alfred.PlatformProvider;
-
-            _alfredCoreSubsystem = new AlfredCoreSubsystem(provider);
-            _systemMonitoringSubsystem = new SystemMonitoringSubsystem(provider);
-            _chatSubsystem = new AlfredChatSubsystem(provider, _alfred.Console);
-
+            // Init Core
+            _alfredCoreSubsystem = new AlfredCoreSubsystem(platformProvider);
             _alfred.Register(_alfredCoreSubsystem);
-            _alfred.Register(_systemMonitoringSubsystem);
+
+            // Init System Monitor - this can throw a few exceptions so may not be available.
+            try
+            {
+                var metricProviderFactory = new CounterMetricProviderFactory();
+                _systemMonitoringSubsystem = new SystemMonitoringSubsystem(platformProvider,
+                                                                           metricProviderFactory);
+                _alfred.Register(_systemMonitoringSubsystem);
+            }
+            catch (Win32Exception ex)
+            {
+                _console?.Log(LogHeader,
+                              string.Format(Locale, "Problem creating system monitoring module: Win32 exception: {0}", ex.Message),
+                              LogLevel.Error);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                _console?.Log(LogHeader,
+                              string.Format(Locale, "Problem creating system monitoring module: Unauthorized access exception: {0}", ex.Message),
+                              LogLevel.Error);
+            }
+
+            // Init Chat
+            _chatSubsystem = new AlfredChatSubsystem(platformProvider, _alfred.Console);
             _alfred.Register(_chatSubsystem);
 
+        }
+
+        /// <summary>
+        /// Gets the current culture's locale information.
+        /// </summary>
+        /// <value>The locale.</value>
+        [NotNull]
+        public CultureInfo Locale
+        {
+            get
+            {
+                //? It might make sense to make this a property on Alfred.
+                return CultureInfo.CurrentCulture;
+            }
         }
 
         /// <summary>

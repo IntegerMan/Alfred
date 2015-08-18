@@ -7,6 +7,7 @@
 // ---------------------------------------------------------
 
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 
 using JetBrains.Annotations;
@@ -26,25 +27,27 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         private const string DiskWriteCounterName = "% Disk Write Time";
 
         [NotNull]
-        private readonly PerformanceCounter _diskReadCounter;
+        private readonly MetricProviderBase _diskReadCounter;
 
         [NotNull]
         private readonly AlfredProgressBarWidget _diskReadWidget;
 
         [NotNull]
-        private readonly PerformanceCounter _diskWriteCounter;
+        private readonly MetricProviderBase _diskWriteCounter;
 
         [NotNull]
         private readonly AlfredProgressBarWidget _diskWriteWidget;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="MemoryMonitorModule" /> class.
+        /// Initializes a new instance of the <see cref="MemoryMonitorModule" /> class.
         /// </summary>
         /// <param name="platformProvider">The platform provider.</param>
-        public DiskMonitorModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
+        /// <param name="factory">The metric provider factory</param>
+        public DiskMonitorModule([NotNull] IPlatformProvider platformProvider,
+                                 [NotNull] IMetricProviderFactory factory) : base(platformProvider, factory)
         {
-            _diskReadCounter = new PerformanceCounter(DiskCategoryName, DiskReadCounterName, TotalInstanceName, true);
-            _diskWriteCounter = new PerformanceCounter(DiskCategoryName, DiskWriteCounterName, TotalInstanceName, true);
+            _diskReadCounter = MetricProvider.Build(DiskCategoryName, DiskReadCounterName, TotalInstanceName);
+            _diskWriteCounter = MetricProvider.Build(DiskCategoryName, DiskWriteCounterName, TotalInstanceName);
 
             _diskReadWidget = CreatePercentWidget();
             _diskReadWidget.Text = Resources.DiskReadLabel;
