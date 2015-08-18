@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.system\systemmonitormodule.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// SystemMonitorModule.cs
+// 
+// Created on:      08/04/2015 at 10:04 PM
+// Last Modified:   08/04/2015 at 10:08 PM
+// Original author: Matt Eland
+// ---------------------------------------------------------
+
+using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Globalization;
+
+using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
+
+using MattEland.Ani.Alfred.Core.Definitions;
+
+namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
+{
+    /// &lt;summary&gt;
+    ///     The SystemMonitorModule is an abstract class for modules commonly working with performance counters.
+    /// &lt;/summary&gt;
+    public abstract class SystemMonitorModule : AlfredModule
+    {
+        /// &lt;summary&gt;
+        ///     The performance counter instance name for total results
+        /// &lt;/summary&gt;
+        public const string TotalInstanceName = &quot;_Total&quot;;
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;SystemMonitorModule&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
+        /// &lt;param name=&quot;metricProvider&quot;&gt;The metric provider.&lt;/param&gt;
+        protected SystemMonitorModule([NotNull] IPlatformProvider platformProvider,
+                                      [NotNull] IMetricProviderFactory metricProvider) : base(platformProvider)
+        {
+            // Use the provided metric provider
+            _metricProvider = metricProvider;
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the next counter value safely, defaulting to 0 on any error.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;counter&quot;&gt;The counter.&lt;/param&gt;
+        /// &lt;returns&gt;The value returned from the counter&lt;/returns&gt;
+        protected static float GetNextCounterValueSafe([CanBeNull] MetricProviderBase counter)
+        {
+            return GetNextCounterValueSafe(counter, 0);
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the next counter value safely, defaulting to the defaultValue on any error.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;counter&quot;&gt;The counter.&lt;/param&gt;
+        /// &lt;param name=&quot;defaultValue&quot;&gt;The default value.&lt;/param&gt;
+        /// &lt;returns&gt;The value returned from the counter&lt;/returns&gt;
+        protected static float GetNextCounterValueSafe([CanBeNull] MetricProviderBase counter, float defaultValue)
+        {
+            try
+            {
+                return counter?.NextValue() ?? 0;
+            }
+            catch (Win32Exception)
+            {
+                return defaultValue;
+            }
+            catch (PlatformNotSupportedException)
+            {
+                return defaultValue;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return defaultValue;
+            }
+            catch (InvalidOperationException)
+            {
+                return defaultValue;
+            }
+        }
+
+        [NotNull]
+        private IMetricProviderFactory _metricProvider;
+
+        /// &lt;summary&gt;
+        /// Gets the metric provider.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The metric provider.&lt;/value&gt;
+        [NotNull]
+        public IMetricProviderFactory MetricProvider
+        {
+            [DebuggerStepThrough]
+            get
+            { return _metricProvider; }
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[66,13,66,35,0],[67,13,67,14,0],[68,17,68,37,0],[70,13,70,50,0],[71,13,71,14,0],[72,17,72,37,0],[74,13,74,48,0],[75,13,75,14,0],[76,17,76,37,0],[78,13,78,46,0],[79,13,79,14,0],[80,17,80,37,0],[38,90,38,112,1],[39,9,39,10,1],[41,13,41,46,1],[42,9,42,10,1],[50,9,50,10,1],[51,13,51,56,1],[52,9,52,10,1],[61,9,61,10,1],[63,13,63,14,1],[64,17,64,50,1],[82,9,82,10,1],[96,13,96,14,1],[96,15,96,38,1],[96,39,96,40,1]]);
+    </script>
+  </body>
+</html>

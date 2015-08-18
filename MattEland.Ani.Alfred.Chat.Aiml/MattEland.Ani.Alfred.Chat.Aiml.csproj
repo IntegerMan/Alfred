@@ -52,8 +52,7 @@
     <Compile Include="ChatEngineLibrarian.cs" />
     <Compile Include="ChatProcessor.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Normalize\TextSubstitutionHelper.cs" />
-    <Compile Include="Normalize\UppercaseTextTransformer.cs" />
+    <Compile Include="Utils\TextSubstitutionHelper.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -62,7 +61,7 @@
     <Compile Include="TagHandlers\HandlesAimlTagAttribute.cs" />
     <Compile Include="TagHandlers\TagHandlerFactory.cs" />
     <Compile Include="Utils\SplitSentenceHelper.cs" />
-    <Compile Include="Normalize\SanitizingTextTransformer.cs" />
+    <Compile Include="Utils\SanitizingTextTransformer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Request.cs" />
     <Compile Include="Result.cs" />

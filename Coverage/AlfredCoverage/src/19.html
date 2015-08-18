@@ -2,38 +2,47 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\chat\chatcommandtests.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\chat\taghandlerfactorytests.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// ChatCommandTests.cs
+// AlfredTagHandlerTests.cs
 // 
-// Created on:      08/17/2015 at 9:56 PM
-// Last Modified:   08/18/2015 at 3:04 PM
+// Created on:      08/17/2015 at 10:55 PM
+// Last Modified:   08/17/2015 at 10:55 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System.Collections.Generic;
-using System.Linq;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
+using System.Xml;
 
-using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
+using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Chat;
+using MattEland.Ani.Alfred.Chat.Aiml;
+using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Common;
 
 using NUnit.Framework;
 
 namespace MattEland.Ani.Alfred.Tests.Chat
 {
     /// &lt;summary&gt;
-    ///     Tests for commands embedded in AIML that impact the functioning of the Alfred system.
+    /// A class to test &lt;see cref=&quot;TagHandlerFactory&quot;/&gt;.
     /// &lt;/summary&gt;
     [TestFixture]
-    public class ChatCommandTests : ChatTestsBase
+    [SuppressMessage(&quot;ReSharper&quot;, &quot;NotNullMemberIsNotInitialized&quot;)]
+    public class TagHandlerFactoryTests : ChatTestsBase
     {
         /// &lt;summary&gt;
-        ///     Sets up the testing environment prior to each test run.
+        /// Sets up the test fixture for each test.
         /// &lt;/summary&gt;
         [SetUp]
         public void SetUp()
@@ -42,144 +51,73 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         }
 
         /// &lt;summary&gt;
-        ///     Builds a list of fake counter names with a total instance included as well.
+        /// Parameter validation for TagName
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;count&quot;&gt;The count of fake items to build.&lt;/param&gt;
-        /// &lt;returns&gt;A list of fake counters&lt;/returns&gt;
-        private IEnumerable&lt;string&gt; BuildInstanceNamesWithTotal(int count)
+        /// &lt;remarks&gt;
+        /// See ALF-29
+        /// &lt;/remarks&gt;
+        [Test]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void BuildDynamicWithNullTagThrowsException()
         {
-            for (var i = 1; i &lt;= count; i++)
-            {
-                yield return $&quot;Item {i}&quot;;
-            }
-
-            yield return SystemMonitorModule.TotalInstanceName;
+            var factory = new TagHandlerFactory(Engine);
+            var parameters = BuildTagHandlerParameters(&quot;&lt;Foo /&gt;&quot;);
+            factory.BuildTagHandlerDynamic(null, parameters);
         }
 
         /// &lt;summary&gt;
-        ///     Tests that the CPU Status command includes the expected CPU information.
+        /// Parameter validation for parameters
         /// &lt;/summary&gt;
         /// &lt;remarks&gt;
-        ///     See ALF-5, ALF-27, and ALF-28
+        /// See ALF-29
         /// &lt;/remarks&gt;
         [Test]
-        public void CpuStatusIsAccurate()
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void BuildDynamicWithNullParamsThrowsException()
         {
-            Alfred.Shutdown();
-            MetricProviderFactory.DefaultValue = 42.0f;
-            MetricProviderFactory.CategoryInstanceNames.Add(CpuMonitorModule.CpuCategoryName,
-                                                            BuildInstanceNamesWithTotal(72));
-            Alfred.Initialize();
-
-            var reply = GetReply(&quot;CPU STATUS&quot;);
-
-            string expected = $&quot;There are 72 CPU cores with an average of 42.0 % utilization.&quot;;
-            Assert.That(reply.Contains(expected),
-                        $&quot;Reply &#39;{reply}&#39; did not match expected value of {expected}.&quot;);
+            var factory = new TagHandlerFactory(Engine);
+            factory.BuildTagHandlerDynamic(&quot;Foo&quot;, null);
         }
 
         /// &lt;summary&gt;
-        ///     Tests that the Memory Status command includes the expected Memory information.
+        /// When building dynamic and encountering a node that doesn&#39;t have any mapping, return null
         /// &lt;/summary&gt;
         /// &lt;remarks&gt;
-        ///     See ALF-5, ALF-27, and ALF-28
+        /// See AlF-29
         /// &lt;/remarks&gt;
         [Test]
-        public void MemoryStatusIsAccurate()
+        public void BuildDynamicWithUnknownTagReturnsNull()
         {
-            MetricProviderFactory.DefaultValue = 42.0f;
+            var factory = new TagHandlerFactory(Engine);
+            var result = factory.BuildTagHandlerDynamic(&quot;Unknown&quot;, BuildTagHandlerParameters(&quot;&lt;unknown /&gt;&quot;));
 
-            var reply = GetReply(&quot;MEMORY STATUS&quot;);
-
-            string expected = $&quot;The system is currently utilizing 42.0 % of all available memory.&quot;;
-            Assert.That(reply.Contains(expected),
-                        $&quot;Reply &#39;{reply}&#39; did not match expected value of {expected}.&quot;);
+            Assert.IsNull(result);
         }
 
         /// &lt;summary&gt;
-        ///     Tests that the Disk Status command includes the expected Disk information.
+        /// When building dynamic and encountering a node that does have a mapping, return a new tag handler
         /// &lt;/summary&gt;
         /// &lt;remarks&gt;
-        ///     See ALF-5, ALF-27, and ALF-28
+        /// See AlF-29
         /// &lt;/remarks&gt;
         [Test]
-        public void DiskStatusIsAccurate()
+        public void BuildDynamicWithKnownTagReturnsNewHandler()
         {
-            MetricProviderFactory.DefaultValue = 42.0f;
+            var factory = new TagHandlerFactory(Engine);
+            var result = factory.BuildTagHandlerDynamic(&quot;srai&quot;, BuildTagHandlerParameters(&quot;&lt;srai&gt;Testing Rocks&lt;/srai&gt;&quot;));
 
-            var reply = GetReply(&quot;DISK STATUS&quot;);
+            Assert.IsNotNull(result);
 
-            string expected = $&quot;Disk read speed is currently utilized at 42.0 % and disk write utilization is at 42.0 %.&quot;;
-            Assert.That(reply.Contains(expected),
-                        $&quot;Reply &#39;{reply}&#39; did not match expected value of {expected}.&quot;);
+            var handler = (RedirectTagHandler)result;
+            Assert.AreEqual(&quot;Testing Rocks&quot;, handler.TemplateNode.InnerText);
         }
 
-        /// &lt;summary&gt;
-        ///     Tests that the Alfred Status command includes the expected information.
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        ///     See ALF-5
-        /// &lt;/remarks&gt;
-        [Test]
-        public void AlfredStatusIsAccurate()
-        {
-            var reply = GetReply(&quot;ALFRED STATUS&quot;);
-            var count = Alfred.Subsystems.Count();
 
-            Assert.That(reply.Contains($&quot;The System is Online with a total of {count} Subsystems Present.&quot;),
-                        $&quot;{reply} did not contain the expected system status text.&quot;);
-        }
-
-        /// &lt;summary&gt;
-        ///     Ensure that the shutdown command causes alfred to be offline.
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        ///     See ALF-21
-        /// &lt;/remarks&gt;
-        [Test]
-        public void ShutdownCausesAlfredToBeOffline()
-        {
-            Say(&quot;Shutdown&quot;);
-
-            Assert.IsFalse(Alfred.IsOnline, &quot;Alfred was not offline after shutdown was handled.&quot;);
-        }
-
-        /// &lt;summary&gt;
-        ///     Tests that the Status command includes the expected basic system information.
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        ///     See ALF-27
-        /// &lt;/remarks&gt;
-        [Test]
-        public void StatusYieldsRelevantInformation()
-        {
-            var reply = GetReply(&quot;Status&quot;);
-            var count = Alfred.Subsystems.Count();
-
-            Assert.That(reply.Contains($&quot;The System is Online with a total of {count} Subsystems Present.&quot;),
-                        $&quot;{reply} did not contain the expected system status text.&quot;);
-        }
-
-        [Test]
-        public void TagHandlersAreInvokedWhenATestingTemplateIsInvoked()
-        {
-            Say(&quot;TEST TAG INVOKE&quot;);
-
-            Assert.IsTrue(AlfredTestTagHandler.WasInvoked);
-        }
-
-        [Test]
-        public void TagHandlersAreNotInvokedOnOtherInput()
-        {
-            Say(&quot;I like turtles&quot;);
-
-            Assert.IsFalse(AlfredTestTagHandler.WasInvoked);
-        }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[27,9,27,10,1],[28,13,28,30,1],[29,9,29,10,1],[33,9,33,10,1],[34,13,34,29,1],[36,13,36,99,1],[37,9,37,10,1],[41,9,41,10,1],[42,13,42,44,1],[43,13,43,51,1],[45,13,46,86,1],[47,9,47,10,1],[51,9,51,10,1],[52,13,52,36,1],[54,13,54,60,1],[55,9,55,10,1],[59,9,59,10,1],[60,13,60,35,1],[62,13,62,61,1],[63,9,63,10,1]]);
+      highlightRanges([[56,9,56,10,0],[70,9,70,10,0],[39,9,39,10,1],[40,13,40,30,1],[41,9,41,10,1],[52,9,52,10,1],[53,13,53,57,1],[54,13,54,67,1],[55,13,55,62,1],[67,9,67,10,1],[68,13,68,57,1],[69,13,69,57,1],[80,9,80,10,1],[81,13,81,57,1],[82,13,82,110,1],[84,13,84,35,1],[85,9,85,10,1],[95,9,95,10,1],[96,13,96,57,1],[97,13,97,122,1],[99,13,99,38,1],[101,13,101,54,1],[102,13,102,78,1],[103,9,103,10,1]]);
     </script>
   </body>
 </html>

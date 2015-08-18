@@ -2,137 +2,125 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.common\assemblyextensions.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\normalize\textsubstitutionhelper.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AssemblyExtensions.cs
+// TextSubstitutionHelper.cs
 // 
-// Created on:      08/14/2015 at 12:38 AM
-// Last Modified:   08/14/2015 at 12:59 AM
+// Created on:      08/12/2015 at 10:37 PM
+// Last Modified:   08/18/2015 at 4:57 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Linq;
-using System.Reflection;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 using JetBrains.Annotations;
 
-namespace MattEland.Common
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Common;
+
+namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
 {
-    public static class AssemblyHelper
+
+    /// &lt;summary&gt;
+    ///     A text transformation helper class that replaces found occurrences of strings
+    ///     with their values found in the settings provider.
+    /// &lt;/summary&gt;
+    public static class TextSubstitutionHelper
     {
+        private const string Marker = &quot;zzMARKERzz&quot;;
+        private const string WordBoundary = @&quot;\b&quot;;
+
         /// &lt;summary&gt;
-        ///     Gets the types in an assembly with an attribute applied to them.
+        ///     Substitutes all occurrences of the words in the settings provider found in input with the
+        ///     replacement values stored in that provider.
         /// &lt;/summary&gt;
-        /// &lt;typeparam name=&quot;TAttribute&quot;&gt;The attribute to search for.&lt;/typeparam&gt;
-        /// &lt;param name=&quot;assembly&quot;&gt;The assembly.&lt;/param&gt;
-        /// &lt;param name=&quot;inherit&quot;&gt;
-        ///     true to search the type&#39;s inheritance chain to find the attributes; otherwise, false.
-        /// &lt;/param&gt;
-        /// &lt;returns&gt;The types in the assembly with the requested attribute&lt;/returns&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        /// &lt;param name=&quot;settings&quot;&gt;The settings manager.&lt;/param&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input.&lt;/param&gt;
+        /// &lt;returns&gt;A modified version of the input string.&lt;/returns&gt;
         [NotNull]
-        [ItemNotNull]
-        [UsedImplicitly]
-        public static IEnumerable&lt;Type&gt; GetTypesInAssemblyWithAttribute&lt;TAttribute&gt;([NotNull] this Assembly assembly,
-                                                                                    bool inherit)
-            where TAttribute : Attribute
+        public static string Substitute([CanBeNull] SettingsManager settings,
+                                        [CanBeNull] string input)
         {
-            if (assembly == null)
+            //- Validate
+            input = input.NonNull();
+            if (settings == null)
             {
-                throw new ArgumentNullException(nameof(assembly));
+                return input;
             }
 
-            var types = assembly.GetTypes();
-            return GetTypesWithAttributes&lt;TAttribute&gt;(types, inherit);
+            //- Grab our setting names
+            var settingNames = settings.Keys;
+
+            // Look for each setting settingName in the input string to replace it with our setting value
+            foreach (var settingName in settingNames)
+            {
+                var settingValue = settings.GetValue(settingName);
+
+                input = Substitute(input, settingName, settingValue);
+            }
+
+            return input;
         }
 
         /// &lt;summary&gt;
-        ///     Gets the types in a group of types that have an attribute applied to them.
+        ///     Substitutes whole word instances of settingName in input with settingValue.
         /// &lt;/summary&gt;
-        /// &lt;typeparam name=&quot;TAttribute&quot;&gt;The attribute to search for.&lt;/typeparam&gt;
-        /// &lt;param name=&quot;types&quot;&gt;The set of types&lt;/param&gt;
-        /// &lt;param name=&quot;inherit&quot;&gt;
-        ///     true to search the type&#39;s inheritance chain to find the attributes; otherwise, false.
-        /// &lt;/param&gt;
-        /// &lt;returns&gt;The types in the set of types that have the requested attribute&lt;/returns&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
-        [SuppressMessage(&quot;ReSharper&quot;, &quot;PossibleNullReferenceException&quot;)]
+        /// &lt;param name=&quot;input&quot;&gt;The input.&lt;/param&gt;
+        /// &lt;param name=&quot;settingName&quot;&gt;Name of the setting.&lt;/param&gt;
+        /// &lt;param name=&quot;settingValue&quot;&gt;The setting value.&lt;/param&gt;
+        /// &lt;returns&gt;A string with words substituted&lt;/returns&gt;
         [NotNull]
-        [ItemNotNull]
-        [UsedImplicitly]
-        public static IEnumerable&lt;Type&gt; GetTypesWithAttributes&lt;TAttribute&gt;([NotNull] IEnumerable&lt;Type&gt; types,
-                                                                           bool inherit) where TAttribute : Attribute
+        public static string Substitute([CanBeNull] string input,
+                                        [CanBeNull] string settingName,
+                                        [CanBeNull] string settingValue)
         {
-            if (types == null)
+            //- Sanity check
+            if (input == null)
             {
-                throw new ArgumentNullException(nameof(types));
+                input = string.Empty;
+            }
+            if (settingName == null || settingValue == null)
+            {
+                return input;
             }
 
-            return types.Where(t =&gt; t.HasAttribute&lt;TAttribute&gt;(inherit));
-        }
+            var locale = CultureInfo.CurrentCulture;
 
-        /// &lt;summary&gt;
-        ///     Determines whether the specified member has a particular attribute applied to it.
-        /// &lt;/summary&gt;
-        /// &lt;typeparam name=&quot;TAttribute&quot;&gt;The type of the attribute.&lt;/typeparam&gt;
-        /// &lt;param name=&quot;member&quot;&gt;The member.&lt;/param&gt;
-        /// &lt;param name=&quot;inherit&quot;&gt;
-        ///     true to search the type&#39;s inheritance chain to find the attributes; otherwise, false.
-        /// &lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the specified inherit has the attribute; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
-        [UsedImplicitly]
-        public static bool HasAttribute&lt;TAttribute&gt;([NotNull] this MemberInfo member, bool inherit)
-            where TAttribute : Attribute
-        {
-            if (member == null)
-            {
-                throw new ArgumentNullException(nameof(member));
-            }
+            // Surround the setting with our marker string
+            var replacement =
+                string.Format(locale, &quot;{0}{1}{0}&quot;, Marker, settingValue.Trim())
+                      .NonNull();
 
-            return member.IsDefined(typeof(TAttribute), inherit);
-        }
+            // Check for bad things in the name and make them regex safe
+            var sanitizedName =
+                settingName.Replace(@&quot;\&quot;, &quot;&quot;)
+                           .Replace(&quot;)&quot;, @&quot;\)&quot;)
+                           .Replace(&quot;(&quot;, @&quot;\(&quot;)
+                           .Replace(&quot;.&quot;, @&quot;\.&quot;)
+                           .Trim();
 
-        /// &lt;summary&gt;
-        ///     Gets the Version of this module&#39;s assembly based on the AssemblyVersionAttribute.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;caller&quot;&gt;The caller.&lt;/param&gt;
-        /// &lt;returns&gt;The Version of this module&#39;s assembly&lt;/returns&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;caller&lt;/exception&gt;
-        [CanBeNull]
-        public static Version GetAssemblyVersion([NotNull] this object caller)
-        {
-            if (caller == null)
-            {
-                throw new ArgumentNullException(nameof(caller));
-            }
+            // Replaces the variable settingName with the setting value
+            var pattern =
+                string.Format(locale, &quot;{0}{1}{0}&quot;, WordBoundary, sanitizedName)
+                      .NonNull();
 
-            try
-            {
-                var assembly = caller.GetType().Assembly;
-                var assemblyName = new AssemblyName(assembly.FullName);
-                return assemblyName.Version;
-            }
-            catch (IOException)
-            {
-                return null;
-            }
+            var substitute = Regex.Replace(input, pattern, replacement, RegexOptions.IgnoreCase);
+
+            // Remove the marker string from the string
+            return substitute.Replace(Marker, string.Empty);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[41,13,41,14,0],[42,17,42,67,0],[67,13,67,14,0],[68,17,68,64,0],[89,13,89,14,0],[90,17,90,65,0],[106,13,106,14,0],[107,17,107,65,0],[116,13,116,32,0],[117,13,117,14,0],[118,17,118,29,0],[39,9,39,10,1],[40,13,40,34,1],[45,13,45,45,1],[46,13,46,71,1],[47,9,47,10,1],[65,9,65,10,1],[66,13,66,31,1],[71,13,71,37,1],[71,72,71,74,1],[72,9,72,10,1],[87,9,87,10,1],[88,13,88,32,1],[93,13,93,66,1],[94,9,94,10,1],[104,9,104,10,1],[105,13,105,32,1],[111,13,111,14,1],[112,17,112,58,1],[113,17,113,72,1],[114,17,114,45,1],[120,9,120,10,1],[71,37,71,72,1]]);
+      highlightRanges([[40,9,40,10,1],[42,13,42,37,1],[43,13,43,34,1],[44,13,44,14,1],[45,17,45,30,1],[49,13,49,46,1],[52,13,52,20,1],[52,41,52,53,1],[52,22,52,37,1],[53,13,53,14,1],[54,17,54,67,1],[56,17,56,70,1],[57,13,57,14,1],[52,38,52,40,1],[59,13,59,26,1],[60,9,60,10,1],[73,9,73,10,1],[75,13,75,31,1],[76,13,76,14,1],[77,17,77,38,1],[78,13,78,14,1],[79,13,79,61,1],[80,13,80,14,1],[81,17,81,30,1],[84,13,84,53,1],[87,13,89,34,1],[92,13,97,36,1],[100,13,102,34,1],[104,13,104,98,1],[107,13,107,61,1],[108,9,108,10,1]]);
     </script>
   </body>
 </html>

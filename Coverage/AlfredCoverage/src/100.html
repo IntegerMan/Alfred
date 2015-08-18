@@ -2,69 +2,75 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.common\collectionextensions.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\normalize\uppercasetexttransformer.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// CollectionExtensions.cs
+// UppercaseTextTransformer.cs
 // 
-// Created on:      08/14/2015 at 12:55 AM
-// Last Modified:   08/14/2015 at 12:59 AM
+// Created on:      08/12/2015 at 10:38 PM
+// Last Modified:   08/12/2015 at 11:59 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 using JetBrains.Annotations;
 
-namespace MattEland.Common
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+
+namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
 {
     /// &lt;summary&gt;
-    ///     A set of extension methods related to collections
+    /// A text transformer that makes the input text be uppercase for comparison
     /// &lt;/summary&gt;
-    public static class CollectionExtensions
+    public class UppercaseTextTransformer : TextTransformer
     {
         /// &lt;summary&gt;
-        ///     Adds an item to a collection safely. This is a convenience method that does null and duplicate checking
-        ///     based on the type of item / collection and will throw null reference or invalid operation exceptions if illegal
-        ///     circumstances are met.
+        /// Initializes a new instance of the &lt;see cref=&quot;TextTransformer&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;typeparam name=&quot;T&quot;&gt;The type of item&lt;/typeparam&gt;
-        /// &lt;param name=&quot;item&quot;&gt;The item.&lt;/param&gt;
-        /// &lt;param name=&quot;collection&quot;&gt;The collection.&lt;/param&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;
-        ///     item, collection
-        /// &lt;/exception&gt;
-        /// &lt;exception cref=&quot;System.InvalidOperationException&quot;&gt;The specified item was already part of the collection&lt;/exception&gt;
-        public static void AddSafe&lt;T&gt;([NotNull] this ICollection&lt;T&gt; collection, [NotNull] T item)
+        /// &lt;param name=&quot;chatEngine&quot;&gt;The ChatEngine.&lt;/param&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
+        public UppercaseTextTransformer([NotNull] ChatEngine chatEngine, string input)
+            : base(chatEngine, input)
         {
-            if (item == null)
-            {
-                throw new ArgumentNullException(nameof(item));
-            }
-            if (collection == null)
-            {
-                throw new ArgumentNullException(nameof(collection));
-            }
+        }
 
-            // This shouldn&#39;t happen, but I want to check to make sure
-            if (collection.Contains(item))
-            {
-                throw new InvalidOperationException(Resources.ErrorItemAlreadyInCollection);
-            }
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;TextTransformer&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;chatEngine&quot;&gt;The ChatEngine.&lt;/param&gt;
+        public UppercaseTextTransformer([NotNull] ChatEngine chatEngine)
+            : base(chatEngine)
+        {
+        }
 
-            collection.Add(item);
+        /// &lt;summary&gt;
+        /// Processes the input text and returns the processed value.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;The processed output&lt;/returns&gt;
+        protected override string ProcessChange()
+        {
+            return TransformInput(InputString);
+        }
+
+        /// &lt;summary&gt;
+        /// Transforms the input to uppercase.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input.&lt;/param&gt;
+        /// &lt;returns&gt;The transformed input&lt;/returns&gt;
+        [CanBeNull]
+        public static string TransformInput([CanBeNull] string input)
+        {
+            return input?.ToUpperInvariant();
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[37,13,37,14,0],[38,17,38,63,0],[41,13,41,14,0],[42,17,42,69,0],[35,9,35,10,1],[36,13,36,30,1],[40,13,40,36,1],[46,13,46,43,1],[47,13,47,14,1],[48,17,48,93,1],[51,13,51,34,1],[52,9,52,10,1]]);
+      highlightRanges([[27,15,27,38,0],[28,9,28,10,0],[29,9,29,10,0],[36,15,36,31,0],[37,9,37,10,0],[38,9,38,10,0],[45,9,45,10,0],[46,13,46,48,0],[47,9,47,10,0],[56,9,56,10,0],[57,13,57,46,0],[58,9,58,10,0]]);
     </script>
   </body>
 </html>

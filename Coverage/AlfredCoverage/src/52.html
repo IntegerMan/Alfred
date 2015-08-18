@@ -2,240 +2,144 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\chatenginelibrarian.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\definitions\alfredcommand.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// ChatEngineLibrarian.cs
+// AlfredCommand.cs
 // 
-// Created on:      08/16/2015 at 1:16 PM
-// Last Modified:   08/17/2015 at 12:24 AM
-// 
-// Last Modified by: Matt Eland
+// Created on:      08/03/2015 at 1:40 PM
+// Last Modified:   08/05/2015 at 3:06 PM
+// Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Security;
-using System.Xml;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Chat.Aiml.Utils;
-using MattEland.Common;
-
-namespace MattEland.Ani.Alfred.Chat.Aiml
+namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// &lt;summary&gt;
-    ///     The librarian is a helper class that manages settings for the Chat Engine
+    ///     Represents a command that can be executed on the user interface layer
     /// &lt;/summary&gt;
-    public class ChatEngineLibrarian
+    /// &lt;remarks&gt;
+    ///     It would be fantastic if this could support System.Windows.Input.ICommand,
+    ///     but portable doesn&#39;t reference that assembly so clients will have to provide
+    ///     their own version to support MVVM bindings, etc.
+    /// &lt;/remarks&gt;
+    public class AlfredCommand
     {
-        [NotNull]
-        private readonly ChatEngine _chatEngine;
+        /// &lt;summary&gt;
+        ///     The Action invoked when the Execute method is called.
+        /// &lt;/summary&gt;
+        [CanBeNull]
+        private Action _executeAction;
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;ChatEngineLibrarian&quot; /&gt; class.
+        ///     Whether or not the command is enabled
         /// &lt;/summary&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;chatEngine&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        public ChatEngineLibrarian([NotNull] ChatEngine chatEngine)
+        private bool _isEnabled = true;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the
+        ///     &lt;see cref=&quot;AlfredCommand&quot; /&gt;
+        ///     class.
+        /// &lt;/summary&gt;
+        public AlfredCommand() : this(null)
         {
-            //-Validate
-            if (chatEngine == null)
-            {
-                throw new ArgumentNullException(nameof(chatEngine));
-            }
-
-            _chatEngine = chatEngine;
-
-            // Initialize settings dictionaries
-            GlobalSettings = new SettingsManager();
-            GenderSubstitutions = new SettingsManager();
-            SecondPersonToFirstPersonSubstitutions = new SettingsManager();
-            FirstPersonToSecondPersonSubstitutions = new SettingsManager();
-            Substitutions = new SettingsManager();
         }
 
         /// &lt;summary&gt;
-        ///     Gets the substitutions dictionary. Substitutions are common phrases that are condensed and
-        ///     translated to their equivalent meaning to increase bot flexibility and make content authoring
-        ///     easier.
+        ///     Initializes a new instance of the
+        ///     &lt;see cref=&quot;AlfredCommand&quot; /&gt;
+        ///     class.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The substitutions.&lt;/value&gt;
-        [NotNull]
-        public SettingsManager Substitutions { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets the gender substitutions dictionary. This is a collection of male and female pronouns and
-        ///     their
-        ///     replacement values to use when the &quot;gender&quot; AIML tag is present.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The gender substitutions dictionary.&lt;/value&gt;
-        [NotNull]
-        public SettingsManager GenderSubstitutions { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets the global settings dictionary.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The global settings.&lt;/value&gt;
-        [NotNull]
-        public SettingsManager GlobalSettings { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets the person substitutions settings dictionary for second person to first person
-        ///     conversions.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The person substitutions settings dictionary.&lt;/value&gt;
-        [NotNull]
-        public SettingsManager SecondPersonToFirstPersonSubstitutions { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets the person substitutions settings dictionary. This contains things related to moving from
-        ///     the first person to the second person.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The person substitutions settings dictionary.&lt;/value&gt;
-        [NotNull]
-        public SettingsManager FirstPersonToSecondPersonSubstitutions { get; }
-
-        /// &lt;summary&gt;
-        ///     Loads settings into the various dictionaries.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;pathToConfigFiles&quot;&gt;The path to the configuration files directory.&lt;/param&gt;
-        /// &lt;exception cref=&quot;ArgumentException&quot;&gt;Path to settings must be provided.&lt;/exception&gt;
-        /// &lt;exception cref=&quot;XmlException&quot;&gt;Path to settings must be provided.&lt;/exception&gt;
-        /// &lt;exception cref=&quot;FileNotFoundException&quot;&gt;The settings file was not found.&lt;/exception&gt;
-        /// &lt;exception cref=&quot;SecurityException&quot;&gt;Could not find a settings file at the given path&lt;/exception&gt;
-        /// &lt;exception cref=&quot;UnauthorizedAccessException&quot;&gt;The caller does not have the required permission.&lt;/exception&gt;
-        /// &lt;exception cref=&quot;DirectoryNotFoundException&quot;&gt;
-        ///     Access to &lt;paramref name=&quot;pathToConfigFiles&quot; /&gt; is
-        ///     denied.
-        /// &lt;/exception&gt;
-        /// &lt;exception cref=&quot;IOException&quot;&gt;
-        ///     The specified path is invalid (for example, it is on an unmapped
-        ///     drive).
-        /// &lt;/exception&gt;
-        public void LoadSettingsFromConfigDirectory([NotNull] string pathToConfigFiles)
+        /// &lt;param name=&quot;executeAction&quot;&gt;
+        ///     The execute action.
+        /// &lt;/param&gt;
+        public AlfredCommand([CanBeNull] Action executeAction)
         {
-            // Validate
-            if (pathToConfigFiles.IsEmpty())
-            {
-                throw new ArgumentException(Resources.LibrarianLoadSettingsErrorNoConfigDirectory,
-                                            nameof(pathToConfigFiles));
-            }
-
-            // Load global settings and ensure default values are present
-            var pathToSettings = Path.Combine(pathToConfigFiles, &quot;Settings.xml&quot;);
-            GlobalSettings.Load(pathToSettings);
-            AddDefaultSettings();
-
-            // Load the indiviual dictionaries. If any one of these fail, the failure will be logged but things will move on
-            var person2Path = Path.Combine(pathToConfigFiles,
-                                           GlobalSettings.GetValue(&quot;person2substitutionsfile&quot;).NonNull());
-            SecondPersonToFirstPersonSubstitutions.LoadSafe(person2Path,
-                                                            _chatEngine.Logger,
-                                                            _chatEngine.Locale);
-
-            var person1Path = Path.Combine(pathToConfigFiles,
-                                           GlobalSettings.GetValue(&quot;personsubstitutionsfile&quot;).NonNull());
-            FirstPersonToSecondPersonSubstitutions.LoadSafe(person1Path,
-                                                            _chatEngine.Logger,
-                                                            _chatEngine.Locale);
-
-            var genderPath = Path.Combine(pathToConfigFiles,
-                                          GlobalSettings.GetValue(&quot;gendersubstitutionsfile&quot;).NonNull());
-            GenderSubstitutions.LoadSafe(genderPath, _chatEngine.Logger, _chatEngine.Locale);
-
-            var substitutionPath = Path.Combine(pathToConfigFiles,
-                                                GlobalSettings.GetValue(&quot;substitutionsfile&quot;).NonNull());
-            Substitutions.LoadSafe(substitutionPath, _chatEngine.Logger, _chatEngine.Locale);
+            ExecuteAction = executeAction;
         }
 
         /// &lt;summary&gt;
-        ///     Loads various settings from XML files. Input parameters are all optional and should be the
-        ///     actual XML and not a file path.
+        ///     Gets or sets the Action that is invoked when a command executes.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;globalXml&quot;&gt;The global XML.&lt;/param&gt;
-        /// &lt;param name=&quot;firstPersonXml&quot;&gt;The first person XML.&lt;/param&gt;
-        /// &lt;param name=&quot;secondPersonXml&quot;&gt;The second person XML.&lt;/param&gt;
-        /// &lt;param name=&quot;genderXml&quot;&gt;The gender XML.&lt;/param&gt;
-        /// &lt;param name=&quot;substitutionsXml&quot;&gt;The substitutions XML.&lt;/param&gt;
-        [SuppressMessage(&quot;ReSharper&quot;, &quot;AssignNullToNotNullAttribute&quot;)]
-        public void LoadSettingsFromXml([CanBeNull] string globalXml = null,
-                                        [CanBeNull] string firstPersonXml = null,
-                                        [CanBeNull] string secondPersonXml = null,
-                                        [CanBeNull] string genderXml = null,
-                                        [CanBeNull] string substitutionsXml = null)
+        /// &lt;value&gt;The executed Action.&lt;/value&gt;
+        [CanBeNull]
+        public Action ExecuteAction
         {
-            if (globalXml.HasText())
-            {
-                GlobalSettings.LoadXmlSafe(globalXml, _chatEngine.Logger, _chatEngine.Locale);
-            }
+            get { return _executeAction; }
+            set { _executeAction = value; }
+        }
 
-            AddDefaultSettings();
-
-            if (firstPersonXml.HasText())
+        /// &lt;summary&gt;
+        ///     Gets or sets a value indicating whether this command is enabled.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;&lt;c&gt;true&lt;/c&gt; if this command is enabled; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/value&gt;
+        public bool IsEnabled
+        {
+            get { return _isEnabled; }
+            set
             {
-                FirstPersonToSecondPersonSubstitutions.LoadXmlSafe(firstPersonXml,
-                                                                   _chatEngine.Logger,
-                                                                   _chatEngine.Locale);
-            }
-            if (secondPersonXml.HasText())
-            {
-                SecondPersonToFirstPersonSubstitutions.LoadXmlSafe(secondPersonXml,
-                                                                   _chatEngine.Logger,
-                                                                   _chatEngine.Locale);
-            }
-            if (genderXml.HasText())
-            {
-                GenderSubstitutions.LoadXmlSafe(genderXml, _chatEngine.Logger, _chatEngine.Locale);
-            }
-            if (substitutionsXml.HasText())
-            {
-                Substitutions.LoadXmlSafe(substitutionsXml, _chatEngine.Logger, _chatEngine.Locale);
+                if (value != _isEnabled)
+                {
+                    _isEnabled = value;
+                    RaiseCanExecuteChanged();
+                }
             }
         }
 
         /// &lt;summary&gt;
-        ///     Adds default settings to the global settings file.
+        ///     Defines the method that determines whether the command can execute in its current state.
         /// &lt;/summary&gt;
-        private void AddDefaultSettings()
+        /// &lt;returns&gt;
+        ///     true if this command can be executed; otherwise, false.
+        /// &lt;/returns&gt;
+        /// &lt;param name=&quot;parameter&quot;&gt;
+        ///     Data used by the command.  If the command does not require data to be passed, this object can be set to null.
+        /// &lt;/param&gt;
+        [SuppressMessage(&quot;Microsoft.Usage&quot;, &quot;CA1801:ReviewUnusedParameters&quot;, MessageId = &quot;parameter&quot;,
+            Justification = &quot;This matches the XAML ICommand interface which makes for ease of porting&quot;)]
+        public bool CanExecute([CanBeNull] object parameter)
         {
-            AddSettingIfMissing(&quot;person2substitutionsfile&quot;, &quot;Person2Substitutions.xml&quot;);
-            AddSettingIfMissing(&quot;personsubstitutionsfile&quot;, &quot;PersonSubstitutions.xml&quot;);
-            AddSettingIfMissing(&quot;gendersubstitutionsfile&quot;, &quot;GenderSubstitutions.xml&quot;);
-            AddSettingIfMissing(&quot;substitutionsfile&quot;, &quot;Substitutions.xml&quot;);
-            AddSettingIfMissing(&quot;aimldirectory&quot;, &quot;aiml&quot;);
-            AddSettingIfMissing(&quot;configdirectory&quot;, &quot;config&quot;);
+            return IsEnabled;
         }
 
         /// &lt;summary&gt;
-        ///     Adds a setting to the global settings dictionary if that setting is not present.
+        ///     Defines the method to be called when the command is invoked.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;settingName&quot;&gt;Name of the setting.&lt;/param&gt;
-        /// &lt;param name=&quot;defaultValue&quot;&gt;The default value.&lt;/param&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;settingName&lt;/exception&gt;
-        private void AddSettingIfMissing([NotNull] string settingName,
-                                         [CanBeNull] string defaultValue)
+        /// &lt;param name=&quot;parameter&quot;&gt;
+        ///     Data used by the command.  If the command does not require data to be passed, this object can be set to null.
+        /// &lt;/param&gt;
+        public virtual void Execute([CanBeNull] object parameter)
         {
-            if (settingName == null)
-            {
-                throw new ArgumentNullException(nameof(settingName));
-            }
+            // TODO: I could support async invokes here. I&#39;d want to add a parameter for that, but it&#39;s possible.
 
-            if (!GlobalSettings.Contains(settingName))
-            {
-                GlobalSettings.Add(settingName, defaultValue);
-            }
+            ExecuteAction?.Invoke();
+        }
+
+        /// &lt;summary&gt;
+        ///     Occurs when the result of CanExecute changes and should be re-evaluated.
+        /// &lt;/summary&gt;
+        public event EventHandler CanExecuteChanged;
+
+        /// &lt;summary&gt;
+        ///     Raises the CanExecuteChanged event.
+        /// &lt;/summary&gt;
+        private void RaiseCanExecuteChanged()
+        {
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[39,13,39,14,0],[40,17,40,69,0],[112,9,112,10,0],[114,13,114,45,0],[115,13,115,14,0],[116,17,117,72,0],[121,13,121,82,0],[122,13,122,49,0],[123,13,123,34,0],[126,13,127,107,0],[128,13,130,81,0],[132,13,133,106,0],[134,13,136,81,0],[138,13,139,105,0],[140,13,140,94,0],[142,13,143,105,0],[144,13,144,94,0],[145,9,145,10,0],[215,13,215,14,0],[216,17,216,70,0],[220,13,220,14,0],[221,17,221,63,0],[222,13,222,14,0],[35,9,35,68,1],[36,9,36,10,1],[38,13,38,36,1],[43,13,43,38,1],[46,13,46,52,1],[47,13,47,57,1],[48,13,48,76,1],[49,13,49,76,1],[50,13,50,51,1],[51,9,51,10,1],[60,48,60,52,1],[69,54,69,58,1],[76,49,76,53,1],[84,73,84,77,1],[92,73,92,77,1],[162,9,162,10,1],[163,13,163,37,1],[164,13,164,14,1],[165,17,165,95,1],[166,13,166,14,1],[168,13,168,34,1],[170,13,170,42,1],[171,13,171,14,1],[172,17,174,88,1],[175,13,175,14,1],[176,13,176,43,1],[177,13,177,14,1],[178,17,180,88,1],[181,13,181,14,1],[182,13,182,37,1],[183,13,183,14,1],[184,17,184,100,1],[185,13,185,14,1],[186,13,186,44,1],[187,13,187,14,1],[188,17,188,101,1],[189,13,189,14,1],[190,9,190,10,1],[196,9,196,10,1],[197,13,197,89,1],[198,13,198,87,1],[199,13,199,87,1],[200,13,200,75,1],[201,13,201,58,1],[202,13,202,62,1],[203,9,203,10,1],[213,9,213,10,1],[214,13,214,37,1],[219,13,219,55,1],[223,9,223,10,1]]);
+      highlightRanges([[42,34,42,44,1],[43,9,43,10,1],[44,9,44,10,1],[35,9,35,40,1],[54,9,54,63,1],[55,9,55,10,1],[56,13,56,43,1],[57,9,57,10,1],[66,17,66,18,1],[66,19,66,41,1],[66,42,66,43,1],[67,17,67,18,1],[67,19,67,42,1],[67,43,67,44,1],[76,17,76,18,1],[76,19,76,37,1],[76,38,76,39,1],[78,13,78,14,1],[79,17,79,41,1],[80,17,80,18,1],[81,21,81,40,1],[82,21,82,46,1],[83,17,83,18,1],[84,13,84,14,1],[99,9,99,10,1],[100,13,100,30,1],[101,9,101,10,1],[110,9,110,10,1],[113,13,113,37,1],[114,9,114,10,1],[125,9,125,10,1],[126,13,126,62,1],[127,9,127,10,1]]);
     </script>
   </body>
 </html>

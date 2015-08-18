@@ -2,147 +2,143 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\modules\alfredmodule.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\modules\alfredcoresubsystem.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlfredModule.cs
+// AlfredCoreSubsystem.cs
 // 
-// Created on:      08/11/2015 at 9:44 PM
-// Last Modified:   08/12/2015 at 3:43 PM
+// Created on:      08/08/2015 at 6:12 PM
+// Last Modified:   08/08/2015 at 6:58 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Widgets;
-using MattEland.Common;
+using MattEland.Ani.Alfred.Core.Pages;
 
 namespace MattEland.Ani.Alfred.Core.Modules
 {
-
     /// &lt;summary&gt;
-    ///     Represents a module within Alfred. Modules contain different bits of information to present to the user.
+    ///     The core subsystem provides essential monitoring and control functionality for Alfred such as the Alfred control
+    ///     page, an event log page, etc. as well as monitoring of the current time and date.
     /// &lt;/summary&gt;
-    public abstract class AlfredModule : AlfredComponent, IAlfredModule
+    /// &lt;remarks&gt;
+    /// TODO: Once Alfred has a calendar subsystem, the time / date functionality may need to move there
+    /// &lt;/remarks&gt;
+    public sealed class AlfredCoreSubsystem : AlfredSubsystem
     {
         [NotNull]
-        [ItemNotNull]
-        private readonly ICollection&lt;AlfredWidget&gt; _widgets;
+        private readonly AlfredModuleListPage _controlPage;
 
-        /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredModule&quot; /&gt; class.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
-        protected AlfredModule([NotNull] IPlatformProvider platformProvider)
-        {
-            if (platformProvider == null)
-            {
-                throw new ArgumentNullException(nameof(platformProvider));
-            }
+        [CanBeNull]
+        private AlfredEventLogPage _eventLogPage;
 
-            _widgets = platformProvider.CreateCollection&lt;AlfredWidget&gt;();
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets whether or not the module is visible to the user interface.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;Whether or not the module is visible.&lt;/value&gt;
-        public override bool IsVisible
-        {
-            get { return _widgets.Any(w =&gt; w.IsVisible); }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the children of this component. Depending on the type of component this is, the children will
-        ///     vary in their own types.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The children.&lt;/value&gt;
-        public override IEnumerable&lt;IAlfredComponent&gt; Children
-        {
-            get { yield break; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the user interface widgets for the module.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The user interface widgets.&lt;/value&gt;
         [NotNull]
-        public IEnumerable&lt;AlfredWidget&gt; Widgets
+        private readonly AlfredPowerModule _powerModule;
+
+        [NotNull]
+        private readonly AlfredTimeModule _timeModule;
+
+        [NotNull]
+        private readonly AlfredSubsystemListModule _systemsModule;
+
+        [NotNull]
+        private readonly AlfredPagesListModule _pagesModule;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredSubsystem&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        public AlfredCoreSubsystem() : this(new SimplePlatformProvider())
         {
-            get { return _widgets; }
         }
 
         /// &lt;summary&gt;
-        ///     Clears all child collections
+        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredSubsystem&quot; /&gt; class.
         /// &lt;/summary&gt;
-        protected override void ClearChildCollections()
+        /// &lt;param name=&quot;provider&quot;&gt;The provider.&lt;/param&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        public AlfredCoreSubsystem([NotNull] IPlatformProvider provider) : base(provider)
         {
-            base.ClearChildCollections();
+            _controlPage = new AlfredModuleListPage(provider, ControlPageName);
 
-            _widgets.Clear();
-            OnPropertyChanged(nameof(Widgets));
+            // Instantiate the modules
+            _powerModule = new AlfredPowerModule(provider);
+            _timeModule = new AlfredTimeModule(provider);
+            _systemsModule = new AlfredSubsystemListModule(provider);
+            _pagesModule = new AlfredPagesListModule(provider);
+
         }
 
         /// &lt;summary&gt;
-        ///     Registers a widget for the module.
+        /// Registers the controls for this component.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;widget&quot;&gt;
-        ///     The widget.
-        /// &lt;/param&gt;
-        protected void Register([NotNull] AlfredWidget widget)
+        protected override void RegisterControls()
         {
-            _widgets.AddSafe(widget);
+            Register(_controlPage);
 
-            OnPropertyChanged(nameof(IsVisible));
-            OnPropertyChanged(nameof(Widgets));
-        }
+            // Build out our control page
+            _controlPage.ClearModules();
+            _controlPage.Register(_powerModule);
+            _controlPage.Register(_timeModule);
+            _controlPage.Register(_systemsModule);
+            _controlPage.Register(_pagesModule);
 
-        /// &lt;summary&gt;
-        ///     Registers multiple widgets at once.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;widgets&quot;&gt;
-        ///     The widgets.
-        /// &lt;/param&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;widgets&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        protected void Register([NotNull] IEnumerable&lt;AlfredWidget&gt; widgets)
-        {
-            if (widgets == null)
+            // Don&#39;t include the event log page if there are no events
+            if (AlfredInstance?.Console != null)
             {
-                throw new ArgumentNullException(nameof(widgets));
-            }
-
-            foreach (var widget in widgets)
-            {
-                // ReSharper disable once AssignNullToNotNullAttribute - for testing purposes we&#39;ll allow this
-                Register(widget);
+                _eventLogPage = new AlfredEventLogPage(AlfredInstance.Console, EventLogPageName);
+                Register(_eventLogPage);
             }
         }
 
         /// &lt;summary&gt;
-        /// Processes an Alfred Command. If the command is handled, result should be modified accordingly and the method should return true. Returning false will not stop the message from being propogated.
+        ///     Gets the name of the control page.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;command&quot;&gt;The command.&lt;/param&gt;
-        /// &lt;param name=&quot;result&quot;&gt;The result. If the command was handled, this should be updated.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;True&lt;/c&gt; if the command was handled; otherwise false.&lt;/returns&gt;
-        public virtual bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
+        /// &lt;value&gt;The name of the control page.&lt;/value&gt;
+        [NotNull]
+        public static string ControlPageName
         {
-            return false;
+            get { return &quot;Alfred Core&quot;; }
         }
+
+        /// &lt;summary&gt;
+        ///     Gets the name of the event log page.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The name of the event log page.&lt;/value&gt;
+        [NotNull]
+        public static string EventLogPageName
+        {
+            get { return &quot;Event Log&quot;; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the name of the module.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The name of the module.&lt;/value&gt;
+        public override string Name
+        {
+            get { return Resources.AlfredControlSubSystem_Name; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the identifier for the subsystem to be used in command routing.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The identifier for the subsystem.&lt;/value&gt;
+        public override string Id
+        {
+            get { return &quot;Core&quot;; }
+        }
+
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[39,13,39,14,0],[40,17,40,75,0],[52,17,52,18,0],[52,19,52,44,0],[52,55,52,57,0],[52,58,52,59,0],[110,13,110,14,0],[111,17,111,66,0],[128,9,128,10,0],[129,13,129,26,0],[130,9,130,10,0],[52,44,52,55,0],[36,9,36,77,1],[37,9,37,10,1],[38,13,38,42,1],[43,13,43,74,1],[44,9,44,10,1],[72,17,72,18,1],[72,19,72,35,1],[72,36,72,37,1],[79,9,79,10,1],[80,13,80,42,1],[82,13,82,30,1],[83,13,83,48,1],[84,9,84,10,1],[93,9,93,10,1],[94,13,94,38,1],[96,13,96,50,1],[97,13,97,48,1],[98,9,98,10,1],[108,9,108,10,1],[109,13,109,33,1],[114,13,114,20,1],[114,36,114,43,1],[114,22,114,32,1],[115,13,115,14,1],[117,17,117,34,1],[118,13,118,14,1],[114,33,114,35,1],[119,9,119,10,1],[62,17,62,18,1],[62,19,62,31,1]]);
+      highlightRanges([[46,40,46,74,1],[47,9,47,10,1],[48,9,48,10,1],[55,76,55,90,1],[56,9,56,10,1],[57,13,57,80,1],[60,13,60,60,1],[61,13,61,58,1],[62,13,62,70,1],[63,13,63,64,1],[65,9,65,10,1],[71,9,71,10,1],[72,13,72,36,1],[75,13,75,41,1],[76,13,76,49,1],[77,13,77,48,1],[78,13,78,51,1],[79,13,79,49,1],[82,13,82,49,1],[83,13,83,14,1],[84,17,84,98,1],[85,17,85,41,1],[86,13,86,14,1],[87,9,87,10,1],[96,17,96,18,1],[96,19,96,40,1],[96,41,96,42,1],[106,17,106,18,1],[106,19,106,38,1],[106,39,106,40,1],[115,17,115,18,1],[115,19,115,64,1],[115,65,115,66,1],[124,17,124,18,1],[124,19,124,33,1],[124,34,124,35,1]]);
     </script>
   </body>
 </html>

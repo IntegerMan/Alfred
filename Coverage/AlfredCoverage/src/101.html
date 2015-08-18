@@ -2,76 +2,68 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.common\integerextensions.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\normalize\sanitizingtexttransformer.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// IntegerExtensions.cs
+// SanitizingTextTransformer.cs
 // 
-// Created on:      08/16/2015 at 12:01 AM
-// Last Modified:   08/16/2015 at 12:01 AM
+// Created on:      08/13/2015 at 10:31 PM
+// Last Modified:   08/16/2015 at 1:02 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 using JetBrains.Annotations;
 
-namespace MattEland.Common
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Common;
+
+namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
 {
     /// &lt;summary&gt;
-    /// A collection of extension methods related to integer operations.
+    ///     A text transformer to remove illegal characters.
     /// &lt;/summary&gt;
-    public static class IntegerExtensions
+    public class SanitizingTextTransformer : TextTransformer
     {
-
         /// &lt;summary&gt;
-        /// Determines whether an index is within the bounds of the specified collection.
+        ///     Initializes a new instance of the &lt;see cref=&quot;TextTransformer&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;index&quot;&gt;The index.&lt;/param&gt;
-        /// &lt;param name=&quot;collection&quot;&gt;The collection. Cannot be null.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the index is within bounds of the specified collection; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;collection&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        public static bool IsWithinBoundsOf(this int index, [NotNull] ICollection collection)
+        /// &lt;param name=&quot;chatEngine&quot;&gt;The ChatEngine.&lt;/param&gt;
+        public SanitizingTextTransformer([NotNull] ChatEngine chatEngine)
+            : base(chatEngine)
         {
-            if (collection == null)
-            {
-                throw new ArgumentNullException(nameof(collection));
-            }
-
-            return index &gt;= 0 &amp;&amp; index &lt; collection.Count;
+            StripperRegexPattern = @&quot;[^0-9a-zA-Z_]&quot;;
         }
 
         /// &lt;summary&gt;
-        /// Determines whether an index is within the bounds of the specified collection.
+        ///     Gets or sets the illegal character stripper regex pattern.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;index&quot;&gt;The index.&lt;/param&gt;
-        /// &lt;param name=&quot;collection&quot;&gt;The collection. Cannot be null.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the index is within bounds of the specified collection; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;collection&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        public static bool IsWithinBoundsOf&lt;T&gt;(this int index, [NotNull] IList&lt;T&gt; collection)
+        /// &lt;value&gt;The stripper regex pattern.&lt;/value&gt;
+        [NotNull]
+        public string StripperRegexPattern { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Processes the input text and returns the processed value.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;The processed output&lt;/returns&gt;
+        protected override string ProcessChange()
         {
-            if (collection == null)
-            {
-                throw new ArgumentNullException(nameof(collection));
-            }
+            // Removes illegal characters and replaces them with spaces
+            var regex = new Regex(StripperRegexPattern, RegexOptions.IgnorePatternWhitespace);
 
-            return index &gt;= 0 &amp;&amp; index &lt; collection.Count;
+            return regex.Replace(InputString.NonNull(), &quot; &quot;);
         }
-
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[33,9,33,10,0],[34,13,34,36,0],[35,13,35,14,0],[36,17,36,69,0],[39,13,39,59,0],[40,9,40,10,0],[51,9,51,10,0],[52,13,52,36,0],[53,13,53,14,0],[54,17,54,69,0],[57,13,57,59,0],[58,9,58,10,0]]);
+      highlightRanges([[29,15,29,31,1],[30,9,30,10,1],[31,13,31,53,1],[32,9,32,10,1],[39,46,39,50,1],[39,51,39,55,1],[46,9,46,10,1],[48,13,48,95,1],[50,13,50,62,1],[51,9,51,10,1]]);
     </script>
   </body>
 </html>

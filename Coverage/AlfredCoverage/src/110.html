@@ -2,144 +2,81 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.system\diskmonitormodule.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.aiml\alfredtaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// DiskMonitorModule.cs
+// AlfredTagHandler.cs
 // 
-// Created on:      08/05/2015 at 1:03 AM
-// Last Modified:   08/05/2015 at 3:10 PM
-// Original author: Matt Eland
+// Created on:      08/17/2015 at 10:57 PM
+// Last Modified:   08/18/2015 at 1:03 AM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.ComponentModel;
-using System.Diagnostics;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Widgets;
 
-namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
+namespace MattEland.Ani.Alfred.Chat
 {
     /// &lt;summary&gt;
-    ///     A module that displays information on the system&#39;s disk input / output operations
+    ///     A tag handler that handles the custom &quot;alfred&quot; tag that integrates Alfred into the AIML system
+    ///     and allows AIML files to issue commands to Alfred modules.
     /// &lt;/summary&gt;
-    public sealed class DiskMonitorModule : SystemMonitorModule, IDisposable
+    [HandlesAimlTag(&quot;alfred&quot;)]
+    public class AlfredTagHandler : AimlTagHandler
     {
-        private const string DiskCategoryName = &quot;PhysicalDisk&quot;;
-        private const string DiskReadCounterName = &quot;% Disk Read Time&quot;;
-        private const string DiskWriteCounterName = &quot;% Disk Write Time&quot;;
-
-        [NotNull]
-        private readonly MetricProviderBase _diskReadCounter;
-
-        [NotNull]
-        private readonly AlfredProgressBarWidget _diskReadWidget;
-
-        [NotNull]
-        private readonly MetricProviderBase _diskWriteCounter;
-
-        [NotNull]
-        private readonly AlfredProgressBarWidget _diskWriteWidget;
-
         /// &lt;summary&gt;
-        /// Initializes a new instance of the &lt;see cref=&quot;MemoryMonitorModule&quot; /&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
-        /// &lt;param name=&quot;factory&quot;&gt;The metric provider factory&lt;/param&gt;
-        public DiskMonitorModule([NotNull] IPlatformProvider platformProvider,
-                                 [NotNull] IMetricProviderFactory factory) : base(platformProvider, factory)
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;parameters&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public AlfredTagHandler([NotNull] TagHandlerParameters parameters) : base(parameters)
         {
-            _diskReadCounter = MetricProvider.Build(DiskCategoryName, DiskReadCounterName, TotalInstanceName);
-            _diskWriteCounter = MetricProvider.Build(DiskCategoryName, DiskWriteCounterName, TotalInstanceName);
-
-            _diskReadWidget = CreatePercentWidget();
-            _diskReadWidget.Text = Resources.DiskReadLabel;
-
-            _diskWriteWidget = CreatePercentWidget();
-            _diskWriteWidget.Text = Resources.DiskWriteLabel;
-
         }
 
         /// &lt;summary&gt;
-        ///     Gets the name of the module.
+        ///     Processes the input text and returns the processed value.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;
-        ///     The name of the module.
-        /// &lt;/value&gt;
-        public override string Name
+        /// &lt;returns&gt;The processed output&lt;/returns&gt;
+        protected override string ProcessChange()
         {
-            // ReSharper disable once AssignNullToNotNullAttribute
-            get { return Resources.DiskMonitorName; }
-        }
+            //throw new Exception(&quot;Test&quot;);
 
-        /// &lt;summary&gt;
-        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// &lt;/summary&gt;
-        public void Dispose()
-        {
-            _diskReadCounter.Dispose();
-            _diskWriteCounter.Dispose();
-        }
+            var result = new AlfredCommandResult();
 
-        /// &lt;summary&gt;
-        ///     Creates a percentage progress bar widget.
-        /// &lt;/summary&gt;
-        /// &lt;returns&gt;A percentage progress bar widget&lt;/returns&gt;
-        [NotNull]
-        private static AlfredProgressBarWidget CreatePercentWidget()
-        {
-            var widget = new AlfredProgressBarWidget
+            var element = TemplateElement;
+            var recipient = ChatEngine.Owner as IAlfredCommandRecipient;
+
+            if (element != null &amp;&amp; element.HasAttribute(&quot;command&quot;) &amp;&amp; recipient != null)
             {
-                Minimum = 0,
-                Maximum = 100,
-                ValueFormatString = &quot;{0:F2} %&quot;
-            };
+                // Build a command
+                var name = GetAttributeSafe(element, &quot;command&quot;);
+                var subsystem = GetAttributeSafe(element, &quot;subsystem&quot;);
+                var data = GetAttributeSafe(element, &quot;data&quot;);
 
-            return widget;
-        }
+                var command = new ChatCommand(subsystem, name, data);
 
-        /// &lt;summary&gt;
-        ///     Handles module shutdown events
-        /// &lt;/summary&gt;
-        protected override void ShutdownProtected()
-        {
-            _diskReadWidget.Value = 0;
-            _diskWriteWidget.Value = 0;
-        }
+                // Send the command on to the owner. This may modify result or carry out other actions.
+                recipient.ProcessAlfredCommand(command, result);
+            }
 
-        /// &lt;summary&gt;
-        ///     Handles module initialization events
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;alfred&quot;&gt;&lt;/param&gt;
-        protected override void InitializeProtected(IAlfred alfred)
-        {
-            Register(_diskReadWidget);
-            Register(_diskWriteWidget);
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles updating the module as needed
-        /// &lt;/summary&gt;
-        protected override void UpdateProtected()
-        {
-            var readPercent = GetNextCounterValueSafe(_diskReadCounter);
-            var writePercent = GetNextCounterValueSafe(_diskWriteCounter);
-
-            _diskReadWidget.Value = readPercent;
-            _diskWriteWidget.Value = writePercent;
+            // Get the output value from the result in case it was set externally
+            return result.Output;
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[69,17,69,18,0],[69,19,69,52,0],[69,53,69,54,0],[76,9,76,10,0],[77,13,77,40,0],[78,13,78,41,0],[79,9,79,10,0],[47,78,47,109,1],[48,9,48,10,1],[49,13,49,111,1],[50,13,50,113,1],[52,13,52,53,1],[53,13,53,60,1],[55,13,55,54,1],[56,13,56,62,1],[58,9,58,10,1],[87,9,87,10,1],[88,13,93,15,1],[95,13,95,27,1],[96,9,96,10,1],[102,9,102,10,1],[103,13,103,39,1],[104,13,104,40,1],[105,9,105,10,1],[112,9,112,10,1],[113,13,113,39,1],[114,13,114,40,1],[115,9,115,10,1],[121,9,121,10,1],[122,13,122,73,1],[123,13,123,75,1],[125,13,125,49,1],[126,13,126,51,1],[127,9,127,10,1]]);
+      highlightRanges([[32,78,32,94,1],[33,9,33,10,1],[34,9,34,10,1],[41,9,41,10,1],[44,13,44,52,1],[46,13,46,43,1],[47,13,47,73,1],[49,13,49,89,1],[50,13,50,14,1],[52,17,52,65,1],[53,17,53,72,1],[54,17,54,62,1],[56,17,56,70,1],[59,17,59,65,1],[60,13,60,14,1],[63,13,63,34,1],[64,9,64,10,1]]);
     </script>
   </body>
 </html>

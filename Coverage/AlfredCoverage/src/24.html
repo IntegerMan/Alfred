@@ -2,395 +2,193 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\alfredcomponent.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\chat\conversationtests.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlfredComponent.cs
+// ConversationTests.cs
 // 
-// Created on:      08/07/2015 at 10:53 PM
-// Last Modified:   08/07/2015 at 11:43 PM
-// Original author: Matt Eland
+// Created on:      08/10/2015 at 2:42 PM
+// Last Modified:   08/16/2015 at 4:47 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core.Console;
-using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Chat;
 using MattEland.Common;
 
-namespace MattEland.Ani.Alfred.Core
+using NUnit.Framework;
+
+namespace MattEland.Ani.Alfred.Tests.Chat
 {
     /// &lt;summary&gt;
-    ///     An abstract class containing most common shared functionality between Subsystems and Modules
+    /// Tests for conversational inquiries on the Alfred chat system.
     /// &lt;/summary&gt;
-    public abstract class AlfredComponent : INotifyPropertyChanged
+    [TestFixture]
+    [SuppressMessage(&quot;ReSharper&quot;, &quot;NotNullMemberIsNotInitialized&quot;)]
+    [SuppressMessage(&quot;ReSharper&quot;, &quot;AssignNullToNotNullAttribute&quot;)]
+    [SuppressMessage(&quot;ReSharper&quot;, &quot;UnusedParameter.Local&quot;)]
+    public class ConversationTests : ChatTestsBase
     {
-        [CanBeNull]
-        private IAlfred _alfred;
-
-        private AlfredStatus _status;
-
-        [CanBeNull, ItemNotNull]
-        private IEnumerable&lt;IAlfredComponent&gt; _childrenOnShutdown;
-
         /// &lt;summary&gt;
-        /// The logging console
+        ///     Sets up the testing environment prior to each test run.
         /// &lt;/summary&gt;
-        [CanBeNull]
-        private IConsole _console;
-
-        /// &lt;summary&gt;
-        /// Initializes a new instance of the &lt;see cref=&quot;AlfredComponent&quot;/&gt; class.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;console&quot;&gt;The console.&lt;/param&gt;
-        protected AlfredComponent([CanBeNull] IConsole console = null)
+        [SetUp]
+        public void SetUp()
         {
-            _console = console;
+            InitChatSystem();
         }
 
         /// &lt;summary&gt;
-        /// Gets the alfred instance associated with this component.
+        /// Tests that the chat engine has nodes associated with it
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The alfred instance.&lt;/value&gt;
-        [CanBeNull]
-        public IAlfred AlfredInstance
+        [Test]
+        public void ChatEngineHasNodes()
         {
-            [DebuggerStepThrough]
-            get
-            { return _alfred; }
+            Assert.Greater(Engine.NodeCount, 0, &quot;Chat engine did not have any nodes&quot;);
+        }
+
+        [Test]
+        public void GenderSubstitutionsHasEntries()
+        {
+            Assert.Greater(Engine.Librarian.GenderSubstitutions.Count, 0, &quot;Settings were not present&quot;);
+        }
+
+        [Test]
+        public void GlobalSettingsHaveEntries()
+        {
+            Assert.Greater(Engine.Librarian.GlobalSettings.Count, 0, &quot;Settings were not present&quot;);
+        }
+
+        [Test]
+        public void FirstPersonSubstitutionsHasEntries()
+        {
+            Assert.Greater(Engine.Librarian.FirstPersonToSecondPersonSubstitutions.Count, 0, &quot;Settings were not present&quot;);
+        }
+
+        [Test]
+        public void SecondPersonSubstitutionsHasEntries()
+        {
+            Assert.Greater(Engine.Librarian.SecondPersonToFirstPersonSubstitutions.Count, 0, &quot;Settings were not present&quot;);
+        }
+
+        [Test]
+        public void SubstitutionsHasEntries()
+        {
+            Assert.Greater(Engine.Librarian.Substitutions.Count, 0, &quot;Settings were not present&quot;);
+        }
+
+        [Test]
+        public void StartupResultsInGreeting()
+        {
+            // In reality, this should be _chat.DoInitialGreeting, but it&#39;s easier to test the template this way
+            var reply = GetReplyTemplate(&quot;EVT_STARTUP&quot;);
+
+            Assert.IsNotNull(reply);
+            Assert.That(reply.Contains(&quot;tmp_hi&quot;), &quot;Startup did not give proper template. Actual template was: &quot; + reply);
+        }
+
+        [Test]
+        public void StartupLeavesLastInputClear()
+        {
+            var chat = new AimlStatementHandler();
+            chat.DoInitialGreeting();
+
+            Assert.That(!chat.LastInput.HasText(), $&quot;Startup did not clear last input. Actual was: {chat.LastInput}&quot;);
+        }
+
+        [TestCase(&quot;Shutdown&quot;, &quot;tmp_bye&quot;)]
+        [TestCase(&quot;Status&quot;, &quot;tmp_status&quot;)]
+        public void ChatCoreTests(string input, string templateId)
+        {
+            AssertMessageGetsReplyTemplate(input, templateId);
+        }
+
+        [TestCase(&quot;Thanks&quot;, &quot;tmp_thanks&quot;)]
+        [TestCase(&quot;Goodbye&quot;, &quot;tmp_bye&quot;)]
+        [TestCase(&quot;Hello&quot;, &quot;tmp_hi&quot;)]
+        [TestCase(&quot;Help&quot;, &quot;tmp_help&quot;)]
+        [TestCase(&quot;Help Commands&quot;, &quot;tmp_help_commands&quot;)]
+        [TestCase(&quot;Help Questions&quot;, &quot;tmp_help_questions&quot;)]
+        [TestCase(&quot;Help Other&quot;, &quot;tmp_help_other&quot;)]
+        [TestCase(&quot;ASDfasd&quot;, &quot;tmp_fallback&quot;, Description = &quot;Gibberish should hit fallback case&quot;)]
+        public void ChatTemplateTests(string input, string templateId)
+        {
+            AssertMessageGetsReplyTemplate(input, templateId);
+        }
+
+        [TestCase(&quot;Bye&quot;, &quot;tmp_bye&quot;)]
+        [TestCase(&quot;Hi&quot;, &quot;tmp_hi&quot;)]
+        [TestCase(&quot;Hey&quot;, &quot;tmp_hi&quot;)]
+        [TestCase(&quot;Thank You&quot;, &quot;tmp_thanks&quot;)]
+        public void ChatRedirectTests([NotNull] string input, [NotNull] string redirectTemplateId)
+        {
+            var template = GetReplyTemplate(input);
+            Assert.IsNotNull(template);
+
+            Assert.IsTrue(template.ToLowerInvariant().Contains(redirectTemplateId),
+                          $&quot;The template {template} did not redirect to the template with an Id tag of {redirectTemplateId}&quot;);
         }
 
         /// &lt;summary&gt;
-        ///     Gets the name and version of the Module.
+        ///     Asserts that asking chat for the date gives the correct date.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The name and version.&lt;/value&gt;
-        [NotNull]
-        public string NameAndVersion
+        /// &lt;remarks&gt;
+        ///     Test for ALF-4
+        /// &lt;/remarks&gt;
+        [Test]
+        public void AskingForCurrentDayContainsCurrentDay()
         {
-            get { return string.Format(CultureInfo.CurrentCulture, &quot;{0} {1}&quot;, Name, Version); }
+            var now = DateTime.Now;
+            var reply = GetReply(&quot;Which day is it?&quot;);
+
+            var expected = now.ToString(&quot;D&quot;);
+            Assert.That(reply.Contains(expected),
+                        $&quot;Asked for current day at {now} and got a reply of &#39;{reply}&#39; which did not contain {expected}&quot;);
         }
 
         /// &lt;summary&gt;
-        ///     Gets the version of the module.
+        ///     Asserts that asking chat for the time gives the correct time.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The version.&lt;/value&gt;
-        [CanBeNull]
-        public virtual string Version
+        /// &lt;remarks&gt;
+        ///     Test for ALF-3
+        /// &lt;/remarks&gt;
+        [Test]
+        public void AskingForCurrentTimeContainsCurrentTime()
         {
-            get
-            {
-                // We&#39;ll base this off of the AssemblyVersion.
-                return this.GetAssemblyVersion()?.ToString();
-            }
+            var now = DateTime.Now;
+            var reply = GetReply(&quot;What time is it?&quot;);
+
+            var expected = now.ToString(&quot;t&quot;);
+            Assert.That(reply.Contains(expected),
+                        $&quot;Asked for current time at {now} and got a reply of &#39;{reply}&#39; which did not contain {expected}&quot;);
         }
-
         /// &lt;summary&gt;
-        ///     Gets the status of the Module.
+        ///     Asserts that when working through redirects, the engine can get the deepest redirect template.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The status.&lt;/value&gt;
-        public AlfredStatus Status
+        /// &lt;remarks&gt;
+        ///     Test for ALF-10
+        /// &lt;/remarks&gt;
+        [Test]
+        public void AskingForCurrentTimeRevealsRedirectedTemplate()
         {
-            get { return _status; }
-            protected set
-            {
-                if (value != _status)
-                {
-                    _status = value;
-                    OnPropertyChanged(nameof(Status));
-                }
-            }
-        }
+            var reply = GetReplyTemplate(&quot;What time is it?&quot;);
 
-        /// &lt;summary&gt;
-        ///     Gets the name of the component.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The name of the component.&lt;/value&gt;
-        public abstract string Name { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets whether or not the component is visible to the user interface.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;Whether or not the component is visible.&lt;/value&gt;
-        public abstract bool IsVisible { get; }
-
-        /// &lt;summary&gt;
-        ///     Initializes the component.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;alfred&quot;&gt;The alfred framework.&lt;/param&gt;
-        /// &lt;exception cref=&quot;InvalidOperationException&quot;&gt;Already online when told to initialize.&lt;/exception&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;alfred&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        public virtual void Initialize([NotNull] IAlfred alfred)
-        {
-            if (alfred == null)
-            {
-                throw new ArgumentNullException(nameof(alfred));
-            }
-
-            if (Status == AlfredStatus.Online)
-            {
-                var format = Resources.AlfredModule_InitializeAlreadyOnline.NonNull();
-                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture,
-                                                                  format,
-                                                                  NameAndVersion));
-            }
-
-            Status = AlfredStatus.Initializing;
-
-            _alfred = alfred;
-
-            // Reset our children collections so that other collections can be registered during shutdown
-            ClearChildCollections();
-
-            RegisterControls();
-
-            InitializeProtected(alfred);
-
-            // Pass on the message to the children
-            foreach (var child in Children)
-            {
-                child.Initialize(alfred);
-            }
-
-            Status = AlfredStatus.Online;
-
-            OnPropertyChanged(nameof(IsVisible));
-        }
-
-        /// &lt;summary&gt;
-        /// Allows components to define controls
-        /// &lt;/summary&gt;
-        protected virtual void RegisterControls()
-        {
-        }
-
-        /// &lt;summary&gt;
-        ///     Shuts down the component.
-        /// &lt;/summary&gt;
-        /// &lt;exception cref=&quot;InvalidOperationException&quot;&gt;
-        ///     Already offline when told to shut down.
-        /// &lt;/exception&gt;
-        public virtual void Shutdown()
-        {
-            if (Status == AlfredStatus.Offline)
-            {
-                var format = Resources.AlfredComponent_ShutdownAlreadyOffline.NonNull();
-                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, format, NameAndVersion));
-            }
-
-            Status = AlfredStatus.Terminating;
-
-            // Pass on the message to the children
-            _childrenOnShutdown = Children.ToList();
-            foreach (var child in _childrenOnShutdown)
-            {
-                child?.Shutdown();
-            }
-
-            // Reset our children collections so that other collections can be registered during shutdown
-            ClearChildCollections();
-
-            // Tell the derived module that it&#39;s now time to do any special logic (e.g. registering widgets, shutting down resources, stopping timers, etc.)
-            ShutdownProtected();
-
-            Status = AlfredStatus.Offline;
-
-            OnPropertyChanged(nameof(IsVisible));
-        }
-
-        /// &lt;summary&gt;
-        /// Clears all child collections
-        /// &lt;/summary&gt;
-        protected virtual void ClearChildCollections()
-        {
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles updating the component as needed
-        /// &lt;/summary&gt;
-        /// &lt;exception cref=&quot;InvalidOperationException&quot;&gt;If this was called when Alfred was offline.&lt;/exception&gt;
-        public void Update()
-        {
-            if (Status == AlfredStatus.Offline)
-            {
-                var message = string.Format(CultureInfo.CurrentCulture,
-                                            Resources.AlfredItemOfflineButToldToUpdate.NonNull(),
-                                            NameAndVersion);
-                throw new InvalidOperationException(message);
-            }
-
-            UpdateProtected();
-
-            // Pass on the message to the children
-            foreach (var child in Children)
-            {
-                child.Update();
-            }
-
-        }
-
-        /// &lt;summary&gt;
-        ///     Updates the component
-        /// &lt;/summary&gt;
-        protected virtual void UpdateProtected()
-        {
-        }
-
-        /// &lt;summary&gt;
-        ///     A notification method that is invoked when initialization for Alfred is complete so the UI can be fully enabled or
-        ///     adjusted
-        /// &lt;/summary&gt;
-        public virtual void OnInitializationCompleted()
-        {
-            // Pass on the message to the children
-            foreach (var child in Children)
-            {
-                child.OnInitializationCompleted();
-            }
-        }
-
-        /// &lt;summary&gt;
-        ///     A notification method that is invoked when shutdown for Alfred is complete so the UI can be fully enabled or
-        ///     adjusted
-        /// &lt;/summary&gt;
-        public virtual void OnShutdownCompleted()
-        {
-            var notified = new HashSet&lt;IAlfredComponent&gt;();
-
-            // Pass on the message to the children
-            foreach (var child in Children)
-            {
-                child.OnShutdownCompleted();
-                notified.Add(child);
-            }
-
-            // Tell our old expatriated children that things ended
-            if (_childrenOnShutdown != null)
-            {
-                foreach (var child in _childrenOnShutdown.Where(child =&gt; !notified.Contains(child)))
-                {
-                    child?.OnShutdownCompleted();
-                    notified.Add(child);
-                }
-            }
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles shutdown events
-        /// &lt;/summary&gt;
-        protected virtual void ShutdownProtected()
-        {
-        }
-
-        /// &lt;summary&gt;
-        /// Handles initialization events
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;alfred&quot;&gt;The alfred instance.&lt;/param&gt;
-        protected virtual void InitializeProtected([CanBeNull] IAlfred alfred)
-        {
-        }
-
-        /// &lt;summary&gt;
-        ///     Logs an event to the console if a console was provided
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;title&quot;&gt;The title of the message.&lt;/param&gt;
-        /// &lt;param name=&quot;message&quot;&gt;The message body.&lt;/param&gt;
-        /// &lt;param name=&quot;level&quot;&gt;The logging level.&lt;/param&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;message&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;title&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        protected void Log([NotNull] string title, [NotNull] string message, LogLevel level)
-        {
-            if (title == null)
-            {
-                throw new ArgumentNullException(nameof(title));
-            }
-            if (message == null)
-            {
-                throw new ArgumentNullException(nameof(message));
-            }
-
-            // Grab the console as Alfred may not have had the console object set during this module&#39;s construction
-            if (_console == null)
-            {
-                _console = _alfred?.Console;
-            }
-
-            // Send it on to the console, if we have one. It&#39;ll figure it out from there
-            _console?.Log(title, message, level);
-
-        }
-
-        /// &lt;summary&gt;
-        /// Gets the children of this component. Depending on the type of component this is, the children will
-        /// vary in their own types.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The children.&lt;/value&gt;
-        [NotNull, ItemNotNull]
-        public abstract IEnumerable&lt;IAlfredComponent&gt; Children { get; }
-
-        /// &lt;summary&gt;
-        /// Called when the component is registered.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;alfred&quot;&gt;The alfred.&lt;/param&gt;
-        public virtual void OnRegistered([CanBeNull] IAlfred alfred)
-        {
-            // Hang on to the reference now so AlfredInstance doesn&#39;t lie and we can tell
-            // our children who Alfred is before the whole update process happens
-            _alfred = alfred;
-
-            RegisterControls();
-        }
-
-        /// &lt;summary&gt;
-        /// Occurs when a property changes.
-        /// &lt;/summary&gt;
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// &lt;summary&gt;
-        /// Called when a property changes.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;propertyName&quot;&gt;Name of the property.&lt;/param&gt;
-        [NotifyPropertyChangedInvocator]
-        protected void OnPropertyChanged([CanBeNull] string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        /// &lt;summary&gt;
-        /// Registers the chat provider as the framework&#39;s chat provider.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;chatProvider&quot;&gt;The chat provider.&lt;/param&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;chatProvider&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        /// &lt;exception cref=&quot;InvalidOperationException&quot;&gt;If Register is called when Alfred is null (prior to initialization)&lt;/exception&gt;
-        protected void Register([NotNull] IChatProvider chatProvider)
-        {
-            if (chatProvider == null)
-            {
-                throw new ArgumentNullException(nameof(chatProvider));
-            }
-
-            if (_alfred == null)
-            {
-                throw new InvalidOperationException(Resources.NoAlfredInstance);
-            }
-
-            _alfred.Register(chatProvider);
+            Assert.That(reply.Contains(&quot;&lt;date&quot;), $&quot;The reply template of {reply} did not contain a date tag. Redirects are likely broken.&quot;);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[126,13,126,14,0],[127,17,127,65,0],[131,13,131,14,0],[132,17,132,87,0],[133,17,135,84,0],[176,13,176,14,0],[177,17,177,89,0],[178,17,178,120,0],[215,13,215,14,0],[216,17,218,61,0],[219,17,219,62,0],[304,13,304,14,0],[305,17,305,64,0],[308,13,308,14,0],[309,17,309,66,0],[368,13,368,14,0],[369,17,369,71,0],[373,13,373,14,0],[374,17,374,81,0],[47,9,47,71,1],[48,9,48,10,1],[49,13,49,32,1],[50,9,50,10,1],[61,13,61,14,1],[61,15,61,30,1],[61,31,61,32,1],[71,17,71,18,1],[71,19,71,94,1],[71,95,71,96,1],[82,13,82,14,1],[84,17,84,62,1],[85,13,85,14,1],[94,17,94,18,1],[94,19,94,34,1],[94,35,94,36,1],[96,13,96,14,1],[97,17,97,38,1],[98,17,98,18,1],[99,21,99,37,1],[100,21,100,55,1],[101,17,101,18,1],[102,13,102,14,1],[124,9,124,10,1],[125,13,125,32,1],[130,13,130,47,1],[138,13,138,48,1],[140,13,140,30,1],[143,13,143,37,1],[145,13,145,32,1],[147,13,147,41,1],[150,13,150,20,1],[150,35,150,43,1],[150,22,150,31,1],[151,13,151,14,1],[152,17,152,42,1],[153,13,153,14,1],[150,32,150,34,1],[155,13,155,42,1],[157,13,157,50,1],[158,9,158,10,1],[164,9,164,10,1],[165,9,165,10,1],[174,9,174,10,1],[175,13,175,48,1],[181,13,181,47,1],[184,13,184,53,1],[185,13,185,20,1],[185,35,185,54,1],[185,22,185,31,1],[186,13,186,14,1],[187,17,187,35,1],[188,13,188,14,1],[185,32,185,34,1],[191,13,191,37,1],[194,13,194,33,1],[196,13,196,43,1],[198,13,198,50,1],[199,9,199,10,1],[205,9,205,10,1],[206,9,206,10,1],[213,9,213,10,1],[214,13,214,48,1],[222,13,222,31,1],[225,13,225,20,1],[225,35,225,43,1],[225,22,225,31,1],[226,13,226,14,1],[227,17,227,32,1],[228,13,228,14,1],[225,32,225,34,1],[230,9,230,10,1],[236,9,236,10,1],[237,9,237,10,1],[244,9,244,10,1],[246,13,246,20,1],[246,35,246,43,1],[246,22,246,31,1],[247,13,247,14,1],[248,17,248,51,1],[249,13,249,14,1],[246,32,246,34,1],[250,9,250,10,1],[257,9,257,10,1],[258,13,258,60,1],[261,13,261,20,1],[261,35,261,43,1],[261,22,261,31,1],[262,13,262,14,1],[263,17,263,45,1],[264,17,264,37,1],[265,13,265,14,1],[261,32,261,34,1],[268,13,268,45,1],[269,13,269,14,1],[270,17,270,24,1],[270,39,270,74,1],[270,99,270,100,1],[270,26,270,35,1],[271,17,271,18,1],[272,21,272,50,1],[273,21,273,41,1],[274,17,274,18,1],[270,36,270,38,1],[275,13,275,14,1],[276,9,276,10,1],[282,9,282,10,1],[283,9,283,10,1],[290,9,290,10,1],[291,9,291,10,1],[302,9,302,10,1],[303,13,303,31,1],[307,13,307,33,1],[313,13,313,34,1],[314,13,314,14,1],[315,17,315,45,1],[316,13,316,14,1],[319,13,319,50,1],[321,9,321,10,1],[336,9,336,10,1],[339,13,339,30,1],[341,13,341,32,1],[342,9,342,10,1],[355,9,355,10,1],[356,13,356,87,1],[357,9,357,10,1],[366,9,366,10,1],[367,13,367,38,1],[372,13,372,33,1],[377,13,377,44,1],[378,9,378,10,1],[270,74,270,99,1]]);
+      highlightRanges([[36,9,36,10,1],[37,13,37,30,1],[38,9,38,10,1],[45,9,45,10,1],[46,13,46,87,1],[47,9,47,10,1],[51,9,51,10,1],[52,13,52,104,1],[53,9,53,10,1],[57,9,57,10,1],[58,13,58,99,1],[59,9,59,10,1],[63,9,63,10,1],[64,13,64,123,1],[65,9,65,10,1],[69,9,69,10,1],[70,13,70,123,1],[71,9,71,10,1],[75,9,75,10,1],[76,13,76,98,1],[77,9,77,10,1],[81,9,81,10,1],[83,13,83,57,1],[85,13,85,37,1],[86,13,86,122,1],[87,9,87,10,1],[91,9,91,10,1],[92,13,92,51,1],[93,13,93,38,1],[95,13,95,119,1],[96,9,96,10,1],[101,9,101,10,1],[102,13,102,63,1],[103,9,103,10,1],[114,9,114,10,1],[115,13,115,63,1],[116,9,116,10,1],[123,9,123,10,1],[124,13,124,52,1],[125,13,125,40,1],[127,13,128,127,1],[129,9,129,10,1],[139,9,139,10,1],[140,13,140,36,1],[141,13,141,54,1],[143,13,143,46,1],[144,13,145,122,1],[146,9,146,10,1],[156,9,156,10,1],[157,13,157,36,1],[158,13,158,54,1],[160,13,160,46,1],[161,13,162,123,1],[163,9,163,10,1],[172,9,172,10,1],[173,13,173,62,1],[175,13,175,141,1],[176,9,176,10,1]]);
     </script>
   </body>
 </html>

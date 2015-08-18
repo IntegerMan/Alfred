@@ -2,167 +2,43 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\subsystems\alfredcoresubsystemtests.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\widgets\warningwidgettests.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlfredCoreSubSystemTests.cs
+// WarningWidgetTests.cs
 // 
-// Created on:      08/08/2015 at 6:17 PM
-// Last Modified:   08/08/2015 at 7:02 PM
+// Created on:      08/08/2015 at 6:19 PM
+// Last Modified:   08/08/2015 at 6:20 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-
-using JetBrains.Annotations;
-
-using MattEland.Ani.Alfred.Core;
-using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Modules;
-using MattEland.Ani.Alfred.Core.Pages;
+using MattEland.Ani.Alfred.Core.Widgets;
 
 using NUnit.Framework;
 
-namespace MattEland.Ani.Alfred.Tests.SubSystems
+namespace MattEland.Ani.Alfred.Tests.Widgets
 {
+
+    /// &lt;summary&gt;
+    ///     Contains a suite of tests oriented around the &lt;see cref=&quot;WarningWidget&quot;&gt;WarningWidget&lt;/see&gt; class.
+    /// &lt;/summary&gt;
     [TestFixture]
-    [SuppressMessage(&quot;ReSharper&quot;, &quot;NotNullMemberIsNotInitialized&quot;)]
-    public class AlfredCoreSubSystemTests
+    public sealed class WarningWidgetTests
     {
-        [SetUp]
-        public void SetUp()
-        {
-            _subsystem = new AlfredCoreSubsystem();
-
-            var bootstrapper = new AlfredBootstrapper();
-            _alfred = bootstrapper.Create();
-        }
-
-        [NotNull]
-        private AlfredCoreSubsystem _subsystem;
-
-        [NotNull]
-        private AlfredApplication _alfred;
-
         [Test]
-        public void AlfredContainsAPageAfterRegistration()
+        public void CanInstantiateWarningWidget()
         {
-            var pages = _alfred.RootPages.Count();
-
-            _alfred.Register(_subsystem);
-            _alfred.Initialize();
-
-            Assert.Greater(_alfred.RootPages.Count(), pages);
-        }
-
-        [Test]
-        public void ControlPageIsPresentInAlfredAfterInitialization()
-        {
-            _alfred.Register(_subsystem);
-            _alfred.Initialize();
-            _alfred.Update();
-
-            Assert.IsTrue(_alfred.RootPages.Any(p =&gt; p.Name == AlfredCoreSubsystem.ControlPageName),
-                          &quot;Control Page was not found&quot;);
-        }
-
-        [Test]
-        public void EventLogPageIsPresentInAlfredAfterInitializationWhenConsoleIsProvided()
-        {
-            var console = new SimpleConsole();
-            _alfred.Console = console;
-
-            _alfred.Register(_subsystem);
-            _alfred.Initialize();
-            _alfred.Update();
-
-            Assert.IsTrue(_alfred.RootPages.Any(p =&gt; p.Name == AlfredCoreSubsystem.EventLogPageName),
-                          &quot;Event Log Page was not found&quot;);
-        }
-
-        [Test]
-        public void EventLogPageIsNotPresentInAlfredAfterInitializationWhenNoConsoleIsProvided()
-        {
-            _alfred.Register(_subsystem);
-            _alfred.Initialize();
-            _alfred.Update();
-
-            Assert.IsTrue(_alfred.RootPages.All(p =&gt; p.Name != AlfredCoreSubsystem.EventLogPageName),
-                          &quot;Event Log Page was present when no console was provided&quot;);
-        }
-
-        [Test]
-        public void SubsystemCanBeRegisteredInAlfred()
-        {
-            _alfred.Register(_subsystem);
-
-            Assert.AreEqual(1, _alfred.Subsystems.Count(), &quot;Subsystem was not registered&quot;);
-            Assert.Contains(_subsystem,
-                            _alfred.Subsystems as ICollection,
-                            &quot;The subsystem was not found in the collection&quot;);
-        }
-
-        [Test]
-        public void SubSystemContainsAPageAfterRegistration()
-        {
-            Assert.AreEqual(0, _subsystem.Pages.Count());
-
-            _alfred.Register(_subsystem);
-            _alfred.Initialize();
-
-            Assert.GreaterOrEqual(_subsystem.Pages.Count(), 1);
-        }
-
-        [Test]
-        public void ControlPageContainsCorrectModules()
-        {
-            _alfred.Register(_subsystem);
-            _alfred.Initialize();
-            _alfred.Update();
-
-            // Grab the Page
-            var pageName = AlfredCoreSubsystem.ControlPageName;
-            var page = FindPage&lt;AlfredModuleListPage&gt;(pageName);
-
-            // Ensure our expected modules are there
-            AssertExpectedModules(page.Modules);
-        }
-
-        private static void AssertExpectedModules([NotNull] IEnumerable&lt;IAlfredModule&gt; modules)
-        {
-            modules = modules.ToList();
-            Assert.IsTrue(modules.Any(m =&gt; m is AlfredTimeModule), &quot;Time Module not found&quot;);
-            Assert.IsTrue(modules.Any(m =&gt; m is AlfredPowerModule), &quot;Power Module not found&quot;);
-            Assert.IsTrue(modules.Any(m =&gt; m is AlfredSubsystemListModule), &quot;Subsystem List Module not found&quot;);
-            Assert.IsTrue(modules.Any(m =&gt; m is AlfredPagesListModule), &quot;Pages List Module not found&quot;);
-        }
-
-        /// &lt;summary&gt;
-        /// Finds the page with the specified name and casts it to the expected type.
-        /// &lt;/summary&gt;
-        /// &lt;typeparam name=&quot;T&quot;&gt;The type&lt;/typeparam&gt;
-        /// &lt;param name=&quot;pageName&quot;&gt;Name of the page.&lt;/param&gt;
-        /// &lt;returns&gt;The page&lt;/returns&gt;
-        [NotNull]
-        private T FindPage&lt;T&gt;(string pageName) where T : AlfredPage
-        {
-            var page = (T)_alfred.RootPages.First(p =&gt; p.Name == pageName);
-            Assert.NotNull(page);
-
-            return page;
+            var widget = new WarningWidget();
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[31,9,31,10,1],[32,13,32,52,1],[34,13,34,57,1],[35,13,35,45,1],[36,9,36,10,1],[46,9,46,10,1],[47,13,47,51,1],[49,13,49,42,1],[50,13,50,34,1],[52,13,52,62,1],[53,9,53,10,1],[57,9,57,10,1],[58,13,58,42,1],[59,13,59,34,1],[60,13,60,30,1],[62,13,62,54,1],[62,99,63,57,1],[64,9,64,10,1],[68,9,68,10,1],[69,13,69,47,1],[70,13,70,39,1],[72,13,72,42,1],[73,13,73,34,1],[74,13,74,30,1],[76,13,76,54,1],[76,100,77,59,1],[78,9,78,10,1],[82,9,82,10,1],[83,13,83,42,1],[84,13,84,34,1],[85,13,85,30,1],[87,13,87,54,1],[87,100,88,86,1],[89,9,89,10,1],[93,9,93,10,1],[94,13,94,42,1],[96,13,96,92,1],[97,13,99,78,1],[100,9,100,10,1],[104,9,104,10,1],[105,13,105,58,1],[107,13,107,42,1],[108,13,108,34,1],[110,13,110,64,1],[111,9,111,10,1],[115,9,115,10,1],[116,13,116,42,1],[117,13,117,34,1],[118,13,118,30,1],[121,13,121,64,1],[122,13,122,65,1],[125,13,125,49,1],[126,9,126,10,1],[129,9,129,10,1],[130,13,130,40,1],[131,13,131,44,1],[131,65,131,93,1],[132,13,132,44,1],[132,66,132,95,1],[133,13,133,44,1],[133,74,133,112,1],[134,13,134,44,1],[134,70,134,104,1],[135,9,135,10,1],[145,9,145,10,1],[146,13,146,56,1],[146,74,146,76,1],[147,13,147,34,1],[149,13,149,25,1],[150,9,150,10,1],[62,54,62,99,1],[76,54,76,100,1],[87,54,87,100,1],[131,44,131,65,1],[132,44,132,66,1],[133,44,133,74,1],[134,44,134,70,1],[146,56,146,74,1]]);
+      highlightRanges([[24,9,24,10,1],[25,13,25,46,1],[26,9,26,10,1]]);
     </script>
   </body>
 </html>

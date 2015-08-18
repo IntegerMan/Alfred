@@ -17,7 +17,6 @@ using System.Xml;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Chat.Aiml.Normalize;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Common;
 

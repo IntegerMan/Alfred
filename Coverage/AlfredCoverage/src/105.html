@@ -2,151 +2,155 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.aiml\alfredchatsubsystem.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.common\stringextensions.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlfredChatSubsystem.cs
+// StringExtensions.cs
 // 
-// Created on:      08/09/2015 at 11:09 PM
-// Last Modified:   08/12/2015 at 3:54 PM
-// Original author: Matt Eland
+// Created on:      08/12/2015 at 2:12 PM
+// Last Modified:   08/14/2015 at 11:26 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System.Diagnostics;
+using System;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core;
-using MattEland.Ani.Alfred.Core.Console;
-using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Common;
-
-using Res = MattEland.Ani.Alfred.Chat.Resources;
-
-namespace MattEland.Ani.Alfred.Chat
+namespace MattEland.Common
 {
     /// &lt;summary&gt;
-    ///     The Chat subsystem for Alfred. Presents a chatting mechanism using AIML powered conversation bots.
+    ///     Contains extension methods dealing with string operations.
     /// &lt;/summary&gt;
-    public sealed class AlfredChatSubsystem : AlfredSubsystem
+    public static class StringExtensions
     {
+        /// &lt;summary&gt;
+        ///     Determines if the input string is has text (is not null and has text beyond whitespace).
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the string has text; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
+        [UsedImplicitly]
+        public static bool HasText([CanBeNull] this string input)
+        {
+            return !input.IsNullOrWhitespace();
+        }
+
+        /// &lt;summary&gt;
+        ///     Determines if the input string is null or an empty string.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the string is null or empty; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
+        [UsedImplicitly]
+        public static bool IsEmpty([CanBeNull] this string input)
+        {
+            return string.IsNullOrEmpty(input);
+        }
+
+        /// &lt;summary&gt;
+        ///     Determines if the input string is null, an empty string, or whitespace.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the string is null or whitespace; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
+        [UsedImplicitly]
+        public static bool IsNullOrWhitespace([CanBeNull] this string input)
+        {
+            return string.IsNullOrWhiteSpace(input);
+        }
+
+        /// &lt;summary&gt;
+        ///     Ensures that the passed in string is not null and returns either the input string or
+        ///     string.empty.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
+        /// &lt;returns&gt;A sanitized string&lt;/returns&gt;
         [NotNull]
-        private readonly AimlStatementHandler _chatHandler;
+        public static string NonNull([CanBeNull] this string input)
+        {
+            return input ?? string.Empty;
+        }
 
         /// &lt;summary&gt;
-        /// Gets the chat handler.
+        ///     Ensures that the passed in string is not null and returns either the input string or
+        ///     replacement.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The chat handler.&lt;/value&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
+        /// &lt;param name=&quot;replacement&quot;&gt;The replacement string when input is null.&lt;/param&gt;
+        /// &lt;returns&gt;A sanitized string&lt;/returns&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;replacement&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
         [NotNull]
-        public AimlStatementHandler ChatHandler
+        public static string IfNull([CanBeNull] this string input, [NotNull] string replacement)
         {
-            [DebuggerStepThrough]
-            get
-            { return _chatHandler; }
-        }
-
-        [NotNull]
-        private readonly ChatPage _chatPage;
-
-        [NotNull]
-        private readonly AlfredCommandRouter _commandRouter = new AlfredCommandRouter();
-
-        /// &lt;summary&gt;
-        /// Handles initialization events
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;alfred&quot;&gt;The alfred instance.&lt;/param&gt;
-        protected override void InitializeProtected(IAlfred alfred)
-        {
-            // Tell the chat engine where to send its mail
-            _commandRouter.Alfred = alfred;
-            _chatHandler.UpdateOwner(_commandRouter);
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles shutdown events
-        /// &lt;/summary&gt;
-        protected override void ShutdownProtected()
-        {
-            // Clear out the owner just in case
-            _chatHandler.UpdateOwner(null);
-        }
-
-        /// &lt;summary&gt;
-        /// Initializes a new instance of the &lt;see cref=&quot;AlfredSubsystem&quot; /&gt; class.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;provider&quot;&gt;The provider.&lt;/param&gt;
-        /// &lt;param name=&quot;console&quot;&gt;The console.&lt;/param&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
-        public AlfredChatSubsystem([NotNull] IPlatformProvider provider,
-                                   [CanBeNull] IConsole console) : base(provider, console)
-        {
-            _chatHandler = new AimlStatementHandler(console);
-            _chatPage = new ChatPage(Res.ChatModuleName.NonNull(), _chatHandler);
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets or sets whether the page should be registered. If not, the chat functionality will just be supplied to the
-        ///     system via the chat handler.
-        ///     Defaults to false.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;Whether or not the page should be registered.&lt;/value&gt;
-        public bool RegisterPage { get; set; }
-
-        /// &lt;summary&gt;
-        ///     Gets the name of the component.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The name of the component.&lt;/value&gt;
-        public override string Name
-        {
-            get { return Res.ChatModuleName.NonNull(); }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the identifier for the subsystem to be used in command routing.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The identifier for the subsystem.&lt;/value&gt;
-        public override string Id
-        {
-            get { return &quot;Chat&quot;; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Allows components to define controls
-        /// &lt;/summary&gt;
-        protected override void RegisterControls()
-        {
-            base.RegisterControls();
-
-            // We don&#39;t have console until we&#39;re registered, so update it here
-            _chatHandler.Console = AlfredInstance?.Console;
-
-            // Register with the rest of the system
-            if (RegisterPage)
+            if (replacement == null)
             {
-                Register(_chatPage);
+                throw new ArgumentNullException(nameof(replacement));
             }
-            Register(_chatHandler);
+
+            return input ?? replacement;
         }
 
         /// &lt;summary&gt;
-        ///     A notification method that is invoked when initialization for Alfred is complete so the UI can be fully enabled or
-        ///     adjusted
+        ///     Extension method to compare two strings and return true if they&#39;re equal according to the
+        ///     comparison type used. By default strings are compared ordinally ignoring casing.
         /// &lt;/summary&gt;
-        public override void OnInitializationCompleted()
+        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
+        /// &lt;param name=&quot;other&quot;&gt;The other string.&lt;/param&gt;
+        /// &lt;param name=&quot;comparison&quot;&gt;The comparison type. Defaults to ordinal ignoring case.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the strings are equal, &lt;c&gt;false&lt;/c&gt; otherwise.&lt;/returns&gt;
+        public static bool Matches([CanBeNull] this string input,
+                                   [CanBeNull] string other,
+                                   StringComparison comparison = StringComparison.OrdinalIgnoreCase)
         {
-            // Say hi so Alfred greets the user
-            AlfredInstance?.ChatProvider?.DoInitialGreeting();
+            return string.Compare(input, other, comparison) == 0;
+        }
+
+        /// &lt;summary&gt;
+        /// Converts the input string to an integer, falling back to the fallback value on parse error.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
+        /// &lt;param name=&quot;fallbackValue&quot;&gt;The fallback value. Defaults to 0.&lt;/param&gt;
+        /// &lt;returns&gt;The parsed value or the fallback value in case of parse error.&lt;/returns&gt;
+        public static int AsInt(this string input, int fallbackValue = 0)
+        {
+            int output;
+
+            // Safely cast the input as an integer. Failure will not throw an exception
+            if (!int.TryParse(input?.Trim(), out output))
+            {
+                // In case of failure, use our fallback value
+                output = fallbackValue;
+            }
+
+            return output;
+        }
+
+        /// &lt;summary&gt;
+        /// Converts the input string to a double, falling back to the fallback value on parse error.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
+        /// &lt;param name=&quot;fallbackValue&quot;&gt;The fallback value. Defaults to 0.&lt;/param&gt;
+        /// &lt;returns&gt;The parsed value or the fallback value in case of parse error.&lt;/returns&gt;
+        public static double AsDouble(this string input, double fallbackValue = 0)
+        {
+            double output;
+
+            // Safely cast the input as an integer. Failure will not throw an exception
+            if (!double.TryParse(input?.Trim(), out output))
+            {
+                // In case of failure, use our fallback value
+                output = fallbackValue;
+            }
+
+            return output;
         }
     }
-
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[87,41,87,45,0],[119,13,119,14,0],[120,17,120,37,0],[121,13,121,14,0],[130,9,130,10,0],[132,13,132,63,0],[133,9,133,10,0],[39,13,39,14,1],[39,15,39,35,1],[39,36,39,37,1],[53,9,53,10,1],[55,13,55,44,1],[56,13,56,54,1],[57,9,57,10,1],[63,9,63,10,1],[65,13,65,44,1],[66,9,66,10,1],[46,9,46,89,1],[75,68,75,91,1],[76,9,76,10,1],[77,13,77,62,1],[78,13,78,82,1],[79,9,79,10,1],[87,36,87,40,1],[95,17,95,18,1],[95,19,95,55,1],[95,56,95,57,1],[104,17,104,18,1],[104,19,104,33,1],[104,34,104,35,1],[111,9,111,10,1],[112,13,112,37,1],[115,13,115,60,1],[118,13,118,30,1],[122,13,122,36,1],[123,9,123,10,1]]);
+      highlightRanges([[76,9,76,10,0],[77,13,77,37,0],[78,13,78,14,0],[79,17,79,70,0],[82,13,82,41,0],[83,9,83,10,0],[107,9,107,10,0],[111,13,111,58,0],[112,13,112,14,0],[114,17,114,40,0],[115,13,115,14,0],[117,13,117,27,0],[118,9,118,10,0],[127,9,127,10,0],[131,13,131,61,0],[132,13,132,14,0],[134,17,134,40,0],[135,13,135,14,0],[137,13,137,27,0],[138,9,138,10,0],[28,9,28,10,1],[29,13,29,48,1],[30,9,30,10,1],[39,9,39,10,1],[40,13,40,48,1],[41,9,41,10,1],[50,9,50,10,1],[51,13,51,53,1],[52,9,52,10,1],[62,9,62,10,1],[63,13,63,42,1],[64,9,64,10,1],[96,9,96,10,1],[97,13,97,66,1],[98,9,98,10,1]]);
     </script>
   </body>
 </html>

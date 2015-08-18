@@ -11,10 +11,9 @@ using System.Text.RegularExpressions;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Common;
 
-namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
+namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 {
     /// <summary>
     ///     A text transformer to remove illegal characters.

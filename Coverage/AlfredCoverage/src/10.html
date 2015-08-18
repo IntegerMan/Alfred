@@ -2,115 +2,129 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\subsystems\systemsubsystemtests.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\subsystems\subsystemtests.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// SystemSubSystemTests.cs
+// SubSystemTests.cs
 // 
-// Created on:      08/07/2015 at 10:01 PM
-// Last Modified:   08/07/2015 at 10:01 PM
+// Created on:      08/09/2015 at 12:12 AM
+// Last Modified:   08/09/2015 at 12:12 AM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Collections;
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
-using MattEland.Ani.Alfred.Core.Pages;
+using MattEland.Ani.Alfred.Tests.Mocks;
 
 using NUnit.Framework;
 
 namespace MattEland.Ani.Alfred.Tests.SubSystems
 {
     /// &lt;summary&gt;
-    /// A series of tests related to the System Monitoring SubSystem
+    /// Tests oriented around testing the subsystem update pumps and related functions
     /// &lt;/summary&gt;
     [TestFixture]
     [SuppressMessage(&quot;ReSharper&quot;, &quot;NotNullMemberIsNotInitialized&quot;)]
-    public class SystemSubSystemTests
+    public class SubSystemTests
     {
-        [NotNull]
-        private SystemMonitoringSubsystem _subsystem;
-
         [NotNull]
         private AlfredApplication _alfred;
 
-        private ValueMetricProviderFactory _metricProviderFactory;
+        [NotNull]
+        private TestSubsystem _subsystem;
 
-        /// &lt;summary&gt;
-        /// Sets up the test environment
-        /// &lt;/summary&gt;
-        /// &lt;exception cref=&quot;UnauthorizedAccessException&quot;&gt;Code that is executing without administrative privileges attempted to read a performance counter.&lt;/exception&gt;
-        /// &lt;exception cref=&quot;Win32Exception&quot;&gt;A call to an underlying system API failed.&lt;/exception&gt;
         [SetUp]
-        public void TestSetup()
+        public void Setup()
         {
-            _metricProviderFactory = new ValueMetricProviderFactory();
-            _subsystem = new SystemMonitoringSubsystem(new SimplePlatformProvider(), _metricProviderFactory);
-
             var bootstrapper = new AlfredBootstrapper();
             _alfred = bootstrapper.Create();
+
+            _subsystem = new TestSubsystem();
         }
 
-        [Test]
-        public void SystemMonitoringSubsystemCanBeRegisteredInAlfred()
-        {
-            _alfred.Register(_subsystem);
-
-            Assert.AreEqual(1, _alfred.Subsystems.Count(), &quot;Subsystem was not registered&quot;);
-            Assert.Contains(_subsystem, _alfred.Subsystems as ICollection, &quot;The subsystem was not found in the collection&quot;);
-        }
 
         [Test]
-        public void SystemMonitoringSubsystemContainsModules()
+        public void InitializeCausesRegisteredSubSystemsToInitialize()
         {
-            _alfred.Register(_subsystem);
+            var testSubsystem = new TestSubsystem();
 
-            var page = _subsystem.Pages.First() as AlfredModuleListPage;
-            Assert.NotNull(page);
+            _alfred.Register(testSubsystem);
 
-            Assert.IsTrue(page.Modules.Any(m =&gt; m is CpuMonitorModule), &quot;CPU Monitor not found&quot;);
-            Assert.IsTrue(page.Modules.Any(m =&gt; m is MemoryMonitorModule), &quot;Memory Monitor not found&quot;);
-            Assert.IsTrue(page.Modules.Any(m =&gt; m is DiskMonitorModule), &quot;Disk Monitor not found&quot;);
-        }
-
-        [Test]
-        public void SubSystemContainsAPageAfterRegistration()
-        {
-            Assert.AreEqual(0, _subsystem.Pages.Count());
-
-            _alfred.Register(_subsystem);
             _alfred.Initialize();
 
-            Assert.AreEqual(1, _subsystem.Pages.Count());
+            Assert.IsTrue(testSubsystem.LastInitialized &gt; DateTime.MinValue, &quot;Subsystem was not initialized&quot;);
+            Assert.IsTrue(testSubsystem.LastInitializationCompleted &gt; DateTime.MinValue,
+                          &quot;Subsystem was not notified initialized completed&quot;);
         }
 
         [Test]
-        public void AlfredContainsAPageAfterRegistration()
+        public void InitializeCausesSubSystemsToGoOnline()
         {
-            var pages = _alfred.RootPages.Count();
+            var testSubsystem = new TestSubsystem();
 
-            _alfred.Register(_subsystem);
+            _alfred.Register(testSubsystem);
+
             _alfred.Initialize();
 
-            Assert.AreEqual(pages + 1, _alfred.RootPages.Count());
+            Assert.AreEqual(AlfredStatus.Online, testSubsystem.Status);
         }
+
+        [Test]
+        public void UpdateCausesRegisteredSubSystemsToUpdate()
+        {
+            var testSubsystem = new TestSubsystem();
+
+            _alfred.Register(testSubsystem);
+
+            _alfred.Initialize();
+            _alfred.Update();
+
+            Assert.IsTrue(testSubsystem.LastUpdated &gt; DateTime.MinValue, &quot;Subsystem was not updated&quot;);
+        }
+
+        [Test]
+        public void ShutdownCausesRegisteredSubSystemsToShutdown()
+        {
+            var testSubsystem = new TestSubsystem();
+
+            _alfred.Register(testSubsystem);
+
+            _alfred.Initialize();
+            _alfred.Update();
+            _alfred.Shutdown();
+
+            Assert.IsTrue(testSubsystem.LastShutdown &gt; DateTime.MinValue, &quot;Subsystem was not shut down&quot;);
+            Assert.IsTrue(testSubsystem.LastShutdownCompleted &gt; DateTime.MinValue, &quot;Subsystem was not notified of shut down completion&quot;);
+        }
+
+        [Test]
+        public void ShutdownCausesRegisteredSubSystemsToGoOffline()
+        {
+            var testSubsystem = new TestSubsystem();
+
+            _alfred.Register(testSubsystem);
+
+            _alfred.Initialize();
+            _alfred.Update();
+            _alfred.Shutdown();
+
+            Assert.AreEqual(AlfredStatus.Offline, testSubsystem.Status);
+        }
+
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[48,9,48,10,1],[49,13,49,71,1],[50,13,50,110,1],[52,13,52,57,1],[53,13,53,45,1],[54,9,54,10,1],[58,9,58,10,1],[59,13,59,42,1],[61,13,61,92,1],[62,13,62,125,1],[63,9,63,10,1],[67,9,67,10,1],[68,13,68,42,1],[70,13,70,73,1],[71,13,71,34,1],[73,13,73,49,1],[73,70,73,98,1],[74,13,74,49,1],[74,73,74,104,1],[75,13,75,49,1],[75,71,75,100,1],[76,9,76,10,1],[80,9,80,10,1],[81,13,81,58,1],[83,13,83,42,1],[84,13,84,34,1],[86,13,86,58,1],[87,9,87,10,1],[91,9,91,10,1],[92,13,92,51,1],[94,13,94,42,1],[95,13,95,34,1],[97,13,97,67,1],[98,9,98,10,1],[73,49,73,70,1],[74,49,74,73,1],[75,49,75,71,1]]);
+      highlightRanges([[37,9,37,10,1],[38,13,38,57,1],[39,13,39,45,1],[41,13,41,46,1],[42,9,42,10,1],[47,9,47,10,1],[48,13,48,53,1],[50,13,50,45,1],[52,13,52,34,1],[54,13,54,111,1],[55,13,56,79,1],[57,9,57,10,1],[61,9,61,10,1],[62,13,62,53,1],[64,13,64,45,1],[66,13,66,34,1],[68,13,68,72,1],[69,9,69,10,1],[73,9,73,10,1],[74,13,74,53,1],[76,13,76,45,1],[78,13,78,34,1],[79,13,79,30,1],[81,13,81,103,1],[82,9,82,10,1],[86,9,86,10,1],[87,13,87,53,1],[89,13,89,45,1],[91,13,91,34,1],[92,13,92,30,1],[93,13,93,32,1],[95,13,95,106,1],[96,13,96,138,1],[97,9,97,10,1],[101,9,101,10,1],[102,13,102,53,1],[104,13,104,45,1],[106,13,106,34,1],[107,13,107,30,1],[108,13,108,32,1],[110,13,110,73,1],[111,9,111,10,1]]);
     </script>
   </body>
 </html>

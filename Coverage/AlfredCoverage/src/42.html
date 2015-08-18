@@ -2,160 +2,99 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\modules\alfredsubsystemlistmodule.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\modules\alertvisibilitycalculator.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlfredSubsystemListModule.cs
+// AlertVisibilityCalculator.cs
 // 
-// Created on:      08/07/2015 at 11:56 PM
-// Last Modified:   08/07/2015 at 11:56 PM
+// Created on:      08/10/2015 at 10:44 PM
+// Last Modified:   08/11/2015 at 1:47 AM
 // Original author: Matt Eland
 // ---------------------------------------------------------
-
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-
-using JetBrains.Annotations;
-
-using MattEland.Ani.Alfred.Core.Console;
-using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Widgets;
-using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Core.Modules
 {
     /// &lt;summary&gt;
-    /// A module that lists installed subsystems
+    ///     Used to calculate when alarms should be displayed
     /// &lt;/summary&gt;
-    public sealed class AlfredSubsystemListModule : AlfredModule
+    internal static class AlertVisibilityCalculator
     {
-
-        [NotNull, ItemNotNull]
-        private readonly ICollection&lt;AlfredWidget&gt; _widgets;
-
         /// &lt;summary&gt;
-        /// Initializes a new instance of the &lt;see cref=&quot;AlfredSubsystemListModule&quot;/&gt; class.
+        ///     Calculates the alert visibility based on the inputed time.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
-        public AlfredSubsystemListModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
+        /// &lt;param name=&quot;hour&quot;&gt;The current hour.&lt;/param&gt;
+        /// &lt;param name=&quot;minute&quot;&gt;The current minute.&lt;/param&gt;
+        /// &lt;param name=&quot;alertHour&quot;&gt;The alert hour.&lt;/param&gt;
+        /// &lt;param name=&quot;alertMinute&quot;&gt;The alert minute.&lt;/param&gt;
+        /// &lt;param name=&quot;alertDurationInHours&quot;&gt;The alert duration in hours.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the alert is visible, &lt;c&gt;false&lt;/c&gt; otherwise.&lt;/returns&gt;
+        internal static bool CalculateAlertVisibility(int hour,
+                                                      int minute,
+                                                      int alertHour,
+                                                      int alertMinute,
+                                                      int alertDurationInHours)
         {
-            _widgets = platformProvider.CreateCollection&lt;AlfredWidget&gt;();
+            if (hour == alertHour)
+            {
+                return minute &gt;= alertMinute;
+            }
+
+            if (hour &gt; alertHour)
+            {
+                return CalculateVisibilityAfterAlarmHour(hour, minute, alertHour, alertMinute, alertDurationInHours);
+            }
+
+            // Next we&#39;ll check early morning carryover for late alerts (e.g. 4 hour alarm display at 10 PM)
+            // so make sure the end hour is representable on a 24 hour clock.
+            var alertEndHour = alertHour + alertDurationInHours;
+            while (alertEndHour &gt;= 24)
+            {
+                alertEndHour -= 24;
+            }
+
+            // Support scenarios of a 9 PM bedtime but it&#39;s 12:30 AM.
+            return hour &lt;= alertEndHour;
+
         }
 
         /// &lt;summary&gt;
-        ///     Gets the name of the module.
+        ///     Calculates the alert visibility when the current hour is after the alarm hour.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The name of the module.&lt;/value&gt;
-        public override string Name
+        /// &lt;param name=&quot;hour&quot;&gt;The current hour.&lt;/param&gt;
+        /// &lt;param name=&quot;minute&quot;&gt;The current minute.&lt;/param&gt;
+        /// &lt;param name=&quot;alertHour&quot;&gt;The alert hour.&lt;/param&gt;
+        /// &lt;param name=&quot;alertMinute&quot;&gt;The alert minute.&lt;/param&gt;
+        /// &lt;param name=&quot;alertDurationInHours&quot;&gt;The alert duration in hours.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the alert should be visible, &lt;c&gt;false&lt;/c&gt; otherwise.&lt;/returns&gt;
+        /// &lt;remarks&gt;
+        ///     This is a method to help break down the complexity of CalculateAlertVisibility.
+        ///     Times come in this way to allow for testable scenarios.
+        /// &lt;/remarks&gt;
+        private static bool CalculateVisibilityAfterAlarmHour(int hour,
+                                                              int minute,
+                                                              int alertHour,
+                                                              int alertMinute,
+                                                              int alertDurationInHours)
         {
-            get { return &quot;Subsystems&quot;; }
-        }
+            // Check for when we&#39;re on the hour the alert will expire
+            var alertEndHour = (alertHour + alertDurationInHours);
 
-        /// &lt;summary&gt;
-        ///     Updates the component
-        /// &lt;/summary&gt;
-        protected override void UpdateProtected()
-        {
-            foreach (var widget in _widgets)
+            if (hour == alertEndHour &amp;&amp; minute &lt; alertMinute)
             {
-                var textWidget = widget as AlfredTextWidget;
-
-                if (textWidget == null)
-                {
-                    continue;
-                }
-
-                // Interpret the DataContext and update its text if it&#39;s a component based on the
-                // component status. If no component context, it&#39;s assumed to be the no items label.
-                var component = widget.DataContext as IAlfredComponent;
-                if (component != null)
-                {
-                    UpdateWidgetText(textWidget, component);
-                }
-                else
-                {
-                    textWidget.Text = Resources.AlfredSubSystemListModule_NoSubsystemsDetected;
-                }
-            }
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles shutdown events
-        /// &lt;/summary&gt;
-        protected override void ShutdownProtected()
-        {
-            _widgets.Clear();
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles initialization events
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;alfred&quot;&gt;&lt;/param&gt;
-        protected override void InitializeProtected(IAlfred alfred)
-        {
-            _widgets.Clear();
-
-            // Read the subsystems from Alfred
-            if (AlfredInstance != null)
-            {
-                foreach (var item in AlfredInstance.Subsystems)
-                {
-                    var widget = new TextWidget { DataContext = item };
-                    UpdateWidgetText(widget, item);
-
-                    _widgets.Add(widget);
-
-                    Register(widget);
-                }
+                return true;
             }
 
-            // We&#39;ll want to display a fallback for no subsystems
-            if (_widgets.Count == 0)
-            {
-                var noSubsystemsDetected = Resources.AlfredSubSystemListModule_NoSubsystemsDetected.NonNull();
-
-                Log(&quot;Subsystems.Initialize&quot;, noSubsystemsDetected, LogLevel.Warning);
-
-                var widget = new TextWidget(noSubsystemsDetected);
-                _widgets.Add(widget);
-
-                Register(widget);
-            }
-        }
-
-        /// &lt;summary&gt;
-        /// Updates the widget&#39;s text to that matching the detected component.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;widget&quot;&gt;The widget.&lt;/param&gt;
-        /// &lt;param name=&quot;component&quot;&gt;The component.&lt;/param&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;
-        /// &lt;/exception&gt;
-        [System.Diagnostics.CodeAnalysis.SuppressMessage(&quot;Microsoft.Globalization&quot;, &quot;CA1303:Do not pass literals as localized parameters&quot;, MessageId = &quot;MattEland.Ani.Alfred.Core.Widgets.AlfredTextWidget.set_Text(System.String)&quot;)]
-        private static void UpdateWidgetText([NotNull] AlfredTextWidget widget, [NotNull] IAlfredComponent component)
-        {
-            if (widget == null)
-            {
-                throw new ArgumentNullException(nameof(widget));
-            }
-            if (component == null)
-            {
-                throw new ArgumentNullException(nameof(component));
-            }
-
-            widget.Text = string.Format(CultureInfo.CurrentCulture, &quot;{0}: {1}&quot;, component.NameAndVersion, component.Status);
+            return hour &lt; alertEndHour;
         }
     }
-
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[47,17,47,18,0],[47,19,47,39,0],[47,40,47,41,0],[60,17,60,18,0],[61,21,61,30,0],[72,17,72,18,0],[73,21,73,96,0],[74,17,74,18,0],[110,13,110,14,0],[111,17,111,111,0],[113,17,113,86,0],[115,17,115,67,0],[116,17,116,38,0],[118,17,118,34,0],[119,13,119,14,0],[133,13,133,14,0],[134,17,134,65,0],[137,13,137,14,0],[138,17,138,68,0],[36,90,36,112,1],[37,9,37,10,1],[38,13,38,74,1],[39,9,39,10,1],[54,9,54,10,1],[55,13,55,20,1],[55,36,55,44,1],[55,22,55,32,1],[56,13,56,14,1],[57,17,57,61,1],[59,17,59,40,1],[66,17,66,72,1],[67,17,67,39,1],[68,17,68,18,1],[69,21,69,61,1],[70,17,70,18,1],[75,13,75,14,1],[55,33,55,35,1],[76,9,76,10,1],[82,9,82,10,1],[83,13,83,30,1],[84,9,84,10,1],[91,9,91,10,1],[92,13,92,30,1],[95,13,95,40,1],[96,13,96,14,1],[97,17,97,24,1],[97,38,97,63,1],[97,26,97,34,1],[98,17,98,18,1],[99,21,99,72,1],[100,21,100,52,1],[102,21,102,42,1],[104,21,104,38,1],[105,17,105,18,1],[97,35,97,37,1],[106,13,106,14,1],[109,13,109,37,1],[120,9,120,10,1],[131,9,131,10,1],[132,13,132,32,1],[136,13,136,35,1],[141,13,141,125,1],[142,9,142,10,1]]);
+      highlightRanges([[30,9,30,10,1],[31,13,31,35,1],[32,13,32,14,1],[33,17,33,46,1],[36,13,36,34,1],[37,13,37,14,1],[38,17,38,118,1],[43,13,43,65,1],[45,13,45,14,1],[46,17,46,36,1],[47,13,47,14,1],[44,13,44,39,1],[50,13,50,41,1],[52,9,52,10,1],[72,9,72,10,1],[74,13,74,67,1],[76,13,76,62,1],[77,13,77,14,1],[78,17,78,29,1],[81,13,81,40,1],[82,9,82,10,1]]);
     </script>
   </body>
 </html>

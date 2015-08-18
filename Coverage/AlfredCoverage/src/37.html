@@ -2,135 +2,51 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\pages\alfredmodulelistpage.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\widgets\textwidget.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlfredModuleListPage.cs
+// TextWidget.cs
 // 
-// Created on:      08/08/2015 at 7:17 PM
-// Last Modified:   08/09/2015 at 10:03 PM
+// Created on:      07/28/2015 at 12:18 PM
+// Last Modified:   08/04/2015 at 3:03 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Common;
-
-namespace MattEland.Ani.Alfred.Core.Pages
+namespace MattEland.Ani.Alfred.Core.Widgets
 {
     /// &lt;summary&gt;
-    ///     A page grouping together multiple module collections of widgets
+    ///     Represents a simple textual display on the user interface.
     /// &lt;/summary&gt;
-    public sealed class AlfredModuleListPage : AlfredPage
+    public sealed class TextWidget : AlfredTextWidget
     {
-        [NotNull]
-        [ItemNotNull]
-        private readonly ICollection&lt;IAlfredModule&gt; _modules;
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredModuleListPage&quot; /&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;TextWidget&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;provider&quot;&gt;The provider.&lt;/param&gt;
-        /// &lt;param name=&quot;name&quot;&gt;The name.&lt;/param&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
-        public AlfredModuleListPage([NotNull] IPlatformProvider provider, [NotNull] string name) : base(name)
+        public TextWidget() : this(null)
         {
-            if (provider == null)
-            {
-                throw new ArgumentNullException(nameof(provider));
-            }
-
-            _modules = provider.CreateCollection&lt;IAlfredModule&gt;();
         }
 
         /// &lt;summary&gt;
-        ///     Gets the modules.
+        ///     Initializes a new instance of the &lt;see cref=&quot;TextWidget&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The modules.&lt;/value&gt;
-        [NotNull]
-        [ItemNotNull]
-        public IEnumerable&lt;IAlfredModule&gt; Modules
+        /// &lt;param name=&quot;text&quot;&gt;The text for the widget.&lt;/param&gt;
+        public TextWidget([CanBeNull] string text)
         {
-            get { return _modules; }
+            Text = text;
         }
 
-        /// &lt;summary&gt;
-        ///     Gets the children of this component. Depending on the type of component this is, the children will
-        ///     vary in their own types.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The children.&lt;/value&gt;
-        public override IEnumerable&lt;IAlfredComponent&gt; Children
-        {
-            get
-            {
-                foreach (var module in _modules)
-                {
-                    yield return module;
-                }
-            }
-        }
-
-        /// &lt;summary&gt;
-        ///     Registers the specified module.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;module&quot;&gt;The module.&lt;/param&gt;
-        [System.Diagnostics.CodeAnalysis.SuppressMessage(&quot;Microsoft.Design&quot;, &quot;CA1062:Validate arguments of public methods&quot;, MessageId = &quot;0&quot;)]
-        public void Register([NotNull] IAlfredModule module)
-        {
-            _modules.AddSafe(module);
-            module.OnRegistered(AlfredInstance);
-        }
-
-        /// &lt;summary&gt;
-        ///     Clears the modules list.
-        /// &lt;/summary&gt;
-        public void ClearModules()
-        {
-            _modules.Clear();
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets whether or not the component is visible to the user interface.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;Whether or not the component is visible.&lt;/value&gt;
-        public override bool IsVisible
-        {
-            get { return base.IsVisible &amp;&amp; Modules.Any(m =&gt; m.Widgets.Any(w =&gt; w.IsVisible)); }
-        }
-
-        /// &lt;summary&gt;
-        /// Processes an Alfred Command. If the command is handled, result should be modified accordingly and the method should return true. Returning false will not stop the message from being propogated.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;command&quot;&gt;The command.&lt;/param&gt;
-        /// &lt;param name=&quot;result&quot;&gt;The result. If the command was handled, this should be updated.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;True&lt;/c&gt; if the command was handled; otherwise false.&lt;/returns&gt;
-        public override bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
-        {
-
-            foreach (IAlfredModule module in this.Modules)
-            {
-                if (module.ProcessAlfredCommand(command, result))
-                {
-                    return true;
-                }
-            }
-
-            return base.ProcessAlfredCommand(command, result);
-        }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[38,13,38,14,0],[39,17,39,67,0],[97,17,97,18,0],[97,19,97,61,0],[97,92,97,94,0],[97,95,97,96,0],[115,13,115,14,0],[117,13,117,63,0],[97,61,97,80,0],[97,91,97,92,0],[97,80,97,91,0],[35,100,35,110,1],[36,9,36,10,1],[37,13,37,34,1],[42,13,42,67,1],[43,9,43,10,1],[53,17,53,18,1],[53,19,53,35,1],[53,36,53,37,1],[78,9,78,10,1],[79,13,79,38,1],[80,13,80,49,1],[81,9,81,10,1],[87,9,87,10,1],[88,13,88,30,1],[89,9,89,10,1],[107,9,107,10,1],[109,13,109,20,1],[109,46,109,58,1],[109,22,109,42,1],[110,13,110,14,1],[111,17,111,66,1],[112,17,112,18,1],[113,21,113,33,1],[109,43,109,45,1],[118,9,118,10,1],[64,13,64,14,1],[65,17,65,24,1],[65,40,65,48,1],[65,26,65,36,1],[66,17,66,18,1],[67,21,67,41,1],[68,17,68,18,1],[65,37,65,39,1],[69,13,69,14,1]]);
+      highlightRanges([[22,31,22,41,1],[23,9,23,10,1],[24,9,24,10,1],[30,9,30,51,1],[31,9,31,10,1],[32,13,32,25,1],[33,9,33,10,1]]);
     </script>
   </body>
 </html>

@@ -2,109 +2,159 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\console\simpleconsole.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\alfredsubsystem.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// SimpleConsole.cs
+// AlfredSubSystem.cs
 // 
-// Created on:      07/26/2015 at 2:23 PM
-// Last Modified:   08/07/2015 at 12:41 AM
-// Original author: Matt Eland
+// Created on:      08/07/2015 at 10:00 PM
+// Last Modified:   08/16/2015 at 2:21 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Core
 {
     /// &lt;summary&gt;
-    ///     A simple console used for unit testing and designer window purposes
+    ///     Represents a subsystem on the Alfred Framework. Subsystems are ways of providing multiple
+    ///     related modules and
+    ///     capabilities to Alfred.
     /// &lt;/summary&gt;
-    public sealed class SimpleConsole : IConsole
+    public abstract class AlfredSubsystem : AlfredComponent, IAlfredSubsystem
     {
         [NotNull]
-        private readonly ICollection&lt;IConsoleEvent&gt; _events;
+        [ItemNotNull]
+        private readonly ICollection&lt;IAlfredPage&gt; _pages;
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;SimpleConsole&quot; /&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredSubsystem&quot; /&gt; class.
         /// &lt;/summary&gt;
-        public SimpleConsole() : this(new SimplePlatformProvider())
-        {
-        }
-
-        /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;SimpleConsole&quot; /&gt; class.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;provider&quot;&gt;The platform provider used to initialize the collection of events.&lt;/param&gt;
+        /// &lt;param name=&quot;provider&quot;&gt;The provider.&lt;/param&gt;
+        /// &lt;param name=&quot;console&quot;&gt;The console.&lt;/param&gt;
         /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
-        public SimpleConsole([NotNull] IPlatformProvider provider)
+        protected AlfredSubsystem([NotNull] IPlatformProvider provider,
+                                  [CanBeNull] IConsole console = null) : base(console)
         {
             if (provider == null)
             {
                 throw new ArgumentNullException(nameof(provider));
             }
 
-            _events = provider.CreateCollection&lt;IConsoleEvent&gt;();
+            _pages = provider.CreateCollection&lt;IAlfredPage&gt;();
         }
 
         /// &lt;summary&gt;
-        ///     Logs the specified message to the console.
+        ///     Gets whether or not the module is visible to the user interface.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;title&quot;&gt;The title.&lt;/param&gt;
-        /// &lt;param name=&quot;message&quot;&gt;The message.&lt;/param&gt;
-        /// &lt;param name=&quot;level&quot;&gt;The logging level.&lt;/param&gt;
-        public void Log([CanBeNull] string title, [CanBeNull] string message, LogLevel level)
+        /// &lt;value&gt;Whether or not the module is visible.&lt;/value&gt;
+        public override bool IsVisible
         {
-            if (title == null)
-            {
-                title = &quot;Unknown&quot;;
-            }
-
-            if (message == null)
-            {
-                return;
-            }
-
-            var evt = new ConsoleEvent(title, message, level);
-
-            Log(evt);
-        }
-
-        private void Log([NotNull] IConsoleEvent consoleEvent)
-        {
-            if (consoleEvent == null)
-            {
-                throw new ArgumentNullException(nameof(consoleEvent));
-            }
-
-            _events.Add(consoleEvent);
+            get { return true; }
         }
 
         /// &lt;summary&gt;
-        ///     Gets the console events.
+        ///     Gets the children of this component. Depending on the type of component this is, the children
+        ///     will
+        ///     vary in their own types.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The console events.&lt;/value&gt;
+        /// &lt;value&gt;The children.&lt;/value&gt;
+        public override IEnumerable&lt;IAlfredComponent&gt; Children
+        {
+            get { return _pages; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the root-level pages provided by this subsystem.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The root-level pages.&lt;/value&gt;
+        public IEnumerable&lt;IAlfredPage&gt; RootPages
+        {
+            get { return _pages.Where(page =&gt; page.IsRootLevel); }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the identifier for the subsystem to be used in command routing.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The identifier for the subsystem.&lt;/value&gt;
         [NotNull]
+        public abstract string Id { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets the pages associated with this subsystem
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The pages.&lt;/value&gt;
         [ItemNotNull]
-        public IEnumerable&lt;IConsoleEvent&gt; Events
+        public IEnumerable&lt;IAlfredPage&gt; Pages
         {
-            get { return _events; }
+            get { return _pages; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Registers a page.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;page&quot;&gt;The page.&lt;/param&gt;
+        [SuppressMessage(&quot;Microsoft.Design&quot;, &quot;CA1062:Validate arguments of public methods&quot;,
+            MessageId = &quot;0&quot;)]
+        protected void Register([NotNull] IAlfredPage page)
+        {
+            _pages.AddSafe(page);
+            page.OnRegistered(AlfredInstance);
+        }
+
+        /// &lt;summary&gt;
+        ///     Clears all child collections
+        /// &lt;/summary&gt;
+        protected override void ClearChildCollections()
+        {
+            base.ClearChildCollections();
+
+            _pages.Clear();
+        }
+
+        /// &lt;summary&gt;
+        /// Processes an Alfred Command. If the command is handled, result should be modified accordingly and the method should return true. Returning false will not stop the message from being propogated.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;command&quot;&gt;The command.&lt;/param&gt;
+        /// &lt;param name=&quot;result&quot;&gt;The result. If the command was handled, this should be updated.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;True&lt;/c&gt; if the command was handled; otherwise false.&lt;/returns&gt;
+        public virtual bool ProcessAlfredCommand(ChatCommand command,
+                                                 [NotNull] AlfredCommandResult result)
+        {
+            // Only route messages to sub-components if they are for this subsystem or unaddressed
+            if (command.Subsystem.IsEmpty() || command.Subsystem.Matches(Id))
+            {
+                foreach (var page in Pages)
+                {
+                    if (page.ProcessAlfredCommand(command, result))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
     }
+
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[43,13,43,14,0],[44,17,44,67,0],[59,13,59,14,0],[60,17,60,35,0],[61,13,61,14,0],[64,13,64,14,0],[65,17,65,24,0],[76,13,76,14,0],[77,17,77,71,0],[31,34,31,68,1],[32,9,32,10,1],[33,9,33,10,1],[40,9,40,67,1],[41,9,41,10,1],[42,13,42,34,1],[47,13,47,66,1],[48,9,48,10,1],[57,9,57,10,1],[58,13,58,31,1],[63,13,63,33,1],[68,13,68,63,1],[70,13,70,22,1],[71,9,71,10,1],[74,9,74,10,1],[75,13,75,38,1],[80,13,80,39,1],[81,9,81,10,1],[91,17,91,18,1],[91,19,91,34,1],[91,35,91,36,1]]);
+      highlightRanges([[44,13,44,14,0],[45,17,45,67,0],[57,17,57,18,0],[57,19,57,31,0],[57,32,57,33,0],[137,17,137,18,0],[41,74,41,87,1],[42,9,42,10,1],[43,13,43,34,1],[48,13,48,63,1],[49,9,49,10,1],[68,17,68,18,1],[68,19,68,33,1],[68,34,68,35,1],[77,17,77,18,1],[77,19,77,47,1],[77,63,77,65,1],[77,66,77,67,1],[94,17,94,18,1],[94,19,94,33,1],[94,34,94,35,1],[104,9,104,10,1],[105,13,105,34,1],[106,13,106,47,1],[107,9,107,10,1],[113,9,113,10,1],[114,13,114,42,1],[116,13,116,28,1],[117,9,117,10,1],[127,9,127,10,1],[129,13,129,78,1],[130,13,130,14,1],[131,17,131,24,1],[131,38,131,43,1],[131,26,131,34,1],[132,17,132,18,1],[133,21,133,68,1],[134,21,134,22,1],[135,25,135,37,1],[131,35,131,37,1],[138,13,138,14,1],[140,13,140,26,1],[141,9,141,10,1],[77,47,77,63,1]]);
     </script>
   </body>
 </html>

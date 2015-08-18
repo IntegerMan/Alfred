@@ -2,98 +2,143 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\mocks\alfredtestmodule.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\mocks\testpage.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// TestSubSystem.cs
+// 
+// Created on:      08/07/2015 at 11:07 PM
+// Last Modified:   08/08/2015 at 1:43 AM
+// Original author: Matt Eland
+// ---------------------------------------------------------
+
 using System;
 using System.Collections.Generic;
 
-using JetBrains.Annotations;
-
+using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Modules;
-using MattEland.Ani.Alfred.Core.Widgets;
+using MattEland.Ani.Alfred.Core.Pages;
 
 namespace MattEland.Ani.Alfred.Tests.Mocks
 {
     /// &lt;summary&gt;
-    /// An AlfredModule used explicitly for testing purposes
+    /// A test page for testing the AlfredPage update pumps
     /// &lt;/summary&gt;
-    internal sealed class AlfredTestModule : AlfredModule
+    public class TestPage : AlfredPage
     {
-        [NotNull]
-        private readonly ICollection&lt;AlfredWidget&gt; _widgetsToAddOnInit = new List&lt;AlfredWidget&gt;();
-
-        [NotNull]
-        private readonly ICollection&lt;AlfredWidget&gt; _widgetsToAddOnShutdown = new List&lt;AlfredWidget&gt;();
-
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the
-        ///     &lt;see
-        ///         cref=&quot;AlfredTestModule&quot; /&gt;
-        ///     class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredSubsystem&quot; /&gt; class.
         /// &lt;/summary&gt;
-        internal AlfredTestModule() : this(new SimplePlatformProvider())
+        public TestPage() : base(&quot;Test Page&quot;)
         {
         }
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the
-        ///     &lt;see
-        ///         cref=&quot;AlfredTestModule&quot; /&gt;
-        ///     class.
+        ///     Gets or sets the last time this page was updated.
         /// &lt;/summary&gt;
-        /// &lt;param
-        ///     name=&quot;platformProvider&quot;&gt;
-        ///     The collection provider.
-        /// &lt;/param&gt;
-        /// &lt;exception
-        ///     cref=&quot;ArgumentNullException&quot;&gt;
-        /// &lt;/exception&gt;
-        private AlfredTestModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
+        /// &lt;value&gt;The last time the module was updated.&lt;/value&gt;
+        public DateTime LastUpdated { get; set; }
+
+        /// &lt;summary&gt;
+        /// Gets or sets the last time this page was notified initialization completed.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The last initialization completed.&lt;/value&gt;
+        public DateTime LastInitializationCompleted { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the last shutdown completed time.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The last shutdown completed time.&lt;/value&gt;
+        public DateTime LastShutdownCompleted { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the last shutdown time.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The last shutdown time.&lt;/value&gt;
+        public DateTime LastShutdown { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the last initialized time.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The last initialized time.&lt;/value&gt;
+        public DateTime LastInitialized { get; set; }
+
+        /// &lt;summary&gt;
+        ///     A notification method that is invoked when initialization for Alfred is complete so the UI can be fully enabled or
+        ///     adjusted
+        /// &lt;/summary&gt;
+        public override void OnInitializationCompleted()
         {
+            LastInitializationCompleted = DateTime.Now;
+
+            base.OnInitializationCompleted();
         }
 
         /// &lt;summary&gt;
-        /// Gets the name of the module.
+        ///     A notification method that is invoked when shutdown for Alfred is complete so the UI can be fully enabled or
+        ///     adjusted
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The name of the module.&lt;/value&gt;
-        public override string Name { get { return &quot;Test&quot;; } }
+        public override void OnShutdownCompleted()
+        {
+            LastShutdownCompleted = DateTime.Now;
+
+            base.OnShutdownCompleted();
+        }
 
         /// &lt;summary&gt;
-        /// Gets the widgets to register on initialize.
+        ///     Handles shutdown events
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The widgets to register on initialize.&lt;/value&gt;
-        [NotNull]
-        internal ICollection&lt;AlfredWidget&gt; WidgetsToRegisterOnInitialize { get { return _widgetsToAddOnInit; } }
+        protected override void ShutdownProtected()
+        {
+            LastShutdown = DateTime.Now;
 
-        [NotNull]
-        internal ICollection&lt;AlfredWidget&gt; WidgetsToRegisterOnShutdown { get { return _widgetsToAddOnShutdown; } }
+            base.ShutdownProtected();
+        }
 
         /// &lt;summary&gt;
-        ///     Handles module initialization events
+        ///     Handles initialization events
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;alfred&quot;&gt;&lt;/param&gt;
         protected override void InitializeProtected(IAlfred alfred)
         {
-            Register(WidgetsToRegisterOnInitialize);
+            LastInitialized = DateTime.Now;
+
+            base.InitializeProtected(alfred);
         }
 
         /// &lt;summary&gt;
-        ///     Handles module shutdown events
+        ///     Handles updating the component as needed
         /// &lt;/summary&gt;
-        protected override void ShutdownProtected()
+        protected override void UpdateProtected()
         {
-            Register(WidgetsToRegisterOnShutdown);
+            LastUpdated = DateTime.Now;
+
+            base.UpdateProtected();
         }
+
+
+        /// &lt;summary&gt;
+        /// Gets the children of this component. Depending on the type of component this is, the children will
+        /// vary in their own types.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The children.&lt;/value&gt;
+        public override IEnumerable&lt;IAlfredComponent&gt; Children
+        {
+            get
+            {
+                yield break;
+            }
+        }
+
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[54,43,54,44,0],[54,45,54,59,0],[54,60,54,61,0],[29,39,29,73,1],[30,9,30,10,1],[31,9,31,10,1],[18,9,18,99,1],[21,9,21,103,1],[46,82,46,104,1],[47,9,47,10,1],[48,9,48,10,1],[61,80,61,81,1],[61,82,61,109,1],[61,110,61,111,1],[64,78,64,79,1],[64,80,64,111,1],[64,112,64,113,1],[71,9,71,10,1],[72,13,72,53,1],[73,9,73,10,1],[79,9,79,10,1],[80,13,80,51,1],[81,9,81,10,1]]);
+      highlightRanges([[26,29,26,46,1],[27,9,27,10,1],[28,9,28,10,1],[34,39,34,43,1],[34,44,34,48,1],[40,55,40,59,1],[40,60,40,64,1],[46,49,46,53,1],[46,54,46,58,1],[52,40,52,44,1],[52,45,52,49,1],[58,43,58,47,1],[58,48,58,52,1],[65,9,65,10,1],[66,13,66,56,1],[68,13,68,46,1],[69,9,69,10,1],[76,9,76,10,1],[77,13,77,50,1],[79,13,79,40,1],[80,9,80,10,1],[86,9,86,10,1],[87,13,87,41,1],[89,13,89,38,1],[90,9,90,10,1],[97,9,97,10,1],[98,13,98,44,1],[100,13,100,46,1],[101,9,101,10,1],[107,9,107,10,1],[108,13,108,40,1],[110,13,110,36,1],[111,9,111,10,1],[122,13,122,14,1],[123,17,123,29,1]]);
     </script>
   </body>
 </html>

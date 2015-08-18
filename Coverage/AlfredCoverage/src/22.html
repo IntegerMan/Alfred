@@ -2,181 +2,185 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\alfredbootstrapper.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\chat\chatcommandtests.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlfredBootstrapper.cs
+// ChatCommandTests.cs
 // 
-// Created on:      08/09/2015 at 5:10 PM
-// Last Modified:   08/09/2015 at 5:29 PM
-// Original author: Matt Eland
+// Created on:      08/17/2015 at 9:56 PM
+// Last Modified:   08/18/2015 at 3:04 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
-using System.Diagnostics;
+using System.Collections.Generic;
+using System.Linq;
 
-using JetBrains.Annotations;
+using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 
-using MattEland.Ani.Alfred.Core.Console;
-using MattEland.Ani.Alfred.Core.Definitions;
+using NUnit.Framework;
 
-namespace MattEland.Ani.Alfred.Core
+namespace MattEland.Ani.Alfred.Tests.Chat
 {
     /// &lt;summary&gt;
-    ///     A utility class used for instantiating the Alfred Framework
+    ///     Tests for commands embedded in AIML that impact the functioning of the Alfred system.
     /// &lt;/summary&gt;
-    public sealed class AlfredBootstrapper
+    [TestFixture]
+    public class ChatCommandTests : ChatTestsBase
     {
-        [CanBeNull]
-        private IConsole _console;
-
-        [NotNull]
-        private IPlatformProvider _platformProvider;
-
-        [NotNull]
-        private IStatusController _statusController;
-
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredBootstrapper&quot; /&gt; class.
+        ///     Sets up the testing environment prior to each test run.
         /// &lt;/summary&gt;
-        public AlfredBootstrapper() : this(new SimplePlatformProvider(), new AlfredStatusController(), null)
+        [SetUp]
+        public void SetUp()
         {
+            InitChatSystem();
         }
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredBootstrapper&quot; /&gt; class.
+        ///     Builds a list of fake counter names with a total instance included as well.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
-        public AlfredBootstrapper([NotNull] IPlatformProvider platformProvider)
-            : this(platformProvider, new AlfredStatusController(), null)
+        /// &lt;param name=&quot;count&quot;&gt;The count of fake items to build.&lt;/param&gt;
+        /// &lt;returns&gt;A list of fake counters&lt;/returns&gt;
+        private IEnumerable&lt;string&gt; BuildInstanceNamesWithTotal(int count)
         {
-        }
-
-        /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredBootstrapper&quot; /&gt; class.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;statusController&quot;&gt;The status controller.&lt;/param&gt;
-        public AlfredBootstrapper([NotNull] IStatusController statusController)
-            : this(new SimplePlatformProvider(), statusController, null)
-        {
-        }
-
-        /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredBootstrapper&quot; /&gt; class.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
-        /// &lt;param name=&quot;statusController&quot;&gt;The status controller.&lt;/param&gt;
-        public AlfredBootstrapper([NotNull] IPlatformProvider platformProvider,
-                                  [NotNull] IStatusController statusController)
-            : this(platformProvider, statusController, null)
-        {
-        }
-
-        /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredBootstrapper&quot; /&gt; class.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
-        /// &lt;param name=&quot;statusController&quot;&gt;The status controller.&lt;/param&gt;
-        /// &lt;param name=&quot;console&quot;&gt;The console.&lt;/param&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;
-        /// &lt;/exception&gt;
-        public AlfredBootstrapper([NotNull] IPlatformProvider platformProvider,
-                                  [NotNull] IStatusController statusController,
-                                  [CanBeNull] IConsole console)
-        {
-            if (platformProvider == null)
+            for (var i = 1; i &lt;= count; i++)
             {
-                throw new ArgumentNullException(nameof(platformProvider));
+                yield return $&quot;Item {i}&quot;;
             }
-            if (statusController == null)
-            {
-                throw new ArgumentNullException(nameof(statusController));
-            }
-            _console = console;
-            _platformProvider = platformProvider;
-            _statusController = statusController;
+
+            yield return SystemMonitorModule.TotalInstanceName;
         }
 
         /// &lt;summary&gt;
-        ///     Gets or sets the platform provider.
+        ///     Tests that the CPU Status command includes the expected CPU information.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The platform provider.&lt;/value&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
-        [NotNull]
-        public IPlatformProvider PlatformProvider
+        /// &lt;remarks&gt;
+        ///     See ALF-5, ALF-27, and ALF-28
+        /// &lt;/remarks&gt;
+        [Test]
+        public void CpuStatusIsAccurate()
         {
-            [DebuggerStepThrough]
-            get
-            { return _platformProvider; }
-            [DebuggerStepThrough]
-            set
-            {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
-                _platformProvider = value;
-            }
+            Alfred.Shutdown();
+            MetricProviderFactory.DefaultValue = 42.0f;
+            MetricProviderFactory.CategoryInstanceNames.Add(CpuMonitorModule.CpuCategoryName,
+                                                            BuildInstanceNamesWithTotal(72));
+            Alfred.Initialize();
+
+            var reply = GetReply(&quot;CPU STATUS&quot;);
+
+            string expected = $&quot;There are 72 CPU cores with an average of 42.0 % utilization.&quot;;
+            Assert.That(reply.Contains(expected),
+                        $&quot;Reply &#39;{reply}&#39; did not match expected value of {expected}.&quot;);
         }
 
         /// &lt;summary&gt;
-        ///     Gets or sets the status controller.
+        ///     Tests that the Memory Status command includes the expected Memory information.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The status controller.&lt;/value&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
-        [NotNull]
-        public IStatusController StatusController
+        /// &lt;remarks&gt;
+        ///     See ALF-5, ALF-27, and ALF-28
+        /// &lt;/remarks&gt;
+        [Test]
+        public void MemoryStatusIsAccurate()
         {
-            [DebuggerStepThrough]
-            get
-            { return _statusController; }
-            [DebuggerStepThrough]
-            set
-            {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
-                _statusController = value;
-            }
+            MetricProviderFactory.DefaultValue = 42.0f;
+
+            var reply = GetReply(&quot;MEMORY STATUS&quot;);
+
+            string expected = $&quot;The system is currently utilizing 42.0 % of all available memory.&quot;;
+            Assert.That(reply.Contains(expected),
+                        $&quot;Reply &#39;{reply}&#39; did not match expected value of {expected}.&quot;);
         }
 
         /// &lt;summary&gt;
-        ///     Gets or sets the console.
+        ///     Tests that the Disk Status command includes the expected Disk information.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The console.&lt;/value&gt;
-        [CanBeNull]
-        public IConsole Console
+        /// &lt;remarks&gt;
+        ///     See ALF-5, ALF-27, and ALF-28
+        /// &lt;/remarks&gt;
+        [Test]
+        public void DiskStatusIsAccurate()
         {
-            [DebuggerStepThrough]
-            get
-            { return _console; }
-            [DebuggerStepThrough]
-            set
-            { _console = value; }
+            MetricProviderFactory.DefaultValue = 42.0f;
+
+            var reply = GetReply(&quot;DISK STATUS&quot;);
+
+            string expected = $&quot;Disk read speed is currently utilized at 42.0 % and disk write utilization is at 42.0 %.&quot;;
+            Assert.That(reply.Contains(expected),
+                        $&quot;Reply &#39;{reply}&#39; did not match expected value of {expected}.&quot;);
         }
 
         /// &lt;summary&gt;
-        ///     Creates a new instance of Alfred using this instance&#39;s properties and returns it.
+        ///     Tests that the Alfred Status command includes the expected information.
         /// &lt;/summary&gt;
-        /// &lt;returns&gt;The Alfred instance.&lt;/returns&gt;
-        [NotNull]
-        public AlfredApplication Create()
+        /// &lt;remarks&gt;
+        ///     See ALF-5
+        /// &lt;/remarks&gt;
+        [Test]
+        public void AlfredStatusIsAccurate()
         {
-            var alfred = new AlfredApplication(_platformProvider, _statusController);
-            alfred.Console = _console;
+            var reply = GetReply(&quot;ALFRED STATUS&quot;);
+            var count = Alfred.Subsystems.Count();
 
-            return alfred;
+            Assert.That(reply.Contains($&quot;The system is online with a total of {count} Subsystems Present.&quot;),
+                        $&quot;&#39;{reply}&#39; did not contain the expected system status text.&quot;);
+        }
+
+        /// &lt;summary&gt;
+        ///     Ensure that the shutdown command causes alfred to be offline.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     See ALF-21
+        /// &lt;/remarks&gt;
+        [Test]
+        public void ShutdownCausesAlfredToBeOffline()
+        {
+            Say(&quot;Shutdown&quot;);
+
+            Assert.IsFalse(Alfred.IsOnline, &quot;Alfred was not offline after shutdown was handled.&quot;);
+        }
+
+        /// &lt;summary&gt;
+        ///     Tests that the generic Status command includes the expected system information from various counters.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     See ALF-5, ALF-27, and ALF-28
+        /// &lt;/remarks&gt;
+        [Test]
+        public void StatusYieldsRelevantInformation()
+        {
+            var reply = GetReply(&quot;Status&quot;);
+
+            Assert.That(reply.Contains(&quot;system is online&quot;), $&quot;System online status was missing from &#39;{reply}&#39;&quot;);
+            Assert.That(reply.Contains(&quot;Disk read speed&quot;), $&quot;Disk status was missing from &#39;{reply}&#39;&quot;);
+            Assert.That(reply.Contains(&quot;available memory&quot;), $&quot;Memory status was missing from &#39;{reply}&#39;&quot;);
+            Assert.That(reply.Contains(&quot;CPU core&quot;), $&quot;CPU status was missing from &#39;{reply}&#39;&quot;);
+        }
+
+        [Test]
+        public void TagHandlersAreInvokedWhenATestingTemplateIsInvoked()
+        {
+            Say(&quot;TEST TAG INVOKE&quot;);
+
+            Assert.IsTrue(AlfredTestTagHandler.WasInvoked);
+        }
+
+        [Test]
+        public void TagHandlersAreNotInvokedOnOtherInput()
+        {
+            Say(&quot;I like turtles&quot;);
+
+            Assert.IsFalse(AlfredTestTagHandler.WasInvoked);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[45,15,45,73,0],[46,9,46,10,0],[47,9,47,10,0],[54,15,54,73,0],[55,9,55,10,0],[56,9,56,10,0],[65,15,65,61,0],[66,9,66,10,0],[67,9,67,10,0],[82,13,82,14,0],[83,17,83,75,0],[86,13,86,14,0],[87,17,87,75,0],[104,13,104,14,0],[104,15,104,40,0],[104,41,104,42,0],[107,13,107,14,0],[108,17,108,35,0],[109,17,109,18,0],[110,21,110,68,0],[112,17,112,43,0],[113,13,113,14,0],[126,13,126,14,0],[126,15,126,40,0],[126,41,126,42,0],[129,13,129,14,0],[130,17,130,35,0],[131,17,131,18,0],[132,21,132,68,0],[134,17,134,43,0],[135,13,135,14,0],[147,13,147,14,0],[147,15,147,31,0],[147,32,147,33,0],[150,13,150,14,0],[150,15,150,32,0],[150,33,150,34,0],[36,39,36,109,1],[37,9,37,10,1],[38,9,38,10,1],[77,9,79,64,1],[80,9,80,10,1],[81,13,81,42,1],[85,13,85,42,1],[89,13,89,32,1],[90,13,90,50,1],[91,13,91,50,1],[92,9,92,10,1],[159,9,159,10,1],[160,13,160,86,1],[161,13,161,39,1],[163,13,163,27,1],[164,9,164,10,1]]);
+      highlightRanges([[30,9,30,10,1],[31,13,31,30,1],[32,9,32,10,1],[57,9,57,10,1],[58,13,58,31,1],[59,13,59,56,1],[60,13,61,94,1],[62,13,62,33,1],[64,13,64,48,1],[66,13,66,96,1],[67,13,68,89,1],[69,9,69,10,1],[79,9,79,10,1],[80,13,80,56,1],[82,13,82,51,1],[84,13,84,100,1],[85,13,86,89,1],[87,9,87,10,1],[97,9,97,10,1],[98,13,98,56,1],[100,13,100,49,1],[102,13,102,123,1],[103,13,104,89,1],[105,9,105,10,1],[115,9,115,10,1],[116,13,116,51,1],[117,13,117,51,1],[119,13,120,88,1],[121,9,121,10,1],[131,9,131,10,1],[132,13,132,29,1],[134,13,134,99,1],[135,9,135,10,1],[145,9,145,10,1],[146,13,146,44,1],[148,13,148,113,1],[149,13,149,103,1],[150,13,150,106,1],[151,13,151,95,1],[152,9,152,10,1],[156,9,156,10,1],[157,13,157,36,1],[159,13,159,60,1],[160,9,160,10,1],[164,9,164,10,1],[165,13,165,35,1],[167,13,167,61,1],[168,9,168,10,1],[40,9,40,10,1],[41,18,41,27,1],[42,13,42,14,1],[43,17,43,42,1],[44,13,44,14,1],[41,41,41,44,1],[41,29,41,39,1],[46,13,46,64,1],[47,9,47,10,1]]);
     </script>
   </body>
 </html>
