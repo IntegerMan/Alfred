@@ -58,5 +58,12 @@ namespace MattEland.Ani.Alfred.Tests.Chat
 
             Assert.IsFalse(AlfredTestTagHandler.WasInvoked);
         }
+
+        [Test]
+        public void StatusYieldsRelevantInformation()
+        {
+            var reply = GetReply("Status");
+            Assert.AreEqual("The System is Online with a total of 3 Subsystems Present.", reply);
+        }
     }
 }

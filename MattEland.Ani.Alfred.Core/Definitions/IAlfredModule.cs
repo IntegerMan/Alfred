@@ -8,7 +8,6 @@
 
 using System.Collections.Generic;
 
-using MattEland.Ani.Alfred.Chat;
 using MattEland.Ani.Alfred.Core.Widgets;
 
 namespace MattEland.Ani.Alfred.Core.Definitions

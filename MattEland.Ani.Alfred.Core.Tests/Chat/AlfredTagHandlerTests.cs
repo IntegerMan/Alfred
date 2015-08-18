@@ -72,7 +72,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             Assert.IsNotNull(Engine.Owner, "Chat Engine had no owner. Commands will not be routed without an owner.");
             Assert.That(command != ChatCommand.Empty, "Alfred's last command was an empty command. No command was invoked.");
             Assert.That(command.Subsystem.Matches(subsystem), $"Chat Command had subsystem of '{command.Subsystem}' instead of '{subsystem}'");
-            Assert.That(command.Command.Matches(expected), $"Chat Command had command of '{command.Command}' instead of '{expected}'");
+            Assert.That(command.Name.Matches(expected), $"Chat Command had command of '{command.Name}' instead of '{expected}'");
         }
 
     }

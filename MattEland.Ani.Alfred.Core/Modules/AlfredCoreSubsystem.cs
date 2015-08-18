@@ -6,12 +6,14 @@
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
+using System.Globalization;
 using System.Linq;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Pages;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Core.Modules
 {
@@ -124,6 +126,34 @@ namespace MattEland.Ani.Alfred.Core.Modules
         public override string Id
         {
             get { return "Core"; }
+        }
+
+        /// <summary>
+        /// Processes an Alfred Command. If the command is handled, result should be modified accordingly and the method should return true. Returning false will not stop the message from being propogated.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="result">The result. If the command was handled, this should be updated.</param>
+        /// <returns><c>True</c> if the command was handled; otherwise false.</returns>
+        public override bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
+        {
+            if (command.IsFor(this) && command.Name.Matches("Status"))
+            {
+                var alfred = AlfredInstance;
+                if (alfred != null)
+                {
+                    result.Output = string.Format(CultureInfo.CurrentCulture,
+                                                  "The System is {0} with a total of {1} Subsystems Present.",
+                                                  alfred.Status,
+                                                  alfred.Subsystems.Count());
+                }
+                else
+                {
+                    result.Output = "No Alfred integration is detected. The system may be offline.";
+                }
+                return true;
+            }
+
+            return base.ProcessAlfredCommand(command, result);
         }
     }
 }

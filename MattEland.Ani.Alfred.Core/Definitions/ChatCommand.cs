@@ -9,6 +9,8 @@
 using System;
 using System.Globalization;
 
+using MattEland.Common;
+
 namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>
@@ -48,7 +50,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         public ChatCommand(string subsystem, string command, string data) : this()
         {
             Subsystem = subsystem;
-            Command = command;
+            Name = command;
             Data = data;
         }
 
@@ -62,10 +64,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         ///     Gets the name of the command to execute. This will be interpreted by the subsystem.
         /// </summary>
         /// <value>The name of the command.</value>
-        /// <remarks>
-        /// TODO: This might be better off as Name as Command leads to syntax like: command.Command
-        /// </remarks>
-        public string Command { get; }
+        public string Name { get; }
 
         /// <summary>
         ///     Gets any extra data or parameters needed to execute the command.
@@ -80,7 +79,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <returns><c>true</c> if the instances are equal, <c>false</c> otherwise.</returns>
         public bool Equals(ChatCommand other)
         {
-            return string.Equals(Subsystem, other.Subsystem) && string.Equals(Command, other.Command) &&
+            return string.Equals(Subsystem, other.Subsystem) && string.Equals(Name, other.Name) &&
                    string.Equals(Data, other.Data);
         }
 
@@ -91,7 +90,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         public override string ToString()
         {
             // ReSharper disable once AssignNullToNotNullAttribute
-            return string.Format(CultureInfo.CurrentCulture, Resources.ChatCommandToString, Subsystem, Command, Data);
+            return string.Format(CultureInfo.CurrentCulture, Resources.ChatCommandToString, Subsystem, Name, Data);
         }
 
 
@@ -118,7 +117,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
             unchecked
             {
                 var hashCode = Subsystem?.GetHashCode() ?? 0;
-                hashCode = (hashCode * 397) ^ (Command?.GetHashCode() ?? 0);
+                hashCode = (hashCode * 397) ^ (Name?.GetHashCode() ?? 0);
                 hashCode = (hashCode * 397) ^ (Data?.GetHashCode() ?? 0);
                 return hashCode;
             }
@@ -144,6 +143,32 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         public static bool operator !=(ChatCommand left, ChatCommand right)
         {
             return !left.Equals(right);
+        }
+
+        /// <summary>
+        /// Determines whether this command is explicitly for the subsystem (not unaddressed).
+        /// </summary>
+        /// <param name="subsystem">The subsystem.</param>
+        /// <returns>System.Boolean.</returns>
+        public bool IsFor(IAlfredSubsystem subsystem)
+        {
+            return subsystem != null && Subsystem.Matches(subsystem.Id);
+        }
+
+        /// <summary>
+        /// Whether or not this instance is explicitly addressed to a particular subsystem.
+        /// </summary>
+        public bool IsAddressed
+        {
+            get { return Subsystem.HasText(); }
+        }
+
+        /// <summary>
+        /// Whether or not this instance is not addressed to a particular subsystem.
+        /// </summary>
+        public bool IsUnaddressed
+        {
+            get { return Subsystem.IsEmpty(); }
         }
     }
 }

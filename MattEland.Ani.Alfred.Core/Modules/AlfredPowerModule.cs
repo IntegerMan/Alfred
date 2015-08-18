@@ -229,7 +229,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <returns><c>True</c> if the command was handled; otherwise false.</returns>
         public override bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
         {
-            if (command.Command.Matches("Shutdown"))
+            if (command.Name.Matches("Shutdown"))
             {
                 ExecuteShutdownCommand();
                 return true;

@@ -22,7 +22,7 @@ namespace MattEland.Ani.Alfred.Core
         /// Changing this is a good way of handling dynamic information in queries
         /// </summary>
         /// <value>The new last output.</value>
-        public string NewLastOutput { get; set; }
+        public string Output { get; set; }
 
         /// <summary>
         /// Gets or sets the chat redirection value.

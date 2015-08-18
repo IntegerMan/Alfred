@@ -50,7 +50,7 @@ namespace MattEland.Ani.Alfred.Chat
 
             // Commands are very, very important and need to be logged.
             alfred.Console?.Log("CommandRouting",
-                                "Command '" + command.Command + "' raised for subsystem '" + target +
+                                "Command '" + command.Name + "' raised for subsystem '" + target +
                                 "' with data value of '" + command.Data + "'.",
                                 LogLevel.Info);
 

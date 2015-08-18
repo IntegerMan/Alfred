@@ -6,8 +6,6 @@
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
-using MattEland.Ani.Alfred.Chat;
-
 namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>
