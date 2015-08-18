@@ -19,6 +19,7 @@ using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
+using MattEland.Ani.Alfred.Tests.Mocks;
 using MattEland.Common;
 
 using NUnit.Framework;
@@ -172,8 +173,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         {
             AlfredTestTagHandler.WasInvoked = false;
 
-            var bootstrapper = new AlfredBootstrapper();
-            _alfred = bootstrapper.Create();
+            _alfred = new TestAlfred();
 
             // Add Subsystems to alfred
 

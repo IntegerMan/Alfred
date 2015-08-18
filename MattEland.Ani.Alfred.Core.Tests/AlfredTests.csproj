@@ -63,6 +63,7 @@
     <Compile Include="Chat\ChatCommandTests.cs" />
     <Compile Include="Chat\ChatTestsBase.cs" />
     <Compile Include="Chat\ConversationTests.cs" />
+    <Compile Include="Mocks\TestAlfred.cs" />
     <Compile Include="Mocks\TestPage.cs" />
     <Compile Include="Pages\PageTests.cs" />
     <Compile Include="Resources.Designer.cs">
