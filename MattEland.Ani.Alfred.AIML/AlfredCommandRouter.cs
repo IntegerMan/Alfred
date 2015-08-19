@@ -77,7 +77,7 @@ namespace MattEland.Ani.Alfred.Chat
         /// Processes a shell command by sending it on to the user interface layer.
         /// </summary>
         /// <param name="command">The command.</param>
-        public void ProcessShellCommand(ShellCommand command)
+        public string ProcessShellCommand(ShellCommand command)
         {
             // Commands are very, very important and need to be logged.
             Alfred?.Console?.Log("CommandRouting",
@@ -86,7 +86,9 @@ namespace MattEland.Ani.Alfred.Chat
 
             var shell = Alfred?.ShellCommandHandler;
 
-            shell?.ProcessShellCommand(command);
+            var result = shell?.ProcessShellCommand(command);
+
+            return result.NonNull();
         }
     }
 }

@@ -52,33 +52,33 @@ namespace MattEland.Ani.Alfred.WPF
         /// Processes a shell command by sending it on to the user interface layer.
         /// </summary>
         /// <param name="command">The command.</param>
-        public void ProcessShellCommand(ShellCommand command)
+        public string ProcessShellCommand(ShellCommand command)
         {
             _alfred.Console?.Log("WPF.ShellCommand", "Received shell command: " + command, LogLevel.Info);
 
             switch (command.Name.ToUpperInvariant())
             {
                 case "NAV":
-                case "NAVIGATE":
-                case "NAVIGATION":
-                    HandleNavigationCommand(command);
-                    break;
-
+                    return HandleNavigationCommand(command) ? "NAVIGATE SUCCESS" : "NAVIGATE FAILED";
             }
+
+            return string.Empty;
         }
 
         /// <summary>
         /// Handles a shell navigation command.
         /// </summary>
         /// <param name="command">The command.</param>
-        private void HandleNavigationCommand(ShellCommand command)
+        /// <returns>Whether or not the event was handled</returns>
+        private bool HandleNavigationCommand(ShellCommand command)
         {
             switch (command.Target.ToUpperInvariant())
             {
                 case "PAGES":
-                    _window.HandlePageNavigationCommand(command);
-                    break;
+                    return _window.HandlePageNavigationCommand(command);
             }
+
+            return false;
         }
     }
 }

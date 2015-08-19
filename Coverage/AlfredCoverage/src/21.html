@@ -61,7 +61,6 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         [SuppressMessage(&quot;ReSharper&quot;, &quot;ExceptionNotDocumented&quot;)]
         public void AlfredTagHandlerHasHandlesAttribute()
         {
-
             var type = _handler.GetType();
             var attribute = type.GetCustomAttribute(typeof(HandlesAimlTagAttribute)) as HandlesAimlTagAttribute;
 

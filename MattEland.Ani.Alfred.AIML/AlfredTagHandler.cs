@@ -8,12 +8,14 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Xml;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
 
@@ -43,25 +45,45 @@ namespace MattEland.Ani.Alfred.Chat
             var element = TemplateElement;
             var recipient = ChatEngine.Owner as IShellCommandRecipient;
 
-            if (element.HasAttribute("target") && recipient != null)
+            // If there's no target or no recipient, don't bother
+            if (!element.HasAttribute("target") || recipient == null)
             {
-                // Build a command
-                var name = GetAttributeSafe(element, "command");
-                if (name.IsEmpty())
-                {
-                    name = "nav";
-                }
-                var target = GetAttributeSafe(element, "target");
-                var data = GetAttributeSafe(element, "data");
-
-                var command = new ShellCommand(name, target, data);
-
-                // Send the command on to the owner
-                recipient.ProcessShellCommand(command);
+                return string.Empty;
             }
 
-            // TODO: I'll need a way of getting a real response and redirecting as needed
-            return "I'll let the user interface know";
+            // Build a command
+            var name = GetAttributeSafe(element, "command");
+            if (name.IsEmpty())
+            {
+                name = "nav";
+            }
+            var target = GetAttributeSafe(element, "target");
+            var data = GetAttributeSafe(element, "data");
+
+            var command = new ShellCommand(name, target, data);
+
+            // Send the command on to the owner
+            var redirect = recipient.ProcessShellCommand(command);
+
+            // If no redirect was specified, use empty
+            if (!redirect.HasText())
+            {
+                return string.Empty;
+            }
+
+            // Execute a redirect to the result of the star operation
+            try
+            {
+                var node = BuildNode(string.Format(Locale, "<srai>{0}</srai>", redirect).NonNull());
+                var parameters = GetTagHandlerParametersForNode(node);
+                return new RedirectTagHandler(parameters).Transform();
+            }
+            catch (XmlException xmlEx)
+            {
+                Log(string.Format(Locale, "Could not redirect to output due to bad XML: " + redirect, xmlEx.Message), LogLevel.Error);
+                return string.Empty;
+            }
+
         }
     }
 

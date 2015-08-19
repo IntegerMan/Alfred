@@ -2,181 +2,137 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\alfredbootstrapper.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.common\assemblyextensions.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlfredBootstrapper.cs
+// AssemblyExtensions.cs
 // 
-// Created on:      08/09/2015 at 5:10 PM
-// Last Modified:   08/09/2015 at 5:29 PM
-// Original author: Matt Eland
+// Created on:      08/14/2015 at 12:38 AM
+// Last Modified:   08/14/2015 at 12:59 AM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Diagnostics;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core.Console;
-using MattEland.Ani.Alfred.Core.Definitions;
-
-namespace MattEland.Ani.Alfred.Core
+namespace MattEland.Common
 {
-    /// &lt;summary&gt;
-    ///     A utility class used for instantiating the Alfred Framework
-    /// &lt;/summary&gt;
-    public sealed class AlfredBootstrapper
+    public static class AssemblyHelper
     {
-        [CanBeNull]
-        private IConsole _console;
-
-        [NotNull]
-        private IPlatformProvider _platformProvider;
-
-        [NotNull]
-        private IStatusController _statusController;
-
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredBootstrapper&quot; /&gt; class.
+        ///     Gets the types in an assembly with an attribute applied to them.
         /// &lt;/summary&gt;
-        public AlfredBootstrapper() : this(new SimplePlatformProvider(), new AlfredStatusController(), null)
-        {
-        }
-
-        /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredBootstrapper&quot; /&gt; class.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
-        public AlfredBootstrapper([NotNull] IPlatformProvider platformProvider)
-            : this(platformProvider, new AlfredStatusController(), null)
-        {
-        }
-
-        /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredBootstrapper&quot; /&gt; class.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;statusController&quot;&gt;The status controller.&lt;/param&gt;
-        public AlfredBootstrapper([NotNull] IStatusController statusController)
-            : this(new SimplePlatformProvider(), statusController, null)
-        {
-        }
-
-        /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredBootstrapper&quot; /&gt; class.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
-        /// &lt;param name=&quot;statusController&quot;&gt;The status controller.&lt;/param&gt;
-        public AlfredBootstrapper([NotNull] IPlatformProvider platformProvider,
-                                  [NotNull] IStatusController statusController)
-            : this(platformProvider, statusController, null)
-        {
-        }
-
-        /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredBootstrapper&quot; /&gt; class.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
-        /// &lt;param name=&quot;statusController&quot;&gt;The status controller.&lt;/param&gt;
-        /// &lt;param name=&quot;console&quot;&gt;The console.&lt;/param&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;
-        /// &lt;/exception&gt;
-        public AlfredBootstrapper([NotNull] IPlatformProvider platformProvider,
-                                  [NotNull] IStatusController statusController,
-                                  [CanBeNull] IConsole console)
-        {
-            if (platformProvider == null)
-            {
-                throw new ArgumentNullException(nameof(platformProvider));
-            }
-            if (statusController == null)
-            {
-                throw new ArgumentNullException(nameof(statusController));
-            }
-            _console = console;
-            _platformProvider = platformProvider;
-            _statusController = statusController;
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets or sets the platform provider.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The platform provider.&lt;/value&gt;
+        /// &lt;typeparam name=&quot;TAttribute&quot;&gt;The attribute to search for.&lt;/typeparam&gt;
+        /// &lt;param name=&quot;assembly&quot;&gt;The assembly.&lt;/param&gt;
+        /// &lt;param name=&quot;inherit&quot;&gt;
+        ///     true to search the type&#39;s inheritance chain to find the attributes; otherwise, false.
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;The types in the assembly with the requested attribute&lt;/returns&gt;
         /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
         [NotNull]
-        public IPlatformProvider PlatformProvider
+        [ItemNotNull]
+        [UsedImplicitly]
+        public static IEnumerable&lt;Type&gt; GetTypesInAssemblyWithAttribute&lt;TAttribute&gt;([NotNull] this Assembly assembly,
+                                                                                    bool inherit)
+            where TAttribute : Attribute
         {
-            [DebuggerStepThrough]
-            get
-            { return _platformProvider; }
-            [DebuggerStepThrough]
-            set
+            if (assembly == null)
             {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
-                _platformProvider = value;
+                throw new ArgumentNullException(nameof(assembly));
             }
+
+            var types = assembly.GetTypes();
+            return GetTypesWithAttributes&lt;TAttribute&gt;(types, inherit);
         }
 
         /// &lt;summary&gt;
-        ///     Gets or sets the status controller.
+        ///     Gets the types in a group of types that have an attribute applied to them.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The status controller.&lt;/value&gt;
+        /// &lt;typeparam name=&quot;TAttribute&quot;&gt;The attribute to search for.&lt;/typeparam&gt;
+        /// &lt;param name=&quot;types&quot;&gt;The set of types&lt;/param&gt;
+        /// &lt;param name=&quot;inherit&quot;&gt;
+        ///     true to search the type&#39;s inheritance chain to find the attributes; otherwise, false.
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;The types in the set of types that have the requested attribute&lt;/returns&gt;
         /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        [SuppressMessage(&quot;ReSharper&quot;, &quot;PossibleNullReferenceException&quot;)]
         [NotNull]
-        public IStatusController StatusController
+        [ItemNotNull]
+        [UsedImplicitly]
+        public static IEnumerable&lt;Type&gt; GetTypesWithAttributes&lt;TAttribute&gt;([NotNull] IEnumerable&lt;Type&gt; types,
+                                                                           bool inherit) where TAttribute : Attribute
         {
-            [DebuggerStepThrough]
-            get
-            { return _statusController; }
-            [DebuggerStepThrough]
-            set
+            if (types == null)
             {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
-                _statusController = value;
+                throw new ArgumentNullException(nameof(types));
             }
+
+            return types.Where(t =&gt; t.HasAttribute&lt;TAttribute&gt;(inherit));
         }
 
         /// &lt;summary&gt;
-        ///     Gets or sets the console.
+        ///     Determines whether the specified member has a particular attribute applied to it.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The console.&lt;/value&gt;
+        /// &lt;typeparam name=&quot;TAttribute&quot;&gt;The type of the attribute.&lt;/typeparam&gt;
+        /// &lt;param name=&quot;member&quot;&gt;The member.&lt;/param&gt;
+        /// &lt;param name=&quot;inherit&quot;&gt;
+        ///     true to search the type&#39;s inheritance chain to find the attributes; otherwise, false.
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the specified inherit has the attribute; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        [UsedImplicitly]
+        public static bool HasAttribute&lt;TAttribute&gt;([NotNull] this MemberInfo member, bool inherit)
+            where TAttribute : Attribute
+        {
+            if (member == null)
+            {
+                throw new ArgumentNullException(nameof(member));
+            }
+
+            return member.IsDefined(typeof(TAttribute), inherit);
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the Version of this module&#39;s assembly based on the AssemblyVersionAttribute.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;caller&quot;&gt;The caller.&lt;/param&gt;
+        /// &lt;returns&gt;The Version of this module&#39;s assembly&lt;/returns&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;caller&lt;/exception&gt;
         [CanBeNull]
-        public IConsole Console
+        public static Version GetAssemblyVersion([NotNull] this object caller)
         {
-            [DebuggerStepThrough]
-            get
-            { return _console; }
-            [DebuggerStepThrough]
-            set
-            { _console = value; }
-        }
+            if (caller == null)
+            {
+                throw new ArgumentNullException(nameof(caller));
+            }
 
-        /// &lt;summary&gt;
-        ///     Creates a new instance of Alfred using this instance&#39;s properties and returns it.
-        /// &lt;/summary&gt;
-        /// &lt;returns&gt;The Alfred instance.&lt;/returns&gt;
-        [NotNull]
-        public AlfredApplication Create()
-        {
-            var alfred = new AlfredApplication(_platformProvider, _statusController);
-            alfred.Console = _console;
-
-            return alfred;
+            try
+            {
+                var assembly = caller.GetType().Assembly;
+                var assemblyName = new AssemblyName(assembly.FullName);
+                return assemblyName.Version;
+            }
+            catch (IOException)
+            {
+                return null;
+            }
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[45,15,45,73,0],[46,9,46,10,0],[47,9,47,10,0],[54,15,54,73,0],[55,9,55,10,0],[56,9,56,10,0],[65,15,65,61,0],[66,9,66,10,0],[67,9,67,10,0],[82,13,82,14,0],[83,17,83,75,0],[86,13,86,14,0],[87,17,87,75,0],[104,13,104,14,0],[104,15,104,40,0],[104,41,104,42,0],[107,13,107,14,0],[108,17,108,35,0],[109,17,109,18,0],[110,21,110,68,0],[112,17,112,43,0],[113,13,113,14,0],[126,13,126,14,0],[126,15,126,40,0],[126,41,126,42,0],[129,13,129,14,0],[130,17,130,35,0],[131,17,131,18,0],[132,21,132,68,0],[134,17,134,43,0],[135,13,135,14,0],[147,13,147,14,0],[147,15,147,31,0],[147,32,147,33,0],[150,13,150,14,0],[150,15,150,32,0],[150,33,150,34,0],[36,39,36,109,1],[37,9,37,10,1],[38,9,38,10,1],[77,9,79,64,1],[80,9,80,10,1],[81,13,81,42,1],[85,13,85,42,1],[89,13,89,32,1],[90,13,90,50,1],[91,13,91,50,1],[92,9,92,10,1],[159,9,159,10,1],[160,13,160,86,1],[161,13,161,39,1],[163,13,163,27,1],[164,9,164,10,1]]);
+      highlightRanges([[41,13,41,14,0],[42,17,42,67,0],[67,13,67,14,0],[68,17,68,64,0],[89,13,89,14,0],[90,17,90,65,0],[106,13,106,14,0],[107,17,107,65,0],[116,13,116,32,0],[117,13,117,14,0],[118,17,118,29,0],[39,9,39,10,1],[40,13,40,34,1],[45,13,45,45,1],[46,13,46,71,1],[47,9,47,10,1],[65,9,65,10,1],[66,13,66,31,1],[71,13,71,37,1],[71,72,71,74,1],[72,9,72,10,1],[87,9,87,10,1],[88,13,88,32,1],[93,13,93,66,1],[94,9,94,10,1],[104,9,104,10,1],[105,13,105,32,1],[111,13,111,14,1],[112,17,112,58,1],[113,17,113,72,1],[114,17,114,45,1],[120,9,120,10,1],[71,37,71,72,1]]);
     </script>
   </body>
 </html>

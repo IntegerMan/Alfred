@@ -2,54 +2,87 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\alfredcommandresult.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.common\collectionextensions.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-namespace MattEland.Ani.Alfred.Core
+// ---------------------------------------------------------
+// CollectionExtensions.cs
+// 
+// Created on:      08/14/2015 at 12:55 AM
+// Last Modified:   08/14/2015 at 12:59 AM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+
+using JetBrains.Annotations;
+
+namespace MattEland.Common
 {
     /// &lt;summary&gt;
-    /// Represents the result of sending a command to a subsystem for handling
+    ///     A set of extension methods related to collections
     /// &lt;/summary&gt;
-    public sealed class AlfredCommandResult
+    public static class CollectionExtensions
     {
+        /// &lt;summary&gt;
+        ///     Adds an item to a collection safely. This is a convenience method that does null and duplicate checking
+        ///     based on the type of item / collection and will throw null reference or invalid operation exceptions if illegal
+        ///     circumstances are met.
+        /// &lt;/summary&gt;
+        /// &lt;typeparam name=&quot;T&quot;&gt;The type of item&lt;/typeparam&gt;
+        /// &lt;param name=&quot;item&quot;&gt;The item.&lt;/param&gt;
+        /// &lt;param name=&quot;collection&quot;&gt;The collection.&lt;/param&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;
+        ///     item, collection
+        /// &lt;/exception&gt;
+        /// &lt;exception cref=&quot;System.InvalidOperationException&quot;&gt;The specified item was already part of the collection&lt;/exception&gt;
+        public static void AddSafe&lt;T&gt;([NotNull] this ICollection&lt;T&gt; collection, [NotNull] T item)
+        {
+            if (item == null)
+            {
+                throw new ArgumentNullException(nameof(item));
+            }
+            if (collection == null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            // This shouldn&#39;t happen, but I want to check to make sure
+            if (collection.Contains(item))
+            {
+                throw new InvalidOperationException(Resources.ErrorItemAlreadyInCollection);
+            }
+
+            collection.Add(item);
+        }
 
         /// &lt;summary&gt;
-        /// Gets or sets the value to set as the last input value.
-        /// This is what is displayed as the user&#39;s last sentence to the system.
-        /// 
-        /// Changing  this is a good way of hiding redirection searches.
+        /// Returns the singular value if collection&#39;s count of items is 1. Otherwise plural is returned.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The new last input value.&lt;/value&gt;
-        public string NewLastInput { get; set; }
-
-        /// &lt;summary&gt;
-        /// Gets or sets the new last output value. This is what is
-        /// displayed as Alfred&#39;s response to the user&#39;s statement.
-        /// 
-        /// Changing this is a good way of handling dynamic information in queries
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The new last output.&lt;/value&gt;
-        public string Output { get; set; }
-
-        /// &lt;summary&gt;
-        /// Gets or sets the chat redirection value.
-        /// If this is set and the command is handled, the system
-        /// will send a new chat message into the system with this
-        /// value. 
-        /// 
-        /// This is a good way to redirect to a common prompt
-        /// after executing a command.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The execute chat input.&lt;/value&gt;
-        public string RedirectToChat { get; set; }
+        /// &lt;typeparam name=&quot;T&quot;&gt;The type the generic collection is holding.&lt;/typeparam&gt;
+        /// &lt;param name=&quot;collection&quot;&gt;The collection.&lt;/param&gt;
+        /// &lt;param name=&quot;singular&quot;&gt;The singular return value.&lt;/param&gt;
+        /// &lt;param name=&quot;plural&quot;&gt;The plural return value.&lt;/param&gt;
+        /// &lt;returns&gt;The singular value if the item count is 1. Otherwise plural is returned.&lt;/returns&gt;
+        public static string Pluralize&lt;T&gt;([NotNull] this IEnumerable&lt;T&gt; collection,
+                                       string singular,
+                                       string plural)
+        {
+            var count = collection.Count&lt;T&gt;();
+            return count.Pluralize(singular, plural);
+        }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[16,38,16,42,0],[16,43,16,47,0],[37,40,37,44,0],[37,45,37,49,0],[25,32,25,36,1],[25,37,25,41,1]]);
+      highlightRanges([[39,13,39,14,0],[40,17,40,63,0],[43,13,43,14,0],[44,17,44,69,0],[37,9,37,10,1],[38,13,38,30,1],[42,13,42,36,1],[48,13,48,43,1],[49,13,49,14,1],[50,17,50,93,1],[53,13,53,34,1],[54,9,54,10,1],[67,9,67,10,1],[68,13,68,47,1],[69,13,69,54,1],[70,9,70,10,1]]);
     </script>
   </body>
 </html>

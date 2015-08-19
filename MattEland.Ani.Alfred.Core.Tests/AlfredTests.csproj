@@ -68,6 +68,7 @@
     <Compile Include="CommonTests.cs" />
     <Compile Include="Mocks\TestAlfred.cs" />
     <Compile Include="Mocks\TestPage.cs" />
+    <Compile Include="Mocks\TestShell.cs" />
     <Compile Include="Pages\PageTests.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>

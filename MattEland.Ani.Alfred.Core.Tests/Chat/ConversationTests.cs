@@ -109,6 +109,10 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         [TestCase("Help Commands", "tmp_help_commands")]
         [TestCase("Help Questions", "tmp_help_questions")]
         [TestCase("Help Other", "tmp_help_other")]
+        [TestCase("Navigate Log", "tmp_nav_success")]
+        [TestCase("Navigate Home", "tmp_nav_success")]
+        [TestCase("Navigate Test Fail", "tmp_nav_failed")]
+        [TestCase("Navigate Unknown", "tmp_nav_unknown")]
         [TestCase("ASDfasd", "tmp_fallback", Description = "Gibberish should hit fallback case")]
         public void ChatTemplateTests(string input, string templateId)
         {

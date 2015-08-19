@@ -31,7 +31,7 @@ This provides handling for navigating to UI areas
   <!-- Navigation Completed - invoked after navigation has succeeded -->
   <category>
     <pattern>Navigate Success</pattern>
-    <template>
+    <template id="tmp_nav_success">
       <random>
       <li>Okay, you're there.</li>
       <li>Your wish is my command.</li>
@@ -46,20 +46,12 @@ This provides handling for navigating to UI areas
   <!-- Failed Navigation -->
   <category>
     <pattern>Navigate Failed</pattern>
-    <template>
+    <template id="tmp_nav_failed">
       <random>
         <li>I'm sorry, I couldn't find that.</li>
         <li>I don't know where that is. I'm sorry.</li>
         <li>I can't find that. Try something else.</li>
       </random>
-    </template>
-  </category>
-
-  <!-- Navigation Failure - Invoked when the system couldn't respond to the navigation -->
-  <category>
-    <pattern>Navigate Error *</pattern>
-    <template>
-      Navigation failed: <star />
     </template>
   </category>
 
@@ -120,7 +112,7 @@ This provides handling for navigating to UI areas
   <!-- Navigate Unknown -->
   <category>
     <pattern>Navigate *</pattern>
-    <template>
+    <template id="tmp_nav_unknown">
       I'm sorry, but <star/> is not a valid destination.
     </template>
   </category>
@@ -130,6 +122,14 @@ This provides handling for navigating to UI areas
     <pattern>Nav *</pattern>
     <template>
       <srai>Navigate <star /></srai>
+    </template>
+  </category>
+
+  <!-- Test for navigation failure - execute a nav against a non-existant item -->
+  <category>
+    <pattern>Navigate Test Fail</pattern>
+    <template>
+      <shell target="pages" command="nav" data="NavigationFailure" />
     </template>
   </category>
 

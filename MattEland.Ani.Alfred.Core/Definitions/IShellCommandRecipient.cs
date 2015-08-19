@@ -18,7 +18,8 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// Processes a shell command by sending it on to the user interface layer.
         /// </summary>
         /// <param name="command">The command.</param>
-        void ProcessShellCommand(ShellCommand command);
+        /// <returns>The redirect target or string.empty for no redirect.</returns>
+        string ProcessShellCommand(ShellCommand command);
 
     }
 }
