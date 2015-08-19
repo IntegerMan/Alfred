@@ -2,20 +2,22 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\gettaghandler.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\secondpersontofirstpersontaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// GetTagHandler.cs
+// person2.cs
 // 
-// Created on:      08/12/2015 at 10:45 PM
-// Last Modified:   08/14/2015 at 10:15 PM
+// Created on:      08/12/2015 at 10:51 PM
+// Last Modified:   08/12/2015 at 11:59 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
+
+using System.Xml;
 
 using JetBrains.Annotations;
 
@@ -25,52 +27,57 @@ using MattEland.Common;
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// &lt;summary&gt;
-    /// A TagHandler for the AIML &quot;get&quot; tag.
+    /// An AIML tag handler that handles converting from the second person &quot;You were&quot; to the first person &quot;I am&quot;.
     /// &lt;/summary&gt;
-    [HandlesAimlTag(&quot;get&quot;)]
-    public class GetTagHandler : AimlTagHandler
+    [HandlesAimlTag(&quot;person2&quot;)]
+    public class SecondPersonToFirstPersonTagHandler : AimlTagHandler
     {
         /// &lt;summary&gt;
         /// Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
-        public GetTagHandler([NotNull] TagHandlerParameters parameters)
+        public SecondPersonToFirstPersonTagHandler([NotNull] TagHandlerParameters parameters)
             : base(parameters)
         {
         }
 
         /// &lt;summary&gt;
-        ///     Processes the input text and returns the processed value.
+        /// Processes the input text and returns the processed value.
         /// &lt;/summary&gt;
         /// &lt;returns&gt;The processed output&lt;/returns&gt;
         protected override string ProcessChange()
         {
-            var node = TemplateElement;
-
-            //- Ensure correct tag and that the node has the attribute we need
-            if (node == null || !node.Name.Matches(&quot;get&quot;) || !node.HasAttribute(&quot;name&quot;))
+            var node = TemplateNode;
+            if (!node.Name.Matches(&quot;person2&quot;))
             {
                 return string.Empty;
             }
 
-            // Grab the name of the requested variable from the tag
-            var variableName = node.GetAttribute(&quot;name&quot;).NonNull();
-
-            //- Safety check for junk input
-            if (variableName.IsEmpty())
+            // Substitute entries of &quot;You are&quot; with &quot;I am&quot; and the like
+            if (node.InnerText.HasText())
             {
-                return string.Empty;
+                var substitutions = Librarian.SecondPersonToFirstPersonSubstitutions;
+                return TextSubstitutionHelper.Substitute(substitutions, node.InnerText);
             }
 
-            // Return the value of the variable
-            return User.UserVariables.GetValue(variableName);
+            // Evaluate everything else and set that as the inner text of this node and then process it
+            var star = BuildStarTagHandler();
+            node.InnerText = star.Transform().NonNull();
+
+            if (node.InnerText.HasText())
+            {
+                // Recursively process the input with the remainder of the inner text
+                return ProcessChange();
+            }
+
+            return string.Empty;
 
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[28,15,28,31,0],[29,9,29,10,0],[30,9,30,10,0],[37,9,37,10,0],[38,13,38,40,0],[41,13,41,89,0],[42,13,42,14,0],[43,17,43,37,0],[47,13,47,68,0],[50,13,50,40,0],[51,13,51,14,0],[52,17,52,37,0],[56,13,56,62,0],[58,9,58,10,0]]);
+      highlightRanges([[30,15,30,31,0],[31,9,31,10,0],[32,9,32,10,0],[39,9,39,10,0],[40,13,40,37,0],[41,13,41,47,0],[42,13,42,14,0],[43,17,43,37,0],[47,13,47,42,0],[48,13,48,14,0],[49,17,49,86,0],[50,17,50,89,0],[54,13,54,46,0],[55,13,55,57,0],[57,13,57,42,0],[58,13,58,14,0],[60,17,60,40,0],[63,13,63,33,0],[65,9,65,10,0]]);
     </script>
   </body>
 </html>

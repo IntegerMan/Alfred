@@ -171,4 +171,5 @@ namespace MattEland.Ani.Alfred.Core.Definitions
             get { return Subsystem.IsEmpty(); }
         }
     }
+
 }

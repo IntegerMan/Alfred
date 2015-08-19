@@ -2,137 +2,87 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.common\assemblyextensions.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.common\collectionextensions.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AssemblyExtensions.cs
+// CollectionExtensions.cs
 // 
-// Created on:      08/14/2015 at 12:38 AM
+// Created on:      08/14/2015 at 12:55 AM
 // Last Modified:   08/14/2015 at 12:59 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 
 using JetBrains.Annotations;
 
 namespace MattEland.Common
 {
-    public static class AssemblyHelper
+    /// &lt;summary&gt;
+    ///     A set of extension methods related to collections
+    /// &lt;/summary&gt;
+    public static class CollectionExtensions
     {
         /// &lt;summary&gt;
-        ///     Gets the types in an assembly with an attribute applied to them.
+        ///     Adds an item to a collection safely. This is a convenience method that does null and duplicate checking
+        ///     based on the type of item / collection and will throw null reference or invalid operation exceptions if illegal
+        ///     circumstances are met.
         /// &lt;/summary&gt;
-        /// &lt;typeparam name=&quot;TAttribute&quot;&gt;The attribute to search for.&lt;/typeparam&gt;
-        /// &lt;param name=&quot;assembly&quot;&gt;The assembly.&lt;/param&gt;
-        /// &lt;param name=&quot;inherit&quot;&gt;
-        ///     true to search the type&#39;s inheritance chain to find the attributes; otherwise, false.
-        /// &lt;/param&gt;
-        /// &lt;returns&gt;The types in the assembly with the requested attribute&lt;/returns&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
-        [NotNull]
-        [ItemNotNull]
-        [UsedImplicitly]
-        public static IEnumerable&lt;Type&gt; GetTypesInAssemblyWithAttribute&lt;TAttribute&gt;([NotNull] this Assembly assembly,
-                                                                                    bool inherit)
-            where TAttribute : Attribute
+        /// &lt;typeparam name=&quot;T&quot;&gt;The type of item&lt;/typeparam&gt;
+        /// &lt;param name=&quot;item&quot;&gt;The item.&lt;/param&gt;
+        /// &lt;param name=&quot;collection&quot;&gt;The collection.&lt;/param&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;
+        ///     item, collection
+        /// &lt;/exception&gt;
+        /// &lt;exception cref=&quot;System.InvalidOperationException&quot;&gt;The specified item was already part of the collection&lt;/exception&gt;
+        public static void AddSafe&lt;T&gt;([NotNull] this ICollection&lt;T&gt; collection, [NotNull] T item)
         {
-            if (assembly == null)
+            if (item == null)
             {
-                throw new ArgumentNullException(nameof(assembly));
+                throw new ArgumentNullException(nameof(item));
+            }
+            if (collection == null)
+            {
+                throw new ArgumentNullException(nameof(collection));
             }
 
-            var types = assembly.GetTypes();
-            return GetTypesWithAttributes&lt;TAttribute&gt;(types, inherit);
+            // This shouldn&#39;t happen, but I want to check to make sure
+            if (collection.Contains(item))
+            {
+                throw new InvalidOperationException(Resources.ErrorItemAlreadyInCollection);
+            }
+
+            collection.Add(item);
         }
 
         /// &lt;summary&gt;
-        ///     Gets the types in a group of types that have an attribute applied to them.
+        /// Returns the singular value if collection&#39;s count of items is 1. Otherwise plural is returned.
         /// &lt;/summary&gt;
-        /// &lt;typeparam name=&quot;TAttribute&quot;&gt;The attribute to search for.&lt;/typeparam&gt;
-        /// &lt;param name=&quot;types&quot;&gt;The set of types&lt;/param&gt;
-        /// &lt;param name=&quot;inherit&quot;&gt;
-        ///     true to search the type&#39;s inheritance chain to find the attributes; otherwise, false.
-        /// &lt;/param&gt;
-        /// &lt;returns&gt;The types in the set of types that have the requested attribute&lt;/returns&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
-        [SuppressMessage(&quot;ReSharper&quot;, &quot;PossibleNullReferenceException&quot;)]
-        [NotNull]
-        [ItemNotNull]
-        [UsedImplicitly]
-        public static IEnumerable&lt;Type&gt; GetTypesWithAttributes&lt;TAttribute&gt;([NotNull] IEnumerable&lt;Type&gt; types,
-                                                                           bool inherit) where TAttribute : Attribute
+        /// &lt;typeparam name=&quot;T&quot;&gt;The type the generic collection is holding.&lt;/typeparam&gt;
+        /// &lt;param name=&quot;collection&quot;&gt;The collection.&lt;/param&gt;
+        /// &lt;param name=&quot;singular&quot;&gt;The singular return value.&lt;/param&gt;
+        /// &lt;param name=&quot;plural&quot;&gt;The plural return value.&lt;/param&gt;
+        /// &lt;returns&gt;The singular value if the item count is 1. Otherwise plural is returned.&lt;/returns&gt;
+        public static string Pluralize&lt;T&gt;([NotNull] this IEnumerable&lt;T&gt; collection,
+                                       string singular,
+                                       string plural)
         {
-            if (types == null)
-            {
-                throw new ArgumentNullException(nameof(types));
-            }
-
-            return types.Where(t =&gt; t.HasAttribute&lt;TAttribute&gt;(inherit));
-        }
-
-        /// &lt;summary&gt;
-        ///     Determines whether the specified member has a particular attribute applied to it.
-        /// &lt;/summary&gt;
-        /// &lt;typeparam name=&quot;TAttribute&quot;&gt;The type of the attribute.&lt;/typeparam&gt;
-        /// &lt;param name=&quot;member&quot;&gt;The member.&lt;/param&gt;
-        /// &lt;param name=&quot;inherit&quot;&gt;
-        ///     true to search the type&#39;s inheritance chain to find the attributes; otherwise, false.
-        /// &lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the specified inherit has the attribute; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
-        [UsedImplicitly]
-        public static bool HasAttribute&lt;TAttribute&gt;([NotNull] this MemberInfo member, bool inherit)
-            where TAttribute : Attribute
-        {
-            if (member == null)
-            {
-                throw new ArgumentNullException(nameof(member));
-            }
-
-            return member.IsDefined(typeof(TAttribute), inherit);
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the Version of this module&#39;s assembly based on the AssemblyVersionAttribute.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;caller&quot;&gt;The caller.&lt;/param&gt;
-        /// &lt;returns&gt;The Version of this module&#39;s assembly&lt;/returns&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;caller&lt;/exception&gt;
-        [CanBeNull]
-        public static Version GetAssemblyVersion([NotNull] this object caller)
-        {
-            if (caller == null)
-            {
-                throw new ArgumentNullException(nameof(caller));
-            }
-
-            try
-            {
-                var assembly = caller.GetType().Assembly;
-                var assemblyName = new AssemblyName(assembly.FullName);
-                return assemblyName.Version;
-            }
-            catch (IOException)
-            {
-                return null;
-            }
+            var count = collection.Count&lt;T&gt;();
+            return count.Pluralize(singular, plural);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[41,13,41,14,0],[42,17,42,67,0],[67,13,67,14,0],[68,17,68,64,0],[89,13,89,14,0],[90,17,90,65,0],[106,13,106,14,0],[107,17,107,65,0],[116,13,116,32,0],[117,13,117,14,0],[118,17,118,29,0],[39,9,39,10,1],[40,13,40,34,1],[45,13,45,45,1],[46,13,46,71,1],[47,9,47,10,1],[65,9,65,10,1],[66,13,66,31,1],[71,13,71,37,1],[71,72,71,74,1],[72,9,72,10,1],[87,9,87,10,1],[88,13,88,32,1],[93,13,93,66,1],[94,9,94,10,1],[104,9,104,10,1],[105,13,105,32,1],[111,13,111,14,1],[112,17,112,58,1],[113,17,113,72,1],[114,17,114,45,1],[120,9,120,10,1],[71,37,71,72,1]]);
+      highlightRanges([[39,13,39,14,0],[40,17,40,63,0],[43,13,43,14,0],[44,17,44,69,0],[37,9,37,10,1],[38,13,38,30,1],[42,13,42,36,1],[48,13,48,43,1],[49,13,49,14,1],[50,17,50,93,1],[53,13,53,34,1],[54,9,54,10,1],[67,9,67,10,1],[68,13,68,47,1],[69,13,69,54,1],[70,9,70,10,1]]);
     </script>
   </body>
 </html>

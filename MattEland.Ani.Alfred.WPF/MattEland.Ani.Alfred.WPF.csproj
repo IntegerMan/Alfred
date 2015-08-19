@@ -98,6 +98,7 @@
     <Compile Include="Converters\LogLevelToBrushConverter.cs" />
     <Compile Include="Platform\WinClientPlatformProvider.cs" />
     <Compile Include="Platform\WinClientCommand.cs" />
+    <Compile Include="WpfShellCommandManager.cs" />
     <Page Include="Controls\ChatPane.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

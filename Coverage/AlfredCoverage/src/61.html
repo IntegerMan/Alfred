@@ -2,66 +2,58 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\utils\splitsentencehelper.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\handlesaimltagattribute.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// SplitSentenceHelper.cs
+// HandlesAimlTagAttribute.cs
 // 
-// Created on:      08/12/2015 at 10:38 PM
-// Last Modified:   08/12/2015 at 11:59 PM
+// Created on:      08/14/2015 at 1:01 AM
+// Last Modified:   08/14/2015 at 1:01 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 
 using JetBrains.Annotations;
 
-namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
+namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// &lt;summary&gt;
-    /// A utility class for splitting strings into sentences
+    /// An attribute describing a class that can handle an AIML tag
     /// &lt;/summary&gt;
-    internal static class SplitSentenceHelper
+    [AttributeUsage(AttributeTargets.Class), UsedImplicitly]
+    public sealed class HandlesAimlTagAttribute : Attribute
     {
 
         /// &lt;summary&gt;
-        /// Transforms the input string into sentences.
+        /// Initializes a new instance of the &lt;see cref=&quot;HandlesAimlTagAttribute&quot;/&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;inputString&quot;&gt;The input string.&lt;/param&gt;
-        /// &lt;param name=&quot;chatEngine&quot;&gt;The chat engine.&lt;/param&gt;
-        /// &lt;returns&gt;Sentences&lt;/returns&gt;
-        [NotNull]
-        [ItemNotNull]
-        internal static IEnumerable&lt;string&gt; Split([NotNull] string inputString, [NotNull] ChatEngine chatEngine)
+        /// &lt;param name=&quot;name&quot;&gt;The name of the tag this class handles.&lt;/param&gt;
+        public HandlesAimlTagAttribute(string name)
         {
-            //- Validate
-            if (inputString == null)
-            {
-                throw new ArgumentNullException(nameof(inputString));
-            }
-            if (chatEngine == null)
-            {
-                throw new ArgumentNullException(nameof(chatEngine));
-            }
+            Name = name;
+        }
 
-            // Use the engine&#39;s splitters to split the input into sentences
-            var sentences = inputString.Split(chatEngine.SentenceSplitters.ToArray(), StringSplitOptions.RemoveEmptyEntries);
-
-            // Yield all sentences
-            return sentences.Select(s =&gt; s?.Trim());
+        /// &lt;summary&gt;
+        /// Gets or sets the name of the tag this class handles.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The name.&lt;/value&gt;
+        public string Name
+        {
+            [DebuggerStepThrough]
+            get;
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[36,13,36,14,0],[37,17,37,70,0],[40,13,40,14,0],[41,17,41,69,0],[33,9,33,10,1],[35,13,35,37,1],[39,13,39,36,1],[45,13,45,126,1],[48,13,48,42,1],[48,51,48,53,1],[49,9,49,10,1],[48,42,48,51,1]]);
+      highlightRanges([[28,9,28,52,1],[29,9,29,10,1],[30,13,30,25,1],[31,9,31,10,1],[39,13,40,17,1]]);
     </script>
   </body>
 </html>

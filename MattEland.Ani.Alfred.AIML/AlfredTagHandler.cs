@@ -15,9 +15,55 @@ using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat
 {
+    /// <summary>
+    /// A TagHandler able to invoke shell events
+    /// </summary>
+    [HandlesAimlTag("shell")]
+    public sealed class ShellTagHandler : AimlTagHandler
+    {
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="ShellTagHandler" /> class.
+        /// </summary>
+        /// <exception cref="ArgumentNullException"><paramref name="parameters"/> is <see langword="null" />.</exception>
+        public ShellTagHandler([NotNull] TagHandlerParameters parameters) : base(parameters)
+        {
+        }
+
+        /// <summary>
+        ///     Processes the input text and returns the processed value.
+        /// </summary>
+        /// <returns>The processed output</returns>
+        protected override string ProcessChange()
+        {
+            var element = TemplateElement;
+            var recipient = ChatEngine.Owner as IShellCommandRecipient;
+
+            if (element.HasAttribute("target") && recipient != null)
+            {
+                // Build a command
+                var name = GetAttributeSafe(element, "command");
+                if (name.IsEmpty())
+                {
+                    name = "nav";
+                }
+                var target = GetAttributeSafe(element, "target");
+                var data = GetAttributeSafe(element, "data");
+
+                var command = new ShellCommand(target, name, data);
+
+                // Send the command on to the owner
+                recipient.ProcessShellCommand(command);
+            }
+
+            return string.Empty;
+        }
+    }
+
     /// <summary>
     ///     A tag handler that handles the custom "alfred" tag that integrates Alfred into the AIML system
     ///     and allows AIML files to issue commands to Alfred modules.
@@ -39,14 +85,12 @@ namespace MattEland.Ani.Alfred.Chat
         /// <returns>The processed output</returns>
         protected override string ProcessChange()
         {
-            //throw new Exception("Test");
-
             var result = new AlfredCommandResult();
 
             var element = TemplateElement;
             var recipient = ChatEngine.Owner as IAlfredCommandRecipient;
 
-            if (element != null && element.HasAttribute("command") && recipient != null)
+            if (element.HasAttribute("command") && recipient != null)
             {
                 // Build a command
                 var name = GetAttributeSafe(element, "command");

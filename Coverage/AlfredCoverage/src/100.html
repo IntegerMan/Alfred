@@ -2,75 +2,199 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\normalize\uppercasetexttransformer.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\utils\texttransformer.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// UppercaseTextTransformer.cs
+// TextTransformer.cs
 // 
-// Created on:      08/12/2015 at 10:38 PM
-// Last Modified:   08/12/2015 at 11:59 PM
+// Created on:      08/12/2015 at 10:36 PM
+// Last Modified:   08/16/2015 at 12:33 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System;
+using System.Diagnostics;
+using System.Globalization;
+using System.Xml;
+
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Common;
 
-namespace MattEland.Ani.Alfred.Chat.Aiml.Normalize
+namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 {
     /// &lt;summary&gt;
-    /// A text transformer that makes the input text be uppercase for comparison
+    ///     An abstract class representing a class that will transform input text into output text.
     /// &lt;/summary&gt;
-    public class UppercaseTextTransformer : TextTransformer
+    public abstract class TextTransformer
     {
+        [NotNull]
+        private readonly ChatEngine _chatEngine;
+
         /// &lt;summary&gt;
-        /// Initializes a new instance of the &lt;see cref=&quot;TextTransformer&quot; /&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;TextTransformer&quot; /&gt; class.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;chatEngine&quot;&gt;The ChatEngine.&lt;/param&gt;
         /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
-        public UppercaseTextTransformer([NotNull] ChatEngine chatEngine, string input)
-            : base(chatEngine, input)
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;chatEngine&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        protected TextTransformer([NotNull] ChatEngine chatEngine, [CanBeNull] string input)
         {
+            if (chatEngine == null)
+            {
+                throw new ArgumentNullException(nameof(chatEngine));
+            }
+
+            _chatEngine = chatEngine;
+            InputString = input;
         }
 
         /// &lt;summary&gt;
-        /// Initializes a new instance of the &lt;see cref=&quot;TextTransformer&quot; /&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;TextTransformer&quot; /&gt; class.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;chatEngine&quot;&gt;The ChatEngine.&lt;/param&gt;
-        public UppercaseTextTransformer([NotNull] ChatEngine chatEngine)
-            : base(chatEngine)
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;chatEngine&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        protected TextTransformer([NotNull] ChatEngine chatEngine) : this(chatEngine, null)
         {
         }
 
         /// &lt;summary&gt;
-        /// Processes the input text and returns the processed value.
+        ///     Gets the chat ChatEngine associated with this transformer.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The ChatEngine.&lt;/value&gt;
+        [NotNull]
+        public ChatEngine ChatEngine
+        {
+            [DebuggerStepThrough]
+            get
+            {
+                return _chatEngine;
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the current locale.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The locale.&lt;/value&gt;
+        [NotNull]
+        protected CultureInfo Locale
+        {
+            get { return _chatEngine.Locale; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the input string.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The input string.&lt;/value&gt;
+        [CanBeNull]
+        public string InputString { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Gets the output string.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The output string.&lt;/value&gt;
+        public string OutputString
+        {
+            get { return Transform(); }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the librarian containing settings files.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The librarian.&lt;/value&gt;
+        [NotNull]
+        public ChatEngineLibrarian Librarian
+        {
+            get { return ChatEngine.Librarian; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Transforms the specified input text into output text and returns it.
+        ///     The input value then becomes InputString in this instance.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input text.&lt;/param&gt;
+        /// &lt;returns&gt;The outputted text from the transform.&lt;/returns&gt;
+        public string Transform([CanBeNull] string input)
+        {
+            //- Store the new input
+            InputString = input;
+
+            // Process and return the result using our primary method
+            return Transform();
+        }
+
+        /// &lt;summary&gt;
+        ///     Transforms the input text into the output text.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;The outputted text from the transform.&lt;/returns&gt;
+        public string Transform()
+        {
+            //- Ensure we have a valid value
+            if (string.IsNullOrWhiteSpace(InputString))
+            {
+                return string.Empty;
+            }
+
+            // Farm out processing the transform to the concrete implementation
+            return ProcessChange();
+        }
+
+        /// &lt;summary&gt;
+        ///     Processes the input text and returns the processed value.
         /// &lt;/summary&gt;
         /// &lt;returns&gt;The processed output&lt;/returns&gt;
-        protected override string ProcessChange()
+        protected abstract string ProcessChange();
+
+        /// &lt;summary&gt;
+        ///     Logs the specified message to the logger.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;message&quot;&gt;The message.&lt;/param&gt;
+        /// &lt;param name=&quot;level&quot;&gt;The log level.&lt;/param&gt;
+        protected void Log(string message, LogLevel level)
         {
-            return TransformInput(InputString);
+            _chatEngine.Log(message, level);
         }
 
         /// &lt;summary&gt;
-        /// Transforms the input to uppercase.
+        ///     Gets the global setting with the specified name.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input.&lt;/param&gt;
-        /// &lt;returns&gt;The transformed input&lt;/returns&gt;
-        [CanBeNull]
-        public static string TransformInput([CanBeNull] string input)
+        /// &lt;param name=&quot;settingName&quot;&gt;Name of the setting.&lt;/param&gt;
+        /// &lt;returns&gt;The value of the setting or string.Empty if no setting found&lt;/returns&gt;
+        protected string GetGlobalSetting([CanBeNull] string settingName)
         {
-            return input?.ToUpperInvariant();
+            return null == settingName
+                       ? string.Empty
+                       : Librarian.GlobalSettings.GetValue(settingName);
+
+        }
+
+        /// &lt;summary&gt;
+        /// Gets an attribute from an XML node and returns string.empty if the attribute isn&#39;t present.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;element&quot;&gt;The element.&lt;/param&gt;
+        /// &lt;param name=&quot;name&quot;&gt;The name.&lt;/param&gt;
+        /// &lt;returns&gt;The attribute value or string.Empty as a fallback.&lt;/returns&gt;
+        [NotNull]
+        protected static string GetAttributeSafe([CanBeNull] XmlElement element,
+                                               [CanBeNull] string name)
+        {
+            if (element != null &amp;&amp; name.HasText() &amp;&amp; element.HasAttribute(name))
+            {
+                return element.GetAttribute(name);
+            }
+
+            return string.Empty;
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[27,15,27,38,0],[28,9,28,10,0],[29,9,29,10,0],[36,15,36,31,0],[37,9,37,10,0],[38,9,38,10,0],[45,9,45,10,0],[46,13,46,48,0],[47,9,47,10,0],[56,9,56,10,0],[57,13,57,46,0],[58,9,58,10,0]]);
+      highlightRanges([[39,13,39,14,0],[40,17,40,69,0],[93,17,93,18,0],[93,19,93,38,0],[93,39,93,40,0],[103,17,103,18,0],[103,19,103,47,0],[103,48,103,49,0],[129,13,129,14,0],[130,17,130,37,0],[149,9,149,10,0],[150,13,150,45,0],[151,9,151,10,0],[159,9,159,10,0],[160,13,162,73,0],[164,9,164,10,0],[36,9,36,93,1],[37,9,37,10,1],[38,13,38,36,1],[43,13,43,38,1],[44,13,44,33,1],[45,9,45,10,1],[52,70,52,92,1],[53,9,53,10,1],[54,9,54,10,1],[65,13,65,14,1],[66,17,66,36,1],[67,13,67,14,1],[77,17,77,18,1],[77,19,77,45,1],[77,46,77,47,1],[85,37,85,41,1],[85,42,85,46,1],[113,9,113,10,1],[115,13,115,33,1],[118,13,118,32,1],[119,9,119,10,1],[126,9,126,10,1],[128,13,128,56,1],[134,13,134,36,1],[135,9,135,10,1],[175,9,175,10,1],[176,13,176,81,1],[177,13,177,14,1],[178,17,178,51,1],[181,13,181,33,1],[182,9,182,10,1]]);
     </script>
   </body>
 </html>

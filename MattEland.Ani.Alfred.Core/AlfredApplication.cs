@@ -51,6 +51,9 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         private AlfredStatus _status;
 
+        [CanBeNull]
+        private IShellCommandRecipient _shellCommandHandler;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredApplication" /> class.
         /// </summary>
@@ -136,6 +139,15 @@ namespace MattEland.Ani.Alfred.Core
         public IPlatformProvider PlatformProvider
         {
             get { return _platformProvider; }
+        }
+
+        /// <summary>
+        /// Gets the shell command handler that can pass shell commands on to the user interface.
+        /// </summary>
+        /// <value>The shell command handler.</value>
+        public IShellCommandRecipient ShellCommandHandler
+        {
+            get { return _shellCommandHandler; }
         }
 
         /// <summary>
@@ -231,6 +243,20 @@ namespace MattEland.Ani.Alfred.Core
         {
             // This process is a little lengthy so we'll have the status controller handle it
             _statusController.Shutdown();
+        }
+
+        /// <summary>
+        /// Registers the shell command recipient that will allow the shell to get commands from the Alfred layer.
+        /// </summary>
+        /// <param name="shell">The command recipient.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="shell"/> is <see langword="null" />.</exception>
+        public void Register(IShellCommandRecipient shell)
+        {
+            if (shell == null)
+            {
+                throw new ArgumentNullException(nameof(shell));
+            }
+            _shellCommandHandler = shell;
         }
 
         /// <summary>

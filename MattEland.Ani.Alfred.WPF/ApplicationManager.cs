@@ -46,11 +46,21 @@ namespace MattEland.Ani.Alfred.WPF
         private AlfredSpeechConsole _console;
         private SystemMonitoringSubsystem _systemMonitoringSubsystem;
 
+        [NotNull]
+        private WpfShellCommandManager _shellManager;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
         /// </summary>
-        public ApplicationManager()
+        /// <param name="window">The owning window</param>
+        /// <exception cref="ArgumentNullException"><paramref name="window"/> is <see langword="null" />.</exception>
+        public ApplicationManager([NotNull] MainWindow window)
         {
+            if (window == null)
+            {
+                throw new ArgumentNullException(nameof(window));
+            }
+
             // Create Alfred. It won't be online and running yet, but create it.
             var platformProvider = new WinClientPlatformProvider();
             var bootstrapper = new AlfredBootstrapper(platformProvider);
@@ -58,6 +68,10 @@ namespace MattEland.Ani.Alfred.WPF
 
             // Give Alfred a way to talk to the user and the client a way to log events that are separate from Alfred
             _console = InitializeConsole(platformProvider);
+
+            // Hook up our shell manager now that we have a way of communicating with Alfred
+            _shellManager = new WpfShellCommandManager(window, _alfred);
+            _alfred.Register(_shellManager);
 
             InitializeSubsystems(_alfred.PlatformProvider);
         }

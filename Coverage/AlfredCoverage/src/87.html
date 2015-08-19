@@ -2,126 +2,58 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\sentencetaghandler.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\thinktaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// SentenceTagHandler.cs
+// ThinkTagHandler.cs
 // 
-// Created on:      08/12/2015 at 10:52 PM
-// Last Modified:   08/15/2015 at 1:10 AM
+// Created on:      08/12/2015 at 10:59 PM
+// Last Modified:   08/15/2015 at 1:29 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System.Collections.Generic;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Xml;
-
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
-using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// &lt;summary&gt;
-    ///     An AIML tag handler for interpreting the AIML &quot;sentence&quot; tag. This causes the first letter of
-    ///     every sentence to be capitalized while the rest run as lowercase.
+    ///     A tag handler for the AIML think tag. This outputs nothing.
     /// &lt;/summary&gt;
-    [HandlesAimlTag(&quot;sentence&quot;)]
-    public class SentenceTagHandler : AimlTagHandler
+    [HandlesAimlTag(&quot;think&quot;)]
+    public class ThinkTagHandler : AimlTagHandler
     {
         /// &lt;summary&gt;
         ///     Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
-        public SentenceTagHandler([NotNull] TagHandlerParameters parameters)
+        public ThinkTagHandler([NotNull] TagHandlerParameters parameters)
             : base(parameters)
         {
         }
 
         /// &lt;summary&gt;
-        ///     Processes the input input and returns the processed value.
+        ///     Processes the input text and returns the processed value.
         /// &lt;/summary&gt;
         /// &lt;returns&gt;The processed output&lt;/returns&gt;
         protected override string ProcessChange()
         {
-            var node = TemplateNode;
-            if (!node.Name.Matches(&quot;sentence&quot;))
-            {
-                return string.Empty;
-            }
+            //? TODO: Do statements inside of Think get executed still?
+            //? If so, shouldn&#39;t it run them via a srai and just not output anything?
 
-            if (node.InnerText.HasText())
-            {
-                return ProcessSentenceText(TemplateNode.InnerText);
-            }
-
-            // Evaluate everything else and stick that in our inner text
-            var star = BuildStarTagHandler();
-            node.InnerText = star.Transform().NonNull();
-
-            // Iterate over everything again if we now have values
-            return node.InnerText.HasText() ? ProcessChange() : string.Empty;
+            return string.Empty;
         }
-
-        /// &lt;summary&gt;
-        /// Handles the sentence tag input.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input.&lt;/param&gt;
-        /// &lt;returns&gt;The sentence text for the input value&lt;/returns&gt;
-        private string ProcessSentenceText([CanBeNull] string input)
-        {
-            ICollection&lt;string&gt; sentenceSplitters = ChatEngine.SentenceSplitters;
-
-            //- Declare loop variables
-            var stringBuilder = new StringBuilder();
-
-            // Start out with a capitalized first letter
-            var isNewSentence = true;
-
-            //- Loop through all letters
-            var letters = input.NonNull().Trim().ToCharArray();
-            for (var index = 0; index &lt; letters.Length; ++index)
-            {
-                var letterString = letters[index].ToString();
-
-                if (new Regex(&quot;[a-zA-Z]&quot;).IsMatch(letterString))
-                {
-                    if (isNewSentence)
-                    {
-                        // By default there are no letter splitters, but if so, capitalize them.
-                        stringBuilder.Append(letterString.ToUpper(Locale));
-                    }
-                    else
-                    {
-                        // This shouldn&#39;t be present
-                        stringBuilder.Append(letterString.ToLower(Locale));
-                    }
-                }
-                else
-                {
-                    // It&#39;s not a letter, we don&#39;t care about its casing
-                    stringBuilder.Append(letterString);
-                }
-
-                // Evaluate for next loop through the iteration
-                isNewSentence = sentenceSplitters.Contains(letterString);
-            }
-
-            return stringBuilder.ToString();
-        }
-
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[34,15,34,31,0],[35,9,35,10,0],[36,9,36,10,0],[43,9,43,10,0],[44,13,44,37,0],[45,13,45,48,0],[46,13,46,14,0],[47,17,47,37,0],[50,13,50,42,0],[51,13,51,14,0],[52,17,52,68,0],[56,13,56,46,0],[57,13,57,57,0],[60,13,60,78,0],[61,9,61,10,0],[69,9,69,10,0],[70,13,70,82,0],[73,13,73,53,0],[76,13,76,38,0],[79,13,79,64,0],[80,18,80,31,0],[81,13,81,14,0],[82,17,82,62,0],[84,17,84,65,0],[85,17,85,18,0],[86,21,86,39,0],[87,21,87,22,0],[89,25,89,76,0],[90,21,90,22,0],[92,21,92,22,0],[94,25,94,76,0],[95,21,95,22,0],[96,17,96,18,0],[98,17,98,18,0],[100,21,100,56,0],[101,17,101,18,0],[104,17,104,74,0],[105,13,105,14,0],[80,57,80,64,0],[80,33,80,55,0],[107,13,107,45,0],[108,9,108,10,0]]);
+      highlightRanges([[27,15,27,31,0],[28,9,28,10,0],[29,9,29,10,0],[36,9,36,10,0],[40,13,40,33,0],[41,9,41,10,0]]);
     </script>
   </body>
 </html>

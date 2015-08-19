@@ -20,7 +20,7 @@ namespace MattEland.Ani.Alfred.Chat
     ///     This class takes commands in and handles them by routing them to various components in an
     ///     Alfred application.
     /// </summary>
-    public class AlfredCommandRouter : IAlfredCommandRecipient
+    public class AlfredCommandRouter : IAlfredCommandRecipient, IShellCommandRecipient
     {
         /// <summary>
         ///     Gets or sets the alfred instance.
@@ -71,6 +71,22 @@ namespace MattEland.Ani.Alfred.Chat
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Processes a shell command by sending it on to the user interface layer.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        public void ProcessShellCommand(ShellCommand command)
+        {
+            // Commands are very, very important and need to be logged.
+            Alfred?.Console?.Log("CommandRouting",
+                                "Shell Command '" + command.Name + "' raised targeting '" + command.Target +
+                                "' with data value of '" + command.Data + "'.", LogLevel.Info);
+
+            var shell = Alfred?.ShellCommandHandler;
+
+            shell?.ProcessShellCommand(command);
         }
     }
 }

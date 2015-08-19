@@ -16,6 +16,7 @@ using System.Windows.Threading;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.WPF.Properties;
 using MattEland.Common;
 
@@ -46,7 +47,7 @@ namespace MattEland.Ani.Alfred.WPF
             // Do not allow topmost window mode while debugging
             Topmost = false;
 #endif
-            _app = new ApplicationManager();
+            _app = new ApplicationManager(this);
 
             // DataBindings rely on Alfred presently as there hasn't been a need for a page ViewModel yet
             DataContext = _app;
@@ -124,6 +125,21 @@ namespace MattEland.Ani.Alfred.WPF
         public void Dispose()
         {
             _app.Dispose();
+        }
+
+        /// <summary>
+        /// Handles the page navigation command.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        public void HandlePageNavigationCommand(ShellCommand command)
+        {
+            if (command.Data.HasText() && tabPages != null)
+            {
+                foreach (var item in tabPages.Items)
+                {
+                    var i = item;
+                }
+            }
         }
     }
 }

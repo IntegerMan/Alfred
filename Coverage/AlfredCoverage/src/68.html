@@ -2,199 +2,85 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\utils\texttransformer.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\gendertaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// TextTransformer.cs
+// GenderTagHandler.cs
 // 
-// Created on:      08/12/2015 at 10:36 PM
-// Last Modified:   08/16/2015 at 12:33 AM
+// Created on:      08/12/2015 at 10:45 PM
+// Last Modified:   08/14/2015 at 6:14 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
-using System.Diagnostics;
-using System.Globalization;
-using System.Xml;
-
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Common;
 
-namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
+namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// &lt;summary&gt;
-    ///     An abstract class representing a class that will transform input text into output text.
+    ///     A tag handler for the AIML &quot;gender&quot; tag that subsitutes gender pronouns for their equivalent
+    ///     value in the chat engine&#39;s GenderSubstitutions
+    /// 
+    ///     See &quot;http://www.alicebot.org/TR/2005/WD-aiml/#section-gender&quot; for more on the gender tag.
     /// &lt;/summary&gt;
-    public abstract class TextTransformer
+    [HandlesAimlTag(&quot;gender&quot;)]
+    public class GenderTagHandler : AimlTagHandler
     {
-        [NotNull]
-        private readonly ChatEngine _chatEngine;
-
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;TextTransformer&quot; /&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;chatEngine&quot;&gt;The ChatEngine.&lt;/param&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;chatEngine&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        protected TextTransformer([NotNull] ChatEngine chatEngine, [CanBeNull] string input)
+        /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
+        public GenderTagHandler([NotNull] TagHandlerParameters parameters)
+            : base(parameters)
         {
-            if (chatEngine == null)
-            {
-                throw new ArgumentNullException(nameof(chatEngine));
-            }
-
-            _chatEngine = chatEngine;
-            InputString = input;
-        }
-
-        /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;TextTransformer&quot; /&gt; class.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;chatEngine&quot;&gt;The ChatEngine.&lt;/param&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;chatEngine&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        protected TextTransformer([NotNull] ChatEngine chatEngine) : this(chatEngine, null)
-        {
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the chat ChatEngine associated with this transformer.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The ChatEngine.&lt;/value&gt;
-        [NotNull]
-        public ChatEngine ChatEngine
-        {
-            [DebuggerStepThrough]
-            get
-            {
-                return _chatEngine;
-            }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the current locale.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The locale.&lt;/value&gt;
-        [NotNull]
-        protected CultureInfo Locale
-        {
-            get { return _chatEngine.Locale; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets or sets the input string.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The input string.&lt;/value&gt;
-        [CanBeNull]
-        public string InputString { get; set; }
-
-        /// &lt;summary&gt;
-        ///     Gets the output string.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The output string.&lt;/value&gt;
-        public string OutputString
-        {
-            get { return Transform(); }
-        }
-
-        /// &lt;summary&gt;
-        /// Gets the librarian containing settings files.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The librarian.&lt;/value&gt;
-        [NotNull]
-        public ChatEngineLibrarian Librarian
-        {
-            get { return ChatEngine.Librarian; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Transforms the specified input text into output text and returns it.
-        ///     The input value then becomes InputString in this instance.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input text.&lt;/param&gt;
-        /// &lt;returns&gt;The outputted text from the transform.&lt;/returns&gt;
-        public string Transform([CanBeNull] string input)
-        {
-            //- Store the new input
-            InputString = input;
-
-            // Process and return the result using our primary method
-            return Transform();
-        }
-
-        /// &lt;summary&gt;
-        ///     Transforms the input text into the output text.
-        /// &lt;/summary&gt;
-        /// &lt;returns&gt;The outputted text from the transform.&lt;/returns&gt;
-        public string Transform()
-        {
-            //- Ensure we have a valid value
-            if (string.IsNullOrWhiteSpace(InputString))
-            {
-                return string.Empty;
-            }
-
-            // Farm out processing the transform to the concrete implementation
-            return ProcessChange();
         }
 
         /// &lt;summary&gt;
         ///     Processes the input text and returns the processed value.
         /// &lt;/summary&gt;
         /// &lt;returns&gt;The processed output&lt;/returns&gt;
-        protected abstract string ProcessChange();
-
-        /// &lt;summary&gt;
-        ///     Logs the specified message to the logger.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;message&quot;&gt;The message.&lt;/param&gt;
-        /// &lt;param name=&quot;level&quot;&gt;The log level.&lt;/param&gt;
-        protected void Log(string message, LogLevel level)
+        protected override string ProcessChange()
         {
-            _chatEngine.Log(message, level);
-        }
+            /* Note: this tag handler uses recursion to recursively iterate through 
+            InnerText and find text that can be evaluated using substitution */
 
-        /// &lt;summary&gt;
-        ///     Gets the global setting with the specified name.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;settingName&quot;&gt;Name of the setting.&lt;/param&gt;
-        /// &lt;returns&gt;The value of the setting or string.Empty if no setting found&lt;/returns&gt;
-        protected string GetGlobalSetting([CanBeNull] string settingName)
-        {
-            return null == settingName
-                       ? string.Empty
-                       : Librarian.GlobalSettings.GetValue(settingName);
-
-        }
-
-        /// &lt;summary&gt;
-        /// Gets an attribute from an XML node and returns string.empty if the attribute isn&#39;t present.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;element&quot;&gt;The element.&lt;/param&gt;
-        /// &lt;param name=&quot;name&quot;&gt;The name.&lt;/param&gt;
-        /// &lt;returns&gt;The attribute value or string.Empty as a fallback.&lt;/returns&gt;
-        [NotNull]
-        protected static string GetAttributeSafe([CanBeNull] XmlElement element,
-                                               [CanBeNull] string name)
-        {
-            if (element != null &amp;&amp; name.HasText() &amp;&amp; element.HasAttribute(name))
+            //- Ensure this is the correct tag
+            if (TemplateNode.Name.Matches(&quot;gender&quot;))
             {
-                return element.GetAttribute(name);
+                return string.Empty;
             }
 
-            return string.Empty;
+            // If we have text inside the gender tag, just transform and return that
+            if (TemplateNode.InnerText.HasText())
+            {
+                /* Substitute occurrences of gender words with other values. This typically 
+                   inverts the gender on gender pronouns (&quot;he&quot; / &quot;she&quot; / etc.) */
+
+                var substitutions = Librarian.GenderSubstitutions;
+                return TextSubstitutionHelper.Substitute(substitutions,
+                                                              TemplateNode.InnerText);
+            }
+
+            // Apply an AIML &quot;star&quot; tag and store the results as our inner text
+            var star = BuildStarTagHandler();
+            TemplateNode.InnerText = star.Transform().NonNull();
+
+            //! If we still have text, we&#39;ll need to use recursion to evaluate our new value
+            return TemplateNode.InnerText.HasText() ? ProcessChange() : string.Empty;
         }
+
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[39,13,39,14,0],[40,17,40,69,0],[93,17,93,18,0],[93,19,93,38,0],[93,39,93,40,0],[103,17,103,18,0],[103,19,103,47,0],[103,48,103,49,0],[129,13,129,14,0],[130,17,130,37,0],[149,9,149,10,0],[150,13,150,45,0],[151,9,151,10,0],[159,9,159,10,0],[160,13,162,73,0],[164,9,164,10,0],[36,9,36,93,1],[37,9,37,10,1],[38,13,38,36,1],[43,13,43,38,1],[44,13,44,33,1],[45,9,45,10,1],[52,70,52,92,1],[53,9,53,10,1],[54,9,54,10,1],[65,13,65,14,1],[66,17,66,36,1],[67,13,67,14,1],[77,17,77,18,1],[77,19,77,45,1],[77,46,77,47,1],[85,37,85,41,1],[85,42,85,46,1],[113,9,113,10,1],[115,13,115,33,1],[118,13,118,32,1],[119,9,119,10,1],[126,9,126,10,1],[128,13,128,56,1],[134,13,134,36,1],[135,9,135,10,1],[175,9,175,10,1],[176,13,176,81,1],[177,13,177,14,1],[178,17,178,51,1],[181,13,181,33,1],[182,9,182,10,1]]);
+      highlightRanges([[31,15,31,31,0],[32,9,32,10,0],[33,9,33,10,0],[40,9,40,10,0],[45,13,45,53,0],[46,13,46,14,0],[47,17,47,37,0],[51,13,51,50,0],[52,13,52,14,0],[56,17,56,67,0],[57,17,58,87,0],[62,13,62,46,0],[63,13,63,65,0],[66,13,66,86,0],[67,9,67,10,0]]);
     </script>
   </body>
 </html>

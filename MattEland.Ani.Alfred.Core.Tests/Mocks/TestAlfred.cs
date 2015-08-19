@@ -29,6 +29,7 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
         [NotNull]
         private readonly IPlatformProvider _platformProvider = new SimplePlatformProvider();
         private IChatProvider _chatProvider;
+        private IShellCommandRecipient _shellCommandHandler;
 
         [NotNull]
         public IList<IAlfredSubsystem> SubsystemsList { get; } = new List<IAlfredSubsystem>();
@@ -130,6 +131,24 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
         public IPlatformProvider PlatformProvider
         {
             get { return _platformProvider; }
+        }
+
+        /// <summary>
+        /// Gets the shell command handler that can pass shell commands on to the user interface.
+        /// </summary>
+        /// <value>The shell command handler.</value>
+        public IShellCommandRecipient ShellCommandHandler
+        {
+            get { return _shellCommandHandler; }
+        }
+
+        /// <summary>
+        /// Registers the shell command recipient that will allow the shell to get commands from the Alfred layer.
+        /// </summary>
+        /// <param name="shell">The command recipient.</param>
+        public void Register(IShellCommandRecipient shell)
+        {
+            _shellCommandHandler = shell;
         }
 
         /// <summary>

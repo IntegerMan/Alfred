@@ -86,7 +86,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         ///     When building dynamic and encountering a node that doesn't have any mapping, return null
         /// </summary>
         /// <remarks>
-        ///     See AlF-29
+        ///     See ALF-29
         /// </remarks>
         [Test]
         public void BuildDynamicWithUnknownTagReturnsNull()
@@ -98,6 +98,12 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             Assert.IsNull(result);
         }
 
+        /// <summary>
+        /// Tag handler factories must have a ChatEngine
+        /// </summary>
+        /// <remarks>
+        /// See ALF-29
+        /// </remarks>
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
         public void BuildFactoryWithNullEngineThrowsException()

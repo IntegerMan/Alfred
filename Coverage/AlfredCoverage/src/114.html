@@ -2,23 +2,22 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.system\diskmonitormodule.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.system\memorymonitormodule.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// DiskMonitorModule.cs
+// MemoryMonitorModule.cs
 // 
-// Created on:      08/05/2015 at 1:03 AM
-// Last Modified:   08/05/2015 at 3:10 PM
-// Original author: Matt Eland
+// Created on:      08/04/2015 at 9:50 PM
+// Last Modified:   08/18/2015 at 2:06 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.ComponentModel;
-using System.Diagnostics;
 
 using JetBrains.Annotations;
 
@@ -28,42 +27,38 @@ using MattEland.Ani.Alfred.Core.Widgets;
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
     /// &lt;summary&gt;
-    ///     A module that displays information on the system&#39;s disk input / output operations
+    ///     A module that displays information on the system&#39;s memory utilization percentage
     /// &lt;/summary&gt;
-    public sealed class DiskMonitorModule : SystemMonitorModule, IDisposable
+    public sealed class MemoryMonitorModule : SystemMonitorModule, IDisposable
     {
-        private const string DiskCategoryName = &quot;PhysicalDisk&quot;;
-        private const string DiskReadCounterName = &quot;% Disk Read Time&quot;;
-        private const string DiskWriteCounterName = &quot;% Disk Write Time&quot;;
+        private const string MemoryCategoryName = &quot;Memory&quot;;
+        private const string MemoryUtilizationBytesCounterName = &quot;% Committed Bytes in Use&quot;;
 
         [NotNull]
-        private readonly MetricProviderBase _diskReadCounter;
+        private readonly MetricProviderBase _memUsedBytesCounter;
 
         [NotNull]
-        private readonly AlfredProgressBarWidget _diskReadWidget;
-
-        [NotNull]
-        private readonly MetricProviderBase _diskWriteCounter;
-
-        [NotNull]
-        private readonly AlfredProgressBarWidget _diskWriteWidget;
+        private readonly AlfredProgressBarWidget _memWidget;
 
         /// &lt;summary&gt;
-        /// Initializes a new instance of the &lt;see cref=&quot;MemoryMonitorModule&quot; /&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;MemoryMonitorModule&quot; /&gt; class.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
-        /// &lt;param name=&quot;factory&quot;&gt;The metric provider factory&lt;/param&gt;
-        public DiskMonitorModule([NotNull] IPlatformProvider platformProvider,
-                                 [NotNull] IMetricProviderFactory factory) : base(platformProvider, factory)
+        /// &lt;param name=&quot;factory&quot;&gt;The metric provider factory.&lt;/param&gt;
+        public MemoryMonitorModule([NotNull] IPlatformProvider platformProvider,
+                                   [NotNull] IMetricProviderFactory factory)
+            : base(platformProvider, factory)
         {
-            _diskReadCounter = MetricProvider.Build(DiskCategoryName, DiskReadCounterName, TotalInstanceName);
-            _diskWriteCounter = MetricProvider.Build(DiskCategoryName, DiskWriteCounterName, TotalInstanceName);
+            _memUsedBytesCounter = MetricProvider.Build(MemoryCategoryName,
+                                                        MemoryUtilizationBytesCounterName);
 
-            _diskReadWidget = CreatePercentWidget();
-            _diskReadWidget.Text = Resources.DiskReadLabel;
-
-            _diskWriteWidget = CreatePercentWidget();
-            _diskWriteWidget.Text = Resources.DiskWriteLabel;
+            _memWidget = new AlfredProgressBarWidget
+            {
+                Minimum = 0,
+                Maximum = 100,
+                Text = Resources.MemoryMonitorModule_LabelName,
+                ValueFormatString = &quot;{0:F2} %&quot;
+            };
 
         }
 
@@ -76,51 +71,24 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         public override string Name
         {
             // ReSharper disable once AssignNullToNotNullAttribute
-            get { return Resources.DiskMonitorName; }
+            get { return Resources.MemoryMonitorModule_Name; }
         }
 
         /// &lt;summary&gt;
-        /// Gets the disk read utilization percentage.
+        /// Gets the percent of memory that is utilized.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The read utilization.&lt;/value&gt;
-        public float ReadUtilization
+        /// &lt;value&gt;The memory utilization percentage.&lt;/value&gt;
+        public float MemoryUtilization
         {
-            get { return _diskReadCounter.NextValue(); }
+            get { return _memUsedBytesCounter.NextValue(); }
         }
 
         /// &lt;summary&gt;
-        /// Gets the write utilization percentage.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The write utilization.&lt;/value&gt;
-        public float WriteUtilization
-        {
-            get { return _diskWriteCounter.NextValue(); }
-        }
-
-        /// &lt;summary&gt;
-        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        ///     Disposes this instance.
         /// &lt;/summary&gt;
         public void Dispose()
         {
-            _diskReadCounter.Dispose();
-            _diskWriteCounter.Dispose();
-        }
-
-        /// &lt;summary&gt;
-        ///     Creates a percentage progress bar widget.
-        /// &lt;/summary&gt;
-        /// &lt;returns&gt;A percentage progress bar widget&lt;/returns&gt;
-        [NotNull]
-        private static AlfredProgressBarWidget CreatePercentWidget()
-        {
-            var widget = new AlfredProgressBarWidget
-            {
-                Minimum = 0,
-                Maximum = 100,
-                ValueFormatString = &quot;{0:F2} %&quot;
-            };
-
-            return widget;
+            _memUsedBytesCounter.Dispose();
         }
 
         /// &lt;summary&gt;
@@ -128,18 +96,16 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// &lt;/summary&gt;
         protected override void ShutdownProtected()
         {
-            _diskReadWidget.Value = 0;
-            _diskWriteWidget.Value = 0;
+            _memWidget.Value = 0;
         }
 
         /// &lt;summary&gt;
         ///     Handles module initialization events
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;alfred&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;alfred&quot;&gt;The alfred instance.&lt;/param&gt;
         protected override void InitializeProtected(IAlfred alfred)
         {
-            Register(_diskReadWidget);
-            Register(_diskWriteWidget);
+            Register(_memWidget);
         }
 
         /// &lt;summary&gt;
@@ -147,17 +113,15 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// &lt;/summary&gt;
         protected override void UpdateProtected()
         {
-            var readPercent = GetNextCounterValueSafe(_diskReadCounter);
-            var writePercent = GetNextCounterValueSafe(_diskWriteCounter);
+            var usedMemory = GetNextCounterValueSafe(_memUsedBytesCounter);
 
-            _diskReadWidget.Value = readPercent;
-            _diskWriteWidget.Value = writePercent;
+            _memWidget.Value = usedMemory;
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[69,17,69,18,0],[69,19,69,52,0],[69,53,69,54,0],[94,9,94,10,0],[95,13,95,40,0],[96,13,96,41,0],[97,9,97,10,0],[47,78,47,109,1],[48,9,48,10,1],[49,13,49,111,1],[50,13,50,113,1],[52,13,52,53,1],[53,13,53,60,1],[55,13,55,54,1],[56,13,56,62,1],[58,9,58,10,1],[78,17,78,18,1],[78,19,78,55,1],[78,56,78,57,1],[87,17,87,18,1],[87,19,87,56,1],[87,57,87,58,1],[105,9,105,10,1],[106,13,111,15,1],[113,13,113,27,1],[114,9,114,10,1],[120,9,120,10,1],[121,13,121,39,1],[122,13,122,40,1],[123,9,123,10,1],[130,9,130,10,1],[131,13,131,39,1],[132,13,132,40,1],[133,9,133,10,1],[139,9,139,10,1],[140,13,140,73,1],[141,13,141,75,1],[143,13,143,49,1],[144,13,144,51,1],[145,9,145,10,1]]);
+      highlightRanges([[64,17,64,18,0],[64,19,64,61,0],[64,62,64,63,0],[80,9,80,10,0],[81,13,81,44,0],[82,9,82,10,0],[40,15,40,46,1],[41,9,41,10,1],[42,13,43,92,1],[45,13,51,15,1],[53,9,53,10,1],[73,17,73,18,1],[73,19,73,59,1],[73,60,73,61,1],[88,9,88,10,1],[89,13,89,34,1],[90,9,90,10,1],[97,9,97,10,1],[98,13,98,34,1],[99,9,99,10,1],[105,9,105,10,1],[106,13,106,76,1],[108,13,108,43,1],[109,9,109,10,1]]);
     </script>
   </body>
 </html>

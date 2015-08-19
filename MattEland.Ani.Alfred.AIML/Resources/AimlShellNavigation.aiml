@@ -55,19 +55,19 @@ This provides handling for navigating to UI areas
   <category>
     <pattern>Navigate System</pattern>
     <template>
-      <alfred subsystem="ui" command="nav" data="System" />
+      <shell target="pages" command="nav" data="System" />
     </template>
   </category>
   <category>
     <pattern>Navigate System Monitoring</pattern>
     <template>
-      <alfred subsystem="ui" command="nav" data="System" />
+      <shell target="pages" command="nav" data="System" />
     </template>
   </category>
   <category>
     <pattern>Navigate System Monitor</pattern>
     <template>
-      <alfred subsystem="ui" command="nav" data="System" />
+      <shell target="pages" command="nav" data="System" />
     </template>
   </category>
   
@@ -75,13 +75,13 @@ This provides handling for navigating to UI areas
   <category>
     <pattern>Navigate Core</pattern>
     <template>
-      <alfred subsystem="ui" command="nav" data="Core" />
+      <shell target="pages" command="nav" data="Core" />
     </template>
   </category>
   <category>
     <pattern>Navigate Home</pattern>
     <template>
-      <alfred subsystem="ui" command="nav" data="Core" />
+      <shell target="pages" command="nav" data="Core" />
     </template>
   </category>
   
@@ -89,13 +89,13 @@ This provides handling for navigating to UI areas
   <category>
     <pattern>Navigate Event Log</pattern>
     <template>
-      <alfred subsystem="ui" command="nav" data="Event Log" />
+      <shell target="pages" command="nav" data="Event Log" />
     </template>
   </category>
   <category>
     <pattern>Navigate Log</pattern>
     <template>
-      <alfred subsystem="ui" command="nav" data="Event Log" />
+      <shell target="pages" command="nav" data="Event Log" />
     </template>
   </category>
   

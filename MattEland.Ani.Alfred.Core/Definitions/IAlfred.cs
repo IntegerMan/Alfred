@@ -86,6 +86,19 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         IPlatformProvider PlatformProvider { get; }
 
         /// <summary>
+        /// Gets the shell command handler that can pass shell commands on to the user interface.
+        /// </summary>
+        /// <value>The shell command handler.</value>
+        [CanBeNull]
+        IShellCommandRecipient ShellCommandHandler { get; }
+
+        /// <summary>
+        /// Registers the shell command recipient that will allow the shell to get commands from the Alfred layer.
+        /// </summary>
+        /// <param name="shell">The command recipient.</param>
+        void Register([NotNull] IShellCommandRecipient shell);
+
+        /// <summary>
         /// Registers the user statement handler as the framework's user statement handler.
         /// </summary>
         /// <param name="chatProvider">The user statement handler.</param>

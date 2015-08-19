@@ -2,91 +2,81 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.aiml\alfredcommandrouter.cs</title>
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.aiml\alfredtaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlfredCommandRouter.cs
+// AlfredTagHandler.cs
 // 
-// Created on:      08/18/2015 at 12:27 AM
-// Last Modified:   08/18/2015 at 1:25 AM
+// Created on:      08/17/2015 at 10:57 PM
+// Last Modified:   08/18/2015 at 1:03 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System;
+
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Ani.Alfred.Core;
-using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat
 {
     /// &lt;summary&gt;
-    ///     This class takes commands in and handles them by routing them to various components in an
-    ///     Alfred application.
+    ///     A tag handler that handles the custom &quot;alfred&quot; tag that integrates Alfred into the AIML system
+    ///     and allows AIML files to issue commands to Alfred modules.
     /// &lt;/summary&gt;
-    public class AlfredCommandRouter : IAlfredCommandRecipient
+    [HandlesAimlTag(&quot;alfred&quot;)]
+    public class AlfredTagHandler : AimlTagHandler
     {
         /// &lt;summary&gt;
-        ///     Gets or sets the alfred instance.
+        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The alfred instance.&lt;/value&gt;
-        [CanBeNull]
-        public IAlfred Alfred { get; set; }
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;parameters&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public AlfredTagHandler([NotNull] TagHandlerParameters parameters) : base(parameters)
+        {
+        }
 
         /// &lt;summary&gt;
-        ///     Processes an Alfred Command. If the command is handled, result should be modified accordingly
-        ///     and the method should return true. Returning false will not stop the message from being
-        ///     propagated.
+        ///     Processes the input text and returns the processed value.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;command&quot;&gt;The command.&lt;/param&gt;
-        /// &lt;param name=&quot;result&quot;&gt;The result. If the command was handled, this should be updated.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;True&lt;/c&gt; if the command was handled; otherwise false.&lt;/returns&gt;
-        public bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
+        /// &lt;returns&gt;The processed output&lt;/returns&gt;
+        protected override string ProcessChange()
         {
-            var alfred = Alfred;
-            if (alfred == null)
+            //throw new Exception(&quot;Test&quot;);
+
+            var result = new AlfredCommandResult();
+
+            var element = TemplateElement;
+            var recipient = ChatEngine.Owner as IAlfredCommandRecipient;
+
+            if (element != null &amp;&amp; element.HasAttribute(&quot;command&quot;) &amp;&amp; recipient != null)
             {
-                return false;
+                // Build a command
+                var name = GetAttributeSafe(element, &quot;command&quot;);
+                var subsystem = GetAttributeSafe(element, &quot;subsystem&quot;);
+                var data = GetAttributeSafe(element, &quot;data&quot;);
+
+                var command = new ChatCommand(subsystem, name, data);
+
+                // Send the command on to the owner. This may modify result or carry out other actions.
+                recipient.ProcessAlfredCommand(command, result);
             }
 
-            // Extract our target for loop readability
-            var target = command.Subsystem;
-
-            // Commands are very, very important and need to be logged.
-            alfred.Console?.Log(&quot;CommandRouting&quot;,
-                                &quot;Command &#39;&quot; + command.Name + &quot;&#39; raised for subsystem &#39;&quot; + target +
-                                &quot;&#39; with data value of &#39;&quot; + command.Data + &quot;&#39;.&quot;,
-                                LogLevel.Info);
-
-            // Send the command to each subsystem. These will in turn send it on to their pages and modules.
-            foreach (var subsystem in alfred.Subsystems)
-            {
-                // If the command isn&#39;t for the subsystem, move on.
-                if (target.HasText() &amp;&amp; !target.Matches(subsystem.Id))
-                {
-                    continue;
-                }
-
-                // Send the command to the subsystem for routing. If it&#39;s handled, the subsystem will return true.
-                if (subsystem.ProcessAlfredCommand(command, result))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            // Get the output value from the result in case it was set externally
+            return result.Output;
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[44,13,44,14,0],[45,17,45,30,0],[30,33,30,37,1],[30,38,30,42,1],[41,9,41,10,1],[42,13,42,33,1],[43,13,43,32,1],[49,13,49,44,1],[52,13,55,48,1],[58,13,58,20,1],[58,39,58,56,1],[58,22,58,35,1],[59,13,59,14,1],[61,17,61,71,1],[62,17,62,18,1],[63,21,63,30,1],[67,17,67,69,1],[68,17,68,18,1],[69,21,69,33,1],[71,13,71,14,1],[58,36,58,38,1],[73,13,73,26,1],[74,9,74,10,1]]);
+      highlightRanges([[32,78,32,94,1],[33,9,33,10,1],[34,9,34,10,1],[41,9,41,10,1],[44,13,44,52,1],[46,13,46,43,1],[47,13,47,73,1],[49,13,49,89,1],[50,13,50,14,1],[52,17,52,65,1],[53,17,53,72,1],[54,17,54,62,1],[56,17,56,70,1],[59,17,59,65,1],[60,13,60,14,1],[63,13,63,34,1],[64,9,64,10,1]]);
     </script>
   </body>
 </html>
