@@ -52,7 +52,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             _memoryModule = new MemoryMonitorModule(provider, factory);
             _diskModule = new DiskMonitorModule(provider, factory);
 
-            _page = new AlfredModuleListPage(provider, Resources.SystemMonitoringSystem_Name.NonNull());
+            _page = new AlfredModuleListPage(provider, Resources.SystemMonitoringSystem_Name.NonNull(), "Sys");
         }
 
         /// <summary>

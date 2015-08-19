@@ -54,13 +54,14 @@ namespace MattEland.Ani.Alfred.Chat
                 var target = GetAttributeSafe(element, "target");
                 var data = GetAttributeSafe(element, "data");
 
-                var command = new ShellCommand(target, name, data);
+                var command = new ShellCommand(name, target, data);
 
                 // Send the command on to the owner
                 recipient.ProcessShellCommand(command);
             }
 
-            return string.Empty;
+            // TODO: I'll need a way of getting a real response and redirecting as needed
+            return "I'll let the user interface know";
         }
     }
 

@@ -43,6 +43,18 @@ This provides handling for navigating to UI areas
     </template>
   </category>
 
+  <!-- Failed Navigation -->
+  <category>
+    <pattern>Navigate Failed</pattern>
+    <template>
+      <random>
+        <li>I'm sorry, I couldn't find that.</li>
+        <li>I don't know where that is. I'm sorry.</li>
+        <li>I can't find that. Try something else.</li>
+      </random>
+    </template>
+  </category>
+
   <!-- Navigation Failure - Invoked when the system couldn't respond to the navigation -->
   <category>
     <pattern>Navigate Error *</pattern>
@@ -55,22 +67,28 @@ This provides handling for navigating to UI areas
   <category>
     <pattern>Navigate System</pattern>
     <template>
-      <shell target="pages" command="nav" data="System" />
+      <shell target="pages" command="nav" data="Sys" />
     </template>
   </category>
   <category>
     <pattern>Navigate System Monitoring</pattern>
     <template>
-      <shell target="pages" command="nav" data="System" />
+      <srai>Navigate System</srai>
     </template>
   </category>
   <category>
     <pattern>Navigate System Monitor</pattern>
     <template>
-      <shell target="pages" command="nav" data="System" />
+      <srai>Navigate System</srai>
     </template>
   </category>
-  
+  <category>
+    <pattern>Navigate Sys</pattern>
+    <template>
+      <srai>Navigate System</srai>
+    </template>
+  </category>
+
   <!-- Navigate Core (or Home) -->
   <category>
     <pattern>Navigate Core</pattern>
@@ -81,7 +99,7 @@ This provides handling for navigating to UI areas
   <category>
     <pattern>Navigate Home</pattern>
     <template>
-      <shell target="pages" command="nav" data="Core" />
+      <srai>Navigate Core</srai>
     </template>
   </category>
   
@@ -89,13 +107,13 @@ This provides handling for navigating to UI areas
   <category>
     <pattern>Navigate Event Log</pattern>
     <template>
-      <shell target="pages" command="nav" data="Event Log" />
+      <shell target="pages" command="nav" data="Log" />
     </template>
   </category>
   <category>
     <pattern>Navigate Log</pattern>
     <template>
-      <shell target="pages" command="nav" data="Event Log" />
+      <srai>Navigate Event Log</srai>
     </template>
   </category>
   
@@ -104,14 +122,6 @@ This provides handling for navigating to UI areas
     <pattern>Navigate *</pattern>
     <template>
       I'm sorry, but <star/> is not a valid destination.
-    </template>
-  </category>
-
-  <!-- Word Replacement for System -->
-  <category>
-    <pattern>* Sys</pattern>
-    <template>
-      <srai>* System</srai>
     </template>
   </category>
 

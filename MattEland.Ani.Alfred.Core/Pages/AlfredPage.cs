@@ -7,6 +7,7 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 
 using JetBrains.Annotations;
 
@@ -22,19 +23,28 @@ namespace MattEland.Ani.Alfred.Core.Pages
         [NotNull]
         private readonly string _name;
 
+        private readonly string _id;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredPage" /> class.
         /// </summary>
         /// <param name="name">The name.</param>
+        /// <param name="id">The ID</param>
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null" />.</exception>
-        protected AlfredPage([NotNull] string name)
+        /// <exception cref="ArgumentNullException"><paramref name="id"/> is <see langword="null" />.</exception>
+        protected AlfredPage([NotNull] string name, [NotNull] string id)
         {
             if (name == null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
 
             _name = name;
+            _id = id;
         }
 
         /// <summary>
@@ -53,7 +63,20 @@ namespace MattEland.Ani.Alfred.Core.Pages
         [NotNull]
         public override string Name
         {
-            get { return _name; }
+            [DebuggerStepThrough]
+            get
+            { return _name; }
+        }
+
+        /// <summary>
+        /// Gets the page identifier.
+        /// </summary>
+        /// <value>The identifier.</value>
+        public string Id
+        {
+            [DebuggerStepThrough]
+            get
+            { return _id; }
         }
 
         /// <summary>

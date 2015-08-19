@@ -18,5 +18,11 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// </summary>
         /// <value><c>true</c> if this page is root level; otherwise, <c>false</c>.</value>
         bool IsRootLevel { get; }
+
+        /// <summary>
+        /// Gets the page identifier.
+        /// </summary>
+        /// <value>The identifier.</value>
+        string Id { get; }
     }
 }

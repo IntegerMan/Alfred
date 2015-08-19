@@ -131,15 +131,24 @@ namespace MattEland.Ani.Alfred.WPF
         /// Handles the page navigation command.
         /// </summary>
         /// <param name="command">The command.</param>
-        public void HandlePageNavigationCommand(ShellCommand command)
+        /// <returns>Whether or not the command was handled</returns>
+        public bool HandlePageNavigationCommand(ShellCommand command)
         {
-            if (command.Data.HasText() && tabPages != null)
+            if (command.Data.HasText() && tabPages?.Items != null)
             {
                 foreach (var item in tabPages.Items)
                 {
-                    var i = item;
+                    var page = item as IAlfredPage;
+
+                    if (page != null && page.Id.Matches(command.Data))
+                    {
+                        tabPages.SelectedItem = page;
+                        return true;
+                    }
                 }
             }
+
+            return false;
         }
     }
 }

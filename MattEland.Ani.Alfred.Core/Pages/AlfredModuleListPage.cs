@@ -27,12 +27,13 @@ namespace MattEland.Ani.Alfred.Core.Pages
         private readonly ICollection<IAlfredModule> _modules;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredModuleListPage" /> class.
+        /// Initializes a new instance of the <see cref="AlfredModuleListPage" /> class.
         /// </summary>
         /// <param name="provider">The provider.</param>
         /// <param name="name">The name.</param>
+        /// <param name="id">The identifier.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public AlfredModuleListPage([NotNull] IPlatformProvider provider, [NotNull] string name) : base(name)
+        public AlfredModuleListPage([NotNull] IPlatformProvider provider, [NotNull] string name, [NotNull] string id) : base(name, id)
         {
             if (provider == null)
             {

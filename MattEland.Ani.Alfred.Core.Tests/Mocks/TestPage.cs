@@ -23,7 +23,7 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
-        public TestPage() : base("Test Page")
+        public TestPage() : base("Test Page", "Test")
         {
         }
 

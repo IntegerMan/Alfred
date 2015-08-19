@@ -35,7 +35,7 @@ namespace MattEland.Ani.Alfred.Chat
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="chatHandler">The input handler</param>
-        public ChatPage([NotNull] string name, [NotNull] IChatProvider chatHandler) : base(name)
+        public ChatPage([NotNull] string name, [NotNull] IChatProvider chatHandler) : base(name, "Chat")
         {
             _chatHandler = chatHandler;
         }

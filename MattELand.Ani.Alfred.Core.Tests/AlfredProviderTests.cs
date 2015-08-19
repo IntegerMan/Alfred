@@ -42,7 +42,7 @@ namespace MattEland.Ani.Alfred.Tests
             _alfred.Console = new SimpleConsole();
 
             _subsystem = new TestSubsystem(_alfred.PlatformProvider);
-            _page = new AlfredModuleListPage(_alfred.PlatformProvider, "Test Page");
+            _page = new AlfredModuleListPage(_alfred.PlatformProvider, "Test Page", "Test");
         }
 
         [NotNull]

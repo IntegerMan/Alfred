@@ -66,7 +66,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
 
             var subsystem = new TestSubsystem();
 
-            var page = new AlfredModuleListPage(alfred.PlatformProvider, "Test Page");
+            var page = new AlfredModuleListPage(alfred.PlatformProvider, "Test Page", "Test");
             subsystem.AddAutoRegisterPage(page);
 
             alfred.Register(subsystem);
