@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\startaghandler.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// StarTagHandler.cs
+// 
+// Created on:      08/12/2015 at 10:56 PM
+// Last Modified:   08/15/2015 at 11:35 PM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using System.Collections.Generic;
+
+using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Common;
+
+namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
+{
+    /// &lt;summary&gt;
+    ///     An AIML tag handler that handles the &quot;star&quot; tag by returning the refernced item in the
+    ///     InputStar collection for the query. This is a way of referencing the rest of a
+    ///     sentence after handling part of the input.
+    /// &lt;/summary&gt;
+    [HandlesAimlTag(&quot;star&quot;)]
+    public class StarTagHandler : AimlTagHandler
+    {
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
+        public StarTagHandler([NotNull] TagHandlerParameters parameters)
+            : base(parameters)
+        {
+        }
+
+        /// &lt;summary&gt;
+        ///     Processes the input text and returns the processed value.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;The processed output&lt;/returns&gt;
+        protected override string ProcessChange()
+        {
+            var element = TemplateElement;
+            if (element != null &amp;&amp; element.Name.Matches(&quot;star&quot;))
+            {
+                // Grab whatever * refers to in this particular query
+                var inputStar = Query.InputStar;
+
+                // If there&#39;s nothing in inputStar, log it and move on
+                if (inputStar.Count &lt;= 0)
+                {
+                    Log(string.Format(Locale,
+                                      Resources.StarErrorNoInputStarElements,
+                                      Request.RawInput),
+                        LogLevel.Error);
+
+                    return string.Empty;
+                }
+
+                // If they don&#39;t specify anything just get last value
+                if (!element.HasAttribute(&quot;index&quot;))
+                {
+                    return inputStar[0];
+                }
+
+                // Grab the index as an integer
+                var indexText = element.GetAttribute(&quot;index&quot;);
+                var index = indexText.AsInt(-1) - 1;
+
+                // Bounds check followed by fetching the star value,
+                if (index &gt;= 0 &amp; index &lt; inputStar.Count)
+                {
+                    return inputStar[index];
+                }
+
+                Log(string.Format(Locale,
+                                  Resources.StarErrorBadIndex,
+                                  Request.RawInput),
+                    LogLevel.Error);
+            }
+
+            return string.Empty;
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[33,15,33,31,0],[34,9,34,10,0],[35,9,35,10,0],[42,9,42,10,0],[43,13,43,43,0],[44,13,44,65,0],[45,13,45,14,0],[47,17,47,49,0],[50,17,50,42,0],[51,17,51,18,0],[52,21,55,41,0],[57,21,57,41,0],[61,17,61,52,0],[62,17,62,18,0],[63,21,63,41,0],[67,17,67,63,0],[68,17,68,53,0],[71,17,71,58,0],[72,17,72,18,0],[73,21,73,45,0],[76,17,79,37,0],[80,13,80,14,0],[82,13,82,33,0],[83,9,83,10,0]]);
+    </script>
+  </body>
+</html>

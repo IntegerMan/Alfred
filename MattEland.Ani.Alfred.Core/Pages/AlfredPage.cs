@@ -1,13 +1,13 @@
 ﻿// ---------------------------------------------------------
 // AlfredPage.cs
 // 
-// Created on:      08/08/2015 at 7:17 PM
-// Last Modified:   08/08/2015 at 7:55 PM
+// Created on:      08/11/2015 at 9:44 PM
+// Last Modified:   08/11/2015 at 9:45 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 
 using JetBrains.Annotations;
 
@@ -23,18 +23,37 @@ namespace MattEland.Ani.Alfred.Core.Pages
         [NotNull]
         private readonly string _name;
 
+        private readonly string _id;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredPage" /> class.
         /// </summary>
         /// <param name="name">The name.</param>
-        protected AlfredPage([NotNull] string name)
+        /// <param name="id">The ID</param>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="id"/> is <see langword="null" />.</exception>
+        protected AlfredPage([NotNull] string name, [NotNull] string id)
         {
             if (name == null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
 
             _name = name;
+            _id = id;
+        }
+
+        /// <summary>
+        ///     Gets whether or not the component is visible to the user interface.
+        /// </summary>
+        /// <value>Whether or not the component is visible.</value>
+        public override bool IsVisible
+        {
+            get { return Status == AlfredStatus.Online; }
         }
 
         /// <summary>
@@ -44,7 +63,20 @@ namespace MattEland.Ani.Alfred.Core.Pages
         [NotNull]
         public override string Name
         {
-            get { return _name; }
+            [DebuggerStepThrough]
+            get
+            { return _name; }
+        }
+
+        /// <summary>
+        /// Gets the page identifier.
+        /// </summary>
+        /// <value>The identifier.</value>
+        public string Id
+        {
+            [DebuggerStepThrough]
+            get
+            { return _id; }
         }
 
         /// <summary>
@@ -57,12 +89,14 @@ namespace MattEland.Ani.Alfred.Core.Pages
         }
 
         /// <summary>
-        ///     Gets whether or not the component is visible to the user interface.
+        /// Processes an Alfred Command. If the command is handled, result should be modified accordingly and the method should return true. Returning false will not stop the message from being propogated.
         /// </summary>
-        /// <value>Whether or not the component is visible.</value>
-        public override bool IsVisible
+        /// <param name="command">The command.</param>
+        /// <param name="result">The result. If the command was handled, this should be updated.</param>
+        /// <returns><c>True</c> if the command was handled; otherwise false.</returns>
+        public virtual bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
         {
-            get { return true; }
+            return false;
         }
     }
 

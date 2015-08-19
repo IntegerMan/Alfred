@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\utils\taghandlerparameters.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// TagHandlerParameters.cs
+// 
+// Created on:      08/14/2015 at 1:24 PM
+// Last Modified:   08/15/2015 at 11:16 PM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using System;
+using System.Xml;
+
+using JetBrains.Annotations;
+
+namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
+{
+    /// &lt;summary&gt;
+    ///     A container for parameters given to AimlTagHandler objects upon creation. This
+    ///     keeps invocations from being unseemly long and makes it easier to manage parameter
+    ///     changes with many consumers.
+    /// &lt;/summary&gt;
+    public class TagHandlerParameters
+    {
+        [NotNull]
+        private readonly ChatEngine _chatEngine;
+
+        [NotNull]
+        private readonly SubQuery _query;
+
+        [NotNull]
+        private readonly Request _request;
+
+        private readonly Result _result;
+
+        [NotNull]
+        private readonly XmlNode _templateNode;
+
+        [NotNull]
+        private readonly User _user;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;TagHandlerParameters&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;chatEngine&quot;&gt;The chat engine.&lt;/param&gt;
+        /// &lt;param name=&quot;user&quot;&gt;The user.&lt;/param&gt;
+        /// &lt;param name=&quot;query&quot;&gt;The query.&lt;/param&gt;
+        /// &lt;param name=&quot;request&quot;&gt;The request.&lt;/param&gt;
+        /// &lt;param name=&quot;result&quot;&gt;The result.&lt;/param&gt;
+        /// &lt;param name=&quot;templateNode&quot;&gt;The template node.&lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;
+        ///     &lt;paramref name=&quot;query&quot; /&gt;, &lt;paramref name=&quot;request&quot; /&gt;, &lt;paramref name=&quot;user&quot; /&gt;, &lt;paramref name=&quot;chatEngine&quot; /&gt;, or
+        ///     &lt;paramref name=&quot;templateNode&quot; /&gt; are &lt;see langword=&quot;null&quot; /&gt;.
+        /// &lt;/exception&gt;
+        public TagHandlerParameters([NotNull] ChatEngine chatEngine,
+                                    [NotNull] User user,
+                                    [NotNull] SubQuery query,
+                                    [NotNull] Request request,
+                                    Result result,
+                                    [NotNull] XmlNode templateNode)
+        {
+            //- Validate
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            if (query == null)
+            {
+                throw new ArgumentNullException(nameof(query));
+            }
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+            if (templateNode == null)
+            {
+                throw new ArgumentNullException(nameof(templateNode));
+            }
+
+            //- Set Properties
+            _chatEngine = chatEngine;
+            _user = user;
+            _query = query;
+            _request = request;
+            _result = result;
+            _templateNode = templateNode;
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the chat engine.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The chat engine.&lt;/value&gt;
+        [NotNull]
+        public ChatEngine ChatEngine
+        {
+            get { return _chatEngine; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the user.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The user.&lt;/value&gt;
+        [NotNull]
+        public User User
+        {
+            get { return _user; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the query.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The query.&lt;/value&gt;
+        [NotNull]
+        public SubQuery Query
+        {
+            get { return _query; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the request.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The request.&lt;/value&gt;
+        [NotNull]
+        public Request Request
+        {
+            get { return _request; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the result.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The result.&lt;/value&gt;
+        public Result Result
+        {
+            get { return _result; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the template node.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The template node.&lt;/value&gt;
+        [NotNull]
+        public XmlNode TemplateNode
+        {
+            get { return _templateNode; }
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[63,13,63,14,0],[64,17,64,63,0],[67,13,67,14,0],[68,17,68,64,0],[71,13,71,14,0],[72,17,72,66,0],[75,13,75,14,0],[76,17,76,71,0],[54,9,59,68,1],[60,9,60,10,1],[62,13,62,30,1],[66,13,66,31,1],[70,13,70,33,1],[74,13,74,38,1],[80,13,80,38,1],[81,13,81,26,1],[82,13,82,28,1],[83,13,83,32,1],[84,13,84,30,1],[85,13,85,42,1],[86,9,86,10,1],[95,17,95,18,1],[95,19,95,38,1],[95,39,95,40,1],[105,17,105,18,1],[105,19,105,32,1],[105,33,105,34,1],[115,17,115,18,1],[115,19,115,33,1],[115,34,115,35,1],[125,17,125,18,1],[125,19,125,35,1],[125,36,125,37,1],[134,17,134,18,1],[134,19,134,34,1],[134,35,134,36,1],[144,17,144,18,1],[144,19,144,40,1],[144,41,144,42,1]]);
+    </script>
+  </body>
+</html>

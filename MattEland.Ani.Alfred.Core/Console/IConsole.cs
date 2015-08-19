@@ -31,6 +31,6 @@ namespace MattEland.Ani.Alfred.Core.Console
         /// <param name="title">The title.</param>
         /// <param name="message">The message.</param>
         /// <param name="level">The logging level.</param>
-        void Log([NotNull] string title, [NotNull] string message, LogLevel level);
+        void Log([CanBeNull] string title, [CanBeNull] string message, LogLevel level);
     }
 }

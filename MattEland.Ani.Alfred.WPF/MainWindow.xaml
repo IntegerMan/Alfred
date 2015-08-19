@@ -3,24 +3,25 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:core="clr-namespace:MattEland.Ani.Alfred.Core;assembly=MattEland.Ani.Alfred.Core"
+        xmlns:wpf="clr-namespace:MattEland.Ani.Alfred.WPF"
+        xmlns:controls="clr-namespace:MattEland.Ani.Alfred.WPF.Controls"
         mc:Ignorable="d"
         Background="{StaticResource AppBackgroundBrush}"
         Foreground="{StaticResource AppForegroundBrush}"
-        Title="{Binding Path=NameAndVersion}"
+        Title="{Binding Path=Alfred.NameAndVersion}"
         Width="800"
         Height="600"
         Topmost="True"
         Loaded="OnWindowLoaded"
         Closing="OnWindowClosing"
-        d:DataContext="{d:DesignInstance core:AlfredProvider}"
+        d:DataContext="{d:DesignInstance wpf:ApplicationManager}"
         ShowInTaskbar="True"
         Icon="alfred.ico"
         WindowStartupLocation="CenterScreen">
 
     <Window.TaskbarItemInfo>
         <!-- TODO: Look into what I can do with this -->
-        <TaskbarItemInfo Description="{Binding NameAndVersion}"
+        <TaskbarItemInfo Description="{Binding Alfred.NameAndVersion}"
                          Overlay="{x:Null}"
                          ProgressValue="0"
                          ProgressState="None" />
@@ -37,19 +38,26 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center">
 
-                <TextBlock Text="{Binding NameAndVersion}" />
+                <TextBlock Text="{Binding Alfred.NameAndVersion}" />
                 <TextBlock Text=" - " Margin="4,0,4,0" />
-                <TextBlock Text="{Binding Status}"
+                <TextBlock Text="{Binding Alfred.Status}"
                            Foreground="{StaticResource AccentForegroundBrush}" />
 
             </StackPanel>
 
         </Border>
+        
+        <!-- Chat Area -->
+        <Border Margin="132,4,8,0" 
+                DockPanel.Dock="Top"
+                Visibility="{Binding Alfred.IsOnline, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <controls:ChatPane DataContext="{Binding Path=Alfred.ChatProvider}" />
+        </Border>
 
         <!-- Tabbed Content Regions -->
         <TabControl x:Name="tabPages"
-                    Margin="8, 16, 8, 8"
-                    ItemsSource="{Binding RootPages}">
+                    Margin="8, 8, 8, 8"
+                    ItemsSource="{Binding Alfred.RootPages}">
 
             <TabControl.ItemTemplate>
                 <DataTemplate>
@@ -65,7 +73,7 @@
                         <!-- Header -->
                         <Border DockPanel.Dock="Top"
                                 Style="{StaticResource HeaderBannerBorderStyle}">
-                            <TextBlock Text="{Binding Name}"
+                            <TextBlock Text="{Binding Alfred.Name}"
                                        Style="{StaticResource HeaderBannerTextBlockStyle}" />
                         </Border>
 

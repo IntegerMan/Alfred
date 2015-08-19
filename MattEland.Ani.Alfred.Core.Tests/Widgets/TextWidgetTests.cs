@@ -13,7 +13,7 @@ using MattEland.Ani.Alfred.Core.Widgets;
 
 using NUnit.Framework;
 
-namespace MattEland.Ani.Alfred.Core.Tests.Widgets
+namespace MattEland.Ani.Alfred.Tests.Widgets
 {
     /// <summary>
     ///     Contains tests related to <see cref="TextWidget" />

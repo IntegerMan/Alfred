@@ -2,7 +2,7 @@
 // AlfredPowerModule.cs
 // 
 // Created on:      08/02/2015 at 4:56 PM
-// Last Modified:   08/07/2015 at 11:55 PM
+// Last Modified:   08/12/2015 at 3:52 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -12,6 +12,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Core.Modules
 {
@@ -43,10 +44,10 @@ namespace MattEland.Ani.Alfred.Core.Modules
         {
             _statusWidget = new TextWidget(Resources.AlfredCoreModule_AlfredNotSet);
 
-            var initializeCommand = platformProvider.CreateCommand(() => AlfredInstance?.Initialize());
+            var initializeCommand = platformProvider.CreateCommand(ExecuteInitializeCommand);
             _initializeButton = new ButtonWidget(Resources.InitializeButtonText, initializeCommand);
 
-            var shutdownCommand = platformProvider.CreateCommand(() => AlfredInstance?.Shutdown());
+            var shutdownCommand = platformProvider.CreateCommand(ExecuteShutdownCommand);
             _shutdownButton = new ButtonWidget(Resources.ShutdownButtonText, shutdownCommand);
         }
 
@@ -88,6 +89,22 @@ namespace MattEland.Ani.Alfred.Core.Modules
         public ButtonWidget ShutdownButton
         {
             get { return _shutdownButton; }
+        }
+
+        /// <summary>
+        ///     Handles the initialize command by initializing Alfred
+        /// </summary>
+        internal void ExecuteInitializeCommand()
+        {
+            AlfredInstance?.Initialize();
+        }
+
+        /// <summary>
+        ///     Handles the shutdown command by shutting down Alfred
+        /// </summary>
+        internal void ExecuteShutdownCommand()
+        {
+            AlfredInstance?.Shutdown();
         }
 
         /// <summary>
@@ -140,7 +157,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        /// Called when the component is registered.
+        ///     Called when the component is registered.
         /// </summary>
         /// <param name="alfred">The alfred.</param>
         public override void OnRegistered(IAlfred alfred)
@@ -202,6 +219,23 @@ namespace MattEland.Ani.Alfred.Core.Modules
                     _initializeButton.ClickCommand.IsEnabled = AlfredInstance.Status == AlfredStatus.Offline;
                 }
             }
+        }
+
+        /// <summary>
+        /// Processes an Alfred Command. If the command is handled, result should be modified accordingly and the method should return true. Returning false will not stop the message from being propogated.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="result">The result. If the command was handled, this should be updated.</param>
+        /// <returns><c>True</c> if the command was handled; otherwise false.</returns>
+        public override bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
+        {
+            if (command.Name.Matches("Shutdown"))
+            {
+                ExecuteShutdownCommand();
+                return true;
+            }
+
+            return base.ProcessAlfredCommand(command, result);
         }
 
         /// <summary>

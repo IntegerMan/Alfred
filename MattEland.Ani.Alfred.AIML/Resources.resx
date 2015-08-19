@@ -1,0 +1,211 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ChatModuleName" xml:space="preserve">
+    <value>Chat</value>
+  </data>
+  <data name="InitialGreeting" xml:space="preserve">
+    <value>Greetings sir. What can I do for you?</value>
+  </data>
+  <data name="DefaultFailureResponseText" xml:space="preserve">
+    <value>I'm afraid I can't help you with that, sir.</value>
+    <comment>This is the default reply that Alfred outputs when the sentenceIndex couldn't be handled.</comment>
+  </data>
+  <data name="NoSettingsPathError" xml:space="preserve">
+    <value>Empty directoryPath to a settings file</value>
+  </data>
+  <data name="InitialGreetingText" xml:space="preserve">
+    <value>Hi</value>
+    <comment>Initial text from the user (not really) to Alfred to get Alfred to greet the user.</comment>
+  </data>
+  <data name="ErrorInitializingChat" xml:space="preserve">
+    <value>Error initializing chat: {0}</value>
+  </data>
+  <data name="ChatErrorLastLogMessageFormat" xml:space="preserve">
+    <value>Last Log Message:{0}</value>
+  </data>
+  <data name="ErrorParsingCommand" xml:space="preserve">
+    <value>Error parsing OOB command: {0} for command: {1}</value>
+    <comment>{0} is exception message, {1} is the XML attempted</comment>
+  </data>
+  <data name="ChatOutputHeader" xml:space="preserve">
+    <value>Chat.Output</value>
+  </data>
+  <data name="NoEndTagForOobCommand" xml:space="preserve">
+    <value>No end tag for OOB command: {0}</value>
+  </data>
+  <data name="ChatUserName" xml:space="preserve">
+    <value>Batman</value>
+  </data>
+  <data name="ChatProcessingHeader" xml:space="preserve">
+    <value>Chat.Processing</value>
+  </data>
+  <data name="ChatInputHeader" xml:space="preserve">
+    <value>Chat.Input</value>
+  </data>
+  <data name="OobRootNotAlfredXElement" xml:space="preserve">
+    <value>OOB root element was not an alfred XElement</value>
+  </data>
+  <data name="AimlStatementHandlerChatOffline" xml:space="preserve">
+    <value>Cannot use the chat system when chat did not initialize properly</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="AimlCoreDateTime" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\AimlCoreDateTime.aiml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="AimlCorePower" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\AimlCorePower.aiml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="AimlFallback" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\AimlFallback.aiml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="AimlGod" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\AimlGod.aiml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="AimlGreeting" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\AimlGreeting.aiml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="AimlHelp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\AimlHelp.aiml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="AimlShellNavigation" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\AimlShellNavigation.aiml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="AimlThanks" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\AimlThanks.aiml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="ChatBotGenderSubstitutions" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\GenderSubstitutions.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="ChatBotPerson2Substitutions" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Person2Substitutions.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="ChatBotPersonSubstitutions" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\PersonSubstitutions.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="ChatBotSettings" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Settings.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="ChatBotSubstitutions" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Substitutions.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="AimlSysStatus" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\AimlSysStatus.aiml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+</root>

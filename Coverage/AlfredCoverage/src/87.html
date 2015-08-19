@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\thinktaghandler.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// ThinkTagHandler.cs
+// 
+// Created on:      08/12/2015 at 10:59 PM
+// Last Modified:   08/15/2015 at 1:29 AM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+
+namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
+{
+    /// &lt;summary&gt;
+    ///     A tag handler for the AIML think tag. This outputs nothing.
+    /// &lt;/summary&gt;
+    [HandlesAimlTag(&quot;think&quot;)]
+    public class ThinkTagHandler : AimlTagHandler
+    {
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
+        public ThinkTagHandler([NotNull] TagHandlerParameters parameters)
+            : base(parameters)
+        {
+        }
+
+        /// &lt;summary&gt;
+        ///     Processes the input text and returns the processed value.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;The processed output&lt;/returns&gt;
+        protected override string ProcessChange()
+        {
+            //? TODO: Do statements inside of Think get executed still?
+            //? If so, shouldn&#39;t it run them via a srai and just not output anything?
+
+            return string.Empty;
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[27,15,27,31,0],[28,9,28,10,0],[29,9,29,10,0],[36,9,36,10,0],[40,13,40,33,0],[41,9,41,10,0]]);
+    </script>
+  </body>
+</html>

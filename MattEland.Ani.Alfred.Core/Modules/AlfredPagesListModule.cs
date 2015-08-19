@@ -15,6 +15,7 @@ using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Ani.Alfred.Core.Widgets;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Core.Modules
 {
@@ -83,10 +84,21 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        ///     Handles initialization events
+        ///     Gets whether or not the module is visible to the user interface.
         /// </summary>
-        /// <param name="alfred"></param>
-        protected override void InitializeProtected(IAlfred alfred)
+        /// <value>Whether or not the module is visible.</value>
+        public override bool IsVisible
+        {
+            get
+            {
+                return AlfredInstance != null && (base.IsVisible && AlfredInstance.IsOnline);
+            }
+        }
+
+        /// <summary>
+        /// Allows components to define controls
+        /// </summary>
+        protected override void RegisterControls()
         {
             _widgets.Clear();
 

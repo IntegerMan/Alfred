@@ -15,7 +15,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
     /// <summary>
     ///     A subsystem of Alfred
     /// </summary>
-    public interface IAlfredSubsystem : IAlfredComponent
+    public interface IAlfredSubsystem : IAlfredComponent, IAlfredCommandRecipient
     {
         /// <summary>
         ///     Gets the pages.
@@ -26,20 +26,18 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         IEnumerable<IAlfredPage> Pages { get; }
 
         /// <summary>
-        ///     Gets the modules associated with this subsystem.
-        ///     This does not include modules associated with pages.
-        /// </summary>
-        /// <value>The modules.</value>
-        [NotNull]
-        [ItemNotNull]
-        IEnumerable<IAlfredModule> Modules { get; }
-
-        /// <summary>
         /// Gets the root-level pages provided by this subsystem.
         /// </summary>
         /// <value>The root-level pages.</value>
         [NotNull, ItemNotNull]
         IEnumerable<IAlfredPage> RootPages { get; }
+
+        /// <summary>
+        /// Gets the identifier for the subsystem to be used in command routing.
+        /// </summary>
+        /// <value>The identifier for the subsystem.</value>
+        [NotNull]
+        string Id { get; }
     }
 
 }

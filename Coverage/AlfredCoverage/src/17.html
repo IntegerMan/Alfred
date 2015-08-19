@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\chat\alfredtesttaghandler.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// AlfredTestTagHandler.cs
+// 
+// Created on:      08/17/2015 at 11:36 PM
+// Last Modified:   08/17/2015 at 11:36 PM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using System;
+
+using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+
+namespace MattEland.Ani.Alfred.Tests.Chat
+{
+    /// &lt;summary&gt;
+    /// A tag handler for testing. Not intended for actual product incorporation.
+    /// &lt;/summary&gt;
+    [HandlesAimlTag(&quot;alfredtest&quot;)]
+    public class AlfredTestTagHandler : AimlTagHandler
+    {
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;parameters&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public AlfredTestTagHandler([NotNull] TagHandlerParameters parameters) : base(parameters)
+        {
+        }
+
+        /// &lt;summary&gt;
+        ///     Processes the input text and returns the processed value.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;The processed output&lt;/returns&gt;
+        protected override string ProcessChange()
+        {
+            WasInvoked = true;
+            return string.Empty;
+        }
+
+        /// &lt;summary&gt;
+        /// Gets or sets a value indicating whether the class&#39;s transform / process change method was called.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;&lt;c&gt;true&lt;/c&gt; if it was invoked; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/value&gt;
+        public static bool WasInvoked { get; set; }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[30,82,30,98,1],[31,9,31,10,1],[32,9,32,10,1],[39,9,39,10,1],[40,13,40,31,1],[41,13,41,33,1],[42,9,42,10,1],[48,41,48,45,1],[48,46,48,50,1]]);
+    </script>
+  </body>
+</html>

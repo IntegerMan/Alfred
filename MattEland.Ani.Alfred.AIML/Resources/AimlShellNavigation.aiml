@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+Copyright (c) 2015 Matt Eland
+
+This provides handling for navigating to UI areas
+-->
+
+<aiml>
+
+  <!-- Root verb with no parameters -->
+  <category>
+    <pattern>NAVIGATE</pattern>
+    <template>
+      Where would you like to navigate to?<br />
+      For a list of destinations, try "Navigate Help"
+    </template>
+  </category>
+
+  <!-- Navigate Help -->
+  <category>
+    <pattern>Navigate Help</pattern>
+    <template>
+      Presently you can navigate to:
+      Core
+      Event Log
+      System
+    </template>
+  </category>
+
+  <!-- Navigation Completed - invoked after navigation has succeeded -->
+  <category>
+    <pattern>Navigate Success</pattern>
+    <template id="tmp_nav_success">
+      <random>
+      <li>Okay, you're there.</li>
+      <li>Your wish is my command.</li>
+      <li>Done.</li>
+      <li>Looks like we're there.</li>
+      <li>All done.</li>
+      <li>Okay.</li>
+      </random>
+    </template>
+  </category>
+
+  <!-- Failed Navigation -->
+  <category>
+    <pattern>Navigate Failed</pattern>
+    <template id="tmp_nav_failed">
+      <random>
+        <li>I'm sorry, I couldn't find that.</li>
+        <li>I don't know where that is. I'm sorry.</li>
+        <li>I can't find that. Try something else.</li>
+      </random>
+    </template>
+  </category>
+
+  <!-- Navigate System -->
+  <category>
+    <pattern>Navigate System</pattern>
+    <template>
+      <shell target="pages" command="nav" data="Sys" />
+    </template>
+  </category>
+  <category>
+    <pattern>Navigate System Monitoring</pattern>
+    <template>
+      <srai>Navigate System</srai>
+    </template>
+  </category>
+  <category>
+    <pattern>Navigate System Monitor</pattern>
+    <template>
+      <srai>Navigate System</srai>
+    </template>
+  </category>
+  <category>
+    <pattern>Navigate Sys</pattern>
+    <template>
+      <srai>Navigate System</srai>
+    </template>
+  </category>
+
+  <!-- Navigate Core (or Home) -->
+  <category>
+    <pattern>Navigate Core</pattern>
+    <template>
+      <shell target="pages" command="nav" data="Core" />
+    </template>
+  </category>
+  <category>
+    <pattern>Navigate Home</pattern>
+    <template>
+      <srai>Navigate Core</srai>
+    </template>
+  </category>
+  
+  <!-- Navigate Event -->
+  <category>
+    <pattern>Navigate Event Log</pattern>
+    <template>
+      <shell target="pages" command="nav" data="Log" />
+    </template>
+  </category>
+  <category>
+    <pattern>Navigate Log</pattern>
+    <template>
+      <srai>Navigate Event Log</srai>
+    </template>
+  </category>
+  
+  <!-- Navigate Unknown -->
+  <category>
+    <pattern>Navigate *</pattern>
+    <template id="tmp_nav_unknown">
+      I'm sorry, but <star/> is not a valid destination.
+    </template>
+  </category>
+
+  <!-- Allow Abbreviating Navigate as Nav -->
+  <category>
+    <pattern>Nav *</pattern>
+    <template>
+      <srai>Navigate <star /></srai>
+    </template>
+  </category>
+
+  <!-- Test for navigation failure - execute a nav against a non-existant item -->
+  <category>
+    <pattern>Navigate Test Fail</pattern>
+    <template>
+      <shell target="pages" command="nav" data="NavigationFailure" />
+    </template>
+  </category>
+
+</aiml>

@@ -7,11 +7,16 @@
 // ---------------------------------------------------------
 
 using System;
+using System.ComponentModel;
+using System.Globalization;
+using System.Linq;
+using System.Text;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Pages;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
@@ -36,22 +41,18 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
-        public SystemMonitoringSubsystem() : this(new SimplePlatformProvider())
-        {
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
-        /// </summary>
         /// <param name="provider">The provider.</param>
+        /// <param name="factory"></param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public SystemMonitoringSubsystem([NotNull] IPlatformProvider provider) : base(provider)
+        /// <exception cref="Win32Exception">A call to an underlying system API failed.</exception>
+        /// <exception cref="UnauthorizedAccessException">Code that is executing without administrative privileges attempted to read a performance counter.</exception>
+        public SystemMonitoringSubsystem([NotNull] IPlatformProvider provider, [NotNull] IMetricProviderFactory factory) : base(provider)
         {
-            _cpuModule = new CpuMonitorModule(provider);
-            _memoryModule = new MemoryMonitorModule(provider);
-            _diskModule = new DiskMonitorModule(provider);
+            _cpuModule = new CpuMonitorModule(provider, factory);
+            _memoryModule = new MemoryMonitorModule(provider, factory);
+            _diskModule = new DiskMonitorModule(provider, factory);
 
-            _page = new AlfredModuleListPage(provider, Resources.SystemMonitoringSystem_Name.NonNull());
+            _page = new AlfredModuleListPage(provider, Resources.SystemMonitoringSystem_Name.NonNull(), "Sys");
         }
 
         /// <summary>
@@ -72,7 +73,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// </summary>
         /// <value>The name.</value>
         [NotNull]
-        public override sealed string Name
+        public override string Name
         {
             get { return Resources.SystemMonitoringSystem_Name.NonNull(); }
         }
@@ -85,6 +86,86 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             _cpuModule.Dispose();
             _memoryModule.Dispose();
             _diskModule.Dispose();
+        }
+
+
+        /// <summary>
+        /// Processes an Alfred Command. If the command is handled, result should be modified accordingly and the method should return true. Returning false will not stop the message from being propogated.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="result">The result. If the command was handled, this should be updated.</param>
+        /// <returns><c>True</c> if the command was handled; otherwise false.</returns>
+        public override bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
+        {
+            if (command.IsFor(this) && command.Name.Matches("Status"))
+            {
+                result.Output = GetStatusText(command.Data);
+                return true;
+            }
+
+            return base.ProcessAlfredCommand(command, result);
+        }
+
+        private string GetStatusText(string data)
+        {
+
+            var alfred = AlfredInstance;
+            if (alfred == null)
+            {
+                return "No Alfred integration is detected. The system may be offline.";
+            }
+
+            var sb = new StringBuilder();
+
+            // Alfred status command
+            if (data.IsEmpty() || data.Matches("Alfred"))
+            {
+                sb.AppendFormat(CultureInfo.CurrentCulture,
+                                "The system is {0} with a total of {1} {2} Present. ",
+                                alfred.Status.ToString().ToLowerInvariant(),
+                                alfred.Subsystems.Count(),
+                                alfred.Subsystems.Pluralize("Subsystem", "Subsystems"));
+            }
+
+            // CPU status command
+            if (data.IsEmpty() || data.Matches("CPU"))
+            {
+                sb.AppendFormat(CultureInfo.CurrentCulture,
+                                "There {3} {0} CPU {1} with an average of {2:F1} % utilization. ",
+                                _cpuModule.NumberOfCores,
+                                _cpuModule.NumberOfCores.Pluralize("core", "cores"),
+                                _cpuModule.AverageCpuUtilization,
+                                _cpuModule.NumberOfCores.Pluralize("is", "are"));
+            }
+
+            // Memory Status Command
+            if (data.IsEmpty() || data.Matches("Memory"))
+            {
+                sb.AppendFormat(CultureInfo.CurrentCulture,
+                                "The system is currently utilizing {0:F1} % of all available memory. ",
+                                _memoryModule.MemoryUtilization);
+            }
+
+            // Disk Status Command
+            if (data.IsEmpty() || data.Matches("Disk"))
+            {
+                sb.AppendFormat(CultureInfo.CurrentCulture,
+                                "Disk read speed is currently utilized at {0:F1} % and disk write utilization is at {1:F1} %. ",
+                                _diskModule.ReadUtilization,
+                                _diskModule.WriteUtilization);
+
+            }
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        ///     Gets the identifier for the subsystem to be used in command routing.
+        /// </summary>
+        /// <value>The identifier for the subsystem.</value>
+        public override string Id
+        {
+            get { return "Sys"; }
         }
     }
 }

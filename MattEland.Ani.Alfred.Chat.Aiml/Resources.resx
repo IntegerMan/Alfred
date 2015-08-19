@@ -1,0 +1,253 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="InputErrorBadlyFormedIndex" xml:space="preserve">
+    <value>An input tag with a badly formed index ({0}) was encountered processing the input: {1}</value>
+  </data>
+  <data name="InputErrorOverflow" xml:space="preserve">
+    <value>An input tag ({0}) caused an overflow processing the input: {1}</value>
+  </data>
+  <data name="JavaScriptNotSupportedMessage" xml:space="preserve">
+    <value>The javascript tag is not supported</value>
+  </data>
+  <data name="LearnErrorSecurityException" xml:space="preserve">
+    <value>Could not interact with file '{0}' due to a security exception: {1}</value>
+  </data>
+  <data name="LearnErrorUnauthorizedException" xml:space="preserve">
+    <value>Could not interact with file '{0}' due to an access exception: {1}</value>
+  </data>
+  <data name="LearnErrorFileNotFound" xml:space="preserve">
+    <value>Could not find learning file at path: {1}</value>
+  </data>
+  <data name="LearnErrorIOException" xml:space="preserve">
+    <value>Could not load learning file due to a {0} exception: {1} on file: {2}</value>
+  </data>
+  <data name="LearnErrorXmlException" xml:space="preserve">
+    <value>Could not load learning file due to an XML exception: {0} on file: {1}</value>
+  </data>
+  <data name="LearnErrorNotSupportedException" xml:space="preserve">
+    <value>Could not load learning file due to an invalid format on file {0}</value>
+  </data>
+  <data name="SrTagHandlerError" xml:space="preserve">
+    <value>Error processing sr operation: {0}</value>
+  </data>
+  <data name="UserCtorNullId" xml:space="preserve">
+    <value>The id cannot be empty</value>
+  </data>
+  <data name="StarErrorBadIndex" xml:space="preserve">
+    <value>InputStar out of bounds reference caused by input: {0}</value>
+  </data>
+  <data name="StarErrorNoInputStarElements" xml:space="preserve">
+    <value>A star tag tried to reference an empty InputStar collection when processing the input: {0}</value>
+  </data>
+  <data name="TopicStarErrorOutOfRange" xml:space="preserve">
+    <value>An input tag with an out of range index ({0}) was encountered processing the input: {1}</value>
+  </data>
+  <data name="TopicStarErrorNoItems" xml:space="preserve">
+    <value>Tried to process a topicstar node when query's TopicStar collection was empty: {0}</value>
+  </data>
+  <data name="ChatEngineNotAcceptingUserInputMessage" xml:space="preserve">
+    <value>{0} is not currently available to talk.</value>
+    <comment>0 = Name</comment>
+  </data>
+  <data name="ChatEngineRequestTimedOut" xml:space="preserve">
+    <value>Your request has timed out. Please try again or phrase your sentence differently.</value>
+  </data>
+  <data name="ChatEngineDontUnderstandFallback" xml:space="preserve">
+    <value>I'm sorry but I don't understand. Can you try asking differently?</value>
+  </data>
+  <data name="ChatEngineErrorCouldNotFindResponse" xml:space="preserve">
+    <value>The ChatEngine could not find any response for the input: {0} with the path(s): {1}{2} from the user with an id: {3}</value>
+  </data>
+  <data name="ChatErrorNoMessage" xml:space="preserve">
+    <value>A chat message is required to interact with the system.</value>
+  </data>
+  <data name="LoadAimlNoFilesInDirectory" xml:space="preserve">
+    <value>Could not find any .aiml files in the specified directory ({0}). Please make sure that your aiml file end in a lowercase aiml extension, for example - myFile.aiml is valid but myFile.AIML is not.</value>
+  </data>
+  <data name="LoadAimlStartingToLoad" xml:space="preserve">
+    <value>Starting to process AIML files found in the directory {0}</value>
+  </data>
+  <data name="LoadAimlDirectoryNotFound" xml:space="preserve">
+    <value>The directory specified as the directoryPath to the AIML files ({0}) cannot be found by the AimlLoader object. Please make sure the directory where you think the AIML files are to be found is the same as the directory specified in the settings file.</value>
+  </data>
+  <data name="LoadAimlFinishedLoading" xml:space="preserve">
+    <value>Finished processing the AIML files. {0} categories processed.</value>
+  </data>
+  <data name="LoadAimlErrorNoDirectoryPath" xml:space="preserve">
+    <value>ChatEngine.AimlDirectoryPath was not set</value>
+  </data>
+  <data name="LibrarianLoadSettingsErrorNoPath" xml:space="preserve">
+    <value>Path to settings must be provided.</value>
+  </data>
+  <data name="LibrarianLoadSettingsErrorNoConfigDirectory" xml:space="preserve">
+    <value>The path to the configuration files must be provided.</value>
+  </data>
+  <data name="SettingsLoadErrorXml" xml:space="preserve">
+    <value>XML error parsing settings file '{0}':{1}</value>
+  </data>
+  <data name="SettingsLoadErrorFileNotFound" xml:space="preserve">
+    <value>Could not load settings from non-existent file '{0}'</value>
+  </data>
+  <data name="SettingsLoadErrorUnauthorized" xml:space="preserve">
+    <value>Could not load settings from file without authorization from operating system '{0}': {1}</value>
+  </data>
+  <data name="SettignsLoadErrorSecurity" xml:space="preserve">
+    <value>Could not load settings from file '{0}' due to a security concern: {1}</value>
+  </data>
+  <data name="SettingsLoadErrorIOException" xml:space="preserve">
+    <value>IO exception encountered loading settings from file '{0}': {1}</value>
+  </data>
+  <data name="SettingsLoadErrorNoPathToSettings" xml:space="preserve">
+    <value>pathToSettings did not have a value</value>
+  </data>
+  <data name="SettingsLoadErrorFileNotFoundException" xml:space="preserve">
+    <value>Could not find a settings file at the given path</value>
+  </data>
+  <data name="ChatEngineAddCategoryErrorNoPath" xml:space="preserve">
+    <value>Attempted to load a new category with an empty pattern where the directoryPath = {0} and template = {1} produced by a category.</value>
+  </data>
+  <data name="ChatProcessNodeError" xml:space="preserve">
+    <value>A problem was encountered when trying to process the input: {0} with the template: "{1}": {2}</value>
+  </data>
+  <data name="SystemNotImplemented" xml:space="preserve">
+    <value>The SystemTagHandler tag is not implemented in this ChatEngine</value>
+  </data>
+  <data name="RequestTimedOut" xml:space="preserve">
+    <value>Request timeout. User: {0} raw input: "{1}"</value>
+  </data>
+  <data name="AimlLoaderProcessingFile" xml:space="preserve">
+    <value>Processing AIML file: {0}</value>
+  </data>
+  <data name="AimlLoaderErrorXmlException" xml:space="preserve">
+    <value>XML error reading file {0}</value>
+  </data>
+  <data name="AimlLoaderErrorIOException" xml:space="preserve">
+    <value>IO error reading file {0} {1}</value>
+  </data>
+  <data name="AimlLoaderErrorSecurityException" xml:space="preserve">
+    <value>Security error reading file {0} {1}</value>
+  </data>
+  <data name="AddCategoryErrorEmptyTemplateTag" xml:space="preserve">
+    <value>The category with a pattern: {0} has an empty template tag. Aborting.</value>
+  </data>
+  <data name="LoadSettingsXmlXmlException" xml:space="preserve">
+    <value>Xml Error Encountered: {0}</value>
+  </data>
+</root>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\javascripttaghandler.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// JavaScriptTagHandler.cs
+// 
+// Created on:      08/12/2015 at 10:48 PM
+// Last Modified:   08/12/2015 at 11:59 PM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using System.Xml;
+
+using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Ani.Alfred.Core.Console;
+
+namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
+{
+    /// &lt;summary&gt;
+    /// A TagHandler for AIML &quot;javascript&quot; tags. JavaScript tags are not currently supported.
+    /// &lt;/summary&gt;
+    [HandlesAimlTag(&quot;javascript&quot;)]
+    public class JavaScriptTagHandler : AimlTagHandler
+    {
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
+        public JavaScriptTagHandler([NotNull] TagHandlerParameters parameters)
+            : base(parameters)
+        {
+        }
+
+        /// &lt;summary&gt;
+        /// Processes the input text and returns the processed value.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;The processed output&lt;/returns&gt;
+        protected override string ProcessChange()
+        {
+            // TODO: If this ever is ported to use web pages, it might be worth revisiting this tag handler
+
+            Log(Resources.JavaScriptNotSupportedMessage, LogLevel.Warning);
+
+            return string.Empty;
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[30,15,30,31,0],[31,9,31,10,0],[32,9,32,10,0],[39,9,39,10,0],[42,13,42,76,0],[44,13,44,33,0],[45,9,45,10,0]]);
+    </script>
+  </body>
+</html>

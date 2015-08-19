@@ -30,7 +30,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <param name="console">The console.</param>
         /// <param name="name">The name.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public AlfredEventLogPage([NotNull] IConsole console, [NotNull] string name) : base(name)
+        public AlfredEventLogPage([NotNull] IConsole console, [NotNull] string name) : base(name, "Log")
         {
             if (console == null)
             {

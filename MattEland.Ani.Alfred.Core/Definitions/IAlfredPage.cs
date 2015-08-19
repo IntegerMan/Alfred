@@ -11,12 +11,18 @@ namespace MattEland.Ani.Alfred.Core.Definitions
     /// <summary>
     ///     Defines an alfred page
     /// </summary>
-    public interface IAlfredPage : IAlfredComponent
+    public interface IAlfredPage : IAlfredComponent, IAlfredCommandRecipient
     {
         /// <summary>
         ///     Gets a value indicating whether this page is root level.
         /// </summary>
         /// <value><c>true</c> if this page is root level; otherwise, <c>false</c>.</value>
         bool IsRootLevel { get; }
+
+        /// <summary>
+        /// Gets the page identifier.
+        /// </summary>
+        /// <value>The identifier.</value>
+        string Id { get; }
     }
 }

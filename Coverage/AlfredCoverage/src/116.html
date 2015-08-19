@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.system\performancecountermetricprovider.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// PerformanceCounterMetricProvider.cs
+// 
+// Created on:      08/18/2015 at 11:29 AM
+// Last Modified:   08/18/2015 at 3:12 PM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using System;
+using System.ComponentModel;
+using System.Diagnostics;
+
+using JetBrains.Annotations;
+
+namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
+{
+    /// &lt;summary&gt;
+    ///     A metric provider based on a performance counter.
+    /// &lt;/summary&gt;
+    public sealed class CounterMetricProvider : MetricProviderBase
+    {
+        [NotNull]
+        private readonly PerformanceCounter _counter;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;CounterMetricProvider&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;categoryName&quot;&gt;Name of the category.&lt;/param&gt;
+        /// &lt;param name=&quot;counterName&quot;&gt;Name of the counter.&lt;/param&gt;
+        /// &lt;param name=&quot;instance&quot;&gt;The instance.&lt;/param&gt;
+        /// &lt;exception cref=&quot;Win32Exception&quot;&gt;An error occurred when accessing a system API.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;UnauthorizedAccessException&quot;&gt;
+        ///     Code that is executing without administrative
+        ///     privileges attempted to read a performance counter.
+        /// &lt;/exception&gt;
+        public CounterMetricProvider(string categoryName, string counterName, string instance = null)
+            : base(instance ?? counterName)
+        {
+            _counter = new PerformanceCounter(categoryName, counterName, instance, true);
+
+            /* Tell the performance counter to start getting values. These tend to always return 
+               0.0 as the first value and then provide accurate data after that */
+            _counter.NextValue();
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the next value from the metric provider
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;The next vaue&lt;/returns&gt;
+        /// &lt;exception cref=&quot;Win32Exception&quot;&gt;An error occurred when accessing a system API.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;UnauthorizedAccessException&quot;&gt;
+        ///     Code that is executing without administrative
+        ///     privileges attempted to read a performance counter.
+        /// &lt;/exception&gt;
+        public override float NextValue()
+        {
+            return _counter.NextValue();
+        }
+
+        /// &lt;summary&gt;
+        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged
+        ///     resources.
+        /// &lt;/summary&gt;
+        public override void Dispose()
+        {
+            base.Dispose();
+
+            _counter.Dispose();
+        }
+    }
+
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[38,15,38,44,0],[39,9,39,10,0],[40,13,40,90,0],[44,13,44,34,0],[45,9,45,10,0],[57,9,57,10,0],[58,13,58,41,0],[59,9,59,10,0],[66,9,66,10,0],[67,13,67,28,0],[69,13,69,32,0],[70,9,70,10,0]]);
+    </script>
+  </body>
+</html>

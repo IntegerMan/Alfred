@@ -8,10 +8,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Core.Pages
 {
@@ -25,12 +27,13 @@ namespace MattEland.Ani.Alfred.Core.Pages
         private readonly ICollection<IAlfredModule> _modules;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredModuleListPage" /> class.
+        /// Initializes a new instance of the <see cref="AlfredModuleListPage" /> class.
         /// </summary>
         /// <param name="provider">The provider.</param>
         /// <param name="name">The name.</param>
+        /// <param name="id">The identifier.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public AlfredModuleListPage([NotNull] IPlatformProvider provider, [NotNull] string name) : base(name)
+        public AlfredModuleListPage([NotNull] IPlatformProvider provider, [NotNull] string name, [NotNull] string id) : base(name, id)
         {
             if (provider == null)
             {
@@ -84,6 +87,35 @@ namespace MattEland.Ani.Alfred.Core.Pages
         public void ClearModules()
         {
             _modules.Clear();
+        }
+
+        /// <summary>
+        ///     Gets whether or not the component is visible to the user interface.
+        /// </summary>
+        /// <value>Whether or not the component is visible.</value>
+        public override bool IsVisible
+        {
+            get { return base.IsVisible && Modules.Any(m => m.Widgets.Any(w => w.IsVisible)); }
+        }
+
+        /// <summary>
+        /// Processes an Alfred Command. If the command is handled, result should be modified accordingly and the method should return true. Returning false will not stop the message from being propogated.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="result">The result. If the command was handled, this should be updated.</param>
+        /// <returns><c>True</c> if the command was handled; otherwise false.</returns>
+        public override bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
+        {
+
+            foreach (IAlfredModule module in this.Modules)
+            {
+                if (module.ProcessAlfredCommand(command, result))
+                {
+                    return true;
+                }
+            }
+
+            return base.ProcessAlfredCommand(command, result);
         }
     }
 }

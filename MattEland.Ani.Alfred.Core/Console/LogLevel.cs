@@ -31,6 +31,22 @@ namespace MattEland.Ani.Alfred.Core.Console
         /// <summary>
         ///     Error messages intended to be raised to the user's attention
         /// </summary>
-        Error
+        Error,
+
+        /// <summary>
+        /// Represents user input into the system
+        /// </summary>
+        UserInput,
+
+        /// <summary>
+        /// A system chat response to the user as a direct result of a user action, 
+        /// intended to be spoken aloud or displayed prominently.
+        /// </summary>
+        ChatResponse,
+
+        /// <summary>
+        /// A system chat notification to the user, intended to be spoken aloud or displayed prominently.
+        /// </summary>
+        ChatNotification
     }
 }

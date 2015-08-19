@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\mocks\alfredtestmodule.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Collections.Generic;
+
+using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Core.Modules;
+using MattEland.Ani.Alfred.Core.Widgets;
+
+namespace MattEland.Ani.Alfred.Tests.Mocks
+{
+    /// &lt;summary&gt;
+    /// An AlfredModule used explicitly for testing purposes
+    /// &lt;/summary&gt;
+    internal sealed class AlfredTestModule : AlfredModule
+    {
+        [NotNull]
+        private readonly ICollection&lt;AlfredWidget&gt; _widgetsToAddOnInit = new List&lt;AlfredWidget&gt;();
+
+        [NotNull]
+        private readonly ICollection&lt;AlfredWidget&gt; _widgetsToAddOnShutdown = new List&lt;AlfredWidget&gt;();
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the
+        ///     &lt;see
+        ///         cref=&quot;AlfredTestModule&quot; /&gt;
+        ///     class.
+        /// &lt;/summary&gt;
+        internal AlfredTestModule() : this(new SimplePlatformProvider())
+        {
+        }
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the
+        ///     &lt;see
+        ///         cref=&quot;AlfredTestModule&quot; /&gt;
+        ///     class.
+        /// &lt;/summary&gt;
+        /// &lt;param
+        ///     name=&quot;platformProvider&quot;&gt;
+        ///     The collection provider.
+        /// &lt;/param&gt;
+        /// &lt;exception
+        ///     cref=&quot;ArgumentNullException&quot;&gt;
+        /// &lt;/exception&gt;
+        private AlfredTestModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
+        {
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the name of the module.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The name of the module.&lt;/value&gt;
+        public override string Name { get { return &quot;Test&quot;; } }
+
+        /// &lt;summary&gt;
+        /// Gets the widgets to register on initialize.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The widgets to register on initialize.&lt;/value&gt;
+        [NotNull]
+        internal ICollection&lt;AlfredWidget&gt; WidgetsToRegisterOnInitialize { get { return _widgetsToAddOnInit; } }
+
+        [NotNull]
+        internal ICollection&lt;AlfredWidget&gt; WidgetsToRegisterOnShutdown { get { return _widgetsToAddOnShutdown; } }
+
+        /// &lt;summary&gt;
+        ///     Handles module initialization events
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;alfred&quot;&gt;&lt;/param&gt;
+        protected override void InitializeProtected(IAlfred alfred)
+        {
+            Register(WidgetsToRegisterOnInitialize);
+        }
+
+        /// &lt;summary&gt;
+        ///     Handles module shutdown events
+        /// &lt;/summary&gt;
+        protected override void ShutdownProtected()
+        {
+            Register(WidgetsToRegisterOnShutdown);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[54,43,54,44,0],[54,45,54,59,0],[54,60,54,61,0],[29,39,29,73,1],[30,9,30,10,1],[31,9,31,10,1],[18,9,18,99,1],[21,9,21,103,1],[46,82,46,104,1],[47,9,47,10,1],[48,9,48,10,1],[61,80,61,81,1],[61,82,61,109,1],[61,110,61,111,1],[64,78,64,79,1],[64,80,64,111,1],[64,112,64,113,1],[71,9,71,10,1],[72,13,72,53,1],[73,9,73,10,1],[79,9,79,10,1],[80,13,80,51,1],[81,9,81,10,1]]);
+    </script>
+  </body>
+</html>

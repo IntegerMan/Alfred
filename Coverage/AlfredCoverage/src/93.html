@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\utils\sanitizingtexttransformer.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// SanitizingTextTransformer.cs
+// 
+// Created on:      08/13/2015 at 10:31 PM
+// Last Modified:   08/16/2015 at 1:02 AM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using System.Text.RegularExpressions;
+
+using JetBrains.Annotations;
+
+using MattEland.Common;
+
+namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
+{
+    /// &lt;summary&gt;
+    ///     A text transformer to remove illegal characters.
+    /// &lt;/summary&gt;
+    public class SanitizingTextTransformer : TextTransformer
+    {
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;TextTransformer&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;chatEngine&quot;&gt;The ChatEngine.&lt;/param&gt;
+        public SanitizingTextTransformer([NotNull] ChatEngine chatEngine)
+            : base(chatEngine)
+        {
+            StripperRegexPattern = @&quot;[^0-9a-zA-Z_]&quot;;
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the illegal character stripper regex pattern.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The stripper regex pattern.&lt;/value&gt;
+        [NotNull]
+        public string StripperRegexPattern { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Processes the input text and returns the processed value.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;The processed output&lt;/returns&gt;
+        protected override string ProcessChange()
+        {
+            // Removes illegal characters and replaces them with spaces
+            var regex = new Regex(StripperRegexPattern, RegexOptions.IgnorePatternWhitespace);
+
+            return regex.Replace(InputString.NonNull(), &quot; &quot;);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[28,15,28,31,1],[29,9,29,10,1],[30,13,30,53,1],[31,9,31,10,1],[38,46,38,50,1],[38,51,38,55,1],[45,9,45,10,1],[47,13,47,95,1],[49,13,49,62,1],[50,9,50,10,1]]);
+    </script>
+  </body>
+</html>

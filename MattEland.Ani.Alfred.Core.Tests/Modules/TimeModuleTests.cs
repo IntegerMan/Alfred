@@ -2,7 +2,7 @@
 // TimeModuleTests.cs
 // 
 // Created on:      08/08/2015 at 6:19 PM
-// Last Modified:   08/08/2015 at 6:21 PM
+// Last Modified:   08/10/2015 at 10:55 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -13,15 +13,16 @@ using System.Linq;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Pages;
-using MattEland.Ani.Alfred.Core.Tests.Mocks;
+using MattEland.Ani.Alfred.Tests.Mocks;
 
 using NUnit.Framework;
 
-namespace MattEland.Ani.Alfred.Core.Tests.Modules
+namespace MattEland.Ani.Alfred.Tests.Modules
 {
     [TestFixture]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
@@ -33,7 +34,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
             var bootstrapper = new AlfredBootstrapper();
             _alfred = bootstrapper.Create();
 
-            _page = new AlfredModuleListPage(_alfred.PlatformProvider, "Test");
+            _page = new AlfredModuleListPage(_alfred.PlatformProvider, "Time", "Time");
             _module = new AlfredTimeModule(_alfred.PlatformProvider);
             _page.Register(_module);
             _subsystem = new TestSubsystem();
@@ -43,7 +44,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
         }
 
         [NotNull]
-        private AlfredProvider _alfred;
+        private AlfredApplication _alfred;
 
         [NotNull]
         private AlfredTimeModule _module;
@@ -123,7 +124,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
             _module.Update(oneThirtyAm);
 
             Assert.IsFalse(
-                           string.IsNullOrWhiteSpace(_module.BedtimeAlertWidget.Text),
+                           string.IsNullOrWhiteSpace(_module.AlertWidget.Text),
                            "Alert text is not set when alert is visible.");
         }
 
@@ -137,7 +138,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
             _module.Update(oneThirtyPm);
 
             Assert.IsFalse(
-                           _module.BedtimeAlertWidget.IsVisible,
+                           _module.AlertWidget.IsVisible,
                            "It's the afternoon but the module is alerting that we're near bedtime.");
         }
 
@@ -150,16 +151,15 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
             var nineThirtyAm = new DateTime(1980, 9, 10, 9, 30, 0);
             _module.Update(nineThirtyAm);
 
-            Assert.IsFalse(
-                           _module.BedtimeAlertWidget.IsVisible,
+            Assert.IsFalse(_module.AlertWidget.IsVisible,
                            "It's morning but the module is alerting that we're near bedtime.");
         }
 
         [Test]
         public void TimeModuleCautionWidgetIsHiddenLateAtNightForNoonBedtimes()
         {
-            _module.BedtimeHour = 12;
-            _module.BedtimeMinute = 0;
+            _module.AlertHour = 12;
+            _module.AlertMinute = 0;
             _module.AlertDurationInHours = 2;
 
             _alfred.Initialize();
@@ -167,8 +167,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
             var evening = new DateTime(1980, 9, 10, 22, 0, 0);
             _module.Update(evening);
 
-            Assert.IsFalse(
-                           _module.BedtimeAlertWidget.IsVisible,
+            Assert.IsFalse(_module.AlertWidget.IsVisible,
                            "It's late in the evening with a noon bedtime but the alert is still showing.");
         }
 
@@ -181,8 +180,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
             var noon = new DateTime(1980, 9, 10, 12, 0, 0);
             _module.Update(noon);
 
-            Assert.IsFalse(
-                           _module.BedtimeAlertWidget.IsVisible,
+            Assert.IsFalse(_module.AlertWidget.IsVisible,
                            "It's noon but the module is alerting that we're near bedtime.");
         }
 
@@ -197,7 +195,21 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
             var oneThirtyAm = new DateTime(1980, 9, 10, 1, 30, 0);
             _module.Update(oneThirtyAm);
 
-            Assert.IsFalse(_module.BedtimeAlertWidget.IsVisible, "Alerts are disabled but the alert is still visible.");
+            Assert.IsFalse(_module.AlertWidget.IsVisible, "Alerts are disabled but the alert is still visible.");
+        }
+
+        [Test]
+        public void TimeModuleCautionWidgetIsVisibleAfterAlarm()
+        {
+            _module.AlertMinute = 30;
+            _alfred.Initialize();
+
+            // This is just a minute after the alarm should start
+            var alarmTime = new DateTime(1980, 9, 10, _module.AlertHour, _module.AlertMinute + 1, 0);
+            _module.Update(alarmTime);
+
+            Assert.IsTrue(_module.AlertWidget.IsVisible,
+                          "It's right after the alarm but the alarm is off.");
         }
 
         [Test]
@@ -210,8 +222,24 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
             _module.Update(midnight);
 
             Assert.IsTrue(
-                          _module.BedtimeAlertWidget.IsVisible,
+                          _module.AlertWidget.IsVisible,
                           "It's midnight but the module isn't alerting that we need to be in bed.");
+        }
+
+        [Test]
+        public void TimeModuleCautionWidgetIsVisibleBeforeEndOfAlarm()
+        {
+            _module.AlertHour = 12;
+            _module.AlertDurationInHours = 1;
+            _module.AlertMinute = 30;
+            _alfred.Initialize();
+
+            // Feed in a time right before the alarm should end
+            var endAlarmHour = new DateTime(1980, 9, 10, 13, 0, 0);
+            _module.Update(endAlarmHour);
+
+            Assert.IsTrue(_module.AlertWidget.IsVisible,
+                          "It's right before the end of the alarm but the alarm is off.");
         }
 
         [Test]
@@ -224,7 +252,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
             _module.Update(oneThirtyAm);
 
             Assert.IsTrue(
-                          _module.BedtimeAlertWidget.IsVisible,
+                          _module.AlertWidget.IsVisible,
                           "It's early morning but the module isn't alerting that we need to be in bed.");
         }
 
@@ -238,7 +266,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
             _module.Update(elevenThirtyPm);
 
             Assert.IsTrue(
-                          _module.BedtimeAlertWidget.IsVisible,
+                          _module.AlertWidget.IsVisible,
                           "It's nearly midnight but the module isn't alerting that we need to be in bed.");
         }
 
@@ -284,11 +312,17 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
         {
             _alfred.Initialize();
 
-            Assert.IsNotNull(_module.BedtimeAlertWidget, "The Bedtime alert widget was not present");
+            Assert.IsNotNull(_module.AlertWidget, "The Bedtime alert widget was not present");
             Assert.Contains(
-                            _module.BedtimeAlertWidget,
+                            _module.AlertWidget,
                             _module.Widgets as ICollection,
                             "The module did not contain a registered bedtime alert widget.");
+        }
+
+        [Test]
+        public void TimeModuleHasName()
+        {
+            Assert.IsNotNullOrEmpty(_module.Name);
         }
 
         [Test]
@@ -334,7 +368,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
             var consoleEvent = console.Events.Single(e => e.Title == AlfredTimeModule.HalfHourAlertEventTitle);
 
             //  We want to ensure it's an informational purposes
-            Assert.AreEqual(LogLevel.Info, consoleEvent.Level);
+            Assert.AreEqual(LogLevel.ChatNotification, consoleEvent.Level);
         }
 
         [Test]
@@ -351,7 +385,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
             var consoleEvent = console.Events.Single(e => e.Title == AlfredTimeModule.HourAlertEventTitle);
 
             //  We want to ensure it's an informational purposes
-            Assert.AreEqual(LogLevel.Info, consoleEvent.Level);
+            Assert.AreEqual(LogLevel.ChatNotification, consoleEvent.Level);
         }
 
         [Test]

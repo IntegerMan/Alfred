@@ -13,14 +13,15 @@ using System.Linq;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Pages;
-using MattEland.Ani.Alfred.Core.Tests.Mocks;
+using MattEland.Ani.Alfred.Tests.Mocks;
 
 using NUnit.Framework;
 
-namespace MattEland.Ani.Alfred.Core.Tests.Modules
+namespace MattEland.Ani.Alfred.Tests.Modules
 {
     /// <summary>
     ///     Tests for the
@@ -52,7 +53,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
         /// <param name="module">The module.</param>
         /// <exception cref="System.ArgumentNullException">alfred, module
         /// </exception>
-        private void RegisterTestModule([NotNull] AlfredProvider alfred, [NotNull] AlfredModule module)
+        private void RegisterTestModule([NotNull] AlfredApplication alfred, [NotNull] AlfredModule module)
         {
             if (alfred == null)
             {
@@ -65,7 +66,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
 
             var subsystem = new TestSubsystem();
 
-            var page = new AlfredModuleListPage(alfred.PlatformProvider, "Test Page");
+            var page = new AlfredModuleListPage(alfred.PlatformProvider, "Test Page", "Test");
             subsystem.AddAutoRegisterPage(page);
 
             alfred.Register(subsystem);
@@ -75,7 +76,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Modules
         }
 
         [NotNull]
-        private AlfredProvider _alfred;
+        private AlfredApplication _alfred;
 
         [NotNull]
         private AlfredPowerModule _module;

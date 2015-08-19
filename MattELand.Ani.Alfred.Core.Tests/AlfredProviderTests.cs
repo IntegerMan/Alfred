@@ -2,7 +2,7 @@
 // AlfredProviderTests.cs
 // 
 // Created on:      07/25/2015 at 11:43 PM
-// Last Modified:   08/07/2015 at 11:12 PM
+// Last Modified:   08/10/2015 at 10:34 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
@@ -12,19 +12,20 @@ using System.Linq;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Pages;
-using MattEland.Ani.Alfred.Core.Tests.Mocks;
 using MattEland.Ani.Alfred.Core.Widgets;
+using MattEland.Ani.Alfred.Tests.Mocks;
 
 using NUnit.Framework;
 
-namespace MattEland.Ani.Alfred.Core.Tests
+namespace MattEland.Ani.Alfred.Tests
 {
     /// <summary>
-    ///     Tests AlfredProvider
+    ///     Tests AlfredApplication
     /// </summary>
     [TestFixture]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
@@ -41,11 +42,11 @@ namespace MattEland.Ani.Alfred.Core.Tests
             _alfred.Console = new SimpleConsole();
 
             _subsystem = new TestSubsystem(_alfred.PlatformProvider);
-            _page = new AlfredModuleListPage(_alfred.PlatformProvider, "Test Page");
+            _page = new AlfredModuleListPage(_alfred.PlatformProvider, "Test Page", "Test");
         }
 
         [NotNull]
-        private AlfredProvider _alfred;
+        private AlfredApplication _alfred;
 
         [NotNull]
         private TestSubsystem _subsystem;
@@ -56,24 +57,12 @@ namespace MattEland.Ani.Alfred.Core.Tests
         [Test]
         public void AddingStandardModulesAddsModules()
         {
-            _alfred.Register(new AlfredControlSubsystem(_alfred.PlatformProvider));
+            _alfred.Register(new AlfredCoreSubsystem(_alfred.PlatformProvider));
 
-            var numModules = 0;
-
-            foreach (var subsystem in _alfred.Subsystems)
-            {
-                numModules += subsystem.Modules.Count();
-
-                foreach (var page in subsystem.Pages)
-                {
-                    var modulePage = page as AlfredModuleListPage;
-
-                    if (modulePage != null)
-                    {
-                        numModules += modulePage.Modules.Count();
-                    }
-                }
-            }
+            var numModules =
+                _alfred.Subsystems.SelectMany(subsystem => subsystem.Pages)
+                       .OfType<AlfredModuleListPage>()
+                       .Sum(modulePage => modulePage.Modules.Count());
 
             Assert.Greater(numModules,
                            0,
@@ -165,7 +154,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         [Test]
         public void InitializingInitializesComponents()
         {
-            _alfred.Register(new AlfredControlSubsystem(_alfred.PlatformProvider));
+            _alfred.Register(new AlfredCoreSubsystem(_alfred.PlatformProvider));
 
             _alfred.Initialize();
 
@@ -195,14 +184,14 @@ namespace MattEland.Ani.Alfred.Core.Tests
         public void ModulesCannotBeAddedWhileOnline()
         {
             _alfred.Initialize();
-            _alfred.Register(new AlfredControlSubsystem(_alfred.PlatformProvider));
+            _alfred.Register(new AlfredCoreSubsystem(_alfred.PlatformProvider));
         }
 
         [Test]
         [ExpectedException(typeof(InvalidOperationException))]
         public void ModulesCannotUpdateWhileOffline()
         {
-            _alfred.Register(new AlfredControlSubsystem(_alfred.PlatformProvider));
+            _alfred.Register(new AlfredCoreSubsystem(_alfred.PlatformProvider));
 
             _alfred.Update();
         }
@@ -311,7 +300,7 @@ namespace MattEland.Ani.Alfred.Core.Tests
         [Test]
         public void ShuttingDownShutsDownComponents()
         {
-            _alfred.Register(new AlfredControlSubsystem(_alfred.PlatformProvider));
+            _alfred.Register(new AlfredCoreSubsystem(_alfred.PlatformProvider));
 
             _alfred.Initialize();
             _alfred.Shutdown();

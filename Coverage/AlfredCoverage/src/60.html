@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\user.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// User.cs
+// 
+// Created on:      08/12/2015 at 10:24 PM
+// Last Modified:   08/13/2015 at 3:45 PM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+
+using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+
+namespace MattEland.Ani.Alfred.Chat.Aiml
+{
+    /// &lt;summary&gt;
+    ///     Represents a user the chat engine interacts with
+    /// &lt;/summary&gt;
+    public class User
+    {
+        [NotNull]
+        [ItemNotNull]
+        private readonly List&lt;Result&gt; _results = new List&lt;Result&gt;();
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;User&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;The identifier.&lt;/param&gt;
+        /// &lt;param name=&quot;chatEngine&quot;&gt;The chat engine.&lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentOutOfRangeException&quot;&gt;The id cannot be empty&lt;/exception&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;chatEngine&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public User([NotNull] string id, [NotNull] ChatEngine chatEngine)
+        {
+            //- Validation
+            if (chatEngine == null)
+            {
+                throw new ArgumentNullException(nameof(chatEngine));
+            }
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentOutOfRangeException(nameof(id), Resources.UserCtorNullId);
+            }
+
+            Id = id;
+            ChatEngine = chatEngine;
+
+            // Set up the variables collection
+            UserVariables = new SettingsManager();
+            UserVariables.Add(&quot;topic&quot;, &quot;*&quot;);
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the chat engine.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The chat engine.&lt;/value&gt;
+        [NotNull]
+        public ChatEngine ChatEngine { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets the predicates. These are variables pertaining to the user.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The predicates.&lt;/value&gt;
+        [NotNull]
+        public SettingsManager UserVariables { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets the user&#39;s identifier.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The user&#39;s identifier.&lt;/value&gt;
+        [NotNull]
+        public string Id { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets the topic.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The topic.&lt;/value&gt;
+        public string Topic
+        {
+            get { return UserVariables.GetValue(&quot;topic&quot;); }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the last result.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The last result.&lt;/value&gt;
+        [CanBeNull]
+        public Result LastResult
+        {
+            get { return _results.FirstOrDefault(); }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the last chat result&#39;s raw output
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;The last result&#39;s raw output&lt;/returns&gt;
+        [NotNull]
+        public string LastChatOutput
+        {
+            get { return LastResult?.RawOutput ?? &quot;*&quot;; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the output sentence from the specified result and sentence.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;resultIndex&quot;&gt;Index of the result. Defaults to 1.&lt;/param&gt;
+        /// &lt;param name=&quot;sentenceIndex&quot;&gt;Index of the sentence. Defaults to 1.&lt;/param&gt;
+        /// &lt;returns&gt;The output sentence&lt;/returns&gt;
+        public string GetOutputSentence(int resultIndex = 1, int sentenceIndex = 1)
+        {
+            //- Ensure we&#39;re not grabbing out of range
+            var isValidResult = resultIndex &gt;= 0 &amp; resultIndex &lt; _results.Count;
+            if (!isValidResult)
+            {
+                return string.Empty;
+            }
+
+            // Get the result
+            var result = _results[resultIndex];
+            Debug.Assert(result != null);
+
+            // Grab the output sentence at the specified index
+            if (sentenceIndex &gt;= 0 &amp; sentenceIndex &lt; result.OutputSentences.Count)
+            {
+                return result.OutputSentences[sentenceIndex];
+            }
+
+            return string.Empty;
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the specified input sentence from the specified result.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;resultIndex&quot;&gt;Index of the result. Defaults to 1.&lt;/param&gt;
+        /// &lt;param name=&quot;sentenceIndex&quot;&gt;Index of the sentenceIndex. Defaults to 1.&lt;/param&gt;
+        /// &lt;returns&gt;The specified sentenceIndex.&lt;/returns&gt;
+        public string GetInputSentence(int resultIndex = 1, int sentenceIndex = 1)
+        {
+            //- Ensure we&#39;re grabbing at an acceptable resultIndex
+            var isValidResult = resultIndex &gt;= 0 &amp; resultIndex &lt; _results.Count;
+            if (!isValidResult)
+            {
+                return string.Empty;
+            }
+
+            //- Grab the result
+            var result = _results[resultIndex];
+            Debug.Assert(result != null);
+
+            // Grab the appropriate sentenceIndex
+            if (sentenceIndex &gt;= 0 &amp; sentenceIndex &lt; result.InputSentences.Count)
+            {
+                return result.InputSentences[sentenceIndex];
+            }
+
+            //- Invalid results yield nothing
+            return string.Empty;
+        }
+
+        /// &lt;summary&gt;
+        ///     Adds a result to the user&#39;s results.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;latestResult&quot;&gt;The latest chat result.&lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;latestResult&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public void AddResult([NotNull] Result latestResult)
+        {
+            if (latestResult == null)
+            {
+                throw new ArgumentNullException(nameof(latestResult));
+            }
+
+            _results.Insert(0, latestResult);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[41,13,41,14,0],[42,17,42,69,0],[45,13,45,14,0],[46,17,46,93,0],[62,40,62,44,0],[114,9,114,10,0],[116,13,116,81,0],[117,13,117,32,0],[118,13,118,14,0],[119,17,119,37,0],[123,13,123,48,0],[124,13,124,42,0],[127,13,127,83,0],[128,13,128,14,0],[129,17,129,62,0],[132,13,132,33,0],[133,9,133,10,0],[142,9,142,10,0],[144,13,144,81,0],[145,13,145,32,0],[146,13,146,14,0],[147,17,147,37,0],[151,13,151,48,0],[152,13,152,42,0],[155,13,155,82,0],[156,13,156,14,0],[157,17,157,61,0],[161,13,161,33,0],[162,9,162,10,0],[172,13,172,14,0],[173,17,173,71,0],[28,9,28,69,1],[37,9,37,74,1],[38,9,38,10,1],[40,13,40,36,1],[44,13,44,47,1],[49,13,49,21,1],[50,13,50,37,1],[53,13,53,51,1],[54,13,54,45,1],[55,9,55,10,1],[69,48,69,52,1],[76,28,76,32,1],[84,17,84,18,1],[84,19,84,58,1],[84,59,84,60,1],[94,17,94,18,1],[94,19,94,52,1],[94,53,94,54,1],[104,17,104,18,1],[104,19,104,55,1],[104,56,104,57,1],[170,9,170,10,1],[171,13,171,38,1],[176,13,176,46,1],[177,9,177,10,1]]);
+    </script>
+  </body>
+</html>

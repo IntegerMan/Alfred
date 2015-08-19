@@ -162,4 +162,10 @@ Do you want to continue running this application?</value>
   <data name="WinClientLoadedLogHeader" xml:space="preserve">
     <value>WinClient.Loaded</value>
   </data>
+  <data name="WarningNoChatTextHeader" xml:space="preserve">
+    <value>Empty Search</value>
+  </data>
+  <data name="WarningNoChatText" xml:space="preserve">
+    <value>Please enter something to say</value>
+  </data>
 </root>

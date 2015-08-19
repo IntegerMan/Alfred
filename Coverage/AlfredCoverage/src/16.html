@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\mocks\testsubsystem.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// TestSubsystem.cs
+// 
+// Created on:      08/07/2015 at 11:07 PM
+// Last Modified:   08/08/2015 at 1:43 AM
+// Original author: Matt Eland
+// ---------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+
+using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Core.Pages;
+
+namespace MattEland.Ani.Alfred.Tests.Mocks
+{
+    public class TestSubsystem : AlfredSubsystem
+    {
+        [NotNull, ItemNotNull]
+        private readonly ICollection&lt;AlfredPage&gt; _registerPages;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredSubsystem&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        public TestSubsystem() : this(new SimplePlatformProvider())
+        {
+        }
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;TestSubsystem&quot;/&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;provider&quot;&gt;The provider.&lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;provider&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public TestSubsystem([NotNull] IPlatformProvider provider) : base(provider)
+        {
+            if (provider == null)
+            {
+                throw new ArgumentNullException(nameof(provider));
+            }
+
+            _registerPages = provider.CreateCollection&lt;AlfredPage&gt;();
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the name of the subsystems.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The name.&lt;/value&gt;
+        public override string Name
+        {
+            get { return &quot;Test SubSystem&quot;; }
+        }
+
+        /// &lt;summary&gt;
+        /// Registers the controls for this component.
+        /// &lt;/summary&gt;
+        protected override void RegisterControls()
+        {
+            // Live up to our promise and auto-register some pages
+            foreach (var page in _registerPages)
+            {
+                Register(page);
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the last time this module was updated.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The last time the module was updated.&lt;/value&gt;
+        public DateTime LastUpdated { get; set; }
+
+        public DateTime LastInitializationCompleted { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the last shutdown completed time.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The last shutdown completed time.&lt;/value&gt;
+        public DateTime LastShutdownCompleted { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the last shutdown time.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The last shutdown time.&lt;/value&gt;
+        public DateTime LastShutdown { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the last initialized time.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The last initialized time.&lt;/value&gt;
+        public DateTime LastInitialized { get; set; }
+
+        /// &lt;summary&gt;
+        ///     A notification method that is invoked when initialization for Alfred is complete so the UI can be fully enabled or
+        ///     adjusted
+        /// &lt;/summary&gt;
+        public override void OnInitializationCompleted()
+        {
+            LastInitializationCompleted = DateTime.Now;
+
+            base.OnInitializationCompleted();
+        }
+
+        /// &lt;summary&gt;
+        ///     A notification method that is invoked when shutdown for Alfred is complete so the UI can be fully enabled or
+        ///     adjusted
+        /// &lt;/summary&gt;
+        public override void OnShutdownCompleted()
+        {
+            LastShutdownCompleted = DateTime.Now;
+
+            base.OnShutdownCompleted();
+        }
+
+        /// &lt;summary&gt;
+        ///     Handles shutdown events
+        /// &lt;/summary&gt;
+        protected override void ShutdownProtected()
+        {
+            LastShutdown = DateTime.Now;
+
+            base.ShutdownProtected();
+        }
+
+        /// &lt;summary&gt;
+        ///     Handles initialization events
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;alfred&quot;&gt;&lt;/param&gt;
+        protected override void InitializeProtected(IAlfred alfred)
+        {
+            LastInitialized = DateTime.Now;
+
+            base.InitializeProtected(alfred);
+        }
+
+        /// &lt;summary&gt;
+        ///     Handles updating the component as needed
+        /// &lt;/summary&gt;
+        protected override void UpdateProtected()
+        {
+            LastUpdated = DateTime.Now;
+
+            base.UpdateProtected();
+        }
+
+        /// &lt;summary&gt;
+        /// Adds a page to be automatically registered on initialization
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;page&quot;&gt;The page.&lt;/param&gt;
+        public void AddAutoRegisterPage([NotNull] AlfredPage page)
+        {
+            if (page == null)
+            {
+                throw new ArgumentNullException(nameof(page));
+            }
+
+            _registerPages.Add(page);
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the identifier for the subsystem to be used in command routing.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The identifier for the subsystem.&lt;/value&gt;
+        public override string Id
+        {
+            get { return &quot;Test&quot;; }
+        }
+
+        /// &lt;summary&gt;
+        /// Processes an Alfred Command. If the command is handled, result should be modified accordingly and the method should return true. Returning false will not stop the message from being propogated.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;command&quot;&gt;The command.&lt;/param&gt;
+        /// &lt;param name=&quot;result&quot;&gt;The result. If the command was handled, this should be updated.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;True&lt;/c&gt; if the command was handled; otherwise false.&lt;/returns&gt;
+        public override bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
+        {
+            var al = AlfredInstance as TestAlfred;
+            if (al != null)
+            {
+                al.LastCommand = command;
+            }
+
+            return base.ProcessAlfredCommand(command, result);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[40,13,40,14,0],[41,17,41,67,0],[154,13,154,14,0],[155,17,155,63,0],[28,34,28,68,1],[29,9,29,10,1],[30,9,30,10,1],[37,70,37,84,1],[38,9,38,10,1],[39,13,39,34,1],[44,13,44,70,1],[45,9,45,10,1],[53,17,53,18,1],[53,19,53,43,1],[53,44,53,45,1],[60,9,60,10,1],[62,13,62,20,1],[62,34,62,48,1],[62,22,62,30,1],[63,13,63,14,1],[64,17,64,32,1],[65,13,65,14,1],[62,31,62,33,1],[66,9,66,10,1],[72,39,72,43,1],[72,44,72,48,1],[74,55,74,59,1],[74,60,74,64,1],[80,49,80,53,1],[80,54,80,58,1],[86,40,86,44,1],[86,45,86,49,1],[92,43,92,47,1],[92,48,92,52,1],[99,9,99,10,1],[100,13,100,56,1],[102,13,102,46,1],[103,9,103,10,1],[110,9,110,10,1],[111,13,111,50,1],[113,13,113,40,1],[114,9,114,10,1],[120,9,120,10,1],[121,13,121,41,1],[123,13,123,38,1],[124,9,124,10,1],[131,9,131,10,1],[132,13,132,44,1],[134,13,134,46,1],[135,9,135,10,1],[141,9,141,10,1],[142,13,142,40,1],[144,13,144,36,1],[145,9,145,10,1],[152,9,152,10,1],[153,13,153,30,1],[158,13,158,38,1],[159,9,159,10,1],[167,17,167,18,1],[167,19,167,33,1],[167,34,167,35,1],[177,9,177,10,1],[178,13,178,51,1],[179,13,179,28,1],[180,13,180,14,1],[181,17,181,42,1],[182,13,182,14,1],[184,13,184,63,1],[185,9,185,10,1]]);
+    </script>
+  </body>
+</html>

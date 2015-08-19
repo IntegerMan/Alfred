@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\starredirecttaghandler.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// sr.cs
+// 
+// Created on:      08/12/2015 at 10:54 PM
+// Last Modified:   08/12/2015 at 11:59 PM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using System.Xml;
+
+using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Common;
+
+namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
+{
+    /// &lt;summary&gt;
+    /// An AIML tag handler that handles the &quot;sr&quot; shortcut tag which is the equivalent of an srai to a star tag.
+    /// &lt;/summary&gt;
+    [HandlesAimlTag(&quot;sr&quot;)]
+    public class StarRedirectTagHandler : AimlTagHandler
+    {
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
+        public StarRedirectTagHandler([NotNull] TagHandlerParameters parameters)
+            : base(parameters)
+        {
+        }
+
+        /// &lt;summary&gt;
+        /// Processes the input text and returns the processed value.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;The processed output&lt;/returns&gt;
+        protected override string ProcessChange()
+        {
+            if (!TemplateNode.Name.Matches(&quot;sr&quot;))
+            {
+                return string.Empty;
+            }
+
+            // Execute a star operation
+            var star = BuildStarTagHandler();
+            var starResult = star.Transform();
+
+            // Execute a redirect to the result of the star operation
+            try
+            {
+                var node = BuildNode(string.Format(Locale, &quot;&lt;srai&gt;{0}&lt;/srai&gt;&quot;, starResult).NonNull());
+                var parameters = GetTagHandlerParametersForNode(node);
+                return new RedirectTagHandler(parameters).Transform();
+
+            }
+            catch (XmlException xmlEx)
+            {
+                Log(string.Format(Locale, Resources.SrTagHandlerError, xmlEx.Message), LogLevel.Error);
+            }
+
+            return string.Empty;
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[31,15,31,31,0],[32,9,32,10,0],[33,9,33,10,0],[40,9,40,10,0],[41,13,41,50,0],[42,13,42,14,0],[43,17,43,37,0],[47,13,47,46,0],[48,13,48,47,0],[52,13,52,14,0],[53,17,53,103,0],[54,17,54,71,0],[55,17,55,71,0],[58,13,58,39,0],[59,13,59,14,0],[60,17,60,104,0],[61,13,61,14,0],[63,13,63,33,0],[64,9,64,10,0]]);
+    </script>
+  </body>
+</html>

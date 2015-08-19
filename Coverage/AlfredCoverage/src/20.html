@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\chat\redirecttaghandlertests.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// AlfredTagHandlerTests.cs
+// 
+// Created on:      08/17/2015 at 10:55 PM
+// Last Modified:   08/17/2015 at 10:55 PM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
+using System.Xml;
+
+using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Chat;
+using MattEland.Ani.Alfred.Chat.Aiml;
+using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Common;
+
+using NUnit.Framework;
+
+namespace MattEland.Ani.Alfred.Tests.Chat
+{
+    /// &lt;summary&gt;
+    /// A class to test tag handlers for &quot;srai&quot; tags.
+    /// &lt;/summary&gt;
+    [TestFixture]
+    [SuppressMessage(&quot;ReSharper&quot;, &quot;NotNullMemberIsNotInitialized&quot;)]
+    public class RedirectTagHandlerTests : ChatTestsBase
+    {
+        /// &lt;summary&gt;
+        /// Sets up the test fixture for each test.
+        /// &lt;/summary&gt;
+        [SetUp]
+        public void SetUp()
+        {
+            InitChatSystem();
+
+        }
+
+        [Test]
+        public void RedirectOnNoTextOutputsEmpty()
+        {
+            var parameters = BuildTagHandlerParameters(&quot;&lt;srai /&gt;&quot;);
+            var handler = new RedirectTagHandler(parameters);
+
+            var output = handler.Transform();
+
+            Assert.That(output.IsEmpty(), $&quot;Output was not empty as expected but {output}&quot;);
+        }
+
+        [Test]
+        public void RedirectOnNoTextDoesNotSpawnSecondRequest()
+        {
+            var parameters = BuildTagHandlerParameters(&quot;&lt;srai /&gt;&quot;);
+            var handler = new RedirectTagHandler(parameters);
+
+            var output = handler.Transform();
+
+            Assert.IsNull(handler.Request.Child, &quot;Second request was spawned&quot;);
+        }
+
+        [Test]
+        public void RedirectWithTextSpawnsSecondRequest()
+        {
+            var parameters = BuildTagHandlerParameters(&quot;&lt;srai&gt;Batman&lt;/srai&gt;&quot;);
+            var handler = new RedirectTagHandler(parameters);
+
+            var output = handler.Transform();
+
+            Assert.IsNotNull(handler.Request.Child, &quot;Second request was not spawned&quot;);
+        }
+
+        [Test]
+        public void RedirectWithTextResultsInText()
+        {
+            var parameters = BuildTagHandlerParameters(&quot;&lt;srai&gt;Batman&lt;/srai&gt;&quot;);
+            var handler = new RedirectTagHandler(parameters);
+
+            var output = handler.Transform();
+
+            Assert.That(output.HasText(), &quot;Output was empty after redirect.&quot;);
+        }
+
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[39,9,39,10,1],[40,13,40,30,1],[42,9,42,10,1],[46,9,46,10,1],[47,13,47,68,1],[48,13,48,62,1],[50,13,50,46,1],[52,13,52,93,1],[53,9,53,10,1],[57,9,57,10,1],[58,13,58,68,1],[59,13,59,62,1],[61,13,61,46,1],[63,13,63,80,1],[64,9,64,10,1],[68,9,68,10,1],[69,13,69,79,1],[70,13,70,62,1],[72,13,72,46,1],[74,13,74,87,1],[75,9,75,10,1],[79,9,79,10,1],[80,13,80,79,1],[81,13,81,62,1],[83,13,83,46,1],[85,13,85,79,1],[86,9,86,10,1]]);
+    </script>
+  </body>
+</html>

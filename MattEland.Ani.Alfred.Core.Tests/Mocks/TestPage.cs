@@ -9,11 +9,11 @@
 using System;
 using System.Collections.Generic;
 
+using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Pages;
 
-namespace MattEland.Ani.Alfred.Core.Tests.Mocks
+namespace MattEland.Ani.Alfred.Tests.Mocks
 {
     /// <summary>
     /// A test page for testing the AlfredPage update pumps
@@ -23,7 +23,7 @@ namespace MattEland.Ani.Alfred.Core.Tests.Mocks
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
-        public TestPage() : base("Test Page")
+        public TestPage() : base("Test Page", "Test")
         {
         }
 

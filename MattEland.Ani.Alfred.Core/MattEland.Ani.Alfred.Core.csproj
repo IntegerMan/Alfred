@@ -25,7 +25,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>true</RunCodeAnalysis>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\Alfred Code Analysis.ruleset</CodeAnalysisRuleSet>
     <DocumentationFile>bin\Debug\MattEland.Ani.Alfred.Core.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -37,7 +37,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>AlfredAppTestCertificate.snk</AssemblyOriginatorKeyFile>
@@ -50,13 +50,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AlfredBootstrapper.cs" />
+    <Compile Include="AlfredCommandResult.cs" />
     <Compile Include="AlfredComponent.cs" />
+    <Compile Include="Definitions\ChatCommand.cs" />
     <Compile Include="Definitions\IAlfred.cs" />
+    <Compile Include="Definitions\IAlfredCommandRecipient.cs" />
     <Compile Include="Definitions\IAlfredModule.cs" />
     <Compile Include="Definitions\IAlfredPage.cs" />
+    <Compile Include="Definitions\IAlfredShell.cs" />
     <Compile Include="Definitions\IAlfredSubsystem.cs" />
     <Compile Include="Console\IConsoleEvent.cs" />
+    <Compile Include="Definitions\IShellCommandRecipient.cs" />
     <Compile Include="Definitions\IStatusController.cs" />
+    <Compile Include="Definitions\IChatProvider.cs" />
+    <Compile Include="Definitions\ShellCommand.cs" />
+    <Compile Include="Definitions\UserStatementResponse.cs" />
+    <Compile Include="Modules\AlertVisibilityCalculator.cs" />
     <Compile Include="Modules\AlfredPagesListModule.cs" />
     <Compile Include="Definitions\IAlfredComponent.cs" />
     <Compile Include="Pages\AlfredEventLogPage.cs" />
@@ -64,16 +73,15 @@
     <Compile Include="Pages\AlfredPage.cs" />
     <Compile Include="Definitions\AlfredStatus.cs" />
     <Compile Include="AlfredStatusController.cs" />
-    <Compile Include="AlfredExtensions.cs" />
     <Compile Include="AlfredSubSystem.cs" />
     <Compile Include="Console\LogLevel.cs" />
-    <Compile Include="Modules\AlfredControlSubSystem.cs" />
+    <Compile Include="Modules\AlfredCoreSubsystem.cs" />
     <Compile Include="Modules\AlfredSubSystemListModule.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Definitions\IPlatformProvider.cs" />
     <Compile Include="Modules\AlfredTimeModule.cs" />
-    <Compile Include="AlfredModule.cs" />
-    <Compile Include="AlfredProvider.cs" />
+    <Compile Include="Modules\AlfredModule.cs" />
+    <Compile Include="AlfredApplication.cs" />
     <Compile Include="Console\ConsoleEvent.cs" />
     <Compile Include="Console\IConsole.cs" />
     <Compile Include="Modules\AlfredPowerModule.cs" />
@@ -82,29 +90,35 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Pages\AlfredWidgetListPage.cs" />
     <Compile Include="Widgets\AlfredProgressBarWidget.cs" />
     <Compile Include="Widgets\AlfredTextWidget.cs" />
     <Compile Include="Widgets\AlfredWidget.cs" />
     <Compile Include="Widgets\ButtonWidget.cs" />
-    <Compile Include="Widgets\AlfredCommand.cs" />
+    <Compile Include="Definitions\AlfredCommand.cs" />
     <Compile Include="Widgets\TextWidget.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SimpleConsole.cs" />
-    <Compile Include="SimplePlatformProvider.cs" />
+    <Compile Include="Console\SimpleConsole.cs" />
+    <Compile Include="Definitions\SimplePlatformProvider.cs" />
     <Compile Include="Widgets\WarningWidget.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="JetBrains.Annotations.PCL328, Version=9.1.1.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\packages\JetBrains.Annotations.9.1.1\lib\portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\JetBrains.Annotations.PCL328.dll</HintPath>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="JetBrains.Annotations.PCL328, Version=9.2.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.9.2.0\lib\portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\JetBrains.Annotations.PCL328.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <ProjectReference Include="..\MattEland.Common\MattEland.Common.csproj">
+      <Project>{514cb422-a6ef-4c75-b925-92ab599ba1be}</Project>
+      <Name>MattEland.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+Copyright (c) 2015 Matt Eland
+
+This provides handling for the Goodbye, Shutdown and Status verbs
+-->
+
+<aiml>
+
+  <!-- Handle status requests with a system status response -->
+  <category>
+    <pattern>STATUS</pattern>
+    <template id="tmp_status">
+      <alfred subsystem="sys" command="status" />
+    </template>
+  </category>
+  <category>
+    <pattern>SYSTEM STATUS</pattern>
+    <template>
+      <srai>STATUS</srai>
+    </template>
+  </category>
+  
+  <category>
+    <pattern>ALFRED STATUS</pattern>
+    <template>
+      <alfred subsystem="sys" command="status" data="Alfred" />
+    </template>
+  </category>
+  <category>
+    <pattern>YOUR STATUS</pattern>
+    <template>
+      <srai>ALFRED STATUS</srai>
+    </template>
+  </category>
+  <category>
+    <pattern>APP STATUS</pattern>
+    <template>
+      <srai>ALFRED STATUS</srai>
+    </template>
+  </category>
+  <category>
+    <pattern>APPLICATION STATUS</pattern>
+    <template>
+      <srai>ALFRED STATUS</srai>
+    </template>
+  </category>
+
+  <category>
+    <pattern>MEMORY STATUS</pattern>
+    <template id="tmp_status_mem">
+      <alfred subsystem="sys" command="status" data="memory" />
+    </template>
+  </category>  
+  <category>
+    <pattern>MEM STATUS</pattern>
+    <template>
+      <srai>MEMORY STATUS</srai>
+    </template>
+  </category>  
+  <category>
+    <pattern>MEMORY</pattern>
+    <template>
+      <srai>MEMORY STATUS</srai>
+    </template>
+  </category>  
+  <category>
+    <pattern>AVAILABLE MEMORY</pattern>
+    <template>
+      <srai>MEMORY STATUS</srai>
+    </template>
+  </category>  
+  <category>
+    <pattern>ALLOCATED MEMORY</pattern>
+    <template>
+      <srai>MEMORY STATUS</srai>
+    </template>
+  </category>
+  <category>
+    <pattern>FREE MEMORY</pattern>
+    <template>
+      <srai>MEMORY STATUS</srai>
+    </template>
+  </category>  
+  <category>
+    <pattern>USED MEMORY</pattern>
+    <template>
+      <srai>MEMORY STATUS</srai>
+    </template>
+  </category>
+  
+  <category>
+    <pattern>CPU STATUS</pattern>
+    <template id="tmp_status_cpu">
+      <alfred subsystem="sys" command="status" data="cpu" />
+    </template>
+  </category>
+  <category>
+    <pattern>PROCESSOR STATUS</pattern>
+    <template>
+      <srai>CPU STATUS</srai>
+    </template>
+  </category>
+  
+  <category>
+    <pattern>DISK STATUS</pattern>
+    <template id="tmp_status_disk">
+      <alfred subsystem="sys" command="status" data="disk" />
+    </template>
+  </category>
+  <category>
+    <pattern>HARD DRIVE STATUS</pattern>
+    <template>
+      <srai>DISK STATUS</srai>
+    </template>
+  </category>
+  <category>
+    <pattern>DISK SPACE</pattern>
+    <template>
+      <srai>DISK STATUS</srai>
+    </template>
+  </category>
+  <category>
+    <pattern>HARD DISK STATUS</pattern>
+    <template>
+      <srai>DISK STATUS</srai>
+    </template>
+  </category>
+
+</aiml>

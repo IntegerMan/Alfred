@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\useridtaghandler.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// UserIdTagHandler.cs
+// 
+// Created on:      08/12/2015 at 10:47 PM
+// Last Modified:   08/14/2015 at 11:28 PM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Common;
+
+namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
+{
+    /// &lt;summary&gt;
+    ///     A tag handler for the AIML &quot;id&quot; tag that outputs the user&#39;s identifier found in the User.Id
+    ///     property.
+    /// &lt;/summary&gt;
+    [HandlesAimlTag(&quot;id&quot;)]
+    public class UserIdTagHandler : AimlTagHandler
+    {
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
+        public UserIdTagHandler([NotNull] TagHandlerParameters parameters)
+            : base(parameters)
+        {
+        }
+
+        /// &lt;summary&gt;
+        ///     Processes the input text and returns the processed value.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;The processed output&lt;/returns&gt;
+        protected override string ProcessChange()
+        {
+            // If it&#39;s the ID tag, use the user&#39;s ID, otherwise we don&#39;t care
+            return TemplateNode.Name.Matches(&quot;id&quot;) ? User.Id : string.Empty;
+
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[29,15,29,31,0],[30,9,30,10,0],[31,9,31,10,0],[38,9,38,10,0],[40,13,40,77,0],[42,9,42,10,0]]);
+    </script>
+  </body>
+</html>

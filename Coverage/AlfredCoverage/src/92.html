@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\utils\splitsentencehelper.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// SplitSentenceHelper.cs
+// 
+// Created on:      08/12/2015 at 10:38 PM
+// Last Modified:   08/12/2015 at 11:59 PM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+using JetBrains.Annotations;
+
+namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
+{
+    /// &lt;summary&gt;
+    /// A utility class for splitting strings into sentences
+    /// &lt;/summary&gt;
+    internal static class SplitSentenceHelper
+    {
+
+        /// &lt;summary&gt;
+        /// Transforms the input string into sentences.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;inputString&quot;&gt;The input string.&lt;/param&gt;
+        /// &lt;param name=&quot;chatEngine&quot;&gt;The chat engine.&lt;/param&gt;
+        /// &lt;returns&gt;Sentences&lt;/returns&gt;
+        [NotNull]
+        [ItemNotNull]
+        internal static IEnumerable&lt;string&gt; Split([NotNull] string inputString, [NotNull] ChatEngine chatEngine)
+        {
+            //- Validate
+            if (inputString == null)
+            {
+                throw new ArgumentNullException(nameof(inputString));
+            }
+            if (chatEngine == null)
+            {
+                throw new ArgumentNullException(nameof(chatEngine));
+            }
+
+            // Use the engine&#39;s splitters to split the input into sentences
+            var sentences = inputString.Split(chatEngine.SentenceSplitters.ToArray(), StringSplitOptions.RemoveEmptyEntries);
+
+            // Yield all sentences
+            return sentences.Select(s =&gt; s?.Trim());
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[36,13,36,14,0],[37,17,37,70,0],[40,13,40,14,0],[41,17,41,69,0],[33,9,33,10,1],[35,13,35,37,1],[39,13,39,36,1],[45,13,45,126,1],[48,13,48,42,1],[48,51,48,53,1],[49,9,49,10,1],[48,42,48,51,1]]);
+    </script>
+  </body>
+</html>

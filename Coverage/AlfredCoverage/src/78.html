@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\randomtaghandler.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// RandomTagHandler.cs
+// 
+// Created on:      08/12/2015 at 10:52 PM
+// Last Modified:   08/18/2015 at 4:41 PM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Xml;
+
+using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+
+namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
+{
+    /// &lt;summary&gt;
+    ///     A tag handler that handles the AIML random tag.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;
+    ///     See &quot;http://www.alicebot.org/documentation/aiml-reference.html#random&quot; for more information on
+    ///     the random tag.
+    /// &lt;/remarks&gt;
+    [HandlesAimlTag(&quot;random&quot;)]
+    public class RandomTagHandler : AimlTagHandler
+    {
+        [NotNull]
+        private static readonly Random _randomizer = new Random();
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;RandomTagHandler&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
+        [UsedImplicitly]
+        public RandomTagHandler([NotNull] TagHandlerParameters parameters)
+            : base(parameters)
+        {
+            IsRecursive = false;
+        }
+
+        /// &lt;summary&gt;
+        ///     Processes the input text and returns the processed value.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;The processed output&lt;/returns&gt;
+        protected override string ProcessChange()
+        {
+            // Don&#39;t return anything if there aren&#39;t any children.
+            if (!TemplateNode.HasChildNodes)
+            {
+                return string.Empty;
+            }
+
+            //- Looking at the children...
+            var childNodes = TemplateNode.ChildNodes.Cast&lt;XmlNode&gt;();
+            var list = childNodes.Where(xmlNode =&gt; xmlNode?.Name == &quot;li&quot;).ToList();
+
+            //- Ensure we have items
+            if (list.Count &lt;= 0)
+            {
+                return string.Empty;
+            }
+
+            // Grab a random element and return its contents
+            var index = _randomizer.Next(list.Count);
+            var node = list[index];
+            Debug.Assert(node != null);
+
+            return node.InnerXml;
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[40,15,40,31,1],[41,9,41,10,1],[42,13,42,33,1],[43,9,43,10,1],[50,9,50,10,1],[52,13,52,45,1],[53,13,53,14,1],[54,17,54,37,1],[58,13,58,70,1],[59,13,59,52,1],[59,73,59,84,1],[62,13,62,33,1],[63,13,63,14,1],[64,17,64,37,1],[68,13,68,54,1],[69,13,69,36,1],[70,13,70,40,1],[72,13,72,34,1],[73,9,73,10,1],[32,9,32,67,1],[59,52,59,73,1]]);
+    </script>
+  </body>
+</html>

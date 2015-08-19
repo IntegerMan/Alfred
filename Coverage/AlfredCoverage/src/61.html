@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\handlesaimltagattribute.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// HandlesAimlTagAttribute.cs
+// 
+// Created on:      08/14/2015 at 1:01 AM
+// Last Modified:   08/14/2015 at 1:01 AM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using System;
+using System.Diagnostics;
+
+using JetBrains.Annotations;
+
+namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
+{
+    /// &lt;summary&gt;
+    /// An attribute describing a class that can handle an AIML tag
+    /// &lt;/summary&gt;
+    [AttributeUsage(AttributeTargets.Class), UsedImplicitly]
+    public sealed class HandlesAimlTagAttribute : Attribute
+    {
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;HandlesAimlTagAttribute&quot;/&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;name&quot;&gt;The name of the tag this class handles.&lt;/param&gt;
+        public HandlesAimlTagAttribute(string name)
+        {
+            Name = name;
+        }
+
+        /// &lt;summary&gt;
+        /// Gets or sets the name of the tag this class handles.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The name.&lt;/value&gt;
+        public string Name
+        {
+            [DebuggerStepThrough]
+            get;
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[28,9,28,52,1],[29,9,29,10,1],[30,13,30,25,1],[31,9,31,10,1],[39,13,40,17,1]]);
+    </script>
+  </body>
+</html>

@@ -10,11 +10,12 @@ using System;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 
 using NUnit.Framework;
 
-namespace MattEland.Ani.Alfred.Core.Tests.Widgets
+namespace MattEland.Ani.Alfred.Tests.Widgets
 {
     /// <summary>
     ///     Tests testing the

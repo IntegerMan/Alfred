@@ -3,7 +3,10 @@
                     xmlns:widgets="clr-namespace:MattEland.Ani.Alfred.Core.Widgets;assembly=MattEland.Ani.Alfred.Core"
                     xmlns:console="clr-namespace:MattEland.Ani.Alfred.Core.Console;assembly=MattEland.Ani.Alfred.Core"
                     xmlns:core="clr-namespace:MattEland.Ani.Alfred.Core;assembly=MattEland.Ani.Alfred.Core"
-                    xmlns:pages="clr-namespace:MattEland.Ani.Alfred.Core.Pages;assembly=MattEland.Ani.Alfred.Core">
+                    xmlns:pages="clr-namespace:MattEland.Ani.Alfred.Core.Pages;assembly=MattEland.Ani.Alfred.Core"
+                    xmlns:chat="clr-namespace:MattEland.Ani.Alfred.Chat;assembly=MattEland.Ani.Alfred.Chat"
+                    xmlns:controls="clr-namespace:MattEland.Ani.Alfred.WPF.Controls"
+                    xmlns:modules="clr-namespace:MattEland.Ani.Alfred.Core.Modules;assembly=MattEland.Ani.Alfred.Core">
 
     <!-- Logging Templates -->
     <DataTemplate DataType="{x:Type console:ConsoleEvent}">
@@ -49,6 +52,7 @@
                 <!-- Message -->
                 <TextBlock Text="{Binding Message}" 
                            Margin="8, 2"
+                           TextWrapping="Wrap"
                            Foreground="{Binding Path=Level, Converter={StaticResource LogLevelToBrushConverter}}"/>
 
             </StackPanel>
@@ -58,7 +62,7 @@
 
     <!-- Module DataTemplates -->
 
-    <DataTemplate DataType="{x:Type core:AlfredModule}">
+    <DataTemplate DataType="{x:Type modules:AlfredModule}">
 
         <!-- TODO: The expand / collapse glyph sucks by default. Customize it -->
         <Expander Header="{Binding Path=Name}"
@@ -80,10 +84,10 @@
     <!-- TextWidget Template -->
     <DataTemplate DataType="{x:Type widgets:TextWidget}">
         <TextBlock
-                Margin="0, 8, 0, 0"
-                Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
-                Text="{Binding Text}"
-                ToolTip="{Binding Text}" />
+            Margin="0, 8, 0, 0"
+            Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
+            Text="{Binding Text}"
+            ToolTip="{Binding Text}" />
     </DataTemplate>
 
     <!-- AlertWidget Template -->
@@ -97,8 +101,8 @@
                 Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
 
             <TextBlock Text="{Binding Text}"
-                           Foreground="{StaticResource CautionForegroundBrush}"
-                           ToolTip="{Binding Text}" />
+                       Foreground="{StaticResource CautionForegroundBrush}"
+                       ToolTip="{Binding Text}" />
 
         </Border>
     </DataTemplate>
@@ -130,27 +134,27 @@
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding Text}" />
                     <TextBlock Text="{Binding ValueText}"
-                                   Margin="4,0,0,0" />
+                               Margin="4,0,0,0" />
                 </StackPanel>
             </Grid.ToolTip>
 
             <TextBlock Grid.Column="0"
-                           MinWidth="75"
-                           Text="{Binding Text}"
-                           HorizontalAlignment="Right"
-                           TextAlignment="Right"
-                           Margin="0,0,8,0"
-                           VerticalAlignment="Center" />
+                       MinWidth="75"
+                       Text="{Binding Text}"
+                       HorizontalAlignment="Right"
+                       TextAlignment="Right"
+                       Margin="0,0,8,0"
+                       VerticalAlignment="Center" />
 
             <ProgressBar Grid.Column="1"
-                             Foreground="{StaticResource ProgressBarNormalForegroundBrush}"
-                             Background="{StaticResource LightBackgroundBrush}"
-                             BorderBrush="{StaticResource AppBorderBrush}"
-                             Minimum="{Binding Minimum}"
-                             Maximum="{Binding Maximum}"
-                             Value="{Binding Value}"
-                             HorizontalAlignment="Stretch"
-                             HorizontalContentAlignment="Center" />
+                         Foreground="{StaticResource ProgressBarNormalForegroundBrush}"
+                         Background="{StaticResource LightBackgroundBrush}"
+                         BorderBrush="{StaticResource AppBorderBrush}"
+                         Minimum="{Binding Minimum}"
+                         Maximum="{Binding Maximum}"
+                         Value="{Binding Value}"
+                         HorizontalAlignment="Stretch"
+                         HorizontalContentAlignment="Center" />
 
         </Grid>
     </DataTemplate>
@@ -158,11 +162,9 @@
     <!-- Fallback type of widget Template -->
     <DataTemplate DataType="{x:Type widgets:AlfredWidget}">
 
-        <!-- TODO: Let's use some red styling to draw attention to the not implemented template -->
-
         <TextBlock
-                Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
-                Text="This is an unknown type of Widget" />
+            Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
+            Text="This is an unknown type of Widget" />
 
     </DataTemplate>
     
@@ -170,7 +172,7 @@
     
     <DataTemplate DataType="{x:Type pages:AlfredModuleListPage}">
         <ItemsControl ItemsSource="{Binding Path=Modules}"                      
-                        BorderThickness="0">
+                      BorderThickness="0">
 
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -184,6 +186,10 @@
     <DataTemplate DataType="{x:Type pages:AlfredEventLogPage}">
         <ItemsControl ItemsSource="{Binding Path=Events}"                                                                
                       BorderThickness="0" />
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type chat:ChatPage}">
+        <controls:ChatPane DataContext="{Binding Path=ChatHandler}" />
     </DataTemplate>
 
 </ResourceDictionary>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\chat\chattestsbase.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// ChatTestsBase.cs
+// 
+// Created on:      08/17/2015 at 9:57 PM
+// Last Modified:   08/18/2015 at 11:25 AM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Xml;
+
+using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Chat;
+using MattEland.Ani.Alfred.Chat.Aiml;
+using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Core.Modules;
+using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
+using MattEland.Ani.Alfred.Tests.Mocks;
+using MattEland.Common;
+
+using NUnit.Framework;
+
+namespace MattEland.Ani.Alfred.Tests.Chat
+{
+
+    /// &lt;summary&gt;
+    ///     An abstract class providing testing capabilities related to chats and commanding
+    /// &lt;/summary&gt;
+    [SuppressMessage(&quot;ReSharper&quot;, &quot;NotNullMemberIsNotInitialized&quot;)]
+    [SuppressMessage(&quot;ReSharper&quot;, &quot;ExceptionNotDocumented&quot;)]
+    public class ChatTestsBase
+    {
+        [NotNull]
+        private TestAlfred _alfred;
+
+        private IChatProvider _chat;
+        private AlfredChatSubsystem _chatSubsystem;
+        private AlfredCoreSubsystem _coreSubsystem;
+
+        [NotNull]
+        private SystemMonitoringSubsystem _sysSubsystem;
+
+        [NotNull]
+        private TestSubsystem _testSubsystem;
+
+        [NotNull]
+        private User _user;
+
+        [NotNull]
+        private ValueMetricProviderFactory _metricProviderFactory;
+
+        [NotNull]
+        public ValueMetricProviderFactory MetricProviderFactory
+        {
+            [DebuggerStepThrough]
+            get
+            { return _metricProviderFactory; }
+        }
+
+        [NotNull]
+        public User User
+        {
+            [DebuggerStepThrough]
+            get
+            {
+                return _user;
+            }
+        }
+
+        public AlfredCoreSubsystem CoreSubsystem
+        {
+            [DebuggerStepThrough]
+            get
+            {
+                return _coreSubsystem;
+            }
+        }
+
+        public AlfredChatSubsystem ChatSubsystem
+        {
+            [DebuggerStepThrough]
+            get
+            {
+                return _chatSubsystem;
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the chat engine.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The chat engine.&lt;/value&gt;
+        [NotNull]
+        protected ChatEngine Engine { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Gets the chat provider.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The chat provider.&lt;/value&gt;
+        public IChatProvider Chat
+        {
+            [DebuggerStepThrough]
+            get
+            {
+                return _chat;
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the alfred framework.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The alfred framework.&lt;/value&gt;
+        [NotNull]
+        protected TestAlfred Alfred
+        {
+            get { return _alfred; }
+        }
+
+        [NotNull]
+        public TestSubsystem TestSubsystem
+        {
+            [DebuggerStepThrough]
+            get
+            {
+                return _testSubsystem;
+            }
+        }
+
+        [NotNull]
+        public SystemMonitoringSubsystem SysSubsystem
+        {
+            [DebuggerStepThrough]
+            get
+            {
+                return _sysSubsystem;
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Asserts that the chat input gets a reply template with the specified ID.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input.&lt;/param&gt;
+        /// &lt;param name=&quot;templateId&quot;&gt;The template identifier.&lt;/param&gt;
+        protected void AssertMessageGetsReplyTemplate(string input, string templateId)
+        {
+            var template = GetReplyTemplate(input);
+
+            AssertTemplateId(template, templateId);
+        }
+
+        /// &lt;summary&gt;
+        ///     Asserts that the template identifier is found in the response template.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;template&quot;&gt;The template.&lt;/param&gt;
+        /// &lt;param name=&quot;id&quot;&gt;The template identifier.&lt;/param&gt;
+        private static void AssertTemplateId([NotNull] string template, [NotNull] string id)
+        {
+            var idString = $&quot;id=\&quot;{id.ToLowerInvariant()}\&quot;&quot;;
+
+            Assert.IsTrue(template.ToLowerInvariant().Contains(idString),
+                          $&quot;ID &#39;{idString}&#39; was not found. Template was: {template}&quot;);
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets a reply from the chat system on a specified inquiry.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;text&quot;&gt;The inquiry text.&lt;/param&gt;
+        /// &lt;returns&gt;The reply&lt;/returns&gt;
+        [NotNull]
+        protected string GetReply([NotNull] string text)
+        {
+            var response = GetResponse(text);
+
+            Assert.IsNotNull(response.ResponseText, &quot;Response text was null&quot;);
+
+            return response.ResponseText;
+        }
+
+        /// &lt;summary&gt;
+        ///     Says the specified message to Alfred.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;message&quot;&gt;The message.&lt;/param&gt;
+        protected void Say([NotNull] string message)
+        {
+            GetResponse(message);
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the response to the chat message.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;text&quot;&gt;The text.&lt;/param&gt;
+        /// &lt;returns&gt;The response&lt;/returns&gt;
+        private UserStatementResponse GetResponse([NotNull] string text)
+        {
+
+            var chatProvider = _alfred.ChatProvider;
+            Assert.NotNull(chatProvider,
+                           &quot;Alfred&#39;s chat provider was null when instructed to handle chat message&quot;);
+
+            var response = chatProvider.HandleUserStatement(text);
+
+            // Do some basic validity checks
+            Assert.NotNull(response, &quot;Response was null&quot;);
+            Assert.AreEqual(text, response.UserInput);
+            return response;
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets a reply from the chat system on a specified inquiry.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;text&quot;&gt;The inquiry text.&lt;/param&gt;
+        /// &lt;returns&gt;The reply&lt;/returns&gt;
+        [CanBeNull]
+        protected string GetReplyTemplate([CanBeNull] string text)
+        {
+            var response = GetResponse(text);
+
+            Assert.IsNotNull(response, &quot;Alfred&#39;s response was null&quot;);
+            return response.Template;
+        }
+
+        /// &lt;summary&gt;
+        ///     Initializes the chat system.
+        /// &lt;/summary&gt;
+        protected void InitChatSystem()
+        {
+            AlfredTestTagHandler.WasInvoked = false;
+
+            _alfred = new TestAlfred();
+
+            // Add Subsystems to alfred
+
+            _coreSubsystem = new AlfredCoreSubsystem(_alfred.PlatformProvider);
+            _alfred.Register(_coreSubsystem);
+
+            _chatSubsystem = new AlfredChatSubsystem(_alfred.PlatformProvider, _alfred.Console);
+            _alfred.Register(_chatSubsystem);
+
+            _testSubsystem = new TestSubsystem(_alfred.PlatformProvider);
+            _alfred.Register(_testSubsystem);
+
+            _metricProviderFactory = new ValueMetricProviderFactory();
+            _sysSubsystem = new SystemMonitoringSubsystem(_alfred.PlatformProvider, _metricProviderFactory);
+            _alfred.Register(_sysSubsystem);
+
+            // Store Chat Handler Details
+            var chatHandler = _chatSubsystem.ChatHandler;
+            _chat = chatHandler;
+
+            // Store Engine
+            Assert.IsNotNull(chatHandler.ChatEngine, &quot;Chat Engine was null&quot;);
+            Engine = chatHandler.ChatEngine;
+            Engine.LoadAimlFromString(Resources.AimlTestAssets.NonNull());
+            _user = new User(&quot;Test User&quot;, Engine);
+
+            // Start Alfred - doesn&#39;t make sense to have a chat test that doesn&#39;t need Alfred online first.
+            _alfred.Initialize();
+            _alfred.Update();
+        }
+
+        [NotNull]
+        protected TagHandlerParameters BuildTagHandlerParameters(string xml)
+        {
+            var node = AimlTagHandler.BuildNode(xml);
+            return BuildTagHandlerParameters(&quot;Testing is fun&quot;, node);
+        }
+
+        [NotNull]
+        private TagHandlerParameters BuildTagHandlerParameters(string input, XmlNode node)
+        {
+            var query = new SubQuery(input);
+            var request = new Request(input, User, Engine);
+            var result = new Result(User, Engine, request);
+            return new TagHandlerParameters(Engine, User, query, request, result, node);
+        }
+
+        /// &lt;summary&gt;
+        /// Builds a strongly typed tag handler for the given tag name from the given XML using a Tag Handler Factory and dynamic creation.
+        /// &lt;/summary&gt;
+        /// &lt;typeparam name=&quot;T&quot;&gt;The type of tag handler&lt;/typeparam&gt;
+        /// &lt;param name=&quot;tagName&quot;&gt;Name of the tag.&lt;/param&gt;
+        /// &lt;param name=&quot;xml&quot;&gt;The XML.&lt;/param&gt;
+        /// &lt;returns&gt;The strongly typed tag handler.&lt;/returns&gt;
+        [NotNull]
+        protected T BuildTagHandler&lt;T&gt;([NotNull] string tagName, [NotNull] string xml) where T : AimlTagHandler
+        {
+            var factory = new TagHandlerFactory(Engine);
+
+            var dynamicHandler = factory.BuildTagHandlerDynamic(tagName, BuildTagHandlerParameters(xml));
+            Assert.IsNotNull(dynamicHandler);
+
+            var typeHandler = (T)dynamicHandler;
+            Assert.IsNotNull(typeHandler);
+
+            return typeHandler;
+        }
+    }
+
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[79,13,79,14,0],[80,17,80,39,0],[81,13,81,14,0],[88,13,88,14,0],[89,17,89,39,0],[90,13,90,14,0],[108,13,108,14,0],[109,17,109,30,0],[110,13,110,14,0],[128,13,128,14,0],[129,17,129,39,0],[130,13,130,14,0],[138,13,138,14,0],[139,17,139,38,0],[140,13,140,14,0],[62,13,62,14,1],[62,15,62,45,1],[62,46,62,47,1],[70,13,70,14,1],[71,17,71,30,1],[72,13,72,14,1],[98,39,98,43,1],[98,44,98,48,1],[120,17,120,18,1],[120,19,120,34,1],[120,35,120,36,1],[149,9,149,10,1],[150,13,150,52,1],[152,13,152,52,1],[153,9,153,10,1],[161,9,161,10,1],[162,13,162,62,1],[164,13,165,87,1],[166,9,166,10,1],[175,9,175,10,1],[176,13,176,46,1],[178,13,178,79,1],[180,13,180,42,1],[181,9,181,10,1],[188,9,188,10,1],[189,13,189,34,1],[190,9,190,10,1],[198,9,198,10,1],[200,13,200,53,1],[201,13,202,102,1],[204,13,204,67,1],[207,13,207,59,1],[208,13,208,55,1],[209,13,209,29,1],[210,9,210,10,1],[219,9,219,10,1],[220,13,220,46,1],[222,13,222,70,1],[223,13,223,38,1],[224,9,224,10,1],[230,9,230,10,1],[231,13,231,53,1],[233,13,233,40,1],[237,13,237,80,1],[238,13,238,46,1],[240,13,240,97,1],[241,13,241,46,1],[243,13,243,74,1],[244,13,244,46,1],[246,13,246,71,1],[247,13,247,109,1],[248,13,248,45,1],[251,13,251,58,1],[252,13,252,33,1],[255,13,255,78,1],[256,13,256,45,1],[257,13,257,75,1],[258,13,258,51,1],[261,13,261,34,1],[262,13,262,30,1],[263,9,263,10,1],[267,9,267,10,1],[268,13,268,54,1],[269,13,269,70,1],[270,9,270,10,1],[274,9,274,10,1],[275,13,275,45,1],[276,13,276,60,1],[277,13,277,60,1],[278,13,278,89,1],[279,9,279,10,1],[290,9,290,10,1],[291,13,291,57,1],[293,13,293,106,1],[294,13,294,46,1],[296,13,296,49,1],[297,13,297,43,1],[299,13,299,32,1],[300,9,300,10,1]]);
+    </script>
+  </body>
+</html>

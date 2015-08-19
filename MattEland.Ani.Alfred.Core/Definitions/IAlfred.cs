@@ -6,6 +6,7 @@
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 
 using JetBrains.Annotations;
@@ -64,6 +65,58 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         ///     Shutdowns this instance.
         /// </summary>
         void Shutdown();
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is online.
+        /// </summary>
+        /// <value><c>true</c> if this instance is online; otherwise, <c>false</c>.</value>
+        bool IsOnline { get; }
+
+        /// <summary>
+        /// Gets the chat provider.
+        /// </summary>
+        /// <value>The chat provider.</value>
+        IChatProvider ChatProvider { get; }
+
+        /// <summary>
+        /// Gets the platform provider.
+        /// </summary>
+        /// <value>The platform provider.</value>
+        [NotNull]
+        IPlatformProvider PlatformProvider { get; }
+
+        /// <summary>
+        /// Gets the shell command handler that can pass shell commands on to the user interface.
+        /// </summary>
+        /// <value>The shell command handler.</value>
+        [CanBeNull]
+        IShellCommandRecipient ShellCommandHandler { get; }
+
+        /// <summary>
+        /// Registers the shell command recipient that will allow the shell to get commands from the Alfred layer.
+        /// </summary>
+        /// <param name="shell">The command recipient.</param>
+        void Register([NotNull] IShellCommandRecipient shell);
+
+        /// <summary>
+        /// Registers the user statement handler as the framework's user statement handler.
+        /// </summary>
+        /// <param name="chatProvider">The user statement handler.</param>
+        void Register([NotNull] IChatProvider chatProvider);
+
+        /// <summary>
+        ///     Registers a sub system with Alfred.
+        /// </summary>
+        /// <param name="subsystem">The subsystem.</param>
+        void Register([NotNull] AlfredSubsystem subsystem);
+
+        /// <summary>
+        ///     Tells modules to take a look at their content and update as needed.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">
+        ///     Thrown if Alfred is not Online
+        /// </exception>
+        void Update();
     }
 
 }

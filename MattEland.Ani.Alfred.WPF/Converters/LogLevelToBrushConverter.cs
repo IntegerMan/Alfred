@@ -15,6 +15,7 @@ using System.Windows.Media;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Core.Definitions;
 
 namespace MattEland.Ani.Alfred.WPF.Converters
 {
@@ -38,6 +39,12 @@ namespace MattEland.Ani.Alfred.WPF.Converters
         [NotNull]
         private Brush _warningBrush;
 
+        [NotNull]
+        private Brush _userInputBrush;
+
+        [NotNull]
+        private Brush _chatResponseBrush;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="LogLevelToBrushConverter" /> class.
         /// </summary>
@@ -47,9 +54,11 @@ namespace MattEland.Ani.Alfred.WPF.Converters
         {
             _errorBrush = Brushes.DarkRed;
             _infoBrush = Brushes.White;
-            _warningBrush = Brushes.Orange;
+            _warningBrush = Brushes.LightCoral;
             _verboseBrush = Brushes.DimGray;
             _defaultBrush = Brushes.DarkOrchid;
+            _userInputBrush = Brushes.PaleGoldenrod;
+            _chatResponseBrush = Brushes.SteelBlue;
         }
 
         /// <summary>
@@ -143,6 +152,44 @@ namespace MattEland.Ani.Alfred.WPF.Converters
         }
 
         /// <summary>
+        ///     Gets or sets the UserInput brush.
+        /// </summary>
+        /// <value>The UserInput brush.</value>
+        [NotNull]
+        public Brush UserInputBrush
+        {
+            get { return _userInputBrush; }
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentNullException(nameof(value));
+                }
+                _userInputBrush = value;
+            }
+        }
+
+
+        /// <summary>
+        ///     Gets or sets the ChatResponse brush.
+        /// </summary>
+        /// <value>The ChatResponse brush.</value>
+        [NotNull]
+        public Brush ChatResponseBrush
+        {
+            get { return _chatResponseBrush; }
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentNullException(nameof(value));
+                }
+                _chatResponseBrush = value;
+            }
+        }
+
+
+        /// <summary>
         ///     Converts a value to a brush where value is intended to be a LogLevel.
         /// </summary>
         /// <returns>
@@ -196,6 +243,13 @@ namespace MattEland.Ani.Alfred.WPF.Converters
 
                 case LogLevel.Verbose:
                     return VerboseBrush;
+
+                case LogLevel.UserInput:
+                    return UserInputBrush;
+
+                case LogLevel.ChatResponse:
+                case LogLevel.ChatNotification:
+                    return ChatResponseBrush;
 
                 default:
                     return DefaultBrush;

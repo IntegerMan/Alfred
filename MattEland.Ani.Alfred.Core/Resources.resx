@@ -252,4 +252,13 @@
   <data name="AppOnlineLogMessage" xml:space="preserve">
     <value>The application is now online</value>
   </data>
+  <data name="ChatModuleName" xml:space="preserve">
+    <value>Chat</value>
+  </data>
+  <data name="NoAlfredInstance" xml:space="preserve">
+    <value>This component is not currently attached to an Alfred instance</value>
+  </data>
+  <data name="ChatCommandToString" xml:space="preserve">
+    <value>{{Subsystem: {0}, Command: {1}, Data: {2}}}</value>
+  </data>
 </root>

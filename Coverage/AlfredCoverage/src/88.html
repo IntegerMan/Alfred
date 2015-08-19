@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\topicstartaghandler.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// topicstar.cs
+// 
+// Created on:      08/12/2015 at 10:59 PM
+// Last Modified:   08/12/2015 at 11:59 PM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using System.Collections.Generic;
+
+using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Common;
+
+namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
+{
+    /// &lt;summary&gt;
+    /// A tag handler for the AIML &quot;topicstar&quot; tag. This returns the output of the specified * value within the topic node.
+    /// &lt;/summary&gt;
+    [HandlesAimlTag(&quot;topicstar&quot;)]
+    public class TopicStarTagHandler : AimlTagHandler
+    {
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
+        public TopicStarTagHandler([NotNull] TagHandlerParameters parameters)
+            : base(parameters)
+        {
+        }
+
+        /// &lt;summary&gt;
+        /// Processes the input text and returns the processed value.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;The processed output&lt;/returns&gt;
+        protected override string ProcessChange()
+        {
+            var element = TemplateElement;
+            if (element != null &amp;&amp; element.Name.Matches(&quot;topicstar&quot;))
+            {
+                // Validate that we have TopicStar items to work with
+                var topicStar = Query.TopicStar;
+                if (topicStar.Count &lt;= 0)
+                {
+                    Log(string.Format(Locale, Resources.TopicStarErrorNoItems, Request.RawInput), LogLevel.Error);
+
+                    return string.Empty;
+                }
+
+                // When no index is specified return the first item.
+                if (!element.HasAttribute(&quot;index&quot;))
+                {
+                    return topicStar[0];
+                }
+
+                // Grab the item at the specified array index
+                var index = element.GetAttribute(&quot;index&quot;).AsInt();
+                if (index.IsWithinBoundsOf(topicStar))
+                {
+                    return topicStar[index - 1];
+                }
+
+                // Log the out of range failure
+                Log(string.Format(Locale, Resources.TopicStarErrorOutOfRange, index, Request.RawInput), LogLevel.Error);
+            }
+
+            return string.Empty;
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[31,15,31,31,0],[32,9,32,10,0],[33,9,33,10,0],[40,9,40,10,0],[41,13,41,43,0],[42,13,42,70,0],[43,13,43,14,0],[45,17,45,49,0],[46,17,46,42,0],[47,17,47,18,0],[48,21,48,115,0],[50,21,50,41,0],[54,17,54,52,0],[55,17,55,18,0],[56,21,56,41,0],[60,17,60,67,0],[61,17,61,55,0],[62,17,62,18,0],[63,21,63,49,0],[67,17,67,121,0],[68,13,68,14,0],[70,13,70,33,0],[71,9,71,10,0]]);
+    </script>
+  </body>
+</html>

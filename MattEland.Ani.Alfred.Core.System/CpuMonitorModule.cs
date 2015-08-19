@@ -8,6 +8,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
     /// </summary>
     public sealed class CpuMonitorModule : SystemMonitorModule, IDisposable
     {
-        private const string CpuCategoryName = "Processor";
+        public const string CpuCategoryName = "Processor";
         private const string CpuUsageCounterName = "% Processor Time";
 
         // ReSharper disable once AssignNullToNotNullAttribute
@@ -38,28 +39,16 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 
         [NotNull]
         [ItemNotNull]
-        private readonly List<PerformanceCounter> _processorCounters = new List<PerformanceCounter>();
+        private readonly List<MetricProviderBase> _processorCounters = new List<MetricProviderBase>();
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="CpuMonitorModule" /> class.
+        /// Initializes a new instance of the <see cref="CpuMonitorModule" /> class.
         /// </summary>
         /// <param name="platformProvider">The platform provider.</param>
-        public CpuMonitorModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
+        /// <param name="factory">The metric provider factory.</param>
+        public CpuMonitorModule([NotNull] IPlatformProvider platformProvider,
+                                [NotNull] IMetricProviderFactory factory) : base(platformProvider, factory)
         {
-            var cpuCategory = new PerformanceCounterCategory(CpuCategoryName);
-
-            var cpuInstanceNames = cpuCategory.GetInstanceNames();
-
-            // Add counters for each CPU instance we're using
-            foreach (var instance in cpuInstanceNames)
-            {
-                _processorCounters.Add(
-                                       new PerformanceCounter(
-                                           CpuCategoryName,
-                                           CpuUsageCounterName,
-                                           instance,
-                                           true));
-            }
         }
 
         /// <summary>
@@ -75,14 +64,45 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         }
 
         /// <summary>
+        /// Gets the number of CPU cores detected.
+        /// </summary>
+        /// <value>The number of CPU cores.</value>
+        public int NumberOfCores
+        {
+            get
+            {
+                // Don't include the aggregate counter
+                return _processorCounters.Count(c => c.Name != TotalInstanceName);
+            }
+        }
+
+        /// <summary>
+        /// Gets the average CPU utilization.
+        /// </summary>
+        /// <value>The average CPU utilization.</value>
+        public float AverageCpuUtilization
+        {
+            get
+            {
+                // Grab the total counter and get its value
+                var aggregateCounter = _processorCounters.FirstOrDefault(c => c.Name == TotalInstanceName);
+                return aggregateCounter?.NextValue() ?? 0;
+            }
+        }
+
+        /// <summary>
         ///     Handles module shutdown events
         /// </summary>
         protected override void ShutdownProtected()
         {
-            _cpuWidgets.Clear();
+            // Clear out the counters, bearing in mind that they're disposable
+            foreach (var counter in _processorCounters)
+            {
+                counter.Dispose();
+            }
+            _processorCounters.Clear();
 
-            // _processorCounters is not cleared since it's only populated at startup and its
-            // values are used during initialize. Fields will be disposed during Dispose.
+            _cpuWidgets.Clear();
         }
 
         /// <summary>
@@ -91,15 +111,17 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <param name="alfred"></param>
         protected override void InitializeProtected(IAlfred alfred)
         {
+            BuildCounters();
+
             _cpuWidgets.Clear();
 
             var core = 1;
 
-            foreach (var counter in _processorCounters.OrderBy(c => c.InstanceName))
+            foreach (var counter in _processorCounters.OrderBy(c => c.Name))
             {
                 // Don't add a core indicator for the total
                 Debug.Assert(counter != null);
-                if (counter.InstanceName == TotalInstanceName)
+                if (counter.Name == TotalInstanceName)
                 {
                     continue;
                 }
@@ -121,6 +143,21 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         }
 
         /// <summary>
+        /// Builds the list of processor counters
+        /// </summary>
+        private void BuildCounters()
+        {
+            var cpuInstanceNames = MetricProvider.GetCategoryInstanceNames(CpuCategoryName);
+
+            // Add counters for each CPU instance we're using
+            foreach (var instance in cpuInstanceNames)
+            {
+                var provider = MetricProvider.Build(CpuCategoryName, CpuUsageCounterName, instance);
+                _processorCounters.Add(provider);
+            }
+        }
+
+        /// <summary>
         ///     Handles updating the module as needed
         /// </summary>
         protected override void UpdateProtected()
@@ -128,7 +165,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             var core = 1;
             foreach (var widget in _cpuWidgets)
             {
-                var counter = widget.DataContext as PerformanceCounter;
+                var counter = widget.DataContext as MetricProviderBase;
 
                 // Update the widget using our arbitrary number instead of the instance name
                 var label = string.Format(CultureInfo.CurrentCulture, _cpuMonitorLabel, core);
@@ -147,7 +184,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <param name="label"> The label to add before the counter value. </param>
         private static void UpdateCpuWidget(
             [NotNull] AlfredProgressBarWidget widget,
-            [CanBeNull] PerformanceCounter counter,
+            [CanBeNull] MetricProviderBase counter,
             [CanBeNull] string label)
         {
 

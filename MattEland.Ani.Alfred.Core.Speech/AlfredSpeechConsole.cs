@@ -14,6 +14,7 @@ using System.Globalization;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Core.Speech
 {
@@ -47,7 +48,7 @@ namespace MattEland.Ani.Alfred.Core.Speech
             _console = console;
 
             // Tell it what log levels we care about
-            _speechEnabledLogLevels = new HashSet<LogLevel> { LogLevel.Info, LogLevel.Warning, LogLevel.Error };
+            _speechEnabledLogLevels = new HashSet<LogLevel> { LogLevel.ChatResponse, LogLevel.Warning, LogLevel.Error };
 
             // Give the speech provider the existing console and not this console since it won't be online yet
             _speech = new AlfredSpeechProvider(console);
@@ -84,7 +85,15 @@ namespace MattEland.Ani.Alfred.Core.Speech
         /// <param name="level">The logging level.</param>
         public void Log(string title, string message, LogLevel level)
         {
-            Debug.Assert(!string.IsNullOrWhiteSpace(message));
+            if (title == null)
+            {
+                title = "Unknown";
+            }
+
+            if (message == null)
+            {
+                return;
+            }
 
             // Always log things to the base logger
             _console.Log(title, message, level);

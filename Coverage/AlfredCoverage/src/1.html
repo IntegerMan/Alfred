@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\commontests.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// CommonTests.cs
+// 
+// Created on:      08/18/2015 at 3:13 PM
+// Last Modified:   08/18/2015 at 3:13 PM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using MattEland.Common;
+
+using NUnit.Framework;
+
+namespace MattEland.Ani.Alfred.Tests
+{
+    /// &lt;summary&gt;
+    /// Contains tests related to MattEland.Common functionality
+    /// &lt;/summary&gt;
+    [TestFixture]
+    public class CommonTests
+    {
+
+        [Test]
+        public void Pluralize1ResultsInSingular()
+        {
+            var i = 1;
+
+            var pluralized = i.Pluralize(&quot;Singular&quot;, &quot;Plural&quot;);
+
+            Assert.AreEqual(&quot;Singular&quot;, pluralized);
+        }
+
+        [Test]
+        public void Pluralize0ResultsInPlural()
+        {
+            var i = 0;
+
+            var pluralized = i.Pluralize(&quot;Singular&quot;, &quot;Plural&quot;);
+
+            Assert.AreEqual(&quot;Plural&quot;, pluralized);
+        }
+
+        [Test]
+        public void Pluralize42ResultsInPlural()
+        {
+            var i = 42;
+
+            var pluralized = i.Pluralize(&quot;Singular&quot;, &quot;Plural&quot;);
+
+            Assert.AreEqual(&quot;Plural&quot;, pluralized);
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[25,9,25,10,1],[26,13,26,23,1],[28,13,28,64,1],[30,13,30,53,1],[31,9,31,10,1],[35,9,35,10,1],[36,13,36,23,1],[38,13,38,64,1],[40,13,40,51,1],[41,9,41,10,1],[45,9,45,10,1],[46,13,46,24,1],[48,13,48,64,1],[50,13,50,51,1],[51,9,51,10,1]]);
+    </script>
+  </body>
+</html>

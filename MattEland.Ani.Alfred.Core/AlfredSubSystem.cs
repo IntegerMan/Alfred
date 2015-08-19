@@ -2,30 +2,31 @@
 // AlfredSubSystem.cs
 // 
 // Created on:      08/07/2015 at 10:00 PM
-// Last Modified:   08/09/2015 at 6:53 PM
-// Original author: Matt Eland
+// Last Modified:   08/16/2015 at 2:21 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Core
 {
     /// <summary>
-    ///     Represents a subsystem on the Alfred Framework. Subsystems are ways of providing multiple related modules and
+    ///     Represents a subsystem on the Alfred Framework. Subsystems are ways of providing multiple
+    ///     related modules and
     ///     capabilities to Alfred.
     /// </summary>
     public abstract class AlfredSubsystem : AlfredComponent, IAlfredSubsystem
     {
-        [NotNull]
-        [ItemNotNull]
-        private readonly ICollection<IAlfredModule> _modules;
-
         [NotNull]
         [ItemNotNull]
         private readonly ICollection<IAlfredPage> _pages;
@@ -34,15 +35,16 @@ namespace MattEland.Ani.Alfred.Core
         ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
         /// <param name="provider">The provider.</param>
+        /// <param name="console">The console.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        protected AlfredSubsystem([NotNull] IPlatformProvider provider)
+        protected AlfredSubsystem([NotNull] IPlatformProvider provider,
+                                  [CanBeNull] IConsole console = null) : base(console)
         {
             if (provider == null)
             {
                 throw new ArgumentNullException(nameof(provider));
             }
 
-            _modules = provider.CreateCollection<IAlfredModule>();
             _pages = provider.CreateCollection<IAlfredPage>();
         }
 
@@ -56,36 +58,14 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     Gets the children of this component. Depending on the type of component this is, the children will
+        ///     Gets the children of this component. Depending on the type of component this is, the children
+        ///     will
         ///     vary in their own types.
         /// </summary>
         /// <value>The children.</value>
         public override IEnumerable<IAlfredComponent> Children
         {
-            get
-            {
-                // Pages are higher up in the hierarchy than modules so they come first
-                foreach (var page in _pages)
-                {
-                    yield return page;
-                }
-
-                // Return all modules
-                foreach (var module in _modules)
-                {
-                    yield return module;
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Gets the modules associated with this subsystem
-        /// </summary>
-        /// <value>The modules.</value>
-        [ItemNotNull]
-        public IEnumerable<IAlfredModule> Modules
-        {
-            get { return _modules; }
+            get { return _pages; }
         }
 
         /// <summary>
@@ -98,6 +78,13 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
+        ///     Gets the identifier for the subsystem to be used in command routing.
+        /// </summary>
+        /// <value>The identifier for the subsystem.</value>
+        [NotNull]
+        public abstract string Id { get; }
+
+        /// <summary>
         ///     Gets the pages associated with this subsystem
         /// </summary>
         /// <value>The pages.</value>
@@ -108,21 +95,11 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     Registers a module.
-        /// </summary>
-        /// <param name="module">The module.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0")]
-        protected void Register([NotNull] IAlfredModule module)
-        {
-            _modules.AddSafe(module);
-            module.OnRegistered(AlfredInstance);
-        }
-
-        /// <summary>
         ///     Registers a page.
         /// </summary>
         /// <param name="page">The page.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0")]
+        [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods",
+            MessageId = "0")]
         protected void Register([NotNull] IAlfredPage page)
         {
             _pages.AddSafe(page);
@@ -137,7 +114,30 @@ namespace MattEland.Ani.Alfred.Core
             base.ClearChildCollections();
 
             _pages.Clear();
-            _modules.Clear();
+        }
+
+        /// <summary>
+        /// Processes an Alfred Command. If the command is handled, result should be modified accordingly and the method should return true. Returning false will not stop the message from being propogated.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="result">The result. If the command was handled, this should be updated.</param>
+        /// <returns><c>True</c> if the command was handled; otherwise false.</returns>
+        public virtual bool ProcessAlfredCommand(ChatCommand command,
+                                                 [NotNull] AlfredCommandResult result)
+        {
+            // Only route messages to sub-components if they are for this subsystem or unaddressed
+            if (command.Subsystem.IsEmpty() || command.Subsystem.Matches(Id))
+            {
+                foreach (var page in Pages)
+                {
+                    if (page.ProcessAlfredCommand(command, result))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
     }
 
