@@ -2,11 +2,10 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:widgets="clr-namespace:MattEland.Ani.Alfred.Core.Widgets;assembly=MattEland.Ani.Alfred.Core"
                     xmlns:console="clr-namespace:MattEland.Ani.Alfred.Core.Console;assembly=MattEland.Ani.Alfred.Core"
-                    xmlns:core="clr-namespace:MattEland.Ani.Alfred.Core;assembly=MattEland.Ani.Alfred.Core"
                     xmlns:pages="clr-namespace:MattEland.Ani.Alfred.Core.Pages;assembly=MattEland.Ani.Alfred.Core"
                     xmlns:chat="clr-namespace:MattEland.Ani.Alfred.Chat;assembly=MattEland.Ani.Alfred.Chat"
-                    xmlns:controls="clr-namespace:MattEland.Ani.Alfred.WPF.Controls"
-                    xmlns:modules="clr-namespace:MattEland.Ani.Alfred.Core.Modules;assembly=MattEland.Ani.Alfred.Core">
+                    xmlns:modules="clr-namespace:MattEland.Ani.Alfred.Core.Modules;assembly=MattEland.Ani.Alfred.Core"
+                    xmlns:controls="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Controls">
 
     <!-- Logging Templates -->
     <DataTemplate DataType="{x:Type console:ConsoleEvent}">

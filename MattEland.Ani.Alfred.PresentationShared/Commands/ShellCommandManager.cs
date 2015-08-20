@@ -16,7 +16,7 @@ using MattEland.Ani.Alfred.Core.Definitions;
 namespace MattEland.Ani.Alfred.PresentationShared.Commands
 {
     /// <summary>
-    /// The command manager for the WPF application
+    /// The command manager for the WPF/XAML application
     /// </summary>
     public class ShellCommandManager : IShellCommandRecipient
     {
@@ -54,7 +54,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         /// <param name="command">The command.</param>
         public string ProcessShellCommand(ShellCommand command)
         {
-            _alfred.Console?.Log("WPF.ShellCommand", "Received shell command: " + command, LogLevel.Info);
+            _alfred.Console?.Log("ShellCommand", "Received shell command: " + command, LogLevel.Info);
 
             switch (command.Name.ToUpperInvariant())
             {

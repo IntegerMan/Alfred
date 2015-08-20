@@ -13,7 +13,7 @@ using System.Windows;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 
-namespace MattEland.Ani.Alfred.WPF.Controls
+namespace MattEland.Ani.Alfred.PresentationShared.Controls
 {
     /// <summary>
     ///     Interaction logic for ChatPane.xaml
@@ -40,7 +40,7 @@ namespace MattEland.Ani.Alfred.WPF.Controls
             var text = txtInput.Text;
             if (string.IsNullOrWhiteSpace(text))
             {
-                MessageBox.Show(Properties.Resources.WarningNoChatText, Properties.Resources.WarningNoChatTextHeader);
+                MessageBox.Show("No Message", "Please type a message before hitting send.");
                 return;
             }
 

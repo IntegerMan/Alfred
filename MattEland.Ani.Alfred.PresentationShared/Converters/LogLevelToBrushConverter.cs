@@ -7,8 +7,10 @@
 // ---------------------------------------------------------
 
 using System;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Windows.Data;
 using System.Windows.Media;
 using JetBrains.Annotations;
@@ -19,28 +21,19 @@ namespace MattEland.Ani.Alfred.PresentationShared.Converters
     /// <summary>
     ///     An IValueConverter that converts LogLevels to brushes
     /// </summary>
-    public sealed class LogLevelToBrushConverter : IValueConverter
+    public sealed class LogLevelToBrushConverter : IValueConverter, INotifyPropertyChanged
     {
         [NotNull]
         private Brush _defaultBrush;
 
         [NotNull]
-        private Brush _errorBrush;
-
-        [NotNull]
-        private Brush _infoBrush;
-
-        [NotNull]
-        private Brush _verboseBrush;
-
-        [NotNull]
-        private Brush _warningBrush;
-
-        [NotNull]
-        private Brush _userInputBrush;
-
-        [NotNull]
         private Brush _chatResponseBrush;
+
+        private Brush _warningBrush;
+        private Brush _verboseBrush;
+        private Brush _errorBrush;
+        private Brush _infoBrush;
+        private Brush _userInputBrush;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="LogLevelToBrushConverter" /> class.
@@ -49,12 +42,12 @@ namespace MattEland.Ani.Alfred.PresentationShared.Converters
             Justification = "Brushes are guaranteed to return non-null values")]
         public LogLevelToBrushConverter()
         {
-            _errorBrush = Brushes.DarkRed;
-            _infoBrush = Brushes.White;
-            _warningBrush = Brushes.LightCoral;
-            _verboseBrush = Brushes.DimGray;
+            ErrorBrush = Brushes.DarkRed;
+            InfoBrush = Brushes.White;
+            WarningBrush = Brushes.LightCoral;
+            VerboseBrush = Brushes.DimGray;
             _defaultBrush = Brushes.DarkOrchid;
-            _userInputBrush = Brushes.PaleGoldenrod;
+            UserInputBrush = Brushes.PaleGoldenrod;
             _chatResponseBrush = Brushes.SteelBlue;
         }
 
@@ -68,11 +61,9 @@ namespace MattEland.Ani.Alfred.PresentationShared.Converters
             get { return _verboseBrush; }
             set
             {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
+                if (Equals(value, _verboseBrush)) return;
                 _verboseBrush = value;
+                OnPropertyChanged();
             }
         }
 
@@ -86,11 +77,9 @@ namespace MattEland.Ani.Alfred.PresentationShared.Converters
             get { return _errorBrush; }
             set
             {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
+                if (Equals(value, _errorBrush)) return;
                 _errorBrush = value;
+                OnPropertyChanged();
             }
         }
 
@@ -104,11 +93,9 @@ namespace MattEland.Ani.Alfred.PresentationShared.Converters
             get { return _defaultBrush; }
             set
             {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
+                if (Equals(value, _defaultBrush)) return;
                 _defaultBrush = value;
+                OnPropertyChanged();
             }
         }
 
@@ -122,11 +109,9 @@ namespace MattEland.Ani.Alfred.PresentationShared.Converters
             get { return _warningBrush; }
             set
             {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
+                if (Equals(value, _warningBrush)) return;
                 _warningBrush = value;
+                OnPropertyChanged();
             }
         }
 
@@ -140,11 +125,9 @@ namespace MattEland.Ani.Alfred.PresentationShared.Converters
             get { return _infoBrush; }
             set
             {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
+                if (Equals(value, _infoBrush)) return;
                 _infoBrush = value;
+                OnPropertyChanged();
             }
         }
 
@@ -158,11 +141,9 @@ namespace MattEland.Ani.Alfred.PresentationShared.Converters
             get { return _userInputBrush; }
             set
             {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
+                if (Equals(value, _userInputBrush)) return;
                 _userInputBrush = value;
+                OnPropertyChanged();
             }
         }
 
@@ -176,11 +157,9 @@ namespace MattEland.Ani.Alfred.PresentationShared.Converters
             get { return _chatResponseBrush; }
             set
             {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
+                if (Equals(value, _chatResponseBrush)) return;
                 _chatResponseBrush = value;
+                OnPropertyChanged();
             }
         }
 
@@ -264,6 +243,21 @@ namespace MattEland.Ani.Alfred.PresentationShared.Converters
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotSupportedException();
+        }
+
+        /// <summary>
+        /// Occurs when a property changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Called when a property changed.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        [NotifyPropertyChangedInvocator]
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

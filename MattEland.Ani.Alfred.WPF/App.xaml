@@ -7,10 +7,10 @@
         <ResourceDictionary>
             
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Dictionaries/DarkStyles.xaml" />
-                <ResourceDictionary Source="Dictionaries/Miscellaneous.xaml" />
-                <ResourceDictionary Source="Dictionaries/Styles.xaml" />
-                <ResourceDictionary Source="Dictionaries/Templates.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/DarkStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Miscellaneous.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Templates.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Styles.xaml" />                
             </ResourceDictionary.MergedDictionaries>
             
         </ResourceDictionary>
