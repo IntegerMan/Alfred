@@ -48,7 +48,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\ApplicationManager.cs" />
+    <Compile Include="Commands\ShellCommandManager.cs" />
+    <Compile Include="Commands\XamlClientCommand.cs" />
+    <Compile Include="Commands\XamlPlatformProvider.cs" />
     <Compile Include="Converters\LogLevelToBrushConverter.cs" />
+    <Compile Include="Commands\IUserInterfaceDirector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

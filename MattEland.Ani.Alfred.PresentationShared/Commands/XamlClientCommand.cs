@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------
-// WinClientCommand.cs
+// XamlClientCommand.cs
 // 
 // Created on:      08/08/2015 at 5:55 PM
 // Last Modified:   08/08/2015 at 5:56 PM
@@ -8,28 +8,27 @@
 
 using System;
 using System.Windows.Input;
-
 using MattEland.Ani.Alfred.Core.Definitions;
 
-namespace MattEland.Ani.Alfred.WPF.Platform
+namespace MattEland.Ani.Alfred.PresentationShared.Commands
 {
     /// <summary>
-    ///     A WPF compliant implementation of AlfredCommand.
+    ///     A WPF/XAML compliant implementation of AlfredCommand.
     /// </summary>
-    public sealed class WinClientCommand : AlfredCommand, ICommand
+    public sealed class XamlClientCommand : AlfredCommand, ICommand
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="WinClientCommand" /> class.
+        ///     Initializes a new instance of the <see cref="XamlClientCommand" /> class.
         /// </summary>
-        public WinClientCommand() : this(null)
+        public XamlClientCommand() : this(null)
         {
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="WinClientCommand" /> class.
+        ///     Initializes a new instance of the <see cref="XamlClientCommand" /> class.
         /// </summary>
         /// <param name="executeAction">The execute action.</param>
-        public WinClientCommand(Action executeAction) : base(executeAction)
+        public XamlClientCommand(Action executeAction) : base(executeAction)
         {
         }
     }

@@ -12,9 +12,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-
 using JetBrains.Annotations;
-
 using MattEland.Ani.Alfred.Chat;
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
@@ -22,47 +20,67 @@ using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Ani.Alfred.Core.Speech;
-using MattEland.Ani.Alfred.WPF.Platform;
-using MattEland.Common;
 
-using Res = MattEland.Ani.Alfred.WPF.Properties.Resources;
-
-namespace MattEland.Ani.Alfred.WPF
+namespace MattEland.Ani.Alfred.PresentationShared.Commands
 {
     /// <summary>
-    ///     The application manager takes care of the discrete bits of managing Alfred that
-    ///     shouldn't be the concern of MainWindow or other user interface elements.
+    ///     The application manager takes care of the discrete bits of managing Alfred
+    ///     that shouldn't be the concern of the client or other user interface elements.
     /// </summary>
     public sealed class ApplicationManager : IDisposable
     {
         /// <summary>
         ///     The Alfred Provider that makes the application possible
         /// </summary>
-        [NotNull]
-        private readonly AlfredApplication _alfred;
+        [NotNull] private readonly AlfredApplication _alfred;
 
+        [NotNull] private readonly ShellCommandManager _shellManager;
         private AlfredCoreSubsystem _alfredCoreSubsystem;
         private AlfredChatSubsystem _chatSubsystem;
         private AlfredSpeechConsole _console;
         private SystemMonitoringSubsystem _systemMonitoringSubsystem;
 
-        [NotNull]
-        private WpfShellCommandManager _shellManager;
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="T:System.Object" /> class with
+        ///     the specified user interface director and a XAML platform provider.
+        /// </summary>
+        /// <param name="director">The user interface director</param>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="director" /> is
+        ///     <see langword="null" />.
+        /// </exception>
+        public ApplicationManager([NotNull] IUserInterfaceDirector director)
+            : this(director, new XamlPlatformProvider())
+        {
+        }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
+        ///     Initializes a new instance of the <see cref="T:System.Object" /> class with
+        ///     the specified user interface director and platform provider.
         /// </summary>
-        /// <param name="window">The owning window</param>
-        /// <exception cref="ArgumentNullException"><paramref name="window"/> is <see langword="null" />.</exception>
-        public ApplicationManager([NotNull] MainWindow window)
+        /// <param name="director">The user interface director</param>
+        /// <param name="platformProvider"></param>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="director" /> is
+        ///     <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="platformProvider" /> is
+        ///     <see langword="null" />.
+        /// </exception>
+        public ApplicationManager([NotNull] IUserInterfaceDirector director,
+            [NotNull] IPlatformProvider platformProvider)
         {
-            if (window == null)
+            if (director == null)
             {
-                throw new ArgumentNullException(nameof(window));
+                throw new ArgumentNullException(nameof(director));
+            }
+            if (platformProvider == null)
+            {
+                throw new ArgumentNullException(nameof(platformProvider));
             }
 
             // Create Alfred. It won't be online and running yet, but create it.
-            var platformProvider = new WinClientPlatformProvider();
             var bootstrapper = new AlfredBootstrapper(platformProvider);
             _alfred = bootstrapper.Create();
 
@@ -70,7 +88,7 @@ namespace MattEland.Ani.Alfred.WPF
             _console = InitializeConsole(platformProvider);
 
             // Hook up our shell manager now that we have a way of communicating with Alfred
-            _shellManager = new WpfShellCommandManager(window, _alfred);
+            _shellManager = new ShellCommandManager(director, _alfred);
             _alfred.Register(_shellManager);
 
             InitializeSubsystems(_alfred.PlatformProvider);
@@ -83,11 +101,7 @@ namespace MattEland.Ani.Alfred.WPF
         [UsedImplicitly]
         public AlfredApplication Alfred
         {
-            [DebuggerStepThrough]
-            get
-            {
-                return _alfred;
-            }
+            [DebuggerStepThrough] get { return _alfred; }
         }
 
         /// <summary>
@@ -97,6 +111,20 @@ namespace MattEland.Ani.Alfred.WPF
         public IConsole Console
         {
             get { return _console; }
+        }
+
+        /// <summary>
+        ///     Gets the current culture's locale information.
+        /// </summary>
+        /// <value>The locale.</value>
+        [NotNull]
+        public CultureInfo Locale
+        {
+            get
+            {
+                //? It might make sense to make this a property on Alfred.
+                return CultureInfo.CurrentCulture;
+            }
         }
 
         /// <summary>
@@ -113,7 +141,8 @@ namespace MattEland.Ani.Alfred.WPF
         }
 
         /// <summary>
-        ///     Initializes the console for the application and returns the instantiated console.
+        ///     Initializes the console for the application and returns the instantiated
+        ///     console.
         /// </summary>
         /// <param name="platformProvider">The platform provider.</param>
         /// <returns>The instantiated console.</returns>
@@ -132,9 +161,9 @@ namespace MattEland.Ani.Alfred.WPF
             // Give Alfred a voice
             _console = new AlfredSpeechConsole(baseConsole);
 
-            _console.Log(Res.InitializeConsoleLogHeader.NonNull(),
-                         Res.ConsoleOnlineLogMessage.NonNull(),
-                         LogLevel.Verbose);
+            _console.Log("AppManager.InitConsole",
+                "Initializing console.",
+                LogLevel.Verbose);
             _alfred.Console = _console;
 
             return _console;
@@ -147,8 +176,8 @@ namespace MattEland.Ani.Alfred.WPF
         private void InitializeSubsystems([NotNull] IPlatformProvider platformProvider)
         {
             // Log header
-            const string LogHeader = "WinClient.Initialize";
-            _console?.Log(LogHeader, Res.InitializeModulesLogMessage.NonNull(), LogLevel.Verbose);
+            const string LogHeader = "AppManager.Initialize";
+            _console?.Log(LogHeader, "Initializing subsystems", LogLevel.Verbose);
 
             // Init Core
             _alfredCoreSubsystem = new AlfredCoreSubsystem(platformProvider);
@@ -159,40 +188,26 @@ namespace MattEland.Ani.Alfred.WPF
             {
                 var metricProviderFactory = new CounterMetricProviderFactory();
                 _systemMonitoringSubsystem = new SystemMonitoringSubsystem(platformProvider,
-                                                                           metricProviderFactory);
+                    metricProviderFactory);
                 _alfred.Register(_systemMonitoringSubsystem);
             }
             catch (Win32Exception ex)
             {
                 _console?.Log(LogHeader,
-                              string.Format(Locale, "Problem creating system monitoring module: Win32 exception: {0}", ex.Message),
-                              LogLevel.Error);
+                    string.Format(Locale, "Problem creating system monitoring module: Win32 exception: {0}", ex.Message),
+                    LogLevel.Error);
             }
             catch (UnauthorizedAccessException ex)
             {
                 _console?.Log(LogHeader,
-                              string.Format(Locale, "Problem creating system monitoring module: Unauthorized access exception: {0}", ex.Message),
-                              LogLevel.Error);
+                    string.Format(Locale,
+                        "Problem creating system monitoring module: Unauthorized access exception: {0}", ex.Message),
+                    LogLevel.Error);
             }
 
             // Init Chat
             _chatSubsystem = new AlfredChatSubsystem(platformProvider, _alfred.Console);
             _alfred.Register(_chatSubsystem);
-
-        }
-
-        /// <summary>
-        /// Gets the current culture's locale information.
-        /// </summary>
-        /// <value>The locale.</value>
-        [NotNull]
-        public CultureInfo Locale
-        {
-            get
-            {
-                //? It might make sense to make this a property on Alfred.
-                return CultureInfo.CurrentCulture;
-            }
         }
 
         /// <summary>

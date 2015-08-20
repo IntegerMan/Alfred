@@ -17,6 +17,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.PresentationShared.Commands;
 using MattEland.Ani.Alfred.WPF.Properties;
 using MattEland.Common;
 
@@ -27,7 +28,7 @@ namespace MattEland.Ani.Alfred.WPF
     /// <summary>
     ///     Interaction logic for MainWindow.xaml
     /// </summary>
-    public sealed partial class MainWindow : IDisposable
+    public sealed partial class MainWindow : IDisposable, IUserInterfaceDirector
     {
         [NotNull]
         private readonly ApplicationManager _app;
@@ -47,7 +48,7 @@ namespace MattEland.Ani.Alfred.WPF
             // Do not allow topmost window mode while debugging
             Topmost = false;
 #endif
-            _app = new ApplicationManager(this);
+            _app = new ApplicationManager(this, new XamlPlatformProvider());
 
             // DataBindings rely on Alfred presently as there hasn't been a need for a page ViewModel yet
             DataContext = _app;

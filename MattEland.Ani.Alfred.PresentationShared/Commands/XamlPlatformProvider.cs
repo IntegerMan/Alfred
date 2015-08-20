@@ -1,5 +1,5 @@
 // ---------------------------------------------------------
-// WinClientPlatformProvider.cs
+// XamlPlatformProvider.cs
 // 
 // Created on:      08/08/2015 at 5:55 PM
 // Last Modified:   08/08/2015 at 5:56 PM
@@ -9,16 +9,14 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Widgets;
 
-namespace MattEland.Ani.Alfred.WPF.Platform
+namespace MattEland.Ani.Alfred.PresentationShared.Commands
 {
     /// <summary>
-    ///     A collection provider that provides WPF preferred Observable Collections
+    ///     A platform provider that provides WPF/XAML compliant objects
     /// </summary>
-    public sealed class WinClientPlatformProvider : IPlatformProvider
+    public sealed class XamlPlatformProvider : IPlatformProvider
     {
         /// <summary>
         ///     Creates a collection of the specified type.
@@ -36,7 +34,7 @@ namespace MattEland.Ani.Alfred.WPF.Platform
         /// <returns>An AlfredCommand.</returns>
         public AlfredCommand CreateCommand()
         {
-            return new WinClientCommand();
+            return new XamlClientCommand();
         }
 
         /// <summary>
@@ -46,7 +44,7 @@ namespace MattEland.Ani.Alfred.WPF.Platform
         /// <returns>An AlfredCommand.</returns>
         public AlfredCommand CreateCommand(Action executeAction)
         {
-            return new WinClientCommand(executeAction);
+            return new XamlClientCommand(executeAction);
         }
     }
 }

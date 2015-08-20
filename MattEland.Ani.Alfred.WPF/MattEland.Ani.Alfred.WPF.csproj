@@ -90,14 +90,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ApplicationManager.cs" />
     <Compile Include="Controls\ChatPane.xaml.cs">
       <DependentUpon>ChatPane.xaml</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Platform\WinClientPlatformProvider.cs" />
-    <Compile Include="Platform\WinClientCommand.cs" />
-    <Compile Include="WpfShellCommandManager.cs" />
     <Page Include="Controls\ChatPane.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -152,28 +148,6 @@
     </EmbeddedResource>
     <None Include="AlfredAppTestCertificate.snk" />
     <None Include="AlfredWPF.cd" />
-    <None Include="DataFiles\Chat\Rosie\animal.aiml" />
-    <None Include="DataFiles\Chat\Rosie\bot_profile.aiml" />
-    <None Include="DataFiles\Chat\Rosie\client_profile.aiml" />
-    <None Include="DataFiles\Chat\Rosie\config.aiml" />
-    <None Include="DataFiles\Chat\Rosie\date.aiml" />
-    <None Include="DataFiles\Chat\Rosie\default.aiml" />
-    <None Include="DataFiles\Chat\Rosie\dialog.aiml" />
-    <None Include="DataFiles\Chat\Rosie\inappropriate.aiml" />
-    <None Include="DataFiles\Chat\Rosie\inquiry.aiml" />
-    <None Include="DataFiles\Chat\Rosie\insults.aiml" />
-    <None Include="DataFiles\Chat\Rosie\knowledge.aiml" />
-    <None Include="DataFiles\Chat\Rosie\personality.aiml" />
-    <None Include="DataFiles\Chat\Rosie\profanity.aiml" />
-    <None Include="DataFiles\Chat\Rosie\reductions1.aiml" />
-    <None Include="DataFiles\Chat\Rosie\reductions2.aiml" />
-    <None Include="DataFiles\Chat\Rosie\reductions_update.aiml" />
-    <None Include="DataFiles\Chat\Rosie\roman.aiml" />
-    <None Include="DataFiles\Chat\Rosie\that.aiml" />
-    <None Include="DataFiles\Chat\Rosie\train.aiml" />
-    <None Include="DataFiles\Chat\Rosie\udc.aiml" />
-    <None Include="DataFiles\Chat\Rosie\utilities.aiml" />
-    <None Include="DataFiles\Chat\Rosie\z_update.aiml" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

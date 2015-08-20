@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------
-// WpfShellCommandManager.cs
+// ShellCommandManager.cs
 // 
 // Created on:      08/18/2015 at 11:11 PM
 // Last Modified:   08/18/2015 at 11:11 PM
@@ -8,43 +8,43 @@
 // ---------------------------------------------------------
 
 using System;
-
 using JetBrains.Annotations;
-
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 
-namespace MattEland.Ani.Alfred.WPF
+namespace MattEland.Ani.Alfred.PresentationShared.Commands
 {
     /// <summary>
     /// The command manager for the WPF application
     /// </summary>
-    public class WpfShellCommandManager : IShellCommandRecipient
+    public class ShellCommandManager : IShellCommandRecipient
     {
         [NotNull]
-        private readonly MainWindow _window;
+        private readonly IUserInterfaceDirector _uiDirector;
 
         [NotNull]
         private readonly AlfredApplication _alfred;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// Initializes a new instance of the <see cref="T:System.Object" /> class.
         /// </summary>
-        /// <exception cref="ArgumentNullException"><paramref name="window"/> is <see langword="null" />.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="alfred"/> is <see langword="null" />.</exception>
-        public WpfShellCommandManager([NotNull] MainWindow window, [NotNull] AlfredApplication alfred)
+        /// <param name="director">The user interface director.</param>
+        /// <param name="alfred">The alfred instance.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="director" /> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="alfred" /> is <see langword="null" />.</exception>
+        public ShellCommandManager([NotNull] IUserInterfaceDirector director, [NotNull] AlfredApplication alfred)
         {
-            if (window == null)
+            if (director == null)
             {
-                throw new ArgumentNullException(nameof(window));
+                throw new ArgumentNullException(nameof(director));
             }
             if (alfred == null)
             {
                 throw new ArgumentNullException(nameof(alfred));
             }
 
-            _window = window;
+            _uiDirector = director;
             _alfred = alfred;
         }
 
@@ -75,7 +75,7 @@ namespace MattEland.Ani.Alfred.WPF
             switch (command.Target.ToUpperInvariant())
             {
                 case "PAGES":
-                    return _window.HandlePageNavigationCommand(command);
+                    return _uiDirector.HandlePageNavigationCommand(command);
             }
 
             return false;
