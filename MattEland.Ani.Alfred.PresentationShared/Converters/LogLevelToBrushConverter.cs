@@ -11,13 +11,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
-
 using JetBrains.Annotations;
-
 using MattEland.Ani.Alfred.Core.Console;
-using MattEland.Ani.Alfred.Core.Definitions;
 
-namespace MattEland.Ani.Alfred.WPF.Converters
+namespace MattEland.Ani.Alfred.PresentationShared.Converters
 {
     /// <summary>
     ///     An IValueConverter that converts LogLevels to brushes
@@ -169,7 +166,6 @@ namespace MattEland.Ani.Alfred.WPF.Converters
             }
         }
 
-
         /// <summary>
         ///     Gets or sets the ChatResponse brush.
         /// </summary>
@@ -187,7 +183,6 @@ namespace MattEland.Ani.Alfred.WPF.Converters
                 _chatResponseBrush = value;
             }
         }
-
 
         /// <summary>
         ///     Converts a value to a brush where value is intended to be a LogLevel.

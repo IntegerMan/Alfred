@@ -194,6 +194,36 @@
       <ManifestResourceName>VSPackage</ManifestResourceName>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MattEland.Ani.Alfred.AIML\MattEland.Ani.Alfred.Chat.csproj">
+      <Project>{3a25074a-351a-471e-aaf8-171a0e66f83a}</Project>
+      <Name>MattEland.Ani.Alfred.Chat</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MattEland.Ani.Alfred.Chat.Aiml\MattEland.Ani.Alfred.Chat.Aiml.csproj">
+      <Project>{818801e4-7862-409a-8e92-4f66800324eb}</Project>
+      <Name>MattEland.Ani.Alfred.Chat.Aiml</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MattEland.Ani.Alfred.Core.Speech\MattEland.Ani.Alfred.Core.Speech.csproj">
+      <Project>{ab933947-863e-455f-aba9-a8866eac1894}</Project>
+      <Name>MattEland.Ani.Alfred.Core.Speech</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MattEland.Ani.Alfred.Core.System\MattEland.Ani.Alfred.Core.Modules.SysMonitor.csproj">
+      <Project>{85194081-752d-48fc-a240-82c9974353d4}</Project>
+      <Name>MattEland.Ani.Alfred.Core.Modules.SysMonitor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MattEland.Ani.Alfred.Core\MattEland.Ani.Alfred.Core.csproj">
+      <Project>{549f22e5-1f66-4420-89bf-9460603f9516}</Project>
+      <Name>MattEland.Ani.Alfred.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MattEland.Ani.Alfred.PresentationShared\MattEland.Ani.Alfred.PresentationShared.csproj">
+      <Project>{b4e5baae-27a8-456e-b0ac-3117e1e6eddf}</Project>
+      <Name>MattEland.Ani.Alfred.PresentationShared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MattEland.Common\MattEland.Common.csproj">
+      <Project>{514cb422-a6ef-4c75-b925-92ab599ba1be}</Project>
+      <Name>MattEland.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
