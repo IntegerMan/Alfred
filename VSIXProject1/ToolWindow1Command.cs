@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="AlfredToolWindowCommand.cs" company="Company">
+// <copyright file="ToolWindow1Command.cs" company="Company">
 //     Copyright (c) Company.  All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
@@ -10,12 +10,12 @@ using System.Globalization;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
-namespace MattEland.Ani.Alfred.VisualStudio
+namespace VSIXProject1
 {
     /// <summary>
     /// Command handler
     /// </summary>
-    internal sealed class AlfredToolWindowCommand
+    internal sealed class ToolWindow1Command
     {
         /// <summary>
         /// Command ID.
@@ -25,7 +25,7 @@ namespace MattEland.Ani.Alfred.VisualStudio
         /// <summary>
         /// Command menu group (command set GUID).
         /// </summary>
-        public static readonly Guid CommandSet = new Guid("9c6a586e-eb74-4686-9f5a-fcd930da17d9");
+        public static readonly Guid CommandSet = new Guid("20311222-a3f1-4c3d-9993-f232830e40ab");
 
         /// <summary>
         /// VS Package that provides this command, not null.
@@ -33,11 +33,11 @@ namespace MattEland.Ani.Alfred.VisualStudio
         private readonly Package package;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlfredToolWindowCommand"/> class.
+        /// Initializes a new instance of the <see cref="ToolWindow1Command"/> class.
         /// Adds our command handlers for menu (commands must exist in the command table file)
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
-        private AlfredToolWindowCommand(Package package)
+        private ToolWindow1Command(Package package)
         {
             if (package == null)
             {
@@ -58,7 +58,7 @@ namespace MattEland.Ani.Alfred.VisualStudio
         /// <summary>
         /// Gets the instance of the command.
         /// </summary>
-        public static AlfredToolWindowCommand Instance
+        public static ToolWindow1Command Instance
         {
             get;
             private set;
@@ -81,7 +81,7 @@ namespace MattEland.Ani.Alfred.VisualStudio
         /// <param name="package">Owner package, not null.</param>
         public static void Initialize(Package package)
         {
-            Instance = new AlfredToolWindowCommand(package);
+            Instance = new ToolWindow1Command(package);
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace MattEland.Ani.Alfred.VisualStudio
             // Get the instance number 0 of this tool window. This window is single instance so this instance
             // is actually the only one.
             // The last flag is set to true so that if the tool window does not exists it will be created.
-            ToolWindowPane window = this.package.FindToolWindow(typeof(AlfredToolWindow), 0, true);
+            ToolWindowPane window = this.package.FindToolWindow(typeof(ToolWindow1), 0, true);
             if ((null == window) || (null == window.Frame))
             {
                 throw new NotSupportedException("Cannot create tool window");

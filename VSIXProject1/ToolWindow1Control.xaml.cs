@@ -1,24 +1,24 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="AlfredToolWindowControl.xaml.cs" company="Company">
+// <copyright file="ToolWindow1Control.xaml.cs" company="Company">
 //     Copyright (c) Company.  All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
 
-namespace MattEland.Ani.Alfred.VisualStudio
+namespace VSIXProject1
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Windows;
     using System.Windows.Controls;
 
     /// <summary>
-    /// Interaction logic for AlfredToolWindowControl.
+    /// Interaction logic for ToolWindow1Control.
     /// </summary>
-    public partial class AlfredToolWindowControl : UserControl
+    public partial class ToolWindow1Control : UserControl
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlfredToolWindowControl"/> class.
+        /// Initializes a new instance of the <see cref="ToolWindow1Control"/> class.
         /// </summary>
-        public AlfredToolWindowControl()
+        public ToolWindow1Control()
         {
             this.InitializeComponent();
         }
@@ -34,7 +34,7 @@ namespace MattEland.Ani.Alfred.VisualStudio
         {
             MessageBox.Show(
                 string.Format(System.Globalization.CultureInfo.CurrentUICulture, "Invoked '{0}'", this.ToString()),
-                "AlfredToolWindow");
+                "ToolWindow1");
         }
     }
 }

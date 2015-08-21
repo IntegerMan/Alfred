@@ -22,7 +22,7 @@
 
   <!--The Commands section is where commands, menus, and menu groups are defined.
       This section uses a Guid to identify the package that provides the command defined inside it. -->
-  <Commands package="guidAlfredToolWindowPackage">
+  <Commands package="guidToolWindow1Package">
     <!-- Inside this section we have different sub-sections: one for the menus, another
     for the menu groups, one for the buttons (the actual commands), one for the combos
     and the last one for the bitmaps used. Each element is identified by a command id that
@@ -42,11 +42,11 @@
               <CommandFlag>DefaultInvisible</CommandFlag>
               <CommandFlag>DynamicVisibility</CommandFlag>
           If you do not want an image next to your command, remove the Icon node /> -->
-      <Button guid="guidAlfredToolWindowPackageCmdSet" id="AlfredToolWindowCommandId" priority="0x0100" type="Button">
+      <Button guid="guidToolWindow1PackageCmdSet" id="ToolWindow1CommandId" priority="0x0100" type="Button">
         <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1"/>
         <Icon guid="guidImages" id="bmpPic1" />
         <Strings>
-          <ButtonText>AlfredToolWindow</ButtonText>
+          <ButtonText>ToolWindow1</ButtonText>
         </Strings>
       </Button>
     </Buttons>
@@ -58,20 +58,20 @@
             bitmap strip containing the bitmaps and then there are the numeric ids of the elements used
             inside a button definition. An important aspect of this declaration is that the element id
             must be the actual index (1-based) of the bitmap inside the bitmap strip. -->
-      <Bitmap guid="guidImages" href="Resources\AlfredToolWindowCommand.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough"/>
+      <Bitmap guid="guidImages" href="Resources\ToolWindow1Command.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough"/>
     </Bitmaps>
   </Commands>
 
   <Symbols>
     <!-- This is the package guid. -->
-    <GuidSymbol name="guidAlfredToolWindowPackage" value="{117d2798-b7f9-4937-8be9-95a7d775cf91}" />
+    <GuidSymbol name="guidToolWindow1Package" value="{18fa78e0-f9a1-43af-8d73-b6beae4b217e}" />
 
     <!-- This is the guid used to group the menu commands together -->
-    <GuidSymbol name="guidAlfredToolWindowPackageCmdSet" value="{9c6a586e-eb74-4686-9f5a-fcd930da17d9}">
-      <IDSymbol name="AlfredToolWindowCommandId" value="0x0100" />
+    <GuidSymbol name="guidToolWindow1PackageCmdSet" value="{20311222-a3f1-4c3d-9993-f232830e40ab}">
+      <IDSymbol name="ToolWindow1CommandId" value="0x0100" />
     </GuidSymbol>
 
-    <GuidSymbol name="guidImages" value="{ef3bf4b8-ce00-4c2e-8d85-942a7a111fd5}" >
+    <GuidSymbol name="guidImages" value="{65e2595b-6ab3-4ddd-beb5-1d80f802a7f5}" >
       <IDSymbol name="bmpPic1" value="1" />
       <IDSymbol name="bmpPic2" value="2" />
       <IDSymbol name="bmpPicSearch" value="3" />

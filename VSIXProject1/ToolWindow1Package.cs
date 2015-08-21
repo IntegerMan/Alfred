@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="AlfredToolWindowPackage.cs" company="Company">
+// <copyright file="ToolWindow1Package.cs" company="Company">
 //     Copyright (c) Company.  All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
@@ -16,7 +16,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Win32;
 
-namespace MattEland.Ani.Alfred.VisualStudio
+namespace VSIXProject1
 {
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.
@@ -38,20 +38,20 @@ namespace MattEland.Ani.Alfred.VisualStudio
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    [ProvideToolWindow(typeof(AlfredToolWindow))]
-    [Guid(AlfredToolWindowPackage.PackageGuidString)]
+    [ProvideToolWindow(typeof(ToolWindow1))]
+    [Guid(ToolWindow1Package.PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
-    public sealed class AlfredToolWindowPackage : Package
+    public sealed class ToolWindow1Package : Package
     {
         /// <summary>
-        /// AlfredToolWindowPackage GUID string.
+        /// ToolWindow1Package GUID string.
         /// </summary>
-        public const string PackageGuidString = "117d2798-b7f9-4937-8be9-95a7d775cf91";
+        public const string PackageGuidString = "18fa78e0-f9a1-43af-8d73-b6beae4b217e";
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlfredToolWindow"/> class.
+        /// Initializes a new instance of the <see cref="ToolWindow1"/> class.
         /// </summary>
-        public AlfredToolWindowPackage()
+        public ToolWindow1Package()
         {
             // Inside this method you can place any initialization code that does not require
             // any Visual Studio service because at this point the package object is created but
@@ -67,7 +67,7 @@ namespace MattEland.Ani.Alfred.VisualStudio
         /// </summary>
         protected override void Initialize()
         {
-            AlfredToolWindowCommand.Initialize(this);
+            ToolWindow1Command.Initialize(this);
             base.Initialize();
         }
 
