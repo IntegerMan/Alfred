@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="AlfredToolWindow.cs" company="Company">
+// <copyright file="AlfredChatWindow.cs" company="Company">
 //     Copyright (c) Company.  All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
@@ -21,20 +21,20 @@ namespace MattEland.Ani.Alfred.VisualStudio
     /// implementation of the IVsUIElementPane interface.
     /// </para>
     /// </remarks>
-    [Guid("24441ce2-233b-4f52-ad5c-a3fe49af3084")]
-    public class AlfredToolWindow : ToolWindowPane
+    [Guid("b068e922-fdc8-4e9b-9951-af36ca688f7c")]
+    public class AlfredChatWindow : ToolWindowPane
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlfredToolWindow"/> class.
+        /// Initializes a new instance of the <see cref="AlfredChatWindow"/> class.
         /// </summary>
-        public AlfredToolWindow() : base(null)
+        public AlfredChatWindow() : base(null)
         {
-            this.Caption = "Alfred Pages";
+            this.Caption = "AlfredChatWindow";
 
             // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
             // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
             // the object returned by the Content property.
-            this.Content = new AlfredToolWindowControl();
+            this.Content = new AlfredChatWindowControl();
         }
     }
 }

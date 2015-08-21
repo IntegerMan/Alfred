@@ -41,6 +41,7 @@ namespace MattEland.Ani.Alfred.VisualStudio
     [ProvideToolWindow(typeof(AlfredToolWindow))]
     [Guid(AlfredToolWindowPackage.PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
+    [ProvideToolWindow(typeof(MattEland.Ani.Alfred.VisualStudio.AlfredChatWindow))]
     public sealed class AlfredToolWindowPackage : Package
     {
         /// <summary>
@@ -69,6 +70,7 @@ namespace MattEland.Ani.Alfred.VisualStudio
         {
             AlfredToolWindowCommand.Initialize(this);
             base.Initialize();
+            MattEland.Ani.Alfred.VisualStudio.AlfredChatWindowCommand.Initialize(this);
         }
 
         #endregion

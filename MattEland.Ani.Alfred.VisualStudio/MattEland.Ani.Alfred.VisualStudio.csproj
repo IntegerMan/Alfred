@@ -50,6 +50,7 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <DeployExtension>True</DeployExtension>
     <CreateVsixContainer>True</CreateVsixContainer>
+    <DocumentationFile>bin\Debug\MattEland.Ani.Alfred.VisualStudio.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -63,6 +64,11 @@
     <CopyVsixExtensionLocation>Deploy</CopyVsixExtensionLocation>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AlfredChatWindow.cs" />
+    <Compile Include="AlfredChatWindowCommand.cs" />
+    <Compile Include="AlfredChatWindowControl.xaml.cs">
+      <DependentUpon>AlfredChatWindowControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="AlfredToolWindow.cs" />
     <Compile Include="AlfredToolWindowCommand.cs" />
     <Compile Include="AlfredToolWindowControl.xaml.cs">
@@ -100,10 +106,15 @@
     <VSCTCompile Include="AlfredToolWindowPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
     </VSCTCompile>
+    <Content Include="Resources\AlfredChatWindowCommand.png" />
     <Content Include="Resources\AlfredToolWindowCommand.png" />
     <Content Include="Resources\AlfredToolWindowPackage.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="AlfredChatWindowControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="AlfredToolWindowControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
