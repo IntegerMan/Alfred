@@ -8,6 +8,7 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Text;
 
 using JetBrains.Annotations;
 
@@ -136,5 +137,25 @@ namespace MattEland.Common
 
             return output;
         }
+
+        /// <summary>
+        /// Appends to a string builder either as a standard append or as an AppendLine, depending on useNewLine
+        /// </summary>
+        /// <param name="stringBuilder">The string builder.</param>
+        /// <param name="message">The message.</param>
+        /// <param name="useNewLine">Whether or not to include line breaks.</param>
+        public static void AppendConditional([NotNull] this StringBuilder stringBuilder, string message, bool useNewLine)
+        {
+            if (useNewLine)
+            {
+                stringBuilder.AppendLine(message);
+            }
+            else
+            {
+                stringBuilder.Append(message);
+            }
+
+        }
+
     }
 }

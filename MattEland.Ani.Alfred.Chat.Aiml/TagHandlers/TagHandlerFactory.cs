@@ -75,7 +75,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         ///     AimlTagHandler and decorated with the HandlesAimlTag attribute.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
-        private void RegisterTagHandlersInAssembly([NotNull] Assembly assembly)
+        /// <exception cref="ArgumentNullException"><paramref name="assembly"/> is <see langword="null" />.</exception>
+        public void RegisterTagHandlersInAssembly([NotNull] Assembly assembly)
         {
             //- Validation
             if (assembly == null)
@@ -84,34 +85,47 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             }
 
             // Read all types in the provided assembly that have this attribute.
-            var types = assembly.GetTypesInAssemblyWithAttribute<HandlesAimlTagAttribute>(false);
-
-            //- Loop through each type and register it
-            foreach (var type in types)
+            try
             {
-                // We can't instantiate an abstract type and we need AimlTagHandlers for this
-                if (type.IsAbstract || !type.IsSubclassOf(typeof(AimlTagHandler)))
-                {
-                    continue;
-                }
+                var types = assembly.GetTypesInAssemblyWithAttribute<HandlesAimlTagAttribute>(false);
 
-                // Grab the attribute and exit early if it's not there
-                var attribute =
-                    type.GetCustomAttribute(typeof(HandlesAimlTagAttribute)) as
-                    HandlesAimlTagAttribute;
-                if (attribute == null)
+                //- Loop through each type and register it
+                foreach (var type in types)
                 {
-                    continue;
-                }
+                    // We can't instantiate an abstract type and we need AimlTagHandlers for this
+                    if (type.IsAbstract || !type.IsSubclassOf(typeof(AimlTagHandler)))
+                    {
+                        continue;
+                    }
 
-                // The attribute is present. Add it to the dictionary as a type handler
-                var name = attribute.Name?.ToUpperInvariant();
-                if (!name.IsNullOrWhitespace())
-                {
-                    _handlerMapping.Add(name, type);
+                    // Grab the attribute and exit early if it's not there
+                    var attribute =
+                        type.GetCustomAttribute(typeof(HandlesAimlTagAttribute)) as
+                        HandlesAimlTagAttribute;
+                    if (attribute == null)
+                    {
+                        continue;
+                    }
+
+                    // The attribute is present. Add it to the dictionary as a type handler
+                    var name = attribute.Name?.ToUpperInvariant();
+                    if (!name.IsNullOrWhitespace())
+                    {
+                        _handlerMapping.Add(name, type);
+                    }
+
                 }
 
             }
+            catch (ReflectionTypeLoadException rex)
+            {
+                _engine.Log($"Encountered reflection type load exception '{rex.Message}' loading assembly '{assembly.FullName}'.", LogLevel.Error);
+            }
+            catch (AmbiguousMatchException amex)
+            {
+                _engine.Log($"Encountered ambiguous match exception '{amex.Message}' loading assembly '{assembly.FullName}'.", LogLevel.Error);
+            }
+
         }
 
         /// <summary>

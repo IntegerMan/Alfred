@@ -19,6 +19,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.PresentationShared.Commands;
+using MattEland.Ani.Alfred.PresentationShared.Helpers;
 using MattEland.Ani.Alfred.WPF.Properties;
 using MattEland.Common;
 
@@ -31,13 +32,9 @@ namespace MattEland.Ani.Alfred.WPF
     /// </summary>
     public sealed partial class MainWindow : IDisposable, IUserInterfaceDirector
     {
+
         [NotNull]
         private readonly ApplicationManager _app;
-
-        /// <summary>
-        ///     The update frequency in seconds for Alfred's update pump
-        /// </summary>
-        private const double UpdateFrequencyInSeconds = 0.25;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="MainWindow" /> class.
@@ -65,7 +62,7 @@ namespace MattEland.Ani.Alfred.WPF
         /// </summary>
         private void InitializeUpdatePump()
         {
-            var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(UpdateFrequencyInSeconds) };
+            var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(_app.UpdateFrequencyInSeconds) };
             timer.Tick += delegate
                           {
                               _app.Update();
@@ -136,21 +133,12 @@ namespace MattEland.Ani.Alfred.WPF
         /// <returns>Whether or not the command was handled</returns>
         public bool HandlePageNavigationCommand(ShellCommand command)
         {
-            if (command.Data.HasText() && tabPages?.Items != null)
+            if (!command.Data.HasText() || tabPages == null)
             {
-                foreach (var item in tabPages.Items)
-                {
-                    var page = item as IAlfredPage;
-
-                    if (page != null && page.Id.Matches(command.Data))
-                    {
-                        tabPages.SelectedItem = page;
-                        return true;
-                    }
-                }
+                return false;
             }
 
-            return false;
+            return SelectionHelper.SelectItemById(tabPages, command.Data);
         }
     }
 }

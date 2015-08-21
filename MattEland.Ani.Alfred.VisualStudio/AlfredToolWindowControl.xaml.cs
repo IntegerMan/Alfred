@@ -2,16 +2,24 @@
 // AlfredToolWindowControl.xaml.cs
 // 
 // Created on:      08/20/2015 at 9:45 PM
-// Last Modified:   08/20/2015 at 10:51 PM
+// Last Modified:   08/21/2015 at 12:07 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Windows;
-using System.Windows.Markup;
+using System.Windows.Threading;
 
+using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.PresentationShared.Commands;
+using MattEland.Ani.Alfred.PresentationShared.Helpers;
 using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.VisualStudio
@@ -22,26 +30,49 @@ namespace MattEland.Ani.Alfred.VisualStudio
     /// </summary>
     public partial class AlfredToolWindowControl : IUserInterfaceDirector
     {
+        [NotNull]
+        private readonly ApplicationManager _app;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredToolWindowControl" /> class.
         /// </summary>
-        /// <exception cref="XamlParseException">
-        ///     If a XamlParseException was encountered, it will be logged and
+        /// <exception cref="Exception">
+        ///     If any exception was encountered during startup, it will be logged and
         ///     rethrown to the Visual Studio Host.
         /// </exception>
+        [SuppressMessage("ReSharper", "ThrowingSystemException")]
+        [SuppressMessage("ReSharper", "CatchAllClause")]
         public AlfredToolWindowControl()
         {
             try
             {
                 InitializeComponent();
+
+                var provider = new XamlPlatformProvider();
+                _app = new ApplicationManager(this, provider);
+
+                // DataBindings rely on Alfred presently as there hasn't been a need for a page ViewModel yet
+                DataContext = _app;
+
+                // Set up the update timer
+                InitializeUpdatePump();
+
+                _app.Console?.Log("WinClient.Initialize", "Tool Window Created", LogLevel.Verbose);
             }
-            catch (XamlParseException xex)
+            catch (Exception ex)
             {
-                // Give some clue as to what went wrong
-                MessageBox.Show("XAML Parse Exception",
-                                xex.BuildExceptionDetailsMessage(),
+                const string Caption = "Problem Starting Tool Window";
+                var message = ex.BuildExceptionDetailsMessage();
+
+#if DEBUG
+                Debugger.Break();
+                Debug.Fail(Caption, message);
+#else
+                MessageBox.Show(message,
+                                caption,
                                 MessageBoxButton.OK,
                                 MessageBoxImage.Error);
+#endif
 
                 // We shouldn't load the page in a bad state. Crash the application
                 throw;
@@ -55,22 +86,29 @@ namespace MattEland.Ani.Alfred.VisualStudio
         /// <returns>Whether or not the command was handled</returns>
         public bool HandlePageNavigationCommand(ShellCommand command)
         {
-            // TODO: This is copy/pasted from WPF. Find a creative way to push this to PresentationShared
-            if (command.Data.HasText() && tabPages?.Items != null)
+            if (!command.Data.HasText() || tabPages == null)
             {
-                foreach (var item in tabPages.Items)
-                {
-                    var page = item as IAlfredPage;
-
-                    if (page != null && page.Id.Matches(command.Data))
-                    {
-                        tabPages.SelectedItem = page;
-                        return true;
-                    }
-                }
+                return false;
             }
 
-            return false;
+            return SelectionHelper.SelectItemById(tabPages, command.Data);
+        }
+
+        /// <summary>
+        ///     Initializes the update pump that causes Alfred to update its modules.
+        /// </summary>
+        private void InitializeUpdatePump()
+        {
+            var timer = new DispatcherTimer
+            {
+                Interval =
+                                TimeSpan.FromSeconds(
+                                                     _app
+                                                         .UpdateFrequencyInSeconds)
+            };
+            timer.Tick += delegate { _app.Update(); };
+
+            timer.Start();
         }
     }
 }

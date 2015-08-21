@@ -61,12 +61,13 @@
                 <DataTemplate>
                     <DockPanel>
 
-                        <!-- Header -->
+                        <!-- Header 
                         <Border DockPanel.Dock="Top"
                                 Style="{StaticResource HeaderBannerBorderStyle}">
                             <TextBlock Text="{Binding Alfred.Name}"
                                        Style="{StaticResource HeaderBannerTextBlockStyle}" />
                         </Border>
+                        -->
 
                         <!-- Present the content inside of an auto-scrolling region. 
                              Let the data template for the type of content handle the presentation -->

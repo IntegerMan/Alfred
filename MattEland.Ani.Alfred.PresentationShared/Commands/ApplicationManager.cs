@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
 // ApplicationManager.cs
 // 
-// Created on:      08/09/2015 at 11:21 PM
-// Last Modified:   08/18/2015 at 2:16 PM
+// Created on:      08/20/2015 at 8:14 PM
+// Last Modified:   08/20/2015 at 11:47 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -12,7 +12,9 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+
 using JetBrains.Annotations;
+
 using MattEland.Ani.Alfred.Chat;
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
@@ -32,13 +34,19 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         /// <summary>
         ///     The Alfred Provider that makes the application possible
         /// </summary>
-        [NotNull] private readonly AlfredApplication _alfred;
+        [NotNull]
+        private readonly AlfredApplication _alfred;
 
-        [NotNull] private readonly ShellCommandManager _shellManager;
         private AlfredCoreSubsystem _alfredCoreSubsystem;
         private AlfredChatSubsystem _chatSubsystem;
         private AlfredSpeechConsole _console;
         private SystemMonitoringSubsystem _systemMonitoringSubsystem;
+
+        [NotNull]
+        private readonly IUserInterfaceDirector _userInterfaceDirector;
+
+        [NotNull]
+        private readonly IPlatformProvider _platformProvider;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:System.Object" /> class with
@@ -69,16 +77,19 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         ///     <see langword="null" />.
         /// </exception>
         public ApplicationManager([NotNull] IUserInterfaceDirector director,
-            [NotNull] IPlatformProvider platformProvider)
+                                  [NotNull] IPlatformProvider platformProvider)
         {
             if (director == null)
             {
                 throw new ArgumentNullException(nameof(director));
             }
+            _userInterfaceDirector = director;
+
             if (platformProvider == null)
             {
                 throw new ArgumentNullException(nameof(platformProvider));
             }
+            _platformProvider = platformProvider;
 
             // Create Alfred. It won't be online and running yet, but create it.
             var bootstrapper = new AlfredBootstrapper(platformProvider);
@@ -88,10 +99,33 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             _console = InitializeConsole(platformProvider);
 
             // Hook up our shell manager now that we have a way of communicating with Alfred
-            _shellManager = new ShellCommandManager(director, _alfred);
-            _alfred.Register(_shellManager);
+            ShellManager = new ShellCommandManager(_userInterfaceDirector, _alfred);
+            _alfred.Register(ShellManager);
 
             InitializeSubsystems(_alfred.PlatformProvider);
+        }
+
+        /// <summary>
+        ///     Gets the shell command manager.
+        /// </summary>
+        /// <value>The shell manager.</value>
+        [NotNull]
+        public ShellCommandManager ShellManager
+        {
+            [DebuggerStepThrough]
+            get;
+        }
+
+        /// <summary>
+        /// Gets the platform provider.
+        /// </summary>
+        /// <value>The platform provider.</value>
+        [NotNull]
+        public IPlatformProvider PlatformProvider
+        {
+            [DebuggerStepThrough]
+            get
+            { return _platformProvider; }
         }
 
         /// <summary>
@@ -101,7 +135,11 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         [UsedImplicitly]
         public AlfredApplication Alfred
         {
-            [DebuggerStepThrough] get { return _alfred; }
+            [DebuggerStepThrough]
+            get
+            {
+                return _alfred;
+            }
         }
 
         /// <summary>
@@ -126,6 +164,11 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
                 return CultureInfo.CurrentCulture;
             }
         }
+
+        /// <summary>
+        ///     The update frequency in seconds for Alfred's update pump
+        /// </summary>
+        public double UpdateFrequencyInSeconds { get; set; } = 0.25;
 
         /// <summary>
         ///     Disposes of loose resources
@@ -162,8 +205,8 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             _console = new AlfredSpeechConsole(baseConsole);
 
             _console.Log("AppManager.InitConsole",
-                "Initializing console.",
-                LogLevel.Verbose);
+                         "Initializing console.",
+                         LogLevel.Verbose);
             _alfred.Console = _console;
 
             return _console;
@@ -188,21 +231,24 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             {
                 var metricProviderFactory = new CounterMetricProviderFactory();
                 _systemMonitoringSubsystem = new SystemMonitoringSubsystem(platformProvider,
-                    metricProviderFactory);
+                                                                           metricProviderFactory);
                 _alfred.Register(_systemMonitoringSubsystem);
             }
             catch (Win32Exception ex)
             {
                 _console?.Log(LogHeader,
-                    string.Format(Locale, "Problem creating system monitoring module: Win32 exception: {0}", ex.Message),
-                    LogLevel.Error);
+                              String.Format(Locale,
+                                            "Problem creating system monitoring module: Win32 exception: {0}",
+                                            ex.Message),
+                              LogLevel.Error);
             }
             catch (UnauthorizedAccessException ex)
             {
                 _console?.Log(LogHeader,
-                    string.Format(Locale,
-                        "Problem creating system monitoring module: Unauthorized access exception: {0}", ex.Message),
-                    LogLevel.Error);
+                              String.Format(Locale,
+                                            "Problem creating system monitoring module: Unauthorized access exception: {0}",
+                                            ex.Message),
+                              LogLevel.Error);
             }
 
             // Init Chat
@@ -241,5 +287,6 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
                 _alfred.Shutdown();
             }
         }
+
     }
 }
