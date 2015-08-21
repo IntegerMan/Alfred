@@ -7,23 +7,24 @@
                     xmlns:modules="clr-namespace:MattEland.Ani.Alfred.Core.Modules;assembly=MattEland.Ani.Alfred.Core"
                     xmlns:controls="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Controls">
 
-    <!-- Module DataTemplates -->
+    <!-- Pages -->
+    
+    <DataTemplate DataType="{x:Type pages:AlfredModuleListPage}">
+        <ItemsControl ItemsSource="{Binding Path=Modules}"                      
+                      BorderThickness="0">
 
-    <DataTemplate DataType="{x:Type modules:AlfredModule}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
 
-        <!-- TODO: The expand / collapse glyph sucks by default. Customize it -->
-        <Expander Header="{Binding Path=Name}"
-                  Width="250"
-                  IsExpanded="True"
-                  Foreground="{StaticResource AccentForegroundBrush}"
-                  Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-
-            <ItemsControl ItemsSource="{Binding Widgets}"                        
-                          Foreground="{StaticResource AppForegroundBrush}"
-                          Margin="24, 0, 0, 8" />
-
-        </Expander>
-
+        </ItemsControl>
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type pages:AlfredEventLogPage}">
+        <ItemsControl ItemsSource="{Binding Path=Events}"                                                                
+                      BorderThickness="0" />
     </DataTemplate>
 
 </ResourceDictionary>

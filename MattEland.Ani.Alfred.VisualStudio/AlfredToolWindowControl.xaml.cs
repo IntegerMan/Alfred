@@ -92,10 +92,8 @@ namespace MattEland.Ani.Alfred.VisualStudio
             return SelectionHelper.SelectItemById(tabPages, command.Data);
         }
 
-
-
         /// <summary>
-        ///     Handles the <see cref="E:WindowLoaded" /> event.
+        ///     Handles the <see cref="E:Loaded" /> event.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="RoutedEventArgs" /> instance containing the event data.</param>
@@ -117,6 +115,16 @@ namespace MattEland.Ani.Alfred.VisualStudio
 
             // Log that we're good to go
             _app.Console?.Log(logHeader, "Window is now loaded", LogLevel.Info);
+        }
+
+        /// <summary>
+        /// Handles the <see cref="E:Unloaded" /> event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.Windows.RoutedEventArgs" /> instance containing the event data.</param>
+        private void OnWindowUnloaded(object sender, RoutedEventArgs e)
+        {
+            _app.Stop();
         }
     }
 }

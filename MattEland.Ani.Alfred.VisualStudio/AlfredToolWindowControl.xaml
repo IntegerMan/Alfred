@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             Loaded="OnWindowLoaded"
+             Unloaded="OnWindowUnloaded"
              Background="{DynamicResource VsBrush.Window}"
              Foreground="{DynamicResource VsBrush.WindowText}"
              mc:Ignorable="d"
@@ -14,8 +16,8 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/dictionaries/DarkStyles.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/dictionaries/Miscellaneous.xaml" />
-                <!--
                 <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/dictionaries/Templates.xaml" />
+                <!--
                 <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/dictionaries/Styles.xaml" />
                 -->
             </ResourceDictionary.MergedDictionaries>

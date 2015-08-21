@@ -9,7 +9,10 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/DarkStyles.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Miscellaneous.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Logging.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Templates.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Widgets.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/TabPages.xaml" />                
                 <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Styles.xaml" />                
             </ResourceDictionary.MergedDictionaries>
             
