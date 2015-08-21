@@ -69,7 +69,7 @@ namespace MattEland.Ani.Alfred.VisualStudio
                 Debug.Fail(Caption, message);
 #else
                 MessageBox.Show(message,
-                                caption,
+                                Caption,
                                 MessageBoxButton.OK,
                                 MessageBoxImage.Error);
 #endif
