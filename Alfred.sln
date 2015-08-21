@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MattEland.Ani.Alfred.Chat.A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MattEland.Ani.Alfred.PresentationShared", "MattEland.Ani.Alfred.PresentationShared\MattEland.Ani.Alfred.PresentationShared.csproj", "{B4E5BAAE-27A8-456E-B0AC-3117E1E6EDDF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MattEland.Ani.Alfred.VisualStudio", "MattEland.Ani.Alfred.VisualStudio\MattEland.Ani.Alfred.VisualStudio.csproj", "{54ACFB38-EF59-4D5F-A652-DEA2B8ECD2B7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -193,6 +195,22 @@ Global
 		{B4E5BAAE-27A8-456E-B0AC-3117E1E6EDDF}.Release|x64.Build.0 = Release|Any CPU
 		{B4E5BAAE-27A8-456E-B0AC-3117E1E6EDDF}.Release|x86.ActiveCfg = Release|Any CPU
 		{B4E5BAAE-27A8-456E-B0AC-3117E1E6EDDF}.Release|x86.Build.0 = Release|Any CPU
+		{54ACFB38-EF59-4D5F-A652-DEA2B8ECD2B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54ACFB38-EF59-4D5F-A652-DEA2B8ECD2B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54ACFB38-EF59-4D5F-A652-DEA2B8ECD2B7}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{54ACFB38-EF59-4D5F-A652-DEA2B8ECD2B7}.Debug|ARM.Build.0 = Debug|Any CPU
+		{54ACFB38-EF59-4D5F-A652-DEA2B8ECD2B7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{54ACFB38-EF59-4D5F-A652-DEA2B8ECD2B7}.Debug|x64.Build.0 = Debug|Any CPU
+		{54ACFB38-EF59-4D5F-A652-DEA2B8ECD2B7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{54ACFB38-EF59-4D5F-A652-DEA2B8ECD2B7}.Debug|x86.Build.0 = Debug|Any CPU
+		{54ACFB38-EF59-4D5F-A652-DEA2B8ECD2B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54ACFB38-EF59-4D5F-A652-DEA2B8ECD2B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54ACFB38-EF59-4D5F-A652-DEA2B8ECD2B7}.Release|ARM.ActiveCfg = Release|Any CPU
+		{54ACFB38-EF59-4D5F-A652-DEA2B8ECD2B7}.Release|ARM.Build.0 = Release|Any CPU
+		{54ACFB38-EF59-4D5F-A652-DEA2B8ECD2B7}.Release|x64.ActiveCfg = Release|Any CPU
+		{54ACFB38-EF59-4D5F-A652-DEA2B8ECD2B7}.Release|x64.Build.0 = Release|Any CPU
+		{54ACFB38-EF59-4D5F-A652-DEA2B8ECD2B7}.Release|x86.ActiveCfg = Release|Any CPU
+		{54ACFB38-EF59-4D5F-A652-DEA2B8ECD2B7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -207,5 +225,6 @@ Global
 		{514CB422-A6EF-4C75-B925-92AB599BA1BE} = {4B2AB36C-F1B4-4CB3-B94C-966BBD61ED42}
 		{818801E4-7862-409A-8E92-4F66800324EB} = {4B2AB36C-F1B4-4CB3-B94C-966BBD61ED42}
 		{B4E5BAAE-27A8-456E-B0AC-3117E1E6EDDF} = {4B2AB36C-F1B4-4CB3-B94C-966BBD61ED42}
+		{54ACFB38-EF59-4D5F-A652-DEA2B8ECD2B7} = {19C5600C-235A-4B95-B57D-8EC061FF44D7}
 	EndGlobalSection
 EndGlobal
