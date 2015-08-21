@@ -3,10 +3,14 @@
                     xmlns:widgets="clr-namespace:MattEland.Ani.Alfred.Core.Widgets;assembly=MattEland.Ani.Alfred.Core"
                     xmlns:console="clr-namespace:MattEland.Ani.Alfred.Core.Console;assembly=MattEland.Ani.Alfred.Core"
                     xmlns:pages="clr-namespace:MattEland.Ani.Alfred.Core.Pages;assembly=MattEland.Ani.Alfred.Core"
-                    xmlns:chat="clr-namespace:MattEland.Ani.Alfred.Chat;assembly=MattEland.Ani.Alfred.Chat"
                     xmlns:modules="clr-namespace:MattEland.Ani.Alfred.Core.Modules;assembly=MattEland.Ani.Alfred.Core"
-                    xmlns:controls="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Controls">
-    
+                    xmlns:controls="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Controls"
+                    xmlns:helpers="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Helpers">
+
+    <ResourceDictionary.MergedDictionaries>
+        <helpers:SharedResourceDictionary Source="Miscellaneous.xaml"  />
+    </ResourceDictionary.MergedDictionaries>
+
     <!-- Widget DataTemplates -->
 
     <!-- TextWidget Template -->
@@ -23,13 +27,13 @@
         <Border Margin="0, 8, 0, 0"
                 Padding="8"
                 HorizontalAlignment="Stretch"
-                Background="{StaticResource CautionBackgroundBrush}"
-                BorderBrush="{StaticResource CautionBorderBrush}"
+                Background="{DynamicResource CautionBackgroundBrush}"
+                BorderBrush="{DynamicResource CautionBorderBrush}"
                 BorderThickness="1"
                 Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
 
             <TextBlock Text="{Binding Text}"
-                       Foreground="{StaticResource CautionForegroundBrush}"
+                       Foreground="{DynamicResource CautionForegroundBrush}"
                        ToolTip="{Binding Text}" />
 
         </Border>
@@ -75,9 +79,9 @@
                        VerticalAlignment="Center" />
 
             <ProgressBar Grid.Column="1"
-                         Foreground="{StaticResource ProgressBarNormalForegroundBrush}"
-                         Background="{StaticResource LightBackgroundBrush}"
-                         BorderBrush="{StaticResource AppBorderBrush}"
+                         Foreground="{DynamicResource ProgressBarNormalForegroundBrush}"
+                         Background="{DynamicResource LightBackgroundBrush}"
+                         BorderBrush="{DynamicResource AppBorderBrush}"
                          Minimum="{Binding Minimum}"
                          Maximum="{Binding Maximum}"
                          Value="{Binding Value}"

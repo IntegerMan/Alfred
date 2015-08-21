@@ -14,10 +14,4 @@
                                   VerboseBrush="{DynamicResource AppMutedForegroundBrush}"
                                   ErrorBrush="{DynamicResource ErrorForegroundBrush}" />
 
-    <!-- Font Sizes -->
-    <system:Double x:Key="FontSizeSmall">10</system:Double>
-
-    <!-- Thicknesses -->
-    <Thickness x:Key="TextSpacingMargin">4,0,0,0</Thickness>
-
 </ResourceDictionary>

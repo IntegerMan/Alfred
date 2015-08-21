@@ -43,9 +43,9 @@ namespace MattEland.Ani.Alfred.PresentationShared.Helpers
         ///            accessor="set">
         ///     <paramref name="value" /> is <see langword="null" />.
         /// </exception>
-        public new Uri Source
+        public new string Source
         {
-            get { return _source; }
+            get { return _source?.OriginalString; }
             set
             {
                 if (value == null)
@@ -53,21 +53,24 @@ namespace MattEland.Ani.Alfred.PresentationShared.Helpers
                     throw new ArgumentNullException(nameof(value));
                 }
 
-                _source = value;
+                // Build out the URI. This makes it easier for the resource file to be manipulated in XAML.
+                var uri = new Uri(value, UriKind.RelativeOrAbsolute);
 
-                if (!SharedDictionaries.ContainsKey(value))
+                _source = uri;
+
+                if (!SharedDictionaries.ContainsKey(uri))
                 {
                     // If the dictionary is not yet loaded, load it by setting
                     // the source of the base class
-                    base.Source = value;
+                    base.Source = uri;
 
                     // add it to the cache
-                    SharedDictionaries.Add(value, this);
+                    SharedDictionaries.Add(uri, this);
                 }
                 else
                 {
                     // If the dictionary is already loaded, get it from the cache
-                    MergedDictionaries.Add(SharedDictionaries[value]);
+                    MergedDictionaries.Add(SharedDictionaries[uri]);
                 }
             }
         }

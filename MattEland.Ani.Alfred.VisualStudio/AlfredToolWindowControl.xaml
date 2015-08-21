@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:helpers="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Helpers;assembly=MattEland.Ani.Alfred.PresentationShared"
              Loaded="OnWindowLoaded"
              Unloaded="OnWindowUnloaded"
              Background="{DynamicResource VsBrush.Window}"
@@ -14,38 +15,17 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/DarkStyles.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Miscellaneous.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Logging.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Templates.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Widgets.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/TabPages.xaml" />
-                <!--
-                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Styles.xaml" />
-                -->
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/DarkStyles.xaml" />
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Miscellaneous.xaml" />
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Logging.xaml" />
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Templates.xaml" />
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Widgets.xaml" />
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/TabPages.xaml" />
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
     <DockPanel>
-
-        <!-- Header Bar 
-        <Border DockPanel.Dock="Top"
-                Style="{StaticResource HeaderBannerBorderStyle}"
-                MinHeight="32">
-
-            <StackPanel Orientation="Horizontal"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
-
-                <TextBlock Text="{Binding Alfred.NameAndVersion}" />
-                <TextBlock Text=" - " Margin="4,0,4,0" />
-                <TextBlock Text="{Binding Alfred.Status}"
-                           Foreground="{StaticResource AccentForegroundBrush}" />
-
-            </StackPanel>
-
-        </Border>
-        -->
 
         <!-- Chat Area 
         <Border Margin="132,4,8,0" 
@@ -57,7 +37,7 @@
 
         <!-- Tabbed Content Regions -->
         <TabControl x:Name="tabPages"
-                    Margin="8, 8, 8, 8"
+                    Margin="2"
                     ItemsSource="{Binding Alfred.RootPages}">
 
             <TabControl.ItemTemplate>
@@ -71,13 +51,12 @@
                 <DataTemplate>
                     <DockPanel>
 
-                        <!-- Header 
+                        <!-- Header -->
                         <Border DockPanel.Dock="Top"
                                 Style="{StaticResource HeaderBannerBorderStyle}">
                             <TextBlock Text="{Binding Alfred.Name}"
                                        Style="{StaticResource HeaderBannerTextBlockStyle}" />
                         </Border>
-                        -->
 
                         <!-- Present the content inside of an auto-scrolling region. 
                              Let the data template for the type of content handle the presentation -->

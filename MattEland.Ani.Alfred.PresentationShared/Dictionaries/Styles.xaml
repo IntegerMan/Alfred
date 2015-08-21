@@ -3,9 +3,9 @@
 
     <!-- Headers -->
     <Style x:Key="HeaderBannerBorderStyle" TargetType="Border">
-        <Setter Property="Background" Value="{StaticResource MediumBackgroundBrush}" />
+        <Setter Property="Background" Value="{DynamicResource MediumBackgroundBrush}" />
         <Setter Property="BorderThickness" Value="0,0,0,1" />
-        <Setter Property="BorderBrush" Value="{StaticResource AppBorderBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}" />
         <Setter Property="Padding" Value="4" />
     </Style>
 
@@ -13,41 +13,17 @@
     <Style x:Key="HeaderBannerTextBlockStyle" TargetType="TextBlock">
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
-        <Setter Property="Foreground" Value="{StaticResource AppForegroundBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource AppForegroundBrush}" />
     </Style>
 
     <!-- Tab Item Styling -->
     <Style TargetType="TabItem">
         
-        <Setter Property="Foreground" Value="{StaticResource AppForegroundBrush}" />
-        <Setter Property="BorderBrush" Value="{StaticResource AppBorderBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource AppForegroundBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}" />
         
         <!-- Style the selected item -->
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="TabItem">
-                    <Border x:Name="Panel"       
-                            BorderBrush="{StaticResource AppBorderBrush}"
-                            BorderThickness="1,1,0,1"
-                            Background="{StaticResource MediumBackgroundBrush}"
-                            MinHeight="40">
-                        <ContentPresenter x:Name="ContentSite"                                        
-                                          VerticalAlignment="Center"                                        
-                                          HorizontalAlignment="Center"                                        
-                                          ContentSource="Header"                                        
-                                          Margin="10,2"/>
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter TargetName="Panel" Property="Background" Value="{StaticResource AccentForegroundBrush}" />
-                        </Trigger>
-                        <Trigger Property="IsSelected" Value="False">
-                            <Setter TargetName="Panel" Property="Background" Value="{StaticResource MediumBackgroundBrush}" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
+        <Setter Property="Template" Value="{DynamicResource TabItemBigTemplate}" />
 
     </Style>
 
@@ -55,9 +31,9 @@
     <Style TargetType="TabControl">
         <Setter Property="TabStripPlacement" Value="Left" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-        <Setter Property="Foreground" Value="{StaticResource AppForegroundBrush}" />
-        <Setter Property="Background" Value="{StaticResource AppBackgroundBrush}" />
-        <Setter Property="BorderBrush" Value="{StaticResource AppBorderBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource AppForegroundBrush}" />
+        <Setter Property="Background" Value="{DynamicResource AppBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}" />
         <Setter Property="Padding" Value="0" />
     </Style>
 
