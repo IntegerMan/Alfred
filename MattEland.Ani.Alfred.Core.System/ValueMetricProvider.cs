@@ -8,6 +8,7 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
 
@@ -24,10 +25,13 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
     {
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="ValueMetricProvider" /> class.
+        /// Initializes a new instance of the <see cref="ValueMetricProvider" /> class.
         /// </summary>
+        /// <param name="factory">The factory.</param>
         /// <param name="name">The name of the metric.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="factory"/> is <see langword="null" />.</exception>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException"><paramref name="factory" /> is <see langword="null" />.</exception>
+        [SuppressMessage("ReSharper", "CodeAnnotationAnalyzer")]
         public ValueMetricProvider([NotNull] ValueMetricProviderFactory factory, string name) : base(name)
         {
             if (factory == null)

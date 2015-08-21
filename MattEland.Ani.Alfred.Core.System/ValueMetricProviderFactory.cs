@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
 // ValueMetricProviderFactory.cs
 // 
-// Created on:      08/18/2015 at 2:01 PM
-// Last Modified:   08/18/2015 at 2:57 PM
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/21/2015 at 5:33 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -28,10 +28,14 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <value>The value.</value>
         public float DefaultValue { get; set; }
 
+        /// <summary>
+        ///     Gets the value providers.
+        /// </summary>
+        /// <value>The value providers.</value>
         [NotNull]
         [ItemNotNull]
-        public ICollection<ValueMetricProvider> Providers { get; } = new List<ValueMetricProvider>()
-            ;
+        [UsedImplicitly]
+        public ICollection<ValueMetricProvider> Providers { get; } = new List<ValueMetricProvider>();
 
         /// <summary>
         ///     Gets the category instance names dictionary. This dictionary allows test code to register
@@ -49,9 +53,10 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <param name="counterName">Name of the counter.</param>
         /// <param name="instanceName">Name of the instance.</param>
         /// <returns>A metric provider</returns>
-        public MetricProviderBase Build(string categoryName,
-                                        string counterName,
-                                        string instanceName = null)
+        [NotNull]
+        public MetricProviderBase Build([NotNull] string categoryName,
+                                        [NotNull] string counterName,
+                                        [CanBeNull] string instanceName = null)
         {
             var provider = new ValueMetricProvider(this, instanceName ?? counterName);
 

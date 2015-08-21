@@ -26,6 +26,9 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
     /// </summary>
     public sealed class CpuMonitorModule : SystemMonitorModule, IDisposable
     {
+        /// <summary>
+        /// The performance counter CPU category name
+        /// </summary>
         public const string CpuCategoryName = "Processor";
         private const string CpuUsageCounterName = "% Processor Time";
 

@@ -1,13 +1,14 @@
 // ---------------------------------------------------------
 // StringExtensions.cs
 // 
-// Created on:      08/12/2015 at 2:12 PM
-// Last Modified:   08/14/2015 at 11:26 PM
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/21/2015 at 6:06 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
+using System.Globalization;
 using System.Text;
 
 using JetBrains.Annotations;
@@ -99,7 +100,7 @@ namespace MattEland.Common
         }
 
         /// <summary>
-        /// Converts the input string to an integer, falling back to the fallback value on parse error.
+        ///     Converts the input string to an integer, falling back to the fallback value on parse error.
         /// </summary>
         /// <param name="input">The input string.</param>
         /// <param name="fallbackValue">The fallback value. Defaults to 0.</param>
@@ -119,7 +120,7 @@ namespace MattEland.Common
         }
 
         /// <summary>
-        /// Converts the input string to a double, falling back to the fallback value on parse error.
+        ///     Converts the input string to a double, falling back to the fallback value on parse error.
         /// </summary>
         /// <param name="input">The input string.</param>
         /// <param name="fallbackValue">The fallback value. Defaults to 0.</param>
@@ -139,12 +140,15 @@ namespace MattEland.Common
         }
 
         /// <summary>
-        /// Appends to a string builder either as a standard append or as an AppendLine, depending on useNewLine
+        ///     Appends to a string builder either as a standard append or as an AppendLine, depending on
+        ///     useNewLine
         /// </summary>
         /// <param name="stringBuilder">The string builder.</param>
         /// <param name="message">The message.</param>
         /// <param name="useNewLine">Whether or not to include line breaks.</param>
-        public static void AppendConditional([NotNull] this StringBuilder stringBuilder, string message, bool useNewLine)
+        public static void AppendConditional([NotNull] this StringBuilder stringBuilder,
+                                             string message,
+                                             bool useNewLine)
         {
             if (useNewLine)
             {
@@ -155,6 +159,46 @@ namespace MattEland.Common
                 stringBuilder.Append(message);
             }
 
+        }
+
+        /// <summary>
+        /// Formats the specified input using the given culture (or current culture) and optional format string.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <param name="culture">The culture.</param>
+        /// <param name="format">The format.</param>
+        /// <returns>The formatted string</returns>
+        [NotNull]
+        public static string Format([NotNull] this IFormattable input,
+                                            [CanBeNull] CultureInfo culture = null,
+                                            [CanBeNull] string format = null)
+        {
+
+            culture = culture ?? CultureInfo.CurrentCulture;
+
+            return input.ToString(format, culture);
+        }
+
+        /// <summary>
+        /// Formats the given string using the user's culture
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <returns>System.String.</returns>
+        [NotNull]
+        public static string ForUser([NotNull] this IFormattable input)
+        {
+            return input.ToString();
+        }
+
+        /// <summary>
+        ///     Formats the given string using invariant culture.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <returns>The formatted string</returns>
+        [NotNull]
+        public static string Invariant([NotNull] this IFormattable input)
+        {
+            return input.Format(CultureInfo.InvariantCulture);
         }
 
     }

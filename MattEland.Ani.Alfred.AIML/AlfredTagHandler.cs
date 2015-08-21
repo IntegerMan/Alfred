@@ -40,6 +40,7 @@ namespace MattEland.Ani.Alfred.Chat
         ///     Processes the input text and returns the processed value.
         /// </summary>
         /// <returns>The processed output</returns>
+        [NotNull]
         protected override string ProcessChange()
         {
             var element = TemplateElement;

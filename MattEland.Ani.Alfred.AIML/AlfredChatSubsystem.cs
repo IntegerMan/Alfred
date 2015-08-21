@@ -90,6 +90,7 @@ namespace MattEland.Ani.Alfred.Chat
         ///     Gets the name of the component.
         /// </summary>
         /// <value>The name of the component.</value>
+        [NotNull]
         public override string Name
         {
             get { return Res.ChatModuleName.NonNull(); }
@@ -99,6 +100,7 @@ namespace MattEland.Ani.Alfred.Chat
         ///     Gets the identifier for the subsystem to be used in command routing.
         /// </summary>
         /// <value>The identifier for the subsystem.</value>
+        [NotNull]
         public override string Id
         {
             get { return "Chat"; }

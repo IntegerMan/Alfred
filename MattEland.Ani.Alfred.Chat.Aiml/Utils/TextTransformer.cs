@@ -88,6 +88,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         ///     Gets the output string.
         /// </summary>
         /// <value>The output string.</value>
+        [NotNull]
         public string OutputString
         {
             get { return Transform(); }
@@ -109,6 +110,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// </summary>
         /// <param name="input">The input text.</param>
         /// <returns>The outputted text from the transform.</returns>
+        [NotNull]
         public string Transform([CanBeNull] string input)
         {
             //- Store the new input
@@ -122,6 +124,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         ///     Transforms the input text into the output text.
         /// </summary>
         /// <returns>The outputted text from the transform.</returns>
+        [NotNull]
         public string Transform()
         {
             //- Ensure we have a valid value
@@ -138,6 +141,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         ///     Processes the input text and returns the processed value.
         /// </summary>
         /// <returns>The processed output</returns>
+        [NotNull]
         protected abstract string ProcessChange();
 
         /// <summary>
@@ -155,11 +159,12 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// </summary>
         /// <param name="settingName">Name of the setting.</param>
         /// <returns>The value of the setting or string.Empty if no setting found</returns>
+        [NotNull]
         protected string GetGlobalSetting([CanBeNull] string settingName)
         {
-            return null == settingName
+            return settingName == null
                        ? string.Empty
-                       : Librarian.GlobalSettings.GetValue(settingName);
+                       : Librarian.GlobalSettings.GetValue(settingName).NonNull();
 
         }
 

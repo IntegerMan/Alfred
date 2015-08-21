@@ -489,7 +489,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
                 }
 
                 //- Add it to the output
-                stringBuilder.AppendFormat(Locale, "{0} ", result?.Trim());
+                stringBuilder.AppendFormat(Locale, "{0} ", result.Trim());
             }
 
             //- Send the result back

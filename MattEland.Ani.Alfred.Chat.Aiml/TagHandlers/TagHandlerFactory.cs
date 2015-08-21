@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
 // TagHandlerFactory.cs
 // 
-// Created on:      08/14/2015 at 12:14 AM
-// Last Modified:   08/18/2015 at 4:03 PM
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/21/2015 at 6:14 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -18,6 +18,8 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Common;
+
+using static MattEland.Common.StringExtensions;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
@@ -75,7 +77,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         ///     AimlTagHandler and decorated with the HandlesAimlTag attribute.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="assembly"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="assembly" /> is <see langword="null" />.</exception>
         public void RegisterTagHandlersInAssembly([NotNull] Assembly assembly)
         {
             //- Validation
@@ -93,14 +95,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                 foreach (var type in types)
                 {
                     // We can't instantiate an abstract type and we need AimlTagHandlers for this
-                    if (type.IsAbstract || !type.IsSubclassOf(typeof(AimlTagHandler)))
+                    if (type.IsAbstract || !type.IsSubclassOf(typeof (AimlTagHandler)))
                     {
                         continue;
                     }
 
                     // Grab the attribute and exit early if it's not there
                     var attribute =
-                        type.GetCustomAttribute(typeof(HandlesAimlTagAttribute)) as
+                        type.GetCustomAttribute(typeof (HandlesAimlTagAttribute)) as
                         HandlesAimlTagAttribute;
                     if (attribute == null)
                     {
@@ -119,11 +121,21 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             }
             catch (ReflectionTypeLoadException rex)
             {
-                _engine.Log($"Encountered reflection type load exception '{rex.Message}' loading assembly '{assembly.FullName}'.", LogLevel.Error);
+                IFormattable message =
+                    $"Encountered reflection type load exception '{rex.Message}' loading assembly '{assembly.FullName}'.";
+                _engine.Log(message.ForUser(), LogLevel.Error);
             }
             catch (AmbiguousMatchException amex)
             {
-                _engine.Log($"Encountered ambiguous match exception '{amex.Message}' loading assembly '{assembly.FullName}'.", LogLevel.Error);
+                IFormattable message =
+                    $"Encountered ambiguous match exception '{amex.Message}' loading assembly '{assembly.FullName}'.";
+                _engine.Log(message.ForUser(), LogLevel.Error);
+            }
+            catch (TypeLoadException lex)
+            {
+                IFormattable message =
+                    $"Encountered type load exception '{lex.Message}' on {lex.TypeName} while loading assembly '{assembly.FullName}'.";
+                _engine.Log(message.ForUser(), LogLevel.Error);
             }
 
         }
