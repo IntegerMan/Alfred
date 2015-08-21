@@ -74,7 +74,7 @@
     <Compile Include="AlfredToolWindowControl.xaml.cs">
       <DependentUpon>AlfredToolWindowControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AlfredToolWindowPackage.cs" />
+    <Compile Include="AlfredPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

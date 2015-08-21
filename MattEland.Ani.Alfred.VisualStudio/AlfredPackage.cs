@@ -39,10 +39,10 @@ namespace MattEland.Ani.Alfred.VisualStudio
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof(AlfredToolWindow))]
-    [Guid(AlfredToolWindowPackage.PackageGuidString)]
+    [Guid(AlfredPackage.PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     [ProvideToolWindow(typeof(MattEland.Ani.Alfred.VisualStudio.AlfredChatWindow))]
-    public sealed class AlfredToolWindowPackage : Package
+    public sealed class AlfredPackage : Package
     {
         /// <summary>
         /// AlfredToolWindowPackage GUID string.
@@ -52,7 +52,7 @@ namespace MattEland.Ani.Alfred.VisualStudio
         /// <summary>
         /// Initializes a new instance of the <see cref="AlfredToolWindow"/> class.
         /// </summary>
-        public AlfredToolWindowPackage()
+        public AlfredPackage()
         {
             // Inside this method you can place any initialization code that does not require
             // any Visual Studio service because at this point the package object is created but
