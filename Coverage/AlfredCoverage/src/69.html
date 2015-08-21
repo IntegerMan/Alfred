@@ -2,20 +2,24 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\gettaghandler.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\taghandlers\datetaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// GetTagHandler.cs
+// DateTagHandler.cs
 // 
-// Created on:      08/12/2015 at 10:45 PM
-// Last Modified:   08/14/2015 at 10:15 PM
+// Created on:      08/12/2015 at 10:43 PM
+// Last Modified:   08/14/2015 at 3:13 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
+
+using System;
+using System.Diagnostics;
+using System.Xml;
 
 using JetBrains.Annotations;
 
@@ -25,16 +29,16 @@ using MattEland.Common;
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// &lt;summary&gt;
-    /// A TagHandler for the AIML &quot;get&quot; tag.
+    /// An AimlTagHandler for the &quot;date&quot; tag. This provides an easy way of giving the time and date.
     /// &lt;/summary&gt;
-    [HandlesAimlTag(&quot;get&quot;)]
-    public class GetTagHandler : AimlTagHandler
+    [HandlesAimlTag(&quot;date&quot;)]
+    public class DateTagHandler : AimlTagHandler
     {
         /// &lt;summary&gt;
-        /// Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;DateTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
-        public GetTagHandler([NotNull] TagHandlerParameters parameters)
+        public DateTagHandler([NotNull] TagHandlerParameters parameters)
             : base(parameters)
         {
         }
@@ -45,32 +49,26 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// &lt;returns&gt;The processed output&lt;/returns&gt;
         protected override string ProcessChange()
         {
-            var node = TemplateElement;
+            var element = TemplateElement;
 
-            //- Ensure correct tag and that the node has the attribute we need
-            if (node == null || !node.Name.Matches(&quot;get&quot;) || !node.HasAttribute(&quot;name&quot;))
+            string formatString = &quot;f&quot;; // Full date and time string
+
+            // By default we&#39;ll use the full date and time, but look for a format attribute to provide a custom format
+            if (element.HasAttribute(&quot;format&quot;))
             {
-                return string.Empty;
+                formatString = element.GetAttribute(&quot;format&quot;);
             }
 
-            // Grab the name of the requested variable from the tag
-            var variableName = node.GetAttribute(&quot;name&quot;).NonNull();
-
-            //- Safety check for junk input
-            if (variableName.IsEmpty())
-            {
-                return string.Empty;
-            }
-
-            // Return the value of the variable
-            return User.UserVariables.GetValue(variableName);
+            // Return the current time with formatting applied
+            var now = DateTime.Now;
+            return now.ToString(formatString, Locale);
 
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[28,15,28,31,0],[29,9,29,10,0],[30,9,30,10,0],[37,9,37,10,0],[38,13,38,40,0],[41,13,41,89,0],[42,13,42,14,0],[43,17,43,37,0],[47,13,47,68,0],[50,13,50,40,0],[51,13,51,14,0],[52,17,52,37,0],[56,13,56,62,0],[58,9,58,10,0]]);
+      highlightRanges([[32,15,32,31,1],[33,9,33,10,1],[34,9,34,10,1],[41,9,41,10,1],[42,13,42,43,1],[44,13,44,39,1],[47,13,47,48,1],[48,13,48,14,1],[49,17,49,63,1],[50,13,50,14,1],[53,13,53,36,1],[54,13,54,55,1],[56,9,56,10,1]]);
     </script>
   </body>
 </html>

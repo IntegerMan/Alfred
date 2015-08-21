@@ -2,88 +2,73 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.system\performancecountermetricprovider.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core.system\countermetricproviderfactory.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// PerformanceCounterMetricProvider.cs
+// CounterMetricProviderFactory.cs
 // 
-// Created on:      08/18/2015 at 11:29 AM
-// Last Modified:   08/18/2015 at 3:12 PM
+// Created on:      08/18/2015 at 2:20 PM
+// Last Modified:   08/18/2015 at 2:49 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-
-using JetBrains.Annotations;
 
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
     /// &lt;summary&gt;
-    ///     A metric provider based on a performance counter.
+    ///     A factory that builds CounterMetricProviders
     /// &lt;/summary&gt;
-    public sealed class CounterMetricProvider : MetricProviderBase
+    public class CounterMetricProviderFactory : IMetricProviderFactory
     {
-        [NotNull]
-        private readonly PerformanceCounter _counter;
-
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;CounterMetricProvider&quot; /&gt; class.
+        ///     Builds a metric provider for the specified type.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;categoryName&quot;&gt;Name of the category.&lt;/param&gt;
         /// &lt;param name=&quot;counterName&quot;&gt;Name of the counter.&lt;/param&gt;
-        /// &lt;param name=&quot;instance&quot;&gt;The instance.&lt;/param&gt;
+        /// &lt;param name=&quot;instanceName&quot;&gt;Name of the instance.&lt;/param&gt;
+        /// &lt;returns&gt;A metric provider&lt;/returns&gt;
         /// &lt;exception cref=&quot;Win32Exception&quot;&gt;An error occurred when accessing a system API.&lt;/exception&gt;
         /// &lt;exception cref=&quot;UnauthorizedAccessException&quot;&gt;
         ///     Code that is executing without administrative
         ///     privileges attempted to read a performance counter.
         /// &lt;/exception&gt;
-        public CounterMetricProvider(string categoryName, string counterName, string instance = null)
-            : base(instance ?? counterName)
+        public MetricProviderBase Build(string categoryName,
+                                        string counterName,
+                                        string instanceName = null)
         {
-            _counter = new PerformanceCounter(categoryName, counterName, instance, true);
-
-            /* Tell the performance counter to start getting values. These tend to always return 
-               0.0 as the first value and then provide accurate data after that */
-            _counter.NextValue();
+            return new CounterMetricProvider(categoryName, counterName, instanceName);
         }
 
         /// &lt;summary&gt;
-        ///     Gets the next value from the metric provider
+        ///     Gets the names of each counter instance in a category.
         /// &lt;/summary&gt;
-        /// &lt;returns&gt;The next vaue&lt;/returns&gt;
-        /// &lt;exception cref=&quot;Win32Exception&quot;&gt;An error occurred when accessing a system API.&lt;/exception&gt;
+        /// &lt;param name=&quot;categoryName&quot;&gt;Name of the category.&lt;/param&gt;
+        /// &lt;returns&gt;A collection of counter instance names&lt;/returns&gt;
+        /// &lt;exception cref=&quot;Win32Exception&quot;&gt;A call to an underlying system API failed. &lt;/exception&gt;
         /// &lt;exception cref=&quot;UnauthorizedAccessException&quot;&gt;
         ///     Code that is executing without administrative
         ///     privileges attempted to read a performance counter.
         /// &lt;/exception&gt;
-        public override float NextValue()
+        public IEnumerable&lt;string&gt; GetCategoryInstanceNames(string categoryName)
         {
-            return _counter.NextValue();
-        }
+            var cpuCategory = new PerformanceCounterCategory(categoryName);
 
-        /// &lt;summary&gt;
-        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged
-        ///     resources.
-        /// &lt;/summary&gt;
-        public override void Dispose()
-        {
-            base.Dispose();
-
-            _counter.Dispose();
+            return cpuCategory.GetInstanceNames();
         }
     }
-
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[38,15,38,44,0],[39,9,39,10,0],[40,13,40,90,0],[44,13,44,34,0],[45,9,45,10,0],[57,9,57,10,0],[58,13,58,41,0],[59,9,59,10,0],[66,9,66,10,0],[67,13,67,28,0],[69,13,69,32,0],[70,9,70,10,0]]);
+      highlightRanges([[37,9,37,10,0],[38,13,38,87,0],[39,9,39,10,0],[52,9,52,10,0],[53,13,53,76,0],[55,13,55,51,0],[56,9,56,10,0]]);
     </script>
   </body>
 </html>

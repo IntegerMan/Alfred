@@ -58,7 +58,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         ///     <see langword="null" />.
         /// </exception>
         public ApplicationManager([NotNull] IUserInterfaceDirector director)
-            : this(director, new XamlPlatformProvider())
+            : this(new XamlPlatformProvider(), director)
         {
         }
 
@@ -66,8 +66,8 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         ///     Initializes a new instance of the <see cref="T:System.Object" /> class with
         ///     the specified user interface director and platform provider.
         /// </summary>
-        /// <param name="director">The user interface director</param>
         /// <param name="platformProvider"></param>
+        /// <param name="director">The user interface director</param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="director" /> is
         ///     <see langword="null" />.
@@ -76,20 +76,30 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         ///     <paramref name="platformProvider" /> is
         ///     <see langword="null" />.
         /// </exception>
-        public ApplicationManager([NotNull] IUserInterfaceDirector director,
-                                  [NotNull] IPlatformProvider platformProvider)
+        public ApplicationManager([NotNull] IPlatformProvider platformProvider) : this(platformProvider, null)
         {
-            if (director == null)
-            {
-                throw new ArgumentNullException(nameof(director));
-            }
-            UserInterfaceDirector = director;
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="T:System.Object" /> class with
+        ///     the specified user interface director and platform provider.
+        /// </summary>
+        /// <param name="platformProvider"></param>
+        /// <param name="director">The user interface director</param>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="platformProvider" /> is
+        ///     <see langword="null" />.
+        /// </exception>
+        public ApplicationManager([NotNull] IPlatformProvider platformProvider, [CanBeNull] IUserInterfaceDirector director)
+        {
 
             if (platformProvider == null)
             {
                 throw new ArgumentNullException(nameof(platformProvider));
             }
+
             PlatformProvider = platformProvider;
+            UserInterfaceDirector = director;
 
             // Create Alfred. It won't be online and running yet, but create it.
             var bootstrapper = new AlfredBootstrapper(platformProvider);
@@ -112,11 +122,13 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         ///     Gets the user interface director.
         /// </summary>
         /// <value>The user interface director.</value>
-        [NotNull]
+        [CanBeNull]
         public IUserInterfaceDirector UserInterfaceDirector
         {
             [DebuggerStepThrough]
             get;
+            [DebuggerStepThrough]
+            set;
         }
 
         /// <summary>

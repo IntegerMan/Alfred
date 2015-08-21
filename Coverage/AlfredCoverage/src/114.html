@@ -2,126 +2,70 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.system\memorymonitormodule.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.aiml\chatpage.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-// ---------------------------------------------------------
-// MemoryMonitorModule.cs
-// 
-// Created on:      08/04/2015 at 9:50 PM
-// Last Modified:   08/18/2015 at 2:06 PM
-// 
-// Last Modified by: Matt Eland
-// ---------------------------------------------------------
-
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Widgets;
+using MattEland.Ani.Alfred.Core.Pages;
 
-namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
+namespace MattEland.Ani.Alfred.Chat
 {
     /// &lt;summary&gt;
-    ///     A module that displays information on the system&#39;s memory utilization percentage
+    /// A custom page for interacting with Alfred via Chat
     /// &lt;/summary&gt;
-    public sealed class MemoryMonitorModule : SystemMonitorModule, IDisposable
+    public sealed class ChatPage : AlfredPage
     {
-        private const string MemoryCategoryName = &quot;Memory&quot;;
-        private const string MemoryUtilizationBytesCounterName = &quot;% Committed Bytes in Use&quot;;
-
         [NotNull]
-        private readonly MetricProviderBase _memUsedBytesCounter;
+        private readonly IChatProvider _chatHandler;
 
+        /// &lt;summary&gt;
+        /// Gets the chat handler.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The chat handler.&lt;/value&gt;
         [NotNull]
-        private readonly AlfredProgressBarWidget _memWidget;
-
-        /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;MemoryMonitorModule&quot; /&gt; class.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
-        /// &lt;param name=&quot;factory&quot;&gt;The metric provider factory.&lt;/param&gt;
-        public MemoryMonitorModule([NotNull] IPlatformProvider platformProvider,
-                                   [NotNull] IMetricProviderFactory factory)
-            : base(platformProvider, factory)
+        public IChatProvider ChatHandler
         {
-            _memUsedBytesCounter = MetricProvider.Build(MemoryCategoryName,
-                                                        MemoryUtilizationBytesCounterName);
-
-            _memWidget = new AlfredProgressBarWidget
-            {
-                Minimum = 0,
-                Maximum = 100,
-                Text = Resources.MemoryMonitorModule_LabelName,
-                ValueFormatString = &quot;{0:F2} %&quot;
-            };
-
+            [DebuggerStepThrough]
+            get
+            { return _chatHandler; }
         }
 
         /// &lt;summary&gt;
-        ///     Gets the name of the module.
+        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredPage&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;
-        ///     The name of the module.
-        /// &lt;/value&gt;
-        public override string Name
+        /// &lt;param name=&quot;name&quot;&gt;The name.&lt;/param&gt;
+        /// &lt;param name=&quot;chatHandler&quot;&gt;The input handler&lt;/param&gt;
+        public ChatPage([NotNull] string name, [NotNull] IChatProvider chatHandler) : base(name, &quot;Chat&quot;)
         {
-            // ReSharper disable once AssignNullToNotNullAttribute
-            get { return Resources.MemoryMonitorModule_Name; }
+            _chatHandler = chatHandler;
         }
 
         /// &lt;summary&gt;
-        /// Gets the percent of memory that is utilized.
+        /// Gets the children of this component. Depending on the type of component this is, the children will
+        /// vary in their own types.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The memory utilization percentage.&lt;/value&gt;
-        public float MemoryUtilization
+        /// &lt;value&gt;The children.&lt;/value&gt;
+        public override IEnumerable&lt;IAlfredComponent&gt; Children
         {
-            get { return _memUsedBytesCounter.NextValue(); }
+            get { yield break; }
         }
 
-        /// &lt;summary&gt;
-        ///     Disposes this instance.
-        /// &lt;/summary&gt;
-        public void Dispose()
-        {
-            _memUsedBytesCounter.Dispose();
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles module shutdown events
-        /// &lt;/summary&gt;
-        protected override void ShutdownProtected()
-        {
-            _memWidget.Value = 0;
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles module initialization events
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;alfred&quot;&gt;The alfred instance.&lt;/param&gt;
-        protected override void InitializeProtected(IAlfred alfred)
-        {
-            Register(_memWidget);
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles updating the module as needed
-        /// &lt;/summary&gt;
-        protected override void UpdateProtected()
-        {
-            var usedMemory = GetNextCounterValueSafe(_memUsedBytesCounter);
-
-            _memWidget.Value = usedMemory;
-        }
     }
+
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[64,17,64,18,0],[64,19,64,61,0],[64,62,64,63,0],[80,9,80,10,0],[81,13,81,44,0],[82,9,82,10,0],[40,15,40,46,1],[41,9,41,10,1],[42,13,43,92,1],[45,13,51,15,1],[53,9,53,10,1],[73,17,73,18,1],[73,19,73,59,1],[73,60,73,61,1],[88,9,88,10,1],[89,13,89,34,1],[90,9,90,10,1],[97,9,97,10,1],[98,13,98,34,1],[99,9,99,10,1],[105,9,105,10,1],[106,13,106,76,1],[108,13,108,43,1],[109,9,109,10,1]]);
+      highlightRanges([[30,13,30,14,0],[30,15,30,35,0],[30,36,30,37,0],[50,17,50,18,0],[50,19,50,31,0],[38,87,38,105,1],[39,9,39,10,1],[40,13,40,40,1],[41,9,41,10,1]]);
     </script>
   </body>
 </html>

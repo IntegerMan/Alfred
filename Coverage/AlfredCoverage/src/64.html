@@ -2,98 +2,58 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\thatstartaghandler.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\taghandlers\handlesaimltagattribute.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// ThatStarTagHandler.cs
+// HandlesAimlTagAttribute.cs
 // 
-// Created on:      08/12/2015 at 10:58 PM
-// Last Modified:   08/15/2015 at 11:54 PM
+// Created on:      08/14/2015 at 1:01 AM
+// Last Modified:   08/14/2015 at 1:01 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using JetBrains.Annotations;
+using System;
+using System.Diagnostics;
 
-using MattEland.Ani.Alfred.Chat.Aiml.Utils;
-using MattEland.Ani.Alfred.Core.Console;
-using MattEland.Common;
+using JetBrains.Annotations;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// &lt;summary&gt;
-    ///     A tag handler responsible for handling AIML &quot;thatstar&quot; tags. This returns items in the query&#39;s
-    ///     ThatStar list depending on the specified index (defaults to the first one). The thatstar is
-    ///     used to referred to * items inside the &quot;that&quot; tag.
+    /// An attribute describing a class that can handle an AIML tag
     /// &lt;/summary&gt;
-    [HandlesAimlTag(&quot;thatstar&quot;)]
-    public class ThatStarTagHandler : AimlTagHandler
+    [AttributeUsage(AttributeTargets.Class), UsedImplicitly]
+    public sealed class HandlesAimlTagAttribute : Attribute
     {
+
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
+        /// Initializes a new instance of the &lt;see cref=&quot;HandlesAimlTagAttribute&quot;/&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
-        public ThatStarTagHandler([NotNull] TagHandlerParameters parameters)
-            : base(parameters)
+        /// &lt;param name=&quot;name&quot;&gt;The name of the tag this class handles.&lt;/param&gt;
+        public HandlesAimlTagAttribute(string name)
         {
+            Name = name;
         }
 
         /// &lt;summary&gt;
-        ///     Processes the input text and returns the processed value.
+        /// Gets or sets the name of the tag this class handles.
         /// &lt;/summary&gt;
-        /// &lt;returns&gt;The processed output&lt;/returns&gt;
-        protected override string ProcessChange()
+        /// &lt;value&gt;The name.&lt;/value&gt;
+        public string Name
         {
-            var element = TemplateElement;
-
-            //- Early exit if it&#39;s not what this should be handling
-            if (element == null || !element.Name.Matches(&quot;thatstar&quot;))
-            {
-                return string.Empty;
-            }
-
-            // Handle case of no items in 
-            if (Query.ThatStar.Count &lt;= 0)
-            {
-                Log(string.Format(Locale,
-                                  &quot;Encountered a thatstar query with no items in Query.ThatStar on request: {0}&quot;,
-                                  Request.RawInput),
-                    LogLevel.Error);
-
-                return string.Empty;
-            }
-
-            // If there&#39;s no index, just return the first one
-            if (!element.HasAttribute(&quot;index&quot;))
-            {
-                return Query.ThatStar[0];
-            }
-
-            // With an index, return the elemernt at the specified index.
-            var index = element.GetAttribute(&quot;index&quot;).AsInt();
-            if (index &gt; 0)
-            {
-                return Query.ThatStar[index - 1];
-            }
-
-            // Nice one, AIML author; looks like a 0 or negative index was specified. Log it and return.
-            Log(string.Format(Locale,
-                              &quot;An input tag with a badly formed index ({0}) was encountered processing the input: {1}&quot;,
-                              element.GetAttribute(&quot;index&quot;),
-                              Request.RawInput),
-                LogLevel.Error);
-
-            return string.Empty;
+            [DebuggerStepThrough]
+            get;
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[31,15,31,31,0],[32,9,32,10,0],[33,9,33,10,0],[40,9,40,10,0],[41,13,41,43,0],[44,13,44,70,0],[45,13,45,14,0],[46,17,46,37,0],[50,13,50,43,0],[51,13,51,14,0],[52,17,55,37,0],[57,17,57,37,0],[61,13,61,48,0],[62,13,62,14,0],[63,17,63,42,0],[67,13,67,63,0],[68,13,68,27,0],[69,13,69,14,0],[70,17,70,50,0],[74,13,78,33,0],[80,13,80,33,0],[81,9,81,10,0]]);
+      highlightRanges([[28,9,28,52,1],[29,9,29,10,1],[30,13,30,25,1],[31,9,31,10,1],[39,13,40,17,1]]);
     </script>
   </body>
 </html>

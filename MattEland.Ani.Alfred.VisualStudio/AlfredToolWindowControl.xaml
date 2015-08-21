@@ -6,7 +6,6 @@
              xmlns:helpers="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Helpers;assembly=MattEland.Ani.Alfred.PresentationShared"
              xmlns:controls="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Controls;assembly=MattEland.Ani.Alfred.PresentationShared"
              Loaded="OnWindowLoaded"
-             Unloaded="OnWindowUnloaded"
              Background="{DynamicResource VsBrush.Window}"
              Foreground="{DynamicResource VsBrush.WindowText}"
              mc:Ignorable="d"

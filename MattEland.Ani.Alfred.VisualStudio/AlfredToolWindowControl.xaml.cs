@@ -49,8 +49,7 @@ namespace MattEland.Ani.Alfred.VisualStudio
             {
                 InitializeComponent();
 
-                var provider = new XamlPlatformProvider();
-                _app = new ApplicationManager(this, provider);
+                _app = AlfredPackage.AlfredInstance;
 
                 // DataBindings rely on Alfred presently as there hasn't been a need for a page ViewModel yet
                 DataContext = _app;
@@ -101,30 +100,12 @@ namespace MattEland.Ani.Alfred.VisualStudio
         {
             var logHeader = "VSClient.Loaded";
 
-            // Determine whether to auto-start or not based off of settings
-            Debug.Assert(Settings.Default != null);
-            if (Settings.Default.AutoStartAlfred)
-            {
-                _app.Console?.Log(logHeader, "Automatically starting Alfred", LogLevel.Verbose);
-                _app.Start();
-            }
-
             // Auto-select the first tab if any tabs are present
             Debug.Assert(tabPages != null);
             SelectionHelper.SelectFirstItem(tabPages);
 
             // Log that we're good to go
             _app.Console?.Log(logHeader, "Window is now loaded", LogLevel.Info);
-        }
-
-        /// <summary>
-        /// Handles the <see cref="E:Unloaded" /> event.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="System.Windows.RoutedEventArgs" /> instance containing the event data.</param>
-        private void OnWindowUnloaded(object sender, RoutedEventArgs e)
-        {
-            _app.Stop();
         }
     }
 }

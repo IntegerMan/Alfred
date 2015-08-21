@@ -2,86 +2,112 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\definitions\userstatementresponse.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core\console\consoleevent.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// UserStatementResponse.cs
+// ConsoleEvent.cs
 // 
-// Created on:      08/10/2015 at 5:01 PM
-// Last Modified:   08/11/2015 at 1:41 PM
+// Created on:      07/26/2015 at 2:23 PM
+// Last Modified:   08/07/2015 at 12:24 AM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
 
-namespace MattEland.Ani.Alfred.Core.Definitions
+namespace MattEland.Ani.Alfred.Core.Console
 {
+
     /// &lt;summary&gt;
-    ///     A response to a user statement
+    ///     Represents a logged event to the console
     /// &lt;/summary&gt;
-    public struct UserStatementResponse : IEquatable&lt;UserStatementResponse&gt;
+    public struct ConsoleEvent : IEquatable&lt;ConsoleEvent&gt;, IConsoleEvent
     {
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;T:UserStatementResponse&quot; /&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;ConsoleEvent&quot; /&gt; class using the current utcTime.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;userInput&quot;&gt;The user input.&lt;/param&gt;
-        /// &lt;param name=&quot;responseText&quot;&gt;The response text.&lt;/param&gt;
-        /// &lt;param name=&quot;template&quot;&gt;The template.&lt;/param&gt;
-        /// &lt;param name=&quot;command&quot;&gt;The Command.&lt;/param&gt;
-        public UserStatementResponse([CanBeNull] string userInput,
-                                     [CanBeNull] string responseText,
-                                     string template,
-                                     ChatCommand command)
+        /// &lt;param name=&quot;title&quot;&gt;The title.&lt;/param&gt;
+        /// &lt;param name=&quot;message&quot;&gt;The message.&lt;/param&gt;
+        public ConsoleEvent(string title, string message) : this(title, message, LogLevel.Verbose, DateTime.UtcNow)
         {
-            UserInput = userInput ?? string.Empty;
-            ResponseText = responseText ?? string.Empty;
-            Template = template;
-            Command = command;
         }
 
         /// &lt;summary&gt;
-        ///     Gets the original user input text.
+        ///     Initializes a new instance of the &lt;see cref=&quot;ConsoleEvent&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The user input.&lt;/value&gt;
-        [NotNull]
-        public string UserInput { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets the response text.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The response text.&lt;/value&gt;
-        [NotNull]
-        public string ResponseText { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets the AIML template used to generate a response.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The template.&lt;/value&gt;
-        [CanBeNull]
-        public string Template { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets the system Command to execute.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The Command.&lt;/value&gt;
-        public ChatCommand Command { get; }
-
-        /// &lt;summary&gt;
-        ///     Determines if this instance is equivalent to the other instance
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;other&quot;&gt;The other instance.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the instances are equivalent, &lt;c&gt;false&lt;/c&gt; otherwise.&lt;/returns&gt;
-        public bool Equals(UserStatementResponse other)
+        /// &lt;param name=&quot;title&quot;&gt;The title.&lt;/param&gt;
+        /// &lt;param name=&quot;message&quot;&gt;The message.&lt;/param&gt;
+        /// &lt;param name=&quot;level&quot;&gt;The logging level.&lt;/param&gt;
+        public ConsoleEvent(string title, string message, LogLevel level) : this(title, message, level, DateTime.UtcNow)
         {
-            return string.Equals(UserInput, other.UserInput) &amp;&amp; string.Equals(ResponseText, other.ResponseText) &amp;&amp;
-                   string.Equals(Template, other.Template) &amp;&amp; Command == other.Command;
+        }
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;ConsoleEvent&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;title&quot;&gt;The title.&lt;/param&gt;
+        /// &lt;param name=&quot;message&quot;&gt;The message.&lt;/param&gt;
+        /// &lt;param name=&quot;level&quot;&gt;The logging level&lt;/param&gt;
+        /// &lt;param name=&quot;utcTime&quot;&gt;The utcTime in UTC.&lt;/param&gt;
+        public ConsoleEvent(string title, string message, LogLevel level, DateTime utcTime)
+        {
+            UtcTime = utcTime;
+            Title = title;
+            Message = message;
+            Level = level;
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the time the event was logged in UTC.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The time the event was logged in UTC.&lt;/value&gt;
+        public DateTime UtcTime { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the title.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The title.&lt;/value&gt;
+        public string Title { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the message.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The message.&lt;/value&gt;
+        public string Message { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the time in local system time.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The time.&lt;/value&gt;
+        public DateTime Time
+        {
+            get { return UtcTime.ToLocalTime(); }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the logging level of the event. Defaults to Verbose.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The logging level.&lt;/value&gt;
+        public LogLevel Level { get; }
+
+        #region Equality Members
+
+        /// &lt;summary&gt;
+        ///     Determines if this instance is equivalent to another
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;other&quot;&gt;The other event.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the events are equivalent, &lt;c&gt;false&lt;/c&gt; otherwise.&lt;/returns&gt;
+        public bool Equals(ConsoleEvent other)
+        {
+            return UtcTime.Equals(other.UtcTime) &amp;&amp;
+                   string.Equals(Title, other.Title) &amp;&amp;
+                   string.Equals(Message, other.Message) &amp;&amp;
+                   Level == other.Level;
         }
 
         /// &lt;summary&gt;
@@ -89,31 +115,27 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;obj&quot;&gt;The object to compare with the current instance.&lt;/param&gt;
         /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the specified &lt;see cref=&quot;System.Object&quot; /&gt; is equal to this instance; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
-        public override bool Equals(object obj)
+        public override bool Equals([CanBeNull] object obj)
         {
             if (ReferenceEquals(null, obj))
             {
                 return false;
             }
-            return obj is UserStatementResponse &amp;&amp; Equals((UserStatementResponse)obj);
+            return obj is ConsoleEvent &amp;&amp; Equals((ConsoleEvent)obj);
         }
 
         /// &lt;summary&gt;
         ///     Returns a hash code for this instance.
         /// &lt;/summary&gt;
         /// &lt;returns&gt;A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.&lt;/returns&gt;
-        [SuppressMessage(&quot;ReSharper&quot;, &quot;ConstantNullCoalescingCondition&quot;)]
         public override int GetHashCode()
         {
             unchecked
             {
-                // ?? Guards against GetHashCode getting called unexpectedly - maybe in constructor? Saw errors with
-                // unknown stack when this was not present
-                var hashCode = (UserInput ?? string.Empty).GetHashCode();
-                hashCode = (hashCode * 397) ^ (ResponseText ?? string.Empty).GetHashCode();
-                hashCode = (hashCode * 397) ^ (Template ?? string.Empty).GetHashCode();
-                hashCode = (hashCode * 397) ^ Command.GetHashCode();
-
+                var hashCode = UtcTime.GetHashCode();
+                hashCode = (hashCode * 397) ^ (Title?.GetHashCode() ?? 0);
+                hashCode = (hashCode * 397) ^ (Message?.GetHashCode() ?? 0);
+                hashCode = (hashCode * 397) ^ (int)(Level);
                 return hashCode;
             }
         }
@@ -121,10 +143,10 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// &lt;summary&gt;
         ///     Implements the == operator.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;left&quot;&gt;The left.&lt;/param&gt;
-        /// &lt;param name=&quot;right&quot;&gt;The right.&lt;/param&gt;
+        /// &lt;param name=&quot;left&quot;&gt;The left operand.&lt;/param&gt;
+        /// &lt;param name=&quot;right&quot;&gt;The right operand.&lt;/param&gt;
         /// &lt;returns&gt;The result of the operator.&lt;/returns&gt;
-        public static bool operator ==(UserStatementResponse left, UserStatementResponse right)
+        public static bool operator ==(ConsoleEvent left, ConsoleEvent right)
         {
             return left.Equals(right);
         }
@@ -132,18 +154,21 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// &lt;summary&gt;
         ///     Implements the != operator.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;left&quot;&gt;The left.&lt;/param&gt;
-        /// &lt;param name=&quot;right&quot;&gt;The right.&lt;/param&gt;
+        /// &lt;param name=&quot;left&quot;&gt;The left operand.&lt;/param&gt;
+        /// &lt;param name=&quot;right&quot;&gt;The right operand.&lt;/param&gt;
         /// &lt;returns&gt;The result of the operator.&lt;/returns&gt;
-        public static bool operator !=(UserStatementResponse left, UserStatementResponse right)
+        public static bool operator !=(ConsoleEvent left, ConsoleEvent right)
         {
             return !left.Equals(right);
         }
+
+        #endregion
     }
+
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[64,38,64,42,0],[85,13,85,14,0],[86,17,86,30,0],[97,9,97,10,0],[99,13,99,14,0],[102,17,102,74,0],[103,17,103,92,0],[104,17,104,88,0],[105,17,105,69,0],[107,17,107,33,0],[109,9,109,10,0],[118,9,118,10,0],[119,13,119,39,0],[120,9,120,10,0],[129,9,129,10,0],[130,13,130,40,0],[131,9,131,10,0],[32,9,32,10,1],[33,13,33,51,1],[34,13,34,57,1],[35,13,35,33,1],[36,13,36,31,1],[37,9,37,10,1],[44,35,44,39,1],[51,38,51,42,1],[58,34,58,38,1],[72,9,72,10,1],[73,13,74,88,1],[75,9,75,10,1],[83,9,83,10,1],[84,13,84,44,1],[88,13,88,87,1],[89,9,89,10,1]]);
+      highlightRanges([[26,61,26,116,0],[27,9,27,10,0],[28,9,28,10,0],[59,35,59,39,0],[71,33,71,37,0],[79,17,79,18,0],[79,19,79,48,0],[79,49,79,50,0],[96,9,96,10,0],[97,13,100,41,0],[101,9,101,10,0],[109,9,109,10,0],[110,13,110,44,0],[111,13,111,14,0],[112,17,112,30,0],[114,13,114,69,0],[115,9,115,10,0],[122,9,122,10,0],[124,13,124,14,0],[125,17,125,54,0],[126,17,126,75,0],[127,17,127,77,0],[128,17,128,60,0],[129,17,129,33,0],[131,9,131,10,0],[140,9,140,10,0],[141,13,141,39,0],[142,9,142,10,0],[151,9,151,10,0],[152,13,152,40,0],[153,9,153,10,0],[36,77,36,121,1],[37,9,37,10,1],[38,9,38,10,1],[48,9,48,10,1],[49,13,49,31,1],[50,13,50,27,1],[51,13,51,31,1],[52,13,52,27,1],[53,9,53,10,1],[65,31,65,35,1],[86,33,86,37,1]]);
     </script>
   </body>
 </html>

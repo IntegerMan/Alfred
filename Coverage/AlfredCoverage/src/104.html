@@ -2,155 +2,137 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.common\stringextensions.cs</title>
+    <title>c:\dev\alfred\matteland.common\assemblyextensions.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// StringExtensions.cs
+// AssemblyExtensions.cs
 // 
-// Created on:      08/12/2015 at 2:12 PM
-// Last Modified:   08/14/2015 at 11:26 PM
+// Created on:      08/14/2015 at 12:38 AM
+// Last Modified:   08/14/2015 at 12:59 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 
 using JetBrains.Annotations;
 
 namespace MattEland.Common
 {
-    /// &lt;summary&gt;
-    ///     Contains extension methods dealing with string operations.
-    /// &lt;/summary&gt;
-    public static class StringExtensions
+    public static class AssemblyHelper
     {
         /// &lt;summary&gt;
-        ///     Determines if the input string is has text (is not null and has text beyond whitespace).
+        ///     Gets the types in an assembly with an attribute applied to them.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the string has text; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
-        [UsedImplicitly]
-        public static bool HasText([CanBeNull] this string input)
-        {
-            return !input.IsNullOrWhitespace();
-        }
-
-        /// &lt;summary&gt;
-        ///     Determines if the input string is null or an empty string.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the string is null or empty; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
-        [UsedImplicitly]
-        public static bool IsEmpty([CanBeNull] this string input)
-        {
-            return string.IsNullOrEmpty(input);
-        }
-
-        /// &lt;summary&gt;
-        ///     Determines if the input string is null, an empty string, or whitespace.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the string is null or whitespace; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
-        [UsedImplicitly]
-        public static bool IsNullOrWhitespace([CanBeNull] this string input)
-        {
-            return string.IsNullOrWhiteSpace(input);
-        }
-
-        /// &lt;summary&gt;
-        ///     Ensures that the passed in string is not null and returns either the input string or
-        ///     string.empty.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
-        /// &lt;returns&gt;A sanitized string&lt;/returns&gt;
+        /// &lt;typeparam name=&quot;TAttribute&quot;&gt;The attribute to search for.&lt;/typeparam&gt;
+        /// &lt;param name=&quot;assembly&quot;&gt;The assembly.&lt;/param&gt;
+        /// &lt;param name=&quot;inherit&quot;&gt;
+        ///     true to search the type&#39;s inheritance chain to find the attributes; otherwise, false.
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;The types in the assembly with the requested attribute&lt;/returns&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
         [NotNull]
-        public static string NonNull([CanBeNull] this string input)
+        [ItemNotNull]
+        [UsedImplicitly]
+        public static IEnumerable&lt;Type&gt; GetTypesInAssemblyWithAttribute&lt;TAttribute&gt;([NotNull] this Assembly assembly,
+                                                                                    bool inherit)
+            where TAttribute : Attribute
         {
-            return input ?? string.Empty;
+            if (assembly == null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            var types = assembly.GetTypes();
+            return GetTypesWithAttributes&lt;TAttribute&gt;(types, inherit);
         }
 
         /// &lt;summary&gt;
-        ///     Ensures that the passed in string is not null and returns either the input string or
-        ///     replacement.
+        ///     Gets the types in a group of types that have an attribute applied to them.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
-        /// &lt;param name=&quot;replacement&quot;&gt;The replacement string when input is null.&lt;/param&gt;
-        /// &lt;returns&gt;A sanitized string&lt;/returns&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;replacement&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        /// &lt;typeparam name=&quot;TAttribute&quot;&gt;The attribute to search for.&lt;/typeparam&gt;
+        /// &lt;param name=&quot;types&quot;&gt;The set of types&lt;/param&gt;
+        /// &lt;param name=&quot;inherit&quot;&gt;
+        ///     true to search the type&#39;s inheritance chain to find the attributes; otherwise, false.
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;The types in the set of types that have the requested attribute&lt;/returns&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        [SuppressMessage(&quot;ReSharper&quot;, &quot;PossibleNullReferenceException&quot;)]
         [NotNull]
-        public static string IfNull([CanBeNull] this string input, [NotNull] string replacement)
+        [ItemNotNull]
+        [UsedImplicitly]
+        public static IEnumerable&lt;Type&gt; GetTypesWithAttributes&lt;TAttribute&gt;([NotNull] IEnumerable&lt;Type&gt; types,
+                                                                           bool inherit) where TAttribute : Attribute
         {
-            if (replacement == null)
+            if (types == null)
             {
-                throw new ArgumentNullException(nameof(replacement));
+                throw new ArgumentNullException(nameof(types));
             }
 
-            return input ?? replacement;
+            return types.Where(t =&gt; t.HasAttribute&lt;TAttribute&gt;(inherit));
         }
 
         /// &lt;summary&gt;
-        ///     Extension method to compare two strings and return true if they&#39;re equal according to the
-        ///     comparison type used. By default strings are compared ordinally ignoring casing.
+        ///     Determines whether the specified member has a particular attribute applied to it.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
-        /// &lt;param name=&quot;other&quot;&gt;The other string.&lt;/param&gt;
-        /// &lt;param name=&quot;comparison&quot;&gt;The comparison type. Defaults to ordinal ignoring case.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the strings are equal, &lt;c&gt;false&lt;/c&gt; otherwise.&lt;/returns&gt;
-        public static bool Matches([CanBeNull] this string input,
-                                   [CanBeNull] string other,
-                                   StringComparison comparison = StringComparison.OrdinalIgnoreCase)
+        /// &lt;typeparam name=&quot;TAttribute&quot;&gt;The type of the attribute.&lt;/typeparam&gt;
+        /// &lt;param name=&quot;member&quot;&gt;The member.&lt;/param&gt;
+        /// &lt;param name=&quot;inherit&quot;&gt;
+        ///     true to search the type&#39;s inheritance chain to find the attributes; otherwise, false.
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the specified inherit has the attribute; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        [UsedImplicitly]
+        public static bool HasAttribute&lt;TAttribute&gt;([NotNull] this MemberInfo member, bool inherit)
+            where TAttribute : Attribute
         {
-            return string.Compare(input, other, comparison) == 0;
+            if (member == null)
+            {
+                throw new ArgumentNullException(nameof(member));
+            }
+
+            return member.IsDefined(typeof(TAttribute), inherit);
         }
 
         /// &lt;summary&gt;
-        /// Converts the input string to an integer, falling back to the fallback value on parse error.
+        ///     Gets the Version of this module&#39;s assembly based on the AssemblyVersionAttribute.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
-        /// &lt;param name=&quot;fallbackValue&quot;&gt;The fallback value. Defaults to 0.&lt;/param&gt;
-        /// &lt;returns&gt;The parsed value or the fallback value in case of parse error.&lt;/returns&gt;
-        public static int AsInt(this string input, int fallbackValue = 0)
+        /// &lt;param name=&quot;caller&quot;&gt;The caller.&lt;/param&gt;
+        /// &lt;returns&gt;The Version of this module&#39;s assembly&lt;/returns&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;caller&lt;/exception&gt;
+        [CanBeNull]
+        public static Version GetAssemblyVersion([NotNull] this object caller)
         {
-            int output;
-
-            // Safely cast the input as an integer. Failure will not throw an exception
-            if (!int.TryParse(input?.Trim(), out output))
+            if (caller == null)
             {
-                // In case of failure, use our fallback value
-                output = fallbackValue;
+                throw new ArgumentNullException(nameof(caller));
             }
 
-            return output;
-        }
-
-        /// &lt;summary&gt;
-        /// Converts the input string to a double, falling back to the fallback value on parse error.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
-        /// &lt;param name=&quot;fallbackValue&quot;&gt;The fallback value. Defaults to 0.&lt;/param&gt;
-        /// &lt;returns&gt;The parsed value or the fallback value in case of parse error.&lt;/returns&gt;
-        public static double AsDouble(this string input, double fallbackValue = 0)
-        {
-            double output;
-
-            // Safely cast the input as an integer. Failure will not throw an exception
-            if (!double.TryParse(input?.Trim(), out output))
+            try
             {
-                // In case of failure, use our fallback value
-                output = fallbackValue;
+                var assembly = caller.GetType().Assembly;
+                var assemblyName = new AssemblyName(assembly.FullName);
+                return assemblyName.Version;
             }
-
-            return output;
+            catch (IOException)
+            {
+                return null;
+            }
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[76,9,76,10,0],[77,13,77,37,0],[78,13,78,14,0],[79,17,79,70,0],[82,13,82,41,0],[83,9,83,10,0],[107,9,107,10,0],[111,13,111,58,0],[112,13,112,14,0],[114,17,114,40,0],[115,13,115,14,0],[117,13,117,27,0],[118,9,118,10,0],[127,9,127,10,0],[131,13,131,61,0],[132,13,132,14,0],[134,17,134,40,0],[135,13,135,14,0],[137,13,137,27,0],[138,9,138,10,0],[28,9,28,10,1],[29,13,29,48,1],[30,9,30,10,1],[39,9,39,10,1],[40,13,40,48,1],[41,9,41,10,1],[50,9,50,10,1],[51,13,51,53,1],[52,9,52,10,1],[62,9,62,10,1],[63,13,63,42,1],[64,9,64,10,1],[96,9,96,10,1],[97,13,97,66,1],[98,9,98,10,1]]);
+      highlightRanges([[41,13,41,14,0],[42,17,42,67,0],[67,13,67,14,0],[68,17,68,64,0],[89,13,89,14,0],[90,17,90,65,0],[106,13,106,14,0],[107,17,107,65,0],[116,13,116,32,0],[117,13,117,14,0],[118,17,118,29,0],[39,9,39,10,1],[40,13,40,34,1],[45,13,45,45,1],[46,13,46,71,1],[47,9,47,10,1],[65,9,65,10,1],[66,13,66,31,1],[71,13,71,37,1],[71,72,71,74,1],[72,9,72,10,1],[87,9,87,10,1],[88,13,88,32,1],[93,13,93,66,1],[94,9,94,10,1],[104,9,104,10,1],[105,13,105,32,1],[111,13,111,14,1],[112,17,112,58,1],[113,17,113,72,1],[114,17,114,45,1],[120,9,120,10,1],[71,37,71,72,1]]);
     </script>
   </body>
 </html>

@@ -2,73 +2,109 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.system\countermetricproviderfactory.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.aiml\alfredcommandrouter.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// CounterMetricProviderFactory.cs
+// AlfredCommandRouter.cs
 // 
-// Created on:      08/18/2015 at 2:20 PM
-// Last Modified:   08/18/2015 at 2:49 PM
+// Created on:      08/18/2015 at 12:27 AM
+// Last Modified:   08/18/2015 at 1:25 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
+using JetBrains.Annotations;
 
-namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
+using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common;
+
+namespace MattEland.Ani.Alfred.Chat
 {
     /// &lt;summary&gt;
-    ///     A factory that builds CounterMetricProviders
+    ///     This class takes commands in and handles them by routing them to various components in an
+    ///     Alfred application.
     /// &lt;/summary&gt;
-    public class CounterMetricProviderFactory : IMetricProviderFactory
+    public class AlfredCommandRouter : IAlfredCommandRecipient, IShellCommandRecipient
     {
         /// &lt;summary&gt;
-        ///     Builds a metric provider for the specified type.
+        ///     Gets or sets the alfred instance.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;categoryName&quot;&gt;Name of the category.&lt;/param&gt;
-        /// &lt;param name=&quot;counterName&quot;&gt;Name of the counter.&lt;/param&gt;
-        /// &lt;param name=&quot;instanceName&quot;&gt;Name of the instance.&lt;/param&gt;
-        /// &lt;returns&gt;A metric provider&lt;/returns&gt;
-        /// &lt;exception cref=&quot;Win32Exception&quot;&gt;An error occurred when accessing a system API.&lt;/exception&gt;
-        /// &lt;exception cref=&quot;UnauthorizedAccessException&quot;&gt;
-        ///     Code that is executing without administrative
-        ///     privileges attempted to read a performance counter.
-        /// &lt;/exception&gt;
-        public MetricProviderBase Build(string categoryName,
-                                        string counterName,
-                                        string instanceName = null)
+        /// &lt;value&gt;The alfred instance.&lt;/value&gt;
+        [CanBeNull]
+        public IAlfred Alfred { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Processes an Alfred Command. If the command is handled, result should be modified accordingly
+        ///     and the method should return true. Returning false will not stop the message from being
+        ///     propagated.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;command&quot;&gt;The command.&lt;/param&gt;
+        /// &lt;param name=&quot;result&quot;&gt;The result. If the command was handled, this should be updated.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;True&lt;/c&gt; if the command was handled; otherwise false.&lt;/returns&gt;
+        public bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
         {
-            return new CounterMetricProvider(categoryName, counterName, instanceName);
+            var alfred = Alfred;
+            if (alfred == null)
+            {
+                return false;
+            }
+
+            // Extract our target for loop readability
+            var target = command.Subsystem;
+
+            // Commands are very, very important and need to be logged.
+            alfred.Console?.Log(&quot;CommandRouting&quot;,
+                                &quot;Command &#39;&quot; + command.Name + &quot;&#39; raised for subsystem &#39;&quot; + target +
+                                &quot;&#39; with data value of &#39;&quot; + command.Data + &quot;&#39;.&quot;,
+                                LogLevel.Info);
+
+            // Send the command to each subsystem. These will in turn send it on to their pages and modules.
+            foreach (var subsystem in alfred.Subsystems)
+            {
+                // If the command isn&#39;t for the subsystem, move on.
+                if (target.HasText() &amp;&amp; !target.Matches(subsystem.Id))
+                {
+                    continue;
+                }
+
+                // Send the command to the subsystem for routing. If it&#39;s handled, the subsystem will return true.
+                if (subsystem.ProcessAlfredCommand(command, result))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// &lt;summary&gt;
-        ///     Gets the names of each counter instance in a category.
+        /// Processes a shell command by sending it on to the user interface layer.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;categoryName&quot;&gt;Name of the category.&lt;/param&gt;
-        /// &lt;returns&gt;A collection of counter instance names&lt;/returns&gt;
-        /// &lt;exception cref=&quot;Win32Exception&quot;&gt;A call to an underlying system API failed. &lt;/exception&gt;
-        /// &lt;exception cref=&quot;UnauthorizedAccessException&quot;&gt;
-        ///     Code that is executing without administrative
-        ///     privileges attempted to read a performance counter.
-        /// &lt;/exception&gt;
-        public IEnumerable&lt;string&gt; GetCategoryInstanceNames(string categoryName)
+        /// &lt;param name=&quot;command&quot;&gt;The command.&lt;/param&gt;
+        public string ProcessShellCommand(ShellCommand command)
         {
-            var cpuCategory = new PerformanceCounterCategory(categoryName);
+            // Commands are very, very important and need to be logged.
+            Alfred?.Console?.Log(&quot;CommandRouting&quot;,
+                                &quot;Shell Command &#39;&quot; + command.Name + &quot;&#39; raised targeting &#39;&quot; + command.Target +
+                                &quot;&#39; with data value of &#39;&quot; + command.Data + &quot;&#39;.&quot;, LogLevel.Info);
 
-            return cpuCategory.GetInstanceNames();
+            var shell = Alfred?.ShellCommandHandler;
+
+            var result = shell?.ProcessShellCommand(command);
+
+            return result.NonNull();
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[37,9,37,10,0],[38,13,38,87,0],[39,9,39,10,0],[52,9,52,10,0],[53,13,53,76,0],[55,13,55,51,0],[56,9,56,10,0]]);
+      highlightRanges([[44,13,44,14,0],[45,17,45,30,0],[30,33,30,37,1],[30,38,30,42,1],[41,9,41,10,1],[42,13,42,33,1],[43,13,43,32,1],[49,13,49,44,1],[52,13,55,48,1],[58,13,58,20,1],[58,39,58,56,1],[58,22,58,35,1],[59,13,59,14,1],[61,17,61,71,1],[62,17,62,18,1],[63,21,63,30,1],[67,17,67,69,1],[68,17,68,18,1],[69,21,69,33,1],[71,13,71,14,1],[58,36,58,38,1],[73,13,73,26,1],[74,9,74,10,1],[81,9,81,10,1],[83,13,85,96,1],[87,13,87,53,1],[89,13,89,62,1],[91,13,91,37,1],[92,9,92,10,1]]);
     </script>
   </body>
 </html>

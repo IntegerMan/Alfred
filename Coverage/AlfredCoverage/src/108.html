@@ -2,91 +2,176 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.aiml\alfredcommandrouter.cs</title>
+    <title>c:\dev\alfred\matteland.common\stringextensions.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlfredCommandRouter.cs
+// StringExtensions.cs
 // 
-// Created on:      08/18/2015 at 12:27 AM
-// Last Modified:   08/18/2015 at 1:25 AM
+// Created on:      08/12/2015 at 2:12 PM
+// Last Modified:   08/14/2015 at 11:26 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System;
+using System.Text;
+
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core;
-using MattEland.Ani.Alfred.Core.Console;
-using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Common;
-
-namespace MattEland.Ani.Alfred.Chat
+namespace MattEland.Common
 {
     /// &lt;summary&gt;
-    ///     This class takes commands in and handles them by routing them to various components in an
-    ///     Alfred application.
+    ///     Contains extension methods dealing with string operations.
     /// &lt;/summary&gt;
-    public class AlfredCommandRouter : IAlfredCommandRecipient
+    public static class StringExtensions
     {
         /// &lt;summary&gt;
-        ///     Gets or sets the alfred instance.
+        ///     Determines if the input string is has text (is not null and has text beyond whitespace).
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The alfred instance.&lt;/value&gt;
-        [CanBeNull]
-        public IAlfred Alfred { get; set; }
+        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the string has text; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
+        [UsedImplicitly]
+        public static bool HasText([CanBeNull] this string input)
+        {
+            return !input.IsNullOrWhitespace();
+        }
 
         /// &lt;summary&gt;
-        ///     Processes an Alfred Command. If the command is handled, result should be modified accordingly
-        ///     and the method should return true. Returning false will not stop the message from being
-        ///     propagated.
+        ///     Determines if the input string is null or an empty string.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;command&quot;&gt;The command.&lt;/param&gt;
-        /// &lt;param name=&quot;result&quot;&gt;The result. If the command was handled, this should be updated.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;True&lt;/c&gt; if the command was handled; otherwise false.&lt;/returns&gt;
-        public bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
+        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the string is null or empty; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
+        [UsedImplicitly]
+        public static bool IsEmpty([CanBeNull] this string input)
         {
-            var alfred = Alfred;
-            if (alfred == null)
-            {
-                return false;
-            }
-
-            // Extract our target for loop readability
-            var target = command.Subsystem;
-
-            // Commands are very, very important and need to be logged.
-            alfred.Console?.Log(&quot;CommandRouting&quot;,
-                                &quot;Command &#39;&quot; + command.Name + &quot;&#39; raised for subsystem &#39;&quot; + target +
-                                &quot;&#39; with data value of &#39;&quot; + command.Data + &quot;&#39;.&quot;,
-                                LogLevel.Info);
-
-            // Send the command to each subsystem. These will in turn send it on to their pages and modules.
-            foreach (var subsystem in alfred.Subsystems)
-            {
-                // If the command isn&#39;t for the subsystem, move on.
-                if (target.HasText() &amp;&amp; !target.Matches(subsystem.Id))
-                {
-                    continue;
-                }
-
-                // Send the command to the subsystem for routing. If it&#39;s handled, the subsystem will return true.
-                if (subsystem.ProcessAlfredCommand(command, result))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return string.IsNullOrEmpty(input);
         }
+
+        /// &lt;summary&gt;
+        ///     Determines if the input string is null, an empty string, or whitespace.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the string is null or whitespace; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
+        [UsedImplicitly]
+        public static bool IsNullOrWhitespace([CanBeNull] this string input)
+        {
+            return string.IsNullOrWhiteSpace(input);
+        }
+
+        /// &lt;summary&gt;
+        ///     Ensures that the passed in string is not null and returns either the input string or
+        ///     string.empty.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
+        /// &lt;returns&gt;A sanitized string&lt;/returns&gt;
+        [NotNull]
+        public static string NonNull([CanBeNull] this string input)
+        {
+            return input ?? string.Empty;
+        }
+
+        /// &lt;summary&gt;
+        ///     Ensures that the passed in string is not null and returns either the input string or
+        ///     replacement.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
+        /// &lt;param name=&quot;replacement&quot;&gt;The replacement string when input is null.&lt;/param&gt;
+        /// &lt;returns&gt;A sanitized string&lt;/returns&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;replacement&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        [NotNull]
+        public static string IfNull([CanBeNull] this string input, [NotNull] string replacement)
+        {
+            if (replacement == null)
+            {
+                throw new ArgumentNullException(nameof(replacement));
+            }
+
+            return input ?? replacement;
+        }
+
+        /// &lt;summary&gt;
+        ///     Extension method to compare two strings and return true if they&#39;re equal according to the
+        ///     comparison type used. By default strings are compared ordinally ignoring casing.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
+        /// &lt;param name=&quot;other&quot;&gt;The other string.&lt;/param&gt;
+        /// &lt;param name=&quot;comparison&quot;&gt;The comparison type. Defaults to ordinal ignoring case.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the strings are equal, &lt;c&gt;false&lt;/c&gt; otherwise.&lt;/returns&gt;
+        public static bool Matches([CanBeNull] this string input,
+                                   [CanBeNull] string other,
+                                   StringComparison comparison = StringComparison.OrdinalIgnoreCase)
+        {
+            return string.Compare(input, other, comparison) == 0;
+        }
+
+        /// &lt;summary&gt;
+        /// Converts the input string to an integer, falling back to the fallback value on parse error.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
+        /// &lt;param name=&quot;fallbackValue&quot;&gt;The fallback value. Defaults to 0.&lt;/param&gt;
+        /// &lt;returns&gt;The parsed value or the fallback value in case of parse error.&lt;/returns&gt;
+        public static int AsInt(this string input, int fallbackValue = 0)
+        {
+            int output;
+
+            // Safely cast the input as an integer. Failure will not throw an exception
+            if (!int.TryParse(input?.Trim(), out output))
+            {
+                // In case of failure, use our fallback value
+                output = fallbackValue;
+            }
+
+            return output;
+        }
+
+        /// &lt;summary&gt;
+        /// Converts the input string to a double, falling back to the fallback value on parse error.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
+        /// &lt;param name=&quot;fallbackValue&quot;&gt;The fallback value. Defaults to 0.&lt;/param&gt;
+        /// &lt;returns&gt;The parsed value or the fallback value in case of parse error.&lt;/returns&gt;
+        public static double AsDouble(this string input, double fallbackValue = 0)
+        {
+            double output;
+
+            // Safely cast the input as an integer. Failure will not throw an exception
+            if (!double.TryParse(input?.Trim(), out output))
+            {
+                // In case of failure, use our fallback value
+                output = fallbackValue;
+            }
+
+            return output;
+        }
+
+        /// &lt;summary&gt;
+        /// Appends to a string builder either as a standard append or as an AppendLine, depending on useNewLine
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;stringBuilder&quot;&gt;The string builder.&lt;/param&gt;
+        /// &lt;param name=&quot;message&quot;&gt;The message.&lt;/param&gt;
+        /// &lt;param name=&quot;useNewLine&quot;&gt;Whether or not to include line breaks.&lt;/param&gt;
+        public static void AppendConditional([NotNull] this StringBuilder stringBuilder, string message, bool useNewLine)
+        {
+            if (useNewLine)
+            {
+                stringBuilder.AppendLine(message);
+            }
+            else
+            {
+                stringBuilder.Append(message);
+            }
+
+        }
+
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[44,13,44,14,0],[45,17,45,30,0],[30,33,30,37,1],[30,38,30,42,1],[41,9,41,10,1],[42,13,42,33,1],[43,13,43,32,1],[49,13,49,44,1],[52,13,55,48,1],[58,13,58,20,1],[58,39,58,56,1],[58,22,58,35,1],[59,13,59,14,1],[61,17,61,71,1],[62,17,62,18,1],[63,21,63,30,1],[67,17,67,69,1],[68,17,68,18,1],[69,21,69,33,1],[71,13,71,14,1],[58,36,58,38,1],[73,13,73,26,1],[74,9,74,10,1]]);
+      highlightRanges([[77,9,77,10,0],[78,13,78,37,0],[79,13,79,14,0],[80,17,80,70,0],[83,13,83,41,0],[84,9,84,10,0],[108,9,108,10,0],[112,13,112,58,0],[113,13,113,14,0],[115,17,115,40,0],[116,13,116,14,0],[118,13,118,27,0],[119,9,119,10,0],[128,9,128,10,0],[132,13,132,61,0],[133,13,133,14,0],[135,17,135,40,0],[136,13,136,14,0],[138,13,138,27,0],[139,9,139,10,0],[148,9,148,10,0],[149,13,149,28,0],[150,13,150,14,0],[151,17,151,51,0],[152,13,152,14,0],[154,13,154,14,0],[155,17,155,47,0],[156,13,156,14,0],[158,9,158,10,0],[29,9,29,10,1],[30,13,30,48,1],[31,9,31,10,1],[40,9,40,10,1],[41,13,41,48,1],[42,9,42,10,1],[51,9,51,10,1],[52,13,52,53,1],[53,9,53,10,1],[63,9,63,10,1],[64,13,64,42,1],[65,9,65,10,1],[97,9,97,10,1],[98,13,98,66,1],[99,9,99,10,1]]);
     </script>
   </body>
 </html>

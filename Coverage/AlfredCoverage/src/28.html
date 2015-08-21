@@ -2,155 +2,54 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.common\stringextensions.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core\alfredcommandresult.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-// ---------------------------------------------------------
-// StringExtensions.cs
-// 
-// Created on:      08/12/2015 at 2:12 PM
-// Last Modified:   08/14/2015 at 11:26 PM
-// 
-// Last Modified by: Matt Eland
-// ---------------------------------------------------------
-
-using System;
-
-using JetBrains.Annotations;
-
-namespace MattEland.Common
+namespace MattEland.Ani.Alfred.Core
 {
     /// &lt;summary&gt;
-    ///     Contains extension methods dealing with string operations.
+    /// Represents the result of sending a command to a subsystem for handling
     /// &lt;/summary&gt;
-    public static class StringExtensions
+    public sealed class AlfredCommandResult
     {
-        /// &lt;summary&gt;
-        ///     Determines if the input string is has text (is not null and has text beyond whitespace).
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the string has text; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
-        [UsedImplicitly]
-        public static bool HasText([CanBeNull] this string input)
-        {
-            return !input.IsNullOrWhitespace();
-        }
 
         /// &lt;summary&gt;
-        ///     Determines if the input string is null or an empty string.
+        /// Gets or sets the value to set as the last input value.
+        /// This is what is displayed as the user&#39;s last sentence to the system.
+        /// 
+        /// Changing  this is a good way of hiding redirection searches.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the string is null or empty; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
-        [UsedImplicitly]
-        public static bool IsEmpty([CanBeNull] this string input)
-        {
-            return string.IsNullOrEmpty(input);
-        }
+        /// &lt;value&gt;The new last input value.&lt;/value&gt;
+        public string NewLastInput { get; set; }
 
         /// &lt;summary&gt;
-        ///     Determines if the input string is null, an empty string, or whitespace.
+        /// Gets or sets the new last output value. This is what is
+        /// displayed as Alfred&#39;s response to the user&#39;s statement.
+        /// 
+        /// Changing this is a good way of handling dynamic information in queries
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the string is null or whitespace; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
-        [UsedImplicitly]
-        public static bool IsNullOrWhitespace([CanBeNull] this string input)
-        {
-            return string.IsNullOrWhiteSpace(input);
-        }
+        /// &lt;value&gt;The new last output.&lt;/value&gt;
+        public string Output { get; set; }
 
         /// &lt;summary&gt;
-        ///     Ensures that the passed in string is not null and returns either the input string or
-        ///     string.empty.
+        /// Gets or sets the chat redirection value.
+        /// If this is set and the command is handled, the system
+        /// will send a new chat message into the system with this
+        /// value. 
+        /// 
+        /// This is a good way to redirect to a common prompt
+        /// after executing a command.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
-        /// &lt;returns&gt;A sanitized string&lt;/returns&gt;
-        [NotNull]
-        public static string NonNull([CanBeNull] this string input)
-        {
-            return input ?? string.Empty;
-        }
-
-        /// &lt;summary&gt;
-        ///     Ensures that the passed in string is not null and returns either the input string or
-        ///     replacement.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
-        /// &lt;param name=&quot;replacement&quot;&gt;The replacement string when input is null.&lt;/param&gt;
-        /// &lt;returns&gt;A sanitized string&lt;/returns&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;replacement&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        [NotNull]
-        public static string IfNull([CanBeNull] this string input, [NotNull] string replacement)
-        {
-            if (replacement == null)
-            {
-                throw new ArgumentNullException(nameof(replacement));
-            }
-
-            return input ?? replacement;
-        }
-
-        /// &lt;summary&gt;
-        ///     Extension method to compare two strings and return true if they&#39;re equal according to the
-        ///     comparison type used. By default strings are compared ordinally ignoring casing.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
-        /// &lt;param name=&quot;other&quot;&gt;The other string.&lt;/param&gt;
-        /// &lt;param name=&quot;comparison&quot;&gt;The comparison type. Defaults to ordinal ignoring case.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the strings are equal, &lt;c&gt;false&lt;/c&gt; otherwise.&lt;/returns&gt;
-        public static bool Matches([CanBeNull] this string input,
-                                   [CanBeNull] string other,
-                                   StringComparison comparison = StringComparison.OrdinalIgnoreCase)
-        {
-            return string.Compare(input, other, comparison) == 0;
-        }
-
-        /// &lt;summary&gt;
-        /// Converts the input string to an integer, falling back to the fallback value on parse error.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
-        /// &lt;param name=&quot;fallbackValue&quot;&gt;The fallback value. Defaults to 0.&lt;/param&gt;
-        /// &lt;returns&gt;The parsed value or the fallback value in case of parse error.&lt;/returns&gt;
-        public static int AsInt(this string input, int fallbackValue = 0)
-        {
-            int output;
-
-            // Safely cast the input as an integer. Failure will not throw an exception
-            if (!int.TryParse(input?.Trim(), out output))
-            {
-                // In case of failure, use our fallback value
-                output = fallbackValue;
-            }
-
-            return output;
-        }
-
-        /// &lt;summary&gt;
-        /// Converts the input string to a double, falling back to the fallback value on parse error.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
-        /// &lt;param name=&quot;fallbackValue&quot;&gt;The fallback value. Defaults to 0.&lt;/param&gt;
-        /// &lt;returns&gt;The parsed value or the fallback value in case of parse error.&lt;/returns&gt;
-        public static double AsDouble(this string input, double fallbackValue = 0)
-        {
-            double output;
-
-            // Safely cast the input as an integer. Failure will not throw an exception
-            if (!double.TryParse(input?.Trim(), out output))
-            {
-                // In case of failure, use our fallback value
-                output = fallbackValue;
-            }
-
-            return output;
-        }
+        /// &lt;value&gt;The execute chat input.&lt;/value&gt;
+        public string RedirectToChat { get; set; }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[76,9,76,10,0],[77,13,77,37,0],[78,13,78,14,0],[79,17,79,70,0],[82,13,82,41,0],[83,9,83,10,0],[107,9,107,10,0],[111,13,111,58,0],[112,13,112,14,0],[114,17,114,40,0],[115,13,115,14,0],[117,13,117,27,0],[118,9,118,10,0],[127,9,127,10,0],[131,13,131,61,0],[132,13,132,14,0],[134,17,134,40,0],[135,13,135,14,0],[137,13,137,27,0],[138,9,138,10,0],[28,9,28,10,1],[29,13,29,48,1],[30,9,30,10,1],[39,9,39,10,1],[40,13,40,48,1],[41,9,41,10,1],[50,9,50,10,1],[51,13,51,53,1],[52,9,52,10,1],[62,9,62,10,1],[63,13,63,42,1],[64,9,64,10,1],[96,9,96,10,1],[97,13,97,66,1],[98,9,98,10,1]]);
+      highlightRanges([[16,38,16,42,0],[16,43,16,47,0],[37,40,37,44,0],[37,45,37,49,0],[25,32,25,36,1],[25,37,25,41,1]]);
     </script>
   </body>
 </html>

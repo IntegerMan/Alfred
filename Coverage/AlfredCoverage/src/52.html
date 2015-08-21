@@ -2,144 +2,190 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\definitions\alfredcommand.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core\definitions\chatcommand.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlfredCommand.cs
+// ChatCommand.cs
 // 
-// Created on:      08/03/2015 at 1:40 PM
-// Last Modified:   08/05/2015 at 3:06 PM
+// Created on:      08/11/2015 at 3:59 PM
+// Last Modified:   08/11/2015 at 10:18 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 
-using JetBrains.Annotations;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// &lt;summary&gt;
-    ///     Represents a command that can be executed on the user interface layer
+    ///     Represents a command that the chat system is requesting Alfred execute.
+    ///     This command will be routed to a subsystem for processing
     /// &lt;/summary&gt;
-    /// &lt;remarks&gt;
-    ///     It would be fantastic if this could support System.Windows.Input.ICommand,
-    ///     but portable doesn&#39;t reference that assembly so clients will have to provide
-    ///     their own version to support MVVM bindings, etc.
-    /// &lt;/remarks&gt;
-    public class AlfredCommand
+    public struct ChatCommand : IEquatable&lt;ChatCommand&gt;
     {
         /// &lt;summary&gt;
-        ///     The Action invoked when the Execute method is called.
+        ///     Gets the empty command for null-ish comparison.
         /// &lt;/summary&gt;
-        [CanBeNull]
-        private Action _executeAction;
+        public static readonly ChatCommand Empty = new ChatCommand();
 
         /// &lt;summary&gt;
-        ///     Whether or not the command is enabled
+        ///     Initializes a new instance of the &lt;see cref=&quot;ChatCommand&quot; /&gt; struct.
         /// &lt;/summary&gt;
-        private bool _isEnabled = true;
-
-        /// &lt;summary&gt;
-        ///     Initializes a new instance of the
-        ///     &lt;see cref=&quot;AlfredCommand&quot; /&gt;
-        ///     class.
-        /// &lt;/summary&gt;
-        public AlfredCommand() : this(null)
+        /// &lt;param name=&quot;command&quot;&gt;The command.&lt;/param&gt;
+        public ChatCommand(string command) : this(null, command, null)
         {
         }
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the
-        ///     &lt;see cref=&quot;AlfredCommand&quot; /&gt;
-        ///     class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;ChatCommand&quot; /&gt; struct.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;executeAction&quot;&gt;
-        ///     The execute action.
-        /// &lt;/param&gt;
-        public AlfredCommand([CanBeNull] Action executeAction)
+        /// &lt;param name=&quot;subsystem&quot;&gt;The subsystem.&lt;/param&gt;
+        /// &lt;param name=&quot;command&quot;&gt;The command.&lt;/param&gt;
+        public ChatCommand(string subsystem, string command) : this(subsystem, command, null)
         {
-            ExecuteAction = executeAction;
         }
 
         /// &lt;summary&gt;
-        ///     Gets or sets the Action that is invoked when a command executes.
+        ///     Initializes a new instance of the &lt;see cref=&quot;ChatCommand&quot; /&gt; struct.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The executed Action.&lt;/value&gt;
-        [CanBeNull]
-        public Action ExecuteAction
+        /// &lt;param name=&quot;subsystem&quot;&gt;The subsystem.&lt;/param&gt;
+        /// &lt;param name=&quot;command&quot;&gt;The command.&lt;/param&gt;
+        /// &lt;param name=&quot;data&quot;&gt;The data.&lt;/param&gt;
+        public ChatCommand(string subsystem, string command, string data) : this()
         {
-            get { return _executeAction; }
-            set { _executeAction = value; }
+            Subsystem = subsystem;
+            Name = command;
+            Data = data;
         }
 
         /// &lt;summary&gt;
-        ///     Gets or sets a value indicating whether this command is enabled.
+        ///     Gets the subsystem the command is intended for.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;&lt;c&gt;true&lt;/c&gt; if this command is enabled; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/value&gt;
-        public bool IsEnabled
+        /// &lt;value&gt;The subsystem.&lt;/value&gt;
+        public string Subsystem { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets the name of the command to execute. This will be interpreted by the subsystem.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The name of the command.&lt;/value&gt;
+        public string Name { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets any extra data or parameters needed to execute the command.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The extra data.&lt;/value&gt;
+        public string Data { get; }
+
+        /// &lt;summary&gt;
+        ///     Determines if this instance is equal to another instance
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;other&quot;&gt;The other.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the instances are equal, &lt;c&gt;false&lt;/c&gt; otherwise.&lt;/returns&gt;
+        public bool Equals(ChatCommand other)
         {
-            get { return _isEnabled; }
-            set
+            return string.Equals(Subsystem, other.Subsystem) &amp;&amp; string.Equals(Name, other.Name) &amp;&amp;
+                   string.Equals(Data, other.Data);
+        }
+
+        /// &lt;summary&gt;
+        ///     Returns a &lt;see cref=&quot;System.String&quot; /&gt; that represents this instance.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;A &lt;see cref=&quot;System.String&quot; /&gt; that represents this instance.&lt;/returns&gt;
+        public override string ToString()
+        {
+            // ReSharper disable once AssignNullToNotNullAttribute
+            return string.Format(CultureInfo.CurrentCulture, Resources.ChatCommandToString, Subsystem, Name, Data);
+        }
+
+
+        /// &lt;summary&gt;
+        ///     Determines whether the specified &lt;see cref=&quot;System.Object&quot; /&gt; is equal to this instance.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;obj&quot;&gt;The object to compare with the current instance.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the specified &lt;see cref=&quot;System.Object&quot; /&gt; is equal to this instance; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
             {
-                if (value != _isEnabled)
-                {
-                    _isEnabled = value;
-                    RaiseCanExecuteChanged();
-                }
+                return false;
+            }
+            return obj is ChatCommand &amp;&amp; Equals((ChatCommand)obj);
+        }
+
+        /// &lt;summary&gt;
+        ///     Returns a hash code for this instance.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.&lt;/returns&gt;
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = Subsystem?.GetHashCode() ?? 0;
+                hashCode = (hashCode * 397) ^ (Name?.GetHashCode() ?? 0);
+                hashCode = (hashCode * 397) ^ (Data?.GetHashCode() ?? 0);
+                return hashCode;
             }
         }
 
         /// &lt;summary&gt;
-        ///     Defines the method that determines whether the command can execute in its current state.
+        ///     Implements the operator ==.
         /// &lt;/summary&gt;
-        /// &lt;returns&gt;
-        ///     true if this command can be executed; otherwise, false.
-        /// &lt;/returns&gt;
-        /// &lt;param name=&quot;parameter&quot;&gt;
-        ///     Data used by the command.  If the command does not require data to be passed, this object can be set to null.
-        /// &lt;/param&gt;
-        [SuppressMessage(&quot;Microsoft.Usage&quot;, &quot;CA1801:ReviewUnusedParameters&quot;, MessageId = &quot;parameter&quot;,
-            Justification = &quot;This matches the XAML ICommand interface which makes for ease of porting&quot;)]
-        public bool CanExecute([CanBeNull] object parameter)
+        /// &lt;param name=&quot;left&quot;&gt;The left.&lt;/param&gt;
+        /// &lt;param name=&quot;right&quot;&gt;The right.&lt;/param&gt;
+        /// &lt;returns&gt;The result of the operator.&lt;/returns&gt;
+        public static bool operator ==(ChatCommand left, ChatCommand right)
         {
-            return IsEnabled;
+            return left.Equals(right);
         }
 
         /// &lt;summary&gt;
-        ///     Defines the method to be called when the command is invoked.
+        ///     Implements the operator !=.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;parameter&quot;&gt;
-        ///     Data used by the command.  If the command does not require data to be passed, this object can be set to null.
-        /// &lt;/param&gt;
-        public virtual void Execute([CanBeNull] object parameter)
+        /// &lt;param name=&quot;left&quot;&gt;The left.&lt;/param&gt;
+        /// &lt;param name=&quot;right&quot;&gt;The right.&lt;/param&gt;
+        /// &lt;returns&gt;The result of the operator.&lt;/returns&gt;
+        public static bool operator !=(ChatCommand left, ChatCommand right)
         {
-            // TODO: I could support async invokes here. I&#39;d want to add a parameter for that, but it&#39;s possible.
-
-            ExecuteAction?.Invoke();
+            return !left.Equals(right);
         }
 
         /// &lt;summary&gt;
-        ///     Occurs when the result of CanExecute changes and should be re-evaluated.
+        /// Determines whether this command is explicitly for the subsystem (not unaddressed).
         /// &lt;/summary&gt;
-        public event EventHandler CanExecuteChanged;
+        /// &lt;param name=&quot;subsystem&quot;&gt;The subsystem.&lt;/param&gt;
+        /// &lt;returns&gt;System.Boolean.&lt;/returns&gt;
+        public bool IsFor(IAlfredSubsystem subsystem)
+        {
+            return subsystem != null &amp;&amp; Subsystem.Matches(subsystem.Id);
+        }
 
         /// &lt;summary&gt;
-        ///     Raises the CanExecuteChanged event.
+        /// Whether or not this instance is explicitly addressed to a particular subsystem.
         /// &lt;/summary&gt;
-        private void RaiseCanExecuteChanged()
+        public bool IsAddressed
         {
-            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+            get { return Subsystem.HasText(); }
+        }
+
+        /// &lt;summary&gt;
+        /// Whether or not this instance is not addressed to a particular subsystem.
+        /// &lt;/summary&gt;
+        public bool IsUnaddressed
+        {
+            get { return Subsystem.IsEmpty(); }
         }
     }
+
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[42,34,42,44,1],[43,9,43,10,1],[44,9,44,10,1],[35,9,35,40,1],[54,9,54,63,1],[55,9,55,10,1],[56,13,56,43,1],[57,9,57,10,1],[66,17,66,18,1],[66,19,66,41,1],[66,42,66,43,1],[67,17,67,18,1],[67,19,67,42,1],[67,43,67,44,1],[76,17,76,18,1],[76,19,76,37,1],[76,38,76,39,1],[78,13,78,14,1],[79,17,79,41,1],[80,17,80,18,1],[81,21,81,40,1],[82,21,82,46,1],[83,17,83,18,1],[84,13,84,14,1],[99,9,99,10,1],[100,13,100,30,1],[101,9,101,10,1],[110,9,110,10,1],[113,13,113,37,1],[114,9,114,10,1],[125,9,125,10,1],[126,13,126,62,1],[127,9,127,10,1]]);
+      highlightRanges([[31,46,31,71,0],[32,9,32,10,0],[33,9,33,10,0],[40,64,40,94,0],[41,9,41,10,0],[42,9,42,10,0],[91,9,91,10,0],[93,13,93,116,0],[94,9,94,10,0],[103,9,103,10,0],[104,13,104,44,0],[105,13,105,14,0],[106,17,106,30,0],[108,13,108,67,0],[109,9,109,10,0],[116,9,116,10,0],[118,13,118,14,0],[119,17,119,62,0],[120,17,120,74,0],[121,17,121,74,0],[122,17,122,33,0],[124,9,124,10,0],[133,9,133,10,0],[134,13,134,39,0],[135,9,135,10,0],[163,17,163,18,0],[163,19,163,46,0],[163,47,163,48,0],[171,17,171,18,0],[171,19,171,46,0],[171,47,171,48,0],[50,77,50,83,1],[51,9,51,10,1],[52,13,52,35,1],[53,13,53,28,1],[54,13,54,25,1],[55,9,55,10,1],[61,35,61,39,1],[67,30,67,34,1],[73,30,73,34,1],[81,9,81,10,1],[82,13,83,52,1],[84,9,84,10,1],[144,9,144,10,1],[145,13,145,40,1],[146,9,146,10,1],[154,9,154,10,1],[155,13,155,73,1],[156,9,156,10,1],[25,9,25,70,1]]);
     </script>
   </body>
 </html>

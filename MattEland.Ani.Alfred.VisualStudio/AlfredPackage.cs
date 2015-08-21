@@ -10,6 +10,13 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Runtime.InteropServices;
+
+using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.PresentationShared.Commands;
+using MattEland.Ani.Alfred.VisualStudio.Properties;
+
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
@@ -44,6 +51,9 @@ namespace MattEland.Ani.Alfred.VisualStudio
     [ProvideToolWindow(typeof(MattEland.Ani.Alfred.VisualStudio.AlfredChatWindow))]
     public sealed class AlfredPackage : Package
     {
+        [CanBeNull]
+        private static ApplicationManager _app;
+
         /// <summary>
         /// AlfredToolWindowPackage GUID string.
         /// </summary>
@@ -58,6 +68,44 @@ namespace MattEland.Ani.Alfred.VisualStudio
             // any Visual Studio service because at this point the package object is created but
             // not sited yet inside Visual Studio environment. The place to do all the other
             // initialization is the Initialize method.
+
+            EnsureAlfredInstance();
+        }
+
+        /// <summary>
+        /// Ensures the alfred instance exists, creating it if it does not.
+        /// </summary>
+        /// <returns>The ApplicationManager.</returns>
+        [NotNull]
+        private static ApplicationManager EnsureAlfredInstance()
+        {
+            if (_app == null)
+            {
+                var provider = new XamlPlatformProvider();
+                _app = new ApplicationManager(provider, null);
+                _app.Console?.Log("Package", "Instantiating Alfred", LogLevel.Verbose);
+
+                if (Settings.Default.AutoStartAlfred)
+                {
+                    _app.Console?.Log("Package", "Automatically starting Alfred", LogLevel.Verbose);
+                    _app.Start();
+                }
+            }
+
+            return _app;
+        }
+
+        /// <summary>
+        /// Gets the alfred application manager instance.
+        /// </summary>
+        /// <value>The alfred instance.</value>
+        [NotNull]
+        public static ApplicationManager AlfredInstance
+        {
+            get
+            {
+                return _app = EnsureAlfredInstance();
+            }
         }
 
         #region Package Members

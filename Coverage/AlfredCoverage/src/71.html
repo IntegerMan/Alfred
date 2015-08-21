@@ -2,17 +2,17 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\useridtaghandler.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\taghandlers\gendertaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// UserIdTagHandler.cs
+// GenderTagHandler.cs
 // 
-// Created on:      08/12/2015 at 10:47 PM
-// Last Modified:   08/14/2015 at 11:28 PM
+// Created on:      08/12/2015 at 10:45 PM
+// Last Modified:   08/14/2015 at 6:14 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -25,17 +25,19 @@ using MattEland.Common;
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// &lt;summary&gt;
-    ///     A tag handler for the AIML &quot;id&quot; tag that outputs the user&#39;s identifier found in the User.Id
-    ///     property.
+    ///     A tag handler for the AIML &quot;gender&quot; tag that subsitutes gender pronouns for their equivalent
+    ///     value in the chat engine&#39;s GenderSubstitutions
+    /// 
+    ///     See &quot;http://www.alicebot.org/TR/2005/WD-aiml/#section-gender&quot; for more on the gender tag.
     /// &lt;/summary&gt;
-    [HandlesAimlTag(&quot;id&quot;)]
-    public class UserIdTagHandler : AimlTagHandler
+    [HandlesAimlTag(&quot;gender&quot;)]
+    public class GenderTagHandler : AimlTagHandler
     {
         /// &lt;summary&gt;
         ///     Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
-        public UserIdTagHandler([NotNull] TagHandlerParameters parameters)
+        public GenderTagHandler([NotNull] TagHandlerParameters parameters)
             : base(parameters)
         {
         }
@@ -46,15 +48,39 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// &lt;returns&gt;The processed output&lt;/returns&gt;
         protected override string ProcessChange()
         {
-            // If it&#39;s the ID tag, use the user&#39;s ID, otherwise we don&#39;t care
-            return TemplateNode.Name.Matches(&quot;id&quot;) ? User.Id : string.Empty;
+            /* Note: this tag handler uses recursion to recursively iterate through 
+            InnerText and find text that can be evaluated using substitution */
 
+            //- Ensure this is the correct tag
+            if (TemplateNode.Name.Matches(&quot;gender&quot;))
+            {
+                return string.Empty;
+            }
+
+            // If we have text inside the gender tag, just transform and return that
+            if (TemplateNode.InnerText.HasText())
+            {
+                /* Substitute occurrences of gender words with other values. This typically 
+                   inverts the gender on gender pronouns (&quot;he&quot; / &quot;she&quot; / etc.) */
+
+                var substitutions = Librarian.GenderSubstitutions;
+                return TextSubstitutionHelper.Substitute(substitutions,
+                                                              TemplateNode.InnerText);
+            }
+
+            // Apply an AIML &quot;star&quot; tag and store the results as our inner text
+            var star = BuildStarTagHandler();
+            TemplateNode.InnerText = star.Transform().NonNull();
+
+            //! If we still have text, we&#39;ll need to use recursion to evaluate our new value
+            return TemplateNode.InnerText.HasText() ? ProcessChange() : string.Empty;
         }
+
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[29,15,29,31,0],[30,9,30,10,0],[31,9,31,10,0],[38,9,38,10,0],[40,13,40,77,0],[42,9,42,10,0]]);
+      highlightRanges([[31,15,31,31,0],[32,9,32,10,0],[33,9,33,10,0],[40,9,40,10,0],[45,13,45,53,0],[46,13,46,14,0],[47,17,47,37,0],[51,13,51,50,0],[52,13,52,14,0],[56,17,56,67,0],[57,17,58,87,0],[62,13,62,46,0],[63,13,63,65,0],[66,13,66,86,0],[67,9,67,10,0]]);
     </script>
   </body>
 </html>

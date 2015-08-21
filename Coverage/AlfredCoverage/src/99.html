@@ -2,77 +2,243 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\utils\taghandlerparameters.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\utils\node.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// TagHandlerParameters.cs
+// Node.cs
 // 
-// Created on:      08/14/2015 at 1:24 PM
-// Last Modified:   08/15/2015 at 11:16 PM
+// Created on:      08/12/2015 at 10:27 PM
+// Last Modified:   08/13/2015 at 1:17 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Xml;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.Text;
 
 using JetBrains.Annotations;
+
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 {
     /// &lt;summary&gt;
-    ///     A container for parameters given to AimlTagHandler objects upon creation. This
-    ///     keeps invocations from being unseemly long and makes it easier to manage parameter
-    ///     changes with many consumers.
+    /// Represents a node in the conversational graph
     /// &lt;/summary&gt;
-    public class TagHandlerParameters
+    [Serializable]
+    public class Node
     {
         [NotNull]
-        private readonly ChatEngine _chatEngine;
-
-        [NotNull]
-        private readonly SubQuery _query;
-
-        [NotNull]
-        private readonly Request _request;
-
-        private readonly Result _result;
-
-        [NotNull]
-        private readonly XmlNode _templateNode;
-
-        [NotNull]
-        private readonly User _user;
+        [ItemNotNull]
+        private readonly Dictionary&lt;string, Node&gt; _children = new Dictionary&lt;string, Node&gt;();
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;TagHandlerParameters&quot; /&gt; class.
+        ///     Gets or sets the file name.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;chatEngine&quot;&gt;The chat engine.&lt;/param&gt;
-        /// &lt;param name=&quot;user&quot;&gt;The user.&lt;/param&gt;
+        /// &lt;value&gt;The file name.&lt;/value&gt;
+        public string FileName { get; set; } = string.Empty;
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the template.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The template.&lt;/value&gt;
+        public string Template { get; set; } = string.Empty;
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the word.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The word.&lt;/value&gt;
+        public string Word { get; set; } = string.Empty;
+
+        /// &lt;summary&gt;
+        ///     Gets the number of children this node has.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The children count.&lt;/value&gt;
+        public int ChildrenCount
+        {
+            get { return _children.Count; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Adds the category to the node as a new child node.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;path&quot;&gt;The path.&lt;/param&gt;
+        /// &lt;param name=&quot;template&quot;&gt;The template.&lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;A category has an  empty template tag.&lt;/exception&gt;
+        public void AddCategory([CanBeNull] string path, [NotNull] string template)
+        {
+            //- Validate Input
+            if (string.IsNullOrEmpty(template))
+            {
+                var message = string.Format(CultureInfo.CurrentCulture, Resources.AddCategoryErrorEmptyTemplateTag, path);
+                throw new ArgumentNullException(template, message);
+            }
+
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                Template = template;
+            }
+            else
+            {
+                // Grab our key as the first word from the path
+                var words = path.Trim().Split(&quot; &quot;.ToCharArray());
+                var key = words[0];
+                Debug.Assert(key != null);
+                key = key.ToUpperInvariant();
+
+                // Chop off the rest of the path string
+                var restOfPath = path.Substring(key.Length, path.Length - key.Length).Trim();
+
+                Node node;
+                if (_children.ContainsKey(key))
+                {
+                    node = _children[key];
+                    Debug.Assert(node != null);
+                }
+                else
+                {
+                    node = new Node { Word = key };
+
+                    _children.Add(key, node);
+                }
+
+                node.AddCategory(restOfPath, template);
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Evaluates the specified path.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;path&quot;&gt;The path.&lt;/param&gt;
         /// &lt;param name=&quot;query&quot;&gt;The query.&lt;/param&gt;
         /// &lt;param name=&quot;request&quot;&gt;The request.&lt;/param&gt;
-        /// &lt;param name=&quot;result&quot;&gt;The result.&lt;/param&gt;
-        /// &lt;param name=&quot;templateNode&quot;&gt;The template node.&lt;/param&gt;
+        /// &lt;param name=&quot;matchstate&quot;&gt;The match state.&lt;/param&gt;
+        /// &lt;param name=&quot;wildcard&quot;&gt;The wildcard.&lt;/param&gt;
+        /// &lt;returns&gt;The path expression&lt;/returns&gt;
         /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;
-        ///     &lt;paramref name=&quot;query&quot; /&gt;, &lt;paramref name=&quot;request&quot; /&gt;, &lt;paramref name=&quot;user&quot; /&gt;, &lt;paramref name=&quot;chatEngine&quot; /&gt;, or
-        ///     &lt;paramref name=&quot;templateNode&quot; /&gt; are &lt;see langword=&quot;null&quot; /&gt;.
-        /// &lt;/exception&gt;
-        public TagHandlerParameters([NotNull] ChatEngine chatEngine,
-                                    [NotNull] User user,
-                                    [NotNull] SubQuery query,
-                                    [NotNull] Request request,
-                                    Result result,
-                                    [NotNull] XmlNode templateNode)
+        ///   &lt;paramref name=&quot;request&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;
+        ///   &lt;paramref name=&quot;wildcard&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;
+        ///   &lt;paramref name=&quot;query&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public string Evaluate(string path,
+                               [NotNull] SubQuery query,
+                               [NotNull] Request request,
+                               MatchState matchstate,
+                               [NotNull] StringBuilder wildcard)
+        {
+            //- Validate Inputs
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+            if (wildcard == null)
+            {
+                throw new ArgumentNullException(nameof(wildcard));
+            }
+            if (query == null)
+            {
+                throw new ArgumentNullException(nameof(query));
+            }
+
+            // Ensure we haven&#39;t taken too long
+            if (request.CheckForTimedOut())
+            {
+                return string.Empty;
+            }
+
+            //- Ensure path is something we can manipulate
+            path = path?.Trim() ?? string.Empty;
+
+            // If no child nodes, this is it - this is our match
+            if (_children.Count == 0)
+            {
+                // Update the path
+                if (!string.IsNullOrEmpty(path))
+                {
+                    AddWordToStringBuilder(path, wildcard);
+                }
+
+                // Bring back the template
+                return Template;
+            }
+
+            // If there&#39;s no path at all, just use the template
+            if (string.IsNullOrEmpty(path))
+            {
+                return Template;
+            }
+
+            // Grab the first word from the path
+            const string WordSeparators = &quot; \r\n\t&quot;;
+            var words = path.Split(WordSeparators.ToCharArray());
+            Debug.Assert(words[0] != null);
+            var key = words[0].ToUpperInvariant();
+
+            // Grab the rest of the path
+            var newPath = path.Substring(key.Length, path.Length - key.Length);
+
+            if (_children.ContainsKey(&quot;_&quot;))
+            {
+                var underscorePath = EvaluateUnderscoreChild(query, request, matchstate, words, newPath);
+
+                if (underscorePath.HasText())
+                {
+                    return underscorePath;
+                }
+            }
+
+            if (_children.ContainsKey(key))
+            {
+                var keyedPath = EvaluateKeyedChildNode(query, request, matchstate, key, newPath);
+                if (keyedPath.HasText())
+                {
+                    return keyedPath;
+                }
+            }
+
+            if (_children.ContainsKey(&quot;*&quot;))
+            {
+                var asterixPath = EvaluateAsterixChildNode(query, request, matchstate, words, newPath);
+                if (asterixPath.HasText())
+                {
+                    return asterixPath;
+                }
+            }
+
+            if (Word == &quot;_&quot; || Word == &quot;*&quot;)
+            {
+                AddWordToStringBuilder(words[0], wildcard);
+
+                return Evaluate(newPath, query, request, matchstate, wildcard);
+            }
+
+            return string.Empty;
+        }
+
+        /// &lt;summary&gt;
+        /// Evaluates an asterix child node.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;query&quot;&gt;The query.&lt;/param&gt;
+        /// &lt;param name=&quot;request&quot;&gt;The request.&lt;/param&gt;
+        /// &lt;param name=&quot;matchstate&quot;&gt;The match state.&lt;/param&gt;
+        /// &lt;param name=&quot;words&quot;&gt;The words.&lt;/param&gt;
+        /// &lt;param name=&quot;newPath&quot;&gt;The new path.&lt;/param&gt;
+        /// &lt;returns&gt;The result&lt;/returns&gt;
+        private string EvaluateAsterixChildNode([NotNull] SubQuery query,
+                                                      [NotNull] Request request,
+                                                      MatchState matchstate,
+                                                      [NotNull] IReadOnlyList&lt;string&gt; words,
+                                                      string newPath)
         {
             //- Validate
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
             if (query == null)
             {
                 throw new ArgumentNullException(nameof(query));
@@ -81,83 +247,204 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             {
                 throw new ArgumentNullException(nameof(request));
             }
-            if (templateNode == null)
+            if (words == null)
             {
-                throw new ArgumentNullException(nameof(templateNode));
+                throw new ArgumentNullException(nameof(words));
             }
 
-            //- Set Properties
-            _chatEngine = chatEngine;
-            _user = user;
-            _query = query;
-            _request = request;
-            _result = result;
-            _templateNode = templateNode;
+            var sbWildcard = new StringBuilder();
+            AddWordToStringBuilder(words[0], sbWildcard);
+
+            var node = _children[&quot;*&quot;];
+            Debug.Assert(node != null);
+
+            var path = node.Evaluate(newPath, query, request, matchstate, sbWildcard);
+            if (path.HasText())
+            {
+                if (sbWildcard.Length &gt; 0)
+                {
+                    switch (matchstate)
+                    {
+                        case MatchState.UserInput:
+                            query.InputStar.Add(sbWildcard.ToString());
+                            sbWildcard.Remove(0, sbWildcard.Length);
+                            break;
+
+                        case MatchState.That:
+                            query.ThatStar.Add(sbWildcard.ToString());
+                            break;
+
+                        case MatchState.Topic:
+                            query.TopicStar.Add(sbWildcard.ToString());
+                            break;
+                    }
+                }
+
+                return path;
+            }
+
+            return string.Empty;
         }
 
         /// &lt;summary&gt;
-        ///     Gets the chat engine.
+        /// Evaluates a keyed child node and returns its path result.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The chat engine.&lt;/value&gt;
-        [NotNull]
-        public ChatEngine ChatEngine
+        /// &lt;param name=&quot;query&quot;&gt;The query.&lt;/param&gt;
+        /// &lt;param name=&quot;request&quot;&gt;The request.&lt;/param&gt;
+        /// &lt;param name=&quot;matchstate&quot;&gt;The match state.&lt;/param&gt;
+        /// &lt;param name=&quot;key&quot;&gt;The key.&lt;/param&gt;
+        /// &lt;param name=&quot;newPath&quot;&gt;The new path.&lt;/param&gt;
+        /// &lt;returns&gt;The path result&lt;/returns&gt;
+        private string EvaluateKeyedChildNode([NotNull] SubQuery query,
+                                                    [NotNull] Request request,
+                                                    MatchState matchstate,
+                                                    [NotNull] string key,
+                                                    string newPath)
         {
-            get { return _chatEngine; }
+            if (query == null)
+            {
+                throw new ArgumentNullException(nameof(query));
+            }
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+            if (key == null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            var matchstate1 = matchstate;
+            switch (key)
+            {
+                case &quot;&lt;THAT&gt;&quot;:
+                    matchstate1 = MatchState.That;
+                    break;
+
+                case &quot;&lt;TOPIC&gt;&quot;:
+                    matchstate1 = MatchState.Topic;
+                    break;
+            }
+
+            var wildcard1 = new StringBuilder();
+            var node = _children[key];
+            Debug.Assert(node != null);
+            var path = node.Evaluate(newPath, query, request, matchstate1, wildcard1);
+
+            if (path.HasText())
+            {
+                if (wildcard1.Length &gt; 0)
+                {
+                    switch (matchstate)
+                    {
+                        case MatchState.UserInput:
+                            query.InputStar.Add(wildcard1.ToString());
+                            wildcard1.Remove(0, wildcard1.Length);
+                            break;
+
+                        case MatchState.That:
+                            query.ThatStar.Add(wildcard1.ToString());
+                            wildcard1.Remove(0, wildcard1.Length);
+                            break;
+
+                        case MatchState.Topic:
+                            query.TopicStar.Add(wildcard1.ToString());
+                            wildcard1.Remove(0, wildcard1.Length);
+                            break;
+                    }
+                }
+
+                return path;
+            }
+
+            return string.Empty;
         }
 
         /// &lt;summary&gt;
-        ///     Gets the user.
+        /// Evaluates an underscore child.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The user.&lt;/value&gt;
-        [NotNull]
-        public User User
+        /// &lt;param name=&quot;query&quot;&gt;The query.&lt;/param&gt;
+        /// &lt;param name=&quot;request&quot;&gt;The request.&lt;/param&gt;
+        /// &lt;param name=&quot;matchstate&quot;&gt;The match state.&lt;/param&gt;
+        /// &lt;param name=&quot;words&quot;&gt;The words.&lt;/param&gt;
+        /// &lt;param name=&quot;newPath&quot;&gt;The new path.&lt;/param&gt;
+        /// &lt;returns&gt;The path result&lt;/returns&gt;
+        private string EvaluateUnderscoreChild([NotNull] SubQuery query,
+                                                     [NotNull] Request request,
+                                                     MatchState matchstate,
+                                                     [NotNull] IReadOnlyList&lt;string&gt; words,
+                                                     string newPath)
         {
-            get { return _user; }
+            if (query == null)
+            {
+                throw new ArgumentNullException(nameof(query));
+            }
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+            if (words == null)
+            {
+                throw new ArgumentNullException(nameof(words));
+            }
+
+            var sbWildcard = new StringBuilder();
+
+            AddWordToStringBuilder(words[0], sbWildcard);
+
+            var node = _children[&quot;_&quot;];
+            Debug.Assert(node != null);
+            var path = node.Evaluate(newPath, query, request, matchstate, sbWildcard);
+
+            if (path.HasText())
+            {
+                if (sbWildcard.Length &gt; 0)
+                {
+                    switch (matchstate)
+                    {
+                        case MatchState.UserInput:
+                            query.InputStar.Add(sbWildcard.ToString());
+                            sbWildcard.Remove(0, sbWildcard.Length);
+                            break;
+
+                        case MatchState.That:
+                            query.ThatStar.Add(sbWildcard.ToString());
+                            break;
+
+                        case MatchState.Topic:
+                            query.TopicStar.Add(sbWildcard.ToString());
+                            break;
+                    }
+                }
+
+                return path;
+            }
+
+            return string.Empty;
         }
 
         /// &lt;summary&gt;
-        ///     Gets the query.
+        /// Adds a word to the string builder ensuring that there is space before the word if the
+        /// StringBuilder has already had items added to it.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The query.&lt;/value&gt;
-        [NotNull]
-        public SubQuery Query
+        /// &lt;param name=&quot;word&quot;&gt;The word.&lt;/param&gt;
+        /// &lt;param name=&quot;stringBuilder&quot;&gt;The string builder.&lt;/param&gt;
+        private static void AddWordToStringBuilder(string word, [NotNull] StringBuilder stringBuilder)
         {
-            get { return _query; }
-        }
+            // If it&#39;s not the first string in there, add a space.
+            if (stringBuilder.Length &gt; 0)
+            {
+                stringBuilder.Append(&quot; &quot;);
+            }
 
-        /// &lt;summary&gt;
-        ///     Gets the request.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The request.&lt;/value&gt;
-        [NotNull]
-        public Request Request
-        {
-            get { return _request; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the result.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The result.&lt;/value&gt;
-        public Result Result
-        {
-            get { return _result; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the template node.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The template node.&lt;/value&gt;
-        [NotNull]
-        public XmlNode TemplateNode
-        {
-            get { return _templateNode; }
+            // Add our word
+            stringBuilder.Append(word);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[63,13,63,14,0],[64,17,64,63,0],[67,13,67,14,0],[68,17,68,64,0],[71,13,71,14,0],[72,17,72,66,0],[75,13,75,14,0],[76,17,76,71,0],[54,9,59,68,1],[60,9,60,10,1],[62,13,62,30,1],[66,13,66,31,1],[70,13,70,33,1],[74,13,74,38,1],[80,13,80,38,1],[81,13,81,26,1],[82,13,82,28,1],[83,13,83,32,1],[84,13,84,30,1],[85,13,85,42,1],[86,9,86,10,1],[95,17,95,18,1],[95,19,95,38,1],[95,39,95,40,1],[105,17,105,18,1],[105,19,105,32,1],[105,33,105,34,1],[115,17,115,18,1],[115,19,115,33,1],[115,34,115,35,1],[125,17,125,18,1],[125,19,125,35,1],[125,36,125,37,1],[134,17,134,18,1],[134,19,134,34,1],[134,35,134,36,1],[144,17,144,18,1],[144,19,144,40,1],[144,41,144,42,1]]);
+      highlightRanges([[36,34,36,38,0],[36,39,36,43,0],[69,13,69,14,0],[70,17,70,123,0],[71,17,71,68,0],[129,13,129,14,0],[130,17,130,66,0],[133,13,133,14,0],[134,17,134,67,0],[137,13,137,14,0],[138,17,138,64,0],[143,13,143,14,0],[144,17,144,37,0],[155,17,155,18,0],[156,21,156,60,0],[157,17,157,18,0],[165,13,165,14,0],[166,17,166,33,0],[179,13,179,14,0],[180,17,180,106,0],[182,17,182,46,0],[183,17,183,18,0],[184,21,184,43,0],[186,13,186,14,0],[195,13,195,14,0],[204,13,204,14,0],[213,13,213,33,0],[233,13,233,14,0],[234,17,234,64,0],[237,13,237,14,0],[238,17,238,66,0],[241,13,241,14,0],[242,17,242,64,0],[264,29,264,71,0],[265,29,265,35,0],[268,29,268,72,0],[269,29,269,35,0],[276,13,276,33,0],[295,13,295,14,0],[296,17,296,64,0],[299,13,299,14,0],[300,17,300,66,0],[303,13,303,14,0],[304,17,304,62,0],[327,17,327,18,0],[328,21,328,40,0],[331,29,331,71,0],[332,29,332,67,0],[333,29,333,35,0],[336,29,336,70,0],[337,29,337,67,0],[338,29,338,35,0],[341,29,341,71,0],[342,29,342,67,0],[343,29,343,35,0],[345,17,345,18,0],[350,13,350,33,0],[367,9,367,10,0],[368,13,368,31,0],[369,13,369,14,0],[370,17,370,64,0],[372,13,372,33,0],[373,13,373,14,0],[374,17,374,66,0],[376,13,376,31,0],[377,13,377,14,0],[378,17,378,64,0],[381,13,381,50,0],[383,13,383,58,0],[385,13,385,39,0],[386,13,386,40,0],[387,13,387,87,0],[389,13,389,32,0],[390,13,390,14,0],[391,17,391,43,0],[392,17,392,18,0],[393,21,393,40,0],[396,29,396,72,0],[397,29,397,69,0],[398,29,398,35,0],[401,29,401,71,0],[402,29,402,35,0],[405,29,405,72,0],[406,29,406,35,0],[408,17,408,18,0],[410,17,410,29,0],[413,13,413,33,0],[414,9,414,10,0],[42,34,42,38,1],[42,39,42,43,1],[48,30,48,34,1],[48,35,48,39,1],[56,17,56,18,1],[56,19,56,42,1],[56,43,56,44,1],[66,9,66,10,1],[68,13,68,48,1],[74,13,74,49,1],[75,13,75,14,1],[76,17,76,37,1],[77,13,77,14,1],[79,13,79,14,1],[81,17,81,66,1],[82,17,82,36,1],[83,17,83,43,1],[84,17,84,46,1],[87,17,87,94,1],[90,17,90,48,1],[91,17,91,18,1],[92,21,92,43,1],[93,21,93,48,1],[94,17,94,18,1],[96,17,96,18,1],[97,21,97,52,1],[99,21,99,46,1],[100,17,100,18,1],[102,17,102,56,1],[103,13,103,14,1],[104,9,104,10,1],[126,9,126,10,1],[128,13,128,33,1],[132,13,132,34,1],[136,13,136,31,1],[142,13,142,44,1],[148,13,148,49,1],[151,13,151,38,1],[152,13,152,14,1],[154,17,154,49,1],[160,17,160,33,1],[164,13,164,44,1],[171,13,171,66,1],[172,13,172,44,1],[173,13,173,51,1],[176,13,176,80,1],[178,13,178,44,1],[188,13,188,44,1],[189,13,189,14,1],[190,17,190,98,1],[191,17,191,41,1],[192,17,192,18,1],[193,21,193,38,1],[197,13,197,44,1],[198,13,198,14,1],[199,17,199,104,1],[200,17,200,43,1],[201,17,201,18,1],[202,21,202,40,1],[206,13,206,44,1],[207,13,207,14,1],[208,17,208,60,1],[210,17,210,80,1],[214,9,214,10,1],[230,9,230,10,1],[232,13,232,31,1],[236,13,236,33,1],[240,13,240,31,1],[245,13,245,50,1],[246,13,246,58,1],[248,13,248,39,1],[249,13,249,40,1],[251,13,251,87,1],[252,13,252,32,1],[253,13,253,14,1],[254,17,254,43,1],[255,17,255,18,1],[256,21,256,40,1],[259,29,259,72,1],[260,29,260,69,1],[261,29,261,35,1],[271,17,271,18,1],[273,17,273,29,1],[277,9,277,10,1],[293,9,293,10,1],[294,13,294,31,1],[298,13,298,33,1],[302,13,302,29,1],[307,13,307,42,1],[308,13,308,25,1],[311,21,311,51,1],[312,21,312,27,1],[315,21,315,52,1],[316,21,316,27,1],[319,13,319,49,1],[320,13,320,39,1],[321,13,321,40,1],[322,13,322,87,1],[324,13,324,32,1],[325,13,325,14,1],[326,17,326,42,1],[347,17,347,29,1],[351,9,351,10,1],[423,9,423,10,1],[425,13,425,42,1],[426,13,426,14,1],[427,17,427,43,1],[428,13,428,14,1],[431,13,431,40,1],[432,9,432,10,1],[30,9,30,94,1],[36,48,36,60,1],[42,48,42,60,1],[48,44,48,56,1]]);
     </script>
   </body>
 </html>

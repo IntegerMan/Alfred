@@ -2,99 +2,136 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\modules\alertvisibilitycalculator.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core\pages\alfredmodulelistpage.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlertVisibilityCalculator.cs
+// AlfredModuleListPage.cs
 // 
-// Created on:      08/10/2015 at 10:44 PM
-// Last Modified:   08/11/2015 at 1:47 AM
+// Created on:      08/08/2015 at 7:17 PM
+// Last Modified:   08/09/2015 at 10:03 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
-namespace MattEland.Ani.Alfred.Core.Modules
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common;
+
+namespace MattEland.Ani.Alfred.Core.Pages
 {
     /// &lt;summary&gt;
-    ///     Used to calculate when alarms should be displayed
+    ///     A page grouping together multiple module collections of widgets
     /// &lt;/summary&gt;
-    internal static class AlertVisibilityCalculator
+    public sealed class AlfredModuleListPage : AlfredPage
     {
+        [NotNull]
+        [ItemNotNull]
+        private readonly ICollection&lt;IAlfredModule&gt; _modules;
+
         /// &lt;summary&gt;
-        ///     Calculates the alert visibility based on the inputed time.
+        /// Initializes a new instance of the &lt;see cref=&quot;AlfredModuleListPage&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;hour&quot;&gt;The current hour.&lt;/param&gt;
-        /// &lt;param name=&quot;minute&quot;&gt;The current minute.&lt;/param&gt;
-        /// &lt;param name=&quot;alertHour&quot;&gt;The alert hour.&lt;/param&gt;
-        /// &lt;param name=&quot;alertMinute&quot;&gt;The alert minute.&lt;/param&gt;
-        /// &lt;param name=&quot;alertDurationInHours&quot;&gt;The alert duration in hours.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the alert is visible, &lt;c&gt;false&lt;/c&gt; otherwise.&lt;/returns&gt;
-        internal static bool CalculateAlertVisibility(int hour,
-                                                      int minute,
-                                                      int alertHour,
-                                                      int alertMinute,
-                                                      int alertDurationInHours)
+        /// &lt;param name=&quot;provider&quot;&gt;The provider.&lt;/param&gt;
+        /// &lt;param name=&quot;name&quot;&gt;The name.&lt;/param&gt;
+        /// &lt;param name=&quot;id&quot;&gt;The identifier.&lt;/param&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        public AlfredModuleListPage([NotNull] IPlatformProvider provider, [NotNull] string name, [NotNull] string id) : base(name, id)
         {
-            if (hour == alertHour)
+            if (provider == null)
             {
-                return minute &gt;= alertMinute;
+                throw new ArgumentNullException(nameof(provider));
             }
 
-            if (hour &gt; alertHour)
-            {
-                return CalculateVisibilityAfterAlarmHour(hour, minute, alertHour, alertMinute, alertDurationInHours);
-            }
-
-            // Next we&#39;ll check early morning carryover for late alerts (e.g. 4 hour alarm display at 10 PM)
-            // so make sure the end hour is representable on a 24 hour clock.
-            var alertEndHour = alertHour + alertDurationInHours;
-            while (alertEndHour &gt;= 24)
-            {
-                alertEndHour -= 24;
-            }
-
-            // Support scenarios of a 9 PM bedtime but it&#39;s 12:30 AM.
-            return hour &lt;= alertEndHour;
-
+            _modules = provider.CreateCollection&lt;IAlfredModule&gt;();
         }
 
         /// &lt;summary&gt;
-        ///     Calculates the alert visibility when the current hour is after the alarm hour.
+        ///     Gets the modules.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;hour&quot;&gt;The current hour.&lt;/param&gt;
-        /// &lt;param name=&quot;minute&quot;&gt;The current minute.&lt;/param&gt;
-        /// &lt;param name=&quot;alertHour&quot;&gt;The alert hour.&lt;/param&gt;
-        /// &lt;param name=&quot;alertMinute&quot;&gt;The alert minute.&lt;/param&gt;
-        /// &lt;param name=&quot;alertDurationInHours&quot;&gt;The alert duration in hours.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the alert should be visible, &lt;c&gt;false&lt;/c&gt; otherwise.&lt;/returns&gt;
-        /// &lt;remarks&gt;
-        ///     This is a method to help break down the complexity of CalculateAlertVisibility.
-        ///     Times come in this way to allow for testable scenarios.
-        /// &lt;/remarks&gt;
-        private static bool CalculateVisibilityAfterAlarmHour(int hour,
-                                                              int minute,
-                                                              int alertHour,
-                                                              int alertMinute,
-                                                              int alertDurationInHours)
+        /// &lt;value&gt;The modules.&lt;/value&gt;
+        [NotNull]
+        [ItemNotNull]
+        public IEnumerable&lt;IAlfredModule&gt; Modules
         {
-            // Check for when we&#39;re on the hour the alert will expire
-            var alertEndHour = (alertHour + alertDurationInHours);
+            get { return _modules; }
+        }
 
-            if (hour == alertEndHour &amp;&amp; minute &lt; alertMinute)
+        /// &lt;summary&gt;
+        ///     Gets the children of this component. Depending on the type of component this is, the children will
+        ///     vary in their own types.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The children.&lt;/value&gt;
+        public override IEnumerable&lt;IAlfredComponent&gt; Children
+        {
+            get
             {
-                return true;
+                foreach (var module in _modules)
+                {
+                    yield return module;
+                }
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Registers the specified module.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;module&quot;&gt;The module.&lt;/param&gt;
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(&quot;Microsoft.Design&quot;, &quot;CA1062:Validate arguments of public methods&quot;, MessageId = &quot;0&quot;)]
+        public void Register([NotNull] IAlfredModule module)
+        {
+            _modules.AddSafe(module);
+            module.OnRegistered(AlfredInstance);
+        }
+
+        /// &lt;summary&gt;
+        ///     Clears the modules list.
+        /// &lt;/summary&gt;
+        public void ClearModules()
+        {
+            _modules.Clear();
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets whether or not the component is visible to the user interface.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;Whether or not the component is visible.&lt;/value&gt;
+        public override bool IsVisible
+        {
+            get { return base.IsVisible &amp;&amp; Modules.Any(m =&gt; m.Widgets.Any(w =&gt; w.IsVisible)); }
+        }
+
+        /// &lt;summary&gt;
+        /// Processes an Alfred Command. If the command is handled, result should be modified accordingly and the method should return true. Returning false will not stop the message from being propogated.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;command&quot;&gt;The command.&lt;/param&gt;
+        /// &lt;param name=&quot;result&quot;&gt;The result. If the command was handled, this should be updated.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;True&lt;/c&gt; if the command was handled; otherwise false.&lt;/returns&gt;
+        public override bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
+        {
+
+            foreach (IAlfredModule module in this.Modules)
+            {
+                if (module.ProcessAlfredCommand(command, result))
+                {
+                    return true;
+                }
             }
 
-            return hour &lt; alertEndHour;
+            return base.ProcessAlfredCommand(command, result);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[30,9,30,10,1],[31,13,31,35,1],[32,13,32,14,1],[33,17,33,46,1],[36,13,36,34,1],[37,13,37,14,1],[38,17,38,118,1],[43,13,43,65,1],[45,13,45,14,1],[46,17,46,36,1],[47,13,47,14,1],[44,13,44,39,1],[50,13,50,41,1],[52,9,52,10,1],[72,9,72,10,1],[74,13,74,67,1],[76,13,76,62,1],[77,13,77,14,1],[78,17,78,29,1],[81,13,81,40,1],[82,9,82,10,1]]);
+      highlightRanges([[39,13,39,14,0],[40,17,40,67,0],[98,17,98,18,0],[98,19,98,61,0],[98,92,98,94,0],[98,95,98,96,0],[116,13,116,14,0],[118,13,118,63,0],[98,61,98,80,0],[98,91,98,92,0],[98,80,98,91,0],[36,121,36,135,1],[37,9,37,10,1],[38,13,38,34,1],[43,13,43,67,1],[44,9,44,10,1],[54,17,54,18,1],[54,19,54,35,1],[54,36,54,37,1],[79,9,79,10,1],[80,13,80,38,1],[81,13,81,49,1],[82,9,82,10,1],[88,9,88,10,1],[89,13,89,30,1],[90,9,90,10,1],[108,9,108,10,1],[110,13,110,20,1],[110,46,110,58,1],[110,22,110,42,1],[111,13,111,14,1],[112,17,112,66,1],[113,17,113,18,1],[114,21,114,33,1],[110,43,110,45,1],[119,9,119,10,1],[65,13,65,14,1],[66,17,66,24,1],[66,40,66,48,1],[66,26,66,36,1],[67,17,67,18,1],[68,21,68,41,1],[69,17,69,18,1],[66,37,66,39,1],[70,13,70,14,1]]);
     </script>
   </body>
 </html>

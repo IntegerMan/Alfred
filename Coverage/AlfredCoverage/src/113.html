@@ -2,162 +2,148 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.system\diskmonitormodule.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.aiml\alfredtaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// DiskMonitorModule.cs
+// AlfredTagHandler.cs
 // 
-// Created on:      08/05/2015 at 1:03 AM
-// Last Modified:   08/05/2015 at 3:10 PM
-// Original author: Matt Eland
+// Created on:      08/17/2015 at 10:57 PM
+// Last Modified:   08/18/2015 at 1:03 AM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.ComponentModel;
-using System.Diagnostics;
+using System.Xml;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Widgets;
+using MattEland.Common;
 
-namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
+namespace MattEland.Ani.Alfred.Chat
 {
     /// &lt;summary&gt;
-    ///     A module that displays information on the system&#39;s disk input / output operations
+    /// A TagHandler able to invoke shell events
     /// &lt;/summary&gt;
-    public sealed class DiskMonitorModule : SystemMonitorModule, IDisposable
+    [HandlesAimlTag(&quot;shell&quot;)]
+    public sealed class ShellTagHandler : AimlTagHandler
     {
-        private const string DiskCategoryName = &quot;PhysicalDisk&quot;;
-        private const string DiskReadCounterName = &quot;% Disk Read Time&quot;;
-        private const string DiskWriteCounterName = &quot;% Disk Write Time&quot;;
-
-        [NotNull]
-        private readonly MetricProviderBase _diskReadCounter;
-
-        [NotNull]
-        private readonly AlfredProgressBarWidget _diskReadWidget;
-
-        [NotNull]
-        private readonly MetricProviderBase _diskWriteCounter;
-
-        [NotNull]
-        private readonly AlfredProgressBarWidget _diskWriteWidget;
 
         /// &lt;summary&gt;
-        /// Initializes a new instance of the &lt;see cref=&quot;MemoryMonitorModule&quot; /&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;ShellTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
-        /// &lt;param name=&quot;factory&quot;&gt;The metric provider factory&lt;/param&gt;
-        public DiskMonitorModule([NotNull] IPlatformProvider platformProvider,
-                                 [NotNull] IMetricProviderFactory factory) : base(platformProvider, factory)
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;parameters&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public ShellTagHandler([NotNull] TagHandlerParameters parameters) : base(parameters)
         {
-            _diskReadCounter = MetricProvider.Build(DiskCategoryName, DiskReadCounterName, TotalInstanceName);
-            _diskWriteCounter = MetricProvider.Build(DiskCategoryName, DiskWriteCounterName, TotalInstanceName);
-
-            _diskReadWidget = CreatePercentWidget();
-            _diskReadWidget.Text = Resources.DiskReadLabel;
-
-            _diskWriteWidget = CreatePercentWidget();
-            _diskWriteWidget.Text = Resources.DiskWriteLabel;
-
         }
 
         /// &lt;summary&gt;
-        ///     Gets the name of the module.
+        ///     Processes the input text and returns the processed value.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;
-        ///     The name of the module.
-        /// &lt;/value&gt;
-        public override string Name
+        /// &lt;returns&gt;The processed output&lt;/returns&gt;
+        protected override string ProcessChange()
         {
-            // ReSharper disable once AssignNullToNotNullAttribute
-            get { return Resources.DiskMonitorName; }
-        }
+            var element = TemplateElement;
+            var recipient = ChatEngine.Owner as IShellCommandRecipient;
 
-        /// &lt;summary&gt;
-        /// Gets the disk read utilization percentage.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The read utilization.&lt;/value&gt;
-        public float ReadUtilization
-        {
-            get { return _diskReadCounter.NextValue(); }
-        }
-
-        /// &lt;summary&gt;
-        /// Gets the write utilization percentage.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The write utilization.&lt;/value&gt;
-        public float WriteUtilization
-        {
-            get { return _diskWriteCounter.NextValue(); }
-        }
-
-        /// &lt;summary&gt;
-        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// &lt;/summary&gt;
-        public void Dispose()
-        {
-            _diskReadCounter.Dispose();
-            _diskWriteCounter.Dispose();
-        }
-
-        /// &lt;summary&gt;
-        ///     Creates a percentage progress bar widget.
-        /// &lt;/summary&gt;
-        /// &lt;returns&gt;A percentage progress bar widget&lt;/returns&gt;
-        [NotNull]
-        private static AlfredProgressBarWidget CreatePercentWidget()
-        {
-            var widget = new AlfredProgressBarWidget
+            // If there&#39;s no target or no recipient, don&#39;t bother
+            if (!element.HasAttribute(&quot;target&quot;) || recipient == null)
             {
-                Minimum = 0,
-                Maximum = 100,
-                ValueFormatString = &quot;{0:F2} %&quot;
-            };
+                return string.Empty;
+            }
 
-            return widget;
+            // Build a command
+            var name = GetAttributeSafe(element, &quot;command&quot;);
+            if (name.IsEmpty())
+            {
+                name = &quot;nav&quot;;
+            }
+            var target = GetAttributeSafe(element, &quot;target&quot;);
+            var data = GetAttributeSafe(element, &quot;data&quot;);
+
+            var command = new ShellCommand(name, target, data);
+
+            // Send the command on to the owner
+            var redirect = recipient.ProcessShellCommand(command);
+
+            // If no redirect was specified, use empty
+            if (!redirect.HasText())
+            {
+                return string.Empty;
+            }
+
+            // Execute a redirect to the result of the star operation
+            try
+            {
+                var node = BuildNode(string.Format(Locale, &quot;&lt;srai&gt;{0}&lt;/srai&gt;&quot;, redirect).NonNull());
+                var parameters = GetTagHandlerParametersForNode(node);
+                return new RedirectTagHandler(parameters).Transform();
+            }
+            catch (XmlException xmlEx)
+            {
+                Log(string.Format(Locale, &quot;Could not redirect to output due to bad XML: &quot; + redirect, xmlEx.Message), LogLevel.Error);
+                return string.Empty;
+            }
+
+        }
+    }
+
+    /// &lt;summary&gt;
+    ///     A tag handler that handles the custom &quot;alfred&quot; tag that integrates Alfred into the AIML system
+    ///     and allows AIML files to issue commands to Alfred modules.
+    /// &lt;/summary&gt;
+    [HandlesAimlTag(&quot;alfred&quot;)]
+    public class AlfredTagHandler : AimlTagHandler
+    {
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredTagHandler&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;parameters&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public AlfredTagHandler([NotNull] TagHandlerParameters parameters) : base(parameters)
+        {
         }
 
         /// &lt;summary&gt;
-        ///     Handles module shutdown events
+        ///     Processes the input text and returns the processed value.
         /// &lt;/summary&gt;
-        protected override void ShutdownProtected()
+        /// &lt;returns&gt;The processed output&lt;/returns&gt;
+        protected override string ProcessChange()
         {
-            _diskReadWidget.Value = 0;
-            _diskWriteWidget.Value = 0;
-        }
+            var result = new AlfredCommandResult();
 
-        /// &lt;summary&gt;
-        ///     Handles module initialization events
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;alfred&quot;&gt;&lt;/param&gt;
-        protected override void InitializeProtected(IAlfred alfred)
-        {
-            Register(_diskReadWidget);
-            Register(_diskWriteWidget);
-        }
+            var element = TemplateElement;
+            var recipient = ChatEngine.Owner as IAlfredCommandRecipient;
 
-        /// &lt;summary&gt;
-        ///     Handles updating the module as needed
-        /// &lt;/summary&gt;
-        protected override void UpdateProtected()
-        {
-            var readPercent = GetNextCounterValueSafe(_diskReadCounter);
-            var writePercent = GetNextCounterValueSafe(_diskWriteCounter);
+            if (element.HasAttribute(&quot;command&quot;) &amp;&amp; recipient != null)
+            {
+                // Build a command
+                var name = GetAttributeSafe(element, &quot;command&quot;);
+                var subsystem = GetAttributeSafe(element, &quot;subsystem&quot;);
+                var data = GetAttributeSafe(element, &quot;data&quot;);
 
-            _diskReadWidget.Value = readPercent;
-            _diskWriteWidget.Value = writePercent;
+                var command = new ChatCommand(subsystem, name, data);
+
+                // Send the command on to the owner. This may modify result or carry out other actions.
+                recipient.ProcessAlfredCommand(command, result);
+            }
+
+            // Get the output value from the result in case it was set externally
+            return result.Output;
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[69,17,69,18,0],[69,19,69,52,0],[69,53,69,54,0],[94,9,94,10,0],[95,13,95,40,0],[96,13,96,41,0],[97,9,97,10,0],[47,78,47,109,1],[48,9,48,10,1],[49,13,49,111,1],[50,13,50,113,1],[52,13,52,53,1],[53,13,53,60,1],[55,13,55,54,1],[56,13,56,62,1],[58,9,58,10,1],[78,17,78,18,1],[78,19,78,55,1],[78,56,78,57,1],[87,17,87,18,1],[87,19,87,56,1],[87,57,87,58,1],[105,9,105,10,1],[106,13,111,15,1],[113,13,113,27,1],[114,9,114,10,1],[120,9,120,10,1],[121,13,121,39,1],[122,13,122,40,1],[123,9,123,10,1],[130,9,130,10,1],[131,13,131,39,1],[132,13,132,40,1],[133,9,133,10,1],[139,9,139,10,1],[140,13,140,73,1],[141,13,141,75,1],[143,13,143,49,1],[144,13,144,51,1],[145,9,145,10,1]]);
+      highlightRanges([[50,13,50,14,0],[51,17,51,37,0],[57,13,57,14,0],[58,17,58,30,0],[59,13,59,14,0],[70,13,70,14,0],[71,17,71,37,0],[81,13,81,39,0],[82,13,82,14,0],[83,17,83,135,0],[84,17,84,37,0],[35,77,35,93,1],[36,9,36,10,1],[37,9,37,10,1],[44,9,44,10,1],[45,13,45,43,1],[46,13,46,72,1],[49,13,49,70,1],[55,13,55,61,1],[56,13,56,32,1],[60,13,60,62,1],[61,13,61,58,1],[63,13,63,64,1],[66,13,66,67,1],[69,13,69,37,1],[76,13,76,14,1],[77,17,77,101,1],[78,17,78,71,1],[79,17,79,71,1],[87,9,87,10,1],[101,78,101,94,1],[102,9,102,10,1],[103,9,103,10,1],[110,9,110,10,1],[111,13,111,52,1],[113,13,113,43,1],[114,13,114,73,1],[116,13,116,70,1],[117,13,117,14,1],[119,17,119,65,1],[120,17,120,72,1],[121,17,121,62,1],[123,17,123,70,1],[126,17,126,65,1],[127,13,127,14,1],[130,13,130,34,1],[131,9,131,10,1]]);
     </script>
   </body>
 </html>

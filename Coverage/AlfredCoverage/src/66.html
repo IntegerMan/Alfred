@@ -2,23 +2,21 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\datetaghandler.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\taghandlers\bottaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// DateTagHandler.cs
+// BotTagHandler.cs
 // 
-// Created on:      08/12/2015 at 10:43 PM
-// Last Modified:   08/14/2015 at 3:13 PM
+// Created on:      08/12/2015 at 10:40 PM
+// Last Modified:   08/14/2015 at 10:45 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
-using System.Diagnostics;
 using System.Xml;
 
 using JetBrains.Annotations;
@@ -29,16 +27,16 @@ using MattEland.Common;
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// &lt;summary&gt;
-    /// An AimlTagHandler for the &quot;date&quot; tag. This provides an easy way of giving the time and date.
+    /// An AIML Tag handler that handles the &quot;bot&quot; tag. This allows the system to interact with system variables.
     /// &lt;/summary&gt;
-    [HandlesAimlTag(&quot;date&quot;)]
-    public class DateTagHandler : AimlTagHandler
+    [HandlesAimlTag(&quot;bot&quot;)]
+    public class BotTagHandler : AimlTagHandler
     {
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;DateTagHandler&quot; /&gt; class.
+        /// Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
-        public DateTagHandler([NotNull] TagHandlerParameters parameters)
+        public BotTagHandler([NotNull] TagHandlerParameters parameters)
             : base(parameters)
         {
         }
@@ -51,24 +49,27 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         {
             var element = TemplateElement;
 
-            string formatString = &quot;f&quot;; // Full date and time string
-
-            // By default we&#39;ll use the full date and time, but look for a format attribute to provide a custom format
-            if (element.HasAttribute(&quot;format&quot;))
+            // Ensure we have an element to work with
+            if (element != null &amp;&amp;
+                element.Name.Matches(&quot;ChatEngine&quot;) &amp;&amp;
+                element.HasAttribute(&quot;name&quot;))
             {
-                formatString = element.GetAttribute(&quot;format&quot;);
+                // Grab the attribute and use its value to GetTagHandler a setting value
+                var nameAttribute = element.Attributes[&quot;name&quot;];
+                if (nameAttribute != null)
+                {
+                    return GetGlobalSetting(nameAttribute.Value);
+                }
             }
 
-            // Return the current time with formatting applied
-            var now = DateTime.Now;
-            return now.ToString(formatString, Locale);
-
+            return string.Empty;
         }
+
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[32,15,32,31,1],[33,9,33,10,1],[34,9,34,10,1],[41,9,41,10,1],[42,13,42,43,1],[44,13,44,39,1],[47,13,47,48,1],[48,13,48,14,1],[49,17,49,63,1],[50,13,50,14,1],[53,13,53,36,1],[54,13,54,55,1],[56,9,56,10,1]]);
+      highlightRanges([[30,15,30,31,0],[31,9,31,10,0],[32,9,32,10,0],[39,9,39,10,0],[40,13,40,43,0],[43,13,45,46,0],[46,13,46,14,0],[48,17,48,64,0],[49,17,49,43,0],[50,17,50,18,0],[51,21,51,66,0],[53,13,53,14,0],[55,13,55,33,0],[56,9,56,10,0]]);
     </script>
   </body>
 </html>

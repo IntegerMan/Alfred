@@ -2,87 +2,162 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.common\collectionextensions.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\utils\taghandlerparameters.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// CollectionExtensions.cs
+// TagHandlerParameters.cs
 // 
-// Created on:      08/14/2015 at 12:55 AM
-// Last Modified:   08/14/2015 at 12:59 AM
+// Created on:      08/14/2015 at 1:24 PM
+// Last Modified:   08/15/2015 at 11:16 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+using System.Xml;
 
 using JetBrains.Annotations;
 
-namespace MattEland.Common
+namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 {
     /// &lt;summary&gt;
-    ///     A set of extension methods related to collections
+    ///     A container for parameters given to AimlTagHandler objects upon creation. This
+    ///     keeps invocations from being unseemly long and makes it easier to manage parameter
+    ///     changes with many consumers.
     /// &lt;/summary&gt;
-    public static class CollectionExtensions
+    public class TagHandlerParameters
     {
+        [NotNull]
+        private readonly ChatEngine _chatEngine;
+
+        [NotNull]
+        private readonly SubQuery _query;
+
+        [NotNull]
+        private readonly Request _request;
+
+        private readonly Result _result;
+
+        [NotNull]
+        private readonly XmlNode _templateNode;
+
+        [NotNull]
+        private readonly User _user;
+
         /// &lt;summary&gt;
-        ///     Adds an item to a collection safely. This is a convenience method that does null and duplicate checking
-        ///     based on the type of item / collection and will throw null reference or invalid operation exceptions if illegal
-        ///     circumstances are met.
+        ///     Initializes a new instance of the &lt;see cref=&quot;TagHandlerParameters&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;typeparam name=&quot;T&quot;&gt;The type of item&lt;/typeparam&gt;
-        /// &lt;param name=&quot;item&quot;&gt;The item.&lt;/param&gt;
-        /// &lt;param name=&quot;collection&quot;&gt;The collection.&lt;/param&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;
-        ///     item, collection
+        /// &lt;param name=&quot;chatEngine&quot;&gt;The chat engine.&lt;/param&gt;
+        /// &lt;param name=&quot;user&quot;&gt;The user.&lt;/param&gt;
+        /// &lt;param name=&quot;query&quot;&gt;The query.&lt;/param&gt;
+        /// &lt;param name=&quot;request&quot;&gt;The request.&lt;/param&gt;
+        /// &lt;param name=&quot;result&quot;&gt;The result.&lt;/param&gt;
+        /// &lt;param name=&quot;templateNode&quot;&gt;The template node.&lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;
+        ///     &lt;paramref name=&quot;query&quot; /&gt;, &lt;paramref name=&quot;request&quot; /&gt;, &lt;paramref name=&quot;user&quot; /&gt;, &lt;paramref name=&quot;chatEngine&quot; /&gt;, or
+        ///     &lt;paramref name=&quot;templateNode&quot; /&gt; are &lt;see langword=&quot;null&quot; /&gt;.
         /// &lt;/exception&gt;
-        /// &lt;exception cref=&quot;System.InvalidOperationException&quot;&gt;The specified item was already part of the collection&lt;/exception&gt;
-        public static void AddSafe&lt;T&gt;([NotNull] this ICollection&lt;T&gt; collection, [NotNull] T item)
+        public TagHandlerParameters([NotNull] ChatEngine chatEngine,
+                                    [NotNull] User user,
+                                    [NotNull] SubQuery query,
+                                    [NotNull] Request request,
+                                    Result result,
+                                    [NotNull] XmlNode templateNode)
         {
-            if (item == null)
+            //- Validate
+            if (user == null)
             {
-                throw new ArgumentNullException(nameof(item));
+                throw new ArgumentNullException(nameof(user));
             }
-            if (collection == null)
+            if (query == null)
             {
-                throw new ArgumentNullException(nameof(collection));
+                throw new ArgumentNullException(nameof(query));
+            }
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+            if (templateNode == null)
+            {
+                throw new ArgumentNullException(nameof(templateNode));
             }
 
-            // This shouldn&#39;t happen, but I want to check to make sure
-            if (collection.Contains(item))
-            {
-                throw new InvalidOperationException(Resources.ErrorItemAlreadyInCollection);
-            }
-
-            collection.Add(item);
+            //- Set Properties
+            _chatEngine = chatEngine;
+            _user = user;
+            _query = query;
+            _request = request;
+            _result = result;
+            _templateNode = templateNode;
         }
 
         /// &lt;summary&gt;
-        /// Returns the singular value if collection&#39;s count of items is 1. Otherwise plural is returned.
+        ///     Gets the chat engine.
         /// &lt;/summary&gt;
-        /// &lt;typeparam name=&quot;T&quot;&gt;The type the generic collection is holding.&lt;/typeparam&gt;
-        /// &lt;param name=&quot;collection&quot;&gt;The collection.&lt;/param&gt;
-        /// &lt;param name=&quot;singular&quot;&gt;The singular return value.&lt;/param&gt;
-        /// &lt;param name=&quot;plural&quot;&gt;The plural return value.&lt;/param&gt;
-        /// &lt;returns&gt;The singular value if the item count is 1. Otherwise plural is returned.&lt;/returns&gt;
-        public static string Pluralize&lt;T&gt;([NotNull] this IEnumerable&lt;T&gt; collection,
-                                       string singular,
-                                       string plural)
+        /// &lt;value&gt;The chat engine.&lt;/value&gt;
+        [NotNull]
+        public ChatEngine ChatEngine
         {
-            var count = collection.Count&lt;T&gt;();
-            return count.Pluralize(singular, plural);
+            get { return _chatEngine; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the user.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The user.&lt;/value&gt;
+        [NotNull]
+        public User User
+        {
+            get { return _user; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the query.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The query.&lt;/value&gt;
+        [NotNull]
+        public SubQuery Query
+        {
+            get { return _query; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the request.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The request.&lt;/value&gt;
+        [NotNull]
+        public Request Request
+        {
+            get { return _request; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the result.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The result.&lt;/value&gt;
+        public Result Result
+        {
+            get { return _result; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the template node.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The template node.&lt;/value&gt;
+        [NotNull]
+        public XmlNode TemplateNode
+        {
+            get { return _templateNode; }
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[39,13,39,14,0],[40,17,40,63,0],[43,13,43,14,0],[44,17,44,69,0],[37,9,37,10,1],[38,13,38,30,1],[42,13,42,36,1],[48,13,48,43,1],[49,13,49,14,1],[50,17,50,93,1],[53,13,53,34,1],[54,9,54,10,1],[67,9,67,10,1],[68,13,68,47,1],[69,13,69,54,1],[70,9,70,10,1]]);
+      highlightRanges([[63,13,63,14,0],[64,17,64,63,0],[67,13,67,14,0],[68,17,68,64,0],[71,13,71,14,0],[72,17,72,66,0],[75,13,75,14,0],[76,17,76,71,0],[54,9,59,68,1],[60,9,60,10,1],[62,13,62,30,1],[66,13,66,31,1],[70,13,70,33,1],[74,13,74,38,1],[80,13,80,38,1],[81,13,81,26,1],[82,13,82,28,1],[83,13,83,32,1],[84,13,84,30,1],[85,13,85,42,1],[86,9,86,10,1],[95,17,95,18,1],[95,19,95,38,1],[95,39,95,40,1],[105,17,105,18,1],[105,19,105,32,1],[105,33,105,34,1],[115,17,115,18,1],[115,19,115,33,1],[115,34,115,35,1],[125,17,125,18,1],[125,19,125,35,1],[125,36,125,37,1],[134,17,134,18,1],[134,19,134,34,1],[134,35,134,36,1],[144,17,144,18,1],[144,19,144,40,1],[144,41,144,42,1]]);
     </script>
   </body>
 </html>

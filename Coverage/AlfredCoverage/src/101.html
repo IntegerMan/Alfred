@@ -2,137 +2,80 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.common\assemblyextensions.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\utils\subquery.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AssemblyExtensions.cs
+// SubQuery.cs
 // 
-// Created on:      08/14/2015 at 12:38 AM
-// Last Modified:   08/14/2015 at 12:59 AM
+// Created on:      08/12/2015 at 10:35 PM
+// Last Modified:   08/15/2015 at 11:17 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Linq;
-using System.Reflection;
 
 using JetBrains.Annotations;
 
-namespace MattEland.Common
+namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 {
-    public static class AssemblyHelper
+    /// &lt;summary&gt;
+    ///     Represents a SubQuery of a chat message.
+    /// &lt;/summary&gt;
+    public class SubQuery
     {
         /// &lt;summary&gt;
-        ///     Gets the types in an assembly with an attribute applied to them.
+        ///     Initializes a new instance of the &lt;see cref=&quot;SubQuery&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;typeparam name=&quot;TAttribute&quot;&gt;The attribute to search for.&lt;/typeparam&gt;
-        /// &lt;param name=&quot;assembly&quot;&gt;The assembly.&lt;/param&gt;
-        /// &lt;param name=&quot;inherit&quot;&gt;
-        ///     true to search the type&#39;s inheritance chain to find the attributes; otherwise, false.
-        /// &lt;/param&gt;
-        /// &lt;returns&gt;The types in the assembly with the requested attribute&lt;/returns&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        /// &lt;param name=&quot;fullPath&quot;&gt;The full path.&lt;/param&gt;
+        public SubQuery([NotNull] string fullPath)
+        {
+            FullPath = fullPath;
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the full path of the query.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The full path.&lt;/value&gt;
         [NotNull]
-        [ItemNotNull]
-        [UsedImplicitly]
-        public static IEnumerable&lt;Type&gt; GetTypesInAssemblyWithAttribute&lt;TAttribute&gt;([NotNull] this Assembly assembly,
-                                                                                    bool inherit)
-            where TAttribute : Attribute
-        {
-            if (assembly == null)
-            {
-                throw new ArgumentNullException(nameof(assembly));
-            }
-
-            var types = assembly.GetTypes();
-            return GetTypesWithAttributes&lt;TAttribute&gt;(types, inherit);
-        }
+        public string FullPath { get; }
 
         /// &lt;summary&gt;
-        ///     Gets the types in a group of types that have an attribute applied to them.
+        /// Gets or sets the template.
         /// &lt;/summary&gt;
-        /// &lt;typeparam name=&quot;TAttribute&quot;&gt;The attribute to search for.&lt;/typeparam&gt;
-        /// &lt;param name=&quot;types&quot;&gt;The set of types&lt;/param&gt;
-        /// &lt;param name=&quot;inherit&quot;&gt;
-        ///     true to search the type&#39;s inheritance chain to find the attributes; otherwise, false.
-        /// &lt;/param&gt;
-        /// &lt;returns&gt;The types in the set of types that have the requested attribute&lt;/returns&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
-        [SuppressMessage(&quot;ReSharper&quot;, &quot;PossibleNullReferenceException&quot;)]
+        /// &lt;value&gt;The template.&lt;/value&gt;
         [NotNull]
-        [ItemNotNull]
-        [UsedImplicitly]
-        public static IEnumerable&lt;Type&gt; GetTypesWithAttributes&lt;TAttribute&gt;([NotNull] IEnumerable&lt;Type&gt; types,
-                                                                           bool inherit) where TAttribute : Attribute
-        {
-            if (types == null)
-            {
-                throw new ArgumentNullException(nameof(types));
-            }
-
-            return types.Where(t =&gt; t.HasAttribute&lt;TAttribute&gt;(inherit));
-        }
+        public string Template { get; set; } = string.Empty;
 
         /// &lt;summary&gt;
-        ///     Determines whether the specified member has a particular attribute applied to it.
+        /// Gets the that star collection.
         /// &lt;/summary&gt;
-        /// &lt;typeparam name=&quot;TAttribute&quot;&gt;The type of the attribute.&lt;/typeparam&gt;
-        /// &lt;param name=&quot;member&quot;&gt;The member.&lt;/param&gt;
-        /// &lt;param name=&quot;inherit&quot;&gt;
-        ///     true to search the type&#39;s inheritance chain to find the attributes; otherwise, false.
-        /// &lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the specified inherit has the attribute; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
-        [UsedImplicitly]
-        public static bool HasAttribute&lt;TAttribute&gt;([NotNull] this MemberInfo member, bool inherit)
-            where TAttribute : Attribute
-        {
-            if (member == null)
-            {
-                throw new ArgumentNullException(nameof(member));
-            }
-
-            return member.IsDefined(typeof(TAttribute), inherit);
-        }
+        /// &lt;value&gt;The that star collection.&lt;/value&gt;
+        [NotNull]
+        public IList&lt;string&gt; ThatStar { get; } = new List&lt;string&gt;();
 
         /// &lt;summary&gt;
-        ///     Gets the Version of this module&#39;s assembly based on the AssemblyVersionAttribute.
+        /// Gets the topic star collection.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;caller&quot;&gt;The caller.&lt;/param&gt;
-        /// &lt;returns&gt;The Version of this module&#39;s assembly&lt;/returns&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;caller&lt;/exception&gt;
-        [CanBeNull]
-        public static Version GetAssemblyVersion([NotNull] this object caller)
-        {
-            if (caller == null)
-            {
-                throw new ArgumentNullException(nameof(caller));
-            }
+        /// &lt;value&gt;The topic star collection.&lt;/value&gt;
+        [NotNull]
+        public IList&lt;string&gt; TopicStar { get; } = new List&lt;string&gt;();
 
-            try
-            {
-                var assembly = caller.GetType().Assembly;
-                var assemblyName = new AssemblyName(assembly.FullName);
-                return assemblyName.Version;
-            }
-            catch (IOException)
-            {
-                return null;
-            }
-        }
+        /// &lt;summary&gt;
+        /// Gets the input star collection.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The input star collection.&lt;/value&gt;
+        [NotNull]
+        public IList&lt;string&gt; InputStar { get; } = new List&lt;string&gt;();
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[41,13,41,14,0],[42,17,42,67,0],[67,13,67,14,0],[68,17,68,64,0],[89,13,89,14,0],[90,17,90,65,0],[106,13,106,14,0],[107,17,107,65,0],[116,13,116,32,0],[117,13,117,14,0],[118,17,118,29,0],[39,9,39,10,1],[40,13,40,34,1],[45,13,45,45,1],[46,13,46,71,1],[47,9,47,10,1],[65,9,65,10,1],[66,13,66,31,1],[71,13,71,37,1],[71,72,71,74,1],[72,9,72,10,1],[87,9,87,10,1],[88,13,88,32,1],[93,13,93,66,1],[94,9,94,10,1],[104,9,104,10,1],[105,13,105,32,1],[111,13,111,14,1],[112,17,112,58,1],[113,17,113,72,1],[114,17,114,45,1],[120,9,120,10,1],[71,37,71,72,1]]);
+      highlightRanges([[35,34,35,38,0],[49,41,49,45,0],[56,42,56,46,0],[42,48,42,60,1],[49,50,49,68,1],[56,51,56,69,1],[63,51,63,69,1],[25,9,25,51,1],[26,9,26,10,1],[27,13,27,33,1],[28,9,28,10,1],[42,34,42,38,1],[42,39,42,43,1],[63,42,63,46,1]]);
     </script>
   </body>
 </html>

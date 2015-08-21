@@ -2,186 +2,67 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.system\systemmonitoringsubsystem.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core.system\metricproviderbase.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// SystemMonitoringSubsystem.cs
+// MetricProviderBase.cs
 // 
-// Created on:      08/07/2015 at 10:12 PM
-// Last Modified:   08/07/2015 at 10:36 PM
-// Original author: Matt Eland
+// Created on:      08/18/2015 at 1:50 PM
+// Last Modified:   08/18/2015 at 1:50 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.ComponentModel;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-
-using JetBrains.Annotations;
-
-using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Pages;
-using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
     /// &lt;summary&gt;
-    ///     This is a subsystem for the Alfred Framework that allows for monitoring system performance
-    ///     and surfacing alerts on critical events.
+    ///     An abstract class representing an object capable of providing metrics periodically via a
+    ///     NextValue method.
     /// &lt;/summary&gt;
-    public sealed class SystemMonitoringSubsystem : AlfredSubsystem, IDisposable
+    public abstract class MetricProviderBase : IDisposable
     {
-        [NotNull]
-        private readonly AlfredModuleListPage _page;
-
-        [NotNull]
-        private readonly CpuMonitorModule _cpuModule;
-
-        [NotNull]
-        private readonly MemoryMonitorModule _memoryModule;
-
-        [NotNull]
-        private readonly DiskMonitorModule _diskModule;
-
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredSubsystem&quot; /&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;MetricProviderBase&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;provider&quot;&gt;The provider.&lt;/param&gt;
-        /// &lt;param name=&quot;factory&quot;&gt;&lt;/param&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
-        /// &lt;exception cref=&quot;Win32Exception&quot;&gt;A call to an underlying system API failed.&lt;/exception&gt;
-        /// &lt;exception cref=&quot;UnauthorizedAccessException&quot;&gt;Code that is executing without administrative privileges attempted to read a performance counter.&lt;/exception&gt;
-        public SystemMonitoringSubsystem([NotNull] IPlatformProvider provider, [NotNull] IMetricProviderFactory factory) : base(provider)
+        /// &lt;param name=&quot;metricName&quot;&gt;The name of the metric.&lt;/param&gt;
+        protected MetricProviderBase(string metricName)
         {
-            _cpuModule = new CpuMonitorModule(provider, factory);
-            _memoryModule = new MemoryMonitorModule(provider, factory);
-            _diskModule = new DiskMonitorModule(provider, factory);
-
-            _page = new AlfredModuleListPage(provider, Resources.SystemMonitoringSystem_Name.NonNull());
+            Name = metricName;
         }
 
         /// &lt;summary&gt;
-        /// Registers the controls for this component.
-        /// &lt;/summary&gt;
-        protected override void RegisterControls()
-        {
-            Register(_page);
-
-            _page.ClearModules();
-            _page.Register(_cpuModule);
-            _page.Register(_memoryModule);
-            _page.Register(_diskModule);
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the name of the subsystems.
+        ///     Gets the name of the metric.
         /// &lt;/summary&gt;
         /// &lt;value&gt;The name.&lt;/value&gt;
-        [NotNull]
-        public override string Name
+        public string Name { get; }
+
+        /// &lt;summary&gt;
+        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged
+        ///     resources.
+        /// &lt;/summary&gt;
+        public virtual void Dispose()
         {
-            get { return Resources.SystemMonitoringSystem_Name.NonNull(); }
         }
 
         /// &lt;summary&gt;
-        /// Disposes of allocated resources
+        ///     Gets the next value from the metric provider
         /// &lt;/summary&gt;
-        public void Dispose()
+        /// &lt;returns&gt;The next value&lt;/returns&gt;
+        public virtual float NextValue()
         {
-            _cpuModule.Dispose();
-            _memoryModule.Dispose();
-            _diskModule.Dispose();
-        }
-
-
-        /// &lt;summary&gt;
-        /// Processes an Alfred Command. If the command is handled, result should be modified accordingly and the method should return true. Returning false will not stop the message from being propogated.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;command&quot;&gt;The command.&lt;/param&gt;
-        /// &lt;param name=&quot;result&quot;&gt;The result. If the command was handled, this should be updated.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;True&lt;/c&gt; if the command was handled; otherwise false.&lt;/returns&gt;
-        public override bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
-        {
-            if (command.IsFor(this) &amp;&amp; command.Name.Matches(&quot;Status&quot;))
-            {
-                result.Output = GetStatusText(command.Data);
-                return true;
-            }
-
-            return base.ProcessAlfredCommand(command, result);
-        }
-
-        private string GetStatusText(string data)
-        {
-
-            var alfred = AlfredInstance;
-            if (alfred == null)
-            {
-                return &quot;No Alfred integration is detected. The system may be offline.&quot;;
-            }
-
-            var sb = new StringBuilder();
-
-            // Alfred status command
-            if (data.IsEmpty() || data.Matches(&quot;Alfred&quot;))
-            {
-                sb.AppendFormat(CultureInfo.CurrentCulture,
-                                &quot;The system is {0} with a total of {1} {2} Present. &quot;,
-                                alfred.Status.ToString().ToLowerInvariant(),
-                                alfred.Subsystems.Count(),
-                                alfred.Subsystems.Pluralize(&quot;Subsystem&quot;, &quot;Subsystems&quot;));
-            }
-
-            // CPU status command
-            if (data.IsEmpty() || data.Matches(&quot;CPU&quot;))
-            {
-                sb.AppendFormat(CultureInfo.CurrentCulture,
-                                &quot;There {3} {0} CPU {1} with an average of {2:F1} % utilization. &quot;,
-                                _cpuModule.NumberOfCores,
-                                _cpuModule.NumberOfCores.Pluralize(&quot;core&quot;, &quot;cores&quot;),
-                                _cpuModule.AverageCpuUtilization,
-                                _cpuModule.NumberOfCores.Pluralize(&quot;is&quot;, &quot;are&quot;));
-            }
-
-            // Memory Status Command
-            if (data.IsEmpty() || data.Matches(&quot;Memory&quot;))
-            {
-                sb.AppendFormat(CultureInfo.CurrentCulture,
-                                &quot;The system is currently utilizing {0:F1} % of all available memory. &quot;,
-                                _memoryModule.MemoryUtilization);
-            }
-
-            // Disk Status Command
-            if (data.IsEmpty() || data.Matches(&quot;Disk&quot;))
-            {
-                sb.AppendFormat(CultureInfo.CurrentCulture,
-                                &quot;Disk read speed is currently utilized at {0:F1} % and disk write utilization is at {1:F1} %. &quot;,
-                                _diskModule.ReadUtilization,
-                                _diskModule.WriteUtilization);
-
-            }
-
-            return sb.ToString();
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the identifier for the subsystem to be used in command routing.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The identifier for the subsystem.&lt;/value&gt;
-        public override string Id
-        {
-            get { return &quot;Sys&quot;; }
+            return 0;
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[85,9,85,10,0],[86,13,86,34,0],[87,13,87,37,0],[88,13,88,35,0],[89,9,89,10,0],[106,13,106,63,0],[114,13,114,14,0],[115,17,115,88,0],[49,124,49,138,1],[50,9,50,10,1],[51,13,51,66,1],[52,13,52,72,1],[53,13,53,68,1],[55,13,55,105,1],[56,9,56,10,1],[62,9,62,10,1],[63,13,63,29,1],[65,13,65,34,1],[66,13,66,40,1],[67,13,67,43,1],[68,13,68,41,1],[69,9,69,10,1],[78,17,78,18,1],[78,19,78,74,1],[78,75,78,76,1],[99,9,99,10,1],[100,13,100,71,1],[101,13,101,14,1],[102,17,102,61,1],[103,17,103,29,1],[107,9,107,10,1],[110,9,110,10,1],[112,13,112,41,1],[113,13,113,32,1],[118,13,118,42,1],[121,13,121,58,1],[122,13,122,14,1],[123,17,127,89,1],[128,13,128,14,1],[131,13,131,55,1],[132,13,132,14,1],[133,17,138,82,1],[139,13,139,14,1],[142,13,142,58,1],[143,13,143,14,1],[144,17,146,66,1],[147,13,147,14,1],[150,13,150,56,1],[151,13,151,14,1],[152,17,155,63,1],[157,13,157,14,1],[159,13,159,34,1],[160,9,160,10,1],[168,17,168,18,1],[168,19,168,32,1],[168,33,168,34,1]]);
+      highlightRanges([[40,9,40,10,0],[41,9,41,10,0],[48,9,48,10,0],[49,13,49,22,0],[50,9,50,10,0],[24,9,24,56,1],[25,9,25,10,1],[26,13,26,31,1],[27,9,27,10,1],[33,30,33,34,1]]);
     </script>
   </body>
 </html>
