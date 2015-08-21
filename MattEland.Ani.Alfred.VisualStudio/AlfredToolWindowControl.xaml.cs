@@ -55,6 +55,7 @@ namespace MattEland.Ani.Alfred.VisualStudio
         /// <returns>Whether or not the command was handled</returns>
         public bool HandlePageNavigationCommand(ShellCommand command)
         {
+            // TODO: This is copy/pasted from WPF. Find a creative way to push this to PresentationShared
             if (command.Data.HasText() && tabPages?.Items != null)
             {
                 foreach (var item in tabPages.Items)
