@@ -186,9 +186,5 @@
         <ItemsControl ItemsSource="{Binding Path=Events}"                                                                
                       BorderThickness="0" />
     </DataTemplate>
-    
-    <DataTemplate DataType="{x:Type chat:ChatPage}">
-        <controls:ChatPane DataContext="{Binding Path=ChatHandler}" />
-    </DataTemplate>
 
 </ResourceDictionary>

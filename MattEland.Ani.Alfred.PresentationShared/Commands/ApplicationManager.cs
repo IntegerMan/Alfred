@@ -2,7 +2,7 @@
 // ApplicationManager.cs
 // 
 // Created on:      08/20/2015 at 8:14 PM
-// Last Modified:   08/20/2015 at 11:47 PM
+// Last Modified:   08/21/2015 at 1:13 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -12,6 +12,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Windows.Threading;
 
 using JetBrains.Annotations;
 
@@ -32,6 +33,11 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
     public sealed class ApplicationManager : IDisposable
     {
         /// <summary>
+        ///     The update frequency in seconds for Alfred's update pump
+        /// </summary>
+        private const double UpdateFrequencyInSeconds = 0.25;
+
+        /// <summary>
         ///     The Alfred Provider that makes the application possible
         /// </summary>
         [NotNull]
@@ -41,12 +47,6 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         private AlfredChatSubsystem _chatSubsystem;
         private AlfredSpeechConsole _console;
         private SystemMonitoringSubsystem _systemMonitoringSubsystem;
-
-        [NotNull]
-        private readonly IUserInterfaceDirector _userInterfaceDirector;
-
-        [NotNull]
-        private readonly IPlatformProvider _platformProvider;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:System.Object" /> class with
@@ -83,13 +83,13 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             {
                 throw new ArgumentNullException(nameof(director));
             }
-            _userInterfaceDirector = director;
+            UserInterfaceDirector = director;
 
             if (platformProvider == null)
             {
                 throw new ArgumentNullException(nameof(platformProvider));
             }
-            _platformProvider = platformProvider;
+            PlatformProvider = platformProvider;
 
             // Create Alfred. It won't be online and running yet, but create it.
             var bootstrapper = new AlfredBootstrapper(platformProvider);
@@ -99,10 +99,24 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             _console = InitializeConsole(platformProvider);
 
             // Hook up our shell manager now that we have a way of communicating with Alfred
-            ShellManager = new ShellCommandManager(_userInterfaceDirector, _alfred);
+            ShellManager = new ShellCommandManager(UserInterfaceDirector, _alfred);
             _alfred.Register(ShellManager);
 
             InitializeSubsystems(_alfred.PlatformProvider);
+
+            // Create an update pump on a dispatcher timer that will automatically get Alfred to regularly update any modules it has
+            InitializeUpdatePump();
+        }
+
+        /// <summary>
+        ///     Gets the user interface director.
+        /// </summary>
+        /// <value>The user interface director.</value>
+        [NotNull]
+        public IUserInterfaceDirector UserInterfaceDirector
+        {
+            [DebuggerStepThrough]
+            get;
         }
 
         /// <summary>
@@ -117,15 +131,14 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         }
 
         /// <summary>
-        /// Gets the platform provider.
+        ///     Gets the platform provider.
         /// </summary>
         /// <value>The platform provider.</value>
         [NotNull]
         public IPlatformProvider PlatformProvider
         {
             [DebuggerStepThrough]
-            get
-            { return _platformProvider; }
+            get;
         }
 
         /// <summary>
@@ -137,9 +150,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         {
             [DebuggerStepThrough]
             get
-            {
-                return _alfred;
-            }
+            { return _alfred; }
         }
 
         /// <summary>
@@ -164,11 +175,6 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
                 return CultureInfo.CurrentCulture;
             }
         }
-
-        /// <summary>
-        ///     The update frequency in seconds for Alfred's update pump
-        /// </summary>
-        public double UpdateFrequencyInSeconds { get; set; } = 0.25;
 
         /// <summary>
         ///     Disposes of loose resources
@@ -237,7 +243,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             catch (Win32Exception ex)
             {
                 _console?.Log(LogHeader,
-                              String.Format(Locale,
+                              string.Format(Locale,
                                             "Problem creating system monitoring module: Win32 exception: {0}",
                                             ex.Message),
                               LogLevel.Error);
@@ -245,7 +251,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             catch (UnauthorizedAccessException ex)
             {
                 _console?.Log(LogHeader,
-                              String.Format(Locale,
+                              string.Format(Locale,
                                             "Problem creating system monitoring module: Unauthorized access exception: {0}",
                                             ex.Message),
                               LogLevel.Error);
@@ -288,5 +294,21 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             }
         }
 
+        /// <summary>
+        ///     Initializes the update pump that causes Alfred to update its modules.
+        /// </summary>
+        private void InitializeUpdatePump()
+        {
+            var seconds = TimeSpan.FromSeconds(UpdateFrequencyInSeconds);
+
+            var timer = new DispatcherTimer
+            {
+                Interval = seconds
+            };
+            timer.Tick += delegate { Update(); };
+
+            timer.Start();
+
+        }
     }
 }

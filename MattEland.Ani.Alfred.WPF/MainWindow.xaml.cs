@@ -53,24 +53,7 @@ namespace MattEland.Ani.Alfred.WPF
             // DataBindings rely on Alfred presently as there hasn't been a need for a page ViewModel yet
             DataContext = _app;
 
-            // Set up the update timer
-            InitializeUpdatePump();
-
             _app.Console?.Log("WinClient.Initialize", Res.InitializationCompleteLogMessage.NonNull(), LogLevel.Verbose);
-        }
-
-        /// <summary>
-        ///     Initializes the update pump that causes Alfred to update its modules.
-        /// </summary>
-        private void InitializeUpdatePump()
-        {
-            var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(_app.UpdateFrequencyInSeconds) };
-            timer.Tick += delegate
-                          {
-                              _app.Update();
-                          };
-
-            timer.Start();
         }
 
         /// <summary>

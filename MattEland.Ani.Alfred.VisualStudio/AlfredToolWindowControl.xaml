@@ -12,7 +12,12 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/dictionaries/DarkStyles.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/dictionaries/Miscellaneous.xaml" />
+                <!--
+                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/dictionaries/Templates.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/dictionaries/Styles.xaml" />
+                -->
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>

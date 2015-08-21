@@ -2,7 +2,7 @@
 // AlfredToolWindowControl.xaml.cs
 // 
 // Created on:      08/20/2015 at 9:45 PM
-// Last Modified:   08/21/2015 at 12:07 AM
+// Last Modified:   08/21/2015 at 1:09 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -55,9 +55,6 @@ namespace MattEland.Ani.Alfred.VisualStudio
                 // DataBindings rely on Alfred presently as there hasn't been a need for a page ViewModel yet
                 DataContext = _app;
 
-                // Set up the update timer
-                InitializeUpdatePump();
-
                 _app.Console?.Log("WinClient.Initialize", "Tool Window Created", LogLevel.Verbose);
             }
             catch (Exception ex)
@@ -79,6 +76,23 @@ namespace MattEland.Ani.Alfred.VisualStudio
                 throw;
             }
         }
+
+        /// <summary>
+        ///     Handles the page navigation command.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <returns>Whether or not the command was handled</returns>
+        public bool HandlePageNavigationCommand(ShellCommand command)
+        {
+            if (!command.Data.HasText() || tabPages == null)
+            {
+                return false;
+            }
+
+            return SelectionHelper.SelectItemById(tabPages, command.Data);
+        }
+
+
 
         /// <summary>
         ///     Handles the <see cref="E:WindowLoaded" /> event.
@@ -103,40 +117,6 @@ namespace MattEland.Ani.Alfred.VisualStudio
 
             // Log that we're good to go
             _app.Console?.Log(logHeader, "Window is now loaded", LogLevel.Info);
-        }
-
-
-
-        /// <summary>
-        ///     Handles the page navigation command.
-        /// </summary>
-        /// <param name="command">The command.</param>
-        /// <returns>Whether or not the command was handled</returns>
-        public bool HandlePageNavigationCommand(ShellCommand command)
-        {
-            if (!command.Data.HasText() || tabPages == null)
-            {
-                return false;
-            }
-
-            return SelectionHelper.SelectItemById(tabPages, command.Data);
-        }
-
-        /// <summary>
-        ///     Initializes the update pump that causes Alfred to update its modules.
-        /// </summary>
-        private void InitializeUpdatePump()
-        {
-            var timer = new DispatcherTimer
-            {
-                Interval =
-                                TimeSpan.FromSeconds(
-                                                     _app
-                                                         .UpdateFrequencyInSeconds)
-            };
-            timer.Tick += delegate { _app.Update(); };
-
-            timer.Start();
         }
     }
 }
