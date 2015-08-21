@@ -5,12 +5,17 @@
                     xmlns:pages="clr-namespace:MattEland.Ani.Alfred.Core.Pages;assembly=MattEland.Ani.Alfred.Core"
                     xmlns:chat="clr-namespace:MattEland.Ani.Alfred.Chat;assembly=MattEland.Ani.Alfred.Chat"
                     xmlns:modules="clr-namespace:MattEland.Ani.Alfred.Core.Modules;assembly=MattEland.Ani.Alfred.Core"
-                    xmlns:controls="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Controls">
+                    xmlns:controls="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Controls"
+                    xmlns:helpers="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Helpers">
 
+    <ResourceDictionary.MergedDictionaries>
+        <helpers:SharedResourceDictionary Source="Miscellaneous.xaml"  />
+    </ResourceDictionary.MergedDictionaries>
+    
     <!-- Logging Templates -->
     <DataTemplate DataType="{x:Type console:ConsoleEvent}">
         <Border BorderThickness="0,0,0,1"
-                BorderBrush="{StaticResource AppBorderBrush}"
+                BorderBrush="{DynamicResource AppBorderBrush}"
                 Margin="4,2">
 
             <!-- Log ToolTip. Detailed since it's smaller content -->
@@ -21,9 +26,9 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Path=Time, StringFormat=T}" />
                         <TextBlock Text="{Binding Path=Title, StringFormat='- {0}'}" 
-                                   Margin="{StaticResource TextSpacingMargin}" />
+                                   Margin="{DynamicResource TextSpacingMargin}" />
                         <TextBlock Text="{Binding Path=Level, StringFormat='- {0}'}" 
-                                   Margin="{StaticResource TextSpacingMargin}"/>
+                                   Margin="{DynamicResource TextSpacingMargin}"/>
                     </StackPanel>
 
                     <!-- Message -->
@@ -38,14 +43,14 @@
                 <!-- Header -->
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding Path=Time, StringFormat=T}" 
-                               FontSize="{StaticResource FontSizeSmall}"/>
+                               FontSize="{DynamicResource FontSizeSmall}"/>
                     <TextBlock Text="{Binding Path=Title, StringFormat='- {0}'}" 
-                               FontSize="{StaticResource FontSizeSmall}"
+                               FontSize="{DynamicResource FontSizeSmall}"
                                FontWeight="Bold"
-                               Margin="{StaticResource TextSpacingMargin}" />
+                               Margin="{DynamicResource TextSpacingMargin}" />
                     <TextBlock Text="{Binding Path=Level, StringFormat='- {0}'}" 
-                               FontSize="{StaticResource FontSizeSmall}"
-                               Margin="{StaticResource TextSpacingMargin}"/>
+                               FontSize="{DynamicResource FontSizeSmall}"
+                               Margin="{DynamicResource TextSpacingMargin}"/>
                 </StackPanel>
 
                 <!-- Message -->
@@ -59,112 +64,6 @@
         </Border>
     </DataTemplate>
 
-    <!-- Module DataTemplates -->
-
-    <DataTemplate DataType="{x:Type modules:AlfredModule}">
-
-        <!-- TODO: The expand / collapse glyph sucks by default. Customize it -->
-        <Expander Header="{Binding Path=Name}"
-                  Width="250"
-                  IsExpanded="True"
-                  Foreground="{StaticResource AccentForegroundBrush}"
-                  Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-
-            <ItemsControl ItemsSource="{Binding Widgets}"                        
-                          Foreground="{StaticResource AppForegroundBrush}"
-                          Margin="24, 0, 0, 8" />
-
-        </Expander>
-
-    </DataTemplate>
-
-    <!-- Widget DataTemplates -->
-
-    <!-- TextWidget Template -->
-    <DataTemplate DataType="{x:Type widgets:TextWidget}">
-        <TextBlock
-            Margin="0, 8, 0, 0"
-            Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
-            Text="{Binding Text}"
-            ToolTip="{Binding Text}" />
-    </DataTemplate>
-
-    <!-- AlertWidget Template -->
-    <DataTemplate DataType="{x:Type widgets:WarningWidget}">
-        <Border Margin="0, 8, 0, 0"
-                Padding="8"
-                HorizontalAlignment="Stretch"
-                Background="{StaticResource CautionBackgroundBrush}"
-                BorderBrush="{StaticResource CautionBorderBrush}"
-                BorderThickness="1"
-                Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
-
-            <TextBlock Text="{Binding Text}"
-                       Foreground="{StaticResource CautionForegroundBrush}"
-                       ToolTip="{Binding Text}" />
-
-        </Border>
-    </DataTemplate>
-
-    <!-- ButtonWidget Template -->
-    <DataTemplate DataType="{x:Type widgets:ButtonWidget}">
-        <Button Margin="0, 8, 0, 0"
-                Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
-                MinWidth="120"
-                HorizontalAlignment="Left"
-                HorizontalContentAlignment="Center"
-                Command="{Binding ClickCommand}"
-                Content="{Binding Text}"
-                ToolTip="{Binding Text}" />
-    </DataTemplate>
-
-    <!-- AlfredProgressBarWidget Template -->
-    <DataTemplate DataType="{x:Type widgets:AlfredProgressBarWidget}">
-        <Grid Margin="0, 8, 0, 0"
-              Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
-
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <Grid.ToolTip>
-                <!-- Show the full value in the ToolTip with a label -->
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding Text}" />
-                    <TextBlock Text="{Binding ValueText}"
-                               Margin="4,0,0,0" />
-                </StackPanel>
-            </Grid.ToolTip>
-
-            <TextBlock Grid.Column="0"
-                       MinWidth="75"
-                       Text="{Binding Text}"
-                       HorizontalAlignment="Right"
-                       TextAlignment="Right"
-                       Margin="0,0,8,0"
-                       VerticalAlignment="Center" />
-
-            <ProgressBar Grid.Column="1"
-                         Foreground="{StaticResource ProgressBarNormalForegroundBrush}"
-                         Background="{StaticResource LightBackgroundBrush}"
-                         BorderBrush="{StaticResource AppBorderBrush}"
-                         Minimum="{Binding Minimum}"
-                         Maximum="{Binding Maximum}"
-                         Value="{Binding Value}"
-                         HorizontalAlignment="Stretch"
-                         HorizontalContentAlignment="Center" />
-
-        </Grid>
-    </DataTemplate>
-
-    <!-- Fallback type of widget Template -->
-    <DataTemplate DataType="{x:Type widgets:AlfredWidget}">
-
-        <TextBlock
-            Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
-            Text="This is an unknown type of Widget" />
-
-    </DataTemplate>
+    <!-- Widget DataTemplates {Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}} -->
     
 </ResourceDictionary>

@@ -10,6 +10,7 @@
     <!-- Pages -->
     
     <DataTemplate DataType="{x:Type pages:AlfredModuleListPage}">
+        <!--
         <ItemsControl ItemsSource="{Binding Path=Modules}"                      
                       BorderThickness="0">
 
@@ -20,6 +21,7 @@
             </ItemsControl.ItemsPanel>
 
         </ItemsControl>
+        -->
     </DataTemplate>
     
     <DataTemplate DataType="{x:Type pages:AlfredEventLogPage}">

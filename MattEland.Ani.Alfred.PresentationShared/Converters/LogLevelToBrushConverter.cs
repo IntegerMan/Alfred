@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 using JetBrains.Annotations;
@@ -21,35 +22,8 @@ namespace MattEland.Ani.Alfred.PresentationShared.Converters
     /// <summary>
     ///     An IValueConverter that converts LogLevels to brushes
     /// </summary>
-    public sealed class LogLevelToBrushConverter : IValueConverter, INotifyPropertyChanged
+    public sealed class LogLevelToBrushConverter : DependencyObject, IValueConverter
     {
-        [NotNull]
-        private Brush _defaultBrush;
-
-        [NotNull]
-        private Brush _chatResponseBrush;
-
-        private Brush _warningBrush;
-        private Brush _verboseBrush;
-        private Brush _errorBrush;
-        private Brush _infoBrush;
-        private Brush _userInputBrush;
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="LogLevelToBrushConverter" /> class.
-        /// </summary>
-        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute",
-            Justification = "Brushes are guaranteed to return non-null values")]
-        public LogLevelToBrushConverter()
-        {
-            ErrorBrush = Brushes.DarkRed;
-            InfoBrush = Brushes.White;
-            WarningBrush = Brushes.LightCoral;
-            VerboseBrush = Brushes.DimGray;
-            _defaultBrush = Brushes.DarkOrchid;
-            UserInputBrush = Brushes.PaleGoldenrod;
-            _chatResponseBrush = Brushes.SteelBlue;
-        }
 
         /// <summary>
         ///     Gets or sets the verbose brush.
@@ -58,78 +32,91 @@ namespace MattEland.Ani.Alfred.PresentationShared.Converters
         [NotNull]
         public Brush VerboseBrush
         {
-            get { return _verboseBrush; }
-            set
-            {
-                if (Equals(value, _verboseBrush)) return;
-                _verboseBrush = value;
-                OnPropertyChanged();
-            }
+            get { return (Brush)GetValue(VerboseBrushProperty); }
+            set { SetValue(VerboseBrushProperty, value); }
         }
 
         /// <summary>
-        ///     Gets or sets the error brush.
+        /// The Verbose Brush dependency property
         /// </summary>
-        /// <value>The error brush.</value>
+        [NotNull]
+        public static readonly DependencyProperty VerboseBrushProperty =
+            DependencyProperty.Register("VerboseBrush", typeof(Brush), typeof(LogLevelToBrushConverter), new PropertyMetadata(Brushes.DimGray));
+
+
+        /// <summary>
+        ///     Gets or sets the Error brush.
+        /// </summary>
+        /// <value>The Error brush.</value>
         [NotNull]
         public Brush ErrorBrush
         {
-            get { return _errorBrush; }
-            set
-            {
-                if (Equals(value, _errorBrush)) return;
-                _errorBrush = value;
-                OnPropertyChanged();
-            }
+            get { return (Brush)GetValue(ErrorBrushProperty); }
+            set { SetValue(ErrorBrushProperty, value); }
         }
 
         /// <summary>
-        ///     Gets or sets the default brush. This brush is used when no match is determined.
+        /// The Error Brush dependency property
         /// </summary>
-        /// <value>The default brush.</value>
+        [NotNull]
+        public static readonly DependencyProperty ErrorBrushProperty =
+            DependencyProperty.Register("ErrorBrush", typeof(Brush), typeof(LogLevelToBrushConverter), new PropertyMetadata(Brushes.DarkRed));
+
+        /// <summary>
+        ///     Gets or sets the Default brush.
+        /// </summary>
+        /// <value>The Default brush.</value>
         [NotNull]
         public Brush DefaultBrush
         {
-            get { return _defaultBrush; }
-            set
-            {
-                if (Equals(value, _defaultBrush)) return;
-                _defaultBrush = value;
-                OnPropertyChanged();
-            }
+            get { return (Brush)GetValue(DefaultBrushProperty); }
+            set { SetValue(DefaultBrushProperty, value); }
         }
 
         /// <summary>
-        ///     Gets or sets the warning brush.
+        /// The Default Brush dependency property
         /// </summary>
-        /// <value>The warning brush.</value>
+        [NotNull]
+        public static readonly DependencyProperty DefaultBrushProperty =
+            DependencyProperty.Register("DefaultBrush", typeof(Brush), typeof(LogLevelToBrushConverter), new PropertyMetadata(Brushes.DarkMagenta));
+
+        /// <summary>
+        ///     Gets or sets the Warning brush.
+        /// </summary>
+        /// <value>The Warning brush.</value>
         [NotNull]
         public Brush WarningBrush
         {
-            get { return _warningBrush; }
-            set
-            {
-                if (Equals(value, _warningBrush)) return;
-                _warningBrush = value;
-                OnPropertyChanged();
-            }
+            get { return (Brush)GetValue(WarningBrushProperty); }
+            set { SetValue(WarningBrushProperty, value); }
         }
 
         /// <summary>
-        ///     Gets or sets the info brush.
+        /// The Warning Brush dependency property
         /// </summary>
-        /// <value>The info brush.</value>
+        [NotNull]
+        public static readonly DependencyProperty WarningBrushProperty =
+            DependencyProperty.Register("WarningBrush", typeof(Brush), typeof(LogLevelToBrushConverter), new PropertyMetadata(Brushes.LightCoral));
+
+
+
+        /// <summary>
+        ///     Gets or sets the Info brush.
+        /// </summary>
+        /// <value>The Info brush.</value>
         [NotNull]
         public Brush InfoBrush
         {
-            get { return _infoBrush; }
-            set
-            {
-                if (Equals(value, _infoBrush)) return;
-                _infoBrush = value;
-                OnPropertyChanged();
-            }
+            get { return (Brush)GetValue(InfoBrushProperty); }
+            set { SetValue(InfoBrushProperty, value); }
         }
+
+        /// <summary>
+        /// The Info Brush dependency property
+        /// </summary>
+        [NotNull]
+        public static readonly DependencyProperty InfoBrushProperty =
+            DependencyProperty.Register("InfoBrush", typeof(Brush), typeof(LogLevelToBrushConverter), new PropertyMetadata(Brushes.White));
 
         /// <summary>
         ///     Gets or sets the UserInput brush.
@@ -138,14 +125,16 @@ namespace MattEland.Ani.Alfred.PresentationShared.Converters
         [NotNull]
         public Brush UserInputBrush
         {
-            get { return _userInputBrush; }
-            set
-            {
-                if (Equals(value, _userInputBrush)) return;
-                _userInputBrush = value;
-                OnPropertyChanged();
-            }
+            get { return (Brush)GetValue(UserInputBrushProperty); }
+            set { SetValue(UserInputBrushProperty, value); }
         }
+
+        /// <summary>
+        /// The UserInput Brush dependency property
+        /// </summary>
+        [NotNull]
+        public static readonly DependencyProperty UserInputBrushProperty =
+            DependencyProperty.Register("UserInputBrush", typeof(Brush), typeof(LogLevelToBrushConverter), new PropertyMetadata(Brushes.PaleGoldenrod));
 
         /// <summary>
         ///     Gets or sets the ChatResponse brush.
@@ -154,14 +143,17 @@ namespace MattEland.Ani.Alfred.PresentationShared.Converters
         [NotNull]
         public Brush ChatResponseBrush
         {
-            get { return _chatResponseBrush; }
-            set
-            {
-                if (Equals(value, _chatResponseBrush)) return;
-                _chatResponseBrush = value;
-                OnPropertyChanged();
-            }
+            get { return (Brush)GetValue(ChatResponseBrushProperty); }
+            set { SetValue(ChatResponseBrushProperty, value); }
         }
+
+        /// <summary>
+        /// The ChatResponse Brush dependency property
+        /// </summary>
+        [NotNull]
+        public static readonly DependencyProperty ChatResponseBrushProperty =
+            DependencyProperty.Register("ChatResponseBrush", typeof(Brush), typeof(LogLevelToBrushConverter), new PropertyMetadata(Brushes.SteelBlue));
+
 
         /// <summary>
         ///     Converts a value to a brush where value is intended to be a LogLevel.
@@ -193,6 +185,19 @@ namespace MattEland.Ani.Alfred.PresentationShared.Converters
             }
 
             return GetBrushForLevel(level);
+        }
+
+        /// <summary>
+        /// Converts a value. 
+        /// </summary>
+        /// <returns>
+        /// A converted value. If the method returns null, the valid null value is used.
+        /// </returns>
+        /// <param name="value">The value that is produced by the binding target.</param><param name="targetType">The type to convert to.</param><param name="parameter">The converter parameter to use.</param><param name="culture">The culture to use in the converter.</param>
+        /// <exception cref="NotSupportedException">This method is not supported on this converter.</exception>
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -230,34 +235,5 @@ namespace MattEland.Ani.Alfred.PresentationShared.Converters
             }
         }
 
-        /// <summary>
-        ///     Converts a value.
-        /// </summary>
-        /// <returns>
-        ///     A converted value. If the method returns null, the valid null value is used.
-        /// </returns>
-        /// <param name="value">The value that is produced by the binding target.</param>
-        /// <param name="targetType">The type to convert to.</param>
-        /// <param name="parameter">The converter parameter to use.</param>
-        /// <param name="culture">The culture to use in the converter.</param>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <summary>
-        /// Occurs when a property changes.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// Called when a property changed.
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }
