@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:helpers="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Helpers;assembly=MattEland.Ani.Alfred.PresentationShared"
+             xmlns:controls="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Controls;assembly=MattEland.Ani.Alfred.PresentationShared"
              Loaded="OnWindowLoaded"
              Unloaded="OnWindowUnloaded"
              Background="{DynamicResource VsBrush.Window}"
@@ -27,16 +28,17 @@
     </UserControl.Resources>
     <DockPanel>
 
-        <!-- Chat Area 
-        <Border Margin="132,4,8,0" 
+        <!-- Chat Area -->
+        <Border Margin="4" 
                 DockPanel.Dock="Top"
                 Visibility="{Binding Alfred.IsOnline, Converter={StaticResource BooleanToVisibilityConverter}}">
             <controls:ChatPane DataContext="{Binding Path=Alfred.ChatProvider}" />
         </Border>
-        -->
 
         <!-- Tabbed Content Regions -->
+        <!-- TODO: Follow VS styles -->
         <TabControl x:Name="tabPages"
+                    TabStripPlacement="Bottom"
                     Margin="2"
                     ItemsSource="{Binding Alfred.RootPages}">
 

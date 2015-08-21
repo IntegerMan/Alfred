@@ -5,7 +5,12 @@
                     xmlns:pages="clr-namespace:MattEland.Ani.Alfred.Core.Pages;assembly=MattEland.Ani.Alfred.Core"
                     xmlns:chat="clr-namespace:MattEland.Ani.Alfred.Chat;assembly=MattEland.Ani.Alfred.Chat"
                     xmlns:modules="clr-namespace:MattEland.Ani.Alfred.Core.Modules;assembly=MattEland.Ani.Alfred.Core"
-                    xmlns:controls="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Controls">
+                    xmlns:controls="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Controls"
+                    xmlns:helpers="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Helpers">
+
+    <ResourceDictionary.MergedDictionaries>
+        <helpers:SharedResourceDictionary Source="Miscellaneous.xaml"  />
+    </ResourceDictionary.MergedDictionaries>
 
     <!-- Module DataTemplates -->
 
@@ -15,11 +20,11 @@
         <Expander Header="{Binding Path=Name}"
                   Width="250"
                   IsExpanded="True"
-                  Foreground="{StaticResource AccentForegroundBrush}"
+                  Foreground="{DynamicResource AccentForegroundBrush}"
                   Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
 
             <ItemsControl ItemsSource="{Binding Widgets}"                        
-                          Foreground="{StaticResource AppForegroundBrush}"
+                          Foreground="{DynamicResource AppForegroundBrush}"
                           Margin="24, 0, 0, 8" />
 
         </Expander>
