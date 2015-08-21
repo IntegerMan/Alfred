@@ -1,40 +1,75 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="AlfredToolWindowControl.xaml.cs" company="Company">
-//     Copyright (c) Company.  All rights reserved.
-// </copyright>
-//------------------------------------------------------------------------------
+﻿// ---------------------------------------------------------
+// AlfredToolWindowControl.xaml.cs
+// 
+// Created on:      08/20/2015 at 9:45 PM
+// Last Modified:   08/20/2015 at 10:51 PM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using System.Windows;
+using System.Windows.Markup;
+
+using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.PresentationShared.Commands;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.VisualStudio
 {
-    using System.Diagnostics.CodeAnalysis;
-    using System.Windows;
-    using System.Windows.Controls;
 
     /// <summary>
-    /// Interaction logic for AlfredToolWindowControl.
+    ///     Interaction logic for AlfredToolWindowControl.
     /// </summary>
-    public partial class AlfredToolWindowControl : UserControl
+    public partial class AlfredToolWindowControl : IUserInterfaceDirector
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlfredToolWindowControl"/> class.
+        ///     Initializes a new instance of the <see cref="AlfredToolWindowControl" /> class.
         /// </summary>
+        /// <exception cref="XamlParseException">
+        ///     If a XamlParseException was encountered, it will be logged and
+        ///     rethrown to the Visual Studio Host.
+        /// </exception>
         public AlfredToolWindowControl()
         {
-            this.InitializeComponent();
+            try
+            {
+                InitializeComponent();
+            }
+            catch (XamlParseException xex)
+            {
+                // Give some clue as to what went wrong
+                MessageBox.Show("XAML Parse Exception",
+                                xex.BuildExceptionDetailsMessage(),
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Error);
+
+                // We shouldn't load the page in a bad state. Crash the application
+                throw;
+            }
         }
 
         /// <summary>
-        /// Handles click on the button by displaying a message box.
+        ///     Handles the page navigation command.
         /// </summary>
-        /// <param name="sender">The event sender.</param>
-        /// <param name="e">The event args.</param>
-        [SuppressMessage("Microsoft.Globalization", "CA1300:SpecifyMessageBoxOptions", Justification = "Sample code")]
-        [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:ElementMustBeginWithUpperCaseLetter", Justification = "Default event handler naming pattern")]
-        private void button1_Click(object sender, RoutedEventArgs e)
+        /// <param name="command">The command.</param>
+        /// <returns>Whether or not the command was handled</returns>
+        public bool HandlePageNavigationCommand(ShellCommand command)
         {
-            MessageBox.Show(
-                string.Format(System.Globalization.CultureInfo.CurrentUICulture, "Invoked '{0}'", this.ToString()),
-                "AlfredToolWindow");
+            if (command.Data.HasText() && tabPages?.Items != null)
+            {
+                foreach (var item in tabPages.Items)
+                {
+                    var page = item as IAlfredPage;
+
+                    if (page != null && page.Id.Matches(command.Data))
+                    {
+                        tabPages.SelectedItem = page;
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
     }
 }

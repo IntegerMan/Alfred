@@ -8,10 +8,76 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
              Name="MyToolWindow">
-    <Grid>
-        <StackPanel Orientation="Vertical">
-            <TextBlock Margin="10" HorizontalAlignment="Center">AlfredToolWindow</TextBlock>
-            <Button Content="Click me!" Click="button1_Click" Width="120" Height="80" Name="button1"/>
-        </StackPanel>
-    </Grid>
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/dictionaries/Miscellaneous.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <DockPanel>
+
+        <!-- Header Bar 
+        <Border DockPanel.Dock="Top"
+                Style="{StaticResource HeaderBannerBorderStyle}"
+                MinHeight="32">
+
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+
+                <TextBlock Text="{Binding Alfred.NameAndVersion}" />
+                <TextBlock Text=" - " Margin="4,0,4,0" />
+                <TextBlock Text="{Binding Alfred.Status}"
+                           Foreground="{StaticResource AccentForegroundBrush}" />
+
+            </StackPanel>
+
+        </Border>
+        -->
+
+        <!-- Chat Area 
+        <Border Margin="132,4,8,0" 
+                DockPanel.Dock="Top"
+                Visibility="{Binding Alfred.IsOnline, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <controls:ChatPane DataContext="{Binding Path=Alfred.ChatProvider}" />
+        </Border>
+        -->
+
+        <!-- Tabbed Content Regions -->
+        <TabControl x:Name="tabPages"
+                    Margin="8, 8, 8, 8"
+                    ItemsSource="{Binding Alfred.RootPages}">
+
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <!-- Tabs are pretty simple; just show the name -->
+                    <TextBlock Text="{Binding Name}" />
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <DockPanel>
+
+                        <!-- Header -->
+                        <Border DockPanel.Dock="Top"
+                                Style="{StaticResource HeaderBannerBorderStyle}">
+                            <TextBlock Text="{Binding Alfred.Name}"
+                                       Style="{StaticResource HeaderBannerTextBlockStyle}" />
+                        </Border>
+
+                        <!-- Present the content inside of an auto-scrolling region. 
+                             Let the data template for the type of content handle the presentation -->
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="8" Content="{Binding}" />
+
+                    </DockPanel>
+
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+
+        </TabControl>
+
+    </DockPanel>
 </UserControl>
