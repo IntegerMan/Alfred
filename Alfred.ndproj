@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <NDepend AppName="Alfred" Platform="DotNet">
-  <OutputDir KeepXmlFiles="False">C:\Dev\Alfred\Alfred\NDependOut</OutputDir>
+  <OutputDir KeepXmlFiles="False">C:\Dev\Alfred\NDependOut</OutputDir>
   <Assemblies>
     <Name>MattEland.Ani.Alfred.Core</Name>
     <Name>MattEland.Ani.Alfred.WPF</Name>
@@ -9,6 +9,8 @@
     <Name>MattEland.Ani.Alfred.Chat</Name>
     <Name>MattEland.Ani.Alfred.Chat.Aiml</Name>
     <Name>MattEland.Common</Name>
+    <Name>MattEland.Ani.Alfred.VisualStudio</Name>
+    <Name>MattEland.Ani.Alfred.PresentationShared</Name>
     <Name>MattEland.Ani.Alfred.Tests</Name>
   </Assemblies>
   <FrameworkAssemblies>
@@ -21,28 +23,33 @@
     <Name>PresentationCore</Name>
     <Name>System.Speech</Name>
     <Name>System.Xml</Name>
+    <Name>Microsoft.VisualStudio.Shell.14.0</Name>
+    <Name>Microsoft.VisualStudio.Shell.Interop</Name>
+    <Name>System.Design</Name>
     <Name>nunit.framework</Name>
   </FrameworkAssemblies>
   <Dirs>
     <Dir>C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319</Dir>
     <Dir>C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319\WPF</Dir>
     <Dir>C:\Program Files (x86)\Windows Kits\8.0\References\CommonConfiguration\Neutral</Dir>
-    <Dir>C:\Dev\Alfred\Alfred\MattEland.Ani.Alfred.Core\bin\Debug</Dir>
-    <Dir>C:\Dev\Alfred\Alfred\MattELand.Ani.Alfred.Core.Tests\bin\Debug</Dir>
-    <Dir>C:\Dev\Alfred\Alfred\MattEland.Ani.Alfred.WPF\bin\Debug</Dir>
-    <Dir>C:\Dev\Alfred\Alfred\MattEland.Ani.Alfred.Win8\bin\Debug</Dir>
-    <Dir>c:\dev\Alfred\Alfred\MattEland.Ani.Alfred.Core.System\bin\Debug</Dir>
-    <Dir>c:\dev\Alfred\Alfred\MattEland.Ani.Alfred.Core.Speech\bin\Debug</Dir>
-    <Dir>c:\dev\Alfred\Alfred\MattEland.Ani.Alfred.AIML\bin\Debug</Dir>
-    <Dir>C:\Dev\Alfred\Alfred\MattEland.Ani.Alfred.Chat.Aiml\bin\Debug</Dir>
-    <Dir>C:\Dev\Alfred\Alfred\MattEland.Common\bin\Debug</Dir>
+    <Dir>C:\Dev\Alfred\MattEland.Ani.Alfred.Core\bin\Debug</Dir>
+    <Dir>C:\Dev\Alfred\MattELand.Ani.Alfred.Core.Tests\bin\Debug</Dir>
+    <Dir>C:\Dev\Alfred\MattEland.Ani.Alfred.WPF\bin\Debug</Dir>
+    <Dir>C:\Dev\Alfred\MattEland.Ani.Alfred.Win8\bin\Debug</Dir>
+    <Dir>c:\dev\Alfred\MattEland.Ani.Alfred.Core.System\bin\Debug</Dir>
+    <Dir>c:\dev\Alfred\MattEland.Ani.Alfred.Core.Speech\bin\Debug</Dir>
+    <Dir>c:\dev\Alfred\MattEland.Ani.Alfred.AIML\bin\Debug</Dir>
+    <Dir>C:\Dev\Alfred\MattEland.Ani.Alfred.Chat.Aiml\bin\Debug</Dir>
+    <Dir>C:\Dev\Alfred\MattEland.Common\bin\Debug</Dir>
+    <Dir>C:\Dev\Alfred\MattEland.Ani.Alfred.VisualStudio\bin\Debug</Dir>
+    <Dir>C:\Dev\Alfred\MattEland.Ani.Alfred.PresentationShared\bin\Debug</Dir>
   </Dirs>
   <MergeCodeGeneratedByCompiler>True</MergeCodeGeneratedByCompiler>
   <Report Kind="0" SectionsEnabled="65535" XslPath="" Flags="261376" />
-  <BuildComparisonSetting ProjectMode="CurrentProject" BuildMode="MostRecentAnalysisResultAvailable" ProjectFileToCompareWith="C:\Dev\Alfred\Alfred\Alfred.ndproj" BuildFileToCompareWith="C:\Dev\Alfred\Alfred\NDependOut\NDependAnalysisResult_Alfred_2015Aug10_23h08.ndar" NDaysAgo="1" FocusOnRecentRulesViolations="False" />
-  <BaselineInUISetting ProjectMode="CurrentProject" BuildMode="MostRecentAnalysisResultAvailable" ProjectFileToCompareWith="C:\Dev\Alfred\Alfred\Alfred.ndproj" BuildFileToCompareWith="C:\Dev\Alfred\Alfred\NDependOut\NDependAnalysisResult_Alfred_2015Aug10_23h08.ndar" NDaysAgo="1" FocusOnRecentRulesViolations="False" />
+  <BuildComparisonSetting ProjectMode="CurrentProject" BuildMode="MostRecentAnalysisResultAvailable" ProjectFileToCompareWith="C:\Dev\Alfred\Alfred.ndproj" BuildFileToCompareWith="C:\Dev\Alfred\NDependOut\NDependAnalysisResult_Alfred_2015Aug10_23h08.ndar" NDaysAgo="1" FocusOnRecentRulesViolations="False" />
+  <BaselineInUISetting ProjectMode="CurrentProject" BuildMode="MostRecentAnalysisResultAvailable" ProjectFileToCompareWith="C:\Dev\Alfred\Alfred.ndproj" BuildFileToCompareWith="C:\Dev\Alfred\NDependOut\NDependAnalysisResult_Alfred_2015Aug10_23h08.ndar" NDaysAgo="1" FocusOnRecentRulesViolations="False" />
   <CoverageFiles CoverageDir="" UncoverableAttribute="">
-    <CoverageFile MergeMode="Or">C:\Dev\Alfred\Alfred\AlfredCoverage.xml</CoverageFile>
+    <CoverageFile MergeMode="Or">C:\Dev\Alfred\AlfredCoverage.xml</CoverageFile>
   </CoverageFiles>
   <TrendMetrics UseCustomLog="False" LogRecurrence="3" LogLabel="2" UseCustomDir="False" CustomDir="">
     <Chart Name="Lines of Code" ShowInReport="True">
@@ -8090,7 +8097,7 @@ select new { n, n.NbLinesOfCode }
       </Group>
     </Group>
   </Queries><WarnFilter>
-    <DontWarn>Invalid coverage file {C:\Dev\Alfred\Alfred\Coverage\AlfredCoverage.xml}</DontWarn>
-    <DontWarn>Coverage file extension must be in : .xml  .nccov  .coveragexml    {C:\Dev\Alfred\Alfred\Coverage\AlfredCoverage.html}</DontWarn>
-    <DontWarn>Invalid coverage file {C:\Dev\Alfred\Alfred\Coverage\TestResult.xml}</DontWarn>
+    <DontWarn>Invalid coverage file {C:\Dev\Alfred\Coverage\AlfredCoverage.xml}</DontWarn>
+    <DontWarn>Coverage file extension must be in : .xml  .nccov  .coveragexml    {C:\Dev\Alfred\Coverage\AlfredCoverage.html}</DontWarn>
+    <DontWarn>Invalid coverage file {C:\Dev\Alfred\Coverage\TestResult.xml}</DontWarn>
   </WarnFilter></NDepend>
