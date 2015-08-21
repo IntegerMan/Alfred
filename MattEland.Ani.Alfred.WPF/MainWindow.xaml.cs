@@ -12,6 +12,8 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Threading;
 
 using JetBrains.Annotations;
@@ -81,30 +83,19 @@ namespace MattEland.Ani.Alfred.WPF
             var logHeader = Res.WinClientLoadedLogHeader.NonNull();
 
             // Determine whether to auto-start or not based off of settings
-            Debug.Assert(Settings.Default != null, "Settings.Default != null");
+            Debug.Assert(Settings.Default != null);
             if (Settings.Default.AutoStartAlfred)
             {
                 _app.Console?.Log(logHeader, Res.AutoStartAlfredLogMessage.NonNull(), LogLevel.Verbose);
                 _app.Start();
             }
 
-            // Auto-select the first tab; if any are present
-            AutoSelectFirstTab();
+            // Auto-select the first tab if any tabs are present
+            Debug.Assert(tabPages != null);
+            SelectionHelper.SelectFirstItem(tabPages);
 
             // Log that we're good to go
             _app.Console?.Log(logHeader, Res.AppOnlineLogMessage.NonNull(), LogLevel.Info);
-        }
-
-        /// <summary>
-        /// Automatically selects the first tab if no tab is selected.
-        /// </summary>
-        private void AutoSelectFirstTab()
-        {
-            Debug.Assert(tabPages != null);
-            if (tabPages.SelectedItem == null && tabPages.HasItems)
-            {
-                tabPages.SelectedIndex = 0;
-            }
         }
 
         /// <summary>

@@ -59,5 +59,24 @@ namespace MattEland.Ani.Alfred.PresentationShared.Helpers
         }
 
 
+        /// <summary>
+        /// Automatically selects the first item if any items are present.
+        /// </summary>
+        /// <param name="selector">The selector</param>
+        /// <exception cref="ArgumentNullException"><paramref name="selector"/> is <see langword="null" />.</exception>
+        public static void SelectFirstItem([NotNull] Selector selector)
+        {
+            if (selector == null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (selector.SelectedItem == null && selector.HasItems)
+            {
+                selector.SelectedIndex = 0;
+            }
+        }
+
+
     }
 }

@@ -20,6 +20,7 @@ using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.PresentationShared.Commands;
 using MattEland.Ani.Alfred.PresentationShared.Helpers;
+using MattEland.Ani.Alfred.VisualStudio.Properties;
 using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.VisualStudio
@@ -78,6 +79,33 @@ namespace MattEland.Ani.Alfred.VisualStudio
                 throw;
             }
         }
+
+        /// <summary>
+        ///     Handles the <see cref="E:WindowLoaded" /> event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs" /> instance containing the event data.</param>
+        private void OnWindowLoaded(object sender, RoutedEventArgs e)
+        {
+            var logHeader = "VSClient.Loaded";
+
+            // Determine whether to auto-start or not based off of settings
+            Debug.Assert(Settings.Default != null);
+            if (Settings.Default.AutoStartAlfred)
+            {
+                _app.Console?.Log(logHeader, "Automatically starting Alfred", LogLevel.Verbose);
+                _app.Start();
+            }
+
+            // Auto-select the first tab if any tabs are present
+            Debug.Assert(tabPages != null);
+            SelectionHelper.SelectFirstItem(tabPages);
+
+            // Log that we're good to go
+            _app.Console?.Log(logHeader, "Window is now loaded", LogLevel.Info);
+        }
+
+
 
         /// <summary>
         ///     Handles the page navigation command.

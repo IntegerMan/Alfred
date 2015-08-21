@@ -2,87 +2,197 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.common\collectionextensions.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core.tests\chat\conversationtests.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// CollectionExtensions.cs
+// ConversationTests.cs
 // 
-// Created on:      08/14/2015 at 12:55 AM
-// Last Modified:   08/14/2015 at 12:59 AM
+// Created on:      08/10/2015 at 2:42 PM
+// Last Modified:   08/16/2015 at 4:47 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
 
-namespace MattEland.Common
+using MattEland.Ani.Alfred.Chat;
+using MattEland.Common;
+
+using NUnit.Framework;
+
+namespace MattEland.Ani.Alfred.Tests.Chat
 {
     /// &lt;summary&gt;
-    ///     A set of extension methods related to collections
+    /// Tests for conversational inquiries on the Alfred chat system.
     /// &lt;/summary&gt;
-    public static class CollectionExtensions
+    [TestFixture]
+    [SuppressMessage(&quot;ReSharper&quot;, &quot;NotNullMemberIsNotInitialized&quot;)]
+    [SuppressMessage(&quot;ReSharper&quot;, &quot;AssignNullToNotNullAttribute&quot;)]
+    [SuppressMessage(&quot;ReSharper&quot;, &quot;UnusedParameter.Local&quot;)]
+    public class ConversationTests : ChatTestsBase
     {
         /// &lt;summary&gt;
-        ///     Adds an item to a collection safely. This is a convenience method that does null and duplicate checking
-        ///     based on the type of item / collection and will throw null reference or invalid operation exceptions if illegal
-        ///     circumstances are met.
+        ///     Sets up the testing environment prior to each test run.
         /// &lt;/summary&gt;
-        /// &lt;typeparam name=&quot;T&quot;&gt;The type of item&lt;/typeparam&gt;
-        /// &lt;param name=&quot;item&quot;&gt;The item.&lt;/param&gt;
-        /// &lt;param name=&quot;collection&quot;&gt;The collection.&lt;/param&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;
-        ///     item, collection
-        /// &lt;/exception&gt;
-        /// &lt;exception cref=&quot;System.InvalidOperationException&quot;&gt;The specified item was already part of the collection&lt;/exception&gt;
-        public static void AddSafe&lt;T&gt;([NotNull] this ICollection&lt;T&gt; collection, [NotNull] T item)
+        [SetUp]
+        public void SetUp()
         {
-            if (item == null)
-            {
-                throw new ArgumentNullException(nameof(item));
-            }
-            if (collection == null)
-            {
-                throw new ArgumentNullException(nameof(collection));
-            }
-
-            // This shouldn&#39;t happen, but I want to check to make sure
-            if (collection.Contains(item))
-            {
-                throw new InvalidOperationException(Resources.ErrorItemAlreadyInCollection);
-            }
-
-            collection.Add(item);
+            InitChatSystem();
         }
 
         /// &lt;summary&gt;
-        /// Returns the singular value if collection&#39;s count of items is 1. Otherwise plural is returned.
+        /// Tests that the chat engine has nodes associated with it
         /// &lt;/summary&gt;
-        /// &lt;typeparam name=&quot;T&quot;&gt;The type the generic collection is holding.&lt;/typeparam&gt;
-        /// &lt;param name=&quot;collection&quot;&gt;The collection.&lt;/param&gt;
-        /// &lt;param name=&quot;singular&quot;&gt;The singular return value.&lt;/param&gt;
-        /// &lt;param name=&quot;plural&quot;&gt;The plural return value.&lt;/param&gt;
-        /// &lt;returns&gt;The singular value if the item count is 1. Otherwise plural is returned.&lt;/returns&gt;
-        public static string Pluralize&lt;T&gt;([NotNull] this IEnumerable&lt;T&gt; collection,
-                                       string singular,
-                                       string plural)
+        [Test]
+        public void ChatEngineHasNodes()
         {
-            var count = collection.Count&lt;T&gt;();
-            return count.Pluralize(singular, plural);
+            Assert.Greater(Engine.NodeCount, 0, &quot;Chat engine did not have any nodes&quot;);
+        }
+
+        [Test]
+        public void GenderSubstitutionsHasEntries()
+        {
+            Assert.Greater(Engine.Librarian.GenderSubstitutions.Count, 0, &quot;Settings were not present&quot;);
+        }
+
+        [Test]
+        public void GlobalSettingsHaveEntries()
+        {
+            Assert.Greater(Engine.Librarian.GlobalSettings.Count, 0, &quot;Settings were not present&quot;);
+        }
+
+        [Test]
+        public void FirstPersonSubstitutionsHasEntries()
+        {
+            Assert.Greater(Engine.Librarian.FirstPersonToSecondPersonSubstitutions.Count, 0, &quot;Settings were not present&quot;);
+        }
+
+        [Test]
+        public void SecondPersonSubstitutionsHasEntries()
+        {
+            Assert.Greater(Engine.Librarian.SecondPersonToFirstPersonSubstitutions.Count, 0, &quot;Settings were not present&quot;);
+        }
+
+        [Test]
+        public void SubstitutionsHasEntries()
+        {
+            Assert.Greater(Engine.Librarian.Substitutions.Count, 0, &quot;Settings were not present&quot;);
+        }
+
+        [Test]
+        public void StartupResultsInGreeting()
+        {
+            // In reality, this should be _chat.DoInitialGreeting, but it&#39;s easier to test the template this way
+            var reply = GetReplyTemplate(&quot;EVT_STARTUP&quot;);
+
+            Assert.IsNotNull(reply);
+            Assert.That(reply.Contains(&quot;tmp_hi&quot;), &quot;Startup did not give proper template. Actual template was: &quot; + reply);
+        }
+
+        [Test]
+        public void StartupLeavesLastInputClear()
+        {
+            var chat = new AimlStatementHandler();
+            chat.DoInitialGreeting();
+
+            Assert.That(!chat.LastInput.HasText(), $&quot;Startup did not clear last input. Actual was: {chat.LastInput}&quot;);
+        }
+
+        [TestCase(&quot;Shutdown&quot;, &quot;tmp_bye&quot;)]
+        [TestCase(&quot;Status&quot;, &quot;tmp_status&quot;)]
+        public void ChatCoreTests(string input, string templateId)
+        {
+            AssertMessageGetsReplyTemplate(input, templateId);
+        }
+
+        [TestCase(&quot;Thanks&quot;, &quot;tmp_thanks&quot;)]
+        [TestCase(&quot;Goodbye&quot;, &quot;tmp_bye&quot;)]
+        [TestCase(&quot;Hello&quot;, &quot;tmp_hi&quot;)]
+        [TestCase(&quot;Help&quot;, &quot;tmp_help&quot;)]
+        [TestCase(&quot;Help Commands&quot;, &quot;tmp_help_commands&quot;)]
+        [TestCase(&quot;Help Questions&quot;, &quot;tmp_help_questions&quot;)]
+        [TestCase(&quot;Help Other&quot;, &quot;tmp_help_other&quot;)]
+        [TestCase(&quot;Navigate Log&quot;, &quot;tmp_nav_success&quot;)]
+        [TestCase(&quot;Navigate Home&quot;, &quot;tmp_nav_success&quot;)]
+        [TestCase(&quot;Navigate Test Fail&quot;, &quot;tmp_nav_failed&quot;)]
+        [TestCase(&quot;Navigate Unknown&quot;, &quot;tmp_nav_unknown&quot;)]
+        [TestCase(&quot;ASDfasd&quot;, &quot;tmp_fallback&quot;, Description = &quot;Gibberish should hit fallback case&quot;)]
+        public void ChatTemplateTests(string input, string templateId)
+        {
+            AssertMessageGetsReplyTemplate(input, templateId);
+        }
+
+        [TestCase(&quot;Bye&quot;, &quot;tmp_bye&quot;)]
+        [TestCase(&quot;Hi&quot;, &quot;tmp_hi&quot;)]
+        [TestCase(&quot;Hey&quot;, &quot;tmp_hi&quot;)]
+        [TestCase(&quot;Thank You&quot;, &quot;tmp_thanks&quot;)]
+        public void ChatRedirectTests([NotNull] string input, [NotNull] string redirectTemplateId)
+        {
+            var template = GetReplyTemplate(input);
+            Assert.IsNotNull(template);
+
+            Assert.IsTrue(template.ToLowerInvariant().Contains(redirectTemplateId),
+                          $&quot;The template {template} did not redirect to the template with an Id tag of {redirectTemplateId}&quot;);
+        }
+
+        /// &lt;summary&gt;
+        ///     Asserts that asking chat for the date gives the correct date.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     Test for ALF-4
+        /// &lt;/remarks&gt;
+        [Test]
+        public void AskingForCurrentDayContainsCurrentDay()
+        {
+            var now = DateTime.Now;
+            var reply = GetReply(&quot;Which day is it?&quot;);
+
+            var expected = now.ToString(&quot;D&quot;);
+            Assert.That(reply.Contains(expected),
+                        $&quot;Asked for current day at {now} and got a reply of &#39;{reply}&#39; which did not contain {expected}&quot;);
+        }
+
+        /// &lt;summary&gt;
+        ///     Asserts that asking chat for the time gives the correct time.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     Test for ALF-3
+        /// &lt;/remarks&gt;
+        [Test]
+        public void AskingForCurrentTimeContainsCurrentTime()
+        {
+            var now = DateTime.Now;
+            var reply = GetReply(&quot;What time is it?&quot;);
+
+            var expected = now.ToString(&quot;t&quot;);
+            Assert.That(reply.Contains(expected),
+                        $&quot;Asked for current time at {now} and got a reply of &#39;{reply}&#39; which did not contain {expected}&quot;);
+        }
+        /// &lt;summary&gt;
+        ///     Asserts that when working through redirects, the engine can get the deepest redirect template.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     Test for ALF-10
+        /// &lt;/remarks&gt;
+        [Test]
+        public void AskingForCurrentTimeRevealsRedirectedTemplate()
+        {
+            var reply = GetReplyTemplate(&quot;What time is it?&quot;);
+
+            Assert.That(reply.Contains(&quot;&lt;date&quot;), $&quot;The reply template of {reply} did not contain a date tag. Redirects are likely broken.&quot;);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[39,13,39,14,0],[40,17,40,63,0],[43,13,43,14,0],[44,17,44,69,0],[37,9,37,10,1],[38,13,38,30,1],[42,13,42,36,1],[48,13,48,43,1],[49,13,49,14,1],[50,17,50,93,1],[53,13,53,34,1],[54,9,54,10,1],[67,9,67,10,1],[68,13,68,47,1],[69,13,69,54,1],[70,9,70,10,1]]);
+      highlightRanges([[36,9,36,10,1],[37,13,37,30,1],[38,9,38,10,1],[45,9,45,10,1],[46,13,46,87,1],[47,9,47,10,1],[51,9,51,10,1],[52,13,52,104,1],[53,9,53,10,1],[57,9,57,10,1],[58,13,58,99,1],[59,9,59,10,1],[63,9,63,10,1],[64,13,64,123,1],[65,9,65,10,1],[69,9,69,10,1],[70,13,70,123,1],[71,9,71,10,1],[75,9,75,10,1],[76,13,76,98,1],[77,9,77,10,1],[81,9,81,10,1],[83,13,83,57,1],[85,13,85,37,1],[86,13,86,122,1],[87,9,87,10,1],[91,9,91,10,1],[92,13,92,51,1],[93,13,93,38,1],[95,13,95,119,1],[96,9,96,10,1],[101,9,101,10,1],[102,13,102,63,1],[103,9,103,10,1],[118,9,118,10,1],[119,13,119,63,1],[120,9,120,10,1],[127,9,127,10,1],[128,13,128,52,1],[129,13,129,40,1],[131,13,132,127,1],[133,9,133,10,1],[143,9,143,10,1],[144,13,144,36,1],[145,13,145,54,1],[147,13,147,46,1],[148,13,149,122,1],[150,9,150,10,1],[160,9,160,10,1],[161,13,161,36,1],[162,13,162,54,1],[164,13,164,46,1],[165,13,166,123,1],[167,9,167,10,1],[176,9,176,10,1],[177,13,177,62,1],[179,13,179,141,1],[180,9,180,10,1]]);
     </script>
   </body>
 </html>

@@ -2,143 +2,216 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\mocks\testpage.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core.tests\mocks\testalfred.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// TestSubSystem.cs
+// TestAlfred.cs
 // 
-// Created on:      08/07/2015 at 11:07 PM
-// Last Modified:   08/08/2015 at 1:43 AM
-// Original author: Matt Eland
+// Created on:      08/17/2015 at 11:48 PM
+// Last Modified:   08/17/2015 at 11:54 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
+using System.Linq;
+
+using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Pages;
 
 namespace MattEland.Ani.Alfred.Tests.Mocks
 {
     /// &lt;summary&gt;
-    /// A test page for testing the AlfredPage update pumps
+    /// A mock implementation of Alfred for testing purposes
     /// &lt;/summary&gt;
-    public class TestPage : AlfredPage
+    public class TestAlfred : IAlfred
     {
+        [NotNull]
+        private readonly IConsole _console = new SimpleConsole();
+
+        [NotNull]
+        private readonly IPlatformProvider _platformProvider = new SimplePlatformProvider();
+        private IChatProvider _chatProvider;
+        private IShellCommandRecipient _shellCommandHandler;
+
+        [NotNull]
+        public IList&lt;IAlfredSubsystem&gt; SubsystemsList { get; } = new List&lt;IAlfredSubsystem&gt;();
+
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredSubsystem&quot; /&gt; class.
+        ///     Gets the console provider. This can be null.
         /// &lt;/summary&gt;
-        public TestPage() : base(&quot;Test Page&quot;, &quot;Test&quot;)
+        /// &lt;value&gt;The console.&lt;/value&gt;
+        public IConsole Console
         {
+            get { return _console; }
         }
 
         /// &lt;summary&gt;
-        ///     Gets or sets the last time this page was updated.
+        ///     Gets or sets the status.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The last time the module was updated.&lt;/value&gt;
-        public DateTime LastUpdated { get; set; }
+        /// &lt;value&gt;The status.&lt;/value&gt;
+        public AlfredStatus Status { get; set; }
 
         /// &lt;summary&gt;
-        /// Gets or sets the last time this page was notified initialization completed.
+        ///     Gets the sub systems associated wih Alfred.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The last initialization completed.&lt;/value&gt;
-        public DateTime LastInitializationCompleted { get; set; }
-
-        /// &lt;summary&gt;
-        ///     Gets or sets the last shutdown completed time.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The last shutdown completed time.&lt;/value&gt;
-        public DateTime LastShutdownCompleted { get; set; }
-
-        /// &lt;summary&gt;
-        ///     Gets or sets the last shutdown time.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The last shutdown time.&lt;/value&gt;
-        public DateTime LastShutdown { get; set; }
-
-        /// &lt;summary&gt;
-        ///     Gets or sets the last initialized time.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The last initialized time.&lt;/value&gt;
-        public DateTime LastInitialized { get; set; }
-
-        /// &lt;summary&gt;
-        ///     A notification method that is invoked when initialization for Alfred is complete so the UI can be fully enabled or
-        ///     adjusted
-        /// &lt;/summary&gt;
-        public override void OnInitializationCompleted()
+        /// &lt;value&gt;The sub systems.&lt;/value&gt;
+        public IEnumerable&lt;IAlfredSubsystem&gt; Subsystems
         {
-            LastInitializationCompleted = DateTime.Now;
-
-            base.OnInitializationCompleted();
+            get { return SubsystemsList; }
         }
 
         /// &lt;summary&gt;
-        ///     A notification method that is invoked when shutdown for Alfred is complete so the UI can be fully enabled or
-        ///     adjusted
+        ///     Gets the root pages.
         /// &lt;/summary&gt;
-        public override void OnShutdownCompleted()
+        /// &lt;value&gt;The root pages.&lt;/value&gt;
+        public IEnumerable&lt;IAlfredPage&gt; RootPages
         {
-            LastShutdownCompleted = DateTime.Now;
-
-            base.OnShutdownCompleted();
+            get { return Subsystems.SelectMany(subsystem =&gt; subsystem.Pages); }
         }
 
         /// &lt;summary&gt;
-        ///     Handles shutdown events
+        ///     Gets the name.
         /// &lt;/summary&gt;
-        protected override void ShutdownProtected()
+        /// &lt;value&gt;The name.&lt;/value&gt;
+        public string Name
         {
-            LastShutdown = DateTime.Now;
-
-            base.ShutdownProtected();
+            get { return &quot;Test Alfred&quot;; }
         }
 
         /// &lt;summary&gt;
-        ///     Handles initialization events
+        ///     Initializes this instance.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;alfred&quot;&gt;&lt;/param&gt;
-        protected override void InitializeProtected(IAlfred alfred)
+        public void Initialize()
         {
-            LastInitialized = DateTime.Now;
+            Status = AlfredStatus.Initializing;
 
-            base.InitializeProtected(alfred);
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles updating the component as needed
-        /// &lt;/summary&gt;
-        protected override void UpdateProtected()
-        {
-            LastUpdated = DateTime.Now;
-
-            base.UpdateProtected();
-        }
-
-
-        /// &lt;summary&gt;
-        /// Gets the children of this component. Depending on the type of component this is, the children will
-        /// vary in their own types.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The children.&lt;/value&gt;
-        public override IEnumerable&lt;IAlfredComponent&gt; Children
-        {
-            get
+            foreach (var subsystem in Subsystems)
             {
-                yield break;
+                subsystem.Initialize(this);
+            }
+
+            Status = AlfredStatus.Online;
+        }
+
+        /// &lt;summary&gt;
+        ///     Shutdowns this instance.
+        /// &lt;/summary&gt;
+        public void Shutdown()
+        {
+            Status = AlfredStatus.Terminating;
+
+            foreach (var subsystem in Subsystems)
+            {
+                subsystem.Shutdown();
+            }
+
+            Status = AlfredStatus.Offline;
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets a value indicating whether this instance is online.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;&lt;c&gt;true&lt;/c&gt; if this instance is online; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/value&gt;
+        public bool IsOnline
+        {
+            get { return Status == AlfredStatus.Online; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the chat provider.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The chat provider.&lt;/value&gt;
+        public IChatProvider ChatProvider
+        {
+            get { return _chatProvider; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the platform provider.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The platform provider.&lt;/value&gt;
+        public IPlatformProvider PlatformProvider
+        {
+            get { return _platformProvider; }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the shell command handler that can pass shell commands on to the user interface.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The shell command handler.&lt;/value&gt;
+        public IShellCommandRecipient ShellCommandHandler
+        {
+            get { return _shellCommandHandler; }
+        }
+
+        /// &lt;summary&gt;
+        /// Registers the shell command recipient that will allow the shell to get commands from the Alfred layer.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;shell&quot;&gt;The command recipient.&lt;/param&gt;
+        public void Register(IShellCommandRecipient shell)
+        {
+            _shellCommandHandler = shell;
+        }
+
+        /// &lt;summary&gt;
+        ///     Registers the user statement handler as the framework&#39;s user statement handler.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;chatProvider&quot;&gt;The user statement handler.&lt;/param&gt;
+        public void Register(IChatProvider chatProvider)
+        {
+            _chatProvider = chatProvider;
+        }
+
+        /// &lt;summary&gt;
+        ///     Registers a sub system with Alfred.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;subsystem&quot;&gt;The subsystem.&lt;/param&gt;
+        public void Register(AlfredSubsystem subsystem)
+        {
+            SubsystemsList.Add(subsystem);
+        }
+
+        /// &lt;summary&gt;
+        ///     Tells modules to take a look at their content and update as needed.
+        /// &lt;/summary&gt;
+        public void Update()
+        {
+            foreach (var subsystem in Subsystems)
+            {
+                subsystem.Update();
             }
         }
 
+        /// &lt;summary&gt;
+        /// Handles a chat command.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;command&quot;&gt;The command.&lt;/param&gt;
+        public void HandleChatCommand(ChatCommand command)
+        {
+            LastCommand = command;
+        }
+
+        /// &lt;summary&gt;
+        /// Gets or sets the last command received.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The last command.&lt;/value&gt;
+        public ChatCommand LastCommand
+        {
+            get; set;
+        }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[26,29,26,46,1],[27,9,27,10,1],[28,9,28,10,1],[34,39,34,43,1],[34,44,34,48,1],[40,55,40,59,1],[40,60,40,64,1],[46,49,46,53,1],[46,54,46,58,1],[52,40,52,44,1],[52,45,52,49,1],[58,43,58,47,1],[58,48,58,52,1],[65,9,65,10,1],[66,13,66,56,1],[68,13,68,46,1],[69,9,69,10,1],[76,9,76,10,1],[77,13,77,50,1],[79,13,79,40,1],[80,9,80,10,1],[86,9,86,10,1],[87,13,87,41,1],[89,13,89,38,1],[90,9,90,10,1],[97,9,97,10,1],[98,13,98,44,1],[100,13,100,46,1],[101,9,101,10,1],[107,9,107,10,1],[108,13,108,40,1],[110,13,110,36,1],[111,9,111,10,1],[122,13,122,14,1],[123,17,123,29,1]]);
+      highlightRanges([[188,9,188,10,0],[189,13,189,35,0],[190,9,190,10,0],[35,57,35,61,1],[43,17,43,18,1],[43,19,43,35,1],[43,36,43,37,1],[50,38,50,42,1],[50,43,50,47,1],[58,17,58,18,1],[58,19,58,41,1],[58,42,58,43,1],[67,17,67,18,1],[67,19,67,61,1],[67,76,67,78,1],[67,79,67,80,1],[76,17,76,18,1],[76,19,76,40,1],[76,41,76,42,1],[83,9,83,10,1],[84,13,84,48,1],[86,13,86,20,1],[86,39,86,49,1],[86,22,86,35,1],[87,13,87,14,1],[88,17,88,44,1],[89,13,89,14,1],[86,36,86,38,1],[91,13,91,42,1],[92,9,92,10,1],[98,9,98,10,1],[99,13,99,47,1],[101,13,101,20,1],[101,39,101,49,1],[101,22,101,35,1],[102,13,102,14,1],[103,17,103,38,1],[104,13,104,14,1],[101,36,101,38,1],[106,13,106,43,1],[107,9,107,10,1],[115,17,115,18,1],[115,19,115,56,1],[115,57,115,58,1],[124,17,124,18,1],[124,19,124,40,1],[124,41,124,42,1],[133,17,133,18,1],[133,19,133,44,1],[133,45,133,46,1],[142,17,142,18,1],[142,19,142,47,1],[142,48,142,49,1],[150,9,150,10,1],[151,13,151,42,1],[152,9,152,10,1],[159,9,159,10,1],[160,13,160,42,1],[161,9,161,10,1],[168,9,168,10,1],[169,13,169,43,1],[170,9,170,10,1],[176,9,176,10,1],[177,13,177,20,1],[177,39,177,49,1],[177,22,177,35,1],[178,13,178,14,1],[179,17,179,36,1],[180,13,180,14,1],[177,36,177,38,1],[181,9,181,10,1],[198,13,198,17,1],[198,18,198,22,1],[27,9,27,66,1],[30,9,30,93,1],[35,66,35,94,1],[67,61,67,76,1]]);
     </script>
   </body>
 </html>

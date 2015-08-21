@@ -2,41 +2,35 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\chat\conversationtests.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core.tests\chat\chatcommandtests.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// ConversationTests.cs
+// ChatCommandTests.cs
 // 
-// Created on:      08/10/2015 at 2:42 PM
-// Last Modified:   08/16/2015 at 4:47 PM
+// Created on:      08/17/2015 at 9:56 PM
+// Last Modified:   08/18/2015 at 3:04 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
+using System.Linq;
 
-using JetBrains.Annotations;
-
-using MattEland.Ani.Alfred.Chat;
-using MattEland.Common;
+using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 
 using NUnit.Framework;
 
 namespace MattEland.Ani.Alfred.Tests.Chat
 {
     /// &lt;summary&gt;
-    /// Tests for conversational inquiries on the Alfred chat system.
+    ///     Tests for commands embedded in AIML that impact the functioning of the Alfred system.
     /// &lt;/summary&gt;
     [TestFixture]
-    [SuppressMessage(&quot;ReSharper&quot;, &quot;NotNullMemberIsNotInitialized&quot;)]
-    [SuppressMessage(&quot;ReSharper&quot;, &quot;AssignNullToNotNullAttribute&quot;)]
-    [SuppressMessage(&quot;ReSharper&quot;, &quot;UnusedParameter.Local&quot;)]
-    public class ConversationTests : ChatTestsBase
+    public class ChatCommandTests : ChatTestsBase
     {
         /// &lt;summary&gt;
         ///     Sets up the testing environment prior to each test run.
@@ -48,147 +42,145 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         }
 
         /// &lt;summary&gt;
-        /// Tests that the chat engine has nodes associated with it
+        ///     Builds a list of fake counter names with a total instance included as well.
         /// &lt;/summary&gt;
-        [Test]
-        public void ChatEngineHasNodes()
+        /// &lt;param name=&quot;count&quot;&gt;The count of fake items to build.&lt;/param&gt;
+        /// &lt;returns&gt;A list of fake counters&lt;/returns&gt;
+        private IEnumerable&lt;string&gt; BuildInstanceNamesWithTotal(int count)
         {
-            Assert.Greater(Engine.NodeCount, 0, &quot;Chat engine did not have any nodes&quot;);
-        }
+            for (var i = 1; i &lt;= count; i++)
+            {
+                yield return $&quot;Item {i}&quot;;
+            }
 
-        [Test]
-        public void GenderSubstitutionsHasEntries()
-        {
-            Assert.Greater(Engine.Librarian.GenderSubstitutions.Count, 0, &quot;Settings were not present&quot;);
-        }
-
-        [Test]
-        public void GlobalSettingsHaveEntries()
-        {
-            Assert.Greater(Engine.Librarian.GlobalSettings.Count, 0, &quot;Settings were not present&quot;);
-        }
-
-        [Test]
-        public void FirstPersonSubstitutionsHasEntries()
-        {
-            Assert.Greater(Engine.Librarian.FirstPersonToSecondPersonSubstitutions.Count, 0, &quot;Settings were not present&quot;);
-        }
-
-        [Test]
-        public void SecondPersonSubstitutionsHasEntries()
-        {
-            Assert.Greater(Engine.Librarian.SecondPersonToFirstPersonSubstitutions.Count, 0, &quot;Settings were not present&quot;);
-        }
-
-        [Test]
-        public void SubstitutionsHasEntries()
-        {
-            Assert.Greater(Engine.Librarian.Substitutions.Count, 0, &quot;Settings were not present&quot;);
-        }
-
-        [Test]
-        public void StartupResultsInGreeting()
-        {
-            // In reality, this should be _chat.DoInitialGreeting, but it&#39;s easier to test the template this way
-            var reply = GetReplyTemplate(&quot;EVT_STARTUP&quot;);
-
-            Assert.IsNotNull(reply);
-            Assert.That(reply.Contains(&quot;tmp_hi&quot;), &quot;Startup did not give proper template. Actual template was: &quot; + reply);
-        }
-
-        [Test]
-        public void StartupLeavesLastInputClear()
-        {
-            var chat = new AimlStatementHandler();
-            chat.DoInitialGreeting();
-
-            Assert.That(!chat.LastInput.HasText(), $&quot;Startup did not clear last input. Actual was: {chat.LastInput}&quot;);
-        }
-
-        [TestCase(&quot;Shutdown&quot;, &quot;tmp_bye&quot;)]
-        [TestCase(&quot;Status&quot;, &quot;tmp_status&quot;)]
-        public void ChatCoreTests(string input, string templateId)
-        {
-            AssertMessageGetsReplyTemplate(input, templateId);
-        }
-
-        [TestCase(&quot;Thanks&quot;, &quot;tmp_thanks&quot;)]
-        [TestCase(&quot;Goodbye&quot;, &quot;tmp_bye&quot;)]
-        [TestCase(&quot;Hello&quot;, &quot;tmp_hi&quot;)]
-        [TestCase(&quot;Help&quot;, &quot;tmp_help&quot;)]
-        [TestCase(&quot;Help Commands&quot;, &quot;tmp_help_commands&quot;)]
-        [TestCase(&quot;Help Questions&quot;, &quot;tmp_help_questions&quot;)]
-        [TestCase(&quot;Help Other&quot;, &quot;tmp_help_other&quot;)]
-        [TestCase(&quot;ASDfasd&quot;, &quot;tmp_fallback&quot;, Description = &quot;Gibberish should hit fallback case&quot;)]
-        public void ChatTemplateTests(string input, string templateId)
-        {
-            AssertMessageGetsReplyTemplate(input, templateId);
-        }
-
-        [TestCase(&quot;Bye&quot;, &quot;tmp_bye&quot;)]
-        [TestCase(&quot;Hi&quot;, &quot;tmp_hi&quot;)]
-        [TestCase(&quot;Hey&quot;, &quot;tmp_hi&quot;)]
-        [TestCase(&quot;Thank You&quot;, &quot;tmp_thanks&quot;)]
-        public void ChatRedirectTests([NotNull] string input, [NotNull] string redirectTemplateId)
-        {
-            var template = GetReplyTemplate(input);
-            Assert.IsNotNull(template);
-
-            Assert.IsTrue(template.ToLowerInvariant().Contains(redirectTemplateId),
-                          $&quot;The template {template} did not redirect to the template with an Id tag of {redirectTemplateId}&quot;);
+            yield return SystemMonitorModule.TotalInstanceName;
         }
 
         /// &lt;summary&gt;
-        ///     Asserts that asking chat for the date gives the correct date.
+        ///     Tests that the CPU Status command includes the expected CPU information.
         /// &lt;/summary&gt;
         /// &lt;remarks&gt;
-        ///     Test for ALF-4
+        ///     See ALF-5, ALF-27, and ALF-28
         /// &lt;/remarks&gt;
         [Test]
-        public void AskingForCurrentDayContainsCurrentDay()
+        public void CpuStatusIsAccurate()
         {
-            var now = DateTime.Now;
-            var reply = GetReply(&quot;Which day is it?&quot;);
+            Alfred.Shutdown();
+            MetricProviderFactory.DefaultValue = 42.0f;
+            MetricProviderFactory.CategoryInstanceNames.Add(CpuMonitorModule.CpuCategoryName,
+                                                            BuildInstanceNamesWithTotal(72));
+            Alfred.Initialize();
 
-            var expected = now.ToString(&quot;D&quot;);
+            var reply = GetReply(&quot;CPU STATUS&quot;);
+
+            string expected = $&quot;There are 72 CPU cores with an average of 42.0 % utilization.&quot;;
             Assert.That(reply.Contains(expected),
-                        $&quot;Asked for current day at {now} and got a reply of &#39;{reply}&#39; which did not contain {expected}&quot;);
+                        $&quot;Reply &#39;{reply}&#39; did not match expected value of {expected}.&quot;);
         }
 
         /// &lt;summary&gt;
-        ///     Asserts that asking chat for the time gives the correct time.
+        ///     Tests that the Memory Status command includes the expected Memory information.
         /// &lt;/summary&gt;
         /// &lt;remarks&gt;
-        ///     Test for ALF-3
+        ///     See ALF-5, ALF-27, and ALF-28
         /// &lt;/remarks&gt;
         [Test]
-        public void AskingForCurrentTimeContainsCurrentTime()
+        public void MemoryStatusIsAccurate()
         {
-            var now = DateTime.Now;
-            var reply = GetReply(&quot;What time is it?&quot;);
+            MetricProviderFactory.DefaultValue = 42.0f;
 
-            var expected = now.ToString(&quot;t&quot;);
+            var reply = GetReply(&quot;MEMORY STATUS&quot;);
+
+            string expected = $&quot;The system is currently utilizing 42.0 % of all available memory.&quot;;
             Assert.That(reply.Contains(expected),
-                        $&quot;Asked for current time at {now} and got a reply of &#39;{reply}&#39; which did not contain {expected}&quot;);
+                        $&quot;Reply &#39;{reply}&#39; did not match expected value of {expected}.&quot;);
         }
+
         /// &lt;summary&gt;
-        ///     Asserts that when working through redirects, the engine can get the deepest redirect template.
+        ///     Tests that the Disk Status command includes the expected Disk information.
         /// &lt;/summary&gt;
         /// &lt;remarks&gt;
-        ///     Test for ALF-10
+        ///     See ALF-5, ALF-27, and ALF-28
         /// &lt;/remarks&gt;
         [Test]
-        public void AskingForCurrentTimeRevealsRedirectedTemplate()
+        public void DiskStatusIsAccurate()
         {
-            var reply = GetReplyTemplate(&quot;What time is it?&quot;);
+            MetricProviderFactory.DefaultValue = 42.0f;
 
-            Assert.That(reply.Contains(&quot;&lt;date&quot;), $&quot;The reply template of {reply} did not contain a date tag. Redirects are likely broken.&quot;);
+            var reply = GetReply(&quot;DISK STATUS&quot;);
+
+            string expected = $&quot;Disk read speed is currently utilized at 42.0 % and disk write utilization is at 42.0 %.&quot;;
+            Assert.That(reply.Contains(expected),
+                        $&quot;Reply &#39;{reply}&#39; did not match expected value of {expected}.&quot;);
+        }
+
+        /// &lt;summary&gt;
+        ///     Tests that the Alfred Status command includes the expected information.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     See ALF-5
+        /// &lt;/remarks&gt;
+        [Test]
+        public void AlfredStatusIsAccurate()
+        {
+            var reply = GetReply(&quot;ALFRED STATUS&quot;);
+            var count = Alfred.Subsystems.Count();
+
+            Assert.That(reply.Contains($&quot;The system is online with a total of {count} Subsystems Present.&quot;),
+                        $&quot;&#39;{reply}&#39; did not contain the expected system status text.&quot;);
+        }
+
+        /// &lt;summary&gt;
+        ///     Ensure that the shutdown command causes alfred to be offline.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     See ALF-21
+        /// &lt;/remarks&gt;
+        [Test]
+        public void ShutdownCausesAlfredToBeOffline()
+        {
+            Say(&quot;Shutdown&quot;);
+
+            Assert.IsFalse(Alfred.IsOnline, &quot;Alfred was not offline after shutdown was handled.&quot;);
+        }
+
+        /// &lt;summary&gt;
+        ///     Tests that the generic Status command includes the expected system information from various counters.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     See ALF-5, ALF-27, and ALF-28
+        /// &lt;/remarks&gt;
+        [Test]
+        public void StatusYieldsRelevantInformation()
+        {
+            var reply = GetReply(&quot;Status&quot;);
+
+            Assert.That(reply.Contains(&quot;system is online&quot;), $&quot;System online status was missing from &#39;{reply}&#39;&quot;);
+            Assert.That(reply.Contains(&quot;Disk read speed&quot;), $&quot;Disk status was missing from &#39;{reply}&#39;&quot;);
+            Assert.That(reply.Contains(&quot;available memory&quot;), $&quot;Memory status was missing from &#39;{reply}&#39;&quot;);
+            Assert.That(reply.Contains(&quot;CPU core&quot;), $&quot;CPU status was missing from &#39;{reply}&#39;&quot;);
+        }
+
+        [Test]
+        public void TagHandlersAreInvokedWhenATestingTemplateIsInvoked()
+        {
+            Say(&quot;TEST TAG INVOKE&quot;);
+
+            Assert.IsTrue(AlfredTestTagHandler.WasInvoked);
+        }
+
+        [Test]
+        public void TagHandlersAreNotInvokedOnOtherInput()
+        {
+            Say(&quot;I like turtles&quot;);
+
+            Assert.IsFalse(AlfredTestTagHandler.WasInvoked);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[36,9,36,10,1],[37,13,37,30,1],[38,9,38,10,1],[45,9,45,10,1],[46,13,46,87,1],[47,9,47,10,1],[51,9,51,10,1],[52,13,52,104,1],[53,9,53,10,1],[57,9,57,10,1],[58,13,58,99,1],[59,9,59,10,1],[63,9,63,10,1],[64,13,64,123,1],[65,9,65,10,1],[69,9,69,10,1],[70,13,70,123,1],[71,9,71,10,1],[75,9,75,10,1],[76,13,76,98,1],[77,9,77,10,1],[81,9,81,10,1],[83,13,83,57,1],[85,13,85,37,1],[86,13,86,122,1],[87,9,87,10,1],[91,9,91,10,1],[92,13,92,51,1],[93,13,93,38,1],[95,13,95,119,1],[96,9,96,10,1],[101,9,101,10,1],[102,13,102,63,1],[103,9,103,10,1],[114,9,114,10,1],[115,13,115,63,1],[116,9,116,10,1],[123,9,123,10,1],[124,13,124,52,1],[125,13,125,40,1],[127,13,128,127,1],[129,9,129,10,1],[139,9,139,10,1],[140,13,140,36,1],[141,13,141,54,1],[143,13,143,46,1],[144,13,145,122,1],[146,9,146,10,1],[156,9,156,10,1],[157,13,157,36,1],[158,13,158,54,1],[160,13,160,46,1],[161,13,162,123,1],[163,9,163,10,1],[172,9,172,10,1],[173,13,173,62,1],[175,13,175,141,1],[176,9,176,10,1]]);
+      highlightRanges([[30,9,30,10,1],[31,13,31,30,1],[32,9,32,10,1],[57,9,57,10,1],[58,13,58,31,1],[59,13,59,56,1],[60,13,61,94,1],[62,13,62,33,1],[64,13,64,48,1],[66,13,66,96,1],[67,13,68,89,1],[69,9,69,10,1],[79,9,79,10,1],[80,13,80,56,1],[82,13,82,51,1],[84,13,84,100,1],[85,13,86,89,1],[87,9,87,10,1],[97,9,97,10,1],[98,13,98,56,1],[100,13,100,49,1],[102,13,102,123,1],[103,13,104,89,1],[105,9,105,10,1],[115,9,115,10,1],[116,13,116,51,1],[117,13,117,51,1],[119,13,120,88,1],[121,9,121,10,1],[131,9,131,10,1],[132,13,132,29,1],[134,13,134,99,1],[135,9,135,10,1],[145,9,145,10,1],[146,13,146,44,1],[148,13,148,113,1],[149,13,149,103,1],[150,13,150,106,1],[151,13,151,95,1],[152,9,152,10,1],[156,9,156,10,1],[157,13,157,36,1],[159,13,159,60,1],[160,9,160,10,1],[164,9,164,10,1],[165,13,165,35,1],[167,13,167,61,1],[168,9,168,10,1],[40,9,40,10,1],[41,18,41,27,1],[42,13,42,14,1],[43,17,43,42,1],[44,13,44,14,1],[41,41,41,44,1],[41,29,41,39,1],[46,13,46,64,1],[47,9,47,10,1]]);
     </script>
   </body>
 </html>
