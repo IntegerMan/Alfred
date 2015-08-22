@@ -94,7 +94,7 @@ namespace MattEland.Ani.Alfred.Tests.SubSystems
             _alfred.Register(_subsystem);
             _alfred.Initialize();
 
-            Assert.AreEqual(pages + 1, _alfred.RootPages.Count());
+            Assert.AreEqual(pages + _subsystem.RootPages.Count(), _alfred.RootPages.Count());
         }
     }
 }

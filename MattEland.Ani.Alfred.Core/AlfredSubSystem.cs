@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
@@ -103,7 +104,13 @@ namespace MattEland.Ani.Alfred.Core
         protected void Register([NotNull] IAlfredPage page)
         {
             _pages.AddSafe(page);
-            page.OnRegistered(AlfredInstance);
+
+            if (AlfredInstance == null)
+            {
+                throw new InvalidOperationException("Cannot register page without an Alfred instance");
+            }
+
+            AlfredInstance.Register(page);
         }
 
         /// <summary>

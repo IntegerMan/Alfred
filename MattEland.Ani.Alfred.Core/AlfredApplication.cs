@@ -43,6 +43,9 @@ namespace MattEland.Ani.Alfred.Core
         [NotNull]
         private readonly ICollection<IAlfredSubsystem> _subsystems;
 
+        /// <summary>
+        /// The chat provider
+        /// </summary>
         [CanBeNull]
         private IChatProvider _chatProvider;
 
@@ -53,6 +56,12 @@ namespace MattEland.Ani.Alfred.Core
 
         [CanBeNull]
         private IShellCommandRecipient _shellCommandHandler;
+
+        /// <summary>
+        /// The root pages collection
+        /// </summary>
+        [NotNull, ItemNotNull]
+        private readonly ICollection<IAlfredPage> _rootPages;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredApplication" /> class.
@@ -82,6 +91,7 @@ namespace MattEland.Ani.Alfred.Core
 
             // Build out sub-collections
             _subsystems = provider.CreateCollection<IAlfredSubsystem>();
+            _rootPages = provider.CreateCollection<IAlfredPage>();
         }
 
         /// <summary>
@@ -208,7 +218,7 @@ namespace MattEland.Ani.Alfred.Core
             get
             {
                 // Give me all pages in subsystems that are root level pages
-                return Subsystems.SelectMany(subSystem => subSystem.RootPages);
+                return _rootPages;
             }
         }
 
@@ -229,8 +239,29 @@ namespace MattEland.Ani.Alfred.Core
         /// </exception>
         public void Initialize()
         {
+            _rootPages.Clear();
+
             // This logic is a bit lengthy, so we'll have the status controller take care of it
             _statusController.Initialize();
+        }
+
+        /// <summary>
+        /// Registers the page as a root page.
+        /// </summary>
+        /// <param name="page">The page.</param>
+        public void Register(IAlfredPage page)
+        {
+            if (page == null)
+            {
+                throw new ArgumentNullException(nameof(page));
+            }
+
+            if (page.IsRootLevel)
+            {
+                _rootPages.Add(page);
+            }
+
+            page.OnRegistered(this);
         }
 
         /// <summary>

@@ -32,6 +32,9 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
         private IShellCommandRecipient _shellCommandHandler;
 
         [NotNull]
+        private readonly ICollection<IAlfredPage> _rootPages = new List<IAlfredPage>();
+
+        [NotNull]
         public IList<IAlfredSubsystem> SubsystemsList { get; } = new List<IAlfredSubsystem>();
 
         /// <summary>
@@ -64,7 +67,7 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
         /// <value>The root pages.</value>
         public IEnumerable<IAlfredPage> RootPages
         {
-            get { return Subsystems.SelectMany(subsystem => subsystem.Pages); }
+            get { return _rootPages; }
         }
 
         /// <summary>
@@ -131,6 +134,15 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
         public IPlatformProvider PlatformProvider
         {
             get { return _platformProvider; }
+        }
+
+        /// <summary>
+        /// Registers the page as a root page.
+        /// </summary>
+        /// <param name="page">The page.</param>
+        public void Register(IAlfredPage page)
+        {
+            _rootPages.Add(page);
         }
 
         /// <summary>

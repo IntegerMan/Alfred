@@ -117,6 +117,12 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         ///     Thrown if Alfred is not Online
         /// </exception>
         void Update();
+
+        /// <summary>
+        /// Registers the page as a root page.
+        /// </summary>
+        /// <param name="page">The page.</param>
+        void Register([NotNull] IAlfredPage page);
     }
 
 }
