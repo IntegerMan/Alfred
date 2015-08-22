@@ -11,7 +11,7 @@
     <StackPanel>
 
         <!-- Alfred's response to prior statement -->
-        <StackPanel x:Name="pnlResponse">
+        <StackPanel>
 
             <TextBlock Foreground="{DynamicResource AppForegroundBrush}" 
                    Text="Alfred:" />

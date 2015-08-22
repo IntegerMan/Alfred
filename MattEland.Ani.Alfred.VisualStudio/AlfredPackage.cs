@@ -15,6 +15,8 @@ using MattEland.Ani.Alfred.PresentationShared.Commands;
 using MattEland.Ani.Alfred.VisualStudio.Properties;
 
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.TextManager.Interop;
 
 namespace MattEland.Ani.Alfred.VisualStudio
 {
