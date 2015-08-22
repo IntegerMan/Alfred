@@ -10,6 +10,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Pages;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Core.Modules
 {
@@ -112,7 +113,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <value>The name of the module.</value>
         public override string Name
         {
-            get { return Resources.AlfredControlSubSystem_Name; }
+            get { return Resources.AlfredControlSubSystem_Name.NonNull(); }
         }
 
         /// <summary>

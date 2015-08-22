@@ -38,7 +38,8 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <param name="name">The command name.</param>
         /// <param name="target">The target.</param>
         /// <param name="data">The data.</param>
-        public ShellCommand(string name, string target, string data)
+        public ShellCommand([CanBeNull] string name, [CanBeNull] string target,
+                            [CanBeNull] string data)
         {
             Target = target.NonNull();
             Name = name.NonNull();

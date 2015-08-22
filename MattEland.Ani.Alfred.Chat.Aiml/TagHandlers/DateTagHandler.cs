@@ -8,13 +8,10 @@
 // ---------------------------------------------------------
 
 using System;
-using System.Diagnostics;
-using System.Xml;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
-using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {

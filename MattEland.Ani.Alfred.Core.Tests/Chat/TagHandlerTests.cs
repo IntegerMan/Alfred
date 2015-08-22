@@ -7,15 +7,11 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using JetBrains.Annotations;
-
 using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
-using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Common;
 
 using NUnit.Framework;

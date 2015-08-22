@@ -15,6 +15,8 @@ using System.Xml;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
@@ -69,7 +71,17 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             var node = list[index];
             Debug.Assert(node != null);
 
-            return node.InnerXml;
+            try
+            {
+                return node.InnerXml.NonNull();
+
+            }
+            catch (XmlException xmlException)
+            {
+                Log("Problem getting node XML: " + xmlException.BuildDetailsMessage(), LogLevel.Error);
+
+                return string.Empty;
+            }
         }
     }
 }

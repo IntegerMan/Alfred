@@ -7,7 +7,6 @@
 // ---------------------------------------------------------
 
 using System;
-using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -44,8 +43,6 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <param name="provider">The provider.</param>
         /// <param name="factory"></param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        /// <exception cref="Win32Exception">A call to an underlying system API failed.</exception>
-        /// <exception cref="UnauthorizedAccessException">Code that is executing without administrative privileges attempted to read a performance counter.</exception>
         public SystemMonitoringSubsystem([NotNull] IPlatformProvider provider, [NotNull] IMetricProviderFactory factory) : base(provider)
         {
             _cpuModule = new CpuMonitorModule(provider, factory);
@@ -134,7 +131,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
                                 "There {3} {0} CPU {1} with an average of {2:F1} % utilization. ",
                                 _cpuModule.NumberOfCores,
                                 _cpuModule.NumberOfCores.Pluralize("core", "cores"),
-                                _cpuModule.AverageCpuUtilization,
+                                _cpuModule.AverageProcessorUtilization,
                                 _cpuModule.NumberOfCores.Pluralize("is", "are"));
             }
 

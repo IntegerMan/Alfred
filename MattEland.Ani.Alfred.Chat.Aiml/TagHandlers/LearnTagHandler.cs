@@ -39,7 +39,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// Processes the input text and returns the processed value.
         /// </summary>
         /// <returns>The processed output</returns>
-        /// <exception cref="NotSupportedException">file is in an invalid format. </exception>
         protected override string ProcessChange()
         {
             if (TemplateNode.Name.Matches("learn") && TemplateNode.InnerText.HasText())

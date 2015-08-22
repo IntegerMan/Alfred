@@ -44,10 +44,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         {
             //- Work with an node instead of a node.
             var element = TemplateElement;
-            if (element == null)
-            {
-                return null;
-            }
 
             //- Ensure we're working with the right node type
             if (!element.Name.Matches("ConditionTagHandler"))
@@ -84,6 +80,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// </summary>
         /// <param name="node">The node.</param>
         /// <returns>System.String.</returns>
+        [NotNull]
         private string EvaluateLooseConditionWithChildNodes([NotNull] XmlNode node)
         {
             if (node == null)
@@ -102,7 +99,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                 // If it's an li with no name and value, this is our default option and it should be taken
                 if (!xmlNode.HasAttribute("name") || !xmlNode.HasAttribute("value"))
                 {
-                    return xmlNode.InnerXml;
+                    return xmlNode.InnerXml.NonNull();
                 }
 
                 //- Grab our name / value
@@ -113,7 +110,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                 var input = User.UserVariables.GetValue(name).NonNull();
                 if (IsRegexMatch(input, value))
                 {
-                    return xmlNode.InnerXml;
+                    return xmlNode.InnerXml.NonNull();
                 }
             }
 
@@ -127,7 +124,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// <param name="node">The node.</param>
         /// <param name="variableName">The variable name.</param>
         /// <returns>System.String.</returns>
-        private static string EvaluateConditionWithNameAndChildNodes([NotNull] XmlNode node, string variableName)
+        [NotNull]
+        private static string EvaluateConditionWithNameAndChildNodes([NotNull] XmlNode node,
+                                                                     [NotNull] string variableName)
         {
             if (node == null)
             {
@@ -151,13 +150,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                     // Is this the node we're looking for?
                     if (IsRegexMatch(variableName, childValue))
                     {
-                        return child.InnerXml;
+                        return child.InnerXml.NonNull();
                     }
                 }
                 else
                 {
                     // It's just a blank li with no value; let's take it as a default / fallback.
-                    return child.InnerXml;
+                    return child.InnerXml.NonNull();
                 }
             }
 
@@ -171,7 +170,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// <param name="name">The name.</param>
         /// <param name="variableName">The variable name.</param>
         /// <returns>The results of the ConditionTagHandler or string.Empty if the ConditionTagHandler failed</returns>
-        private static string EvaluateSimpleConditionNode([NotNull] XmlElement element, string name, string variableName)
+        [NotNull]
+        private static string EvaluateSimpleConditionNode([NotNull] XmlElement element,
+                                                          [NotNull] string name,
+                                                          [NotNull] string variableName)
         {
             if (element == null)
             {
@@ -191,7 +193,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             var isMatch = IsRegexMatch(variableName, value);
 
             // If the match succeeded, use the contents
-            return isMatch ? element.InnerXml : string.Empty;
+            return isMatch ? element.InnerXml.NonNull() : string.Empty;
         }
 
         /// <summary>
@@ -200,7 +202,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// <param name="expected">The variableName.</param>
         /// <param name="value">The value.</param>
         /// <returns>True if the regex matched otherwise false.</returns>
-        private static bool IsRegexMatch(string expected, string value)
+        private static bool IsRegexMatch([CanBeNull] string expected, [CanBeNull] string value)
         {
             var regex = BuildValidationRegex(value);
 
@@ -213,12 +215,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// <param name="input">The input value.</param>
         /// <returns>A regular expression</returns>
         [NotNull]
-        private static Regex BuildValidationRegex(string input)
+        private static Regex BuildValidationRegex([CanBeNull] string input)
         {
             const RegexOptions Options = RegexOptions.IgnoreCase;
 
-            var regex = new Regex(input.NonNull().Replace(" ", @"\s").Replace("*", @"[\sA-Z0-9]+"),
-                                  Options);
+            var regex = new Regex(input.NonNull().Replace(" ", @"\s").Replace("*", @"[\sA-Z0-9]+"), Options);
             return regex;
         }
     }

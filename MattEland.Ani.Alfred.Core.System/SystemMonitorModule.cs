@@ -9,11 +9,8 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Globalization;
 
 using JetBrains.Annotations;
-
-using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 
@@ -82,7 +79,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         }
 
         [NotNull]
-        private IMetricProviderFactory _metricProvider;
+        private readonly IMetricProviderFactory _metricProvider;
 
         /// <summary>
         /// Gets the metric provider.

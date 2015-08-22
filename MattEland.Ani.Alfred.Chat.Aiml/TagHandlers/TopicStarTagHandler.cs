@@ -39,7 +39,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         protected override string ProcessChange()
         {
             var element = TemplateElement;
-            if (element != null && element.Name.Matches("topicstar"))
+            if (element.Name.Matches("topicstar"))
             {
                 // Validate that we have TopicStar items to work with
                 var topicStar = Query.TopicStar;
@@ -53,14 +53,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                 // When no index is specified return the first item.
                 if (!element.HasAttribute("index"))
                 {
-                    return topicStar[0];
+                    return topicStar[0].NonNull();
                 }
 
                 // Grab the item at the specified array index
                 var index = element.GetAttribute("index").AsInt();
                 if (index.IsWithinBoundsOf(topicStar))
                 {
-                    return topicStar[index - 1];
+                    return topicStar[index - 1].NonNull();
                 }
 
                 // Log the out of range failure

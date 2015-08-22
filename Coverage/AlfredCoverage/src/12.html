@@ -17,6 +17,7 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 using JetBrains.Annotations;
@@ -34,6 +35,8 @@ namespace MattEland.Ani.Alfred.Tests.Shell
     /// Tests related to &lt;see cref=&quot;IAlfredShell&quot;/&gt; and its utilization.
     /// &lt;/summary&gt;
     [TestFixture]
+    [SuppressMessage(&quot;ReSharper&quot;, &quot;NotNullMemberIsNotInitialized&quot;)]
+    [SuppressMessage(&quot;ReSharper&quot;, &quot;ExceptionNotDocumented&quot;)]
     public sealed class ShellTagHandlerTests : ChatTestsBase
     {
         [NotNull]

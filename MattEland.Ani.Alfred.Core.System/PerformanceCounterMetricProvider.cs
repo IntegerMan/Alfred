@@ -34,7 +34,10 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         ///     Code that is executing without administrative
         ///     privileges attempted to read a performance counter.
         /// </exception>
-        public CounterMetricProvider(string categoryName, string counterName, string instance = null)
+        public CounterMetricProvider([NotNull] string categoryName,
+                                     [NotNull] string counterName,
+                                     [CanBeNull] string instance = null)
+
             : base(instance ?? counterName)
         {
             _counter = new PerformanceCounter(categoryName, counterName, instance, true);

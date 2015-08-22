@@ -67,11 +67,6 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         ///     the specified user interface director and platform provider.
         /// </summary>
         /// <param name="platformProvider"></param>
-        /// <param name="director">The user interface director</param>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="director" /> is
-        ///     <see langword="null" />.
-        /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="platformProvider" /> is
         ///     <see langword="null" />.
@@ -98,9 +93,6 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
                 throw new ArgumentNullException(nameof(platformProvider));
             }
 
-            PlatformProvider = platformProvider;
-            UserInterfaceDirector = director;
-
             // Create Alfred. It won't be online and running yet, but create it.
             var bootstrapper = new AlfredBootstrapper(platformProvider);
             _alfred = bootstrapper.Create();
@@ -108,15 +100,15 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             // Give Alfred a way to talk to the user and the client a way to log events that are separate from Alfred
             _console = InitializeConsole(platformProvider);
 
-            // Hook up our shell manager now that we have a way of communicating with Alfred
-            ShellManager = new ShellCommandManager(UserInterfaceDirector, _alfred);
-            _alfred.Register(ShellManager);
+            UserInterfaceDirector = director;
 
             InitializeSubsystems(_alfred.PlatformProvider);
 
             // Create an update pump on a dispatcher timer that will automatically get Alfred to regularly update any modules it has
             InitializeUpdatePump();
         }
+
+        private IUserInterfaceDirector _userInterfaceDirector;
 
         /// <summary>
         ///     Gets the user interface director.
@@ -126,31 +118,37 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         public IUserInterfaceDirector UserInterfaceDirector
         {
             [DebuggerStepThrough]
-            get;
+            get
+            { return _userInterfaceDirector; }
             [DebuggerStepThrough]
-            set;
+            set
+            {
+                if (_userInterfaceDirector != value)
+                {
+                    _userInterfaceDirector = value;
+
+                    if (value != null)
+                    {
+                        // Hook up our shell manager now that we have a way of communicating with Alfred
+                        ShellManager = new ShellCommandManager(value, _alfred);
+                        _alfred.Register(ShellManager);
+                    }
+                }
+
+            }
         }
 
         /// <summary>
         ///     Gets the shell command manager.
         /// </summary>
         /// <value>The shell manager.</value>
-        [NotNull]
+        [CanBeNull]
         public ShellCommandManager ShellManager
         {
             [DebuggerStepThrough]
             get;
-        }
-
-        /// <summary>
-        ///     Gets the platform provider.
-        /// </summary>
-        /// <value>The platform provider.</value>
-        [NotNull]
-        public IPlatformProvider PlatformProvider
-        {
             [DebuggerStepThrough]
-            get;
+            private set;
         }
 
         /// <summary>
@@ -169,6 +167,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         ///     Gets the console.
         /// </summary>
         /// <value>The console.</value>
+        [CanBeNull]
         public IConsole Console
         {
             get { return _console; }

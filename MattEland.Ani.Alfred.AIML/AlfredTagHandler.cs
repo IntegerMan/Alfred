@@ -128,7 +128,7 @@ namespace MattEland.Ani.Alfred.Chat
             }
 
             // Get the output value from the result in case it was set externally
-            return result.Output;
+            return result.Output.NonNull();
         }
     }
 }

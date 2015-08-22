@@ -36,7 +36,6 @@ namespace MattEland.Ani.Alfred.Core.Speech
         ///     Initializes a new instance of the <see cref="AlfredSpeechConsole" /> class.
         /// </summary>
         /// <param name="console">The console that events should be logged to.</param>
-        /// <exception cref="System.ArgumentNullException">console</exception>
         public AlfredSpeechConsole([CanBeNull] IConsole console)
         {
             // This class can decorate other consoles, but for an empty implementation it can rely on an internal collection

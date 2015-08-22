@@ -8,7 +8,6 @@
 // ---------------------------------------------------------
 
 using System.Diagnostics;
-using System.Xml;
 
 using JetBrains.Annotations;
 

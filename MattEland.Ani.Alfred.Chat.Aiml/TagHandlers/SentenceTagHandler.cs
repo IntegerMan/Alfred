@@ -10,7 +10,6 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Xml;
 
 using JetBrains.Annotations;
 
@@ -65,9 +64,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// </summary>
         /// <param name="input">The input.</param>
         /// <returns>The sentence text for the input value</returns>
+        [NotNull]
         private string ProcessSentenceText([CanBeNull] string input)
         {
-            ICollection<string> sentenceSplitters = ChatEngine.SentenceSplitters;
+            var sentenceSplitters = ChatEngine.SentenceSplitters;
 
             //- Declare loop variables
             var stringBuilder = new StringBuilder();
@@ -77,22 +77,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 
             //- Loop through all letters
             var letters = input.NonNull().Trim().ToCharArray();
-            for (var index = 0; index < letters.Length; ++index)
+            foreach (var t in letters)
             {
-                var letterString = letters[index].ToString();
+                var letterString = t.ToString();
 
                 if (new Regex("[a-zA-Z]").IsMatch(letterString))
                 {
-                    if (isNewSentence)
-                    {
-                        // By default there are no letter splitters, but if so, capitalize them.
-                        stringBuilder.Append(letterString.ToUpper(Locale));
-                    }
-                    else
-                    {
-                        // This shouldn't be present
-                        stringBuilder.Append(letterString.ToLower(Locale));
-                    }
+                    stringBuilder.Append(isNewSentence
+                                             ? letterString.ToUpper(Locale)
+                                             : letterString.ToLower(Locale));
                 }
                 else
                 {

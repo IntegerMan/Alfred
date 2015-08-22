@@ -37,7 +37,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         {
             //- Validate conditions
             var element = TemplateElement;
-            if (element == null || !element.Name.Matches("set") || (!element.HasAttribute("name")))
+            if (!element.Name.Matches("set") || (!element.HasAttribute("name")))
             {
                 return string.Empty;
             }

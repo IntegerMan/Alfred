@@ -106,6 +106,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <param name="parameter">
         ///     Data used by the command.  If the command does not require data to be passed, this object can be set to null.
         /// </param>
+        /// <exception cref="Exception">A delegate callback throws an exception.</exception>
         public virtual void Execute([CanBeNull] object parameter)
         {
             // TODO: I could support async invokes here. I'd want to add a parameter for that, but it's possible.

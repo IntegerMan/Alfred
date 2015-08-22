@@ -7,8 +7,6 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
-
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
@@ -39,7 +37,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         {
             if (TemplateNode.Name.Matches("version"))
             {
-                return GetType().GetAssemblyVersion()?.ToString();
+                return (GetType().GetAssemblyVersion()?.ToString()).NonNull();
             }
 
             return string.Empty;

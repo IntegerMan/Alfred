@@ -7,9 +7,8 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
+using System.Diagnostics;
 
 using JetBrains.Annotations;
 
@@ -44,7 +43,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         ///     expected responses for when GetCategoryInstanceNames is called.
         /// </summary>
         /// <value>The category instance names.</value>
-        [NotNull]
+        [NotNull, ItemNotNull]
         public IDictionary<string, IEnumerable<string>> CategoryInstanceNames { get; } =
             new Dictionary<string, IEnumerable<string>>();
 
@@ -73,12 +72,14 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// </summary>
         /// <param name="categoryName">Name of the category.</param>
         /// <returns>A collection of counter instance names</returns>
+        [NotNull]
         public IEnumerable<string> GetCategoryInstanceNames([NotNull] string categoryName)
         {
-            //Contract.Requires<ArgumentNullException>(categoryName != null);
             if (CategoryInstanceNames.ContainsKey(categoryName))
             {
-                return CategoryInstanceNames[categoryName];
+                var instanceNames = CategoryInstanceNames[categoryName];
+                Debug.Assert(instanceNames != null);
+                return instanceNames;
             }
 
             // Fallback to an empty list

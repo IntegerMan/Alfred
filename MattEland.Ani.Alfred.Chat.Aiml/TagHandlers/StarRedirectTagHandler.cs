@@ -21,6 +21,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     /// An AIML tag handler that handles the "sr" shortcut tag which is the equivalent of an srai to a star tag.
     /// </summary>
     [HandlesAimlTag("sr")]
+    [UsedImplicitly]
     public class StarRedirectTagHandler : AimlTagHandler
     {
         /// <summary>

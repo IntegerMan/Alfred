@@ -68,5 +68,14 @@ namespace MattEland.Common {
                 return ResourceManager.GetString("ErrorItemAlreadyInCollection", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loader Exceptions: .
+        /// </summary>
+        internal static string ExceptionExtensionsLoadingLoaderExceptions {
+            get {
+                return ResourceManager.GetString("ExceptionExtensionsLoadingLoaderExceptions", resourceCulture);
+            }
+        }
     }
 }

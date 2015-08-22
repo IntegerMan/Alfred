@@ -15,6 +15,7 @@ using System.Linq;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml
 {
@@ -31,35 +32,21 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         ///     Initializes a new instance of the <see cref="User" /> class.
         /// </summary>
         /// <param name="id">The identifier.</param>
-        /// <param name="chatEngine">The chat engine.</param>
         /// <exception cref="ArgumentOutOfRangeException">The id cannot be empty</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="chatEngine"/> is <see langword="null" />.</exception>
-        public User([NotNull] string id, [NotNull] ChatEngine chatEngine)
+        public User([NotNull] string id)
         {
             //- Validation
-            if (chatEngine == null)
-            {
-                throw new ArgumentNullException(nameof(chatEngine));
-            }
             if (string.IsNullOrWhiteSpace(id))
             {
                 throw new ArgumentOutOfRangeException(nameof(id), Resources.UserCtorNullId);
             }
 
             Id = id;
-            ChatEngine = chatEngine;
 
             // Set up the variables collection
             UserVariables = new SettingsManager();
             UserVariables.Add("topic", "*");
         }
-
-        /// <summary>
-        ///     Gets the chat engine.
-        /// </summary>
-        /// <value>The chat engine.</value>
-        [NotNull]
-        public ChatEngine ChatEngine { get; }
 
         /// <summary>
         ///     Gets the predicates. These are variables pertaining to the user.
@@ -79,9 +66,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         ///     Gets the topic.
         /// </summary>
         /// <value>The topic.</value>
+        [NotNull]
         public string Topic
         {
-            get { return UserVariables.GetValue("topic"); }
+            get { return UserVariables.GetValue("topic").NonNull(); }
         }
 
         /// <summary>
@@ -110,6 +98,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <param name="resultIndex">Index of the result. Defaults to 1.</param>
         /// <param name="sentenceIndex">Index of the sentence. Defaults to 1.</param>
         /// <returns>The output sentence</returns>
+        [NotNull]
         public string GetOutputSentence(int resultIndex = 1, int sentenceIndex = 1)
         {
             //- Ensure we're not grabbing out of range
@@ -126,7 +115,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             // Grab the output sentence at the specified index
             if (sentenceIndex >= 0 & sentenceIndex < result.OutputSentences.Count)
             {
-                return result.OutputSentences[sentenceIndex];
+                return result.OutputSentences[sentenceIndex].NonNull();
             }
 
             return string.Empty;
@@ -138,6 +127,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <param name="resultIndex">Index of the result. Defaults to 1.</param>
         /// <param name="sentenceIndex">Index of the sentenceIndex. Defaults to 1.</param>
         /// <returns>The specified sentenceIndex.</returns>
+        [NotNull]
         public string GetInputSentence(int resultIndex = 1, int sentenceIndex = 1)
         {
             //- Ensure we're grabbing at an acceptable resultIndex
@@ -154,7 +144,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             // Grab the appropriate sentenceIndex
             if (sentenceIndex >= 0 & sentenceIndex < result.InputSentences.Count)
             {
-                return result.InputSentences[sentenceIndex];
+                return result.InputSentences[sentenceIndex].NonNull();
             }
 
             //- Invalid results yield nothing

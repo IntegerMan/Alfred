@@ -6,7 +6,6 @@
 
 namespace MattEland.Ani.Alfred.VisualStudio
 {
-    using System.Windows.Controls;
 
     /// <summary>
     /// Interaction logic for AlfredChatWindowControl.

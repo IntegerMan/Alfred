@@ -37,7 +37,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         protected override string ProcessChange()
         {
             var element = TemplateElement;
-            if (element == null || !element.Name.Matches("input"))
+            if (!element.Name.Matches("input"))
             {
                 return string.Empty;
             }
@@ -82,7 +82,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         ///     Logs a bad index.
         /// </summary>
         /// <param name="indexText">The index text.</param>
-        private void LogBadIndex(string indexText)
+        private void LogBadIndex([NotNull] string indexText)
         {
             var message = string.Format(Locale,
                                            Resources.InputErrorBadlyFormedIndex,

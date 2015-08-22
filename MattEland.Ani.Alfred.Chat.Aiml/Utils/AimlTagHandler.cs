@@ -107,6 +107,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         ///     There is a load or parse error in the XML. In this case, the
         ///     document remains empty.
         /// </exception>
+        [NotNull]
         public static XmlNode BuildNode([NotNull] string xml)
         {
             if (xml.IsEmpty())
@@ -120,7 +121,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             xmlDocument.LoadXml(xml);
 
             // Return the root element
-            return xmlDocument.FirstChild;
+            var child = xmlDocument.FirstChild;
+            Debug.Assert(child != null);
+            return child;
         }
 
         /// <summary>

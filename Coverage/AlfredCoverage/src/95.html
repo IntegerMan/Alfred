@@ -37,6 +37,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// &lt;param name=&quot;inputString&quot;&gt;The input string.&lt;/param&gt;
         /// &lt;param name=&quot;chatEngine&quot;&gt;The chat engine.&lt;/param&gt;
         /// &lt;returns&gt;Sentences&lt;/returns&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;inputString&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;chatEngine&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
         [NotNull]
         [ItemNotNull]
         internal static IEnumerable&lt;string&gt; Split([NotNull] string inputString, [NotNull] ChatEngine chatEngine)

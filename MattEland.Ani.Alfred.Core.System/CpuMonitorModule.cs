@@ -28,8 +28,8 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <summary>
         /// The performance counter CPU category name
         /// </summary>
-        public const string CpuCategoryName = "Processor";
-        private const string CpuUsageCounterName = "% Processor Time";
+        public const string ProcessorCategoryName = "Processor";
+        private const string ProcessorUsageCounterName = "% Processor Time";
 
         // ReSharper disable once AssignNullToNotNullAttribute
         [NotNull]
@@ -83,7 +83,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// Gets the average CPU utilization.
         /// </summary>
         /// <value>The average CPU utilization.</value>
-        public float AverageCpuUtilization
+        public float AverageProcessorUtilization
         {
             get
             {
@@ -150,12 +150,12 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// </summary>
         private void BuildCounters()
         {
-            var cpuInstanceNames = MetricProvider.GetCategoryInstanceNames(CpuCategoryName);
+            var cpuInstanceNames = MetricProvider.GetCategoryInstanceNames(ProcessorCategoryName);
 
             // Add counters for each CPU instance we're using
             foreach (var instance in cpuInstanceNames)
             {
-                var provider = MetricProvider.Build(CpuCategoryName, CpuUsageCounterName, instance);
+                var provider = MetricProvider.Build(ProcessorCategoryName, ProcessorUsageCounterName, instance);
                 _processorCounters.Add(provider);
             }
         }

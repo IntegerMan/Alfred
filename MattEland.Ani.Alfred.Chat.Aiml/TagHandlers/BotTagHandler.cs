@@ -7,8 +7,6 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System.Xml;
-
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
@@ -40,8 +38,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             var element = TemplateElement;
 
             // Ensure we have an element to work with
-            if (element != null &&
-                element.Name.Matches("ChatEngine") &&
+            if (element.Name.Matches("ChatEngine") &&
                 element.HasAttribute("name"))
             {
                 // Grab the attribute and use its value to GetTagHandler a setting value

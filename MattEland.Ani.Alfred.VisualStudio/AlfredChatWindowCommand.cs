@@ -54,7 +54,7 @@ namespace MattEland.Ani.Alfred.VisualStudio
             _package = package;
 
             var commandService =
-                ServiceProvider.GetService(typeof (IMenuCommandService)) as OleMenuCommandService;
+                ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if (commandService != null)
             {
                 var menuCommandId = new CommandID(CommandSet, CommandId);
@@ -102,13 +102,13 @@ namespace MattEland.Ani.Alfred.VisualStudio
             // Get the instance number 0 of this tool window. This window is single instance so this instance
             // is actually the only one.
             // The last flag is set to true so that if the tool window does not exists it will be created.
-            var window = _package.FindToolWindow(typeof (AlfredChatWindow), 0, true);
+            var window = _package.FindToolWindow(typeof(AlfredChatWindow), 0, true);
             if (window?.Frame == null)
             {
                 throw new NotSupportedException("Cannot create tool window");
             }
 
-            var windowFrame = (IVsWindowFrame) window.Frame;
+            var windowFrame = (IVsWindowFrame)window.Frame;
             ErrorHandler.ThrowOnFailure(windowFrame.Show());
         }
     }

@@ -7,10 +7,12 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Core.Widgets
 {
@@ -88,6 +90,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         ///     Tried to click the button when CanExecute on ClickCommand returned false.
         /// </exception>
         /// <exception cref="InvalidOperationException">Tried to click the button when CanExecute on ClickCommand returned false.</exception>
+        [SuppressMessage("ReSharper", "CatchAllClause")]
         public void Click()
         {
             if (ClickCommand != null)
@@ -97,8 +100,17 @@ namespace MattEland.Ani.Alfred.Core.Widgets
                     throw new InvalidOperationException(Resources.ButtonWidgetClickCantExecuteErrorMessage);
                 }
 
-                ClickCommand.Execute(this);
+                try
+                {
+                    ClickCommand.Execute(this);
+
+                }
+                catch (Exception exception)
+                {
+                    Error("Button.Click", exception.BuildDetailsMessage());
+                }
             }
         }
+
     }
 }

@@ -87,7 +87,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// </summary>
         /// <value>The logger.</value>
         [CanBeNull]
-        public IConsole Logger { get; set; }
+        public IConsole Logger { get; }
 
         /// <summary>
         ///     Gets the locale of this instance.
@@ -103,20 +103,20 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         ///     Gets the time out limit for a request in milliseconds. Defaults to 2000 (2 seconds).
         /// </summary>
         /// <value>The time out.</value>
-        public double Timeout { get; set; }
+        public double Timeout { get; }
 
         /// <summary>
         ///     Gets or sets the maximum size that can be used to hold a path in the that value.
         /// </summary>
         /// <value>The maximum size of the that.</value>
-        public int MaxThatSize { get; set; }
+        public int MaxThatSize { get; }
 
         /// <summary>
         ///     Gets or sets the root node of the Aiml knowledge graph.
         /// </summary>
         /// <value>The root node.</value>
         [NotNull]
-        public Node RootNode { get; set; }
+        public Node RootNode { get; }
 
         /// <summary>
         ///     Gets the count of AIML nodes in memory.
@@ -147,7 +147,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="level">The log level.</param>
-        internal void Log(string message, LogLevel level)
+        internal void Log([CanBeNull] string message, LogLevel level)
         {
             Logger?.Log("ChatEngine", message, level);
         }
@@ -211,6 +211,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         ///     denied.
         /// </exception>
         /// <exception cref="IOException">There was an I/O related error reading files from the directory.</exception>
+        [UsedImplicitly]
         public void LoadAimlFromDirectory([NotNull] string directoryPath)
         {
             if (directoryPath == null)
@@ -279,6 +280,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <exception cref="SecurityException">The caller does not have the required permission.</exception>
         /// <exception cref="FileNotFoundException">Could not find a settings file at the given path</exception>
         /// <exception cref="XmlException">The settings file was not found.</exception>
+        [UsedImplicitly]
         public void LoadSettingsFromDirectory([NotNull] string settingsDirectoryPath)
         {
             //- Validate

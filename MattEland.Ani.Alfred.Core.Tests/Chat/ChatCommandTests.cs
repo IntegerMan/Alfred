@@ -10,6 +10,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using JetBrains.Annotations;
+
 using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 
 using NUnit.Framework;
@@ -36,6 +38,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         /// </summary>
         /// <param name="count">The count of fake items to build.</param>
         /// <returns>A list of fake counters</returns>
+        [NotNull, ItemNotNull]
         private IEnumerable<string> BuildInstanceNamesWithTotal(int count)
         {
             for (var i = 1; i <= count; i++)
@@ -57,13 +60,13 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         {
             Alfred.Shutdown();
             MetricProviderFactory.DefaultValue = 42.0f;
-            MetricProviderFactory.CategoryInstanceNames.Add(CpuMonitorModule.CpuCategoryName,
+            MetricProviderFactory.CategoryInstanceNames.Add(CpuMonitorModule.ProcessorCategoryName,
                                                             BuildInstanceNamesWithTotal(72));
             Alfred.Initialize();
 
             var reply = GetReply("CPU STATUS");
 
-            string expected = $"There are 72 CPU cores with an average of 42.0 % utilization.";
+            var expected = "There are 72 CPU cores with an average of 42.0 % utilization.";
             Assert.That(reply.Contains(expected),
                         $"Reply '{reply}' did not match expected value of {expected}.");
         }
@@ -81,7 +84,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
 
             var reply = GetReply("MEMORY STATUS");
 
-            string expected = $"The system is currently utilizing 42.0 % of all available memory.";
+            var expected = "The system is currently utilizing 42.0 % of all available memory.";
             Assert.That(reply.Contains(expected),
                         $"Reply '{reply}' did not match expected value of {expected}.");
         }
@@ -99,7 +102,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
 
             var reply = GetReply("DISK STATUS");
 
-            string expected = $"Disk read speed is currently utilized at 42.0 % and disk write utilization is at 42.0 %.";
+            var expected = "Disk read speed is currently utilized at 42.0 % and disk write utilization is at 42.0 %.";
             Assert.That(reply.Contains(expected),
                         $"Reply '{reply}' did not match expected value of {expected}.");
         }

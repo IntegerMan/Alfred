@@ -29,10 +29,12 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// </summary>
         /// <param name="factory">The factory.</param>
         /// <param name="name">The name of the metric.</param>
+        /// <param name="value">The value to return</param>
         /// <exception cref="System.ArgumentNullException"></exception>
         /// <exception cref="ArgumentNullException"><paramref name="factory" /> is <see langword="null" />.</exception>
         [SuppressMessage("ReSharper", "CodeAnnotationAnalyzer")]
-        public ValueMetricProvider([NotNull] ValueMetricProviderFactory factory, string name) : base(name)
+        public ValueMetricProvider([NotNull] ValueMetricProviderFactory factory,
+                                   [NotNull] string name, float? value = null) : base(name)
         {
             if (factory == null)
             {
@@ -40,6 +42,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             }
 
             Factory = factory;
+            Value = value;
         }
 
         /// <summary>
@@ -47,13 +50,18 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// </summary>
         /// <value>The factory.</value>
         [NotNull]
-        public ValueMetricProviderFactory Factory { get; set; }
+        public ValueMetricProviderFactory Factory { get; }
 
         /// <summary>
         ///     Gets or sets the value that will be provided the next time NextValue() is called.
         /// </summary>
         /// <value>The value.</value>
-        public float? Value { get; set; }
+        [UsedImplicitly]
+        public float? Value
+        {
+            get;
+            set;
+        }
 
         /// <summary>
         ///     Gets the next value from the metric provider

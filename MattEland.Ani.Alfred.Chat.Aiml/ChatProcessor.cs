@@ -107,7 +107,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             foreach (var path in result.NormalizedPaths)
             {
                 // Build out a query based on the path
-                var query = new SubQuery(path.NonNull());
+                var query = new SubQuery();
 
                 // Search the node tree for the template most closely matched to this request
                 var template = _chatEngine.RootNode.Evaluate(path, query, request, MatchState.UserInput, new StringBuilder());
@@ -159,12 +159,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             {
                 // Build an XML node out of the template the query traced to
                 var node = AimlTagHandler.BuildNode(query.Template);
-
-                // If no template, there's nothing to do.
-                if (node == null)
-                {
-                    return;
-                }
 
                 // Process the chat node with the given template and tag handlers. This will result in the chat output.
                 var nodeOutput = ProcessNode(node, query, request, result, request.User);
@@ -258,10 +252,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             // Build a node out of the output of the transform
             Debug.Assert(nodeContents != null);
             var evaluatedNode = AimlTagHandler.BuildNode(nodeContents);
-            if (evaluatedNode == null)
-            {
-                return string.Empty;
-            }
 
             // If it's simple, just return it
             if (!evaluatedNode.HasChildNodes)

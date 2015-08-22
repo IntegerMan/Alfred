@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Root CoveredStatements="3772" TotalStatements="5794" CoveragePercent="65" ReportType="NDependXML" DotCoverVersion="3.1.1">
-  <Assembly Name="MattEland.Ani.Alfred.Chat" CoveredStatements="264" TotalStatements="362" CoveragePercent="73">
-    <Namespace Name="MattEland.Ani.Alfred.Chat" CoveredStatements="264" TotalStatements="362" CoveragePercent="73">
+<Root CoveredStatements="3784" TotalStatements="5806" CoveragePercent="65" ReportType="NDependXML" DotCoverVersion="3.1.1">
+  <Assembly Name="MattEland.Ani.Alfred.Chat" CoveredStatements="276" TotalStatements="374" CoveragePercent="74">
+    <Namespace Name="MattEland.Ani.Alfred.Chat" CoveredStatements="276" TotalStatements="374" CoveragePercent="74">
       <Type Name="AimlStatementHandler" CoveredStatements="103" TotalStatements="137" CoveragePercent="75">
         <Method Name=".ctor(IConsole)" CoveredStatements="9" TotalStatements="17" CoveragePercent="53" FirstStatementLine="57" />
         <Method Name="AddApplicationAimlResourcesToChatEngine(ChatEngine)" CoveredStatements="12" TotalStatements="14" CoveragePercent="86" FirstStatementLine="309" />
@@ -50,7 +50,7 @@
         <Method Name=".ctor(String,IChatProvider)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="38" />
         <Method Name="get_ChatHandler()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="30" />
       </Type>
-      <Type Name="Resources" CoveredStatements="65" TotalStatements="104" CoveragePercent="63">
+      <Type Name="Resources" CoveredStatements="77" TotalStatements="116" CoveragePercent="66">
         <Method Name=".ctor()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="32" />
         <Method Name="get_AimlCoreDateTime()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="93" />
         <Method Name="get_AimlCorePower()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="123" />
@@ -60,28 +60,32 @@
         <Method Name="get_AimlHelp()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="240" />
         <Method Name="get_AimlShellNavigation()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="272" />
         <Method Name="get_AimlStatementHandlerChatOffline()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="281" />
-        <Method Name="get_AimlSysStatus()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="311" />
-        <Method Name="get_AimlThanks()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="343" />
-        <Method Name="get_ChatBotGenderSubstitutions()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="364" />
-        <Method Name="get_ChatBotPerson2Substitutions()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="385" />
-        <Method Name="get_ChatBotPersonSubstitutions()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="405" />
-        <Method Name="get_ChatBotSettings()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="424" />
-        <Method Name="get_ChatBotSubstitutions()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="447" />
-        <Method Name="get_ChatErrorLastLogMessageFormat()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="456" />
-        <Method Name="get_ChatInputHeader()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="465" />
-        <Method Name="get_ChatModuleName()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="474" />
-        <Method Name="get_ChatOutputHeader()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="483" />
-        <Method Name="get_ChatProcessingHeader()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="492" />
-        <Method Name="get_ChatUserName()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="501" />
+        <Method Name="get_AimlSysStatus()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="312" />
+        <Method Name="get_AimlThanks()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="344" />
+        <Method Name="get_AlfredCommandRouterProcessAlfredCommandLogHeader()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="353" />
+        <Method Name="get_AlfredCommandRouterProcessAlfredCommandLogMessage()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="362" />
+        <Method Name="get_AlfredCommandRouterProcessShellCommandLogHeader()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="371" />
+        <Method Name="get_AlfredCommandRouterProcessShellCommandMessage()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="380" />
+        <Method Name="get_ChatBotGenderSubstitutions()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="401" />
+        <Method Name="get_ChatBotPerson2Substitutions()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="422" />
+        <Method Name="get_ChatBotPersonSubstitutions()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="442" />
+        <Method Name="get_ChatBotSettings()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="461" />
+        <Method Name="get_ChatBotSubstitutions()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="484" />
+        <Method Name="get_ChatErrorLastLogMessageFormat()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="493" />
+        <Method Name="get_ChatInputHeader()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="502" />
+        <Method Name="get_ChatModuleName()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="511" />
+        <Method Name="get_ChatOutputHeader()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="520" />
+        <Method Name="get_ChatProcessingHeader()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="529" />
+        <Method Name="get_ChatUserName()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="538" />
         <Method Name="get_Culture()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="55" />
-        <Method Name="get_DefaultFailureResponseText()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="510" />
-        <Method Name="get_ErrorInitializingChat()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="519" />
-        <Method Name="get_ErrorParsingCommand()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="528" />
-        <Method Name="get_InitialGreeting()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="537" />
-        <Method Name="get_InitialGreetingText()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="546" />
-        <Method Name="get_NoEndTagForOobCommand()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="555" />
-        <Method Name="get_NoSettingsPathError()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="564" />
-        <Method Name="get_OobRootNotAlfredXElement()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="573" />
+        <Method Name="get_DefaultFailureResponseText()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="547" />
+        <Method Name="get_ErrorInitializingChat()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="556" />
+        <Method Name="get_ErrorParsingCommand()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="565" />
+        <Method Name="get_InitialGreeting()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="574" />
+        <Method Name="get_InitialGreetingText()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="583" />
+        <Method Name="get_NoEndTagForOobCommand()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="592" />
+        <Method Name="get_NoSettingsPathError()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="601" />
+        <Method Name="get_OobRootNotAlfredXElement()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="610" />
         <Method Name="get_ResourceManager()" CoveredStatements="8" TotalStatements="8" CoveragePercent="100" FirstStatementLine="40" />
         <Method Name="set_Culture(CultureInfo)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="58" />
       </Type>

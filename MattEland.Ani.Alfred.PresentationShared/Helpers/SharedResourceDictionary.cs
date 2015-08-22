@@ -13,6 +13,8 @@ using System.Windows;
 
 using JetBrains.Annotations;
 
+using MattEland.Common;
+
 namespace MattEland.Ani.Alfred.PresentationShared.Helpers
 {
     /// <summary>
@@ -43,9 +45,10 @@ namespace MattEland.Ani.Alfred.PresentationShared.Helpers
         ///            accessor="set">
         ///     <paramref name="value" /> is <see langword="null" />.
         /// </exception>
+        [NotNull]
         public new string Source
         {
-            get { return _source?.OriginalString; }
+            get { return (_source?.OriginalString).NonNull(); }
             set
             {
                 if (value == null)

@@ -38,7 +38,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             var node = TemplateElement;
 
             //- Ensure correct tag and that the node has the attribute we need
-            if (node == null || !node.Name.Matches("get") || !node.HasAttribute("name"))
+            if (!node.Name.Matches("get") || !node.HasAttribute("name"))
             {
                 return string.Empty;
             }
@@ -53,7 +53,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             }
 
             // Return the value of the variable
-            return User.UserVariables.GetValue(variableName);
+            return User.UserVariables.GetValue(variableName).NonNull();
 
         }
     }

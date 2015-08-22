@@ -7,7 +7,7 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
+using JetBrains.Annotations;
 
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
@@ -21,7 +21,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         ///     Initializes a new instance of the <see cref="MetricProviderBase" /> class.
         /// </summary>
         /// <param name="metricName">The name of the metric.</param>
-        protected MetricProviderBase(string metricName)
+        protected MetricProviderBase([NotNull] string metricName)
         {
             Name = metricName;
         }
@@ -30,6 +30,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         ///     Gets the name of the metric.
         /// </summary>
         /// <value>The name.</value>
+        [NotNull]
         public string Name { get; }
 
         /// <summary>

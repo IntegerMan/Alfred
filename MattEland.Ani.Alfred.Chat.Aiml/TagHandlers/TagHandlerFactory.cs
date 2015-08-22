@@ -9,6 +9,7 @@
 
 using System;
 using System.Reflection;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
@@ -18,8 +19,6 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Common;
-
-using static MattEland.Common.StringExtensions;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
@@ -95,14 +94,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                 foreach (var type in types)
                 {
                     // We can't instantiate an abstract type and we need AimlTagHandlers for this
-                    if (type.IsAbstract || !type.IsSubclassOf(typeof (AimlTagHandler)))
+                    if (type.IsAbstract || !type.IsSubclassOf(typeof(AimlTagHandler)))
                     {
                         continue;
                     }
 
                     // Grab the attribute and exit early if it's not there
                     var attribute =
-                        type.GetCustomAttribute(typeof (HandlesAimlTagAttribute)) as
+                        type.GetCustomAttribute(typeof(HandlesAimlTagAttribute)) as
                         HandlesAimlTagAttribute;
                     if (attribute == null)
                     {

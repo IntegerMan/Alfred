@@ -156,7 +156,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         /// </summary>
         /// <param name="input">The input.</param>
         /// <param name="templateId">The template identifier.</param>
-        protected void AssertMessageGetsReplyTemplate(string input, string templateId)
+        protected void AssertMessageGetsReplyTemplate([NotNull] string input, [NotNull] string templateId)
         {
             var template = GetReplyTemplate(input);
 
@@ -168,11 +168,12 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         /// </summary>
         /// <param name="template">The template.</param>
         /// <param name="id">The template identifier.</param>
-        private static void AssertTemplateId([NotNull] string template, [NotNull] string id)
+        [SuppressMessage("ReSharper", "UnusedParameter.Local")]
+        private static void AssertTemplateId([CanBeNull] string template, [NotNull] string id)
         {
             var idString = $"id=\"{id.ToLowerInvariant()}\"";
 
-            Assert.IsTrue(template.ToLowerInvariant().Contains(idString),
+            Assert.IsTrue(template != null && template.ToLowerInvariant().Contains(idString),
                           $"ID '{idString}' was not found. Template was: {template}");
         }
 
@@ -226,7 +227,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         /// <param name="text">The inquiry text.</param>
         /// <returns>The reply</returns>
         [CanBeNull]
-        protected string GetReplyTemplate([CanBeNull] string text)
+        protected string GetReplyTemplate([NotNull] string text)
         {
             var response = GetResponse(text);
 
@@ -266,7 +267,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             Assert.IsNotNull(chatHandler.ChatEngine, "Chat Engine was null");
             Engine = chatHandler.ChatEngine;
             Engine.LoadAimlFromString(Resources.AimlTestAssets.NonNull());
-            _user = new User("Test User", Engine);
+            _user = new User("Test User");
 
             // Set up a shell handler to respond to events
             _shell = new TestShell();
@@ -278,16 +279,16 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         }
 
         [NotNull]
-        protected TagHandlerParameters BuildTagHandlerParameters(string xml)
+        protected TagHandlerParameters BuildTagHandlerParameters([NotNull] string xml)
         {
             var node = AimlTagHandler.BuildNode(xml);
             return BuildTagHandlerParameters("Testing is fun", node);
         }
 
         [NotNull]
-        private TagHandlerParameters BuildTagHandlerParameters(string input, XmlNode node)
+        private TagHandlerParameters BuildTagHandlerParameters([NotNull] string input, [NotNull] XmlNode node)
         {
-            var query = new SubQuery(input);
+            var query = new SubQuery();
             var request = new Request(input, User, Engine);
             var result = new Result(User, Engine, request);
             return new TagHandlerParameters(Engine, User, query, request, result, node);

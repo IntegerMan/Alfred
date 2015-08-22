@@ -41,7 +41,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             var element = TemplateElement;
 
             //- Early exit if it's not what this should be handling
-            if (element == null || !element.Name.Matches("thatstar"))
+            if (!element.Name.Matches("thatstar"))
             {
                 return string.Empty;
             }
@@ -60,14 +60,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             // If there's no index, just return the first one
             if (!element.HasAttribute("index"))
             {
-                return Query.ThatStar[0];
+                return Query.ThatStar[0].NonNull();
             }
 
             // With an index, return the elemernt at the specified index.
             var index = element.GetAttribute("index").AsInt();
             if (index > 0)
             {
-                return Query.ThatStar[index - 1];
+                return Query.ThatStar[index - 1].NonNull();
             }
 
             // Nice one, AIML author; looks like a 0 or negative index was specified. Log it and return.

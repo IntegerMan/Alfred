@@ -101,4 +101,7 @@
   <data name="ErrorItemAlreadyInCollection" xml:space="preserve">
     <value>The specified item was already part of the collection</value>
   </data>
+  <data name="ExceptionExtensionsLoadingLoaderExceptions" xml:space="preserve">
+    <value>Loader Exceptions: </value>
+  </data>
 </root>

@@ -41,7 +41,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         protected override string ProcessChange()
         {
             var element = TemplateElement;
-            if (element != null && element.Name.Matches("star"))
+            if (element.Name.Matches("star"))
             {
                 // Grab whatever * refers to in this particular query
                 var inputStar = Query.InputStar;
@@ -60,7 +60,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                 // If they don't specify anything just get last value
                 if (!element.HasAttribute("index"))
                 {
-                    return inputStar[0];
+                    return inputStar[0].NonNull();
                 }
 
                 // Grab the index as an integer
@@ -70,7 +70,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                 // Bounds check followed by fetching the star value,
                 if (index >= 0 & index < inputStar.Count)
                 {
-                    return inputStar[index];
+                    return inputStar[index].NonNull();
                 }
 
                 Log(string.Format(Locale,

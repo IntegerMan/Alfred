@@ -7,9 +7,6 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
-using System.Xml;
-
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;

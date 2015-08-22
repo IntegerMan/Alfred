@@ -63,7 +63,7 @@ namespace MattEland.Ani.Alfred.Chat
             try
             {
                 _chatEngine = new ChatEngine(console);
-                _user = new User(Resources.ChatUserName.NonNull(), _chatEngine);
+                _user = new User(Resources.ChatUserName.NonNull());
                 InitializeChatEngine();
             }
             catch (IOException ex)

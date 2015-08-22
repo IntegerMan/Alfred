@@ -9,6 +9,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+
 using MattEland.Ani.Alfred.Core.Definitions;
 
 namespace MattEland.Ani.Alfred.PresentationShared.Commands

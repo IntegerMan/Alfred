@@ -1,13 +1,15 @@
 ﻿// ---------------------------------------------------------
 // AlfredModuleListPage.cs
 // 
-// Created on:      08/08/2015 at 7:17 PM
-// Last Modified:   08/09/2015 at 10:03 PM
-// Original author: Matt Eland
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/22/2015 at 12:03 AM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 using JetBrains.Annotations;
@@ -27,13 +29,15 @@ namespace MattEland.Ani.Alfred.Core.Pages
         private readonly ICollection<IAlfredModule> _modules;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlfredModuleListPage" /> class.
+        ///     Initializes a new instance of the <see cref="AlfredModuleListPage" /> class.
         /// </summary>
         /// <param name="provider">The provider.</param>
         /// <param name="name">The name.</param>
         /// <param name="id">The identifier.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public AlfredModuleListPage([NotNull] IPlatformProvider provider, [NotNull] string name, [NotNull] string id) : base(name, id)
+        public AlfredModuleListPage([NotNull] IPlatformProvider provider,
+                                    [NotNull] string name,
+                                    [NotNull] string id) : base(name, id)
         {
             if (provider == null)
             {
@@ -55,7 +59,8 @@ namespace MattEland.Ani.Alfred.Core.Pages
         }
 
         /// <summary>
-        ///     Gets the children of this component. Depending on the type of component this is, the children will
+        ///     Gets the children of this component. Depending on the type of component this is, the children
+        ///     will
         ///     vary in their own types.
         /// </summary>
         /// <value>The children.</value>
@@ -71,10 +76,24 @@ namespace MattEland.Ani.Alfred.Core.Pages
         }
 
         /// <summary>
+        ///     Gets whether or not the component is visible to the user interface.
+        /// </summary>
+        /// <value>Whether or not the component is visible.</value>
+        public override bool IsVisible
+        {
+            get
+            {
+                return base.IsVisible &&
+                       Modules.Any(m => m.Widgets != null && m.Widgets.Any(w => w != null && w.IsVisible));
+            }
+        }
+
+        /// <summary>
         ///     Registers the specified module.
         /// </summary>
         /// <param name="module">The module.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0")]
+        [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods",
+            MessageId = "0")]
         public void Register([NotNull] IAlfredModule module)
         {
             _modules.AddSafe(module);
@@ -90,16 +109,9 @@ namespace MattEland.Ani.Alfred.Core.Pages
         }
 
         /// <summary>
-        ///     Gets whether or not the component is visible to the user interface.
-        /// </summary>
-        /// <value>Whether or not the component is visible.</value>
-        public override bool IsVisible
-        {
-            get { return base.IsVisible && Modules.Any(m => m.Widgets.Any(w => w.IsVisible)); }
-        }
-
-        /// <summary>
-        /// Processes an Alfred Command. If the command is handled, result should be modified accordingly and the method should return true. Returning false will not stop the message from being propogated.
+        ///     Processes an Alfred Command. If the command is handled, result should be modified accordingly
+        ///     and the method should return true. Returning false will not stop the message from being
+        ///     propogated.
         /// </summary>
         /// <param name="command">The command.</param>
         /// <param name="result">The result. If the command was handled, this should be updated.</param>
@@ -107,7 +119,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         public override bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
         {
 
-            foreach (IAlfredModule module in Modules)
+            foreach (var module in Modules)
             {
                 if (module.ProcessAlfredCommand(command, result))
                 {

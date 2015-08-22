@@ -68,7 +68,7 @@ namespace MattEland.Common
                 throw new ArgumentNullException(nameof(types));
             }
 
-            return types.Where(t => t.HasAttribute<TAttribute>(inherit));
+            return types.Where(t => t != null && t.HasAttribute<TAttribute>(inherit));
         }
 
         /// <summary>

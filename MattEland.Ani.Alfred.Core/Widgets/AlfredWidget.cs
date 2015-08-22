@@ -6,9 +6,14 @@
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
+
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Core.Widgets
 {
@@ -77,9 +82,33 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         [NotifyPropertyChangedInvocator]
+        [SuppressMessage("ReSharper", "CatchAllClause")]
         protected void OnPropertyChanged([CanBeNull] string propertyName)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            try
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+            catch (Exception ex)
+            {
+                IFormattable message = $"Error encountered changing property '{propertyName}' :{ex.GetBaseException()}";
+                Error("Widget.PropertyChanged", message.ForUser());
+            }
+        }
+
+        /// <summary>
+        /// Handles a widget error.
+        /// </summary>
+        /// <param name="header">The error header.</param>
+        /// <param name="message">The error message.</param>
+        protected void Error([NotNull] string header, [NotNull] string message)
+        {
+            // TODO: It'd be very good to get this to Alfred's console
+
+            IFormattable format = $"{header}: {message}";
+            Debug.WriteLine(format.ForUser());
+
+            Debugger.Break();
         }
     }
 }

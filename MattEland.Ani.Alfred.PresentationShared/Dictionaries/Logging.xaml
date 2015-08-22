@@ -1,11 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:widgets="clr-namespace:MattEland.Ani.Alfred.Core.Widgets;assembly=MattEland.Ani.Alfred.Core"
                     xmlns:console="clr-namespace:MattEland.Ani.Alfred.Core.Console;assembly=MattEland.Ani.Alfred.Core"
-                    xmlns:pages="clr-namespace:MattEland.Ani.Alfred.Core.Pages;assembly=MattEland.Ani.Alfred.Core"
-                    xmlns:chat="clr-namespace:MattEland.Ani.Alfred.Chat;assembly=MattEland.Ani.Alfred.Chat"
-                    xmlns:modules="clr-namespace:MattEland.Ani.Alfred.Core.Modules;assembly=MattEland.Ani.Alfred.Core"
-                    xmlns:controls="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Controls"
                     xmlns:helpers="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Helpers">
 
     <ResourceDictionary.MergedDictionaries>

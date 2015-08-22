@@ -33,7 +33,7 @@ namespace MattEland.Common
         /// <param name="culture">The user interface culture. Defaults to CurrentCulture.</param>
         /// <returns>An exception details message suitable for diagnostic purposes.</returns>
         [NotNull]
-        public static string BuildExceptionDetailsMessage([CanBeNull] this Exception ex,
+        public static string BuildDetailsMessage([CanBeNull] this Exception ex,
                                                           [CanBeNull] StringBuilder stringBuilder =
                                                               null,
                                                           bool useNewLine = true,
@@ -52,7 +52,8 @@ namespace MattEland.Common
             while (ex != null)
             {
                 // Log the message keeping formatting in mind
-                var message = string.Format(culture, "{0}: {1} ", ex.GetType().Name, ex.Message);
+                const string Format = "{0}: {1} ";
+                var message = string.Format(culture, Format, ex.GetType().Name, ex.Message);
                 stringBuilder.AppendConditional(message, useNewLine);
 
                 /* - This can be lengthy and resulted in out of memory exceptions during testing
@@ -76,7 +77,7 @@ namespace MattEland.Common
         /// <param name="stringBuilder">The string builder.</param>
         /// <param name="useNewLine">if set to <c>true</c> new lines will be used in the message.</param>
         /// <param name="culture">The culture.</param>
-        private static void BuildExceptionAdditionalDetails(
+        private static void BuildAdditionalDetails(
             [NotNull] ReflectionTypeLoadException rex,
             [NotNull] StringBuilder stringBuilder,
             bool useNewLine,
@@ -91,13 +92,13 @@ namespace MattEland.Common
             var loaderExceptions = rex.LoaderExceptions.ToList();
             if (loaderExceptions.Any())
             {
-                stringBuilder.AppendConditional("Loader Exceptions: ", useNewLine);
+                stringBuilder.AppendConditional(Resources.ExceptionExtensionsLoadingLoaderExceptions, useNewLine);
 
                 // Loop through each loader exception and recursively call the core exception details message on it
                 foreach (var loaderException in loaderExceptions)
                 {
                     var detailsMessage =
-                        loaderException.BuildExceptionDetailsMessage(stringBuilder,
+                        loaderException.BuildDetailsMessage(stringBuilder,
                                                                      useNewLine,
                                                                      culture);
 

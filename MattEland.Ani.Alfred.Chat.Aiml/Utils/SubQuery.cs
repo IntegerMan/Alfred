@@ -18,21 +18,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
     /// </summary>
     public class SubQuery
     {
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="SubQuery" /> class.
-        /// </summary>
-        /// <param name="fullPath">The full path.</param>
-        public SubQuery([NotNull] string fullPath)
-        {
-            FullPath = fullPath;
-        }
-
-        /// <summary>
-        /// Gets the full path of the query.
-        /// </summary>
-        /// <value>The full path.</value>
-        [NotNull]
-        public string FullPath { get; }
 
         /// <summary>
         /// Gets or sets the template.
@@ -45,21 +30,21 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// Gets the that star collection.
         /// </summary>
         /// <value>The that star collection.</value>
-        [NotNull]
+        [NotNull, ItemNotNull]
         public IList<string> ThatStar { get; } = new List<string>();
 
         /// <summary>
         /// Gets the topic star collection.
         /// </summary>
         /// <value>The topic star collection.</value>
-        [NotNull]
+        [NotNull, ItemNotNull]
         public IList<string> TopicStar { get; } = new List<string>();
 
         /// <summary>
         /// Gets the input star collection.
         /// </summary>
         /// <value>The input star collection.</value>
-        [NotNull]
+        [NotNull, ItemNotNull]
         public IList<string> InputStar { get; } = new List<string>();
     }
 }

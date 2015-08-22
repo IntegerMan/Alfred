@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
 // TextTransformer.cs
 // 
-// Created on:      08/12/2015 at 10:36 PM
-// Last Modified:   08/16/2015 at 12:33 AM
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/21/2015 at 11:58 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -24,9 +24,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
     /// </summary>
     public abstract class TextTransformer
     {
-        [NotNull]
-        private readonly ChatEngine _chatEngine;
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="TextTransformer" /> class.
         /// </summary>
@@ -40,7 +37,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
                 throw new ArgumentNullException(nameof(chatEngine));
             }
 
-            _chatEngine = chatEngine;
+            ChatEngine = chatEngine;
             InputString = input;
         }
 
@@ -61,10 +58,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         public ChatEngine ChatEngine
         {
             [DebuggerStepThrough]
-            get
-            {
-                return _chatEngine;
-            }
+            get;
         }
 
         /// <summary>
@@ -74,7 +68,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         [NotNull]
         protected CultureInfo Locale
         {
-            get { return _chatEngine.Locale; }
+            get { return ChatEngine.Locale; }
         }
 
         /// <summary>
@@ -95,7 +89,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        /// Gets the librarian containing settings files.
+        ///     Gets the librarian containing settings files.
         /// </summary>
         /// <value>The librarian.</value>
         [NotNull]
@@ -149,9 +143,18 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="level">The log level.</param>
-        protected void Log(string message, LogLevel level)
+        protected void Log([CanBeNull] string message, LogLevel level)
         {
-            _chatEngine.Log(message, level);
+            ChatEngine.Log(message, level);
+        }
+
+        /// <summary>
+        ///     Logs the specified message to the logger.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        protected void Error([CanBeNull] string message)
+        {
+            ChatEngine.Log(message, LogLevel.Error);
         }
 
         /// <summary>
@@ -169,14 +172,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        /// Gets an attribute from an XML node and returns string.empty if the attribute isn't present.
+        ///     Gets an attribute from an XML node and returns string.empty if the attribute isn't present.
         /// </summary>
         /// <param name="element">The element.</param>
         /// <param name="name">The name.</param>
         /// <returns>The attribute value or string.Empty as a fallback.</returns>
         [NotNull]
         protected static string GetAttributeSafe([CanBeNull] XmlElement element,
-                                               [CanBeNull] string name)
+                                                 [CanBeNull] string name)
         {
             if (element != null && name.HasText() && element.HasAttribute(name))
             {

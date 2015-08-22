@@ -20,6 +20,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     ///     to the user.
     /// </summary>
     [HandlesAimlTag("that")]
+    [UsedImplicitly]
     public class OutputTagHandler : AimlTagHandler
     {
         /// <summary>
@@ -38,7 +39,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         protected override string ProcessChange()
         {
             var element = TemplateElement;
-            if (element != null && element.Name.Matches("that"))
+            if (element.Name.Matches("that"))
             {
                 // If we just said that, grab the first sentence of the first output.
                 if (element.Attributes.Count == 0)

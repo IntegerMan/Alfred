@@ -5,11 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:helpers="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Helpers;assembly=MattEland.Ani.Alfred.PresentationShared"
              xmlns:controls="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Controls;assembly=MattEland.Ani.Alfred.PresentationShared"
+             xmlns:commands="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Commands;assembly=MattEland.Ani.Alfred.PresentationShared"
              Background="{DynamicResource VsBrush.Window}"
              Foreground="{DynamicResource VsBrush.WindowText}"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
-             Name="MyToolWindow">
+             Name="MyToolWindow" d:DataContext="{d:DesignInstance commands:ApplicationManager}">
 
     <UserControl.Resources>
         <ResourceDictionary>

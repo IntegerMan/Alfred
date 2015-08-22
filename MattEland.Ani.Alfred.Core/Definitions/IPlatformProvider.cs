@@ -11,8 +11,6 @@ using System.Collections.Generic;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core.Widgets;
-
 namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>

@@ -35,7 +35,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// </summary>
         /// <value>The stripper regex pattern.</value>
         [NotNull]
-        public string StripperRegexPattern { get; set; }
+        public string StripperRegexPattern { get; }
 
         /// <summary>
         ///     Processes the input text and returns the processed value.

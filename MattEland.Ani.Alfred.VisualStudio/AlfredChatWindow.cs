@@ -4,11 +4,12 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
+using System.Runtime.InteropServices;
+
+using Microsoft.VisualStudio.Shell;
+
 namespace MattEland.Ani.Alfred.VisualStudio
 {
-    using System;
-    using System.Runtime.InteropServices;
-    using Microsoft.VisualStudio.Shell;
 
     /// <summary>
     /// This class implements the tool window exposed by this package and hosts a user control.
@@ -22,7 +23,7 @@ namespace MattEland.Ani.Alfred.VisualStudio
     /// </para>
     /// </remarks>
     [Guid("b068e922-fdc8-4e9b-9951-af36ca688f7c")]
-    public class AlfredChatWindow : ToolWindowPane
+    public sealed class AlfredChatWindow : ToolWindowPane
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AlfredChatWindow"/> class.

@@ -59,7 +59,7 @@ namespace MattEland.Ani.Alfred.VisualStudio
             catch (Exception ex)
             {
                 const string Caption = "Problem Starting Tool Window";
-                var message = ex.BuildExceptionDetailsMessage();
+                var message = ex.BuildDetailsMessage();
 
 #if DEBUG
                 Debugger.Break();

@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 
@@ -352,9 +353,17 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         [NotifyPropertyChangedInvocator]
+        [SuppressMessage("ReSharper", "CatchAllClause")]
         protected void OnPropertyChanged([CanBeNull] string propertyName)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            try
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+            catch (Exception ex)
+            {
+                Log("Component.PropertyChanged", "Encountered an exception raising a property changed event: " + ex.BuildDetailsMessage(), LogLevel.Error);
+            }
         }
 
         /// <summary>
