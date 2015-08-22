@@ -1,15 +1,17 @@
 ﻿// ---------------------------------------------------------
 // AlfredWidget.cs
 // 
-// Created on:      07/28/2015 at 12:18 PM
-// Last Modified:   08/04/2015 at 3:04 PM
-// Original author: Matt Eland
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/22/2015 at 12:48 AM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 
 using JetBrains.Annotations;
 
@@ -53,7 +55,8 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         /// </summary>
         /// <remarks>
         ///     The DataContext is used by some controls for data binding and can act as a tag value
-        ///     in others allowing the caller to put miscellaneous information related to what the widget represents so that the
+        ///     in others allowing the caller to put miscellaneous information related to what the widget
+        ///     represents so that the
         ///     widget can be updated later.
         /// </remarks>
         /// <value>The data context.</value>
@@ -73,12 +76,12 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         }
 
         /// <summary>
-        /// Occurs when a property changes.
+        ///     Occurs when a property changes.
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
-        /// Called when a property changes.
+        ///     Called when a property changes.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         [NotifyPropertyChangedInvocator]
@@ -91,13 +94,17 @@ namespace MattEland.Ani.Alfred.Core.Widgets
             }
             catch (Exception ex)
             {
-                IFormattable message = $"Error encountered changing property '{propertyName}' :{ex.GetBaseException()}";
-                Error("Widget.PropertyChanged", message.ForUser());
+                var message = string.Format(CultureInfo.CurrentCulture,
+                                            "Error encountered changing property '{0}' :{1}",
+                                            propertyName,
+                                            ex.GetBaseException());
+
+                Error("Widget.PropertyChanged", message);
             }
         }
 
         /// <summary>
-        /// Handles a widget error.
+        ///     Handles a widget error.
         /// </summary>
         /// <param name="header">The error header.</param>
         /// <param name="message">The error message.</param>
@@ -105,8 +112,8 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         {
             // TODO: It'd be very good to get this to Alfred's console
 
-            IFormattable format = $"{header}: {message}";
-            Debug.WriteLine(format.ForUser());
+            var format = string.Format(CultureInfo.CurrentCulture, "{0}: {1}", header, message);
+            Debug.WriteLine(format);
 
             Debugger.Break();
         }
