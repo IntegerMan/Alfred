@@ -11,6 +11,7 @@ using System;
 using System.Reflection;
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Xml;
 
@@ -120,21 +121,18 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             }
             catch (ReflectionTypeLoadException rex)
             {
-                IFormattable message =
-                    $"Encountered reflection type load exception '{rex.Message}' loading assembly '{assembly.FullName}'.";
-                _engine.Log(message.ForUser(), LogLevel.Verbose);
+                var message = string.Format(CultureInfo.CurrentCulture, "Encountered reflection type load exception '{0}' loading assembly '{1}'.", rex.Message, assembly.FullName);
+                _engine.Log(message, LogLevel.Verbose);
             }
             catch (AmbiguousMatchException amex)
             {
-                IFormattable message =
-                    $"Encountered ambiguous match exception '{amex.Message}' loading assembly '{assembly.FullName}'.";
-                _engine.Log(message.ForUser(), LogLevel.Verbose);
+                var message = string.Format(CultureInfo.CurrentCulture, "Encountered ambiguous match exception '{0}' loading assembly '{1}'.", amex.Message, assembly.FullName);
+                _engine.Log(message, LogLevel.Verbose);
             }
             catch (TypeLoadException lex)
             {
-                IFormattable message =
-                    $"Encountered type load exception '{lex.Message}' on {lex.TypeName} while loading assembly '{assembly.FullName}'.";
-                _engine.Log(message.ForUser(), LogLevel.Verbose);
+                var message = string.Format(CultureInfo.CurrentCulture, "Encountered type load exception '{0}' on '{2}' while loading assembly '{1}'.", lex.Message, assembly.FullName, lex.TypeName);
+                _engine.Log(message, LogLevel.Verbose);
             }
 
         }
