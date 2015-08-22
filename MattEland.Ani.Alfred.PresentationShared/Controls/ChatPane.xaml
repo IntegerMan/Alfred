@@ -25,22 +25,20 @@
         </StackPanel>
 
         <!-- User Input area -->
-        <StackPanel HorizontalAlignment="Left"
-                    Width="250"
->
+        <StackPanel>
         <TextBlock Margin="0,8,0,4"
                    Text="Input:"
                    Foreground="{DynamicResource AppForegroundBrush}" />
 
             <DockPanel>
-                <Button x:Name="btnSubmit" 
+                <Button x:Name="SubmitButton" 
                     Margin="8,0,0,0"
                     Padding="8,0"
                     IsDefault="True"
                     Click="OnSubmitClicked"
                     DockPanel.Dock="Right"
                     Content="Submit" />
-                <TextBox x:Name="txtInput"
+                <TextBox x:Name="InputText"
                     ToolTip="Enter your statement here and click Submit once you're ready." />
 
             </DockPanel>

@@ -1,9 +1,10 @@
 ﻿// ---------------------------------------------------------
 // ChatPane.xaml.cs
 // 
-// Created on:      08/09/2015 at 11:57 PM
-// Last Modified:   08/10/2015 at 12:31 AM
-// Original author: Matt Eland
+// Created on:      08/20/2015 at 8:14 PM
+// Last Modified:   08/22/2015 at 2:22 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System.Collections.Generic;
@@ -37,7 +38,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Controls
         private void OnSubmitClicked(object sender, RoutedEventArgs e)
         {
             // Validate input
-            var text = txtInput.Text;
+            var text = InputText.Text;
             if (string.IsNullOrWhiteSpace(text))
             {
                 MessageBox.Show("No Message", "Please type a message before hitting send.");
@@ -50,8 +51,8 @@ namespace MattEland.Ani.Alfred.PresentationShared.Controls
             chatHandler.HandleUserStatement(text.Trim());
 
             // Clear out the input for the next time around
-            txtInput.Text = string.Empty;
-            txtInput.Focus();
+            InputText.Text = string.Empty;
+            InputText.Focus();
 
         }
     }

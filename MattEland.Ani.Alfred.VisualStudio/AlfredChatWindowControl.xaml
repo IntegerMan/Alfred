@@ -9,8 +9,9 @@
              Background="{DynamicResource VsBrush.Window}"
              Foreground="{DynamicResource VsBrush.WindowText}"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300"
-             Name="MyToolWindow" d:DataContext="{d:DesignInstance commands:ApplicationManager}">
+             d:DesignHeight="300" 
+             d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance commands:ApplicationManager}">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -29,10 +30,12 @@
     <!-- Chat Area -->
     <Grid Margin="8">
 
-        <Border Visibility="{Binding Path=Alfred.IsOnline, Converter={StaticResource ShowIfTrue}}">
-            <controls:ChatPane DataContext="{Binding Path=Alfred.ChatProvider}" />
+        <!-- Chat User Interface -->
+        <Border Visibility="{Binding Alfred.IsOnline, Converter={StaticResource ShowIfTrue}}">
+            <controls:ChatPane DataContext="{Binding Path=Alfred.ChatProvider}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" />
         </Border>
 
+        <!-- Offline Message -->
         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
                    Visibility="{Binding Alfred.IsOnline, Converter={StaticResource HideIfTrue}, ConverterParameter=True}">
             Alfred is Currently Offline
