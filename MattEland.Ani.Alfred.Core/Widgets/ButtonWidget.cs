@@ -87,14 +87,14 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         ///     cref="System.InvalidOperationException">
         ///     Tried to click the button when CanExecute on ClickCommand returned false.
         /// </exception>
+        /// <exception cref="InvalidOperationException">Tried to click the button when CanExecute on ClickCommand returned false.</exception>
         public void Click()
         {
             if (ClickCommand != null)
             {
                 if (!ClickCommand.CanExecute(this))
                 {
-                    throw new InvalidOperationException(
-                        "Tried to click the button when CanExecute on ClickCommand returned false.");
+                    throw new InvalidOperationException(Resources.ButtonWidgetClickCantExecuteErrorMessage);
                 }
 
                 ClickCommand.Execute(this);

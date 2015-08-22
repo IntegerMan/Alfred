@@ -117,4 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AlfredPackageInstantiatingAlfredLogMessage" xml:space="preserve">
+    <value>Instantiating Alfred</value>
+  </data>
+  <data name="AlfredPackageInstantiatingAlfredLogHeader" xml:space="preserve">
+    <value>Package</value>
+  </data>
+  <data name="AlfredPackageEnsureAlfredInstanceAutoStartingLogMessage" xml:space="preserve">
+    <value>Automatically starting Alfred</value>
+  </data>
+  <data name="AlfredToolWindowCaption" xml:space="preserve">
+    <value>Alfred Pages</value>
+  </data>
+  <data name="AlfredToolWindowControlInitializeLogHeader" xml:space="preserve">
+    <value>VsClient.Initialize</value>
+  </data>
+  <data name="AlfredToolWindowControlInitializeLogMessage" xml:space="preserve">
+    <value>Tool Window Created</value>
+  </data>
 </root>

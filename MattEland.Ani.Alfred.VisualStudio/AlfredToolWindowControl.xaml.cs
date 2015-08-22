@@ -2,7 +2,7 @@
 // AlfredToolWindowControl.xaml.cs
 // 
 // Created on:      08/20/2015 at 9:45 PM
-// Last Modified:   08/21/2015 at 1:09 AM
+// Last Modified:   08/21/2015 at 10:55 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -12,7 +12,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows;
-using System.Windows.Threading;
 
 using JetBrains.Annotations;
 
@@ -20,7 +19,6 @@ using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.PresentationShared.Commands;
 using MattEland.Ani.Alfred.PresentationShared.Helpers;
-using MattEland.Ani.Alfred.VisualStudio.Properties;
 using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.VisualStudio
@@ -54,7 +52,9 @@ namespace MattEland.Ani.Alfred.VisualStudio
                 // DataBindings rely on Alfred presently as there hasn't been a need for a page ViewModel yet
                 DataContext = _app;
 
-                _app.Console?.Log("WinClient.Initialize", "Tool Window Created", LogLevel.Verbose);
+                _app.Console?.Log(Properties.Resources.AlfredToolWindowControlInitializeLogHeader,
+                                  Properties.Resources.AlfredToolWindowControlInitializeLogMessage,
+                                  LogLevel.Verbose);
             }
             catch (Exception ex)
             {
@@ -72,6 +72,7 @@ namespace MattEland.Ani.Alfred.VisualStudio
 #endif
 
                 // We shouldn't load the page in a bad state. Crash the application
+                // ReSharper disable once HeuristicUnreachableCode
                 throw;
             }
         }
@@ -96,7 +97,7 @@ namespace MattEland.Ani.Alfred.VisualStudio
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="RoutedEventArgs" /> instance containing the event data.</param>
-        private void OnWindowLoaded(object sender, RoutedEventArgs e)
+        private void OnWindowLoaded([CanBeNull] object sender, [NotNull] RoutedEventArgs e)
         {
             var logHeader = "VSClient.Loaded";
 

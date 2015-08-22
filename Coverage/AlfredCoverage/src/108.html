@@ -11,13 +11,14 @@
 // ---------------------------------------------------------
 // StringExtensions.cs
 // 
-// Created on:      08/12/2015 at 2:12 PM
-// Last Modified:   08/14/2015 at 11:26 PM
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/21/2015 at 6:06 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
+using System.Globalization;
 using System.Text;
 
 using JetBrains.Annotations;
@@ -109,7 +110,7 @@ namespace MattEland.Common
         }
 
         /// &lt;summary&gt;
-        /// Converts the input string to an integer, falling back to the fallback value on parse error.
+        ///     Converts the input string to an integer, falling back to the fallback value on parse error.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
         /// &lt;param name=&quot;fallbackValue&quot;&gt;The fallback value. Defaults to 0.&lt;/param&gt;
@@ -129,7 +130,7 @@ namespace MattEland.Common
         }
 
         /// &lt;summary&gt;
-        /// Converts the input string to a double, falling back to the fallback value on parse error.
+        ///     Converts the input string to a double, falling back to the fallback value on parse error.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
         /// &lt;param name=&quot;fallbackValue&quot;&gt;The fallback value. Defaults to 0.&lt;/param&gt;
@@ -149,12 +150,15 @@ namespace MattEland.Common
         }
 
         /// &lt;summary&gt;
-        /// Appends to a string builder either as a standard append or as an AppendLine, depending on useNewLine
+        ///     Appends to a string builder either as a standard append or as an AppendLine, depending on
+        ///     useNewLine
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;stringBuilder&quot;&gt;The string builder.&lt;/param&gt;
         /// &lt;param name=&quot;message&quot;&gt;The message.&lt;/param&gt;
         /// &lt;param name=&quot;useNewLine&quot;&gt;Whether or not to include line breaks.&lt;/param&gt;
-        public static void AppendConditional([NotNull] this StringBuilder stringBuilder, string message, bool useNewLine)
+        public static void AppendConditional([NotNull] this StringBuilder stringBuilder,
+                                             string message,
+                                             bool useNewLine)
         {
             if (useNewLine)
             {
@@ -167,11 +171,51 @@ namespace MattEland.Common
 
         }
 
+        /// &lt;summary&gt;
+        /// Formats the specified input using the given culture (or current culture) and optional format string.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input.&lt;/param&gt;
+        /// &lt;param name=&quot;culture&quot;&gt;The culture.&lt;/param&gt;
+        /// &lt;param name=&quot;format&quot;&gt;The format.&lt;/param&gt;
+        /// &lt;returns&gt;The formatted string&lt;/returns&gt;
+        [NotNull]
+        public static string Format([NotNull] this IFormattable input,
+                                            [CanBeNull] CultureInfo culture = null,
+                                            [CanBeNull] string format = null)
+        {
+
+            culture = culture ?? CultureInfo.CurrentCulture;
+
+            return input.ToString(format, culture);
+        }
+
+        /// &lt;summary&gt;
+        /// Formats the given string using the user&#39;s culture
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input.&lt;/param&gt;
+        /// &lt;returns&gt;System.String.&lt;/returns&gt;
+        [NotNull]
+        public static string ForUser([NotNull] this IFormattable input)
+        {
+            return input.ToString();
+        }
+
+        /// &lt;summary&gt;
+        ///     Formats the given string using invariant culture.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input.&lt;/param&gt;
+        /// &lt;returns&gt;The formatted string&lt;/returns&gt;
+        [NotNull]
+        public static string Invariant([NotNull] this IFormattable input)
+        {
+            return input.Format(CultureInfo.InvariantCulture);
+        }
+
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[77,9,77,10,0],[78,13,78,37,0],[79,13,79,14,0],[80,17,80,70,0],[83,13,83,41,0],[84,9,84,10,0],[108,9,108,10,0],[112,13,112,58,0],[113,13,113,14,0],[115,17,115,40,0],[116,13,116,14,0],[118,13,118,27,0],[119,9,119,10,0],[128,9,128,10,0],[132,13,132,61,0],[133,13,133,14,0],[135,17,135,40,0],[136,13,136,14,0],[138,13,138,27,0],[139,9,139,10,0],[148,9,148,10,0],[149,13,149,28,0],[150,13,150,14,0],[151,17,151,51,0],[152,13,152,14,0],[154,13,154,14,0],[155,17,155,47,0],[156,13,156,14,0],[158,9,158,10,0],[29,9,29,10,1],[30,13,30,48,1],[31,9,31,10,1],[40,9,40,10,1],[41,13,41,48,1],[42,9,42,10,1],[51,9,51,10,1],[52,13,52,53,1],[53,9,53,10,1],[63,9,63,10,1],[64,13,64,42,1],[65,9,65,10,1],[97,9,97,10,1],[98,13,98,66,1],[99,9,99,10,1]]);
+      highlightRanges([[78,9,78,10,0],[79,13,79,37,0],[80,13,80,14,0],[81,17,81,70,0],[84,13,84,41,0],[85,9,85,10,0],[109,9,109,10,0],[113,13,113,58,0],[114,13,114,14,0],[116,17,116,40,0],[117,13,117,14,0],[119,13,119,27,0],[120,9,120,10,0],[129,9,129,10,0],[133,13,133,61,0],[134,13,134,14,0],[136,17,136,40,0],[137,13,137,14,0],[139,13,139,27,0],[140,9,140,10,0],[152,9,152,10,0],[153,13,153,28,0],[154,13,154,14,0],[155,17,155,51,0],[156,13,156,14,0],[158,13,158,14,0],[159,17,159,47,0],[160,13,160,14,0],[162,9,162,10,0],[175,9,175,10,0],[177,13,177,61,0],[179,13,179,52,0],[180,9,180,10,0],[189,9,189,10,0],[190,13,190,37,0],[191,9,191,10,0],[200,9,200,10,0],[201,13,201,63,0],[202,9,202,10,0],[30,9,30,10,1],[31,13,31,48,1],[32,9,32,10,1],[41,9,41,10,1],[42,13,42,48,1],[43,9,43,10,1],[52,9,52,10,1],[53,13,53,53,1],[54,9,54,10,1],[64,9,64,10,1],[65,13,65,42,1],[66,9,66,10,1],[98,9,98,10,1],[99,13,99,66,1],[100,9,100,10,1]]);
     </script>
   </body>
 </html>

@@ -106,6 +106,7 @@ namespace MattEland.Ani.Alfred.Core
         ///     Gets the name of the component.
         /// </summary>
         /// <value>The name of the component.</value>
+        [NotNull]
         public abstract string Name { get; }
 
         /// <summary>

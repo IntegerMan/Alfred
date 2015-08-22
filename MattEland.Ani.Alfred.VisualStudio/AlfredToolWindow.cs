@@ -4,6 +4,8 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
+using MattEland.Ani.Alfred.VisualStudio.Properties;
+
 namespace MattEland.Ani.Alfred.VisualStudio
 {
     using System;
@@ -27,14 +29,18 @@ namespace MattEland.Ani.Alfred.VisualStudio
         /// <summary>
         /// Initializes a new instance of the <see cref="AlfredToolWindow"/> class.
         /// </summary>
+        /// <exception cref="Exception">
+        ///     If any exception was encountered during startup, it will be logged and
+        ///     rethrown to the Visual Studio Host.
+        /// </exception>
         public AlfredToolWindow() : base(null)
         {
-            this.Caption = "Alfred Pages";
+            Caption = Resources.AlfredToolWindowCaption;
 
             // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
             // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
             // the object returned by the Content property.
-            this.Content = new AlfredToolWindowControl();
+            Content = new AlfredToolWindowControl();
         }
     }
 }

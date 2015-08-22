@@ -4,11 +4,8 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-using System;
-using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Runtime.InteropServices;
 
 using JetBrains.Annotations;
@@ -17,11 +14,7 @@ using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.PresentationShared.Commands;
 using MattEland.Ani.Alfred.VisualStudio.Properties;
 
-using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.Win32;
 
 namespace MattEland.Ani.Alfred.VisualStudio
 {
@@ -46,9 +39,9 @@ namespace MattEland.Ani.Alfred.VisualStudio
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof(AlfredToolWindow))]
-    [Guid(AlfredPackage.PackageGuidString)]
+    [Guid(PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
-    [ProvideToolWindow(typeof(MattEland.Ani.Alfred.VisualStudio.AlfredChatWindow))]
+    [ProvideToolWindow(typeof(AlfredChatWindow))]
     public sealed class AlfredPackage : Package
     {
         [CanBeNull]
@@ -83,11 +76,12 @@ namespace MattEland.Ani.Alfred.VisualStudio
             {
                 var provider = new XamlPlatformProvider();
                 _app = new ApplicationManager(provider, null);
-                _app.Console?.Log("Package", "Instantiating Alfred", LogLevel.Verbose);
+                _app.Console?.Log(Resources.AlfredPackageInstantiatingAlfredLogHeader, Resources.AlfredPackageInstantiatingAlfredLogMessage, LogLevel.Verbose);
 
+                Debug.Assert(Settings.Default != null);
                 if (Settings.Default.AutoStartAlfred)
                 {
-                    _app.Console?.Log("Package", "Automatically starting Alfred", LogLevel.Verbose);
+                    _app.Console?.Log(Resources.AlfredPackageInstantiatingAlfredLogHeader, Resources.AlfredPackageEnsureAlfredInstanceAutoStartingLogMessage, LogLevel.Verbose);
                     _app.Start();
                 }
             }
@@ -118,7 +112,7 @@ namespace MattEland.Ani.Alfred.VisualStudio
         {
             AlfredToolWindowCommand.Initialize(this);
             base.Initialize();
-            MattEland.Ani.Alfred.VisualStudio.AlfredChatWindowCommand.Initialize(this);
+            AlfredChatWindowCommand.Initialize(this);
         }
 
         #endregion

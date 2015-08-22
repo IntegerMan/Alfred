@@ -59,5 +59,59 @@ namespace MattEland.Ani.Alfred.VisualStudio.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Automatically starting Alfred.
+        /// </summary>
+        internal static string AlfredPackageEnsureAlfredInstanceAutoStartingLogMessage {
+            get {
+                return ResourceManager.GetString("AlfredPackageEnsureAlfredInstanceAutoStartingLogMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Package.
+        /// </summary>
+        internal static string AlfredPackageInstantiatingAlfredLogHeader {
+            get {
+                return ResourceManager.GetString("AlfredPackageInstantiatingAlfredLogHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Instantiating Alfred.
+        /// </summary>
+        internal static string AlfredPackageInstantiatingAlfredLogMessage {
+            get {
+                return ResourceManager.GetString("AlfredPackageInstantiatingAlfredLogMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alfred Pages.
+        /// </summary>
+        internal static string AlfredToolWindowCaption {
+            get {
+                return ResourceManager.GetString("AlfredToolWindowCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VsClient.Initialize.
+        /// </summary>
+        internal static string AlfredToolWindowControlInitializeLogHeader {
+            get {
+                return ResourceManager.GetString("AlfredToolWindowControlInitializeLogHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tool Window Created.
+        /// </summary>
+        internal static string AlfredToolWindowControlInitializeLogMessage {
+            get {
+                return ResourceManager.GetString("AlfredToolWindowControlInitializeLogMessage", resourceCulture);
+            }
+        }
     }
 }

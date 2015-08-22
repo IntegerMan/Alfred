@@ -51,9 +51,9 @@ namespace MattEland.Ani.Alfred.Chat
             var target = command.Subsystem;
 
             // Commands are very, very important and need to be logged.
-            alfred.Console?.Log("CommandRouting",
+            alfred.Console?.Log(Resources.AlfredCommandRouterProcessAlfredCommandLogHeader,
                                 string.Format(CultureInfo.CurrentCulture,
-                                              "Command '{0}' raised for subsystem '{1}' with data value of '{2}'.",
+                                              Resources.AlfredCommandRouterProcessAlfredCommandLogMessage,
                                               command.Name,
                                               target,
                                               command.Data),
@@ -86,9 +86,9 @@ namespace MattEland.Ani.Alfred.Chat
         public string ProcessShellCommand(ShellCommand command)
         {
             // Commands are very, very important and need to be logged.
-            Alfred?.Console?.Log("CommandRouting",
-                                 string.Format(
-                                               "Shell Command '{0}' raised targeting '{1}' with data value of '{2}'.",
+            Alfred?.Console?.Log(Resources.AlfredCommandRouterProcessShellCommandLogHeader,
+                                 string.Format(CultureInfo.CurrentCulture,
+                                               Resources.AlfredCommandRouterProcessShellCommandMessage,
                                                command.Name,
                                                command.Target,
                                                command.Data),

@@ -7,7 +7,9 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 
 using JetBrains.Annotations;
 
@@ -71,8 +73,9 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// </summary>
         /// <param name="categoryName">Name of the category.</param>
         /// <returns>A collection of counter instance names</returns>
-        public IEnumerable<string> GetCategoryInstanceNames(string categoryName)
+        public IEnumerable<string> GetCategoryInstanceNames([NotNull] string categoryName)
         {
+            //Contract.Requires<ArgumentNullException>(categoryName != null);
             if (CategoryInstanceNames.ContainsKey(categoryName))
             {
                 return CategoryInstanceNames[categoryName];

@@ -107,7 +107,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         public override bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
         {
 
-            foreach (IAlfredModule module in this.Modules)
+            foreach (IAlfredModule module in Modules)
             {
                 if (module.ProcessAlfredCommand(command, result))
                 {

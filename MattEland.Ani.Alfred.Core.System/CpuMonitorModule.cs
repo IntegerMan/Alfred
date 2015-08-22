@@ -8,7 +8,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -60,6 +59,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <value>
         ///     The name of the module.
         /// </value>
+        [NotNull]
         public override string Name
         {
             // ReSharper disable once AssignNullToNotNullAttribute

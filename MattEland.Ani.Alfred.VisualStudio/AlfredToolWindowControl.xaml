@@ -5,12 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:helpers="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Helpers;assembly=MattEland.Ani.Alfred.PresentationShared"
              xmlns:controls="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Controls;assembly=MattEland.Ani.Alfred.PresentationShared"
+             xmlns:definitions="clr-namespace:MattEland.Ani.Alfred.Core.Definitions;assembly=MattEland.Ani.Alfred.Core"
+             xmlns:commands="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Commands;assembly=MattEland.Ani.Alfred.PresentationShared"
              Loaded="OnWindowLoaded"
              Background="{DynamicResource VsBrush.Window}"
              Foreground="{DynamicResource VsBrush.WindowText}"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
-             Name="MyToolWindow">
+             Name="MyToolWindow" d:DataContext="{d:DesignInstance commands:ApplicationManager}">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -31,7 +33,7 @@
         <Border Margin="4" 
                 DockPanel.Dock="Top"
                 Visibility="{Binding Alfred.IsOnline, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <controls:ChatPane DataContext="{Binding Path=Alfred.ChatProvider}" />
+            <controls:ChatPane DataContext="{Binding Alfred.ChatProvider}" />
         </Border>
 
         <!-- Tabbed Content Regions -->
@@ -42,20 +44,20 @@
                     ItemsSource="{Binding Alfred.RootPages}">
 
             <TabControl.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate DataType="{x:Type definitions:IAlfredPage}">
                     <!-- Tabs are pretty simple; just show the name -->
                     <TextBlock Text="{Binding Name}" />
                 </DataTemplate>
             </TabControl.ItemTemplate>
 
             <TabControl.ContentTemplate>
-                <DataTemplate>
+                <DataTemplate DataType="{x:Type definitions:IAlfredPage}">
                     <DockPanel>
 
                         <!-- Header -->
                         <Border DockPanel.Dock="Top"
                                 Style="{StaticResource HeaderBannerBorderStyle}">
-                            <TextBlock Text="{Binding Alfred.Name}"
+                            <TextBlock Text="{Binding Name}"
                                        Style="{StaticResource HeaderBannerTextBlockStyle}" />
                         </Border>
 

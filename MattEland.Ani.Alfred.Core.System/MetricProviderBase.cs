@@ -15,7 +15,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
     ///     An abstract class representing an object capable of providing metrics periodically via a
     ///     NextValue method.
     /// </summary>
-    public abstract class MetricProviderBase : IDisposable
+    public abstract class MetricProviderBase
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="MetricProviderBase" /> class.

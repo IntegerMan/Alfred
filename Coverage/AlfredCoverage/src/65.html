@@ -11,8 +11,8 @@
 // ---------------------------------------------------------
 // TagHandlerFactory.cs
 // 
-// Created on:      08/14/2015 at 12:14 AM
-// Last Modified:   08/18/2015 at 4:03 PM
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/21/2015 at 6:14 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -28,6 +28,8 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Common;
+
+using static MattEland.Common.StringExtensions;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
@@ -85,7 +87,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         ///     AimlTagHandler and decorated with the HandlesAimlTag attribute.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;assembly&quot;&gt;The assembly.&lt;/param&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;assembly&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;assembly&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
         public void RegisterTagHandlersInAssembly([NotNull] Assembly assembly)
         {
             //- Validation
@@ -103,14 +105,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                 foreach (var type in types)
                 {
                     // We can&#39;t instantiate an abstract type and we need AimlTagHandlers for this
-                    if (type.IsAbstract || !type.IsSubclassOf(typeof(AimlTagHandler)))
+                    if (type.IsAbstract || !type.IsSubclassOf(typeof (AimlTagHandler)))
                     {
                         continue;
                     }
 
                     // Grab the attribute and exit early if it&#39;s not there
                     var attribute =
-                        type.GetCustomAttribute(typeof(HandlesAimlTagAttribute)) as
+                        type.GetCustomAttribute(typeof (HandlesAimlTagAttribute)) as
                         HandlesAimlTagAttribute;
                     if (attribute == null)
                     {
@@ -129,11 +131,21 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             }
             catch (ReflectionTypeLoadException rex)
             {
-                _engine.Log($&quot;Encountered reflection type load exception &#39;{rex.Message}&#39; loading assembly &#39;{assembly.FullName}&#39;.&quot;, LogLevel.Error);
+                IFormattable message =
+                    $&quot;Encountered reflection type load exception &#39;{rex.Message}&#39; loading assembly &#39;{assembly.FullName}&#39;.&quot;;
+                _engine.Log(message.ForUser(), LogLevel.Error);
             }
             catch (AmbiguousMatchException amex)
             {
-                _engine.Log($&quot;Encountered ambiguous match exception &#39;{amex.Message}&#39; loading assembly &#39;{assembly.FullName}&#39;.&quot;, LogLevel.Error);
+                IFormattable message =
+                    $&quot;Encountered ambiguous match exception &#39;{amex.Message}&#39; loading assembly &#39;{assembly.FullName}&#39;.&quot;;
+                _engine.Log(message.ForUser(), LogLevel.Error);
+            }
+            catch (TypeLoadException lex)
+            {
+                IFormattable message =
+                    $&quot;Encountered type load exception &#39;{lex.Message}&#39; on {lex.TypeName} while loading assembly &#39;{assembly.FullName}&#39;.&quot;;
+                _engine.Log(message.ForUser(), LogLevel.Error);
             }
 
         }
@@ -282,7 +294,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[83,13,83,14,0],[84,17,84,67,0],[97,21,97,22,0],[98,25,98,34,0],[106,21,106,22,0],[107,25,107,34,0],[120,13,120,52,0],[121,13,121,14,0],[122,17,122,148,0],[123,13,123,14,0],[124,13,124,49,0],[125,13,125,14,0],[126,17,126,144,0],[127,13,127,14,0],[152,13,152,14,0],[153,17,153,63,0],[156,13,156,14,0],[157,17,157,64,0],[160,13,160,14,0],[161,17,161,66,0],[164,13,164,14,0],[165,17,165,63,0],[168,13,168,14,0],[169,17,169,29,0],[215,13,215,14,0],[216,17,216,29,0],[237,17,241,50,0],[243,13,243,14,0],[244,13,244,49,0],[245,13,245,14,0],[247,17,251,56,0],[253,13,253,14,0],[254,13,254,46,0],[255,13,255,14,0],[257,17,261,56,0],[263,13,263,14,0],[266,13,266,53,0],[267,13,267,44,0],[269,13,269,25,0],[35,9,35,101,1],[41,9,41,62,1],[42,9,42,10,1],[44,13,44,32,1],[45,13,45,14,1],[46,17,46,65,1],[50,13,50,30,1],[53,13,53,46,1],[54,9,54,10,1],[61,9,61,10,1],[63,13,63,70,1],[66,13,66,20,1],[66,38,66,67,1],[66,83,66,84,1],[66,22,66,34,1],[67,13,67,14,1],[68,17,68,57,1],[69,13,69,14,1],[66,35,66,37,1],[70,9,70,10,1],[80,9,80,10,1],[82,13,82,34,1],[89,13,89,14,1],[90,17,90,102,1],[93,17,93,24,1],[93,38,93,43,1],[93,26,93,34,1],[94,17,94,18,1],[96,21,96,87,1],[102,21,104,49,1],[105,21,105,43,1],[111,21,111,67,1],[112,21,112,52,1],[113,21,113,22,1],[114,25,114,57,1],[115,21,115,22,1],[117,17,117,18,1],[93,35,93,37,1],[119,13,119,14,1],[129,9,129,10,1],[149,9,149,10,1],[151,13,151,30,1],[155,13,155,31,1],[159,13,159,33,1],[163,13,163,30,1],[167,13,167,33,1],[174,13,174,100,1],[177,13,177,64,1],[178,9,178,10,1],[195,9,195,10,1],[196,13,196,36,1],[197,13,197,14,1],[198,17,198,69,1],[200,13,200,35,1],[201,13,201,14,1],[202,17,202,66,1],[206,13,206,53,1],[207,13,207,54,1],[208,13,208,14,1],[209,17,209,29,1],[213,13,213,48,1],[214,13,214,30,1],[222,13,222,14,1],[227,17,227,75,1],[230,17,230,58,1],[231,17,231,37,1],[232,17,232,18,1],[233,21,233,36,1],[270,9,270,10,1],[66,67,66,83,1]]);
+      highlightRanges([[85,13,85,14,0],[86,17,86,67,0],[99,21,99,22,0],[100,25,100,34,0],[108,21,108,22,0],[109,25,109,34,0],[122,13,122,52,0],[123,13,123,14,0],[124,17,125,123,0],[126,17,126,64,0],[127,13,127,14,0],[128,13,128,49,0],[129,13,129,14,0],[130,17,131,119,0],[132,17,132,64,0],[133,13,133,14,0],[134,13,134,42,0],[135,13,135,14,0],[136,17,137,136,0],[138,17,138,64,0],[139,13,139,14,0],[164,13,164,14,0],[165,17,165,63,0],[168,13,168,14,0],[169,17,169,64,0],[172,13,172,14,0],[173,17,173,66,0],[176,13,176,14,0],[177,17,177,63,0],[180,13,180,14,0],[181,17,181,29,0],[227,13,227,14,0],[228,17,228,29,0],[249,17,253,50,0],[255,13,255,14,0],[256,13,256,49,0],[257,13,257,14,0],[259,17,263,56,0],[265,13,265,14,0],[266,13,266,46,0],[267,13,267,14,0],[269,17,273,56,0],[275,13,275,14,0],[278,13,278,53,0],[279,13,279,44,0],[281,13,281,25,0],[37,9,37,101,1],[43,9,43,62,1],[44,9,44,10,1],[46,13,46,32,1],[47,13,47,14,1],[48,17,48,65,1],[52,13,52,30,1],[55,13,55,46,1],[56,9,56,10,1],[63,9,63,10,1],[65,13,65,70,1],[68,13,68,20,1],[68,38,68,67,1],[68,83,68,84,1],[68,22,68,34,1],[69,13,69,14,1],[70,17,70,57,1],[71,13,71,14,1],[68,35,68,37,1],[72,9,72,10,1],[82,9,82,10,1],[84,13,84,34,1],[91,13,91,14,1],[92,17,92,102,1],[95,17,95,24,1],[95,38,95,43,1],[95,26,95,34,1],[96,17,96,18,1],[98,21,98,88,1],[104,21,106,49,1],[107,21,107,43,1],[113,21,113,67,1],[114,21,114,52,1],[115,21,115,22,1],[116,25,116,57,1],[117,21,117,22,1],[119,17,119,18,1],[95,35,95,37,1],[121,13,121,14,1],[141,9,141,10,1],[161,9,161,10,1],[163,13,163,30,1],[167,13,167,31,1],[171,13,171,33,1],[175,13,175,30,1],[179,13,179,33,1],[186,13,186,100,1],[189,13,189,64,1],[190,9,190,10,1],[207,9,207,10,1],[208,13,208,36,1],[209,13,209,14,1],[210,17,210,69,1],[212,13,212,35,1],[213,13,213,14,1],[214,17,214,66,1],[218,13,218,53,1],[219,13,219,54,1],[220,13,220,14,1],[221,17,221,29,1],[225,13,225,48,1],[226,13,226,30,1],[234,13,234,14,1],[239,17,239,75,1],[242,17,242,58,1],[243,17,243,37,1],[244,17,244,18,1],[245,21,245,36,1],[282,9,282,10,1],[68,67,68,83,1]]);
     </script>
   </body>
 </html>
