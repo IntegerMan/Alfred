@@ -70,7 +70,7 @@ namespace MattEland.Ani.Alfred.VisualStudio
         /// </summary>
         /// <returns>The ApplicationManager.</returns>
         [NotNull]
-        private static ApplicationManager EnsureAlfredInstance()
+        internal static ApplicationManager EnsureAlfredInstance()
         {
             if (_app == null)
             {
@@ -110,8 +110,14 @@ namespace MattEland.Ani.Alfred.VisualStudio
         /// </summary>
         protected override void Initialize()
         {
-            AlfredToolWindowCommand.Initialize(this);
+
             base.Initialize();
+
+            // Let's get Alfred ready before we add the controls
+            EnsureAlfredInstance();
+
+            // Add tool window display commands
+            AlfredToolWindowCommand.Initialize(this);
             AlfredChatWindowCommand.Initialize(this);
         }
 

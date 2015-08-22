@@ -2,7 +2,7 @@
 // AlfredToolWindowControl.xaml.cs
 // 
 // Created on:      08/20/2015 at 9:45 PM
-// Last Modified:   08/21/2015 at 10:55 PM
+// Last Modified:   08/22/2015 at 2:17 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -101,8 +101,19 @@ namespace MattEland.Ani.Alfred.VisualStudio
         {
             var logHeader = "VSClient.Loaded";
 
-            // Auto-select the first tab if any tabs are present
             Debug.Assert(tabPages != null);
+
+            /* HACK: For whatever reason, the binding for tabPages.ItemsSource doesn't
+            kick in on the loaded event leaving this control with no selection or items
+            to auto-select. If that's the case, forgo the binding and stick the 
+            collection in there manually so we have an item that can be auto-selected. */
+
+            if (!tabPages.HasItems && _app.Alfred.RootPages.Any())
+            {
+                tabPages.ItemsSource = _app.Alfred.RootPages;
+            }
+
+            // Auto-select the first tab if any tabs are present
             SelectionHelper.SelectFirstItem(tabPages);
 
             // Log that we're good to go
