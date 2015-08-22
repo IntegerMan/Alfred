@@ -109,7 +109,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                     }
 
                     // The attribute is present. Add it to the dictionary as a type handler
-                    var name = attribute.Name?.ToUpperInvariant();
+                    var name = attribute.Name.ToUpperInvariant();
                     if (!name.IsNullOrWhitespace())
                     {
                         _handlerMapping.Add(name, type);
@@ -122,19 +122,19 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             {
                 IFormattable message =
                     $"Encountered reflection type load exception '{rex.Message}' loading assembly '{assembly.FullName}'.";
-                _engine.Log(message.ForUser(), LogLevel.Error);
+                _engine.Log(message.ForUser(), LogLevel.Verbose);
             }
             catch (AmbiguousMatchException amex)
             {
                 IFormattable message =
                     $"Encountered ambiguous match exception '{amex.Message}' loading assembly '{assembly.FullName}'.";
-                _engine.Log(message.ForUser(), LogLevel.Error);
+                _engine.Log(message.ForUser(), LogLevel.Verbose);
             }
             catch (TypeLoadException lex)
             {
                 IFormattable message =
                     $"Encountered type load exception '{lex.Message}' on {lex.TypeName} while loading assembly '{assembly.FullName}'.";
-                _engine.Log(message.ForUser(), LogLevel.Error);
+                _engine.Log(message.ForUser(), LogLevel.Verbose);
             }
 
         }
@@ -154,7 +154,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         public AimlTagHandler Build([NotNull] XmlNode node,
                                     [NotNull] SubQuery query,
                                     [NotNull] Request request,
-                                    Result result,
+                                    [NotNull] Result result,
                                     [NotNull] User user,
                                     [CanBeNull] string tagName)
         {

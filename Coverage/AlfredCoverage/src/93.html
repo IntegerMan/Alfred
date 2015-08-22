@@ -17,8 +17,6 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
-
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
@@ -49,7 +47,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         {
             if (TemplateNode.Name.Matches(&quot;version&quot;))
             {
-                return GetType().GetAssemblyVersion()?.ToString();
+                return (GetType().GetAssemblyVersion()?.ToString()).NonNull();
             }
 
             return string.Empty;
@@ -58,7 +56,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[30,15,30,31,0],[31,9,31,10,0],[32,9,32,10,0],[39,9,39,10,0],[40,13,40,54,0],[41,13,41,14,0],[42,17,42,67,0],[45,13,45,33,0],[46,9,46,10,0]]);
+      highlightRanges([[28,15,28,31,0],[29,9,29,10,0],[30,9,30,10,0],[37,9,37,10,0],[38,13,38,54,0],[39,13,39,14,0],[40,17,40,79,0],[43,13,43,33,0],[44,9,44,10,0]]);
     </script>
   </body>
 </html>

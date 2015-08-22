@@ -2,23 +2,22 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.core.system\performancecountermetricprovider.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core.system\valuemetricproviderfactory.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// PerformanceCounterMetricProvider.cs
+// ValueMetricProviderFactory.cs
 // 
-// Created on:      08/18/2015 at 11:29 AM
-// Last Modified:   08/18/2015 at 3:12 PM
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/21/2015 at 5:33 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
-using System.ComponentModel;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 using JetBrains.Annotations;
@@ -26,64 +25,81 @@ using JetBrains.Annotations;
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
     /// &lt;summary&gt;
-    ///     A metric provider based on a performance counter.
+    ///     A factory that builds ValueMetricProviders
     /// &lt;/summary&gt;
-    public sealed class CounterMetricProvider : MetricProviderBase
+    /// &lt;remarks&gt;
+    ///     This is primarily used for testing
+    /// &lt;/remarks&gt;
+    public class ValueMetricProviderFactory : IMetricProviderFactory
     {
-        [NotNull]
-        private readonly PerformanceCounter _counter;
+        /// &lt;summary&gt;
+        ///     Gets or sets the value to provide to ValueMetricProviders that don&#39;t have values of their own
+        ///     set.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The value.&lt;/value&gt;
+        public float DefaultValue { get; set; }
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;CounterMetricProvider&quot; /&gt; class.
+        ///     Gets the value providers.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The value providers.&lt;/value&gt;
+        [NotNull]
+        [ItemNotNull]
+        [UsedImplicitly]
+        public ICollection&lt;ValueMetricProvider&gt; Providers { get; } = new List&lt;ValueMetricProvider&gt;();
+
+        /// &lt;summary&gt;
+        ///     Gets the category instance names dictionary. This dictionary allows test code to register
+        ///     expected responses for when GetCategoryInstanceNames is called.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The category instance names.&lt;/value&gt;
+        [NotNull, ItemNotNull]
+        public IDictionary&lt;string, IEnumerable&lt;string&gt;&gt; CategoryInstanceNames { get; } =
+            new Dictionary&lt;string, IEnumerable&lt;string&gt;&gt;();
+
+        /// &lt;summary&gt;
+        ///     Builds a metric provider for the specified type.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;categoryName&quot;&gt;Name of the category.&lt;/param&gt;
         /// &lt;param name=&quot;counterName&quot;&gt;Name of the counter.&lt;/param&gt;
-        /// &lt;param name=&quot;instance&quot;&gt;The instance.&lt;/param&gt;
-        /// &lt;exception cref=&quot;Win32Exception&quot;&gt;An error occurred when accessing a system API.&lt;/exception&gt;
-        /// &lt;exception cref=&quot;UnauthorizedAccessException&quot;&gt;
-        ///     Code that is executing without administrative
-        ///     privileges attempted to read a performance counter.
-        /// &lt;/exception&gt;
-        public CounterMetricProvider(string categoryName, string counterName, string instance = null)
-            : base(instance ?? counterName)
+        /// &lt;param name=&quot;instanceName&quot;&gt;Name of the instance.&lt;/param&gt;
+        /// &lt;returns&gt;A metric provider&lt;/returns&gt;
+        [NotNull]
+        public MetricProviderBase Build([NotNull] string categoryName,
+                                        [NotNull] string counterName,
+                                        [CanBeNull] string instanceName = null)
         {
-            _counter = new PerformanceCounter(categoryName, counterName, instance, true);
+            var provider = new ValueMetricProvider(this, instanceName ?? counterName);
 
-            /* Tell the performance counter to start getting values. These tend to always return 
-               0.0 as the first value and then provide accurate data after that */
-            _counter.NextValue();
+            // Register the item in the list so it can be accessed during testing
+            Providers.Add(provider);
+
+            return provider;
         }
 
         /// &lt;summary&gt;
-        ///     Gets the next value from the metric provider
+        ///     Gets the names of each counter instance in a category.
         /// &lt;/summary&gt;
-        /// &lt;returns&gt;The next vaue&lt;/returns&gt;
-        /// &lt;exception cref=&quot;Win32Exception&quot;&gt;An error occurred when accessing a system API.&lt;/exception&gt;
-        /// &lt;exception cref=&quot;UnauthorizedAccessException&quot;&gt;
-        ///     Code that is executing without administrative
-        ///     privileges attempted to read a performance counter.
-        /// &lt;/exception&gt;
-        public override float NextValue()
+        /// &lt;param name=&quot;categoryName&quot;&gt;Name of the category.&lt;/param&gt;
+        /// &lt;returns&gt;A collection of counter instance names&lt;/returns&gt;
+        [NotNull]
+        public IEnumerable&lt;string&gt; GetCategoryInstanceNames([NotNull] string categoryName)
         {
-            return _counter.NextValue();
-        }
+            if (CategoryInstanceNames.ContainsKey(categoryName))
+            {
+                var instanceNames = CategoryInstanceNames[categoryName];
+                Debug.Assert(instanceNames != null);
+                return instanceNames;
+            }
 
-        /// &lt;summary&gt;
-        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged
-        ///     resources.
-        /// &lt;/summary&gt;
-        public override void Dispose()
-        {
-            base.Dispose();
-
-            _counter.Dispose();
+            // Fallback to an empty list
+            return new List&lt;string&gt;();
         }
     }
-
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[38,15,38,44,0],[39,9,39,10,0],[40,13,40,90,0],[44,13,44,34,0],[45,9,45,10,0],[57,9,57,10,0],[58,13,58,41,0],[59,9,59,10,0],[66,9,66,10,0],[67,13,67,28,0],[69,13,69,32,0],[70,9,70,10,0]]);
+      highlightRanges([[30,37,30,41,1],[30,42,30,46,1],[39,61,39,65,1],[47,81,47,85,1],[61,9,61,10,1],[62,13,62,87,1],[65,13,65,37,1],[67,13,67,29,1],[68,9,68,10,1],[77,9,77,10,1],[78,13,78,65,1],[79,13,79,14,1],[80,17,80,73,1],[81,17,81,53,1],[82,17,82,38,1],[86,13,86,39,1],[87,9,87,10,1],[39,70,39,101,1],[48,13,48,58,1]]);
     </script>
   </body>
 </html>

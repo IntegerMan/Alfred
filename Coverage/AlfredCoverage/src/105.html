@@ -2,87 +2,153 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.common\collectionextensions.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.aiml\alfredchatsubsystem.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// CollectionExtensions.cs
+// AlfredChatSubsystem.cs
 // 
-// Created on:      08/14/2015 at 12:55 AM
-// Last Modified:   08/14/2015 at 12:59 AM
-// 
-// Last Modified by: Matt Eland
+// Created on:      08/09/2015 at 11:09 PM
+// Last Modified:   08/12/2015 at 3:54 PM
+// Original author: Matt Eland
 // ---------------------------------------------------------
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 
 using JetBrains.Annotations;
 
-namespace MattEland.Common
+using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common;
+
+using Res = MattEland.Ani.Alfred.Chat.Resources;
+
+namespace MattEland.Ani.Alfred.Chat
 {
     /// &lt;summary&gt;
-    ///     A set of extension methods related to collections
+    ///     The Chat subsystem for Alfred. Presents a chatting mechanism using AIML powered conversation bots.
     /// &lt;/summary&gt;
-    public static class CollectionExtensions
+    public sealed class AlfredChatSubsystem : AlfredSubsystem
     {
+        [NotNull]
+        private readonly AimlStatementHandler _chatHandler;
+
         /// &lt;summary&gt;
-        ///     Adds an item to a collection safely. This is a convenience method that does null and duplicate checking
-        ///     based on the type of item / collection and will throw null reference or invalid operation exceptions if illegal
-        ///     circumstances are met.
+        /// Gets the chat handler.
         /// &lt;/summary&gt;
-        /// &lt;typeparam name=&quot;T&quot;&gt;The type of item&lt;/typeparam&gt;
-        /// &lt;param name=&quot;item&quot;&gt;The item.&lt;/param&gt;
-        /// &lt;param name=&quot;collection&quot;&gt;The collection.&lt;/param&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;
-        ///     item, collection
-        /// &lt;/exception&gt;
-        /// &lt;exception cref=&quot;System.InvalidOperationException&quot;&gt;The specified item was already part of the collection&lt;/exception&gt;
-        public static void AddSafe&lt;T&gt;([NotNull] this ICollection&lt;T&gt; collection, [NotNull] T item)
+        /// &lt;value&gt;The chat handler.&lt;/value&gt;
+        [NotNull]
+        public AimlStatementHandler ChatHandler
         {
-            if (item == null)
-            {
-                throw new ArgumentNullException(nameof(item));
-            }
-            if (collection == null)
-            {
-                throw new ArgumentNullException(nameof(collection));
-            }
+            [DebuggerStepThrough]
+            get
+            { return _chatHandler; }
+        }
 
-            // This shouldn&#39;t happen, but I want to check to make sure
-            if (collection.Contains(item))
-            {
-                throw new InvalidOperationException(Resources.ErrorItemAlreadyInCollection);
-            }
+        [NotNull]
+        private readonly ChatPage _chatPage;
 
-            collection.Add(item);
+        [NotNull]
+        private readonly AlfredCommandRouter _commandRouter = new AlfredCommandRouter();
+
+        /// &lt;summary&gt;
+        /// Handles initialization events
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;alfred&quot;&gt;The alfred instance.&lt;/param&gt;
+        protected override void InitializeProtected(IAlfred alfred)
+        {
+            // Tell the chat engine where to send its mail
+            _commandRouter.Alfred = alfred;
+            _chatHandler.UpdateOwner(_commandRouter);
         }
 
         /// &lt;summary&gt;
-        /// Returns the singular value if collection&#39;s count of items is 1. Otherwise plural is returned.
+        ///     Handles shutdown events
         /// &lt;/summary&gt;
-        /// &lt;typeparam name=&quot;T&quot;&gt;The type the generic collection is holding.&lt;/typeparam&gt;
-        /// &lt;param name=&quot;collection&quot;&gt;The collection.&lt;/param&gt;
-        /// &lt;param name=&quot;singular&quot;&gt;The singular return value.&lt;/param&gt;
-        /// &lt;param name=&quot;plural&quot;&gt;The plural return value.&lt;/param&gt;
-        /// &lt;returns&gt;The singular value if the item count is 1. Otherwise plural is returned.&lt;/returns&gt;
-        public static string Pluralize&lt;T&gt;([NotNull] this IEnumerable&lt;T&gt; collection,
-                                       string singular,
-                                       string plural)
+        protected override void ShutdownProtected()
         {
-            var count = collection.Count&lt;T&gt;();
-            return count.Pluralize(singular, plural);
+            // Clear out the owner just in case
+            _chatHandler.UpdateOwner(null);
+        }
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;AlfredSubsystem&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;provider&quot;&gt;The provider.&lt;/param&gt;
+        /// &lt;param name=&quot;console&quot;&gt;The console.&lt;/param&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        public AlfredChatSubsystem([NotNull] IPlatformProvider provider,
+                                   [CanBeNull] IConsole console) : base(provider, console)
+        {
+            _chatHandler = new AimlStatementHandler(console);
+            _chatPage = new ChatPage(Res.ChatModuleName.NonNull(), _chatHandler);
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets whether the page should be registered. If not, the chat functionality will just be supplied to the
+        ///     system via the chat handler.
+        ///     Defaults to false.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;Whether or not the page should be registered.&lt;/value&gt;
+        public bool RegisterPage { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Gets the name of the component.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The name of the component.&lt;/value&gt;
+        [NotNull]
+        public override string Name
+        {
+            get { return Res.ChatModuleName.NonNull(); }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the identifier for the subsystem to be used in command routing.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The identifier for the subsystem.&lt;/value&gt;
+        [NotNull]
+        public override string Id
+        {
+            get { return &quot;Chat&quot;; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Allows components to define controls
+        /// &lt;/summary&gt;
+        protected override void RegisterControls()
+        {
+            base.RegisterControls();
+
+            // We don&#39;t have console until we&#39;re registered, so update it here
+            _chatHandler.Console = AlfredInstance?.Console;
+
+            // Register with the rest of the system
+            if (RegisterPage)
+            {
+                Register(_chatPage);
+            }
+            Register(_chatHandler);
+        }
+
+        /// &lt;summary&gt;
+        ///     A notification method that is invoked when initialization for Alfred is complete so the UI can be fully enabled or
+        ///     adjusted
+        /// &lt;/summary&gt;
+        public override void OnInitializationCompleted()
+        {
+            // Say hi so Alfred greets the user
+            AlfredInstance?.ChatProvider?.DoInitialGreeting();
         }
     }
+
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[39,13,39,14,0],[40,17,40,63,0],[43,13,43,14,0],[44,17,44,69,0],[37,9,37,10,1],[38,13,38,30,1],[42,13,42,36,1],[48,13,48,43,1],[49,13,49,14,1],[50,17,50,93,1],[53,13,53,34,1],[54,9,54,10,1],[67,9,67,10,1],[68,13,68,47,1],[69,13,69,54,1],[70,9,70,10,1]]);
+      highlightRanges([[87,41,87,45,0],[121,13,121,14,0],[122,17,122,37,0],[123,13,123,14,0],[132,9,132,10,0],[134,13,134,63,0],[135,9,135,10,0],[39,13,39,14,1],[39,15,39,35,1],[39,36,39,37,1],[53,9,53,10,1],[55,13,55,44,1],[56,13,56,54,1],[57,9,57,10,1],[63,9,63,10,1],[65,13,65,44,1],[66,9,66,10,1],[46,9,46,89,1],[75,68,75,91,1],[76,9,76,10,1],[77,13,77,62,1],[78,13,78,82,1],[79,9,79,10,1],[87,36,87,40,1],[96,17,96,18,1],[96,19,96,55,1],[96,56,96,57,1],[106,17,106,18,1],[106,19,106,33,1],[106,34,106,35,1],[113,9,113,10,1],[114,13,114,37,1],[117,13,117,60,1],[120,13,120,30,1],[124,13,124,36,1],[125,9,125,10,1]]);
     </script>
   </body>
 </html>

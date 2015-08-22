@@ -71,6 +71,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         /// &lt;/remarks&gt;
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
+        [SuppressMessage(&quot;ReSharper&quot;, &quot;AssignNullToNotNullAttribute&quot;)]
         public void BuildDynamicWithNullParamsThrowsException()
         {
             var factory = new TagHandlerFactory(Engine);
@@ -85,6 +86,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         /// &lt;/remarks&gt;
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
+        [SuppressMessage(&quot;ReSharper&quot;, &quot;AssignNullToNotNullAttribute&quot;)]
         public void BuildDynamicWithNullTagThrowsException()
         {
             var factory = new TagHandlerFactory(Engine);
@@ -116,9 +118,11 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         /// &lt;/remarks&gt;
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
+        [SuppressMessage(&quot;ReSharper&quot;, &quot;AssignNullToNotNullAttribute&quot;)]
+        [SuppressMessage(&quot;ReSharper&quot;, &quot;ObjectCreationAsStatement&quot;)]
         public void BuildFactoryWithNullEngineThrowsException()
         {
-            var factory = new TagHandlerFactory(null);
+            new TagHandlerFactory(null);
         }
     }
 }

@@ -102,6 +102,7 @@
     </Compile>
     <Compile Include="Converters\LogLevelToBrushConverter.cs" />
     <Compile Include="Commands\IUserInterfaceDirector.cs" />
+    <Compile Include="Converters\VisibilityConverter.cs" />
     <Compile Include="Helpers\SelectionHelper.cs" />
     <Compile Include="Helpers\SharedResourceDictionary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -137,6 +138,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Controls\ChatPane.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dictionaries\VsStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

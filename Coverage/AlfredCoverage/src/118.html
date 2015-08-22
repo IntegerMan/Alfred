@@ -2,126 +2,111 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.core.system\memorymonitormodule.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core.system\systemmonitormodule.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// MemoryMonitorModule.cs
+// SystemMonitorModule.cs
 // 
-// Created on:      08/04/2015 at 9:50 PM
-// Last Modified:   08/18/2015 at 2:06 PM
-// 
-// Last Modified by: Matt Eland
+// Created on:      08/04/2015 at 10:04 PM
+// Last Modified:   08/04/2015 at 10:08 PM
+// Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
+using System.ComponentModel;
+using System.Diagnostics;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Widgets;
 
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
     /// &lt;summary&gt;
-    ///     A module that displays information on the system&#39;s memory utilization percentage
+    ///     The SystemMonitorModule is an abstract class for modules commonly working with performance counters.
     /// &lt;/summary&gt;
-    public sealed class MemoryMonitorModule : SystemMonitorModule, IDisposable
+    public abstract class SystemMonitorModule : AlfredModule
     {
-        private const string MemoryCategoryName = &quot;Memory&quot;;
-        private const string MemoryUtilizationBytesCounterName = &quot;% Committed Bytes in Use&quot;;
-
-        [NotNull]
-        private readonly MetricProviderBase _memUsedBytesCounter;
-
-        [NotNull]
-        private readonly AlfredProgressBarWidget _memWidget;
+        /// &lt;summary&gt;
+        ///     The performance counter instance name for total results
+        /// &lt;/summary&gt;
+        public const string TotalInstanceName = &quot;_Total&quot;;
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;MemoryMonitorModule&quot; /&gt; class.
+        /// Initializes a new instance of the &lt;see cref=&quot;SystemMonitorModule&quot; /&gt; class.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
-        /// &lt;param name=&quot;factory&quot;&gt;The metric provider factory.&lt;/param&gt;
-        public MemoryMonitorModule([NotNull] IPlatformProvider platformProvider,
-                                   [NotNull] IMetricProviderFactory factory)
-            : base(platformProvider, factory)
+        /// &lt;param name=&quot;metricProvider&quot;&gt;The metric provider.&lt;/param&gt;
+        protected SystemMonitorModule([NotNull] IPlatformProvider platformProvider,
+                                      [NotNull] IMetricProviderFactory metricProvider) : base(platformProvider)
         {
-            _memUsedBytesCounter = MetricProvider.Build(MemoryCategoryName,
-                                                        MemoryUtilizationBytesCounterName);
+            // Use the provided metric provider
+            _metricProvider = metricProvider;
+        }
 
-            _memWidget = new AlfredProgressBarWidget
+        /// &lt;summary&gt;
+        ///     Gets the next counter value safely, defaulting to 0 on any error.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;counter&quot;&gt;The counter.&lt;/param&gt;
+        /// &lt;returns&gt;The value returned from the counter&lt;/returns&gt;
+        protected static float GetNextCounterValueSafe([CanBeNull] MetricProviderBase counter)
+        {
+            return GetNextCounterValueSafe(counter, 0);
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the next counter value safely, defaulting to the defaultValue on any error.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;counter&quot;&gt;The counter.&lt;/param&gt;
+        /// &lt;param name=&quot;defaultValue&quot;&gt;The default value.&lt;/param&gt;
+        /// &lt;returns&gt;The value returned from the counter&lt;/returns&gt;
+        protected static float GetNextCounterValueSafe([CanBeNull] MetricProviderBase counter, float defaultValue)
+        {
+            try
             {
-                Minimum = 0,
-                Maximum = 100,
-                Text = Resources.MemoryMonitorModule_LabelName,
-                ValueFormatString = &quot;{0:F2} %&quot;
-            };
-
+                return counter?.NextValue() ?? 0;
+            }
+            catch (Win32Exception)
+            {
+                return defaultValue;
+            }
+            catch (PlatformNotSupportedException)
+            {
+                return defaultValue;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return defaultValue;
+            }
+            catch (InvalidOperationException)
+            {
+                return defaultValue;
+            }
         }
 
-        /// &lt;summary&gt;
-        ///     Gets the name of the module.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;
-        ///     The name of the module.
-        /// &lt;/value&gt;
-        public override string Name
-        {
-            // ReSharper disable once AssignNullToNotNullAttribute
-            get { return Resources.MemoryMonitorModule_Name; }
-        }
+        [NotNull]
+        private readonly IMetricProviderFactory _metricProvider;
 
         /// &lt;summary&gt;
-        /// Gets the percent of memory that is utilized.
+        /// Gets the metric provider.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The memory utilization percentage.&lt;/value&gt;
-        public float MemoryUtilization
+        /// &lt;value&gt;The metric provider.&lt;/value&gt;
+        [NotNull]
+        public IMetricProviderFactory MetricProvider
         {
-            get { return _memUsedBytesCounter.NextValue(); }
-        }
-
-        /// &lt;summary&gt;
-        ///     Disposes this instance.
-        /// &lt;/summary&gt;
-        public void Dispose()
-        {
-            _memUsedBytesCounter.Dispose();
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles module shutdown events
-        /// &lt;/summary&gt;
-        protected override void ShutdownProtected()
-        {
-            _memWidget.Value = 0;
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles module initialization events
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;alfred&quot;&gt;The alfred instance.&lt;/param&gt;
-        protected override void InitializeProtected(IAlfred alfred)
-        {
-            Register(_memWidget);
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles updating the module as needed
-        /// &lt;/summary&gt;
-        protected override void UpdateProtected()
-        {
-            var usedMemory = GetNextCounterValueSafe(_memUsedBytesCounter);
-
-            _memWidget.Value = usedMemory;
+            [DebuggerStepThrough]
+            get
+            { return _metricProvider; }
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[64,17,64,18,0],[64,19,64,61,0],[64,62,64,63,0],[80,9,80,10,0],[81,13,81,44,0],[82,9,82,10,0],[40,15,40,46,1],[41,9,41,10,1],[42,13,43,92,1],[45,13,51,15,1],[53,9,53,10,1],[73,17,73,18,1],[73,19,73,59,1],[73,60,73,61,1],[88,9,88,10,1],[89,13,89,34,1],[90,9,90,10,1],[97,9,97,10,1],[98,13,98,34,1],[99,9,99,10,1],[105,9,105,10,1],[106,13,106,76,1],[108,13,108,43,1],[109,9,109,10,1]]);
+      highlightRanges([[63,13,63,35,0],[64,13,64,14,0],[65,17,65,37,0],[67,13,67,50,0],[68,13,68,14,0],[69,17,69,37,0],[71,13,71,48,0],[72,13,72,14,0],[73,17,73,37,0],[75,13,75,46,0],[76,13,76,14,0],[77,17,77,37,0],[35,90,35,112,1],[36,9,36,10,1],[38,13,38,46,1],[39,9,39,10,1],[47,9,47,10,1],[48,13,48,56,1],[49,9,49,10,1],[58,9,58,10,1],[60,13,60,14,1],[61,17,61,50,1],[79,9,79,10,1],[93,13,93,14,1],[93,15,93,38,1],[93,39,93,40,1]]);
     </script>
   </body>
 </html>

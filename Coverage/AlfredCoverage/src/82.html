@@ -20,7 +20,6 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Xml;
 
 using JetBrains.Annotations;
 
@@ -75,9 +74,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;input&quot;&gt;The input.&lt;/param&gt;
         /// &lt;returns&gt;The sentence text for the input value&lt;/returns&gt;
+        [NotNull]
         private string ProcessSentenceText([CanBeNull] string input)
         {
-            ICollection&lt;string&gt; sentenceSplitters = ChatEngine.SentenceSplitters;
+            var sentenceSplitters = ChatEngine.SentenceSplitters;
 
             //- Declare loop variables
             var stringBuilder = new StringBuilder();
@@ -87,22 +87,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 
             //- Loop through all letters
             var letters = input.NonNull().Trim().ToCharArray();
-            for (var index = 0; index &lt; letters.Length; ++index)
+            foreach (var t in letters)
             {
-                var letterString = letters[index].ToString();
+                var letterString = t.ToString();
 
                 if (new Regex(&quot;[a-zA-Z]&quot;).IsMatch(letterString))
                 {
-                    if (isNewSentence)
-                    {
-                        // By default there are no letter splitters, but if so, capitalize them.
-                        stringBuilder.Append(letterString.ToUpper(Locale));
-                    }
-                    else
-                    {
-                        // This shouldn&#39;t be present
-                        stringBuilder.Append(letterString.ToLower(Locale));
-                    }
+                    stringBuilder.Append(isNewSentence
+                                             ? letterString.ToUpper(Locale)
+                                             : letterString.ToLower(Locale));
                 }
                 else
                 {
@@ -121,7 +114,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[34,15,34,31,0],[35,9,35,10,0],[36,9,36,10,0],[43,9,43,10,0],[44,13,44,37,0],[45,13,45,48,0],[46,13,46,14,0],[47,17,47,37,0],[50,13,50,42,0],[51,13,51,14,0],[52,17,52,68,0],[56,13,56,46,0],[57,13,57,57,0],[60,13,60,78,0],[61,9,61,10,0],[69,9,69,10,0],[70,13,70,82,0],[73,13,73,53,0],[76,13,76,38,0],[79,13,79,64,0],[80,18,80,31,0],[81,13,81,14,0],[82,17,82,62,0],[84,17,84,65,0],[85,17,85,18,0],[86,21,86,39,0],[87,21,87,22,0],[89,25,89,76,0],[90,21,90,22,0],[92,21,92,22,0],[94,25,94,76,0],[95,21,95,22,0],[96,17,96,18,0],[98,17,98,18,0],[100,21,100,56,0],[101,17,101,18,0],[104,17,104,74,0],[105,13,105,14,0],[80,57,80,64,0],[80,33,80,55,0],[107,13,107,45,0],[108,9,108,10,0]]);
+      highlightRanges([[33,15,33,31,0],[34,9,34,10,0],[35,9,35,10,0],[42,9,42,10,0],[43,13,43,37,0],[44,13,44,48,0],[45,13,45,14,0],[46,17,46,37,0],[49,13,49,42,0],[50,13,50,14,0],[51,17,51,68,0],[55,13,55,46,0],[56,13,56,57,0],[59,13,59,78,0],[60,9,60,10,0],[69,9,69,10,0],[70,13,70,66,0],[73,13,73,53,0],[76,13,76,38,0],[79,13,79,64,0],[80,13,80,20,0],[80,31,80,38,0],[80,22,80,27,0],[81,13,81,14,0],[82,17,82,49,0],[84,17,84,65,0],[85,17,85,18,0],[86,21,88,78,0],[89,17,89,18,0],[91,17,91,18,0],[93,21,93,56,0],[94,17,94,18,0],[97,17,97,74,0],[98,13,98,14,0],[80,28,80,30,0],[100,13,100,45,0],[101,9,101,10,0]]);
     </script>
   </body>
 </html>

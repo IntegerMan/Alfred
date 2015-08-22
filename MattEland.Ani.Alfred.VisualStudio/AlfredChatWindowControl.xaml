@@ -15,7 +15,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/DarkStyles.xaml" />
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/VsStyles.xaml" />
                 <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Miscellaneous.xaml" />
                 <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Logging.xaml" />
                 <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Templates.xaml" />
@@ -27,8 +27,16 @@
     </UserControl.Resources>
 
     <!-- Chat Area -->
-    <Border Margin="4" 
-            Visibility="{Binding Alfred.IsOnline, Converter={StaticResource BooleanToVisibilityConverter}}">
-        <controls:ChatPane DataContext="{Binding Path=Alfred.ChatProvider}" />
-    </Border>
+    <Grid Margin="8">
+
+        <Border Visibility="{Binding Path=Alfred.IsOnline, Converter={StaticResource ShowIfTrue}}">
+            <controls:ChatPane DataContext="{Binding Path=Alfred.ChatProvider}" />
+        </Border>
+
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                   Visibility="{Binding Alfred.IsOnline, Converter={StaticResource HideIfTrue}, ConverterParameter=True}">
+            Alfred is Currently Offline
+        </TextBlock>
+
+    </Grid>
 </UserControl>

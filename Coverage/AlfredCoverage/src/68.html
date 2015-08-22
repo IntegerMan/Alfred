@@ -54,10 +54,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         {
             //- Work with an node instead of a node.
             var element = TemplateElement;
-            if (element == null)
-            {
-                return null;
-            }
 
             //- Ensure we&#39;re working with the right node type
             if (!element.Name.Matches(&quot;ConditionTagHandler&quot;))
@@ -94,6 +90,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;node&quot;&gt;The node.&lt;/param&gt;
         /// &lt;returns&gt;System.String.&lt;/returns&gt;
+        [NotNull]
         private string EvaluateLooseConditionWithChildNodes([NotNull] XmlNode node)
         {
             if (node == null)
@@ -112,7 +109,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                 // If it&#39;s an li with no name and value, this is our default option and it should be taken
                 if (!xmlNode.HasAttribute(&quot;name&quot;) || !xmlNode.HasAttribute(&quot;value&quot;))
                 {
-                    return xmlNode.InnerXml;
+                    return xmlNode.InnerXml.NonNull();
                 }
 
                 //- Grab our name / value
@@ -123,7 +120,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                 var input = User.UserVariables.GetValue(name).NonNull();
                 if (IsRegexMatch(input, value))
                 {
-                    return xmlNode.InnerXml;
+                    return xmlNode.InnerXml.NonNull();
                 }
             }
 
@@ -137,7 +134,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// &lt;param name=&quot;node&quot;&gt;The node.&lt;/param&gt;
         /// &lt;param name=&quot;variableName&quot;&gt;The variable name.&lt;/param&gt;
         /// &lt;returns&gt;System.String.&lt;/returns&gt;
-        private static string EvaluateConditionWithNameAndChildNodes([NotNull] XmlNode node, string variableName)
+        [NotNull]
+        private static string EvaluateConditionWithNameAndChildNodes([NotNull] XmlNode node,
+                                                                     [NotNull] string variableName)
         {
             if (node == null)
             {
@@ -161,13 +160,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                     // Is this the node we&#39;re looking for?
                     if (IsRegexMatch(variableName, childValue))
                     {
-                        return child.InnerXml;
+                        return child.InnerXml.NonNull();
                     }
                 }
                 else
                 {
                     // It&#39;s just a blank li with no value; let&#39;s take it as a default / fallback.
-                    return child.InnerXml;
+                    return child.InnerXml.NonNull();
                 }
             }
 
@@ -181,7 +180,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// &lt;param name=&quot;name&quot;&gt;The name.&lt;/param&gt;
         /// &lt;param name=&quot;variableName&quot;&gt;The variable name.&lt;/param&gt;
         /// &lt;returns&gt;The results of the ConditionTagHandler or string.Empty if the ConditionTagHandler failed&lt;/returns&gt;
-        private static string EvaluateSimpleConditionNode([NotNull] XmlElement element, string name, string variableName)
+        [NotNull]
+        private static string EvaluateSimpleConditionNode([NotNull] XmlElement element,
+                                                          [NotNull] string name,
+                                                          [NotNull] string variableName)
         {
             if (element == null)
             {
@@ -201,7 +203,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             var isMatch = IsRegexMatch(variableName, value);
 
             // If the match succeeded, use the contents
-            return isMatch ? element.InnerXml : string.Empty;
+            return isMatch ? element.InnerXml.NonNull() : string.Empty;
         }
 
         /// &lt;summary&gt;
@@ -210,7 +212,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// &lt;param name=&quot;expected&quot;&gt;The variableName.&lt;/param&gt;
         /// &lt;param name=&quot;value&quot;&gt;The value.&lt;/param&gt;
         /// &lt;returns&gt;True if the regex matched otherwise false.&lt;/returns&gt;
-        private static bool IsRegexMatch(string expected, string value)
+        private static bool IsRegexMatch([CanBeNull] string expected, [CanBeNull] string value)
         {
             var regex = BuildValidationRegex(value);
 
@@ -223,19 +225,18 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// &lt;param name=&quot;input&quot;&gt;The input value.&lt;/param&gt;
         /// &lt;returns&gt;A regular expression&lt;/returns&gt;
         [NotNull]
-        private static Regex BuildValidationRegex(string input)
+        private static Regex BuildValidationRegex([CanBeNull] string input)
         {
             const RegexOptions Options = RegexOptions.IgnoreCase;
 
-            var regex = new Regex(input.NonNull().Replace(&quot; &quot;, @&quot;\s&quot;).Replace(&quot;*&quot;, @&quot;[\sA-Z0-9]+&quot;),
-                                  Options);
+            var regex = new Regex(input.NonNull().Replace(&quot; &quot;, @&quot;\s&quot;).Replace(&quot;*&quot;, @&quot;[\sA-Z0-9]+&quot;), Options);
             return regex;
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[34,15,34,31,0],[35,9,35,10,0],[36,13,36,33,0],[37,9,37,10,0],[44,9,44,10,0],[46,13,46,43,0],[47,13,47,33,0],[48,13,48,14,0],[49,17,49,29,0],[53,13,53,62,0],[54,13,54,14,0],[55,17,55,37,0],[62,13,62,47,0],[63,13,63,14,0],[64,17,64,70,0],[68,13,68,53,0],[69,13,69,76,0],[72,13,72,47,0],[73,13,73,14,0],[74,17,74,81,0],[78,13,78,82,0],[79,9,79,10,0],[88,9,88,10,0],[89,13,89,30,0],[90,13,90,14,0],[91,17,91,63,0],[94,13,94,20,0],[94,44,94,59,0],[94,22,94,40,0],[95,13,95,14,0],[97,17,97,68,0],[98,17,98,18,0],[99,21,99,30,0],[103,17,103,85,0],[104,17,104,18,0],[105,21,105,45,0],[109,17,109,67,0],[110,17,110,69,0],[113,17,113,73,0],[114,17,114,48,0],[115,17,115,18,0],[116,21,116,45,0],[118,13,118,14,0],[94,41,94,43,0],[121,13,121,33,0],[122,9,122,10,0],[131,9,131,10,0],[132,13,132,30,0],[133,13,133,14,0],[134,17,134,63,0],[138,13,138,20,0],[138,35,139,41,0],[139,56,140,41,0],[140,67,141,49,0],[138,22,138,31,0],[142,13,142,14,0],[144,17,144,57,0],[147,17,147,49,0],[148,17,148,18,0],[149,21,149,66,0],[152,21,152,64,0],[153,21,153,22,0],[154,25,154,47,0],[156,17,156,18,0],[158,17,158,18,0],[160,21,160,43,0],[162,13,162,14,0],[138,32,138,34,0],[164,13,164,33,0],[165,9,165,10,0],[175,9,175,10,0],[176,13,176,33,0],[177,13,177,14,0],[178,17,178,66,0],[182,13,182,55,0],[185,13,185,73,0],[186,13,186,14,0],[187,17,187,37,0],[191,13,191,61,0],[194,13,194,62,0],[195,9,195,10,0],[204,9,204,10,0],[205,13,205,53,0],[207,13,207,54,0],[208,9,208,10,0],[217,9,217,10,0],[220,13,221,44,0],[222,13,222,26,0],[223,9,223,10,0],[139,41,139,56,0],[140,41,140,67,0]]);
+      highlightRanges([[34,15,34,31,0],[35,9,35,10,0],[36,13,36,33,0],[37,9,37,10,0],[44,9,44,10,0],[46,13,46,43,0],[49,13,49,62,0],[50,13,50,14,0],[51,17,51,37,0],[58,13,58,47,0],[59,13,59,14,0],[60,17,60,70,0],[64,13,64,53,0],[65,13,65,76,0],[68,13,68,47,0],[69,13,69,14,0],[70,17,70,81,0],[74,13,74,82,0],[75,9,75,10,0],[85,9,85,10,0],[86,13,86,30,0],[87,13,87,14,0],[88,17,88,63,0],[91,13,91,20,0],[91,44,91,59,0],[91,22,91,40,0],[92,13,92,14,0],[94,17,94,68,0],[95,17,95,18,0],[96,21,96,30,0],[100,17,100,85,0],[101,17,101,18,0],[102,21,102,55,0],[106,17,106,67,0],[107,17,107,69,0],[110,17,110,73,0],[111,17,111,48,0],[112,17,112,18,0],[113,21,113,55,0],[115,13,115,14,0],[91,41,91,43,0],[118,13,118,33,0],[119,9,119,10,0],[130,9,130,10,0],[131,13,131,30,0],[132,13,132,14,0],[133,17,133,63,0],[137,13,137,20,0],[137,35,138,41,0],[138,56,139,41,0],[139,67,140,49,0],[137,22,137,31,0],[141,13,141,14,0],[143,17,143,57,0],[146,17,146,49,0],[147,17,147,18,0],[148,21,148,66,0],[151,21,151,64,0],[152,21,152,22,0],[153,25,153,57,0],[155,17,155,18,0],[157,17,157,18,0],[159,21,159,53,0],[161,13,161,14,0],[137,32,137,34,0],[163,13,163,33,0],[164,9,164,10,0],[175,9,175,10,0],[176,13,176,33,0],[177,13,177,14,0],[178,17,178,66,0],[182,13,182,55,0],[185,13,185,73,0],[186,13,186,14,0],[187,17,187,37,0],[191,13,191,61,0],[194,13,194,72,0],[195,9,195,10,0],[204,9,204,10,0],[205,13,205,53,0],[207,13,207,54,0],[208,9,208,10,0],[217,9,217,10,0],[220,13,221,44,0],[222,13,222,26,0],[223,9,223,10,0],[138,41,138,56,0],[139,41,139,67,0]]);
     </script>
   </body>
 </html>

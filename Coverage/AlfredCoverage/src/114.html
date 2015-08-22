@@ -2,70 +2,91 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.aiml\chatpage.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core.system\performancecountermetricprovider.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// PerformanceCounterMetricProvider.cs
+// 
+// Created on:      08/18/2015 at 11:29 AM
+// Last Modified:   08/18/2015 at 3:12 PM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
 using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core;
-using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Pages;
-
-namespace MattEland.Ani.Alfred.Chat
+namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
     /// &lt;summary&gt;
-    /// A custom page for interacting with Alfred via Chat
+    ///     A metric provider based on a performance counter.
     /// &lt;/summary&gt;
-    public sealed class ChatPage : AlfredPage
+    public sealed class CounterMetricProvider : MetricProviderBase
     {
         [NotNull]
-        private readonly IChatProvider _chatHandler;
+        private readonly PerformanceCounter _counter;
 
         /// &lt;summary&gt;
-        /// Gets the chat handler.
+        ///     Initializes a new instance of the &lt;see cref=&quot;CounterMetricProvider&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The chat handler.&lt;/value&gt;
-        [NotNull]
-        public IChatProvider ChatHandler
+        /// &lt;param name=&quot;categoryName&quot;&gt;Name of the category.&lt;/param&gt;
+        /// &lt;param name=&quot;counterName&quot;&gt;Name of the counter.&lt;/param&gt;
+        /// &lt;param name=&quot;instance&quot;&gt;The instance.&lt;/param&gt;
+        /// &lt;exception cref=&quot;Win32Exception&quot;&gt;An error occurred when accessing a system API.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;UnauthorizedAccessException&quot;&gt;
+        ///     Code that is executing without administrative
+        ///     privileges attempted to read a performance counter.
+        /// &lt;/exception&gt;
+        public CounterMetricProvider([NotNull] string categoryName,
+                                     [NotNull] string counterName,
+                                     [CanBeNull] string instance = null)
+
+            : base(instance ?? counterName)
         {
-            [DebuggerStepThrough]
-            get
-            { return _chatHandler; }
+            _counter = new PerformanceCounter(categoryName, counterName, instance, true);
+
+            /* Tell the performance counter to start getting values. These tend to always return 
+               0.0 as the first value and then provide accurate data after that */
+            _counter.NextValue();
         }
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredPage&quot; /&gt; class.
+        ///     Gets the next value from the metric provider
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;name&quot;&gt;The name.&lt;/param&gt;
-        /// &lt;param name=&quot;chatHandler&quot;&gt;The input handler&lt;/param&gt;
-        public ChatPage([NotNull] string name, [NotNull] IChatProvider chatHandler) : base(name, &quot;Chat&quot;)
+        /// &lt;returns&gt;The next vaue&lt;/returns&gt;
+        /// &lt;exception cref=&quot;Win32Exception&quot;&gt;An error occurred when accessing a system API.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;UnauthorizedAccessException&quot;&gt;
+        ///     Code that is executing without administrative
+        ///     privileges attempted to read a performance counter.
+        /// &lt;/exception&gt;
+        public override float NextValue()
         {
-            _chatHandler = chatHandler;
+            return _counter.NextValue();
         }
 
         /// &lt;summary&gt;
-        /// Gets the children of this component. Depending on the type of component this is, the children will
-        /// vary in their own types.
+        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged
+        ///     resources.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The children.&lt;/value&gt;
-        public override IEnumerable&lt;IAlfredComponent&gt; Children
+        public override void Dispose()
         {
-            get { yield break; }
-        }
+            base.Dispose();
 
+            _counter.Dispose();
+        }
     }
 
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[30,13,30,14,0],[30,15,30,35,0],[30,36,30,37,0],[50,17,50,18,0],[50,19,50,31,0],[38,87,38,105,1],[39,9,39,10,1],[40,13,40,40,1],[41,9,41,10,1]]);
+      highlightRanges([[41,15,41,44,0],[42,9,42,10,0],[43,13,43,90,0],[47,13,47,34,0],[48,9,48,10,0],[60,9,60,10,0],[61,13,61,41,0],[62,9,62,10,0],[69,9,69,10,0],[70,13,70,28,0],[72,13,72,32,0],[73,9,73,10,0]]);
     </script>
   </body>
 </html>

@@ -13,8 +13,6 @@ using System.Windows;
 
 using JetBrains.Annotations;
 
-using MattEland.Common;
-
 namespace MattEland.Ani.Alfred.PresentationShared.Helpers
 {
     /// <summary>
@@ -36,6 +34,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Helpers
         /// <summary>
         ///     The source for the resource dictionary
         /// </summary>
+        [CanBeNull]
         private Uri _source;
 
         /// <summary>
@@ -45,10 +44,11 @@ namespace MattEland.Ani.Alfred.PresentationShared.Helpers
         ///            accessor="set">
         ///     <paramref name="value" /> is <see langword="null" />.
         /// </exception>
-        [NotNull]
-        public new string Source
+        [CanBeNull]
+        public new Uri Source
         {
-            get { return (_source?.OriginalString).NonNull(); }
+            get { return _source; }
+            [NotNull]
             set
             {
                 if (value == null)
@@ -57,7 +57,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Helpers
                 }
 
                 // Build out the URI. This makes it easier for the resource file to be manipulated in XAML.
-                var uri = new Uri(value, UriKind.RelativeOrAbsolute);
+                var uri = value;
 
                 _source = uri;
 

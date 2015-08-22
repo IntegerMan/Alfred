@@ -25,6 +25,7 @@ using System.Linq;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml
 {
@@ -41,35 +42,21 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         ///     Initializes a new instance of the &lt;see cref=&quot;User&quot; /&gt; class.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;id&quot;&gt;The identifier.&lt;/param&gt;
-        /// &lt;param name=&quot;chatEngine&quot;&gt;The chat engine.&lt;/param&gt;
         /// &lt;exception cref=&quot;ArgumentOutOfRangeException&quot;&gt;The id cannot be empty&lt;/exception&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;chatEngine&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        public User([NotNull] string id, [NotNull] ChatEngine chatEngine)
+        public User([NotNull] string id)
         {
             //- Validation
-            if (chatEngine == null)
-            {
-                throw new ArgumentNullException(nameof(chatEngine));
-            }
             if (string.IsNullOrWhiteSpace(id))
             {
                 throw new ArgumentOutOfRangeException(nameof(id), Resources.UserCtorNullId);
             }
 
             Id = id;
-            ChatEngine = chatEngine;
 
             // Set up the variables collection
             UserVariables = new SettingsManager();
             UserVariables.Add(&quot;topic&quot;, &quot;*&quot;);
         }
-
-        /// &lt;summary&gt;
-        ///     Gets the chat engine.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The chat engine.&lt;/value&gt;
-        [NotNull]
-        public ChatEngine ChatEngine { get; }
 
         /// &lt;summary&gt;
         ///     Gets the predicates. These are variables pertaining to the user.
@@ -89,9 +76,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         ///     Gets the topic.
         /// &lt;/summary&gt;
         /// &lt;value&gt;The topic.&lt;/value&gt;
+        [NotNull]
         public string Topic
         {
-            get { return UserVariables.GetValue(&quot;topic&quot;); }
+            get { return UserVariables.GetValue(&quot;topic&quot;).NonNull(); }
         }
 
         /// &lt;summary&gt;
@@ -120,6 +108,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// &lt;param name=&quot;resultIndex&quot;&gt;Index of the result. Defaults to 1.&lt;/param&gt;
         /// &lt;param name=&quot;sentenceIndex&quot;&gt;Index of the sentence. Defaults to 1.&lt;/param&gt;
         /// &lt;returns&gt;The output sentence&lt;/returns&gt;
+        [NotNull]
         public string GetOutputSentence(int resultIndex = 1, int sentenceIndex = 1)
         {
             //- Ensure we&#39;re not grabbing out of range
@@ -136,7 +125,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             // Grab the output sentence at the specified index
             if (sentenceIndex &gt;= 0 &amp; sentenceIndex &lt; result.OutputSentences.Count)
             {
-                return result.OutputSentences[sentenceIndex];
+                return result.OutputSentences[sentenceIndex].NonNull();
             }
 
             return string.Empty;
@@ -148,6 +137,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// &lt;param name=&quot;resultIndex&quot;&gt;Index of the result. Defaults to 1.&lt;/param&gt;
         /// &lt;param name=&quot;sentenceIndex&quot;&gt;Index of the sentenceIndex. Defaults to 1.&lt;/param&gt;
         /// &lt;returns&gt;The specified sentenceIndex.&lt;/returns&gt;
+        [NotNull]
         public string GetInputSentence(int resultIndex = 1, int sentenceIndex = 1)
         {
             //- Ensure we&#39;re grabbing at an acceptable resultIndex
@@ -164,7 +154,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             // Grab the appropriate sentenceIndex
             if (sentenceIndex &gt;= 0 &amp; sentenceIndex &lt; result.InputSentences.Count)
             {
-                return result.InputSentences[sentenceIndex];
+                return result.InputSentences[sentenceIndex].NonNull();
             }
 
             //- Invalid results yield nothing
@@ -189,7 +179,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[41,13,41,14,0],[42,17,42,69,0],[45,13,45,14,0],[46,17,46,93,0],[62,40,62,44,0],[114,9,114,10,0],[116,13,116,81,0],[117,13,117,32,0],[118,13,118,14,0],[119,17,119,37,0],[123,13,123,48,0],[124,13,124,42,0],[127,13,127,83,0],[128,13,128,14,0],[129,17,129,62,0],[132,13,132,33,0],[133,9,133,10,0],[142,9,142,10,0],[144,13,144,81,0],[145,13,145,32,0],[146,13,146,14,0],[147,17,147,37,0],[151,13,151,48,0],[152,13,152,42,0],[155,13,155,82,0],[156,13,156,14,0],[157,17,157,61,0],[161,13,161,33,0],[162,9,162,10,0],[172,13,172,14,0],[173,17,173,71,0],[28,9,28,69,1],[37,9,37,74,1],[38,9,38,10,1],[40,13,40,36,1],[44,13,44,47,1],[49,13,49,21,1],[50,13,50,37,1],[53,13,53,51,1],[54,13,54,45,1],[55,9,55,10,1],[69,48,69,52,1],[76,28,76,32,1],[84,17,84,18,1],[84,19,84,58,1],[84,59,84,60,1],[94,17,94,18,1],[94,19,94,52,1],[94,53,94,54,1],[104,17,104,18,1],[104,19,104,55,1],[104,56,104,57,1],[170,9,170,10,1],[171,13,171,38,1],[176,13,176,46,1],[177,9,177,10,1]]);
+      highlightRanges([[40,13,40,14,0],[41,17,41,93,0],[102,9,102,10,0],[104,13,104,81,0],[105,13,105,32,0],[106,13,106,14,0],[107,17,107,37,0],[111,13,111,48,0],[112,13,112,42,0],[115,13,115,83,0],[116,13,116,14,0],[117,17,117,72,0],[120,13,120,33,0],[121,9,121,10,0],[131,9,131,10,0],[133,13,133,81,0],[134,13,134,32,0],[135,13,135,14,0],[136,17,136,37,0],[140,13,140,48,0],[141,13,141,42,0],[144,13,144,82,0],[145,13,145,14,0],[146,17,146,71,0],[150,13,150,33,0],[151,9,151,10,0],[161,13,161,14,0],[162,17,162,71,0],[29,9,29,69,1],[36,9,36,41,1],[37,9,37,10,1],[39,13,39,47,1],[44,13,44,21,1],[47,13,47,51,1],[48,13,48,45,1],[49,9,49,10,1],[56,48,56,52,1],[63,28,63,32,1],[71,17,71,18,1],[71,19,71,58,1],[71,59,71,60,1],[81,17,81,18,1],[81,19,81,52,1],[81,53,81,54,1],[91,17,91,18,1],[91,19,91,55,1],[91,56,91,57,1],[159,9,159,10,1],[160,13,160,38,1],[165,13,165,46,1],[166,9,166,10,1]]);
     </script>
   </body>
 </html>

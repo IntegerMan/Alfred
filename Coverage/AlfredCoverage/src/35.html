@@ -2,122 +2,48 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.core\widgets\alfredprogressbarwidget.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core\widgets\alfredtextwidget.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlfredProgressBarWidget.cs
+// AlfredTextWidget.cs
 // 
-// Created on:      08/04/2015 at 3:34 PM
-// Last Modified:   08/04/2015 at 4:04 PM
+// Created on:      08/03/2015 at 2:46 PM
+// Last Modified:   08/04/2015 at 3:04 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
-
-using System.Globalization;
 
 using JetBrains.Annotations;
 
 namespace MattEland.Ani.Alfred.Core.Widgets
 {
     /// &lt;summary&gt;
-    /// A progress bar widget to be interpreted at the user interface layer
+    ///     Represents a widget that operates off of a Text field to present its contents.
     /// &lt;/summary&gt;
-    public sealed class AlfredProgressBarWidget : AlfredTextWidget
+    public abstract class AlfredTextWidget : AlfredWidget
     {
-        private float _maximum = 100;
-        private float _minimum;
-        private float _value;
-
-        /// &lt;summary&gt;
-        ///     Gets or sets the minimum value to display on the bar.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The minimum.&lt;/value&gt;
-        public float Minimum
-        {
-            get { return _minimum; }
-            set
-            {
-                if (!value.Equals(_minimum))
-                {
-                    _minimum = value;
-                    OnPropertyChanged(nameof(Minimum));
-                }
-            }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets or sets the maximum value to display on the bar.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The maximum value.&lt;/value&gt;
-        public float Maximum
-        {
-            get { return _maximum; }
-            set
-            {
-                if (!value.Equals(_maximum))
-                {
-                    _maximum = value;
-                    OnPropertyChanged(nameof(Maximum));
-                }
-            }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets or sets the current value.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The value.&lt;/value&gt;
-        public float Value
-        {
-            get { return _value; }
-            set
-            {
-                if (!value.Equals(_value))
-                {
-                    _value = value;
-
-                    OnPropertyChanged(nameof(Value));
-                    OnPropertyChanged(nameof(ValueText));
-                }
-            }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the value to display in the user interface for the ToolTip.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;A textual representation of the Value field.&lt;/value&gt;
-        public string ValueText
-        {
-            get
-            {
-                var formatString = _valueFormatString ?? &quot;{0}&quot;;
-
-                return string.Format(CultureInfo.CurrentCulture, formatString, Value);
-            }
-        }
+        // Choosing to not include short-cut constructors to give base classes more freedom in defining their constructors
 
         [CanBeNull]
-        private string _valueFormatString;
+        private string _text;
 
         /// &lt;summary&gt;
-        /// Gets or sets the value format string. This is used for driving the ValueText field.
-        /// This can be null for default representation. Use {0} to represent the value.
+        ///     Gets or sets the text of the widget.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The value format string.&lt;/value&gt;
+        /// &lt;value&gt;The text.&lt;/value&gt;
         [CanBeNull]
-        public string ValueFormatString
+        public string Text
         {
-            get { return _valueFormatString; }
+            get { return _text; }
             set
             {
-                if (value != _valueFormatString)
+                if (value != _text)
                 {
-                    _valueFormatString = value;
-
-                    OnPropertyChanged(nameof(ValueFormatString));
-                    OnPropertyChanged(nameof(ValueText));
+                    _text = value;
+                    OnPropertyChanged(nameof(Text));
                 }
             }
         }
@@ -125,7 +51,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[30,17,30,18,0],[30,19,30,35,0],[30,36,30,37,0],[34,17,34,18,0],[35,21,35,38,0],[36,21,36,56,0],[37,17,37,18,0],[47,17,47,18,0],[47,19,47,35,0],[47,36,47,37,0],[51,17,51,18,0],[52,21,52,38,0],[53,21,53,56,0],[54,17,54,18,0],[64,17,64,18,0],[64,19,64,33,0],[64,34,64,35,0],[84,13,84,14,0],[85,17,85,64,0],[87,17,87,87,0],[88,13,88,14,0],[102,17,102,18,0],[102,19,102,45,0],[102,46,102,47,0],[32,13,32,14,1],[33,17,33,45,1],[38,13,38,14,1],[49,13,49,14,1],[50,17,50,45,1],[55,13,55,14,1],[66,13,66,14,1],[67,17,67,43,1],[68,17,68,18,1],[69,21,69,36,1],[71,21,71,54,1],[72,21,72,58,1],[73,17,73,18,1],[74,13,74,14,1],[104,13,104,14,1],[105,17,105,49,1],[106,17,106,18,1],[107,21,107,48,1],[109,21,109,66,1],[110,21,110,58,1],[111,17,111,18,1],[112,13,112,14,1],[20,9,20,38,1]]);
+      highlightRanges([[30,17,30,18,1],[30,19,30,32,1],[30,33,30,34,1],[32,13,32,14,1],[33,17,33,36,1],[34,17,34,18,1],[35,21,35,35,1],[36,21,36,53,1],[37,17,37,18,1],[38,13,38,14,1]]);
     </script>
   </body>
 </html>

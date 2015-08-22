@@ -4,6 +4,9 @@
 
     <!-- Converters -->
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    
+    <converters:VisibilityConverter x:Key="ShowIfTrue" />
+    <converters:VisibilityConverter x:Key="HideIfTrue" Invert="True" />
 
     <converters:LogLevelToBrushConverter x:Key="LogLevelToBrushConverter"
                                   WarningBrush="{DynamicResource CautionForegroundBrush}"

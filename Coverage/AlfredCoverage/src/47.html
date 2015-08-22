@@ -2,22 +2,21 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.core\modules\alfredsubsystemlistmodule.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core\modules\alfredtimemodule.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlfredSubsystemListModule.cs
+// AlfredTimeModule.cs
 // 
-// Created on:      08/07/2015 at 11:56 PM
-// Last Modified:   08/07/2015 at 11:56 PM
+// Created on:      07/26/2015 at 1:46 PM
+// Last Modified:   08/10/2015 at 10:52 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 
 using JetBrains.Annotations;
@@ -30,22 +29,45 @@ using MattEland.Common;
 namespace MattEland.Ani.Alfred.Core.Modules
 {
     /// &lt;summary&gt;
-    /// A module that lists installed subsystems
+    ///     A module that keeps track of time and date information and presents it to the user.
     /// &lt;/summary&gt;
-    public sealed class AlfredSubsystemListModule : AlfredModule
+    public sealed class AlfredTimeModule : AlfredModule
     {
-
-        [NotNull, ItemNotNull]
-        private readonly ICollection&lt;AlfredWidget&gt; _widgets;
+        /// &lt;summary&gt;
+        ///     The hour changed event&#39;s title message used for logging purposes.
+        /// &lt;/summary&gt;
+        public const string HourAlertEventTitle = &quot;Time.HourAlert&quot;;
 
         /// &lt;summary&gt;
-        /// Initializes a new instance of the &lt;see cref=&quot;AlfredSubsystemListModule&quot;/&gt; class.
+        ///     The half hour alert event title log message
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
-        public AlfredSubsystemListModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
+        public const string HalfHourAlertEventTitle = &quot;Time.HalfHourAlert&quot;;
+
+        private DateTime _time;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the
+        ///     &lt;see cref=&quot;AlfredModule&quot; /&gt;
+        ///     class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;platformProvider&quot;&gt;
+        ///     The platform provider.
+        /// &lt;/param&gt;
+        public AlfredTimeModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
         {
-            _widgets = platformProvider.CreateCollection&lt;AlfredWidget&gt;();
+            CurrentDateWidget = new TextWidget();
+            CurrentTimeWidget = new TextWidget();
+            AlertWidget = new WarningWidget
+            {
+                IsVisible = false,
+                Text = Resources.AlfredTimeModule_AlfredTimeModule_BedtimeNagMessage
+            };
+            AlertHour = 21;
+            AlertMinute = 30;
+            AlertDurationInHours = 4;
+            IsAlertEnabled = true;
+
+            CurrentTime = DateTime.MinValue;
         }
 
         /// &lt;summary&gt;
@@ -54,108 +76,177 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// &lt;value&gt;The name of the module.&lt;/value&gt;
         public override string Name
         {
-            get { return &quot;Subsystems&quot;; }
+            get { return Resources.AlfredTimeModule_Name.NonNull(); }
         }
 
         /// &lt;summary&gt;
-        ///     Updates the component
+        ///     Gets the current time user interface widget.
         /// &lt;/summary&gt;
-        protected override void UpdateProtected()
-        {
-            foreach (var widget in _widgets)
-            {
-                var textWidget = widget as AlfredTextWidget;
-
-                if (textWidget == null)
-                {
-                    continue;
-                }
-
-                // Interpret the DataContext and update its text if it&#39;s a component based on the
-                // component status. If no component context, it&#39;s assumed to be the no items label.
-                var component = widget.DataContext as IAlfredComponent;
-                if (component != null)
-                {
-                    UpdateWidgetText(textWidget, component);
-                }
-                else
-                {
-                    textWidget.Text = Resources.AlfredSubSystemListModule_NoSubsystemsDetected;
-                }
-            }
-        }
+        /// &lt;value&gt;The current time user interface widget.&lt;/value&gt;
+        [NotNull]
+        public TextWidget CurrentTimeWidget { get; }
 
         /// &lt;summary&gt;
-        ///     Handles shutdown events
+        ///     Gets the current date user interface widget.
         /// &lt;/summary&gt;
-        protected override void ShutdownProtected()
+        /// &lt;value&gt;The current date user interface widget.&lt;/value&gt;
+        [NotNull]
+        public TextWidget CurrentDateWidget { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets the bedtime alert widget.
+        ///     This widget alerts users to go to bed after a certain time
+        ///     and will be hidden until the user needs to go to bed.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The bedtime alert widget.&lt;/value&gt;
+        [NotNull]
+        public WarningWidget AlertWidget { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the bedtime hour.  Defaults to 9 PM
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The bedtime hour.&lt;/value&gt;
+        public int AlertHour { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the bedtime minute. Defaults to 30 minutes past the hour.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The bedtime minute.&lt;/value&gt;
+        public int AlertMinute { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the alert duration in hours.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The alert duration in hours.&lt;/value&gt;
+        public int AlertDurationInHours { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets whether the alert is enabled.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The alert is enabled.&lt;/value&gt;
+        public bool IsAlertEnabled { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the last time recorded
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The current time.&lt;/value&gt;
+        private DateTime CurrentTime
         {
-            _widgets.Clear();
+            get { return _time; }
+            set { _time = value; }
         }
 
         /// &lt;summary&gt;
-        ///     Handles initialization events
+        ///     Handles module initialization events
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;alfred&quot;&gt;&lt;/param&gt;
         protected override void InitializeProtected(IAlfred alfred)
         {
-            _widgets.Clear();
+            Register(CurrentDateWidget);
+            Register(CurrentTimeWidget);
+            Register(AlertWidget);
 
-            // Read the subsystems from Alfred
-            if (AlfredInstance != null)
+            // Ensure it has some initial values so it doesn&#39;t &quot;blink&quot; or lag on start
+            ClearLastTimeRun();
+            Update(DateTime.Now);
+        }
+
+        /// &lt;summary&gt;
+        ///     Handles updating the module
+        /// &lt;/summary&gt;
+        protected override void UpdateProtected()
+        {
+            // Call a new method with the current time. This helps this module be testable
+            Update(DateTime.Now);
+        }
+
+        /// &lt;summary&gt;
+        ///     Updates the module given the specified time.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;time&quot;&gt;
+        ///     The time. Date portions of this will be ignored.
+        /// &lt;/param&gt;
+        public void Update(DateTime time)
+        {
+            // Always update the date
+            CurrentDateWidget.Text = time.ToString(&quot;D&quot;, CultureInfo.CurrentCulture); // Thursday April 10, 2008
+
+            // Always update the time
+            var timeFormat = Resources.AlfredTimeModule_Update_CurrentTimeDisplayString.NonNull();
+            var timeText = string.Format(CultureInfo.CurrentCulture, timeFormat, time);
+            CurrentTimeWidget.Text = timeText;
+
+            // Update the visibility of the alert widget based on time of day
+            UpdateBedtimeAlertVisibility(time);
+
+            // Check to see if it&#39;s now a new hour and, if so, log it to the console
+            if (CurrentTime &gt; DateTime.MinValue)
             {
-                foreach (var item in AlfredInstance.Subsystems)
+                if (time.Minute == 0 &amp;&amp; CurrentTime.Hour != time.Hour)
                 {
-                    var widget = new TextWidget { DataContext = item };
-                    UpdateWidgetText(widget, item);
-
-                    _widgets.Add(widget);
-
-                    Register(widget);
+                    // Let the user know it&#39;s now X
+                    Log(HourAlertEventTitle, timeText, LogLevel.ChatNotification);
+                }
+                else if (time.Minute == 30 &amp;&amp; CurrentTime.Minute != 30)
+                {
+                    // Let the user know it&#39;s now half after X
+                    Log(HalfHourAlertEventTitle, timeText, LogLevel.ChatNotification);
                 }
             }
 
-            // We&#39;ll want to display a fallback for no subsystems
-            if (_widgets.Count == 0)
+            // Store the last time we processed so it can be referenced next iteration
+            CurrentTime = time;
+        }
+
+        /// &lt;summary&gt;
+        ///     Updates the bedtime alert visibility based on the given time.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;time&quot;&gt;
+        ///     The time.
+        /// &lt;/param&gt;
+        private void UpdateBedtimeAlertVisibility(DateTime time)
+        {
+            if (!IsAlertEnabled)
             {
-                var noSubsystemsDetected = Resources.AlfredSubSystemListModule_NoSubsystemsDetected.NonNull();
-
-                Log(&quot;Subsystems.Initialize&quot;, noSubsystemsDetected, LogLevel.Warning);
-
-                var widget = new TextWidget(noSubsystemsDetected);
-                _widgets.Add(widget);
-
-                Register(widget);
+                // Easy call; if it&#39;s disabled, don&#39;t show it
+                AlertWidget.IsVisible = false;
+            }
+            else
+            {
+                // Farm off the more complicated math to a dedicated class
+                AlertWidget.IsVisible = AlertVisibilityCalculator.CalculateAlertVisibility(time.Hour,
+                                                                                           time.Minute,
+                                                                                           AlertHour,
+                                                                                           AlertMinute,
+                                                                                           AlertDurationInHours);
             }
         }
 
         /// &lt;summary&gt;
-        /// Updates the widget&#39;s text to that matching the detected component.
+        ///     Handles module shutdown events
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;widget&quot;&gt;The widget.&lt;/param&gt;
-        /// &lt;param name=&quot;component&quot;&gt;The component.&lt;/param&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;
-        /// &lt;/exception&gt;
-        [System.Diagnostics.CodeAnalysis.SuppressMessage(&quot;Microsoft.Globalization&quot;, &quot;CA1303:Do not pass literals as localized parameters&quot;, MessageId = &quot;MattEland.Ani.Alfred.Core.Widgets.AlfredTextWidget.set_Text(System.String)&quot;)]
-        private static void UpdateWidgetText([NotNull] AlfredTextWidget widget, [NotNull] IAlfredComponent component)
+        protected override void ShutdownProtected()
         {
-            if (widget == null)
-            {
-                throw new ArgumentNullException(nameof(widget));
-            }
-            if (component == null)
-            {
-                throw new ArgumentNullException(nameof(component));
-            }
+            CurrentTimeWidget.Text = null;
+            ClearLastTimeRun();
+        }
 
-            widget.Text = string.Format(CultureInfo.CurrentCulture, &quot;{0}: {1}&quot;, component.NameAndVersion, component.Status);
+        /// &lt;summary&gt;
+        ///     Clears the last time the module was run.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     This is intended for use in time-sensitive unit testing
+        ///     scenarios and is not intended for any normal usage
+        /// &lt;/remarks&gt;
+        public void ClearLastTimeRun()
+        {
+            CurrentTime = DateTime.MinValue;
         }
     }
-
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[47,17,47,18,0],[47,19,47,39,0],[47,40,47,41,0],[60,17,60,18,0],[61,21,61,30,0],[72,17,72,18,0],[73,21,73,96,0],[74,17,74,18,0],[110,13,110,14,0],[111,17,111,111,0],[113,17,113,86,0],[115,17,115,67,0],[116,17,116,38,0],[118,17,118,34,0],[119,13,119,14,0],[133,13,133,14,0],[134,17,134,65,0],[137,13,137,14,0],[138,17,138,68,0],[36,90,36,112,1],[37,9,37,10,1],[38,13,38,74,1],[39,9,39,10,1],[54,9,54,10,1],[55,13,55,20,1],[55,36,55,44,1],[55,22,55,32,1],[56,13,56,14,1],[57,17,57,61,1],[59,17,59,40,1],[66,17,66,72,1],[67,17,67,39,1],[68,17,68,18,1],[69,21,69,61,1],[70,17,70,18,1],[75,13,75,14,1],[55,33,55,35,1],[76,9,76,10,1],[82,9,82,10,1],[83,13,83,30,1],[84,9,84,10,1],[91,9,91,10,1],[92,13,92,30,1],[95,13,95,40,1],[96,13,96,14,1],[97,17,97,24,1],[97,38,97,63,1],[97,26,97,34,1],[98,17,98,18,1],[99,21,99,72,1],[100,21,100,52,1],[102,21,102,42,1],[104,21,104,38,1],[105,17,105,18,1],[97,35,97,37,1],[106,13,106,14,1],[109,13,109,37,1],[120,9,120,10,1],[131,9,131,10,1],[132,13,132,32,1],[136,13,136,35,1],[141,13,141,125,1],[142,9,142,10,1]]);
+      highlightRanges([[46,81,46,103,1],[47,9,47,10,1],[48,13,48,50,1],[49,13,49,50,1],[50,13,54,15,1],[55,13,55,28,1],[56,13,56,30,1],[57,13,57,38,1],[58,13,58,35,1],[60,13,60,45,1],[61,9,61,10,1],[69,17,69,18,1],[69,19,69,68,1],[69,69,69,70,1],[77,47,77,51,1],[84,47,84,51,1],[93,44,93,48,1],[99,32,99,36,1],[99,37,99,41,1],[105,34,105,38,1],[105,39,105,43,1],[111,43,111,47,1],[111,48,111,52,1],[117,38,117,42,1],[117,43,117,47,1],[125,17,125,18,1],[125,19,125,32,1],[125,33,125,34,1],[126,17,126,18,1],[126,19,126,33,1],[126,34,126,35,1],[134,9,134,10,1],[135,13,135,41,1],[136,13,136,41,1],[137,13,137,35,1],[140,13,140,32,1],[141,13,141,34,1],[142,9,142,10,1],[148,9,148,10,1],[150,13,150,34,1],[151,9,151,10,1],[160,9,160,10,1],[162,13,162,85,1],[165,13,165,99,1],[166,13,166,88,1],[167,13,167,47,1],[170,13,170,48,1],[173,13,173,49,1],[174,13,174,14,1],[175,17,175,71,1],[176,17,176,18,1],[178,21,178,83,1],[179,17,179,18,1],[180,22,180,72,1],[181,17,181,18,1],[183,21,183,87,1],[184,17,184,18,1],[185,13,185,14,1],[188,13,188,32,1],[189,9,189,10,1],[198,9,198,10,1],[199,13,199,33,1],[200,13,200,14,1],[202,17,202,47,1],[203,13,203,14,1],[205,13,205,14,1],[207,17,211,114,1],[212,13,212,14,1],[213,9,213,10,1],[219,9,219,10,1],[220,13,220,43,1],[221,13,221,32,1],[222,9,222,10,1],[232,9,232,10,1],[233,13,233,45,1],[234,9,234,10,1]]);
     </script>
   </body>
 </html>

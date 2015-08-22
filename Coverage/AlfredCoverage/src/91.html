@@ -49,7 +49,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         protected override string ProcessChange()
         {
             var element = TemplateElement;
-            if (element != null &amp;&amp; element.Name.Matches(&quot;topicstar&quot;))
+            if (element.Name.Matches(&quot;topicstar&quot;))
             {
                 // Validate that we have TopicStar items to work with
                 var topicStar = Query.TopicStar;
@@ -63,14 +63,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                 // When no index is specified return the first item.
                 if (!element.HasAttribute(&quot;index&quot;))
                 {
-                    return topicStar[0];
+                    return topicStar[0].NonNull();
                 }
 
                 // Grab the item at the specified array index
                 var index = element.GetAttribute(&quot;index&quot;).AsInt();
                 if (index.IsWithinBoundsOf(topicStar))
                 {
-                    return topicStar[index - 1];
+                    return topicStar[index - 1].NonNull();
                 }
 
                 // Log the out of range failure
@@ -83,7 +83,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[31,15,31,31,0],[32,9,32,10,0],[33,9,33,10,0],[40,9,40,10,0],[41,13,41,43,0],[42,13,42,70,0],[43,13,43,14,0],[45,17,45,49,0],[46,17,46,42,0],[47,17,47,18,0],[48,21,48,115,0],[50,21,50,41,0],[54,17,54,52,0],[55,17,55,18,0],[56,21,56,41,0],[60,17,60,67,0],[61,17,61,55,0],[62,17,62,18,0],[63,21,63,49,0],[67,17,67,121,0],[68,13,68,14,0],[70,13,70,33,0],[71,9,71,10,0]]);
+      highlightRanges([[31,15,31,31,0],[32,9,32,10,0],[33,9,33,10,0],[40,9,40,10,0],[41,13,41,43,0],[42,13,42,70,0],[43,13,43,14,0],[45,17,45,49,0],[46,17,46,42,0],[47,17,47,18,0],[48,21,48,115,0],[50,21,50,41,0],[54,17,54,52,0],[55,17,55,18,0],[56,21,56,51,0],[60,17,60,67,0],[61,17,61,55,0],[62,17,62,18,0],[63,21,63,59,0],[67,17,67,121,0],[68,13,68,14,0],[70,13,70,33,0],[71,9,71,10,0]]);
     </script>
   </body>
 </html>

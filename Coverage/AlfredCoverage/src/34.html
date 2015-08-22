@@ -2,109 +2,130 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.core\console\simpleconsole.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core\widgets\alfredprogressbarwidget.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// SimpleConsole.cs
+// AlfredProgressBarWidget.cs
 // 
-// Created on:      07/26/2015 at 2:23 PM
-// Last Modified:   08/07/2015 at 12:41 AM
+// Created on:      08/04/2015 at 3:34 PM
+// Last Modified:   08/04/2015 at 4:04 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Globalization;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core.Console;
-using MattEland.Ani.Alfred.Core.Definitions;
-
-namespace MattEland.Ani.Alfred.Core
+namespace MattEland.Ani.Alfred.Core.Widgets
 {
     /// &lt;summary&gt;
-    ///     A simple console used for unit testing and designer window purposes
+    /// A progress bar widget to be interpreted at the user interface layer
     /// &lt;/summary&gt;
-    public sealed class SimpleConsole : IConsole
+    public sealed class AlfredProgressBarWidget : AlfredTextWidget
     {
-        [NotNull]
-        private readonly ICollection&lt;IConsoleEvent&gt; _events;
+        private float _maximum = 100;
+        private float _minimum;
+        private float _value;
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;SimpleConsole&quot; /&gt; class.
+        ///     Gets or sets the minimum value to display on the bar.
         /// &lt;/summary&gt;
-        public SimpleConsole() : this(new SimplePlatformProvider())
+        /// &lt;value&gt;The minimum.&lt;/value&gt;
+        public float Minimum
         {
+            get { return _minimum; }
+            set
+            {
+                if (!value.Equals(_minimum))
+                {
+                    _minimum = value;
+                    OnPropertyChanged(nameof(Minimum));
+                }
+            }
         }
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;SimpleConsole&quot; /&gt; class.
+        ///     Gets or sets the maximum value to display on the bar.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;provider&quot;&gt;The platform provider used to initialize the collection of events.&lt;/param&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
-        public SimpleConsole([NotNull] IPlatformProvider provider)
+        /// &lt;value&gt;The maximum value.&lt;/value&gt;
+        public float Maximum
         {
-            if (provider == null)
+            get { return _maximum; }
+            set
             {
-                throw new ArgumentNullException(nameof(provider));
+                if (!value.Equals(_maximum))
+                {
+                    _maximum = value;
+                    OnPropertyChanged(nameof(Maximum));
+                }
             }
-
-            _events = provider.CreateCollection&lt;IConsoleEvent&gt;();
         }
 
         /// &lt;summary&gt;
-        ///     Logs the specified message to the console.
+        ///     Gets or sets the current value.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;title&quot;&gt;The title.&lt;/param&gt;
-        /// &lt;param name=&quot;message&quot;&gt;The message.&lt;/param&gt;
-        /// &lt;param name=&quot;level&quot;&gt;The logging level.&lt;/param&gt;
-        public void Log([CanBeNull] string title, [CanBeNull] string message, LogLevel level)
+        /// &lt;value&gt;The value.&lt;/value&gt;
+        public float Value
         {
-            if (title == null)
+            get { return _value; }
+            set
             {
-                title = &quot;Unknown&quot;;
+                if (!value.Equals(_value))
+                {
+                    _value = value;
+
+                    OnPropertyChanged(nameof(Value));
+                    OnPropertyChanged(nameof(ValueText));
+                }
             }
-
-            if (message == null)
-            {
-                return;
-            }
-
-            var evt = new ConsoleEvent(title, message, level);
-
-            Log(evt);
-        }
-
-        private void Log([NotNull] IConsoleEvent consoleEvent)
-        {
-            if (consoleEvent == null)
-            {
-                throw new ArgumentNullException(nameof(consoleEvent));
-            }
-
-            _events.Add(consoleEvent);
         }
 
         /// &lt;summary&gt;
-        ///     Gets the console events.
+        ///     Gets the value to display in the user interface for the ToolTip.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The console events.&lt;/value&gt;
-        [NotNull]
-        [ItemNotNull]
-        public IEnumerable&lt;IConsoleEvent&gt; Events
+        /// &lt;value&gt;A textual representation of the Value field.&lt;/value&gt;
+        public string ValueText
         {
-            get { return _events; }
+            get
+            {
+                var formatString = _valueFormatString ?? &quot;{0}&quot;;
+
+                return string.Format(CultureInfo.CurrentCulture, formatString, Value);
+            }
+        }
+
+        [CanBeNull]
+        private string _valueFormatString;
+
+        /// &lt;summary&gt;
+        /// Gets or sets the value format string. This is used for driving the ValueText field.
+        /// This can be null for default representation. Use {0} to represent the value.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The value format string.&lt;/value&gt;
+        [CanBeNull]
+        public string ValueFormatString
+        {
+            get { return _valueFormatString; }
+            set
+            {
+                if (value != _valueFormatString)
+                {
+                    _valueFormatString = value;
+
+                    OnPropertyChanged(nameof(ValueFormatString));
+                    OnPropertyChanged(nameof(ValueText));
+                }
+            }
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[43,13,43,14,0],[44,17,44,67,0],[59,13,59,14,0],[60,17,60,35,0],[61,13,61,14,0],[64,13,64,14,0],[65,17,65,24,0],[76,13,76,14,0],[77,17,77,71,0],[31,34,31,68,1],[32,9,32,10,1],[33,9,33,10,1],[40,9,40,67,1],[41,9,41,10,1],[42,13,42,34,1],[47,13,47,66,1],[48,9,48,10,1],[57,9,57,10,1],[58,13,58,31,1],[63,13,63,33,1],[68,13,68,63,1],[70,13,70,22,1],[71,9,71,10,1],[74,9,74,10,1],[75,13,75,38,1],[80,13,80,39,1],[81,9,81,10,1],[91,17,91,18,1],[91,19,91,34,1],[91,35,91,36,1]]);
+      highlightRanges([[30,17,30,18,0],[30,19,30,35,0],[30,36,30,37,0],[34,17,34,18,0],[35,21,35,38,0],[36,21,36,56,0],[37,17,37,18,0],[47,17,47,18,0],[47,19,47,35,0],[47,36,47,37,0],[51,17,51,18,0],[52,21,52,38,0],[53,21,53,56,0],[54,17,54,18,0],[64,17,64,18,0],[64,19,64,33,0],[64,34,64,35,0],[84,13,84,14,0],[85,17,85,64,0],[87,17,87,87,0],[88,13,88,14,0],[102,17,102,18,0],[102,19,102,45,0],[102,46,102,47,0],[32,13,32,14,1],[33,17,33,45,1],[38,13,38,14,1],[49,13,49,14,1],[50,17,50,45,1],[55,13,55,14,1],[66,13,66,14,1],[67,17,67,43,1],[68,17,68,18,1],[69,21,69,36,1],[71,21,71,54,1],[72,21,72,58,1],[73,17,73,18,1],[74,13,74,14,1],[104,13,104,14,1],[105,17,105,49,1],[106,17,106,18,1],[107,21,107,48,1],[109,21,109,66,1],[110,21,110,58,1],[111,17,111,18,1],[112,13,112,14,1],[20,9,20,38,1]]);
     </script>
   </body>
 </html>

@@ -2,119 +2,126 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.aiml\alfredcommandrouter.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core.system\memorymonitormodule.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlfredCommandRouter.cs
+// MemoryMonitorModule.cs
 // 
-// Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   08/21/2015 at 5:46 PM
+// Created on:      08/04/2015 at 9:50 PM
+// Last Modified:   08/18/2015 at 2:06 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System.Globalization;
+using System;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core;
-using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Common;
+using MattEland.Ani.Alfred.Core.Widgets;
 
-namespace MattEland.Ani.Alfred.Chat
+namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
     /// &lt;summary&gt;
-    ///     This class takes commands in and handles them by routing them to various components in an
-    ///     Alfred application.
+    ///     A module that displays information on the system&#39;s memory utilization percentage
     /// &lt;/summary&gt;
-    public class AlfredCommandRouter : IAlfredCommandRecipient, IShellCommandRecipient
+    public sealed class MemoryMonitorModule : SystemMonitorModule, IDisposable
     {
-        /// &lt;summary&gt;
-        ///     Gets or sets the alfred instance.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The alfred instance.&lt;/value&gt;
-        [CanBeNull]
-        public IAlfred Alfred { get; set; }
+        private const string MemoryCategoryName = &quot;Memory&quot;;
+        private const string MemoryUtilizationBytesCounterName = &quot;% Committed Bytes in Use&quot;;
+
+        [NotNull]
+        private readonly MetricProviderBase _memUsedBytesCounter;
+
+        [NotNull]
+        private readonly AlfredProgressBarWidget _memWidget;
 
         /// &lt;summary&gt;
-        ///     Processes an Alfred Command. If the command is handled, result should be modified accordingly
-        ///     and the method should return true. Returning false will not stop the message from being
-        ///     propagated.
+        ///     Initializes a new instance of the &lt;see cref=&quot;MemoryMonitorModule&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;command&quot;&gt;The command.&lt;/param&gt;
-        /// &lt;param name=&quot;result&quot;&gt;The result. If the command was handled, this should be updated.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;True&lt;/c&gt; if the command was handled; otherwise false.&lt;/returns&gt;
-        public bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
+        /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
+        /// &lt;param name=&quot;factory&quot;&gt;The metric provider factory.&lt;/param&gt;
+        public MemoryMonitorModule([NotNull] IPlatformProvider platformProvider,
+                                   [NotNull] IMetricProviderFactory factory)
+            : base(platformProvider, factory)
         {
-            var alfred = Alfred;
-            if (alfred == null)
+            _memUsedBytesCounter = MetricProvider.Build(MemoryCategoryName,
+                                                        MemoryUtilizationBytesCounterName);
+
+            _memWidget = new AlfredProgressBarWidget
             {
-                return false;
-            }
+                Minimum = 0,
+                Maximum = 100,
+                Text = Resources.MemoryMonitorModule_LabelName,
+                ValueFormatString = &quot;{0:F2} %&quot;
+            };
 
-            // Extract our target for loop readability
-            var target = command.Subsystem;
-
-            // Commands are very, very important and need to be logged.
-            alfred.Console?.Log(Resources.AlfredCommandRouterProcessAlfredCommandLogHeader,
-                                string.Format(CultureInfo.CurrentCulture,
-                                              Resources.AlfredCommandRouterProcessAlfredCommandLogMessage,
-                                              command.Name,
-                                              target,
-                                              command.Data),
-                                LogLevel.Info);
-
-            // Send the command to each subsystem. These will in turn send it on to their pages and modules.
-            foreach (var subsystem in alfred.Subsystems)
-            {
-                // If the command isn&#39;t for the subsystem, move on.
-                if (target.HasText() &amp;&amp; !target.Matches(subsystem.Id))
-                {
-                    continue;
-                }
-
-                // Send the command to the subsystem for routing. If it&#39;s handled, the subsystem will return true.
-                if (subsystem.ProcessAlfredCommand(command, result))
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         /// &lt;summary&gt;
-        ///     Processes a shell command by sending it on to the user interface layer.
+        ///     Gets the name of the module.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;command&quot;&gt;The command.&lt;/param&gt;
-        [NotNull]
-        public string ProcessShellCommand(ShellCommand command)
+        /// &lt;value&gt;
+        ///     The name of the module.
+        /// &lt;/value&gt;
+        public override string Name
         {
-            // Commands are very, very important and need to be logged.
-            Alfred?.Console?.Log(Resources.AlfredCommandRouterProcessShellCommandLogHeader,
-                                 string.Format(CultureInfo.CurrentCulture,
-                                               Resources.AlfredCommandRouterProcessShellCommandMessage,
-                                               command.Name,
-                                               command.Target,
-                                               command.Data),
-                                 LogLevel.Info);
+            // ReSharper disable once AssignNullToNotNullAttribute
+            get { return Resources.MemoryMonitorModule_Name; }
+        }
 
-            var shell = Alfred?.ShellCommandHandler;
+        /// &lt;summary&gt;
+        /// Gets the percent of memory that is utilized.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The memory utilization percentage.&lt;/value&gt;
+        public float MemoryUtilization
+        {
+            get { return _memUsedBytesCounter.NextValue(); }
+        }
 
-            var result = shell?.ProcessShellCommand(command);
+        /// &lt;summary&gt;
+        ///     Disposes this instance.
+        /// &lt;/summary&gt;
+        public void Dispose()
+        {
+            _memUsedBytesCounter.Dispose();
+        }
 
-            return result.NonNull();
+        /// &lt;summary&gt;
+        ///     Handles module shutdown events
+        /// &lt;/summary&gt;
+        protected override void ShutdownProtected()
+        {
+            _memWidget.Value = 0;
+        }
+
+        /// &lt;summary&gt;
+        ///     Handles module initialization events
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;alfred&quot;&gt;The alfred instance.&lt;/param&gt;
+        protected override void InitializeProtected(IAlfred alfred)
+        {
+            Register(_memWidget);
+        }
+
+        /// &lt;summary&gt;
+        ///     Handles updating the module as needed
+        /// &lt;/summary&gt;
+        protected override void UpdateProtected()
+        {
+            var usedMemory = GetNextCounterValueSafe(_memUsedBytesCounter);
+
+            _memWidget.Value = usedMemory;
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[46,13,46,14,0],[47,17,47,30,0],[32,33,32,37,1],[32,38,32,42,1],[43,9,43,10,1],[44,13,44,33,1],[45,13,45,32,1],[51,13,51,44,1],[54,13,60,48,1],[63,13,63,20,1],[63,39,63,56,1],[63,22,63,35,1],[64,13,64,14,1],[66,17,66,71,1],[67,17,67,18,1],[68,21,68,30,1],[72,17,72,69,1],[73,17,73,18,1],[74,21,74,33,1],[76,13,76,14,1],[63,36,63,38,1],[78,13,78,26,1],[79,9,79,10,1],[87,9,87,10,1],[89,13,95,49,1],[97,13,97,53,1],[99,13,99,62,1],[101,13,101,37,1],[102,9,102,10,1]]);
+      highlightRanges([[64,17,64,18,0],[64,19,64,61,0],[64,62,64,63,0],[80,9,80,10,0],[81,13,81,44,0],[82,9,82,10,0],[40,15,40,46,1],[41,9,41,10,1],[42,13,43,92,1],[45,13,51,15,1],[53,9,53,10,1],[73,17,73,18,1],[73,19,73,59,1],[73,60,73,61,1],[88,9,88,10,1],[89,13,89,34,1],[90,9,90,10,1],[97,9,97,10,1],[98,13,98,34,1],[99,9,99,10,1],[105,9,105,10,1],[106,13,106,76,1],[108,13,108,43,1],[109,9,109,10,1]]);
     </script>
   </body>
 </html>
