@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
 // AssemblyExtensions.cs
 // 
-// Created on:      08/14/2015 at 12:38 AM
-// Last Modified:   08/14/2015 at 12:59 AM
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/22/2015 at 2:56 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -33,8 +33,9 @@ namespace MattEland.Common
         [NotNull]
         [ItemNotNull]
         [UsedImplicitly]
-        public static IEnumerable<Type> GetTypesInAssemblyWithAttribute<TAttribute>([NotNull] this Assembly assembly,
-                                                                                    bool inherit)
+        public static IEnumerable<Type> GetTypesInAssemblyWithAttribute<TAttribute>(
+            [NotNull] this Assembly assembly,
+            bool inherit)
             where TAttribute : Attribute
         {
             if (assembly == null)
@@ -43,54 +44,64 @@ namespace MattEland.Common
             }
 
             var types = assembly.GetTypes();
-            return GetTypesWithAttributes<TAttribute>(types, inherit);
+            return GetTypesWithAttributes(types, typeof(TAttribute), inherit);
         }
 
         /// <summary>
         ///     Gets the types in a group of types that have an attribute applied to them.
         /// </summary>
-        /// <typeparam name="TAttribute">The attribute to search for.</typeparam>
         /// <param name="types">The set of types</param>
+        /// <param name="attributeType">The attribute type.</param>
         /// <param name="inherit">
         ///     true to search the type's inheritance chain to find the attributes; otherwise, false.
         /// </param>
         /// <returns>The types in the set of types that have the requested attribute</returns>
-        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="System.ArgumentNullException">types, attributeType</exception>
         [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         [NotNull]
         [ItemNotNull]
         [UsedImplicitly]
-        public static IEnumerable<Type> GetTypesWithAttributes<TAttribute>([NotNull] IEnumerable<Type> types,
-                                                                           bool inherit) where TAttribute : Attribute
+        public static IEnumerable<Type> GetTypesWithAttributes([NotNull] IEnumerable<Type> types,
+                                                               [NotNull] Type attributeType,
+                                                               bool inherit)
         {
             if (types == null)
             {
                 throw new ArgumentNullException(nameof(types));
             }
+            if (attributeType == null)
+            {
+                throw new ArgumentNullException(nameof(attributeType));
+            }
 
-            return types.Where(t => t != null && t.HasAttribute<TAttribute>(inherit));
+            return types.Where(t => t != null && t.HasAttribute(attributeType, inherit));
         }
 
         /// <summary>
         ///     Determines whether the specified member has a particular attribute applied to it.
         /// </summary>
-        /// <typeparam name="TAttribute">The type of the attribute.</typeparam>
         /// <param name="member">The member.</param>
+        /// <param name="attributeType">The attribute type</param>
         /// <param name="inherit">
         ///     true to search the type's inheritance chain to find the attributes; otherwise, false.
         /// </param>
         /// <returns><c>true</c> if the specified inherit has the attribute; otherwise, <c>false</c>.</returns>
         /// <exception cref="System.ArgumentNullException"></exception>
         [UsedImplicitly]
-        public static bool HasAttribute<TAttribute>([NotNull] this MemberInfo member, bool inherit)
-            where TAttribute : Attribute
+        public static bool HasAttribute([NotNull] this MemberInfo member,
+                                        [NotNull] Type attributeType,
+                                        bool inherit)
         {
             if (member == null)
             {
                 throw new ArgumentNullException(nameof(member));
             }
+            if (attributeType == null)
+            {
+                throw new ArgumentNullException(nameof(attributeType));
+            }
 
-            return member.IsDefined(typeof(TAttribute), inherit);
+            return member.IsDefined(attributeType, inherit);
         }
 
         /// <summary>

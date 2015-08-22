@@ -37,13 +37,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>AlfredAppTestCertificate.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>Alfred.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
+    <None Include="Alfred.pfx" />
     <None Include="AlfredAppTestCertificate.snk" />
     <None Include="AlfredCore.cd" />
     <None Include="packages.config" />

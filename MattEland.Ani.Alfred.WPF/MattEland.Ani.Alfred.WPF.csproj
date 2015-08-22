@@ -53,10 +53,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>AlfredAppTestCertificate.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>Alfred.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Alfred.ico</ApplicationIcon>
@@ -123,6 +123,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="Alfred.pfx" />
     <None Include="AlfredAppTestCertificate.snk" />
     <None Include="AlfredWPF.cd" />
     <None Include="packages.config" />
