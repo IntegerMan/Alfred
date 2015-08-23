@@ -2,67 +2,70 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\taghandlers\gossiptaghandler.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\taghandlers\datetaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// GossipTagHandler.cs
+// DateTagHandler.cs
 // 
-// Created on:      08/12/2015 at 10:46 PM
-// Last Modified:   08/12/2015 at 11:59 PM
+// Created on:      08/12/2015 at 10:43 PM
+// Last Modified:   08/14/2015 at 3:13 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System;
+
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
-using MattEland.Ani.Alfred.Core.Console;
-using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// &lt;summary&gt;
-    /// A tag handler for the AIML &quot;gossip&quot; tag. 
-    /// 
-    /// This implementation simply logs the contents of the gossip tag to the logger.
+    /// An AimlTagHandler for the &quot;date&quot; tag. This provides an easy way of giving the time and date.
     /// &lt;/summary&gt;
-    [HandlesAimlTag(&quot;gossip&quot;)]
-    public class GossipTagHandler : AimlTagHandler
+    [HandlesAimlTag(&quot;date&quot;)]
+    public class DateTagHandler : AimlTagHandler
     {
         /// &lt;summary&gt;
-        /// Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;DateTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
-        public GossipTagHandler([NotNull] TagHandlerParameters parameters)
+        public DateTagHandler([NotNull] TagHandlerParameters parameters)
             : base(parameters)
         {
         }
 
         /// &lt;summary&gt;
-        /// Processes the input text and returns the processed value.
+        ///     Processes the input text and returns the processed value.
         /// &lt;/summary&gt;
         /// &lt;returns&gt;The processed output&lt;/returns&gt;
         protected override string ProcessChange()
         {
-            var node = TemplateNode;
+            var element = TemplateElement;
 
-            //- Ensure we have something to care about
-            if (node.Name.Matches(&quot;gossip&quot;) &amp;&amp; node.InnerText.HasText())
+            string formatString = &quot;f&quot;; // Full date and time string
+
+            // By default we&#39;ll use the full date and time, but look for a format attribute to provide a custom format
+            if (element.HasAttribute(&quot;format&quot;))
             {
-                Log(string.Format(Locale, &quot;GOSSIP from user: {0}, &#39;{1}&#39;&quot;, User.Id, node.InnerText), LogLevel.Info);
+                formatString = element.GetAttribute(&quot;format&quot;);
             }
 
-            return string.Empty;
+            // Return the current time with formatting applied
+            var now = DateTime.Now;
+            return now.ToString(formatString, Locale);
+
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[31,15,31,31,0],[32,9,32,10,0],[33,9,33,10,0],[40,9,40,10,0],[41,13,41,37,0],[44,13,44,73,0],[45,13,45,14,0],[46,17,46,116,0],[47,13,47,14,0],[49,13,49,33,0],[50,9,50,10,0]]);
+      highlightRanges([[29,15,29,31,1],[30,9,30,10,1],[31,9,31,10,1],[38,9,38,10,1],[39,13,39,43,1],[41,13,41,39,1],[44,13,44,48,1],[45,13,45,14,1],[46,17,46,63,1],[47,13,47,14,1],[50,13,50,36,1],[51,13,51,55,1],[53,9,53,10,1]]);
     </script>
   </body>
 </html>

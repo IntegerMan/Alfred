@@ -2,57 +2,110 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.core.tests\widgets\textwidgettests.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core.tests\widgets\explorerwidgettests.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// TextWidgetTests.cs
+// ExplorerWidgetTests.cs
 // 
-// Created on:      08/08/2015 at 6:19 PM
-// Last Modified:   08/08/2015 at 6:20 PM
-// Original author: Matt Eland
+// Created on:      08/22/2015 at 11:27 PM
+// Last Modified:   08/22/2015 at 11:27 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System.Collections.Generic;
-using System.Linq;
+using System;
+using System.Diagnostics.CodeAnalysis;
 
-using MattEland.Ani.Alfred.Core.Widgets;
+using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Core.Pages;
 
 using NUnit.Framework;
 
 namespace MattEland.Ani.Alfred.Tests.Widgets
 {
     /// &lt;summary&gt;
-    ///     Contains tests related to &lt;see cref=&quot;TextWidget&quot; /&gt;
+    /// Contains tests related to the &lt;see cref=&quot;ExplorerPage&quot;/&gt;
     /// &lt;/summary&gt;
     [TestFixture]
-    public sealed class TextWidgetTests
+    [SuppressMessage(&quot;ReSharper&quot;, &quot;NotNullMemberIsNotInitialized&quot;)]
+    [SuppressMessage(&quot;ReSharper&quot;, &quot;AssignNullToNotNullAttribute&quot;)]
+    [SuppressMessage(&quot;ReSharper&quot;, &quot;ObjectCreationAsStatement&quot;)]
+    public class ExplorerWidgetTests
     {
-        private const string TestString = &quot;This is a test&quot;;
+        [NotNull]
+        private SimplePlatformProvider _provider;
+        private const string TestPageId = &quot;TestExp&quot;;
+        private const string TestPageName = &quot;Explorer Page&quot;;
 
-        [Test]
-        public void TextWidgetConstructorTextTests()
+        /// &lt;summary&gt;
+        /// Sets up the environment for each test
+        /// &lt;/summary&gt;
+        [SetUp]
+        public void SetUp()
         {
-            var widget = new TextWidget(TestString);
-
-            Assert.AreEqual(TestString, widget.Text);
+            _provider = new SimplePlatformProvider();
         }
 
+        /// &lt;summary&gt;
+        /// Simple constructor test for &lt;see cref=&quot;ExplorerPage&quot;/&gt;
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        /// ALF-15
+        /// &lt;/remarks&gt;
         [Test]
-        public void TextWidgetTextTests()
+        public void ExplorerPageCanBeCreated()
         {
-            var widget = new TextWidget { Text = TestString };
+            var page = new ExplorerPage(_provider, TestPageName, TestPageId);
+            Assert.AreEqual(TestPageId, page.Id);
+            Assert.AreEqual(TestPageName, page.Name);
+        }
 
-            Assert.AreEqual(TestString, widget.Text);
+        /// &lt;summary&gt;
+        /// Simple constructor test for &lt;see cref=&quot;ExplorerPage&quot;/&gt; checking parameter validation on provider
+        /// &lt;/summary&gt;
+        [Test, ExpectedException(typeof(ArgumentNullException))]
+        public void ExplorerPageThrowsOnNoProvider()
+        {
+            new ExplorerPage(null, TestPageName, TestPageId);
+        }
+        /// &lt;summary&gt;
+        /// Simple constructor test for &lt;see cref=&quot;ExplorerPage&quot;/&gt; checking parameter validation on name
+        /// &lt;/summary&gt;
+        [Test, ExpectedException(typeof(ArgumentNullException))]
+        public void ExplorerPageThrowsOnNoName()
+        {
+            new ExplorerPage(_provider, null, TestPageId);
+        }
+        /// &lt;summary&gt;
+        /// Simple constructor test for &lt;see cref=&quot;ExplorerPage&quot;/&gt; checking parameter validation on id
+        /// &lt;/summary&gt;
+        [Test, ExpectedException(typeof(ArgumentNullException))]
+        public void ExplorerPageThrowsOnNoId()
+        {
+            new ExplorerPage(_provider, TestPageName, null);
+        }
+
+        /// &lt;summary&gt;
+        /// Ensures that Explorer pages are visible.
+        /// &lt;/summary&gt;
+        [Test]
+        public void ExplorerPageIsVisible()
+        {
+            var page = new ExplorerPage(_provider, TestPageName, TestPageId);
+
+            Assert.That(page.IsVisible);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[28,9,28,10,1],[29,13,29,53,1],[31,13,31,54,1],[32,9,32,10,1],[36,9,36,10,1],[37,13,37,63,1],[39,13,39,54,1],[40,9,40,10,1]]);
+      highlightRanges([[66,9,66,10,0],[74,9,74,10,0],[82,9,82,10,0],[41,9,41,10,1],[42,13,42,54,1],[43,9,43,10,1],[53,9,53,10,1],[54,13,54,78,1],[55,13,55,50,1],[56,13,56,54,1],[57,9,57,10,1],[64,9,64,10,1],[65,13,65,62,1],[72,9,72,10,1],[73,13,73,59,1],[80,9,80,10,1],[81,13,81,61,1],[89,9,89,10,1],[90,13,90,78,1],[92,13,92,41,1],[93,9,93,10,1]]);
     </script>
   </body>
 </html>

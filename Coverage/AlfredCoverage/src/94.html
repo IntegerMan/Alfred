@@ -2,124 +2,58 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\utils\textsubstitutionhelper.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\taghandlers\thinktaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// TextSubstitutionHelper.cs
+// ThinkTagHandler.cs
 // 
-// Created on:      08/12/2015 at 10:37 PM
-// Last Modified:   08/18/2015 at 4:57 PM
+// Created on:      08/12/2015 at 10:59 PM
+// Last Modified:   08/15/2015 at 1:29 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System.Globalization;
-using System.Text.RegularExpressions;
-
 using JetBrains.Annotations;
 
-using MattEland.Common;
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 
-namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
+namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
-
     /// &lt;summary&gt;
-    ///     A text transformation helper class that replaces found occurrences of strings
-    ///     with their values found in the settings provider.
+    ///     A tag handler for the AIML think tag. This outputs nothing.
     /// &lt;/summary&gt;
-    public static class TextSubstitutionHelper
+    [HandlesAimlTag(&quot;think&quot;)]
+    public class ThinkTagHandler : AimlTagHandler
     {
-        private const string Marker = &quot;zzMARKERzz&quot;;
-        private const string WordBoundary = @&quot;\b&quot;;
-
         /// &lt;summary&gt;
-        ///     Substitutes all occurrences of the words in the settings provider found in input with the
-        ///     replacement values stored in that provider.
+        ///     Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;settings&quot;&gt;The settings manager.&lt;/param&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input.&lt;/param&gt;
-        /// &lt;returns&gt;A modified version of the input string.&lt;/returns&gt;
-        [NotNull]
-        public static string Substitute([CanBeNull] SettingsManager settings,
-                                        [CanBeNull] string input)
+        /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
+        public ThinkTagHandler([NotNull] TagHandlerParameters parameters)
+            : base(parameters)
         {
-            //- Validate
-            input = input.NonNull();
-            if (settings == null)
-            {
-                return input;
-            }
-
-            //- Grab our setting names
-            var settingNames = settings.Keys;
-
-            // Look for each setting settingName in the input string to replace it with our setting value
-            foreach (var settingName in settingNames)
-            {
-                var settingValue = settings.GetValue(settingName);
-
-                input = Substitute(input, settingName, settingValue);
-            }
-
-            return input;
         }
 
         /// &lt;summary&gt;
-        ///     Substitutes whole word instances of settingName in input with settingValue.
+        ///     Processes the input text and returns the processed value.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input.&lt;/param&gt;
-        /// &lt;param name=&quot;settingName&quot;&gt;Name of the setting.&lt;/param&gt;
-        /// &lt;param name=&quot;settingValue&quot;&gt;The setting value.&lt;/param&gt;
-        /// &lt;returns&gt;A string with words substituted&lt;/returns&gt;
-        [NotNull]
-        public static string Substitute([CanBeNull] string input,
-                                        [CanBeNull] string settingName,
-                                        [CanBeNull] string settingValue)
+        /// &lt;returns&gt;The processed output&lt;/returns&gt;
+        protected override string ProcessChange()
         {
-            //- Sanity check
-            if (input == null)
-            {
-                input = string.Empty;
-            }
-            if (settingName == null || settingValue == null)
-            {
-                return input;
-            }
+            //? TODO: Do statements inside of Think get executed still?
+            //? If so, shouldn&#39;t it run them via a srai and just not output anything?
 
-            var locale = CultureInfo.CurrentCulture;
-
-            // Surround the setting with our marker string
-            var replacement =
-                string.Format(locale, &quot;{0}{1}{0}&quot;, Marker, settingValue.Trim())
-                      .NonNull();
-
-            // Check for bad things in the name and make them regex safe
-            var sanitizedName =
-                settingName.Replace(@&quot;\&quot;, &quot;&quot;)
-                           .Replace(&quot;)&quot;, @&quot;\)&quot;)
-                           .Replace(&quot;(&quot;, @&quot;\(&quot;)
-                           .Replace(&quot;.&quot;, @&quot;\.&quot;)
-                           .Trim();
-
-            // Replaces the variable settingName with the setting value
-            var pattern =
-                string.Format(locale, &quot;{0}{1}{0}&quot;, WordBoundary, sanitizedName)
-                      .NonNull();
-
-            var substitute = Regex.Replace(input, pattern, replacement, RegexOptions.IgnoreCase);
-
-            // Remove the marker string from the string
-            return substitute.Replace(Marker, string.Empty);
+            return string.Empty;
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[39,9,39,10,1],[41,13,41,37,1],[42,13,42,34,1],[43,13,43,14,1],[44,17,44,30,1],[48,13,48,46,1],[51,13,51,20,1],[51,41,51,53,1],[51,22,51,37,1],[52,13,52,14,1],[53,17,53,67,1],[55,17,55,70,1],[56,13,56,14,1],[51,38,51,40,1],[58,13,58,26,1],[59,9,59,10,1],[72,9,72,10,1],[74,13,74,31,1],[75,13,75,14,1],[76,17,76,38,1],[77,13,77,14,1],[78,13,78,61,1],[79,13,79,14,1],[80,17,80,30,1],[83,13,83,53,1],[86,13,88,34,1],[91,13,96,36,1],[99,13,101,34,1],[103,13,103,98,1],[106,13,106,61,1],[107,9,107,10,1]]);
+      highlightRanges([[27,15,27,31,0],[28,9,28,10,0],[29,9,29,10,0],[36,9,36,10,0],[40,13,40,33,0],[41,9,41,10,0]]);
     </script>
   </body>
 </html>

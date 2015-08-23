@@ -2,68 +2,88 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\utils\splitsentencehelper.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\taghandlers\topicstartaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// SplitSentenceHelper.cs
+// topicstar.cs
 // 
-// Created on:      08/12/2015 at 10:38 PM
+// Created on:      08/12/2015 at 10:59 PM
 // Last Modified:   08/12/2015 at 11:59 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using JetBrains.Annotations;
 
-namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Common;
+
+namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// &lt;summary&gt;
-    /// A utility class for splitting strings into sentences
+    /// A tag handler for the AIML &quot;topicstar&quot; tag. This returns the output of the specified * value within the topic node.
     /// &lt;/summary&gt;
-    internal static class SplitSentenceHelper
+    [HandlesAimlTag(&quot;topicstar&quot;)]
+    public class TopicStarTagHandler : AimlTagHandler
     {
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
+        public TopicStarTagHandler([NotNull] TagHandlerParameters parameters)
+            : base(parameters)
+        {
+        }
 
         /// &lt;summary&gt;
-        /// Transforms the input string into sentences.
+        /// Processes the input text and returns the processed value.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;inputString&quot;&gt;The input string.&lt;/param&gt;
-        /// &lt;param name=&quot;chatEngine&quot;&gt;The chat engine.&lt;/param&gt;
-        /// &lt;returns&gt;Sentences&lt;/returns&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;inputString&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;chatEngine&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        [NotNull]
-        [ItemNotNull]
-        internal static IEnumerable&lt;string&gt; Split([NotNull] string inputString, [NotNull] ChatEngine chatEngine)
+        /// &lt;returns&gt;The processed output&lt;/returns&gt;
+        protected override string ProcessChange()
         {
-            //- Validate
-            if (inputString == null)
+            var element = TemplateElement;
+            if (element.Name.Matches(&quot;topicstar&quot;))
             {
-                throw new ArgumentNullException(nameof(inputString));
-            }
-            if (chatEngine == null)
-            {
-                throw new ArgumentNullException(nameof(chatEngine));
+                // Validate that we have TopicStar items to work with
+                var topicStar = Query.TopicStar;
+                if (topicStar.Count &lt;= 0)
+                {
+                    Log(string.Format(Locale, Resources.TopicStarErrorNoItems, Request.RawInput), LogLevel.Error);
+
+                    return string.Empty;
+                }
+
+                // When no index is specified return the first item.
+                if (!element.HasAttribute(&quot;index&quot;))
+                {
+                    return topicStar[0].NonNull();
+                }
+
+                // Grab the item at the specified array index
+                var index = element.GetAttribute(&quot;index&quot;).AsInt();
+                if (index.IsWithinBoundsOf(topicStar))
+                {
+                    return topicStar[index - 1].NonNull();
+                }
+
+                // Log the out of range failure
+                Log(string.Format(Locale, Resources.TopicStarErrorOutOfRange, index, Request.RawInput), LogLevel.Error);
             }
 
-            // Use the engine&#39;s splitters to split the input into sentences
-            var sentences = inputString.Split(chatEngine.SentenceSplitters.ToArray(), StringSplitOptions.RemoveEmptyEntries);
-
-            // Yield all sentences
-            return sentences.Select(s =&gt; s?.Trim());
+            return string.Empty;
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[38,13,38,14,0],[39,17,39,70,0],[42,13,42,14,0],[43,17,43,69,0],[35,9,35,10,1],[37,13,37,37,1],[41,13,41,36,1],[47,13,47,126,1],[50,13,50,42,1],[50,51,50,53,1],[51,9,51,10,1],[50,42,50,51,1]]);
+      highlightRanges([[31,15,31,31,0],[32,9,32,10,0],[33,9,33,10,0],[40,9,40,10,0],[41,13,41,43,0],[42,13,42,51,0],[43,13,43,14,0],[45,17,45,49,0],[46,17,46,42,0],[47,17,47,18,0],[48,21,48,115,0],[50,21,50,41,0],[54,17,54,52,0],[55,17,55,18,0],[56,21,56,51,0],[60,17,60,67,0],[61,17,61,55,0],[62,17,62,18,0],[63,21,63,59,0],[67,17,67,121,0],[68,13,68,14,0],[70,13,70,33,0],[71,9,71,10,0]]);
     </script>
   </body>
 </html>

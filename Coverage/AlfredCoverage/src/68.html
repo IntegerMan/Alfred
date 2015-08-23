@@ -2,241 +2,59 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\taghandlers\conditiontaghandler.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\taghandlers\handlesaimltagattribute.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// ConditionTagHandler.cs
+// HandlesAimlTagAttribute.cs
 // 
-// Created on:      08/12/2015 at 10:42 PM
-// Last Modified:   08/14/2015 at 2:35 PM
+// Created on:      08/14/2015 at 1:01 AM
+// Last Modified:   08/14/2015 at 1:01 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
 using System.Diagnostics;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Xml;
 
 using JetBrains.Annotations;
-
-using MattEland.Ani.Alfred.Chat.Aiml.Utils;
-using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// &lt;summary&gt;
-    /// This is an AimlTagHandler for the &quot;condition&quot; tag that is used for variable and branch evaluation
+    /// An attribute describing a class that can handle an AIML tag
     /// &lt;/summary&gt;
-    [HandlesAimlTag(&quot;ConditionTagHandler&quot;)]
-    public class ConditionTagHandler : AimlTagHandler
+    [AttributeUsage(AttributeTargets.Class), UsedImplicitly]
+    public sealed class HandlesAimlTagAttribute : Attribute
     {
+
         /// &lt;summary&gt;
-        /// Initializes a new instance of the &lt;see cref=&quot;ConditionTagHandler&quot; /&gt; class.
+        /// Initializes a new instance of the &lt;see cref=&quot;HandlesAimlTagAttribute&quot;/&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
-        public ConditionTagHandler([NotNull] TagHandlerParameters parameters)
-            : base(parameters)
+        /// &lt;param name=&quot;name&quot;&gt;The name of the tag this class handles.&lt;/param&gt;
+        public HandlesAimlTagAttribute([NotNull] string name)
         {
-            IsRecursive = false;
+            Name = name;
         }
 
         /// &lt;summary&gt;
-        ///     Processes the input text and returns the processed value.
+        /// Gets or sets the name of the tag this class handles.
         /// &lt;/summary&gt;
-        /// &lt;returns&gt;The processed output&lt;/returns&gt;
-        protected override string ProcessChange()
-        {
-            //- Work with an node instead of a node.
-            var element = TemplateElement;
-
-            //- Ensure we&#39;re working with the right node type
-            if (!element.Name.Matches(&quot;ConditionTagHandler&quot;))
-            {
-                return string.Empty;
-            }
-
-            /* There are three different scenarios depending on what attributes are present on the ConditionTagHandler.
-            This will work by checking the node&#39;s name and value attributes */
-
-            // In this case no name was provided on the ConditionTagHandler so the children will provide the rules
-            if (!element.HasAttribute(&quot;name&quot;))
-            {
-                return EvaluateLooseConditionWithChildNodes(element);
-            }
-
-            // Grab the attribute values
-            var name = element.GetAttribute(&quot;name&quot;);
-            var variableName = User.UserVariables.GetValue(name).NonNull();
-
-            // Handle a simple case with a single node with name and value attributes
-            if (element.HasAttribute(&quot;value&quot;))
-            {
-                return EvaluateSimpleConditionNode(element, name, variableName);
-            }
-
-            // In this case we have an node with a name, but the child li elements have the values
-            return EvaluateConditionWithNameAndChildNodes(element, variableName);
-        }
-
-        /// &lt;summary&gt;
-        /// Handles the scenario where you have a ConditionTagHandler node without name or value. In that case, the first
-        /// matching child node is used and many different conditions can be evaluated.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;node&quot;&gt;The node.&lt;/param&gt;
-        /// &lt;returns&gt;System.String.&lt;/returns&gt;
+        /// &lt;value&gt;The name.&lt;/value&gt;
         [NotNull]
-        private string EvaluateLooseConditionWithChildNodes([NotNull] XmlNode node)
+        public string Name
         {
-            if (node == null)
-            {
-                throw new ArgumentNullException(nameof(node));
-            }
-
-            foreach (XmlElement xmlNode in node.ChildNodes)
-            {
-                //- Ensure we&#39;re looking at valid li&#39;s
-                if (xmlNode == null || !xmlNode.Name.Matches(&quot;li&quot;))
-                {
-                    continue;
-                }
-
-                // If it&#39;s an li with no name and value, this is our default option and it should be taken
-                if (!xmlNode.HasAttribute(&quot;name&quot;) || !xmlNode.HasAttribute(&quot;value&quot;))
-                {
-                    return xmlNode.InnerXml.NonNull();
-                }
-
-                //- Grab our name / value
-                var name = xmlNode.GetAttribute(&quot;name&quot;).NonNull();
-                var value = xmlNode.GetAttribute(&quot;value&quot;).NonNull();
-
-                // Check to see if we match the ConditionTagHandler. If we do, use that value
-                var input = User.UserVariables.GetValue(name).NonNull();
-                if (IsRegexMatch(input, value))
-                {
-                    return xmlNode.InnerXml.NonNull();
-                }
-            }
-
-            //- If we got here, no matches were found
-            return string.Empty;
-        }
-
-        /// &lt;summary&gt;
-        /// Evaluates the ConditionTagHandler with name and child nodes.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;node&quot;&gt;The node.&lt;/param&gt;
-        /// &lt;param name=&quot;variableName&quot;&gt;The variable name.&lt;/param&gt;
-        /// &lt;returns&gt;System.String.&lt;/returns&gt;
-        [NotNull]
-        private static string EvaluateConditionWithNameAndChildNodes([NotNull] XmlNode node,
-                                                                     [NotNull] string variableName)
-        {
-            if (node == null)
-            {
-                throw new ArgumentNullException(nameof(node));
-            }
-
-            // Select XmlElements from the children for each &quot;li&quot; choice
-            foreach (var child in from XmlElement xmlNode in node.ChildNodes
-                                  where xmlNode != null
-                                  where xmlNode.Name.Matches(&quot;li&quot;)
-                                  select xmlNode)
-            {
-                //- Sanity check
-                Debug.Assert(child?.Attributes != null);
-
-                // If it has a value node, we&#39;ll compare it to our variableName value
-                if (child.HasAttribute(&quot;value&quot;))
-                {
-                    var childValue = child.GetAttribute(&quot;value&quot;);
-
-                    // Is this the node we&#39;re looking for?
-                    if (IsRegexMatch(variableName, childValue))
-                    {
-                        return child.InnerXml.NonNull();
-                    }
-                }
-                else
-                {
-                    // It&#39;s just a blank li with no value; let&#39;s take it as a default / fallback.
-                    return child.InnerXml.NonNull();
-                }
-            }
-
-            return string.Empty;
-        }
-
-        /// &lt;summary&gt;
-        /// Evaluates a simple ConditionTagHandler node for a ConditionTagHandler tag with both a name and a value.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;element&quot;&gt;The node.&lt;/param&gt;
-        /// &lt;param name=&quot;name&quot;&gt;The name.&lt;/param&gt;
-        /// &lt;param name=&quot;variableName&quot;&gt;The variable name.&lt;/param&gt;
-        /// &lt;returns&gt;The results of the ConditionTagHandler or string.Empty if the ConditionTagHandler failed&lt;/returns&gt;
-        [NotNull]
-        private static string EvaluateSimpleConditionNode([NotNull] XmlElement element,
-                                                          [NotNull] string name,
-                                                          [NotNull] string variableName)
-        {
-            if (element == null)
-            {
-                throw new ArgumentNullException(nameof(element));
-            }
-
-            // Grab our ConditionTagHandler&#39;s value
-            var value = element.GetAttribute(&quot;value&quot;);
-
-            //- Early exit for no value
-            if (name.IsNullOrWhitespace() || value.IsNullOrWhitespace())
-            {
-                return string.Empty;
-            }
-
-            // Build and evaluate a regex to see if our value matches the value
-            var isMatch = IsRegexMatch(variableName, value);
-
-            // If the match succeeded, use the contents
-            return isMatch ? element.InnerXml.NonNull() : string.Empty;
-        }
-
-        /// &lt;summary&gt;
-        /// Determines whether the two values match according to a test regex.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;expected&quot;&gt;The variableName.&lt;/param&gt;
-        /// &lt;param name=&quot;value&quot;&gt;The value.&lt;/param&gt;
-        /// &lt;returns&gt;True if the regex matched otherwise false.&lt;/returns&gt;
-        private static bool IsRegexMatch([CanBeNull] string expected, [CanBeNull] string value)
-        {
-            var regex = BuildValidationRegex(value);
-
-            return regex.IsMatch(expected.NonNull());
-        }
-
-        /// &lt;summary&gt;
-        /// Builds a regular expression for validation purposes.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input value.&lt;/param&gt;
-        /// &lt;returns&gt;A regular expression&lt;/returns&gt;
-        [NotNull]
-        private static Regex BuildValidationRegex([CanBeNull] string input)
-        {
-            const RegexOptions Options = RegexOptions.IgnoreCase;
-
-            var regex = new Regex(input.NonNull().Replace(&quot; &quot;, @&quot;\s&quot;).Replace(&quot;*&quot;, @&quot;[\sA-Z0-9]+&quot;), Options);
-            return regex;
+            [DebuggerStepThrough]
+            get;
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[34,15,34,31,0],[35,9,35,10,0],[36,13,36,33,0],[37,9,37,10,0],[44,9,44,10,0],[46,13,46,43,0],[49,13,49,62,0],[50,13,50,14,0],[51,17,51,37,0],[58,13,58,47,0],[59,13,59,14,0],[60,17,60,70,0],[64,13,64,53,0],[65,13,65,76,0],[68,13,68,47,0],[69,13,69,14,0],[70,17,70,81,0],[74,13,74,82,0],[75,9,75,10,0],[85,9,85,10,0],[86,13,86,30,0],[87,13,87,14,0],[88,17,88,63,0],[91,13,91,20,0],[91,44,91,59,0],[91,22,91,40,0],[92,13,92,14,0],[94,17,94,68,0],[95,17,95,18,0],[96,21,96,30,0],[100,17,100,85,0],[101,17,101,18,0],[102,21,102,55,0],[106,17,106,67,0],[107,17,107,69,0],[110,17,110,73,0],[111,17,111,48,0],[112,17,112,18,0],[113,21,113,55,0],[115,13,115,14,0],[91,41,91,43,0],[118,13,118,33,0],[119,9,119,10,0],[130,9,130,10,0],[131,13,131,30,0],[132,13,132,14,0],[133,17,133,63,0],[137,13,137,20,0],[137,35,138,41,0],[138,56,139,41,0],[139,67,140,49,0],[137,22,137,31,0],[141,13,141,14,0],[143,17,143,57,0],[146,17,146,49,0],[147,17,147,18,0],[148,21,148,66,0],[151,21,151,64,0],[152,21,152,22,0],[153,25,153,57,0],[155,17,155,18,0],[157,17,157,18,0],[159,21,159,53,0],[161,13,161,14,0],[137,32,137,34,0],[163,13,163,33,0],[164,9,164,10,0],[175,9,175,10,0],[176,13,176,33,0],[177,13,177,14,0],[178,17,178,66,0],[182,13,182,55,0],[185,13,185,73,0],[186,13,186,14,0],[187,17,187,37,0],[191,13,191,61,0],[194,13,194,72,0],[195,9,195,10,0],[204,9,204,10,0],[205,13,205,53,0],[207,13,207,54,0],[208,9,208,10,0],[217,9,217,10,0],[220,13,221,44,0],[222,13,222,26,0],[223,9,223,10,0],[138,41,138,56,0],[139,41,139,67,0]]);
+      highlightRanges([[28,9,28,62,1],[29,9,29,10,1],[30,13,30,25,1],[31,9,31,10,1],[40,13,41,17,1]]);
     </script>
   </body>
 </html>

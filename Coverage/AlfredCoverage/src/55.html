@@ -2,145 +2,108 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.core\definitions\alfredcommand.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core\console\simpleconsole.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlfredCommand.cs
+// SimpleConsole.cs
 // 
-// Created on:      08/03/2015 at 1:40 PM
-// Last Modified:   08/05/2015 at 3:06 PM
+// Created on:      07/26/2015 at 2:23 PM
+// Last Modified:   08/07/2015 at 12:41 AM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
+using System.Linq;
 
 using JetBrains.Annotations;
 
-namespace MattEland.Ani.Alfred.Core.Definitions
+using MattEland.Ani.Alfred.Core.Definitions;
+
+namespace MattEland.Ani.Alfred.Core.Console
 {
     /// &lt;summary&gt;
-    ///     Represents a command that can be executed on the user interface layer
+    ///     A simple console used for unit testing and designer window purposes
     /// &lt;/summary&gt;
-    /// &lt;remarks&gt;
-    ///     It would be fantastic if this could support System.Windows.Input.ICommand,
-    ///     but portable doesn&#39;t reference that assembly so clients will have to provide
-    ///     their own version to support MVVM bindings, etc.
-    /// &lt;/remarks&gt;
-    public class AlfredCommand
+    public sealed class SimpleConsole : IConsole
     {
-        /// &lt;summary&gt;
-        ///     The Action invoked when the Execute method is called.
-        /// &lt;/summary&gt;
-        [CanBeNull]
-        private Action _executeAction;
+        [NotNull]
+        private readonly ICollection&lt;IConsoleEvent&gt; _events;
 
         /// &lt;summary&gt;
-        ///     Whether or not the command is enabled
+        ///     Initializes a new instance of the &lt;see cref=&quot;SimpleConsole&quot; /&gt; class.
         /// &lt;/summary&gt;
-        private bool _isEnabled = true;
-
-        /// &lt;summary&gt;
-        ///     Initializes a new instance of the
-        ///     &lt;see cref=&quot;AlfredCommand&quot; /&gt;
-        ///     class.
-        /// &lt;/summary&gt;
-        public AlfredCommand() : this(null)
+        public SimpleConsole() : this(new SimplePlatformProvider())
         {
         }
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the
-        ///     &lt;see cref=&quot;AlfredCommand&quot; /&gt;
-        ///     class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;SimpleConsole&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;executeAction&quot;&gt;
-        ///     The execute action.
-        /// &lt;/param&gt;
-        public AlfredCommand([CanBeNull] Action executeAction)
+        /// &lt;param name=&quot;provider&quot;&gt;The platform provider used to initialize the collection of events.&lt;/param&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        public SimpleConsole([NotNull] IPlatformProvider provider)
         {
-            ExecuteAction = executeAction;
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets or sets the Action that is invoked when a command executes.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The executed Action.&lt;/value&gt;
-        [CanBeNull]
-        public Action ExecuteAction
-        {
-            get { return _executeAction; }
-            set { _executeAction = value; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets or sets a value indicating whether this command is enabled.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;&lt;c&gt;true&lt;/c&gt; if this command is enabled; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/value&gt;
-        public bool IsEnabled
-        {
-            get { return _isEnabled; }
-            set
+            if (provider == null)
             {
-                if (value != _isEnabled)
-                {
-                    _isEnabled = value;
-                    RaiseCanExecuteChanged();
-                }
+                throw new ArgumentNullException(nameof(provider));
             }
+
+            _events = provider.CreateCollection&lt;IConsoleEvent&gt;();
         }
 
         /// &lt;summary&gt;
-        ///     Defines the method that determines whether the command can execute in its current state.
+        ///     Logs the specified message to the console.
         /// &lt;/summary&gt;
-        /// &lt;returns&gt;
-        ///     true if this command can be executed; otherwise, false.
-        /// &lt;/returns&gt;
-        /// &lt;param name=&quot;parameter&quot;&gt;
-        ///     Data used by the command.  If the command does not require data to be passed, this object can be set to null.
-        /// &lt;/param&gt;
-        [SuppressMessage(&quot;Microsoft.Usage&quot;, &quot;CA1801:ReviewUnusedParameters&quot;, MessageId = &quot;parameter&quot;,
-            Justification = &quot;This matches the XAML ICommand interface which makes for ease of porting&quot;)]
-        public bool CanExecute([CanBeNull] object parameter)
+        /// &lt;param name=&quot;title&quot;&gt;The title.&lt;/param&gt;
+        /// &lt;param name=&quot;message&quot;&gt;The message.&lt;/param&gt;
+        /// &lt;param name=&quot;level&quot;&gt;The logging level.&lt;/param&gt;
+        public void Log([CanBeNull] string title, [CanBeNull] string message, LogLevel level)
         {
-            return IsEnabled;
+            if (title == null)
+            {
+                title = &quot;Unknown&quot;;
+            }
+
+            if (message == null)
+            {
+                return;
+            }
+
+            var evt = new ConsoleEvent(title, message, level);
+
+            Log(evt);
+        }
+
+        private void Log([NotNull] IConsoleEvent consoleEvent)
+        {
+            if (consoleEvent == null)
+            {
+                throw new ArgumentNullException(nameof(consoleEvent));
+            }
+
+            _events.Add(consoleEvent);
         }
 
         /// &lt;summary&gt;
-        ///     Defines the method to be called when the command is invoked.
+        ///     Gets the console events.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;parameter&quot;&gt;
-        ///     Data used by the command.  If the command does not require data to be passed, this object can be set to null.
-        /// &lt;/param&gt;
-        /// &lt;exception cref=&quot;Exception&quot;&gt;A delegate callback throws an exception.&lt;/exception&gt;
-        public virtual void Execute([CanBeNull] object parameter)
+        /// &lt;value&gt;The console events.&lt;/value&gt;
+        [NotNull]
+        [ItemNotNull]
+        public IEnumerable&lt;IConsoleEvent&gt; Events
         {
-            // TODO: I could support async invokes here. I&#39;d want to add a parameter for that, but it&#39;s possible.
-
-            ExecuteAction?.Invoke();
-        }
-
-        /// &lt;summary&gt;
-        ///     Occurs when the result of CanExecute changes and should be re-evaluated.
-        /// &lt;/summary&gt;
-        public event EventHandler CanExecuteChanged;
-
-        /// &lt;summary&gt;
-        ///     Raises the CanExecuteChanged event.
-        /// &lt;/summary&gt;
-        private void RaiseCanExecuteChanged()
-        {
-            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+            get { return _events; }
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[42,34,42,44,1],[43,9,43,10,1],[44,9,44,10,1],[35,9,35,40,1],[54,9,54,63,1],[55,9,55,10,1],[56,13,56,43,1],[57,9,57,10,1],[66,17,66,18,1],[66,19,66,41,1],[66,42,66,43,1],[67,17,67,18,1],[67,19,67,42,1],[67,43,67,44,1],[76,17,76,18,1],[76,19,76,37,1],[76,38,76,39,1],[78,13,78,14,1],[79,17,79,41,1],[80,17,80,18,1],[81,21,81,40,1],[82,21,82,46,1],[83,17,83,18,1],[84,13,84,14,1],[99,9,99,10,1],[100,13,100,30,1],[101,9,101,10,1],[111,9,111,10,1],[114,13,114,37,1],[115,9,115,10,1],[126,9,126,10,1],[127,13,127,62,1],[128,9,128,10,1]]);
+      highlightRanges([[42,13,42,14,0],[43,17,43,67,0],[58,13,58,14,0],[59,17,59,35,0],[60,13,60,14,0],[63,13,63,14,0],[64,17,64,24,0],[75,13,75,14,0],[76,17,76,71,0],[30,34,30,68,1],[31,9,31,10,1],[32,9,32,10,1],[39,9,39,67,1],[40,9,40,10,1],[41,13,41,34,1],[46,13,46,66,1],[47,9,47,10,1],[56,9,56,10,1],[57,13,57,31,1],[62,13,62,33,1],[67,13,67,63,1],[69,13,69,22,1],[70,9,70,10,1],[73,9,73,10,1],[74,13,74,38,1],[79,13,79,39,1],[80,9,80,10,1],[90,17,90,18,1],[90,19,90,34,1],[90,35,90,36,1]]);
     </script>
   </body>
 </html>

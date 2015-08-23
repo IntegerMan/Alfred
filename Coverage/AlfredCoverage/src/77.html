@@ -2,25 +2,20 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\taghandlers\learntaghandler.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\taghandlers\gossiptaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// learn.cs
+// GossipTagHandler.cs
 // 
-// Created on:      08/12/2015 at 10:49 PM
+// Created on:      08/12/2015 at 10:46 PM
 // Last Modified:   08/12/2015 at 11:59 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
-
-using System;
-using System.IO;
-using System.Security;
-using System.Xml;
 
 using JetBrains.Annotations;
 
@@ -31,16 +26,18 @@ using MattEland.Common;
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// &lt;summary&gt;
-    /// A tag handler for the AIML &quot;learn&quot; tag that causes the engine to learn new AIML values from a provided file path.
+    /// A tag handler for the AIML &quot;gossip&quot; tag. 
+    /// 
+    /// This implementation simply logs the contents of the gossip tag to the logger.
     /// &lt;/summary&gt;
-    [HandlesAimlTag(&quot;learn&quot;)]
-    public class LearnTagHandler : AimlTagHandler
+    [HandlesAimlTag(&quot;gossip&quot;)]
+    public class GossipTagHandler : AimlTagHandler
     {
         /// &lt;summary&gt;
         /// Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
-        public LearnTagHandler([NotNull] TagHandlerParameters parameters)
+        public GossipTagHandler([NotNull] TagHandlerParameters parameters)
             : base(parameters)
         {
         }
@@ -51,64 +48,21 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// &lt;returns&gt;The processed output&lt;/returns&gt;
         protected override string ProcessChange()
         {
-            if (TemplateNode.Name.Matches(&quot;learn&quot;) &amp;&amp; TemplateNode.InnerText.HasText())
+            var node = TemplateNode;
+
+            //- Ensure we have something to care about
+            if (node.Name.Matches(&quot;gossip&quot;) &amp;&amp; node.InnerText.HasText())
             {
-                var innerText = TemplateNode.InnerText;
-                try
-                {
-                    // This can cause some issues with IO, security, format, etc. catch handles all
-                    var fileInfo = new FileInfo(innerText);
-
-                    //- Ensure the file exists
-                    if (fileInfo.Exists)
-                    {
-                        var newAiml = new XmlDocument();
-
-                        // This can cause loads of XML related exceptions. They&#39;re dealt with in catch
-                        newAiml.Load(innerText);
-
-                        // We&#39;ve got a document in a decent state - send it to the engine to learn
-                        ChatEngine.LoadAimlFile(newAiml);
-
-                        //- Log for diagnostics
-                        Log(string.Format(Locale, &quot;Learn tag invoked on file {0}&quot;, fileInfo.FullName), LogLevel.Info);
-                    }
-
-                }
-                catch (SecurityException ex)
-                {
-                    Log(string.Format(Locale, Resources.LearnErrorSecurityException, innerText, ex.Message), LogLevel.Error);
-                }
-                catch (UnauthorizedAccessException ex)
-                {
-                    Log(string.Format(Locale, Resources.LearnErrorUnauthorizedException, innerText, ex.Message), LogLevel.Error);
-                }
-                catch (FileNotFoundException ex)
-                {
-                    Log(string.Format(Locale, Resources.LearnErrorFileNotFound, ex.FileName), LogLevel.Error);
-                }
-                catch (IOException ex)
-                {
-                    Log(string.Format(Locale, Resources.LearnErrorIOException, ex.GetType().Name, ex.Message, innerText), LogLevel.Error);
-                }
-                catch (XmlException ex)
-                {
-                    Log(string.Format(Locale, Resources.LearnErrorXmlException, ex.Message, innerText), LogLevel.Error);
-                }
-                catch (NotSupportedException)
-                {
-                    Log(string.Format(Locale, Resources.LearnErrorNotSupportedException, innerText), LogLevel.Error);
-                }
+                Log(string.Format(Locale, &quot;GOSSIP from user: {0}, &#39;{1}&#39;&quot;, User.Id, node.InnerText), LogLevel.Info);
             }
 
-            // Learn never has any output
             return string.Empty;
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[34,15,34,31,0],[35,9,35,10,0],[36,9,36,10,0],[43,9,43,10,0],[44,13,44,88,0],[45,13,45,14,0],[46,17,46,56,0],[48,17,48,18,0],[50,21,50,60,0],[53,21,53,41,0],[54,21,54,22,0],[55,25,55,57,0],[58,25,58,49,0],[61,25,61,58,0],[64,25,64,119,0],[65,21,65,22,0],[67,17,67,18,0],[68,17,68,45,0],[69,17,69,18,0],[70,21,70,126,0],[71,17,71,18,0],[72,17,72,55,0],[73,17,73,18,0],[74,21,74,130,0],[75,17,75,18,0],[76,17,76,49,0],[77,17,77,18,0],[78,21,78,111,0],[79,17,79,18,0],[80,17,80,39,0],[81,17,81,18,0],[82,21,82,139,0],[83,17,83,18,0],[84,17,84,40,0],[85,17,85,18,0],[86,21,86,121,0],[87,17,87,18,0],[88,17,88,46,0],[89,17,89,18,0],[90,21,90,118,0],[91,17,91,18,0],[92,13,92,14,0],[95,13,95,33,0],[96,9,96,10,0]]);
+      highlightRanges([[31,15,31,31,0],[32,9,32,10,0],[33,9,33,10,0],[40,9,40,10,0],[41,13,41,37,0],[44,13,44,73,0],[45,13,45,14,0],[46,17,46,116,0],[47,13,47,14,0],[49,13,49,33,0],[50,9,50,10,0]]);
     </script>
   </body>
 </html>

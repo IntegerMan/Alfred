@@ -2,216 +2,72 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.core.tests\mocks\testalfred.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core.tests\shell\shelltaghandlertests.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// TestAlfred.cs
+// AlfredShellTests.cs
 // 
-// Created on:      08/17/2015 at 11:48 PM
-// Last Modified:   08/17/2015 at 11:54 PM
+// Created on:      08/18/2015 at 10:35 PM
+// Last Modified:   08/18/2015 at 10:35 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core;
-using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Chat;
+using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Tests.Chat;
 
-namespace MattEland.Ani.Alfred.Tests.Mocks
+using NUnit.Framework;
+
+namespace MattEland.Ani.Alfred.Tests.Shell
 {
     /// &lt;summary&gt;
-    /// A mock implementation of Alfred for testing purposes
+    /// Tests related to &lt;see cref=&quot;IAlfredShell&quot;/&gt; and its utilization.
     /// &lt;/summary&gt;
-    public class TestAlfred : IAlfred
+    [TestFixture]
+    [SuppressMessage(&quot;ReSharper&quot;, &quot;NotNullMemberIsNotInitialized&quot;)]
+    [SuppressMessage(&quot;ReSharper&quot;, &quot;ExceptionNotDocumented&quot;)]
+    public sealed class ShellTagHandlerTests : ChatTestsBase
     {
         [NotNull]
-        private readonly IConsole _console = new SimpleConsole();
-
-        [NotNull]
-        private readonly IPlatformProvider _platformProvider = new SimplePlatformProvider();
-        private IChatProvider _chatProvider;
-        private IShellCommandRecipient _shellCommandHandler;
-
-        [NotNull]
-        public IList&lt;IAlfredSubsystem&gt; SubsystemsList { get; } = new List&lt;IAlfredSubsystem&gt;();
+        private ShellTagHandler _handler;
 
         /// &lt;summary&gt;
-        ///     Gets the console provider. This can be null.
+        /// Sets up the test environment for each test.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The console.&lt;/value&gt;
-        public IConsole Console
+        [SetUp]
+        public void SetUp()
         {
-            get { return _console; }
+            InitChatSystem();
+            var parameters = BuildTagHandlerParameters(&quot;&lt;alfred submodule=\&quot;core\&quot; command=\&quot;shutdown\&quot; /&gt;&quot;);
+            _handler = new ShellTagHandler(parameters);
         }
 
-        /// &lt;summary&gt;
-        ///     Gets or sets the status.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The status.&lt;/value&gt;
-        public AlfredStatus Status { get; set; }
-
-        /// &lt;summary&gt;
-        ///     Gets the sub systems associated wih Alfred.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The sub systems.&lt;/value&gt;
-        public IEnumerable&lt;IAlfredSubsystem&gt; Subsystems
+        [Test]
+        public void ShellHandlerHasAppropriateAttributes()
         {
-            get { return SubsystemsList; }
+            var type = _handler.GetType();
+            var attribute = type.GetCustomAttribute(typeof(HandlesAimlTagAttribute)) as HandlesAimlTagAttribute;
+
+            Assert.IsNotNull(attribute, &quot;Handler did not have the HandlesAimlTag attribute&quot;);
+            Assert.AreEqual(&quot;shell&quot;, attribute.Name, &quot;Handler did not handle the expected type&quot;);
         }
 
-        /// &lt;summary&gt;
-        ///     Gets the root pages.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The root pages.&lt;/value&gt;
-        public IEnumerable&lt;IAlfredPage&gt; RootPages
-        {
-            get { return Subsystems.SelectMany(subsystem =&gt; subsystem.Pages); }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the name.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The name.&lt;/value&gt;
-        public string Name
-        {
-            get { return &quot;Test Alfred&quot;; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Initializes this instance.
-        /// &lt;/summary&gt;
-        public void Initialize()
-        {
-            Status = AlfredStatus.Initializing;
-
-            foreach (var subsystem in Subsystems)
-            {
-                subsystem.Initialize(this);
-            }
-
-            Status = AlfredStatus.Online;
-        }
-
-        /// &lt;summary&gt;
-        ///     Shutdowns this instance.
-        /// &lt;/summary&gt;
-        public void Shutdown()
-        {
-            Status = AlfredStatus.Terminating;
-
-            foreach (var subsystem in Subsystems)
-            {
-                subsystem.Shutdown();
-            }
-
-            Status = AlfredStatus.Offline;
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets a value indicating whether this instance is online.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;&lt;c&gt;true&lt;/c&gt; if this instance is online; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/value&gt;
-        public bool IsOnline
-        {
-            get { return Status == AlfredStatus.Online; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the chat provider.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The chat provider.&lt;/value&gt;
-        public IChatProvider ChatProvider
-        {
-            get { return _chatProvider; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the platform provider.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The platform provider.&lt;/value&gt;
-        public IPlatformProvider PlatformProvider
-        {
-            get { return _platformProvider; }
-        }
-
-        /// &lt;summary&gt;
-        /// Gets the shell command handler that can pass shell commands on to the user interface.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The shell command handler.&lt;/value&gt;
-        public IShellCommandRecipient ShellCommandHandler
-        {
-            get { return _shellCommandHandler; }
-        }
-
-        /// &lt;summary&gt;
-        /// Registers the shell command recipient that will allow the shell to get commands from the Alfred layer.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;shell&quot;&gt;The command recipient.&lt;/param&gt;
-        public void Register(IShellCommandRecipient shell)
-        {
-            _shellCommandHandler = shell;
-        }
-
-        /// &lt;summary&gt;
-        ///     Registers the user statement handler as the framework&#39;s user statement handler.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;chatProvider&quot;&gt;The user statement handler.&lt;/param&gt;
-        public void Register(IChatProvider chatProvider)
-        {
-            _chatProvider = chatProvider;
-        }
-
-        /// &lt;summary&gt;
-        ///     Registers a sub system with Alfred.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;subsystem&quot;&gt;The subsystem.&lt;/param&gt;
-        public void Register(AlfredSubsystem subsystem)
-        {
-            SubsystemsList.Add(subsystem);
-        }
-
-        /// &lt;summary&gt;
-        ///     Tells modules to take a look at their content and update as needed.
-        /// &lt;/summary&gt;
-        public void Update()
-        {
-            foreach (var subsystem in Subsystems)
-            {
-                subsystem.Update();
-            }
-        }
-
-        /// &lt;summary&gt;
-        /// Handles a chat command.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;command&quot;&gt;The command.&lt;/param&gt;
-        public void HandleChatCommand(ChatCommand command)
-        {
-            LastCommand = command;
-        }
-
-        /// &lt;summary&gt;
-        /// Gets or sets the last command received.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The last command.&lt;/value&gt;
-        public ChatCommand LastCommand
-        {
-            get; set;
-        }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[188,9,188,10,0],[189,13,189,35,0],[190,9,190,10,0],[35,57,35,61,1],[43,17,43,18,1],[43,19,43,35,1],[43,36,43,37,1],[50,38,50,42,1],[50,43,50,47,1],[58,17,58,18,1],[58,19,58,41,1],[58,42,58,43,1],[67,17,67,18,1],[67,19,67,61,1],[67,76,67,78,1],[67,79,67,80,1],[76,17,76,18,1],[76,19,76,40,1],[76,41,76,42,1],[83,9,83,10,1],[84,13,84,48,1],[86,13,86,20,1],[86,39,86,49,1],[86,22,86,35,1],[87,13,87,14,1],[88,17,88,44,1],[89,13,89,14,1],[86,36,86,38,1],[91,13,91,42,1],[92,9,92,10,1],[98,9,98,10,1],[99,13,99,47,1],[101,13,101,20,1],[101,39,101,49,1],[101,22,101,35,1],[102,13,102,14,1],[103,17,103,38,1],[104,13,104,14,1],[101,36,101,38,1],[106,13,106,43,1],[107,9,107,10,1],[115,17,115,18,1],[115,19,115,56,1],[115,57,115,58,1],[124,17,124,18,1],[124,19,124,40,1],[124,41,124,42,1],[133,17,133,18,1],[133,19,133,44,1],[133,45,133,46,1],[142,17,142,18,1],[142,19,142,47,1],[142,48,142,49,1],[150,9,150,10,1],[151,13,151,42,1],[152,9,152,10,1],[159,9,159,10,1],[160,13,160,42,1],[161,9,161,10,1],[168,9,168,10,1],[169,13,169,43,1],[170,9,170,10,1],[176,9,176,10,1],[177,13,177,20,1],[177,39,177,49,1],[177,22,177,35,1],[178,13,178,14,1],[179,17,179,36,1],[180,13,180,14,1],[177,36,177,38,1],[181,9,181,10,1],[198,13,198,17,1],[198,18,198,22,1],[27,9,27,66,1],[30,9,30,93,1],[35,66,35,94,1],[67,61,67,76,1]]);
+      highlightRanges([[40,9,40,10,1],[41,13,41,30,1],[42,13,42,110,1],[43,13,43,56,1],[44,9,44,10,1],[48,9,48,10,1],[49,13,49,43,1],[50,13,50,113,1],[52,13,52,94,1],[53,13,53,98,1],[54,9,54,10,1]]);
     </script>
   </body>
 </html>

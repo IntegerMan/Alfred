@@ -2,51 +2,131 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.core\widgets\textwidget.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core\widgets\buttonwidget.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// TextWidget.cs
+// ButtonWidget.cs
 // 
-// Created on:      07/28/2015 at 12:18 PM
-// Last Modified:   08/04/2015 at 3:03 PM
+// Created on:      08/03/2015 at 1:10 AM
+// Last Modified:   08/03/2015 at 2:16 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
+using System;
+using System.Diagnostics.CodeAnalysis;
+
 using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Core.Widgets
 {
     /// &lt;summary&gt;
-    ///     Represents a simple textual display on the user interface.
+    ///     Represents a button that&#39;s clickable in the user interface.
     /// &lt;/summary&gt;
-    public sealed class TextWidget : AlfredTextWidget
+    public sealed class ButtonWidget : AlfredTextWidget
     {
+        /// &lt;summary&gt;
+        ///     The command that is executed when the button is clicked.
+        /// &lt;/summary&gt;
+        [CanBeNull]
+        private AlfredCommand _clickCommand;
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;TextWidget&quot; /&gt; class.
+        ///     Initializes a new instance of the
+        ///     &lt;see
+        ///         cref=&quot;ButtonWidget&quot; /&gt;
+        ///     class.
         /// &lt;/summary&gt;
-        public TextWidget() : this(null)
+        public ButtonWidget() : this(null, null)
         {
         }
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;TextWidget&quot; /&gt; class.
+        /// Initializes a new instance of the &lt;see cref=&quot;ButtonWidget&quot;/&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;text&quot;&gt;The text for the widget.&lt;/param&gt;
-        public TextWidget([CanBeNull] string text)
+        /// &lt;param name=&quot;clickCommand&quot;&gt;The command.&lt;/param&gt;
+        public ButtonWidget([CanBeNull] AlfredCommand clickCommand) : this(null, clickCommand)
         {
+        }
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;ButtonWidget&quot;/&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;text&quot;&gt;The text.&lt;/param&gt;
+        public ButtonWidget([CanBeNull] string text) : this(text, null)
+        {
+        }
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;ButtonWidget&quot;/&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;text&quot;&gt;The text.&lt;/param&gt;
+        /// &lt;param name=&quot;clickCommand&quot;&gt;The click command.&lt;/param&gt;
+        public ButtonWidget([CanBeNull] string text, [CanBeNull] AlfredCommand clickCommand)
+        {
+            ClickCommand = clickCommand;
             Text = text;
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the command that is executed when the button is clicked.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The click command.&lt;/value&gt;
+        [CanBeNull]
+        public AlfredCommand ClickCommand
+        {
+            get { return _clickCommand; }
+            set
+            {
+                if (!Equals(value, _clickCommand))
+                {
+                    _clickCommand = value;
+                    OnPropertyChanged(nameof(ClickCommand));
+                }
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Simulates a button click
+        /// &lt;/summary&gt;
+        /// &lt;exception
+        ///     cref=&quot;System.InvalidOperationException&quot;&gt;
+        ///     Tried to click the button when CanExecute on ClickCommand returned false.
+        /// &lt;/exception&gt;
+        /// &lt;exception cref=&quot;InvalidOperationException&quot;&gt;Tried to click the button when CanExecute on ClickCommand returned false.&lt;/exception&gt;
+        [SuppressMessage(&quot;ReSharper&quot;, &quot;CatchAllClause&quot;)]
+        public void Click()
+        {
+            if (ClickCommand != null)
+            {
+                if (!ClickCommand.CanExecute(this))
+                {
+                    throw new InvalidOperationException(Resources.ButtonWidgetClickCantExecuteErrorMessage);
+                }
+
+                try
+                {
+                    ClickCommand.Execute(this);
+
+                }
+                catch (Exception exception)
+                {
+                    Error(&quot;Button.Click&quot;, exception.BuildDetailsMessage());
+                }
+            }
         }
 
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[22,31,22,41,1],[23,9,23,10,1],[24,9,24,10,1],[30,9,30,51,1],[31,9,31,10,1],[32,13,32,25,1],[33,9,33,10,1]]);
+      highlightRanges([[99,17,99,18,0],[100,21,100,109,0],[108,17,108,44,0],[109,17,109,18,0],[110,21,110,76,0],[111,17,111,18,0],[36,33,36,49,1],[37,9,37,10,1],[38,9,38,10,1],[44,71,44,95,1],[45,9,45,10,1],[46,9,46,10,1],[52,56,52,72,1],[53,9,53,10,1],[54,9,54,10,1],[61,9,61,93,1],[62,9,62,10,1],[63,13,63,41,1],[64,13,64,25,1],[65,9,65,10,1],[74,17,74,18,1],[74,19,74,40,1],[74,41,74,42,1],[76,13,76,14,1],[77,17,77,51,1],[78,17,78,18,1],[79,21,79,43,1],[80,21,80,61,1],[81,17,81,18,1],[82,13,82,14,1],[95,9,95,10,1],[96,13,96,38,1],[97,13,97,14,1],[98,17,98,52,1],[104,17,104,18,1],[105,21,105,48,1],[107,17,107,18,1],[112,13,112,14,1],[113,9,113,10,1]]);
     </script>
   </body>
 </html>

@@ -2,72 +2,124 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.core.tests\shell\shelltaghandlertests.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core.tests\subsystems\subsystemtests.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlfredShellTests.cs
+// SubSystemTests.cs
 // 
-// Created on:      08/18/2015 at 10:35 PM
-// Last Modified:   08/18/2015 at 10:35 PM
-// 
-// Last Modified by: Matt Eland
+// Created on:      08/09/2015 at 12:12 AM
+// Last Modified:   08/09/2015 at 12:12 AM
+// Original author: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Chat;
-using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
+using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Tests.Chat;
+using MattEland.Ani.Alfred.Tests.Mocks;
 
 using NUnit.Framework;
 
-namespace MattEland.Ani.Alfred.Tests.Shell
+namespace MattEland.Ani.Alfred.Tests.Subsystems
 {
     /// &lt;summary&gt;
-    /// Tests related to &lt;see cref=&quot;IAlfredShell&quot;/&gt; and its utilization.
+    /// Tests oriented around testing the subsystem update pumps and related functions
     /// &lt;/summary&gt;
     [TestFixture]
     [SuppressMessage(&quot;ReSharper&quot;, &quot;NotNullMemberIsNotInitialized&quot;)]
-    [SuppressMessage(&quot;ReSharper&quot;, &quot;ExceptionNotDocumented&quot;)]
-    public sealed class ShellTagHandlerTests : ChatTestsBase
+    public class SubsystemTests
     {
         [NotNull]
-        private ShellTagHandler _handler;
+        private AlfredApplication _alfred;
 
-        /// &lt;summary&gt;
-        /// Sets up the test environment for each test.
-        /// &lt;/summary&gt;
+        [NotNull]
+        private TestSubsystem _subsystem;
+
         [SetUp]
-        public void SetUp()
+        public void Setup()
         {
-            InitChatSystem();
-            var parameters = BuildTagHandlerParameters(&quot;&lt;alfred submodule=\&quot;core\&quot; command=\&quot;shutdown\&quot; /&gt;&quot;);
-            _handler = new ShellTagHandler(parameters);
+            var bootstrapper = new AlfredBootstrapper();
+            _alfred = bootstrapper.Create();
+
+            _subsystem = new TestSubsystem();
+        }
+
+
+        [Test]
+        public void InitializeCausesRegisteredSubSystemsToInitialize()
+        {
+
+            _alfred.Register(_subsystem);
+
+            _alfred.Initialize();
+
+            Assert.IsTrue(_subsystem.LastInitialized &gt; DateTime.MinValue, &quot;Subsystem was not initialized&quot;);
+            Assert.IsTrue(_subsystem.LastInitializationCompleted &gt; DateTime.MinValue,
+                          &quot;Subsystem was not notified initialized completed&quot;);
         }
 
         [Test]
-        public void ShellHandlerHasAppropriateAttributes()
+        public void InitializeCausesSubSystemsToGoOnline()
         {
-            var type = _handler.GetType();
-            var attribute = type.GetCustomAttribute(typeof(HandlesAimlTagAttribute)) as HandlesAimlTagAttribute;
 
-            Assert.IsNotNull(attribute, &quot;Handler did not have the HandlesAimlTag attribute&quot;);
-            Assert.AreEqual(&quot;shell&quot;, attribute.Name, &quot;Handler did not handle the expected type&quot;);
+            _alfred.Register(_subsystem);
+
+            _alfred.Initialize();
+
+            Assert.AreEqual(AlfredStatus.Online, _subsystem.Status);
+        }
+
+        [Test]
+        public void UpdateCausesRegisteredSubSystemsToUpdate()
+        {
+
+            _alfred.Register(_subsystem);
+
+            _alfred.Initialize();
+            _alfred.Update();
+
+            Assert.IsTrue(_subsystem.LastUpdated &gt; DateTime.MinValue, &quot;Subsystem was not updated&quot;);
+        }
+
+        [Test]
+        public void ShutdownCausesRegisteredSubSystemsToShutdown()
+        {
+
+            _alfred.Register(_subsystem);
+
+            _alfred.Initialize();
+            _alfred.Update();
+            _alfred.Shutdown();
+
+            Assert.IsTrue(_subsystem.LastShutdown &gt; DateTime.MinValue, &quot;Subsystem was not shut down&quot;);
+            Assert.IsTrue(_subsystem.LastShutdownCompleted &gt; DateTime.MinValue, &quot;Subsystem was not notified of shut down completion&quot;);
+        }
+
+        [Test]
+        public void ShutdownCausesRegisteredSubSystemsToGoOffline()
+        {
+
+            _alfred.Register(_subsystem);
+
+            _alfred.Initialize();
+            _alfred.Update();
+            _alfred.Shutdown();
+
+            Assert.AreEqual(AlfredStatus.Offline, _subsystem.Status);
         }
 
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[40,9,40,10,1],[41,13,41,30,1],[42,13,42,110,1],[43,13,43,56,1],[44,9,44,10,1],[48,9,48,10,1],[49,13,49,43,1],[50,13,50,113,1],[52,13,52,94,1],[53,13,53,98,1],[54,9,54,10,1]]);
+      highlightRanges([[37,9,37,10,1],[38,13,38,57,1],[39,13,39,45,1],[41,13,41,46,1],[42,9,42,10,1],[47,9,47,10,1],[49,13,49,42,1],[51,13,51,34,1],[53,13,53,108,1],[54,13,55,79,1],[56,9,56,10,1],[60,9,60,10,1],[62,13,62,42,1],[64,13,64,34,1],[66,13,66,69,1],[67,9,67,10,1],[71,9,71,10,1],[73,13,73,42,1],[75,13,75,34,1],[76,13,76,30,1],[78,13,78,100,1],[79,9,79,10,1],[83,9,83,10,1],[85,13,85,42,1],[87,13,87,34,1],[88,13,88,30,1],[89,13,89,32,1],[91,13,91,103,1],[92,13,92,135,1],[93,9,93,10,1],[97,9,97,10,1],[99,13,99,42,1],[101,13,101,34,1],[102,13,102,30,1],[103,13,103,32,1],[105,13,105,70,1],[106,9,106,10,1]]);
     </script>
   </body>
 </html>

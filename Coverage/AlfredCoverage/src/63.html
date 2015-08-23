@@ -2,184 +2,405 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\user.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\chatprocessor.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// User.cs
+// ChatProcessor.cs
 // 
-// Created on:      08/12/2015 at 10:24 PM
-// Last Modified:   08/13/2015 at 3:45 PM
+// Created on:      08/16/2015 at 3:33 PM
+// Last Modified:   08/16/2015 at 3:33 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
+using System.Text;
+using System.Xml;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml
 {
     /// &lt;summary&gt;
-    ///     Represents a user the chat engine interacts with
+    /// A helper class that handles the logic for processing a chat request for the chat engine.
     /// &lt;/summary&gt;
-    public class User
+    internal class ChatProcessor
     {
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;T:System.Object&quot;/&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;chatEngine&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        internal ChatProcessor([NotNull] ChatEngine chatEngine)
+        {
+            if (chatEngine == null)
+            {
+                throw new ArgumentNullException(nameof(chatEngine));
+            }
+
+            // Store helpers
+            _chatEngine = chatEngine;
+            _tagFactory = new TagHandlerFactory(chatEngine);
+            _aimlLoader = new AimlLoader(chatEngine);
+        }
+
         [NotNull]
-        [ItemNotNull]
-        private readonly List&lt;Result&gt; _results = new List&lt;Result&gt;();
+        private readonly TagHandlerFactory _tagFactory;
+
+
+        [NotNull]
+        private readonly ChatEngine _chatEngine;
+
+        [NotNull]
+        private readonly AimlLoader _aimlLoader;
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;User&quot; /&gt; class.
+        /// Gets the locale.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;id&quot;&gt;The identifier.&lt;/param&gt;
-        /// &lt;exception cref=&quot;ArgumentOutOfRangeException&quot;&gt;The id cannot be empty&lt;/exception&gt;
-        public User([NotNull] string id)
+        /// &lt;value&gt;The locale.&lt;/value&gt;
+        private CultureInfo Locale
+        {
+            get { return _chatEngine.Locale; }
+        }
+
+        /// &lt;summary&gt;
+        /// Logs the specified message to the error log.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;message&quot;&gt;The message.&lt;/param&gt;
+        /// &lt;param name=&quot;level&quot;&gt;The level.&lt;/param&gt;
+        private void Log(string message, LogLevel level)
+        {
+            _chatEngine.Log(message, level);
+        }
+
+        /// &lt;summary&gt;
+        /// Accepts a chat message from the user and returns the chat engine&#39;s reply.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;request&quot;&gt;The request.&lt;/param&gt;
+        /// &lt;returns&gt;A result object containing the engine&#39;s reply.&lt;/returns&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;request&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        internal Result ProcessChatRequest([NotNull] Request request)
         {
             //- Validation
-            if (string.IsNullOrWhiteSpace(id))
+            if (request == null)
             {
-                throw new ArgumentOutOfRangeException(nameof(id), Resources.UserCtorNullId);
+                throw new ArgumentNullException(nameof(request));
             }
 
-            Id = id;
+            // Build a result for this request. This will link the two together.
+            var result = new Result(request.User, _chatEngine, request);
 
-            // Set up the variables collection
-            UserVariables = new SettingsManager();
-            UserVariables.Add(&quot;topic&quot;, &quot;*&quot;);
+            // Split the input into different sentences and build a path for each sentence.
+            foreach (var pattern in SplitSentenceHelper.Split(request.RawInput, _chatEngine))
+            {
+                result.InputSentences.Add(pattern);
+                var str = _aimlLoader.BuildPathString(pattern,
+                                                     request.User.LastChatOutput,
+                                                     request.User.Topic.NonNull(),
+                                                     true);
+                result.NormalizedPaths.Add(str);
+            }
+
+            // Build out SubQueries with appropriate templates based on the paths detected
+            foreach (var path in result.NormalizedPaths)
+            {
+                // Build out a query based on the path
+                var query = new SubQuery();
+
+                // Search the node tree for the template most closely matched to this request
+                var template = _chatEngine.RootNode.Evaluate(path, query, request, MatchState.UserInput, new StringBuilder());
+                query.Template = template.NonNull();
+
+                // Now that the query is polished, add it to the subqueries
+                result.SubQueries.Add(query);
+            }
+
+            // Process each SubQuery to build out the result text
+            foreach (var query in result.SubQueries.Where(query =&gt; query != null &amp;&amp; query.Template.HasText()))
+            {
+                ProcessSubQuery(request, query, result);
+            }
+
+            // Complete the result and return everything
+            result.Completed();
+            request.User.AddResult(result);
+            return result;
         }
 
         /// &lt;summary&gt;
-        ///     Gets the predicates. These are variables pertaining to the user.
+        /// Processes a chat SubQuery.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The predicates.&lt;/value&gt;
-        [NotNull]
-        public SettingsManager UserVariables { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets the user&#39;s identifier.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The user&#39;s identifier.&lt;/value&gt;
-        [NotNull]
-        public string Id { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets the topic.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The topic.&lt;/value&gt;
-        [NotNull]
-        public string Topic
+        /// &lt;param name=&quot;request&quot;&gt;The request.&lt;/param&gt;
+        /// &lt;param name=&quot;query&quot;&gt;The query.&lt;/param&gt;
+        /// &lt;param name=&quot;result&quot;&gt;The result.&lt;/param&gt;
+        [SuppressMessage(&quot;Microsoft.Design&quot;, &quot;CA1031:DoNotCatchGeneralExceptionTypes&quot;)]
+        [SuppressMessage(&quot;ReSharper&quot;, &quot;CatchAllClause&quot;)]
+        private void ProcessSubQuery([NotNull] Request request,
+                                                 [NotNull] SubQuery query,
+                                                 [NotNull] Result result)
         {
-            get { return UserVariables.GetValue(&quot;topic&quot;).NonNull(); }
+            //- Validate
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+            if (query == null)
+            {
+                throw new ArgumentNullException(nameof(query));
+            }
+            if (result == null)
+            {
+                throw new ArgumentNullException(nameof(result));
+            }
+
+            try
+            {
+                // Build an XML node out of the template the query traced to
+                var node = AimlTagHandler.BuildNode(query.Template);
+
+                // Process the chat node with the given template and tag handlers. This will result in the chat output.
+                var nodeOutput = ProcessNode(node, query, request, result, request.User);
+
+                // Check to see if the output had textual values, and, if so, add them to our output.
+                if (nodeOutput.HasText())
+                {
+                    result.OutputSentences.Add(nodeOutput);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                /* Catching all exceptions here because ProcessNode could be doing invokes to third party code due to how
+                HandlesAimlTag attribute and dynamic invocation work */
+                Log(string.Format(Locale, Resources.ChatProcessNodeError, request.RawInput, query.Template, ex.Message),
+                    LogLevel.Error);
+            }
         }
 
         /// &lt;summary&gt;
-        ///     Gets the last result.
+        /// Processes an XML node as part of resolving a chat query and returns a chat result dependant on the type of node and the node&#39;s contents.
+        /// This method is called recursively when resolving complicated compound chat messages.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The last result.&lt;/value&gt;
-        [CanBeNull]
-        public Result LastResult
+        /// &lt;param name=&quot;node&quot;&gt;The node.&lt;/param&gt;
+        /// &lt;param name=&quot;query&quot;&gt;The query.&lt;/param&gt;
+        /// &lt;param name=&quot;request&quot;&gt;The request.&lt;/param&gt;
+        /// &lt;param name=&quot;result&quot;&gt;The result.&lt;/param&gt;
+        /// &lt;param name=&quot;user&quot;&gt;The user.&lt;/param&gt;
+        /// &lt;returns&gt;The textual result of evaluating the node&lt;/returns&gt;
+        private string ProcessNode([NotNull] XmlNode node,
+                                           [NotNull] SubQuery query,
+                                           [NotNull] Request request,
+                                           [NotNull] Result result,
+                                           [NotNull] User user)
         {
-            get { return _results.FirstOrDefault(); }
-        }
+            //- Validation
+            if (node == null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+            if (query == null)
+            {
+                throw new ArgumentNullException(nameof(query));
+            }
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+            if (result == null)
+            {
+                throw new ArgumentNullException(nameof(result));
+            }
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
 
-        /// &lt;summary&gt;
-        ///     Gets the last chat result&#39;s raw output
-        /// &lt;/summary&gt;
-        /// &lt;returns&gt;The last result&#39;s raw output&lt;/returns&gt;
-        [NotNull]
-        public string LastChatOutput
-        {
-            get { return LastResult?.RawOutput ?? &quot;*&quot;; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the output sentence from the specified result and sentence.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;resultIndex&quot;&gt;Index of the result. Defaults to 1.&lt;/param&gt;
-        /// &lt;param name=&quot;sentenceIndex&quot;&gt;Index of the sentence. Defaults to 1.&lt;/param&gt;
-        /// &lt;returns&gt;The output sentence&lt;/returns&gt;
-        [NotNull]
-        public string GetOutputSentence(int resultIndex = 1, int sentenceIndex = 1)
-        {
-            //- Ensure we&#39;re not grabbing out of range
-            var isValidResult = resultIndex &gt;= 0 &amp; resultIndex &lt; _results.Count;
-            if (!isValidResult)
+            // If we&#39;ve already timed out, give up on this.
+            // This is important for iterative operations on complex queries.
+            if (request.CheckForTimedOut())
             {
                 return string.Empty;
             }
 
-            // Get the result
-            var result = _results[resultIndex];
-            Debug.Assert(result != null);
-
-            // Grab the output sentence at the specified index
-            if (sentenceIndex &gt;= 0 &amp; sentenceIndex &lt; result.OutputSentences.Count)
+            // Farm out handling for template nodes
+            if (node.Name.Matches(&quot;template&quot;))
             {
-                return result.OutputSentences[sentenceIndex].NonNull();
+                return ProcessTemplateNode(node, query, request, result, user);
             }
 
-            return string.Empty;
+            // We need a handler for this type of node. Grab it from the registered tag handlers
+            var handler = _tagFactory.Build(node, query, request, result, user, node.Name.ToLowerInvariant());
+
+            // We can encounter nodes of unknown types. These will not have handlers
+            if (handler == null)
+            {
+                //? Does the AIML specification call for string.Empty here?
+                return node.InnerText;
+            }
+
+            // Farm out handling to recursive node handling function
+            if (handler.IsRecursive)
+            {
+                return ProcessRecursiveNode(node, query, request, result, user, handler);
+            }
+
+            // Execute the transformation and build a new node XML string from the result
+            var nodeContents = string.Format(Locale, &quot;&lt;node&gt;{0}&lt;/node&gt;&quot;, handler.Transform());
+
+            // Build a node out of the output of the transform
+            Debug.Assert(nodeContents != null);
+            var evaluatedNode = AimlTagHandler.BuildNode(nodeContents);
+
+            // If it&#39;s simple, just return it
+            if (!evaluatedNode.HasChildNodes)
+            {
+                return evaluatedNode.InnerXml;
+            }
+
+            // Recursively process each child node and build out our output from their values.
+            var sbOutput = new StringBuilder();
+            foreach (XmlNode childNode in evaluatedNode.ChildNodes)
+            {
+                if (childNode != null)
+                {
+                    sbOutput.Append(ProcessNode(childNode, query, request, result, user));
+                }
+            }
+
+            return sbOutput.ToString();
         }
 
         /// &lt;summary&gt;
-        ///     Gets the specified input sentence from the specified result.
+        /// Processes chat contents with a handler that returns true for IsRecursive.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;resultIndex&quot;&gt;Index of the result. Defaults to 1.&lt;/param&gt;
-        /// &lt;param name=&quot;sentenceIndex&quot;&gt;Index of the sentenceIndex. Defaults to 1.&lt;/param&gt;
-        /// &lt;returns&gt;The specified sentenceIndex.&lt;/returns&gt;
-        [NotNull]
-        public string GetInputSentence(int resultIndex = 1, int sentenceIndex = 1)
+        /// &lt;remarks&gt;
+        /// This is a separate method to reduce the complexity of ProcessNode
+        /// &lt;/remarks&gt;
+        /// &lt;param name=&quot;node&quot;&gt;The node.&lt;/param&gt;
+        /// &lt;param name=&quot;query&quot;&gt;The query.&lt;/param&gt;
+        /// &lt;param name=&quot;request&quot;&gt;The request.&lt;/param&gt;
+        /// &lt;param name=&quot;result&quot;&gt;The result.&lt;/param&gt;
+        /// &lt;param name=&quot;user&quot;&gt;The user.&lt;/param&gt;
+        /// &lt;param name=&quot;handler&quot;&gt;The handler.&lt;/param&gt;
+        /// &lt;returns&gt;System.String.&lt;/returns&gt;
+        private string ProcessRecursiveNode([NotNull] XmlNode node,
+                                                    [NotNull] SubQuery query,
+                                                    [NotNull] Request request,
+                                                    [NotNull] Result result,
+                                                    [NotNull] User user,
+                                                    [NotNull] TextTransformer handler)
         {
-            //- Ensure we&#39;re grabbing at an acceptable resultIndex
-            var isValidResult = resultIndex &gt;= 0 &amp; resultIndex &lt; _results.Count;
-            if (!isValidResult)
+            //- Validation
+            if (node == null)
             {
-                return string.Empty;
+                throw new ArgumentNullException(nameof(node));
+            }
+            if (query == null)
+            {
+                throw new ArgumentNullException(nameof(query));
+            }
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+            if (result == null)
+            {
+                throw new ArgumentNullException(nameof(result));
+            }
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            if (handler == null)
+            {
+                throw new ArgumentNullException(nameof(handler));
             }
 
-            //- Grab the result
-            var result = _results[resultIndex];
-            Debug.Assert(result != null);
-
-            // Grab the appropriate sentenceIndex
-            if (sentenceIndex &gt;= 0 &amp; sentenceIndex &lt; result.InputSentences.Count)
+            // Process child nodes
+            if (node.HasChildNodes)
             {
-                return result.InputSentences[sentenceIndex].NonNull();
+                foreach (XmlNode childNode in node.ChildNodes)
+                {
+                    if (childNode != null &amp;&amp; childNode.NodeType != XmlNodeType.Text)
+                    {
+                        childNode.InnerXml = ProcessNode(childNode, query, request, result, user);
+                    }
+                }
             }
 
-            //- Invalid results yield nothing
-            return string.Empty;
+            // Do the final evaluation on the handler and return that
+            return handler.Transform();
         }
 
         /// &lt;summary&gt;
-        ///     Adds a result to the user&#39;s results.
+        /// Processes a template node by processing all internal contents and returning the results.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;latestResult&quot;&gt;The latest chat result.&lt;/param&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;latestResult&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        public void AddResult([NotNull] Result latestResult)
+        /// &lt;param name=&quot;node&quot;&gt;The node.&lt;/param&gt;
+        /// &lt;param name=&quot;query&quot;&gt;The query.&lt;/param&gt;
+        /// &lt;param name=&quot;request&quot;&gt;The request.&lt;/param&gt;
+        /// &lt;param name=&quot;result&quot;&gt;The result.&lt;/param&gt;
+        /// &lt;param name=&quot;user&quot;&gt;The user.&lt;/param&gt;
+        /// &lt;returns&gt;The output text.&lt;/returns&gt;
+        private string ProcessTemplateNode([NotNull] XmlNode node,
+                                                   [NotNull] SubQuery query,
+                                                   [NotNull] Request request,
+                                                   [NotNull] Result result,
+                                                   [NotNull] User user)
         {
-            if (latestResult == null)
+            //- Validation
+            if (node == null)
             {
-                throw new ArgumentNullException(nameof(latestResult));
+                throw new ArgumentNullException(nameof(node));
+            }
+            if (query == null)
+            {
+                throw new ArgumentNullException(nameof(query));
+            }
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+            if (result == null)
+            {
+                throw new ArgumentNullException(nameof(result));
+            }
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
             }
 
-            _results.Insert(0, latestResult);
+            // Loop through all contained children and process them, returning the results
+            var sbOutput = new StringBuilder();
+            if (node.HasChildNodes)
+            {
+                foreach (XmlNode childNode in node.ChildNodes)
+                {
+                    if (childNode != null)
+                    {
+                        sbOutput.Append(ProcessNode(childNode, query, request, result, user));
+                    }
+                }
+            }
+
+            return sbOutput.ToString();
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[40,13,40,14,0],[41,17,41,93,0],[102,9,102,10,0],[104,13,104,81,0],[105,13,105,32,0],[106,13,106,14,0],[107,17,107,37,0],[111,13,111,48,0],[112,13,112,42,0],[115,13,115,83,0],[116,13,116,14,0],[117,17,117,72,0],[120,13,120,33,0],[121,9,121,10,0],[131,9,131,10,0],[133,13,133,81,0],[134,13,134,32,0],[135,13,135,14,0],[136,17,136,37,0],[140,13,140,48,0],[141,13,141,42,0],[144,13,144,82,0],[145,13,145,14,0],[146,17,146,71,0],[150,13,150,33,0],[151,9,151,10,0],[161,13,161,14,0],[162,17,162,71,0],[29,9,29,69,1],[36,9,36,41,1],[37,9,37,10,1],[39,13,39,47,1],[44,13,44,21,1],[47,13,47,51,1],[48,13,48,45,1],[49,9,49,10,1],[56,48,56,52,1],[63,28,63,32,1],[71,17,71,18,1],[71,19,71,58,1],[71,59,71,60,1],[81,17,81,18,1],[81,19,81,52,1],[81,53,81,54,1],[91,17,91,18,1],[91,19,91,55,1],[91,56,91,57,1],[159,9,159,10,1],[160,13,160,38,1],[165,13,165,46,1],[166,9,166,10,1]]);
+      highlightRanges([[39,13,39,14,0],[40,17,40,69,0],[74,9,74,10,0],[75,13,75,45,0],[76,9,76,10,0],[88,13,88,14,0],[89,17,89,66,0],[146,13,146,14,0],[147,17,147,66,0],[150,13,150,14,0],[151,17,151,64,0],[154,13,154,14,0],[155,17,155,65,0],[173,13,173,33,0],[174,13,174,14,0],[177,17,178,37,0],[179,13,179,14,0],[200,13,200,14,0],[201,17,201,63,0],[204,13,204,14,0],[205,17,205,64,0],[208,13,208,14,0],[209,17,209,66,0],[212,13,212,14,0],[213,17,213,65,0],[216,13,216,14,0],[217,17,217,63,0],[223,13,223,14,0],[224,17,224,37,0],[258,13,258,14,0],[259,17,259,47,0],[297,13,297,14,0],[298,17,298,63,0],[301,13,301,14,0],[302,17,302,64,0],[305,13,305,14,0],[306,17,306,66,0],[309,13,309,14,0],[310,17,310,65,0],[313,13,313,14,0],[314,17,314,63,0],[317,13,317,14,0],[318,17,318,66,0],[327,21,327,22,0],[328,25,328,99,0],[329,21,329,22,0],[354,13,354,14,0],[355,17,355,63,0],[358,13,358,14,0],[359,17,359,64,0],[362,13,362,14,0],[363,17,363,66,0],[366,13,366,14,0],[367,17,367,65,0],[370,13,370,14,0],[371,17,371,63,0],[36,9,36,64,1],[37,9,37,10,1],[38,13,38,36,1],[44,13,44,38,1],[45,13,45,61,1],[46,13,46,54,1],[47,9,47,10,1],[65,17,65,18,1],[65,19,65,45,1],[65,46,65,47,1],[85,9,85,10,1],[87,13,87,33,1],[93,13,93,73,1],[96,13,96,20,1],[96,37,96,93,1],[96,22,96,33,1],[97,13,97,14,1],[98,17,98,52,1],[99,17,102,60,1],[103,17,103,49,1],[104,13,104,14,1],[96,34,96,36,1],[107,13,107,20,1],[107,34,107,56,1],[107,22,107,30,1],[108,13,108,14,1],[110,17,110,44,1],[113,17,113,127,1],[114,17,114,53,1],[117,17,117,46,1],[118,13,118,14,1],[107,31,107,33,1],[121,13,121,20,1],[121,35,121,68,1],[121,109,121,110,1],[121,22,121,31,1],[122,13,122,14,1],[123,17,123,57,1],[124,13,124,14,1],[121,32,121,34,1],[127,13,127,32,1],[128,13,128,44,1],[129,13,129,27,1],[130,9,130,10,1],[143,9,143,10,1],[145,13,145,33,1],[149,13,149,31,1],[153,13,153,32,1],[159,13,159,14,1],[161,17,161,69,1],[164,17,164,90,1],[167,17,167,42,1],[168,17,168,18,1],[169,21,169,60,1],[170,17,170,18,1],[172,13,172,14,1],[180,9,180,10,1],[197,9,197,10,1],[199,13,199,30,1],[203,13,203,31,1],[207,13,207,33,1],[211,13,211,32,1],[215,13,215,30,1],[222,13,222,44,1],[228,13,228,47,1],[229,13,229,14,1],[230,17,230,80,1],[234,13,234,111,1],[237,13,237,33,1],[238,13,238,14,1],[240,17,240,39,1],[244,13,244,37,1],[245,13,245,14,1],[246,17,246,90,1],[250,13,250,95,1],[253,13,253,48,1],[254,13,254,72,1],[257,13,257,46,1],[263,13,263,48,1],[264,13,264,20,1],[264,43,264,67,1],[264,22,264,39,1],[265,13,265,14,1],[266,17,266,39,1],[267,17,267,18,1],[268,21,268,91,1],[269,17,269,18,1],[270,13,270,14,1],[264,40,264,42,1],[272,13,272,40,1],[273,9,273,10,1],[294,9,294,10,1],[296,13,296,30,1],[300,13,300,31,1],[304,13,304,33,1],[308,13,308,32,1],[312,13,312,30,1],[316,13,316,33,1],[322,13,322,36,1],[323,13,323,14,1],[324,17,324,24,1],[324,47,324,62,1],[324,26,324,43,1],[325,17,325,18,1],[326,21,326,85,1],[330,17,330,18,1],[324,44,324,46,1],[331,13,331,14,1],[334,13,334,40,1],[335,9,335,10,1],[351,9,351,10,1],[353,13,353,30,1],[357,13,357,31,1],[361,13,361,33,1],[365,13,365,32,1],[369,13,369,30,1],[375,13,375,48,1],[376,13,376,36,1],[377,13,377,14,1],[378,17,378,24,1],[378,47,378,62,1],[378,26,378,43,1],[379,17,379,18,1],[380,21,380,43,1],[381,21,381,22,1],[382,25,382,95,1],[383,21,383,22,1],[384,17,384,18,1],[378,44,378,46,1],[385,13,385,14,1],[387,13,387,40,1],[388,9,388,10,1],[121,68,121,109,1]]);
     </script>
   </body>
 </html>

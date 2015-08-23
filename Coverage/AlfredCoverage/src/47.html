@@ -2,251 +2,84 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.core\modules\alfredtimemodule.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core\pages\explorerpage.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlfredTimeModule.cs
+// MindExplorerPage.cs
 // 
-// Created on:      07/26/2015 at 1:46 PM
-// Last Modified:   08/10/2015 at 10:52 PM
-// Original author: Matt Eland
+// Created on:      08/22/2015 at 11:16 PM
+// Last Modified:   08/22/2015 at 11:16 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Globalization;
+using System.Collections.Generic;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Widgets;
-using MattEland.Common;
 
-namespace MattEland.Ani.Alfred.Core.Modules
+namespace MattEland.Ani.Alfred.Core.Pages
 {
     /// &lt;summary&gt;
-    ///     A module that keeps track of time and date information and presents it to the user.
+    /// An explorer page intended for delving through the details of items in a hierarchical / detail format.
     /// &lt;/summary&gt;
-    public sealed class AlfredTimeModule : AlfredModule
+    public class ExplorerPage : AlfredPage
     {
-        /// &lt;summary&gt;
-        ///     The hour changed event&#39;s title message used for logging purposes.
-        /// &lt;/summary&gt;
-        public const string HourAlertEventTitle = &quot;Time.HourAlert&quot;;
+        [NotNull]
+        private readonly IPlatformProvider _provider;
 
         /// &lt;summary&gt;
-        ///     The half hour alert event title log message
+        /// Initializes a new instance of the &lt;see cref=&quot;ExplorerPage&quot; /&gt; class.
         /// &lt;/summary&gt;
-        public const string HalfHourAlertEventTitle = &quot;Time.HalfHourAlert&quot;;
-
-        private DateTime _time;
-
-        /// &lt;summary&gt;
-        ///     Initializes a new instance of the
-        ///     &lt;see cref=&quot;AlfredModule&quot; /&gt;
-        ///     class.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;platformProvider&quot;&gt;
-        ///     The platform provider.
-        /// &lt;/param&gt;
-        public AlfredTimeModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
+        /// &lt;param name=&quot;provider&quot;&gt;The platform provider.&lt;/param&gt;
+        /// &lt;param name=&quot;name&quot;&gt;The name.&lt;/param&gt;
+        /// &lt;param name=&quot;id&quot;&gt;The ID&lt;/param&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;name&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;id&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public ExplorerPage([NotNull] IPlatformProvider provider, [NotNull] string name, [NotNull] string id) : base(name, id)
         {
-            CurrentDateWidget = new TextWidget();
-            CurrentTimeWidget = new TextWidget();
-            AlertWidget = new WarningWidget
+            if (provider == null)
             {
-                IsVisible = false,
-                Text = Resources.AlfredTimeModule_AlfredTimeModule_BedtimeNagMessage
-            };
-            AlertHour = 21;
-            AlertMinute = 30;
-            AlertDurationInHours = 4;
-            IsAlertEnabled = true;
-
-            CurrentTime = DateTime.MinValue;
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the name of the module.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The name of the module.&lt;/value&gt;
-        public override string Name
-        {
-            get { return Resources.AlfredTimeModule_Name.NonNull(); }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the current time user interface widget.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The current time user interface widget.&lt;/value&gt;
-        [NotNull]
-        public TextWidget CurrentTimeWidget { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets the current date user interface widget.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The current date user interface widget.&lt;/value&gt;
-        [NotNull]
-        public TextWidget CurrentDateWidget { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets the bedtime alert widget.
-        ///     This widget alerts users to go to bed after a certain time
-        ///     and will be hidden until the user needs to go to bed.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The bedtime alert widget.&lt;/value&gt;
-        [NotNull]
-        public WarningWidget AlertWidget { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets or sets the bedtime hour.  Defaults to 9 PM
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The bedtime hour.&lt;/value&gt;
-        public int AlertHour { get; set; }
-
-        /// &lt;summary&gt;
-        ///     Gets or sets the bedtime minute. Defaults to 30 minutes past the hour.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The bedtime minute.&lt;/value&gt;
-        public int AlertMinute { get; set; }
-
-        /// &lt;summary&gt;
-        ///     Gets or sets the alert duration in hours.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The alert duration in hours.&lt;/value&gt;
-        public int AlertDurationInHours { get; set; }
-
-        /// &lt;summary&gt;
-        ///     Gets or sets whether the alert is enabled.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The alert is enabled.&lt;/value&gt;
-        public bool IsAlertEnabled { get; set; }
-
-        /// &lt;summary&gt;
-        ///     Gets or sets the last time recorded
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The current time.&lt;/value&gt;
-        private DateTime CurrentTime
-        {
-            get { return _time; }
-            set { _time = value; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles module initialization events
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;alfred&quot;&gt;&lt;/param&gt;
-        protected override void InitializeProtected(IAlfred alfred)
-        {
-            Register(CurrentDateWidget);
-            Register(CurrentTimeWidget);
-            Register(AlertWidget);
-
-            // Ensure it has some initial values so it doesn&#39;t &quot;blink&quot; or lag on start
-            ClearLastTimeRun();
-            Update(DateTime.Now);
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles updating the module
-        /// &lt;/summary&gt;
-        protected override void UpdateProtected()
-        {
-            // Call a new method with the current time. This helps this module be testable
-            Update(DateTime.Now);
-        }
-
-        /// &lt;summary&gt;
-        ///     Updates the module given the specified time.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;time&quot;&gt;
-        ///     The time. Date portions of this will be ignored.
-        /// &lt;/param&gt;
-        public void Update(DateTime time)
-        {
-            // Always update the date
-            CurrentDateWidget.Text = time.ToString(&quot;D&quot;, CultureInfo.CurrentCulture); // Thursday April 10, 2008
-
-            // Always update the time
-            var timeFormat = Resources.AlfredTimeModule_Update_CurrentTimeDisplayString.NonNull();
-            var timeText = string.Format(CultureInfo.CurrentCulture, timeFormat, time);
-            CurrentTimeWidget.Text = timeText;
-
-            // Update the visibility of the alert widget based on time of day
-            UpdateBedtimeAlertVisibility(time);
-
-            // Check to see if it&#39;s now a new hour and, if so, log it to the console
-            if (CurrentTime &gt; DateTime.MinValue)
-            {
-                if (time.Minute == 0 &amp;&amp; CurrentTime.Hour != time.Hour)
-                {
-                    // Let the user know it&#39;s now X
-                    Log(HourAlertEventTitle, timeText, LogLevel.ChatNotification);
-                }
-                else if (time.Minute == 30 &amp;&amp; CurrentTime.Minute != 30)
-                {
-                    // Let the user know it&#39;s now half after X
-                    Log(HalfHourAlertEventTitle, timeText, LogLevel.ChatNotification);
-                }
+                throw new ArgumentNullException(nameof(provider));
             }
 
-            // Store the last time we processed so it can be referenced next iteration
-            CurrentTime = time;
+            _provider = provider;
         }
 
         /// &lt;summary&gt;
-        ///     Updates the bedtime alert visibility based on the given time.
+        /// Gets the children of this component. Depending on the type of component this is, the children will
+        /// vary in their own types.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;time&quot;&gt;
-        ///     The time.
-        /// &lt;/param&gt;
-        private void UpdateBedtimeAlertVisibility(DateTime time)
+        /// &lt;value&gt;The children.&lt;/value&gt;
+        public override IEnumerable&lt;IAlfredComponent&gt; Children
         {
-            if (!IsAlertEnabled)
+            get { yield break; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets whether or not the component is visible to the user interface.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;Whether or not the component is visible.&lt;/value&gt;
+        public override bool IsVisible
+        {
+            get
             {
-                // Easy call; if it&#39;s disabled, don&#39;t show it
-                AlertWidget.IsVisible = false;
+                // Explorer pages are always visible
+                return true;
             }
-            else
-            {
-                // Farm off the more complicated math to a dedicated class
-                AlertWidget.IsVisible = AlertVisibilityCalculator.CalculateAlertVisibility(time.Hour,
-                                                                                           time.Minute,
-                                                                                           AlertHour,
-                                                                                           AlertMinute,
-                                                                                           AlertDurationInHours);
-            }
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles module shutdown events
-        /// &lt;/summary&gt;
-        protected override void ShutdownProtected()
-        {
-            CurrentTimeWidget.Text = null;
-            ClearLastTimeRun();
-        }
-
-        /// &lt;summary&gt;
-        ///     Clears the last time the module was run.
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        ///     This is intended for use in time-sensitive unit testing
-        ///     scenarios and is not intended for any normal usage
-        /// &lt;/remarks&gt;
-        public void ClearLastTimeRun()
-        {
-            CurrentTime = DateTime.MinValue;
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[46,81,46,103,1],[47,9,47,10,1],[48,13,48,50,1],[49,13,49,50,1],[50,13,54,15,1],[55,13,55,28,1],[56,13,56,30,1],[57,13,57,38,1],[58,13,58,35,1],[60,13,60,45,1],[61,9,61,10,1],[69,17,69,18,1],[69,19,69,68,1],[69,69,69,70,1],[77,47,77,51,1],[84,47,84,51,1],[93,44,93,48,1],[99,32,99,36,1],[99,37,99,41,1],[105,34,105,38,1],[105,39,105,43,1],[111,43,111,47,1],[111,48,111,52,1],[117,38,117,42,1],[117,43,117,47,1],[125,17,125,18,1],[125,19,125,32,1],[125,33,125,34,1],[126,17,126,18,1],[126,19,126,33,1],[126,34,126,35,1],[134,9,134,10,1],[135,13,135,41,1],[136,13,136,41,1],[137,13,137,35,1],[140,13,140,32,1],[141,13,141,34,1],[142,9,142,10,1],[148,9,148,10,1],[150,13,150,34,1],[151,9,151,10,1],[160,9,160,10,1],[162,13,162,85,1],[165,13,165,99,1],[166,13,166,88,1],[167,13,167,47,1],[170,13,170,48,1],[173,13,173,49,1],[174,13,174,14,1],[175,17,175,71,1],[176,17,176,18,1],[178,21,178,83,1],[179,17,179,18,1],[180,22,180,72,1],[181,17,181,18,1],[183,21,183,87,1],[184,17,184,18,1],[185,13,185,14,1],[188,13,188,32,1],[189,9,189,10,1],[198,9,198,10,1],[199,13,199,33,1],[200,13,200,14,1],[202,17,202,47,1],[203,13,203,14,1],[205,13,205,14,1],[207,17,211,114,1],[212,13,212,14,1],[213,9,213,10,1],[219,9,219,10,1],[220,13,220,43,1],[221,13,221,32,1],[222,9,222,10,1],[232,9,232,10,1],[233,13,233,45,1],[234,9,234,10,1]]);
+      highlightRanges([[53,17,53,18,0],[53,19,53,31,0],[36,113,36,127,1],[37,9,37,10,1],[38,13,38,34,1],[39,13,39,14,1],[40,17,40,67,1],[43,13,43,34,1],[44,9,44,10,1],[63,13,63,14,1],[65,17,65,29,1],[66,13,66,14,1]]);
     </script>
   </body>
 </html>

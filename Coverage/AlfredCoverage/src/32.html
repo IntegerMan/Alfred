@@ -2,27 +2,22 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.core\alfredapplication.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core\alfredstatuscontroller.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlfredApplication.cs
+// AlfredStatusController.cs
 // 
-// Created on:      07/25/2015 at 11:30 PM
-// Last Modified:   08/11/2015 at 7:02 PM
+// Created on:      08/03/2015 at 3:09 PM
+// Last Modified:   08/09/2015 at 9:38 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Linq;
 
 using JetBrains.Annotations;
 
@@ -33,202 +28,37 @@ using MattEland.Common;
 namespace MattEland.Ani.Alfred.Core
 {
     /// &lt;summary&gt;
-    ///     Coordinates providing personal assistance to a user interface and receiving settings and queries back from the user
-    ///     interface.
+    ///     A utility class that helps control Alfred&#39;s status and monitors the initialization and shutdown processes.
     /// &lt;/summary&gt;
-    public sealed class AlfredApplication : INotifyPropertyChanged, IAlfred
+    public sealed class AlfredStatusController : IStatusController
     {
-        /// &lt;summary&gt;
-        ///     The platform provider
-        /// &lt;/summary&gt;
-        [NotNull]
-        private readonly IPlatformProvider _platformProvider;
-
-        /// &lt;summary&gt;
-        ///     The status controller
-        /// &lt;/summary&gt;
-        [NotNull]
-        private readonly IStatusController _statusController;
-
-        [NotNull]
-        private readonly ICollection&lt;IAlfredSubsystem&gt; _subsystems;
-
         [CanBeNull]
-        private IChatProvider _chatProvider;
+        private IAlfred _alfred;
 
         /// &lt;summary&gt;
-        ///     The status
+        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredStatusController&quot; /&gt; class.
         /// &lt;/summary&gt;
-        private AlfredStatus _status;
-
-        [CanBeNull]
-        private IShellCommandRecipient _shellCommandHandler;
-
-        /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredApplication&quot; /&gt; class.
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        ///     Initialization should come from AlfredBootstrapper
-        /// &lt;/remarks&gt;
-        /// &lt;param name=&quot;provider&quot;&gt;The provider.&lt;/param&gt;
-        /// &lt;param name=&quot;controller&quot;&gt;The controller.&lt;/param&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;provider&lt;/exception&gt;
-        internal AlfredApplication([NotNull] IPlatformProvider provider, [CanBeNull] IStatusController controller)
+        public AlfredStatusController() : this(null)
         {
-            // Set the controller
-            if (controller == null)
-            {
-                controller = new AlfredStatusController(this);
-            }
-            _statusController = controller;
-            _statusController.Alfred = this;
-
-            // Set the provider
-            if (provider == null)
-            {
-                throw new ArgumentNullException(nameof(provider));
-            }
-            _platformProvider = provider;
-
-            // Build out sub-collections
-            _subsystems = provider.CreateCollection&lt;IAlfredSubsystem&gt;();
         }
 
         /// &lt;summary&gt;
-        ///     Gets the chat provider.
+        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredStatusController&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The chat provider.&lt;/value&gt;
-        [CanBeNull]
-        public IChatProvider ChatProvider
+        /// &lt;param name=&quot;alfred&quot;&gt;The alfred provider.&lt;/param&gt;
+        public AlfredStatusController([CanBeNull] IAlfred alfred)
         {
-            [DebuggerStepThrough]
-            get
-            { return _chatProvider; }
-            private set
-            {
-                if (Equals(value, _chatProvider))
-                {
-                    return;
-                }
-
-                _chatProvider = value;
-                OnPropertyChanged(nameof(ChatProvider));
-            }
+            Alfred = alfred;
         }
 
         /// &lt;summary&gt;
-        ///     Gets the name and version of Alfred.
+        ///     Gets or sets the alfred framework.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The name and version.&lt;/value&gt;
-        [NotNull]
-        public string NameAndVersion
+        /// &lt;value&gt;The alfred framework.&lt;/value&gt;
+        public IAlfred Alfred
         {
-            get { return string.Format(CultureInfo.CurrentCulture, &quot;{0} {1}&quot;, Name, Version); }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the name of the framework.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The name.&lt;/value&gt;
-        [NotNull]
-        public string Version
-        {
-            get
-            {
-                // We&#39;ll base this off of the AssemblyVersion.
-                var version = this.GetAssemblyVersion();
-                return version?.ToString() ?? string.Empty;
-            }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the collection provider used for cross platform portability.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The collection provider.&lt;/value&gt;
-        [NotNull]
-        public IPlatformProvider PlatformProvider
-        {
-            get { return _platformProvider; }
-        }
-
-        /// &lt;summary&gt;
-        /// Gets the shell command handler that can pass shell commands on to the user interface.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The shell command handler.&lt;/value&gt;
-        public IShellCommandRecipient ShellCommandHandler
-        {
-            get { return _shellCommandHandler; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets or sets the console provider. This can be null.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The console.&lt;/value&gt;
-        [CanBeNull]
-        public IConsole Console { get; set; }
-
-        /// &lt;summary&gt;
-        ///     Gets the name of the framework.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The name.&lt;/value&gt;
-        [NotNull]
-        public string Name
-        {
-            get { return Resources.AlfredProvider_Name.NonNull(); }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the status.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The status.&lt;/value&gt;
-        public AlfredStatus Status
-        {
-            get { return _status; }
-            set
-            {
-                if (value != _status)
-                {
-                    _status = value;
-                    OnPropertyChanged(nameof(Status));
-                    OnPropertyChanged(nameof(IsOnline));
-                }
-            }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the sub systems associated wih Alfred.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The sub systems.&lt;/value&gt;
-        [NotNull]
-        [ItemNotNull]
-        public IEnumerable&lt;IAlfredSubsystem&gt; Subsystems
-        {
-            get { return _subsystems; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the user interface pages registered to the Alfred Framework at root level.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The pages.&lt;/value&gt;
-        [NotNull]
-        [ItemNotNull]
-        [SuppressMessage(&quot;ReSharper&quot;, &quot;AssignNullToNotNullAttribute&quot;)]
-        public IEnumerable&lt;IAlfredPage&gt; RootPages
-        {
-            get
-            {
-                // Give me all pages in subsystems that are root level pages
-                return Subsystems.SelectMany(subSystem =&gt; subSystem.RootPages);
-            }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets Whether or not Alfred is online.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The is online.&lt;/value&gt;
-        public bool IsOnline
-        {
-            get { return Status == AlfredStatus.Online; }
+            get { return _alfred; }
+            set { _alfred = value; }
         }
 
         /// &lt;summary&gt;
@@ -239,8 +69,43 @@ namespace MattEland.Ani.Alfred.Core
         /// &lt;/exception&gt;
         public void Initialize()
         {
-            // This logic is a bit lengthy, so we&#39;ll have the status controller take care of it
-            _statusController.Initialize();
+            var alfred = Alfred;
+            if (alfred == null)
+            {
+                throw new InvalidOperationException(&quot;Alfred is not set. Please set Alfred first&quot;);
+            }
+
+            var header = Resources.AlfredStatusController_Initialize_LogHeader.NonNull();
+
+            var console = alfred.Console;
+
+            // Handle case on initialize but already initializing or online
+            EnsureAlfredOffline(alfred, console, header);
+
+            // Inform things that we&#39;re setting up right now
+            console?.Log(header, Resources.AlfredStatusController_Initialize_Initializing.NonNull(), LogLevel.Verbose);
+            alfred.Status = AlfredStatus.Initializing;
+
+            // Boot up items and give them a provider
+            foreach (var item in alfred.Subsystems)
+            {
+                InitializeComponent(console, item, header);
+            }
+
+            // We&#39;re done. Let the world know.
+            alfred.Status = AlfredStatus.Online;
+            console?.Log(header,
+                         Resources.AlfredStatusController_Initialize_InitilizationCompleted.NonNull(),
+                         LogLevel.Verbose);
+
+            // Notify each item that startup was completed
+            foreach (var item in alfred.Subsystems)
+            {
+                item.OnInitializationCompleted();
+            }
+
+            // Log the completion
+            console?.Log(header, Resources.AlfredStatusController_Initialize_AlfredOnline.NonNull(), LogLevel.Info);
         }
 
         /// &lt;summary&gt;
@@ -251,101 +116,138 @@ namespace MattEland.Ani.Alfred.Core
         /// &lt;/exception&gt;
         public void Shutdown()
         {
-            // This process is a little lengthy so we&#39;ll have the status controller handle it
-            _statusController.Shutdown();
-        }
-
-        /// &lt;summary&gt;
-        /// Registers the shell command recipient that will allow the shell to get commands from the Alfred layer.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;shell&quot;&gt;The command recipient.&lt;/param&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;shell&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        public void Register(IShellCommandRecipient shell)
-        {
-            if (shell == null)
+            var alfred = Alfred;
+            if (alfred == null)
             {
-                throw new ArgumentNullException(nameof(shell));
-            }
-            _shellCommandHandler = shell;
-        }
-
-        /// &lt;summary&gt;
-        ///     Registers the chat provider as the framework&#39;s chat provider.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;chatProvider&quot;&gt;The chat provider.&lt;/param&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;chatProvider&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        public void Register([NotNull] IChatProvider chatProvider)
-        {
-            if (chatProvider == null)
-            {
-                throw new ArgumentNullException(nameof(chatProvider));
+                throw new InvalidOperationException(&quot;Alfred is not set. Please set Alfred first&quot;);
             }
 
-            ChatProvider = chatProvider;
-        }
+            var header = Resources.AlfredStatusController_Shutdown_LogHeader.NonNull();
 
-        /// &lt;summary&gt;
-        ///     Occurs when a property changes.
-        /// &lt;/summary&gt;
-        public event PropertyChangedEventHandler PropertyChanged;
+            var console = alfred.Console;
 
-        /// &lt;summary&gt;
-        ///     Tells modules to take a look at their content and update as needed.
-        /// &lt;/summary&gt;
-        /// &lt;exception cref=&quot;InvalidOperationException&quot;&gt;
-        ///     Thrown if Alfred is not Online
-        /// &lt;/exception&gt;
-        public void Update()
-        {
-            // Error check
-            if (Status != AlfredStatus.Online)
+            // Handle cases where shutdown shouldn&#39;t be allowed
+            EnsureAlfredOnline(alfred, console, header);
+
+            // Indicate status so the UI can keep busy
+            console?.Log(header, Resources.AlfredStatusController_Shutdown_Shutting_down.NonNull(), LogLevel.Verbose);
+            alfred.Status = AlfredStatus.Terminating;
+
+            // Shut down items and decouple them from Alfred
+            foreach (var item in alfred.Subsystems)
             {
-                throw new InvalidOperationException(Resources.AlfredProvider_Update_ErrorMustBeOnline);
+                ShutdownComponent(console, item, header);
             }
 
-            // Update every system
-            foreach (var item in Subsystems)
+            // We&#39;re done here. Tell the world.
+            alfred.Status = AlfredStatus.Offline;
+            console?.Log(header, Resources.AlfredStatusController_Shutdown_Completed.NonNull(), LogLevel.Info);
+
+            // Notify each item that shutdown was completed
+            foreach (var item in alfred.Subsystems)
             {
-                item.Update();
+                item.OnShutdownCompleted();
             }
         }
 
         /// &lt;summary&gt;
-        ///     Registers a sub system with Alfred.
+        ///     Ensures that alfred is offline and throws an InvalidOperationException if it isn&#39;t.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;subsystem&quot;&gt;The subsystem.&lt;/param&gt;
-        /// &lt;exception cref=&quot;InvalidOperationException&quot;&gt;If a subsystem was registered when Alfred was offline.&lt;/exception&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;subsystem&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        public void Register([NotNull] AlfredSubsystem subsystem)
+        /// &lt;param name=&quot;alfred&quot;&gt;The alfred.&lt;/param&gt;
+        /// &lt;param name=&quot;console&quot;&gt;The console.&lt;/param&gt;
+        /// &lt;param name=&quot;header&quot;&gt;The header.&lt;/param&gt;
+        private static void EnsureAlfredOffline([NotNull] IAlfred alfred,
+                                                [CanBeNull] IConsole console,
+                                                [NotNull] string header)
         {
-            if (subsystem == null)
+            if (alfred.Status == AlfredStatus.Online)
             {
-                throw new ArgumentNullException(nameof(subsystem));
-            }
-            if (Status != AlfredStatus.Offline)
-            {
-                throw new InvalidOperationException(Resources.AlfredProvider_AssertMustBeOffline_ErrorNotOffline);
-            }
+                var message = Resources.AlfredStatusController_Initialize_ErrorAlreadyOnline.NonNull();
+                console?.Log(header, message, LogLevel.Verbose);
 
-            _subsystems.AddSafe(subsystem);
-            subsystem.OnRegistered(this);
+                throw new InvalidOperationException(message);
+            }
         }
 
         /// &lt;summary&gt;
-        ///     Called when a property changes.
+        ///     Initializes the component.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;propertyName&quot;&gt;Name of the property.&lt;/param&gt;
-        [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CanBeNull] string propertyName)
+        /// &lt;param name=&quot;console&quot;&gt;The console.&lt;/param&gt;
+        /// &lt;param name=&quot;item&quot;&gt;The item.&lt;/param&gt;
+        /// &lt;param name=&quot;header&quot;&gt;The header.&lt;/param&gt;
+        private void InitializeComponent([CanBeNull] IConsole console,
+                                         [NotNull] IAlfredComponent item,
+                                         [NotNull] string header)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+            // Log the initialization
+            var initLogFormat = Resources.AlfredStatusController_InitializingComponent.NonNull();
+            console?.Log(header,
+                         string.Format(CultureInfo.CurrentCulture, initLogFormat, item.NameAndVersion),
+                         LogLevel.Verbose);
+
+            // Actually initialize the component
+            item.Initialize(Alfred);
+
+            // Log the completion
+            var initializedLogFormat = Resources.AlfredStatusController_InitializeComponentInitialized.NonNull();
+            console?.Log(header,
+                         string.Format(CultureInfo.CurrentCulture, initializedLogFormat, item.NameAndVersion),
+                         LogLevel.Verbose);
+        }
+
+        /// &lt;summary&gt;
+        ///     Shutdowns the subsystem.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;console&quot;&gt;The console.&lt;/param&gt;
+        /// &lt;param name=&quot;item&quot;&gt;The item.&lt;/param&gt;
+        /// &lt;param name=&quot;header&quot;&gt;The header.&lt;/param&gt;
+        private static void ShutdownComponent([CanBeNull] IConsole console,
+                                              [NotNull] IAlfredComponent item,
+                                              [NotNull] string header)
+        {
+
+            var culture = CultureInfo.CurrentCulture;
+
+            var shuttingDownMessage = Resources.AlfredStatusController_ShuttingDownComponent.NonNull();
+            console?.Log(header, string.Format(culture, shuttingDownMessage, item.NameAndVersion), LogLevel.Verbose);
+
+            item.Shutdown();
+
+            var shutDownMessage = Resources.AlfredStatusController_ComponentOffline.NonNull();
+            console?.Log(header, string.Format(culture, shutDownMessage, item.NameAndVersion), LogLevel.Verbose);
+        }
+
+        /// &lt;summary&gt;
+        ///     Ensures that alfred online.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;alfred&quot;&gt;The alfred.&lt;/param&gt;
+        /// &lt;param name=&quot;console&quot;&gt;The console.&lt;/param&gt;
+        /// &lt;param name=&quot;header&quot;&gt;The header.&lt;/param&gt;
+        private static void EnsureAlfredOnline([NotNull] IAlfred alfred,
+                                               [CanBeNull] IConsole console,
+                                               [NotNull] string header)
+        {
+            switch (alfred.Status)
+            {
+                case AlfredStatus.Offline:
+                    var offlineMessage = Resources.AlfredStatusController_Shutdown_ErrorAlreadyOffline.NonNull();
+                    console?.Log(header, offlineMessage, LogLevel.Verbose);
+
+                    throw new InvalidOperationException(offlineMessage);
+
+                case AlfredStatus.Terminating:
+                    var terminatingMessage = Resources.AlfredStatusController_Shutdown_ErrorAlreadyTerminating.NonNull();
+                    console?.Log(header, terminatingMessage, LogLevel.Verbose);
+
+                    throw new InvalidOperationException(terminatingMessage);
+            }
         }
     }
-
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[70,13,70,14,0],[71,17,71,63,0],[72,13,72,14,0],[78,13,78,14,0],[79,17,79,67,0],[96,13,96,14,0],[96,15,96,36,0],[96,37,96,38,0],[98,13,98,14,0],[99,17,99,50,0],[100,17,100,18,0],[101,21,101,28,0],[104,17,104,39,0],[105,17,105,57,0],[106,13,106,14,0],[116,17,116,18,0],[116,19,116,94,0],[116,95,116,96,0],[127,13,127,14,0],[129,17,129,57,0],[130,17,130,60,0],[131,13,131,14,0],[150,17,150,18,0],[150,19,150,47,0],[150,48,150,49,0],[221,17,221,18,0],[221,19,221,56,0],[221,57,221,58,0],[254,9,254,10,0],[255,13,255,31,0],[256,13,256,14,0],[257,17,257,64,0],[259,13,259,42,0],[260,9,260,10,0],[268,9,268,10,0],[269,13,269,38,0],[270,13,270,14,0],[271,17,271,71,0],[274,13,274,41,0],[275,9,275,10,0],[66,9,66,115,1],[67,9,67,10,1],[69,13,69,36,1],[73,13,73,44,1],[74,13,74,45,1],[77,13,77,34,1],[81,13,81,42,1],[84,13,84,73,1],[85,9,85,10,1],[141,17,141,18,1],[141,19,141,44,1],[141,45,141,46,1],[158,35,158,39,1],[158,40,158,44,1],[167,17,167,18,1],[167,19,167,66,1],[167,67,167,68,1],[176,17,176,18,1],[176,19,176,34,1],[176,35,176,36,1],[178,13,178,14,1],[179,17,179,38,1],[180,17,180,18,1],[181,21,181,37,1],[182,21,182,55,1],[183,21,183,57,1],[184,17,184,18,1],[185,13,185,14,1],[196,17,196,18,1],[196,19,196,38,1],[196,39,196,40,1],[209,13,209,14,1],[211,17,211,59,1],[211,78,211,80,1],[212,13,212,14,1],[231,9,231,10,1],[233,13,233,44,1],[234,9,234,10,1],[243,9,243,10,1],[245,13,245,42,1],[246,9,246,10,1],[289,9,289,10,1],[291,13,291,47,1],[292,13,292,14,1],[293,17,293,104,1],[297,13,297,20,1],[297,34,297,44,1],[297,22,297,30,1],[298,13,298,14,1],[299,17,299,31,1],[300,13,300,14,1],[297,31,297,33,1],[301,9,301,10,1],[310,9,310,10,1],[311,13,311,35,1],[312,13,312,14,1],[313,17,313,68,1],[315,13,315,48,1],[316,13,316,14,1],[317,17,317,115,1],[320,13,320,44,1],[321,13,321,42,1],[322,9,322,10,1],[330,9,330,10,1],[331,13,331,87,1],[332,9,332,10,1],[211,59,211,78,1]]);
+      highlightRanges([[64,13,64,14,0],[65,17,65,99,0],[111,13,111,14,0],[112,17,112,99,0],[230,21,230,122,0],[231,21,231,80,0],[233,21,233,77,0],[31,43,31,53,1],[32,9,32,10,1],[33,9,33,10,1],[39,9,39,66,1],[40,9,40,10,1],[41,13,41,29,1],[42,9,42,10,1],[50,17,50,18,1],[50,19,50,34,1],[50,35,50,36,1],[51,17,51,18,1],[51,19,51,35,1],[51,36,51,37,1],[61,9,61,10,1],[62,13,62,33,1],[63,13,63,32,1],[68,13,68,90,1],[70,13,70,42,1],[73,13,73,58,1],[76,13,76,120,1],[77,13,77,55,1],[80,13,80,20,1],[80,34,80,51,1],[80,22,80,30,1],[81,13,81,14,1],[82,17,82,60,1],[83,13,83,14,1],[80,31,80,33,1],[86,13,86,49,1],[87,13,89,44,1],[92,13,92,20,1],[92,34,92,51,1],[92,22,92,30,1],[93,13,93,14,1],[94,17,94,50,1],[95,13,95,14,1],[92,31,92,33,1],[98,13,98,117,1],[99,9,99,10,1],[108,9,108,10,1],[109,13,109,33,1],[110,13,110,32,1],[115,13,115,88,1],[117,13,117,42,1],[120,13,120,57,1],[123,13,123,119,1],[124,13,124,54,1],[127,13,127,20,1],[127,34,127,51,1],[127,22,127,30,1],[128,13,128,14,1],[129,17,129,58,1],[130,13,130,14,1],[127,31,127,33,1],[133,13,133,50,1],[134,13,134,112,1],[137,13,137,20,1],[137,34,137,51,1],[137,22,137,30,1],[138,13,138,14,1],[139,17,139,44,1],[140,13,140,14,1],[137,31,137,33,1],[141,9,141,10,1],[152,9,152,10,1],[153,13,153,54,1],[154,13,154,14,1],[155,17,155,104,1],[156,17,156,65,1],[158,17,158,62,1],[160,9,160,10,1],[171,9,171,10,1],[174,13,174,98,1],[175,13,177,44,1],[180,13,180,37,1],[183,13,183,114,1],[184,13,186,44,1],[187,9,187,10,1],[198,9,198,10,1],[200,13,200,54,1],[202,13,202,104,1],[203,13,203,118,1],[205,13,205,29,1],[207,13,207,95,1],[208,13,208,114,1],[209,9,209,10,1],[220,9,220,10,1],[221,13,221,35,1],[224,21,224,114,1],[225,21,225,76,1],[227,21,227,73,1],[235,9,235,10,1]]);
     </script>
   </body>
 </html>

@@ -2,17 +2,17 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\taghandlers\inputtaghandler.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\taghandlers\gendertaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// InputTagHandler.cs
+// GenderTagHandler.cs
 // 
-// Created on:      08/12/2015 at 10:47 PM
-// Last Modified:   08/15/2015 at 12:03 AM
+// Created on:      08/12/2015 at 10:45 PM
+// Last Modified:   08/14/2015 at 6:14 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -20,22 +20,24 @@
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
-using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// &lt;summary&gt;
-    /// A tag handler that handles the AIML &#39;input&#39; tag by grabbing historical input from the user and rendering that text.
+    ///     A tag handler for the AIML &quot;gender&quot; tag that subsitutes gender pronouns for their equivalent
+    ///     value in the chat engine&#39;s GenderSubstitutions
+    /// 
+    ///     See &quot;http://www.alicebot.org/TR/2005/WD-aiml/#section-gender&quot; for more on the gender tag.
     /// &lt;/summary&gt;
-    [HandlesAimlTag(&quot;input&quot;)]
-    public class InputTagHandler : AimlTagHandler
+    [HandlesAimlTag(&quot;gender&quot;)]
+    public class GenderTagHandler : AimlTagHandler
     {
         /// &lt;summary&gt;
         ///     Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
-        public InputTagHandler([NotNull] TagHandlerParameters parameters)
+        public GenderTagHandler([NotNull] TagHandlerParameters parameters)
             : base(parameters)
         {
         }
@@ -46,66 +48,39 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// &lt;returns&gt;The processed output&lt;/returns&gt;
         protected override string ProcessChange()
         {
-            var element = TemplateElement;
-            if (!element.Name.Matches(&quot;input&quot;))
+            /* Note: this tag handler uses recursion to recursively iterate through 
+            InnerText and find text that can be evaluated using substitution */
+
+            //- Ensure this is the correct tag
+            if (TemplateNode.Name.Matches(&quot;gender&quot;))
             {
                 return string.Empty;
             }
 
-            // If we don&#39;t have an input tag, just get the default one
-            if (!element.HasAttribute(&quot;index&quot;))
+            // If we have text inside the gender tag, just transform and return that
+            if (TemplateNode.InnerText.HasText())
             {
-                return User.GetInputSentence();
+                /* Substitute occurrences of gender words with other values. This typically 
+                   inverts the gender on gender pronouns (&quot;he&quot; / &quot;she&quot; / etc.) */
+
+                var substitutions = Librarian.GenderSubstitutions;
+                return TextSubstitutionHelper.Substitute(substitutions,
+                                                              TemplateNode.InnerText);
             }
 
-            // Grab and validate the index
-            var indexText = element.GetAttribute(&quot;index&quot;);
-            if (indexText.HasText())
-            {
-                // We can be either in a # format or a #,# format. Check to find out which
-                var indexes = indexText.Split(&quot;,&quot;.ToCharArray());
+            // Apply an AIML &quot;star&quot; tag and store the results as our inner text
+            var star = BuildStarTagHandler();
+            TemplateNode.InnerText = star.Transform().NonNull();
 
-                //- Grab values for the inputs. This refers to the nth last thing the user said to the engine
-                var inputIndex = indexes[0].AsInt();
-
-                //- Sentence index is optional. This refers to the sentence in the input referred to by inputIndex.
-                var sentenceIndex = 1;
-                if (indexes.Length &gt;= 2)
-                {
-                    sentenceIndex = indexes[1].AsInt();
-                }
-
-                // Grab the input X inputs ago and Y sentences into that input
-                if (inputIndex &gt; 0 &amp;&amp; sentenceIndex &gt; 0)
-                {
-                    return User.GetInputSentence(inputIndex - 1, sentenceIndex - 1);
-                }
-            }
-
-            // If we hit this point, it&#39;s bad input. Log and move on.
-            LogBadIndex(indexText);
-
-            return string.Empty;
+            //! If we still have text, we&#39;ll need to use recursion to evaluate our new value
+            return TemplateNode.InnerText.HasText() ? ProcessChange() : string.Empty;
         }
 
-        /// &lt;summary&gt;
-        ///     Logs a bad index.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;indexText&quot;&gt;The index text.&lt;/param&gt;
-        private void LogBadIndex([NotNull] string indexText)
-        {
-            var message = string.Format(Locale,
-                                           Resources.InputErrorBadlyFormedIndex,
-                                           indexText,
-                                           Request.RawInput);
-
-            Log(message, LogLevel.Error);
-        }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[29,15,29,31,0],[30,9,30,10,0],[31,9,31,10,0],[38,9,38,10,0],[39,13,39,43,0],[40,13,40,48,0],[41,13,41,14,0],[42,17,42,37,0],[46,13,46,48,0],[47,13,47,14,0],[48,17,48,48,0],[52,13,52,59,0],[53,13,53,37,0],[54,13,54,14,0],[56,17,56,66,0],[59,17,59,53,0],[62,17,62,39,0],[63,17,63,41,0],[64,17,64,18,0],[65,21,65,56,0],[66,17,66,18,0],[69,17,69,57,0],[70,17,70,18,0],[71,21,71,85,0],[73,13,73,14,0],[76,13,76,36,0],[78,13,78,33,0],[79,9,79,10,0],[86,9,86,10,0],[87,13,90,62,0],[92,13,92,42,0],[93,9,93,10,0]]);
+      highlightRanges([[31,15,31,31,0],[32,9,32,10,0],[33,9,33,10,0],[40,9,40,10,0],[45,13,45,53,0],[46,13,46,14,0],[47,17,47,37,0],[51,13,51,50,0],[52,13,52,14,0],[56,17,56,67,0],[57,17,58,87,0],[62,13,62,46,0],[63,13,63,65,0],[66,13,66,86,0],[67,9,67,10,0]]);
     </script>
   </body>
 </html>

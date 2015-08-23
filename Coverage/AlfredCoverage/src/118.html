@@ -2,18 +2,19 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.core.system\systemmonitormodule.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core.system\performancecountermetricprovider.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// SystemMonitorModule.cs
+// PerformanceCounterMetricProvider.cs
 // 
-// Created on:      08/04/2015 at 10:04 PM
-// Last Modified:   08/04/2015 at 10:08 PM
-// Original author: Matt Eland
+// Created on:      08/18/2015 at 11:29 AM
+// Last Modified:   08/18/2015 at 3:12 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
@@ -22,91 +23,70 @@ using System.Diagnostics;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core.Definitions;
-
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
     /// &lt;summary&gt;
-    ///     The SystemMonitorModule is an abstract class for modules commonly working with performance counters.
+    ///     A metric provider based on a performance counter.
     /// &lt;/summary&gt;
-    public abstract class SystemMonitorModule : AlfredModule
+    public sealed class CounterMetricProvider : MetricProviderBase, IDisposable
     {
-        /// &lt;summary&gt;
-        ///     The performance counter instance name for total results
-        /// &lt;/summary&gt;
-        public const string TotalInstanceName = &quot;_Total&quot;;
-
-        /// &lt;summary&gt;
-        /// Initializes a new instance of the &lt;see cref=&quot;SystemMonitorModule&quot; /&gt; class.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
-        /// &lt;param name=&quot;metricProvider&quot;&gt;The metric provider.&lt;/param&gt;
-        protected SystemMonitorModule([NotNull] IPlatformProvider platformProvider,
-                                      [NotNull] IMetricProviderFactory metricProvider) : base(platformProvider)
-        {
-            // Use the provided metric provider
-            _metricProvider = metricProvider;
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the next counter value safely, defaulting to 0 on any error.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;counter&quot;&gt;The counter.&lt;/param&gt;
-        /// &lt;returns&gt;The value returned from the counter&lt;/returns&gt;
-        protected static float GetNextCounterValueSafe([CanBeNull] MetricProviderBase counter)
-        {
-            return GetNextCounterValueSafe(counter, 0);
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the next counter value safely, defaulting to the defaultValue on any error.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;counter&quot;&gt;The counter.&lt;/param&gt;
-        /// &lt;param name=&quot;defaultValue&quot;&gt;The default value.&lt;/param&gt;
-        /// &lt;returns&gt;The value returned from the counter&lt;/returns&gt;
-        protected static float GetNextCounterValueSafe([CanBeNull] MetricProviderBase counter, float defaultValue)
-        {
-            try
-            {
-                return counter?.NextValue() ?? 0;
-            }
-            catch (Win32Exception)
-            {
-                return defaultValue;
-            }
-            catch (PlatformNotSupportedException)
-            {
-                return defaultValue;
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return defaultValue;
-            }
-            catch (InvalidOperationException)
-            {
-                return defaultValue;
-            }
-        }
-
         [NotNull]
-        private readonly IMetricProviderFactory _metricProvider;
+        private readonly PerformanceCounter _counter;
 
         /// &lt;summary&gt;
-        /// Gets the metric provider.
+        ///     Initializes a new instance of the &lt;see cref=&quot;CounterMetricProvider&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The metric provider.&lt;/value&gt;
-        [NotNull]
-        public IMetricProviderFactory MetricProvider
+        /// &lt;param name=&quot;categoryName&quot;&gt;Name of the category.&lt;/param&gt;
+        /// &lt;param name=&quot;counterName&quot;&gt;Name of the counter.&lt;/param&gt;
+        /// &lt;param name=&quot;instance&quot;&gt;The instance.&lt;/param&gt;
+        /// &lt;exception cref=&quot;Win32Exception&quot;&gt;An error occurred when accessing a system API.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;UnauthorizedAccessException&quot;&gt;
+        ///     Code that is executing without administrative
+        ///     privileges attempted to read a performance counter.
+        /// &lt;/exception&gt;
+        public CounterMetricProvider([NotNull] string categoryName,
+                                     [NotNull] string counterName,
+                                     [CanBeNull] string instance = null)
+
+            : base(instance ?? counterName)
         {
-            [DebuggerStepThrough]
-            get
-            { return _metricProvider; }
+            _counter = new PerformanceCounter(categoryName, counterName, instance, true);
+
+            /* Tell the performance counter to start getting values. These tend to always return 
+               0.0 as the first value and then provide accurate data after that */
+            _counter.NextValue();
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the next value from the metric provider
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;The next vaue&lt;/returns&gt;
+        /// &lt;exception cref=&quot;Win32Exception&quot;&gt;An error occurred when accessing a system API.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;UnauthorizedAccessException&quot;&gt;
+        ///     Code that is executing without administrative
+        ///     privileges attempted to read a performance counter.
+        /// &lt;/exception&gt;
+        public override float NextValue()
+        {
+            return _counter.NextValue();
+        }
+
+        /// &lt;summary&gt;
+        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged
+        ///     resources.
+        /// &lt;/summary&gt;
+        public override void Dispose()
+        {
+            base.Dispose();
+
+            _counter.Dispose();
         }
     }
+
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[63,13,63,35,0],[64,13,64,14,0],[65,17,65,37,0],[67,13,67,50,0],[68,13,68,14,0],[69,17,69,37,0],[71,13,71,48,0],[72,13,72,14,0],[73,17,73,37,0],[75,13,75,46,0],[76,13,76,14,0],[77,17,77,37,0],[35,90,35,112,1],[36,9,36,10,1],[38,13,38,46,1],[39,9,39,10,1],[47,9,47,10,1],[48,13,48,56,1],[49,9,49,10,1],[58,9,58,10,1],[60,13,60,14,1],[61,17,61,50,1],[79,9,79,10,1],[93,13,93,14,1],[93,15,93,38,1],[93,39,93,40,1]]);
+      highlightRanges([[60,9,60,10,0],[61,13,61,41,0],[62,9,62,10,0],[69,9,69,10,0],[70,13,70,28,0],[72,13,72,32,0],[73,9,73,10,0],[41,15,41,44,1],[42,9,42,10,1],[43,13,43,90,1],[47,13,47,34,1],[48,9,48,10,1]]);
     </script>
   </body>
 </html>

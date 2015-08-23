@@ -2,197 +2,124 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\utils\aimltaghandler.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\utils\textsubstitutionhelper.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AimlTagHandler.cs
+// TextSubstitutionHelper.cs
 // 
-// Created on:      08/12/2015 at 10:25 PM
-// Last Modified:   08/14/2015 at 6:01 PM
+// Created on:      08/12/2015 at 10:37 PM
+// Last Modified:   08/18/2015 at 4:57 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
-using System.Diagnostics;
-using System.Xml;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
 using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 {
+
     /// &lt;summary&gt;
-    ///     An abstract class representing a TextTransformer that can also handle an AIML tag.
+    ///     A text transformation helper class that replaces found occurrences of strings
+    ///     with their values found in the settings provider.
     /// &lt;/summary&gt;
-    public abstract class AimlTagHandler : TextTransformer
+    public static class TextSubstitutionHelper
     {
+        private const string Marker = &quot;zzMARKERzz&quot;;
+        private const string WordBoundary = @&quot;\b&quot;;
+
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
+        ///     Substitutes all occurrences of the words in the settings provider found in input with the
+        ///     replacement values stored in that provider.
         /// &lt;/summary&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;parameters&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        protected AimlTagHandler([NotNull] TagHandlerParameters parameters)
-            : base(parameters.ChatEngine, parameters.TemplateNode.OuterXml)
+        /// &lt;param name=&quot;settings&quot;&gt;The settings manager.&lt;/param&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input.&lt;/param&gt;
+        /// &lt;returns&gt;A modified version of the input string.&lt;/returns&gt;
+        [NotNull]
+        public static string Substitute([CanBeNull] SettingsManager settings,
+                                        [CanBeNull] string input)
         {
-            //- Validation
-            if (parameters == null)
+            //- Validate
+            input = input.NonNull();
+            if (settings == null)
             {
-                throw new ArgumentNullException(nameof(parameters));
+                return input;
             }
 
-            //- Assign fields
-            User = parameters.User;
-            Query = parameters.Query;
-            Request = parameters.Request;
-            Result = parameters.Result;
+            //- Grab our setting names
+            var settingNames = settings.Keys;
 
-            // Assign the template node and clear out the namespace values
-            parameters.TemplateNode.Attributes?.RemoveNamedItem(&quot;xmlns&quot;);
-            TemplateNode = parameters.TemplateNode;
+            // Look for each setting settingName in the input string to replace it with our setting value
+            foreach (var settingName in settingNames)
+            {
+                var settingValue = settings.GetValue(settingName);
+
+                input = Substitute(input, settingName, settingValue);
+            }
+
+            return input;
         }
 
         /// &lt;summary&gt;
-        ///     Gets or sets a value indicating whether this instance is recursive.
+        ///     Substitutes whole word instances of settingName in input with settingValue.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;&lt;c&gt;true&lt;/c&gt; if this instance is recursive; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/value&gt;
-        public bool IsRecursive { get; set; } = true;
-
-        /// &lt;summary&gt;
-        ///     Gets the query.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The query.&lt;/value&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input.&lt;/param&gt;
+        /// &lt;param name=&quot;settingName&quot;&gt;Name of the setting.&lt;/param&gt;
+        /// &lt;param name=&quot;settingValue&quot;&gt;The setting value.&lt;/param&gt;
+        /// &lt;returns&gt;A string with words substituted&lt;/returns&gt;
         [NotNull]
-        public SubQuery Query { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets the request.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The request.&lt;/value&gt;
-        [NotNull]
-        public Request Request { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets the result of the operation.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The result.&lt;/value&gt;
-        public Result Result { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets the template node.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The template node.&lt;/value&gt;
-        [NotNull]
-        public XmlNode TemplateNode { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets the user.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The user.&lt;/value&gt;
-        [NotNull]
-        public User User { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets the template node as an XmlElement.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The template element.&lt;/value&gt;
-        [NotNull]
-        protected XmlElement TemplateElement
+        public static string Substitute([CanBeNull] string input,
+                                        [CanBeNull] string settingName,
+                                        [CanBeNull] string settingValue)
         {
-            get { return (XmlElement)TemplateNode; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets an XML node from an XML string.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;xml&quot;&gt;The outer XML.&lt;/param&gt;
-        /// &lt;returns&gt;An XmlNode from the document&lt;/returns&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;xml&lt;/exception&gt;
-        /// &lt;exception cref=&quot;XmlException&quot;&gt;
-        ///     There is a load or parse error in the XML. In this case, the
-        ///     document remains empty.
-        /// &lt;/exception&gt;
-        [NotNull]
-        public static XmlNode BuildNode([NotNull] string xml)
-        {
-            if (xml.IsEmpty())
+            //- Sanity check
+            if (input == null)
             {
-                throw new ArgumentNullException(nameof(xml));
+                input = string.Empty;
+            }
+            if (settingName == null || settingValue == null)
+            {
+                return input;
             }
 
-            // Build out a document from the XML
-            // TODO: Use XDocument and XElement
-            var xmlDocument = new XmlDocument();
-            xmlDocument.LoadXml(xml);
+            var locale = CultureInfo.CurrentCulture;
 
-            // Return the root element
-            var child = xmlDocument.FirstChild;
-            Debug.Assert(child != null);
-            return child;
-        }
+            // Surround the setting with our marker string
+            var replacement =
+                string.Format(locale, &quot;{0}{1}{0}&quot;, Marker, settingValue.Trim())
+                      .NonNull();
 
-        /// &lt;summary&gt;
-        ///     Gets tag handler parameters for the given template node.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;templateNode&quot;&gt;The template node.&lt;/param&gt;
-        /// &lt;returns&gt;TagHandlerParameters.&lt;/returns&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;templateNode&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        [NotNull]
-        protected TagHandlerParameters GetTagHandlerParametersForNode([NotNull] XmlNode templateNode)
-        {
-            if (templateNode == null)
-            {
-                throw new ArgumentNullException(nameof(templateNode));
-            }
+            // Check for bad things in the name and make them regex safe
+            var sanitizedName =
+                settingName.Replace(@&quot;\&quot;, &quot;&quot;)
+                           .Replace(&quot;)&quot;, @&quot;\)&quot;)
+                           .Replace(&quot;(&quot;, @&quot;\(&quot;)
+                           .Replace(&quot;.&quot;, @&quot;\.&quot;)
+                           .Trim();
 
-            return new TagHandlerParameters(ChatEngine, User, Query, Request, Result, templateNode);
-        }
+            // Replaces the variable settingName with the setting value
+            var pattern =
+                string.Format(locale, &quot;{0}{1}{0}&quot;, WordBoundary, sanitizedName)
+                      .NonNull();
 
-        /// &lt;summary&gt;
-        ///     Gets the XML child node for an AIML star operation.
-        /// &lt;/summary&gt;
-        /// &lt;returns&gt;The star node.&lt;/returns&gt;
-        [NotNull]
-        protected static XmlNode BuildStarNode()
-        {
-            try
-            {
-                var starNode = BuildNode(&quot;&lt;star/&gt;&quot;);
-                Debug.Assert(starNode != null);
-                return starNode;
-            }
-            catch (XmlException ex)
-            {
-                Debug.Fail(&quot;GetStarNode cannot return a null value but encountered an XmlException: &quot; + ex.Message);
+            var substitute = Regex.Replace(input, pattern, replacement, RegexOptions.IgnoreCase);
 
-                // ReSharper disable once ExceptionNotDocumented
-                // ReSharper disable once HeuristicUnreachableCode
-                throw;
-            }
-        }
-
-        /// &lt;summary&gt;
-        ///     Builds a star tag handler.
-        /// &lt;/summary&gt;
-        /// &lt;returns&gt;A star tag handler.&lt;/returns&gt;
-        [NotNull]
-        protected StarTagHandler BuildStarTagHandler()
-        {
-            var node = BuildStarNode();
-            var parameters = GetTagHandlerParametersForNode(node);
-
-            return new StarTagHandler(parameters);
+            // Remove the marker string from the string
+            return substitute.Replace(Marker, string.Empty);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[35,13,35,14,0],[36,17,36,69,0],[114,13,114,14,0],[115,17,115,62,0],[139,13,139,14,0],[140,17,140,71,0],[152,9,152,10,0],[154,13,154,14,0],[155,17,155,53,0],[156,17,156,48,0],[157,17,157,33,0],[159,13,159,36,0],[160,13,160,14,0],[161,17,161,117,0],[165,17,165,23,0],[167,9,167,10,0],[175,9,175,10,0],[176,13,176,40,0],[177,13,177,67,0],[179,13,179,51,0],[180,9,180,10,0],[54,49,54,53,1],[31,15,31,76,1],[32,9,32,10,1],[34,13,34,36,1],[40,13,40,36,1],[41,13,41,38,1],[42,13,42,42,1],[43,13,43,40,1],[46,13,46,74,1],[47,13,47,52,1],[48,9,48,10,1],[54,35,54,39,1],[54,40,54,44,1],[61,33,61,37,1],[68,34,68,38,1],[74,32,74,36,1],[81,39,81,43,1],[88,28,88,32,1],[97,17,97,18,1],[97,19,97,51,1],[97,52,97,53,1],[112,9,112,10,1],[113,13,113,31,1],[120,13,120,49,1],[121,13,121,38,1],[124,13,124,48,1],[125,13,125,41,1],[126,13,126,26,1],[127,9,127,10,1],[137,9,137,10,1],[138,13,138,38,1],[143,13,143,101,1],[144,9,144,10,1]]);
+      highlightRanges([[39,9,39,10,1],[41,13,41,37,1],[42,13,42,34,1],[43,13,43,14,1],[44,17,44,30,1],[48,13,48,46,1],[51,13,51,20,1],[51,41,51,53,1],[51,22,51,37,1],[52,13,52,14,1],[53,17,53,67,1],[55,17,55,70,1],[56,13,56,14,1],[51,38,51,40,1],[58,13,58,26,1],[59,9,59,10,1],[72,9,72,10,1],[74,13,74,31,1],[75,13,75,14,1],[76,17,76,38,1],[77,13,77,14,1],[78,13,78,61,1],[79,13,79,14,1],[80,17,80,30,1],[83,13,83,53,1],[86,13,88,34,1],[91,13,96,36,1],[99,13,101,34,1],[103,13,103,98,1],[106,13,106,61,1],[107,9,107,10,1]]);
     </script>
   </body>
 </html>

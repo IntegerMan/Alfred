@@ -2,298 +2,223 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\taghandlers\taghandlerfactory.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\request.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// TagHandlerFactory.cs
+// Request.cs
 // 
-// Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   08/21/2015 at 6:14 PM
+// Created on:      08/12/2015 at 10:22 PM
+// Last Modified:   08/16/2015 at 5:46 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Reflection;
-
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Common;
 
-namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
+namespace MattEland.Ani.Alfred.Chat.Aiml
 {
     /// &lt;summary&gt;
-    ///     TagHandlerFactory is responsible for taking a set of input parameters and instantiating the
-    ///     appropriate class and providing that class the necessary parameters
+    ///     Represents a chat request or a sub-component of an existing request
     /// &lt;/summary&gt;
-    public sealed class TagHandlerFactory
+    public class Request
     {
-        [NotNull]
-        private readonly ChatEngine _engine;
-
-        [NotNull]
-        [ItemNotNull]
-        private readonly IDictionary&lt;string, Type&gt; _handlerMapping = new Dictionary&lt;string, Type&gt;();
+        private Request _child;
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;T:System.Object&quot; /&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;Request&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;engine&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        public TagHandlerFactory([NotNull] ChatEngine engine)
-        {
-            //- Validate
-            if (engine == null)
-            {
-                throw new ArgumentNullException(nameof(engine));
-            }
-
-            //- Set fields
-            _engine = engine;
-
-            //+ Load types in this assembly that have the HandlesAimlTag attribute
-            RegisterTagHandlersInAppDomain();
-        }
-
-        /// &lt;summary&gt;
-        ///     Registers all AimlTagHandler derived types decorated with the HandlesAimlTag attribute in any
-        ///     assembly that is currently loaded.
-        /// &lt;/summary&gt;
-        private void RegisterTagHandlersInAppDomain()
-        {
-            // Grab all assemblies currently loaded
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-
-            // Loop through and register each tag handler found. This will make registration automatic
-            foreach (var assembly in assemblies.Where(assembly =&gt; assembly != null))
-            {
-                RegisterTagHandlersInAssembly(assembly);
-            }
-        }
-
-        /// &lt;summary&gt;
-        ///     Loads and registers tag handlers in the given assembly. Valid tag handlers are non-abstract
-        ///     classes derived from
-        ///     AimlTagHandler and decorated with the HandlesAimlTag attribute.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;assembly&quot;&gt;The assembly.&lt;/param&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;assembly&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        public void RegisterTagHandlersInAssembly([NotNull] Assembly assembly)
-        {
-            //- Validation
-            if (assembly == null)
-            {
-                throw new ArgumentNullException(nameof(assembly));
-            }
-
-            // Read all types in the provided assembly that have this attribute.
-            try
-            {
-                var types = assembly.GetTypesInAssemblyWithAttribute&lt;HandlesAimlTagAttribute&gt;(false);
-
-                //- Loop through each type and register it
-                foreach (var type in types)
-                {
-                    // We can&#39;t instantiate an abstract type and we need AimlTagHandlers for this
-                    if (type.IsAbstract || !type.IsSubclassOf(typeof(AimlTagHandler)))
-                    {
-                        continue;
-                    }
-
-                    // Grab the attribute and exit early if it&#39;s not there
-                    var attribute =
-                        type.GetCustomAttribute(typeof(HandlesAimlTagAttribute)) as
-                        HandlesAimlTagAttribute;
-                    if (attribute == null)
-                    {
-                        continue;
-                    }
-
-                    // The attribute is present. Add it to the dictionary as a type handler
-                    var name = attribute.Name?.ToUpperInvariant();
-                    if (!name.IsNullOrWhitespace())
-                    {
-                        _handlerMapping.Add(name, type);
-                    }
-
-                }
-
-            }
-            catch (ReflectionTypeLoadException rex)
-            {
-                IFormattable message =
-                    $&quot;Encountered reflection type load exception &#39;{rex.Message}&#39; loading assembly &#39;{assembly.FullName}&#39;.&quot;;
-                _engine.Log(message.ForUser(), LogLevel.Error);
-            }
-            catch (AmbiguousMatchException amex)
-            {
-                IFormattable message =
-                    $&quot;Encountered ambiguous match exception &#39;{amex.Message}&#39; loading assembly &#39;{assembly.FullName}&#39;.&quot;;
-                _engine.Log(message.ForUser(), LogLevel.Error);
-            }
-            catch (TypeLoadException lex)
-            {
-                IFormattable message =
-                    $&quot;Encountered type load exception &#39;{lex.Message}&#39; on {lex.TypeName} while loading assembly &#39;{assembly.FullName}&#39;.&quot;;
-                _engine.Log(message.ForUser(), LogLevel.Error);
-            }
-
-        }
-
-        /// &lt;summary&gt;
-        ///     Builds a tag handler for the specified node.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;node&quot;&gt;The node.&lt;/param&gt;
-        /// &lt;param name=&quot;query&quot;&gt;The query.&lt;/param&gt;
-        /// &lt;param name=&quot;request&quot;&gt;The request.&lt;/param&gt;
-        /// &lt;param name=&quot;result&quot;&gt;The result.&lt;/param&gt;
+        /// &lt;param name=&quot;rawInput&quot;&gt;The raw input.&lt;/param&gt;
         /// &lt;param name=&quot;user&quot;&gt;The user.&lt;/param&gt;
-        /// &lt;param name=&quot;tagName&quot;&gt;Name of the tag.&lt;/param&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;node, query, request, user&lt;/exception&gt;
-        /// &lt;returns&gt;The tag handler.&lt;/returns&gt;
-        [CanBeNull]
-        public AimlTagHandler Build([NotNull] XmlNode node,
-                                    [NotNull] SubQuery query,
-                                    [NotNull] Request request,
-                                    Result result,
-                                    [NotNull] User user,
-                                    [CanBeNull] string tagName)
+        /// &lt;param name=&quot;chatEngine&quot;&gt;The chat engine.&lt;/param&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;
+        /// &lt;/exception&gt;
+        public Request([NotNull] string rawInput,
+                       [NotNull] User user,
+                       [NotNull] ChatEngine chatEngine)
+            : this(rawInput, user, chatEngine, null)
+        {
+        }
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the &lt;see cref=&quot;Request&quot; /&gt; class as a child of a prior Request
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;rawInput&quot;&gt;The raw input.&lt;/param&gt;
+        /// &lt;param name=&quot;user&quot;&gt;The user.&lt;/param&gt;
+        /// &lt;param name=&quot;chatEngine&quot;&gt;The chat engine.&lt;/param&gt;
+        /// &lt;param name=&quot;parent&quot;&gt;The parent.&lt;/param&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;
+        /// &lt;/exception&gt;
+        public Request([NotNull] string rawInput,
+                       [NotNull] User user,
+                       [NotNull] ChatEngine chatEngine,
+                       [CanBeNull] Request parent)
         {
             //- Validate
-            if (node == null)
+            if (rawInput == null)
             {
-                throw new ArgumentNullException(nameof(node));
-            }
-            if (query == null)
-            {
-                throw new ArgumentNullException(nameof(query));
-            }
-            if (request == null)
-            {
-                throw new ArgumentNullException(nameof(request));
+                throw new ArgumentNullException(nameof(rawInput));
             }
             if (user == null)
             {
                 throw new ArgumentNullException(nameof(user));
             }
-            if (tagName == null)
+            if (chatEngine == null)
             {
-                return null;
+                throw new ArgumentNullException(nameof(chatEngine));
             }
 
-            //- All construction will require these parameters so build them now
-            // TODO: Would thee be better suited for outside of this method and passed in as parameters?
-            var parameters = new TagHandlerParameters(_engine, user, query, request, result, node);
+            //- Set Properties
+            RawInput = rawInput;
+            User = user;
+            ChatEngine = chatEngine;
 
-            // Use dynamic invocation to create a TagHandler based on usage of the HandlesAimlTag attribute.
-            return BuildTagHandlerDynamic(tagName, parameters);
+            if (parent != null)
+            {
+                // Set up the parent / child hierarchy
+                Parent = parent;
+                parent.RegisterChild(this);
+
+                // Copy some additional properties from the parent
+                StartedOn = parent.StartedOn;
+                HasTimedOut = parent.HasTimedOut;
+            }
+            else
+            {
+                // Set the current start time as the StartedOn field
+                StartedOn = DateTime.Now;
+            }
         }
 
         /// &lt;summary&gt;
-        ///     Builds a tag handler using dynamic invocation and reflection relying on the HandlesAimlTag
-        ///     attribute.
+        ///     Gets the chat engine.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The chat engine.&lt;/value&gt;
+        [NotNull]
+        public ChatEngine ChatEngine { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets a value indicating whether this instance has timed out.
+        ///     Call CheckForTimeOut to update this.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;&lt;c&gt;true&lt;/c&gt; if this instance has timed out; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/value&gt;
+        public bool HasTimedOut { get; private set; }
+
+        /// &lt;summary&gt;
+        ///     Gets the raw input.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The raw input.&lt;/value&gt;
+        [NotNull]
+        public string RawInput { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the result of the request.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The result.&lt;/value&gt;
+        [CanBeNull]
+        public Result Result { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets when the request started.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The started on.&lt;/value&gt;
+        public DateTime StartedOn { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets the user associated with the request.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The user.&lt;/value&gt;
+        [NotNull]
+        public User User { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets the parent request, if any.
         /// &lt;/summary&gt;
         /// &lt;remarks&gt;
-        ///     This method is public for testability
+        ///     Requests can have parents if they were spawned by a prior Request
         /// &lt;/remarks&gt;
-        /// &lt;param name=&quot;tagName&quot;&gt;Name of the tag.&lt;/param&gt;
-        /// &lt;param name=&quot;parameters&quot;&gt;The construction parameters.&lt;/param&gt;
-        /// &lt;returns&gt;The tag handler.&lt;/returns&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;tagName&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;parameters&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        /// &lt;value&gt;The parent request.&lt;/value&gt;
         [CanBeNull]
-        public AimlTagHandler BuildTagHandlerDynamic([NotNull] string tagName,
-                                                     [NotNull] TagHandlerParameters parameters)
+        public Request Parent { get; private set; }
+
+        /// &lt;summary&gt;
+        ///     Gets the child request, if any.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     Requests can have children if they spawn an additional Request object
+        /// &lt;/remarks&gt;
+        /// &lt;value&gt;The child request.&lt;/value&gt;
+        [CanBeNull]
+        public Request Child
         {
-            if (parameters == null)
+            get { return _child; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Registers a child request.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;childRequest&quot;&gt;The child request.&lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;childRequest&lt;/exception&gt;
+        private void RegisterChild([NotNull] Request childRequest)
+        {
+            if (childRequest == null)
             {
-                throw new ArgumentNullException(nameof(parameters));
+                throw new ArgumentNullException(nameof(childRequest));
             }
-            if (tagName.IsEmpty())
+            _child = childRequest;
+        }
+
+        /// &lt;summary&gt;
+        ///     Checks to see if this has timed out and returns true if that has happened. This will also log
+        ///     if the request timed out and update HasTimedOut.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        /// If ChatEngine.Timeout is set to 0 or negative values, timeout will never occur
+        /// &lt;/remarks&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the request has timed out, &lt;c&gt;false&lt;/c&gt; otherwise.&lt;/returns&gt;
+        public bool CheckForTimedOut()
+        {
+            if (HasTimedOut)
             {
-                throw new ArgumentNullException(nameof(tagName));
+                return HasTimedOut;
             }
+            var timeLimit = ChatEngine.Timeout;
 
-            //- Ensure we have the requested tag. If we don&#39;t exit now.
-            var tagKey = tagName.ToUpperInvariant();
-            if (!_handlerMapping.ContainsKey(tagKey))
+            // Allow disabling timeout by setting it to &lt;= 0 values
+            if (!(timeLimit &gt; 0))
             {
-                return null;
-            }
-
-            //- Grab the type definition
-            var type = _handlerMapping[tagKey];
-            if (type == null)
-            {
-                return null;
-            }
-
-            string logMessage;
-
-            try
-            {
-                /* Execute dynamic activation using reflection. This assumes the needed constructor
-                   will be present on the type and, if not, a TargetInvocationException will be 
-                   thrown. */
-
-                var instance = Activator.CreateInstance(type, parameters);
-
-                // The result doesn&#39;t have to be an AimlTagHandler. Do a safe cast and check.
-                var handler = instance as AimlTagHandler;
-                if (handler != null)
-                {
-                    return handler;
-                }
-
-                //- The item is not of the right type. Prepare the log
-                logMessage =
-                    string.Format(_engine.Locale,
-                                  &quot;Dynamic tag handler for {0} instantiated an instance of type {1} that was not an AimlTagHandler. Disabling this handler.&quot;,
-                                  tagName,
-                                  type.FullName);
-
-            }
-            catch (TargetInvocationException ex)
-            {
-                //- Error handling for errors encountered during invocation
-                logMessage = string.Format(_engine.Locale,
-                                           &quot;Dynamic tag handler for {0} encountered an invocation error instantiating type {1}: {2}\n Disabling this handler.&quot;,
-                                           tagName,
-                                           type.FullName,
-                                           ex.Message);
-
-            }
-            catch (MissingMethodException ex)
-            {
-                //- This happens if the constructor wasn&#39;t found with the right parameters
-                logMessage = string.Format(_engine.Locale,
-                                           &quot;Dynamic tag handler for {0} encountered a missing method error instantiating type {1}: {2}\n Disabling this handler.&quot;,
-                                           tagName,
-                                           type.FullName,
-                                           ex.Message);
-
+                return HasTimedOut;
             }
 
-            // If we got here, it didn&#39;t work; unregister it.
-            _engine.Log(logMessage, LogLevel.Error);
-            _handlerMapping.Remove(tagKey);
+            // Calculate timeout based on start time and now
+            HasTimedOut = StartedOn.AddMilliseconds(timeLimit) &lt; DateTime.Now;
 
-            return null;
+            // Do appropriate logging on new timeouts
+            if (HasTimedOut)
+            {
+                var message = string.Format(ChatEngine.Locale,
+                                            Resources.RequestTimedOut.NonNull(),
+                                            User.Id,
+                                            RawInput);
+
+                ChatEngine.Log(message, LogLevel.Warning);
+            }
+
+            return HasTimedOut;
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[84,13,84,14,0],[85,17,85,67,0],[98,21,98,22,0],[99,25,99,34,0],[107,21,107,22,0],[108,25,108,34,0],[121,13,121,52,0],[122,13,122,14,0],[123,17,124,123,0],[125,17,125,64,0],[126,13,126,14,0],[127,13,127,49,0],[128,13,128,14,0],[129,17,130,119,0],[131,17,131,64,0],[132,13,132,14,0],[133,13,133,42,0],[134,13,134,14,0],[135,17,136,136,0],[137,17,137,64,0],[138,13,138,14,0],[163,13,163,14,0],[164,17,164,63,0],[167,13,167,14,0],[168,17,168,64,0],[171,13,171,14,0],[172,17,172,66,0],[175,13,175,14,0],[176,17,176,63,0],[179,13,179,14,0],[180,17,180,29,0],[226,13,226,14,0],[227,17,227,29,0],[248,17,252,50,0],[254,13,254,14,0],[255,13,255,49,0],[256,13,256,14,0],[258,17,262,56,0],[264,13,264,14,0],[265,13,265,46,0],[266,13,266,14,0],[268,17,272,56,0],[274,13,274,14,0],[277,13,277,53,0],[278,13,278,44,0],[280,13,280,25,0],[36,9,36,101,1],[42,9,42,62,1],[43,9,43,10,1],[45,13,45,32,1],[46,13,46,14,1],[47,17,47,65,1],[51,13,51,30,1],[54,13,54,46,1],[55,9,55,10,1],[62,9,62,10,1],[64,13,64,70,1],[67,13,67,20,1],[67,38,67,67,1],[67,83,67,84,1],[67,22,67,34,1],[68,13,68,14,1],[69,17,69,57,1],[70,13,70,14,1],[67,35,67,37,1],[71,9,71,10,1],[81,9,81,10,1],[83,13,83,34,1],[90,13,90,14,1],[91,17,91,102,1],[94,17,94,24,1],[94,38,94,43,1],[94,26,94,34,1],[95,17,95,18,1],[97,21,97,87,1],[103,21,105,49,1],[106,21,106,43,1],[112,21,112,67,1],[113,21,113,52,1],[114,21,114,22,1],[115,25,115,57,1],[116,21,116,22,1],[118,17,118,18,1],[94,35,94,37,1],[120,13,120,14,1],[140,9,140,10,1],[160,9,160,10,1],[162,13,162,30,1],[166,13,166,31,1],[170,13,170,33,1],[174,13,174,30,1],[178,13,178,33,1],[185,13,185,100,1],[188,13,188,64,1],[189,9,189,10,1],[206,9,206,10,1],[207,13,207,36,1],[208,13,208,14,1],[209,17,209,69,1],[211,13,211,35,1],[212,13,212,14,1],[213,17,213,66,1],[217,13,217,53,1],[218,13,218,54,1],[219,13,219,14,1],[220,17,220,29,1],[224,13,224,48,1],[225,13,225,30,1],[233,13,233,14,1],[238,17,238,75,1],[241,17,241,58,1],[242,17,242,37,1],[243,17,243,18,1],[244,21,244,36,1],[281,9,281,10,1],[67,67,67,83,1]]);
+      highlightRanges([[57,13,57,14,0],[58,17,58,67,0],[61,13,61,14,0],[62,17,62,63,0],[65,13,65,14,0],[66,17,66,69,0],[140,33,140,37,0],[163,13,163,14,0],[164,17,164,71,0],[180,13,180,14,0],[181,17,181,36,0],[192,13,192,79,0],[195,13,195,29,0],[196,13,196,14,0],[197,17,200,55,0],[202,17,202,59,0],[203,13,203,14,0],[205,13,205,32,0],[37,15,37,53,1],[38,9,38,10,1],[39,9,39,10,1],[50,9,53,51,1],[54,9,54,10,1],[56,13,56,34,1],[60,13,60,30,1],[64,13,64,36,1],[70,13,70,33,1],[71,13,71,25,1],[72,13,72,37,1],[74,13,74,32,1],[75,13,75,14,1],[77,17,77,33,1],[78,17,78,44,1],[81,17,81,46,1],[82,17,82,50,1],[83,13,83,14,1],[85,13,85,14,1],[87,17,87,42,1],[88,13,88,14,1],[89,9,89,10,1],[96,40,96,44,1],[103,35,103,39,1],[103,40,103,52,1],[110,34,110,38,1],[117,32,117,36,1],[117,37,117,41,1],[123,37,123,41,1],[130,28,130,32,1],[140,38,140,50,1],[152,17,152,18,1],[152,19,152,33,1],[152,34,152,35,1],[161,9,161,10,1],[162,13,162,38,1],[166,13,166,35,1],[167,9,167,10,1],[178,9,178,10,1],[179,13,179,29,1],[183,13,183,48,1],[186,13,186,34,1],[187,13,187,14,1],[188,17,188,36,1],[206,9,206,10,1]]);
     </script>
   </body>
 </html>

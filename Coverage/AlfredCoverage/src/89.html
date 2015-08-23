@@ -2,20 +2,22 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\taghandlers\outputtaghandler.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\taghandlers\starredirecttaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// OutputTagHandler.cs
+// sr.cs
 // 
-// Created on:      08/12/2015 at 10:57 PM
-// Last Modified:   08/15/2015 at 11:06 PM
+// Created on:      08/12/2015 at 10:54 PM
+// Last Modified:   08/12/2015 at 11:59 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
+
+using System.Xml;
 
 using JetBrains.Annotations;
 
@@ -26,85 +28,56 @@ using MattEland.Common;
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// &lt;summary&gt;
-    ///     An AIML tag handler that handles the &quot;that&quot; tag and refers to the nTh last thing the bot said
-    ///     to the user.
+    /// An AIML tag handler that handles the &quot;sr&quot; shortcut tag which is the equivalent of an srai to a star tag.
     /// &lt;/summary&gt;
-    [HandlesAimlTag(&quot;that&quot;)]
+    [HandlesAimlTag(&quot;sr&quot;)]
     [UsedImplicitly]
-    public class OutputTagHandler : AimlTagHandler
+    public class StarRedirectTagHandler : AimlTagHandler
     {
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
+        /// Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
-        public OutputTagHandler([NotNull] TagHandlerParameters parameters)
+        public StarRedirectTagHandler([NotNull] TagHandlerParameters parameters)
             : base(parameters)
         {
         }
 
         /// &lt;summary&gt;
-        ///     Processes the input text and returns the processed value.
+        /// Processes the input text and returns the processed value.
         /// &lt;/summary&gt;
         /// &lt;returns&gt;The processed output&lt;/returns&gt;
         protected override string ProcessChange()
         {
-            var element = TemplateElement;
-            if (element.Name.Matches(&quot;that&quot;))
+            if (!TemplateNode.Name.Matches(&quot;sr&quot;))
             {
-                // If we just said that, grab the first sentence of the first output.
-                if (element.Attributes.Count == 0)
-                {
-                    return User.GetOutputSentence();
-                }
+                return string.Empty;
+            }
 
-                if (element.HasAttribute(&quot;index&quot;))
-                {
-                    var indexText = element.GetAttribute(&quot;index&quot;);
+            // Execute a star operation
+            var star = BuildStarTagHandler();
+            var starResult = star.Transform();
 
-                    if (indexText.HasText())
-                    {
-                        //- Interpret what the user said
-                        var indiciesText = indexText.Split(&quot;,&quot;.ToCharArray());
+            // Execute a redirect to the result of the star operation
+            try
+            {
+                var node = BuildNode(string.Format(Locale, &quot;&lt;srai&gt;{0}&lt;/srai&gt;&quot;, starResult).NonNull());
+                var parameters = GetTagHandlerParametersForNode(node);
+                return new RedirectTagHandler(parameters).Transform();
 
-                        //- Grab the output index - the nth last interaction result with the chat engine
-                        int outputIndex = indiciesText[0].AsInt();
-
-                        //- Grab the sentence index referring to the sentence within the output - defaulting to 1 if not specified
-                        var sentenceIndex = 1;
-                        if (indiciesText.Length &gt;= 2)
-                        {
-                            sentenceIndex = indiciesText[1].AsInt();
-                        }
-
-                        // Return the thing the chat engine said at the specified point in time
-                        if (outputIndex &gt; 0 &amp; sentenceIndex &gt; 0)
-                        {
-                            return User.GetOutputSentence(outputIndex - 1, sentenceIndex - 1);
-                        }
-
-                        // If we got here we were invalid but did have some text. Log it.
-                        Log(
-                            string.Format(Locale,
-                                          &quot;An input tag with a badly formed index ({0}) was encountered processing the input: {1}&quot;,
-                                          indiciesText,
-                                          Request.RawInput),
-                            LogLevel.Error);
-
-                    }
-
-                }
-
+            }
+            catch (XmlException xmlEx)
+            {
+                Log(string.Format(Locale, Resources.SrTagHandlerError, xmlEx.Message), LogLevel.Error);
             }
 
             return string.Empty;
-
         }
     }
-
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[31,15,31,31,0],[32,9,32,10,0],[33,9,33,10,0],[40,9,40,10,0],[41,13,41,43,0],[42,13,42,46,0],[43,13,43,14,0],[45,17,45,51,0],[46,17,46,18,0],[47,21,47,53,0],[50,17,50,51,0],[51,17,51,18,0],[52,21,52,67,0],[54,21,54,45,0],[55,21,55,22,0],[57,25,57,79,0],[60,25,60,67,0],[63,25,63,47,0],[64,25,64,54,0],[65,25,65,26,0],[66,29,66,69,0],[67,25,67,26,0],[70,25,70,65,0],[71,25,71,26,0],[72,29,72,95,0],[76,25,81,45,0],[83,21,83,22,0],[85,17,85,18,0],[87,13,87,14,0],[89,13,89,33,0],[91,9,91,10,0]]);
+      highlightRanges([[32,15,32,31,0],[33,9,33,10,0],[34,9,34,10,0],[41,9,41,10,0],[42,13,42,50,0],[43,13,43,14,0],[44,17,44,37,0],[48,13,48,46,0],[49,13,49,47,0],[53,13,53,14,0],[54,17,54,103,0],[55,17,55,71,0],[56,17,56,71,0],[59,13,59,39,0],[60,13,60,14,0],[61,17,61,104,0],[62,13,62,14,0],[64,13,64,33,0],[65,9,65,10,0]]);
     </script>
   </body>
 </html>

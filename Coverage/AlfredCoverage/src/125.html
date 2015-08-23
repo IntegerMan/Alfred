@@ -2,87 +2,136 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.core.system\valuemetricprovider.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core.speech\alfredspeechconsole.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// ValueMetricProvider.cs
+// AlfredSpeechConsole.cs
 // 
-// Created on:      08/18/2015 at 1:50 PM
-// Last Modified:   08/18/2015 at 1:50 PM
-// 
-// Last Modified by: Matt Eland
+// Created on:      08/07/2015 at 2:49 PM
+// Last Modified:   08/07/2015 at 3:15 PM
+// Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 
 using JetBrains.Annotations;
 
-namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
+using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Common;
+
+namespace MattEland.Ani.Alfred.Core.Speech
 {
     /// &lt;summary&gt;
-    ///     A value-based metric provider that provides a value from its Value property when NextValue is
-    ///     called.
+    ///     A speech-enabled console implementation that notifies the user of significant events
     /// &lt;/summary&gt;
-    /// &lt;remarks&gt;
-    ///     This class is intended primarily for testing purposes.
-    /// &lt;/remarks&gt;
-    public sealed class ValueMetricProvider : MetricProviderBase
+    public sealed class AlfredSpeechConsole : IConsole, IDisposable
     {
+        [NotNull]
+        private readonly IConsole _console;
+
+        [NotNull]
+        private readonly AlfredSpeechProvider _speech;
+
+        [NotNull]
+        private readonly HashSet&lt;LogLevel&gt; _speechEnabledLogLevels;
 
         /// &lt;summary&gt;
-        /// Initializes a new instance of the &lt;see cref=&quot;ValueMetricProvider&quot; /&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredSpeechConsole&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;factory&quot;&gt;The factory.&lt;/param&gt;
-        /// &lt;param name=&quot;name&quot;&gt;The name of the metric.&lt;/param&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;factory&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        [SuppressMessage(&quot;ReSharper&quot;, &quot;CodeAnnotationAnalyzer&quot;)]
-        public ValueMetricProvider([NotNull] ValueMetricProviderFactory factory, string name) : base(name)
+        /// &lt;param name=&quot;console&quot;&gt;The console that events should be logged to.&lt;/param&gt;
+        public AlfredSpeechConsole([CanBeNull] IConsole console)
         {
-            if (factory == null)
+            // This class can decorate other consoles, but for an empty implementation it can rely on an internal collection
+            if (console == null)
             {
-                throw new ArgumentNullException(nameof(factory));
+                console = new SimpleConsole();
             }
 
-            Factory = factory;
+            _console = console;
+
+            // Tell it what log levels we care about
+            _speechEnabledLogLevels = new HashSet&lt;LogLevel&gt; { LogLevel.ChatResponse, LogLevel.Warning, LogLevel.Error };
+
+            // Give the speech provider the existing console and not this console since it won&#39;t be online yet
+            _speech = new AlfredSpeechProvider(console);
         }
 
         /// &lt;summary&gt;
-        /// Gets or sets the value provider factory.
+        ///     Gets the log levels that warrant the user&#39;s attention.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The factory.&lt;/value&gt;
+        /// &lt;value&gt;The log levels that warrant user attention.&lt;/value&gt;
         [NotNull]
-        public ValueMetricProviderFactory Factory { get; set; }
-
-        /// &lt;summary&gt;
-        ///     Gets or sets the value that will be provided the next time NextValue() is called.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The value.&lt;/value&gt;
-        public float? Value { get; set; }
-
-        /// &lt;summary&gt;
-        ///     Gets the next value from the metric provider
-        /// &lt;/summary&gt;
-        /// &lt;returns&gt;The next value&lt;/returns&gt;
-        public override float NextValue()
+        public HashSet&lt;LogLevel&gt; SpeechEnabledLogLevels
         {
-            if (Value.HasValue)
+            [DebuggerStepThrough]
+            get
+            { return _speechEnabledLogLevels; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the console events.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The console events.&lt;/value&gt;
+        public IEnumerable&lt;IConsoleEvent&gt; Events
+        {
+            [DebuggerStepThrough]
+            get
+            { return _console.Events; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Logs the specified message to the console.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;title&quot;&gt;The title.&lt;/param&gt;
+        /// &lt;param name=&quot;message&quot;&gt;The message.&lt;/param&gt;
+        /// &lt;param name=&quot;level&quot;&gt;The logging level.&lt;/param&gt;
+        public void Log(string title, string message, LogLevel level)
+        {
+            if (title == null)
             {
-                return Value.Value;
+                title = &quot;Unknown&quot;;
             }
 
-            return Factory.DefaultValue;
+            if (message == null)
+            {
+                return;
+            }
+
+            // Always log things to the base logger
+            _console.Log(title, message, level);
+
+            // If it&#39;s a significant message, tell the user via voice
+            if (_speechEnabledLogLevels.Contains(level))
+            {
+                // For more serious items, have Alfred say the status beforehand
+                if (level == LogLevel.Warning || level == LogLevel.Error)
+                {
+                    message = string.Format(CultureInfo.CurrentCulture, &quot;{0}: {1}&quot;, level, message);
+                }
+
+                _speech.Say(message.NonNull());
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// &lt;/summary&gt;
+        public void Dispose()
+        {
+            _speech.Dispose();
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[38,13,38,14,0],[39,17,39,66,0],[56,36,56,40,0],[65,13,65,14,0],[66,17,66,36,0],[35,97,35,107,1],[36,9,36,10,1],[37,13,37,33,1],[42,13,42,31,1],[43,9,43,10,1],[50,53,50,57,1],[50,58,50,62,1],[56,31,56,35,1],[63,9,63,10,1],[64,13,64,32,1],[69,13,69,41,1],[70,9,70,10,1]]);
+      highlightRanges([[43,13,43,14,0],[44,17,44,47,0],[45,13,45,14,0],[65,13,65,14,0],[65,15,65,46,0],[65,47,65,48,0],[76,13,76,14,0],[76,15,76,38,0],[76,39,76,40,0],[88,13,88,14,0],[89,17,89,35,0],[90,13,90,14,0],[93,13,93,14,0],[94,17,94,24,0],[102,13,102,14,0],[104,17,104,74,0],[105,17,105,18,0],[106,21,106,101,0],[107,17,107,18,0],[109,17,109,48,0],[110,13,110,14,0],[117,9,117,10,0],[118,13,118,31,0],[119,9,119,10,0],[39,9,39,65,1],[40,9,40,10,1],[42,13,42,33,1],[47,13,47,32,1],[50,13,50,121,1],[53,13,53,57,1],[54,9,54,10,1],[86,9,86,10,1],[87,13,87,31,1],[92,13,92,33,1],[98,13,98,49,1],[101,13,101,57,1],[111,9,111,10,1]]);
     </script>
   </body>
 </html>

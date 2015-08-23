@@ -2,103 +2,182 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.core.system\valuemetricproviderfactory.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core.speech\alfredspeechprovider.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// ValueMetricProviderFactory.cs
+// AlfredSpeechProvider.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   08/21/2015 at 5:33 PM
+// Last Modified:   08/22/2015 at 11:46 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
+using System.Globalization;
+using System.Speech.Synthesis;
 
 using JetBrains.Annotations;
 
-namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
+using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Common;
+
+namespace MattEland.Ani.Alfred.Core.Speech
 {
     /// &lt;summary&gt;
-    ///     A factory that builds ValueMetricProviders
+    ///     Provides speech synthesis and speech recognition capabilities to the Alfred framework.
+    ///     This class cannot be inherited.
     /// &lt;/summary&gt;
-    /// &lt;remarks&gt;
-    ///     This is primarily used for testing
-    /// &lt;/remarks&gt;
-    public class ValueMetricProviderFactory : IMetricProviderFactory
+    public sealed class AlfredSpeechProvider : IDisposable
     {
         /// &lt;summary&gt;
-        ///     Gets or sets the value to provide to ValueMetricProviders that don&#39;t have values of their own
-        ///     set.
+        ///     The log header used in speech related log entries
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The value.&lt;/value&gt;
-        public float DefaultValue { get; set; }
+        public const string LogHeader = &quot;Alfred.Speech&quot;;
+
+        [NotNull]
+        private readonly SpeechSynthesizer _speech;
 
         /// &lt;summary&gt;
-        ///     Gets the value providers.
+        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredSpeechProvider&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The value providers.&lt;/value&gt;
-        [NotNull]
-        [ItemNotNull]
-        [UsedImplicitly]
-        public ICollection&lt;ValueMetricProvider&gt; Providers { get; } = new List&lt;ValueMetricProvider&gt;();
-
-        /// &lt;summary&gt;
-        ///     Gets the category instance names dictionary. This dictionary allows test code to register
-        ///     expected responses for when GetCategoryInstanceNames is called.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The category instance names.&lt;/value&gt;
-        [NotNull]
-        public IDictionary&lt;string, IEnumerable&lt;string&gt;&gt; CategoryInstanceNames { get; } =
-            new Dictionary&lt;string, IEnumerable&lt;string&gt;&gt;();
-
-        /// &lt;summary&gt;
-        ///     Builds a metric provider for the specified type.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;categoryName&quot;&gt;Name of the category.&lt;/param&gt;
-        /// &lt;param name=&quot;counterName&quot;&gt;Name of the counter.&lt;/param&gt;
-        /// &lt;param name=&quot;instanceName&quot;&gt;Name of the instance.&lt;/param&gt;
-        /// &lt;returns&gt;A metric provider&lt;/returns&gt;
-        [NotNull]
-        public MetricProviderBase Build([NotNull] string categoryName,
-                                        [NotNull] string counterName,
-                                        [CanBeNull] string instanceName = null)
+        /// &lt;param name=&quot;console&quot;&gt;The console.&lt;/param&gt;
+        public AlfredSpeechProvider([CanBeNull] IConsole console)
         {
-            var provider = new ValueMetricProvider(this, instanceName ?? counterName);
+            _speech = new SpeechSynthesizer();
 
-            // Register the item in the list so it can be accessed during testing
-            Providers.Add(provider);
+            // Let&#39;s get verbose with the console
+            if (console != null)
+            {
+                console.Log(LogHeader,
+                            Resources.InitializingSpeechModule.NonNull(),
+                            LogLevel.Verbose);
 
-            return provider;
+                // Enumerate all detected voices for diagnostic purposes. This takes ~60ms.
+                LogInstalledVoices(console);
+            }
+
+            // We want Alfred to sound lik an English butler so request the closest thing we can find
+            var greatBritainCulture = new CultureInfo(&quot;en-GB&quot;);
+            _speech.SelectVoiceByHints(VoiceGender.Male, VoiceAge.Senior, 0, greatBritainCulture);
+
+            // Set to slightly faster than normal
+            _speech.Rate = 2;
+
+            // Everything else is just logging, so... get out of here
+            if (console == null)
+            {
+                return;
+            }
+
+            // Log what voice we&#39;re using
+            var voice = _speech.Voice;
+            if (voice != null)
+            {
+                var message = string.Format(CultureInfo.CurrentCulture,
+                                            Resources.UsingVoiceLog.NonNull(),
+                                            voice.Name);
+                console.Log(LogHeader,
+                            message.NonNull(),
+                            LogLevel.Verbose);
+            }
+            else
+            {
+                console.Log(LogHeader,
+                            Resources.UsingUnknownVoice.NonNull(),
+                            LogLevel.Warning);
+            }
         }
 
         /// &lt;summary&gt;
-        ///     Gets the names of each counter instance in a category.
+        ///     Disposes of all allocated resources
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;categoryName&quot;&gt;Name of the category.&lt;/param&gt;
-        /// &lt;returns&gt;A collection of counter instance names&lt;/returns&gt;
-        public IEnumerable&lt;string&gt; GetCategoryInstanceNames([NotNull] string categoryName)
+        public void Dispose()
         {
-            Contract.Requires&lt;ArgumentNullException&gt;(categoryName != null);
-            if (CategoryInstanceNames.ContainsKey(categoryName))
+            _speech.Dispose();
+        }
+
+        /// &lt;summary&gt;
+        ///     Logs detected voices to the console
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     This contains a call to get installed voices which is expensive and should not be performed in
+        ///     performance critical scenarios.
+        /// &lt;/remarks&gt;
+        /// &lt;param name=&quot;console&quot;&gt;The console.&lt;/param&gt;
+        private void LogInstalledVoices([NotNull] IConsole console)
+        {
+            if (console == null)
             {
-                return CategoryInstanceNames[categoryName];
+                throw new ArgumentNullException(nameof(console));
             }
 
-            // Fallback to an empty list
-            return new List&lt;string&gt;();
+            const LogLevel Level = LogLevel.Verbose;
+            console.Log(LogHeader, Resources.FindVoiceModules.NonNull(), Level);
+
+            // NOTE: This call is relatively expensive
+            var voices = _speech.GetInstalledVoices();
+
+            foreach (var voice in voices)
+            {
+                LogDetectedVoice(console, voice);
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Logs the detected voice&#39;s information to the console.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;console&quot;&gt;The console.&lt;/param&gt;
+        /// &lt;param name=&quot;voice&quot;&gt;The voice.&lt;/param&gt;
+        private static void LogDetectedVoice([NotNull] IConsole console,
+                                             [CanBeNull] InstalledVoice voice)
+        {
+            // We have a voice; log what we&#39;ve found
+            if (voice != null)
+            {
+                var info = voice.VoiceInfo;
+                if (info != null)
+                {
+                    var message = string.Format(CultureInfo.CurrentCulture,
+                                                Resources.VoiceFoundList.NonNull(),
+                                                info.Name,
+                                                info.Gender,
+                                                info.Culture?.EnglishName,
+                                                voice.Enabled);
+
+                    console.Log(LogHeader, message, LogLevel.Verbose);
+                }
+                else
+                {
+                    console.Log(LogHeader, Resources.UnknownVoiceFound.NonNull(), LogLevel.Warning);
+                }
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Says the specified phrase.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;phrase&quot;&gt;The phrase.&lt;/param&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;phrase&lt;/exception&gt;
+        public void Say([NotNull] string phrase)
+        {
+            if (phrase == null)
+            {
+                throw new ArgumentNullException(nameof(phrase));
+            }
+
+            // Actually speak things
+            _speech.SpeakAsync(phrase);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[29,37,29,41,1],[29,42,29,46,1],[38,61,38,65,1],[46,81,46,85,1],[60,9,60,10,1],[61,13,61,87,1],[64,13,64,37,1],[66,13,66,29,1],[67,9,67,10,1],[75,9,75,10,1],[76,13,76,65,1],[77,13,77,14,1],[78,17,78,60,1],[82,13,82,39,1],[83,9,83,10,1],[38,70,38,101,1],[47,13,47,58,1]]);
+      highlightRanges([[63,13,63,14,0],[64,17,64,24,0],[79,13,79,14,0],[80,17,82,47,0],[83,13,83,14,0],[90,9,90,10,0],[91,13,91,31,0],[92,9,92,10,0],[105,13,105,14,0],[106,17,106,66,0],[145,17,145,18,0],[146,21,146,101,0],[147,17,147,18,0],[157,9,157,10,0],[158,13,158,32,0],[159,13,159,14,0],[160,17,160,65,0],[164,13,164,40,0],[165,9,165,10,0],[39,9,39,66,1],[40,9,40,10,1],[41,13,41,47,1],[44,13,44,33,1],[45,13,45,14,1],[46,17,48,47,1],[51,17,51,45,1],[52,13,52,14,1],[55,13,55,64,1],[56,13,56,99,1],[59,13,59,30,1],[62,13,62,33,1],[68,13,68,39,1],[69,13,69,31,1],[70,13,70,14,1],[71,17,73,57,1],[74,17,76,47,1],[77,13,77,14,1],[84,9,84,10,1],[103,9,103,10,1],[104,13,104,33,1],[110,13,110,81,1],[113,13,113,55,1],[115,13,115,20,1],[115,35,115,41,1],[115,22,115,31,1],[116,13,116,14,1],[117,17,117,50,1],[118,13,118,14,1],[115,32,115,34,1],[119,9,119,10,1],[128,9,128,10,1],[130,13,130,31,1],[131,13,131,14,1],[132,17,132,44,1],[133,17,133,34,1],[134,17,134,18,1],[135,21,140,64,1],[142,21,142,71,1],[143,17,143,18,1],[148,13,148,14,1],[149,9,149,10,1]]);
     </script>
   </body>
 </html>

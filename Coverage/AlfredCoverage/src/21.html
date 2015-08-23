@@ -2,133 +2,65 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.core.tests\chat\taghandlerfactorytests.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core.tests\chat\alfredtesttaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// TagHandlerFactoryTests.cs
+// AlfredTestTagHandler.cs
 // 
-// Created on:      08/18/2015 at 3:59 PM
-// Last Modified:   08/18/2015 at 5:07 PM
+// Created on:      08/17/2015 at 11:36 PM
+// Last Modified:   08/17/2015 at 11:36 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
+
+using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
-
-using NUnit.Framework;
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 
 namespace MattEland.Ani.Alfred.Tests.Chat
 {
     /// &lt;summary&gt;
-    ///     A class to test &lt;see cref=&quot;TagHandlerFactory&quot; /&gt;.
+    /// A tag handler for testing. Not intended for actual product incorporation.
     /// &lt;/summary&gt;
-    [TestFixture]
-    [SuppressMessage(&quot;ReSharper&quot;, &quot;NotNullMemberIsNotInitialized&quot;)]
-    public class TagHandlerFactoryTests : ChatTestsBase
+    [HandlesAimlTag(&quot;alfredtest&quot;)]
+    public class AlfredTestTagHandler : AimlTagHandler
     {
+
         /// &lt;summary&gt;
-        ///     Sets up the test fixture for each test.
+        ///     Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
-        [SetUp]
-        public void SetUp()
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;parameters&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public AlfredTestTagHandler([NotNull] TagHandlerParameters parameters) : base(parameters)
         {
-            InitChatSystem();
         }
 
         /// &lt;summary&gt;
-        ///     When building dynamic and encountering a node that does have a mapping, return a new tag
-        ///     handler
+        ///     Processes the input text and returns the processed value.
         /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        ///     See AlF-29
-        /// &lt;/remarks&gt;
-        [Test]
-        public void BuildDynamicWithKnownTagReturnsNewHandler()
+        /// &lt;returns&gt;The processed output&lt;/returns&gt;
+        protected override string ProcessChange()
         {
-            var factory = new TagHandlerFactory(Engine);
-            var result = factory.BuildTagHandlerDynamic(&quot;srai&quot;,
-                                                        BuildTagHandlerParameters(
-                                                                                  &quot;&lt;srai&gt;Testing Rocks&lt;/srai&gt;&quot;));
-
-            Assert.IsNotNull(result);
-
-            var handler = (RedirectTagHandler)result;
-            Assert.AreEqual(&quot;Testing Rocks&quot;, handler.TemplateNode.InnerText);
+            WasInvoked = true;
+            return string.Empty;
         }
 
         /// &lt;summary&gt;
-        ///     Parameter validation for parameters
+        /// Gets or sets a value indicating whether the class&#39;s transform / process change method was called.
         /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        ///     See ALF-29
-        /// &lt;/remarks&gt;
-        [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
-        [SuppressMessage(&quot;ReSharper&quot;, &quot;AssignNullToNotNullAttribute&quot;)]
-        public void BuildDynamicWithNullParamsThrowsException()
-        {
-            var factory = new TagHandlerFactory(Engine);
-            factory.BuildTagHandlerDynamic(&quot;Foo&quot;, null);
-        }
-
-        /// &lt;summary&gt;
-        ///     Parameter validation for TagName
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        ///     See ALF-29
-        /// &lt;/remarks&gt;
-        [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
-        [SuppressMessage(&quot;ReSharper&quot;, &quot;AssignNullToNotNullAttribute&quot;)]
-        public void BuildDynamicWithNullTagThrowsException()
-        {
-            var factory = new TagHandlerFactory(Engine);
-            var parameters = BuildTagHandlerParameters(&quot;&lt;Foo /&gt;&quot;);
-            factory.BuildTagHandlerDynamic(null, parameters);
-        }
-
-        /// &lt;summary&gt;
-        ///     When building dynamic and encountering a node that doesn&#39;t have any mapping, return null
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        ///     See ALF-29
-        /// &lt;/remarks&gt;
-        [Test]
-        public void BuildDynamicWithUnknownTagReturnsNull()
-        {
-            var factory = new TagHandlerFactory(Engine);
-            var result = factory.BuildTagHandlerDynamic(&quot;Unknown&quot;,
-                                                        BuildTagHandlerParameters(&quot;&lt;unknown /&gt;&quot;));
-
-            Assert.IsNull(result);
-        }
-
-        /// &lt;summary&gt;
-        /// Tag handler factories must have a ChatEngine
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        /// See ALF-29
-        /// &lt;/remarks&gt;
-        [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
-        [SuppressMessage(&quot;ReSharper&quot;, &quot;AssignNullToNotNullAttribute&quot;)]
-        [SuppressMessage(&quot;ReSharper&quot;, &quot;ObjectCreationAsStatement&quot;)]
-        public void BuildFactoryWithNullEngineThrowsException()
-        {
-            new TagHandlerFactory(null);
-        }
+        /// &lt;value&gt;&lt;c&gt;true&lt;/c&gt; if it was invoked; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/value&gt;
+        public static bool WasInvoked { get; set; }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[68,9,68,10,0],[83,9,83,10,0],[112,9,112,10,0],[31,9,31,10,1],[32,13,32,30,1],[33,9,33,10,1],[44,9,44,10,1],[45,13,45,57,1],[46,13,48,114,1],[50,13,50,38,1],[52,13,52,54,1],[53,13,53,78,1],[54,9,54,10,1],[65,9,65,10,1],[66,13,66,57,1],[67,13,67,57,1],[79,9,79,10,1],[80,13,80,57,1],[81,13,81,67,1],[82,13,82,62,1],[93,9,93,10,1],[94,13,94,57,1],[95,13,96,99,1],[98,13,98,35,1],[99,9,99,10,1],[110,9,110,10,1],[111,13,111,55,1]]);
+      highlightRanges([[30,82,30,98,1],[31,9,31,10,1],[32,9,32,10,1],[39,9,39,10,1],[40,13,40,31,1],[41,13,41,33,1],[42,9,42,10,1],[48,41,48,45,1],[48,46,48,50,1]]);
     </script>
   </body>
 </html>

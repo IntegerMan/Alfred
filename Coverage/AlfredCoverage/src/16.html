@@ -2,62 +2,229 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.core.tests\mocks\testshell.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core.tests\mocks\testalfred.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// TestShell.cs
+// TestAlfred.cs
 // 
-// Created on:      08/19/2015 at 12:08 AM
-// Last Modified:   08/19/2015 at 12:08 AM
+// Created on:      08/17/2015 at 11:48 PM
+// Last Modified:   08/17/2015 at 11:54 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Linq;
+
+using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Common;
+using MattEland.Ani.Alfred.Core.SubSystems;
 
 namespace MattEland.Ani.Alfred.Tests.Mocks
 {
     /// &lt;summary&gt;
-    /// A fake user interface controller for testing
+    /// A mock implementation of Alfred for testing purposes
     /// &lt;/summary&gt;
-    public class TestShell : IShellCommandRecipient
+    public class TestAlfred : IAlfred
     {
+        [NotNull]
+        private readonly IConsole _console = new SimpleConsole();
+
+        [NotNull]
+        private readonly IPlatformProvider _platformProvider = new SimplePlatformProvider();
+        private IChatProvider _chatProvider;
+        private IShellCommandRecipient _shellCommandHandler;
+
+        [NotNull]
+        private readonly ICollection&lt;IAlfredPage&gt; _rootPages = new List&lt;IAlfredPage&gt;();
+
+        [NotNull]
+        public IList&lt;IAlfredSubsystem&gt; SubsystemsList { get; } = new List&lt;IAlfredSubsystem&gt;();
 
         /// &lt;summary&gt;
-        /// Processes a shell command by sending it on to the user interface layer.
+        ///     Gets the console provider. This can be null.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;command&quot;&gt;The command.&lt;/param&gt;
-        /// &lt;returns&gt;The redirect target or string.empty for no redirect.&lt;/returns&gt;
-        public string ProcessShellCommand(ShellCommand command)
+        /// &lt;value&gt;The console.&lt;/value&gt;
+        public IConsole Console
         {
-            if (command.Name.Matches(&quot;Nav&quot;))
-            {
-                if (command.Target.Matches(&quot;Pages&quot;))
-                {
-                    // We&#39;ll pretend it worked unless the data contained fail. Why not?
-                    if (!command.Data.ToUpperInvariant().Contains(&quot;FAIL&quot;))
-                    {
-                        return &quot;Navigate Success&quot;;
-                    }
-                }
+            get { return _console; }
+        }
 
-                // If we got here, its a navigate and it didn&#39;t succeed
-                return &quot;Navigate Failed&quot;;
+        /// &lt;summary&gt;
+        ///     Gets or sets the status.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The status.&lt;/value&gt;
+        public AlfredStatus Status { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Gets the sub systems associated wih Alfred.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The sub systems.&lt;/value&gt;
+        public IEnumerable&lt;IAlfredSubsystem&gt; Subsystems
+        {
+            get { return SubsystemsList; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the root pages.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The root pages.&lt;/value&gt;
+        public IEnumerable&lt;IAlfredPage&gt; RootPages
+        {
+            get { return _rootPages; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the name.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The name.&lt;/value&gt;
+        public string Name
+        {
+            get { return &quot;Test Alfred&quot;; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Initializes this instance.
+        /// &lt;/summary&gt;
+        public void Initialize()
+        {
+            Status = AlfredStatus.Initializing;
+
+            foreach (var subsystem in Subsystems)
+            {
+                subsystem.Initialize(this);
             }
 
-            // Default to string.empty
-            return string.Empty;
+            Status = AlfredStatus.Online;
+        }
+
+        /// &lt;summary&gt;
+        ///     Shutdowns this instance.
+        /// &lt;/summary&gt;
+        public void Shutdown()
+        {
+            Status = AlfredStatus.Terminating;
+
+            foreach (var subsystem in Subsystems)
+            {
+                subsystem.Shutdown();
+            }
+
+            Status = AlfredStatus.Offline;
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets a value indicating whether this instance is online.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;&lt;c&gt;true&lt;/c&gt; if this instance is online; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/value&gt;
+        public bool IsOnline
+        {
+            get { return Status == AlfredStatus.Online; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the chat provider.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The chat provider.&lt;/value&gt;
+        public IChatProvider ChatProvider
+        {
+            get { return _chatProvider; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the platform provider.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The platform provider.&lt;/value&gt;
+        public IPlatformProvider PlatformProvider
+        {
+            get { return _platformProvider; }
+        }
+
+        /// &lt;summary&gt;
+        /// Registers the page as a root page.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;page&quot;&gt;The page.&lt;/param&gt;
+        public void Register(IAlfredPage page)
+        {
+            _rootPages.Add(page);
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the shell command handler that can pass shell commands on to the user interface.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The shell command handler.&lt;/value&gt;
+        public IShellCommandRecipient ShellCommandHandler
+        {
+            get { return _shellCommandHandler; }
+        }
+
+        /// &lt;summary&gt;
+        /// Registers the shell command recipient that will allow the shell to get commands from the Alfred layer.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;shell&quot;&gt;The command recipient.&lt;/param&gt;
+        public void Register(IShellCommandRecipient shell)
+        {
+            _shellCommandHandler = shell;
+        }
+
+        /// &lt;summary&gt;
+        ///     Registers the user statement handler as the framework&#39;s user statement handler.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;chatProvider&quot;&gt;The user statement handler.&lt;/param&gt;
+        public void Register(IChatProvider chatProvider)
+        {
+            _chatProvider = chatProvider;
+        }
+
+        /// &lt;summary&gt;
+        ///     Registers a sub system with Alfred.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;subsystem&quot;&gt;The subsystem.&lt;/param&gt;
+        public void Register(AlfredSubsystem subsystem)
+        {
+            SubsystemsList.Add(subsystem);
+        }
+
+        /// &lt;summary&gt;
+        ///     Tells modules to take a look at their content and update as needed.
+        /// &lt;/summary&gt;
+        public void Update()
+        {
+            foreach (var subsystem in Subsystems)
+            {
+                subsystem.Update();
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Handles a chat command.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;command&quot;&gt;The command.&lt;/param&gt;
+        public void HandleChatCommand(ChatCommand command)
+        {
+            LastCommand = command;
+        }
+
+        /// &lt;summary&gt;
+        /// Gets or sets the last command received.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The last command.&lt;/value&gt;
+        public ChatCommand LastCommand
+        {
+            get; set;
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[44,13,44,33,0],[27,9,27,10,1],[28,13,28,45,1],[29,13,29,14,1],[30,17,30,53,1],[31,17,31,18,1],[33,21,33,75,1],[34,21,34,22,1],[35,25,35,51,1],[37,17,37,18,1],[40,17,40,42,1],[45,9,45,10,1]]);
+      highlightRanges([[201,9,201,10,0],[202,13,202,35,0],[203,9,203,10,0],[39,57,39,61,1],[47,17,47,18,1],[47,19,47,35,1],[47,36,47,37,1],[54,38,54,42,1],[54,43,54,47,1],[62,17,62,18,1],[62,19,62,41,1],[62,42,62,43,1],[71,17,71,18,1],[71,19,71,37,1],[71,38,71,39,1],[80,17,80,18,1],[80,19,80,40,1],[80,41,80,42,1],[87,9,87,10,1],[88,13,88,48,1],[90,13,90,20,1],[90,39,90,49,1],[90,22,90,35,1],[91,13,91,14,1],[92,17,92,44,1],[93,13,93,14,1],[90,36,90,38,1],[95,13,95,42,1],[96,9,96,10,1],[102,9,102,10,1],[103,13,103,47,1],[105,13,105,20,1],[105,39,105,49,1],[105,22,105,35,1],[106,13,106,14,1],[107,17,107,38,1],[108,13,108,14,1],[105,36,105,38,1],[110,13,110,43,1],[111,9,111,10,1],[119,17,119,18,1],[119,19,119,56,1],[119,57,119,58,1],[128,17,128,18,1],[128,19,128,40,1],[128,41,128,42,1],[137,17,137,18,1],[137,19,137,44,1],[137,45,137,46,1],[145,9,145,10,1],[146,13,146,34,1],[147,9,147,10,1],[155,17,155,18,1],[155,19,155,47,1],[155,48,155,49,1],[163,9,163,10,1],[164,13,164,42,1],[165,9,165,10,1],[172,9,172,10,1],[173,13,173,42,1],[174,9,174,10,1],[181,9,181,10,1],[182,13,182,43,1],[183,9,183,10,1],[189,9,189,10,1],[190,13,190,20,1],[190,39,190,49,1],[190,22,190,35,1],[191,13,191,14,1],[192,17,192,36,1],[193,13,193,14,1],[190,36,190,38,1],[194,9,194,10,1],[211,13,211,17,1],[211,18,211,22,1],[28,9,28,66,1],[31,9,31,93,1],[36,9,36,88,1],[39,66,39,94,1]]);
     </script>
   </body>
 </html>

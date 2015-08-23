@@ -2,144 +2,204 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.core.tests\chat\taghandlertests.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core.tests\mocks\testsubsystem.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// ChatCommandTests.cs
+// TestSubsystem.cs
 // 
-// Created on:      08/17/2015 at 9:56 PM
-// Last Modified:   08/18/2015 at 3:04 PM
-// 
-// Last Modified by: Matt Eland
+// Created on:      08/07/2015 at 11:07 PM
+// Last Modified:   08/08/2015 at 1:43 AM
+// Original author: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
-using System.Linq;
 
-using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
-using MattEland.Ani.Alfred.Chat.Aiml.Utils;
-using MattEland.Common;
+using JetBrains.Annotations;
 
-using NUnit.Framework;
+using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Core.Pages;
+using MattEland.Ani.Alfred.Core.SubSystems;
 
-namespace MattEland.Ani.Alfred.Tests.Chat
+namespace MattEland.Ani.Alfred.Tests.Mocks
 {
-    /// &lt;summary&gt;
-    ///     Tests for AimlTagHandlers of concern.
-    /// &lt;/summary&gt;
-    [TestFixture]
-    public class TagHandlerTests : ChatTestsBase
+    public class TestSubsystem : AlfredSubsystem
     {
-        /// &lt;summary&gt;
-        ///     Sets up the testing environment prior to each test run.
-        /// &lt;/summary&gt;
-        [SetUp]
-        public void SetUp()
-        {
-            InitChatSystem();
-        }
+        [NotNull, ItemNotNull]
+        private readonly ICollection&lt;AlfredPage&gt; _registerPages;
 
         /// &lt;summary&gt;
-        ///     Tests that random tags with no children return empty results.
+        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredSubsystem&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        ///     See ALF-29
-        /// &lt;/remarks&gt;
-        [Test]
-        public void RandomTagWithNoChildrenReturnsEmpty()
+        public TestSubsystem() : this(new SimplePlatformProvider())
         {
-            // Build a handler to test with
-            var handler = BuildTagHandler&lt;RandomTagHandler&gt;(&quot;random&quot;, &quot;&lt;random /&gt;&quot;);
-
-            // Ensure that the results are what we expect
-            var result = handler.Transform();
-            Assert.That(result.IsEmpty(), $&quot;Tag Handler result of &#39;{result}&#39; was not empty as expected.&quot;);
         }
 
         /// &lt;summary&gt;
-        ///     Tests that random tags with unexpected children return empty results.
+        /// Initializes a new instance of the &lt;see cref=&quot;TestSubsystem&quot;/&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        ///     See ALF-29
-        /// &lt;/remarks&gt;
-        [Test]
-        public void RandomTagWithWrongChildTypeReturnsEmpty()
+        /// &lt;param name=&quot;provider&quot;&gt;The provider.&lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;provider&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public TestSubsystem([NotNull] IPlatformProvider provider) : base(provider)
         {
-            // Build a handler to test with
-            var handler = BuildTagHandler&lt;RandomTagHandler&gt;(&quot;random&quot;, &quot;&lt;random&gt;&lt;b&gt;Dude&lt;/b&gt;&lt;b&gt;Bro&lt;/b&gt;&lt;/random&gt;&quot;);
+            if (provider == null)
+            {
+                throw new ArgumentNullException(nameof(provider));
+            }
 
-            // Ensure that the results are what we expect
-            var result = handler.Transform();
-            Assert.That(result.IsEmpty(), $&quot;Tag Handler result of &#39;{result}&#39; was not empty as expected.&quot;);
+            _registerPages = provider.CreateCollection&lt;AlfredPage&gt;();
         }
 
-        [Test]
-        public void TextSubstitutionHelperWithNullSettingsReturnsInput()
+        /// &lt;summary&gt;
+        ///     Gets the name of the subsystems.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The name.&lt;/value&gt;
+        public override string Name
         {
-            var input = &quot;foo&quot;;
-            var output = TextSubstitutionHelper.Substitute(null, input);
-
-            Assert.AreEqual(input, output);
+            get { return &quot;Test SubSystem&quot;; }
         }
 
-        [Test]
-        public void TextSubstitutionHelperWithNullInputReturnsEmpty()
+        /// &lt;summary&gt;
+        /// Registers the controls for this component.
+        /// &lt;/summary&gt;
+        protected override void RegisterControls()
         {
-            var output = TextSubstitutionHelper.Substitute(null, null);
-
-            Assert.IsNotNull(output);
-            Assert.That(output.IsEmpty());
+            // Live up to our promise and auto-register some pages
+            foreach (var page in _registerPages)
+            {
+                Register(page);
+            }
         }
 
-        [Test]
-        public void TextSubstitutionHelperSubstitutesText()
-        {
-            var subs = new SettingsManager();
-            subs.Add(&quot;Foo&quot;, &quot;Bar&quot;);
-            var output = TextSubstitutionHelper.Substitute(subs, &quot;Foo&quot;);
+        /// &lt;summary&gt;
+        ///     Gets or sets the last time this module was updated.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The last time the module was updated.&lt;/value&gt;
+        public DateTime LastUpdated { get; set; }
 
-            Assert.AreEqual(&quot;Bar&quot;, output);
+        public DateTime LastInitializationCompleted { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the last shutdown completed time.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The last shutdown completed time.&lt;/value&gt;
+        public DateTime LastShutdownCompleted { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the last shutdown time.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The last shutdown time.&lt;/value&gt;
+        public DateTime LastShutdown { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the last initialized time.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The last initialized time.&lt;/value&gt;
+        public DateTime LastInitialized { get; set; }
+
+        /// &lt;summary&gt;
+        ///     A notification method that is invoked when initialization for Alfred is complete so the UI can be fully enabled or
+        ///     adjusted
+        /// &lt;/summary&gt;
+        public override void OnInitializationCompleted()
+        {
+            LastInitializationCompleted = DateTime.Now;
+
+            base.OnInitializationCompleted();
         }
 
-        [Test]
-        public void TextSubstitutionHelperHandlesEmptyEntries()
+        /// &lt;summary&gt;
+        ///     A notification method that is invoked when shutdown for Alfred is complete so the UI can be fully enabled or
+        ///     adjusted
+        /// &lt;/summary&gt;
+        public override void OnShutdownCompleted()
         {
-            var subs = new SettingsManager();
-            subs.Add(&quot;Foo&quot;, &quot;Bar&quot;);
-            subs.Add(&quot;Frodo&quot;, null);
+            LastShutdownCompleted = DateTime.Now;
 
-            var input = &quot;Baggins&quot;;
-            var output = TextSubstitutionHelper.Substitute(subs, input);
-
-            Assert.AreEqual(input, output);
+            base.OnShutdownCompleted();
         }
 
-        [Test]
-        public void TextSubstitutionHelperHandlesNullInput()
+        /// &lt;summary&gt;
+        ///     Handles shutdown events
+        /// &lt;/summary&gt;
+        protected override void ShutdownProtected()
         {
-            var output = TextSubstitutionHelper.Substitute(null, &quot;Bubba&quot;, &quot;Gump&quot;);
+            LastShutdown = DateTime.Now;
 
-            Assert.IsNotNull(output);
-            Assert.That(output.IsEmpty());
+            base.ShutdownProtected();
         }
 
-        [Test]
-        public void TextSubstitutionHelperHandlesReplacement()
+        /// &lt;summary&gt;
+        ///     Handles initialization events
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;alfred&quot;&gt;&lt;/param&gt;
+        protected override void InitializeProtected(IAlfred alfred)
         {
-            var output = TextSubstitutionHelper.Substitute(&quot;Bubbark Shrimp ZeBubba Bubbazar Bubba Gump&quot;, &quot;Bubba&quot;, &quot;Gump&quot;);
+            LastInitialized = DateTime.Now;
 
-            Assert.AreEqual(&quot;Bubbark Shrimp ZeBubba Bubbazar Gump Gump&quot;, output);
+            base.InitializeProtected(alfred);
         }
 
+        /// &lt;summary&gt;
+        ///     Handles updating the component as needed
+        /// &lt;/summary&gt;
+        protected override void UpdateProtected()
+        {
+            LastUpdated = DateTime.Now;
+
+            base.UpdateProtected();
+        }
+
+        /// &lt;summary&gt;
+        /// Adds a page to be automatically registered on initialization
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;page&quot;&gt;The page.&lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;page&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public void AddAutoRegisterPage([NotNull] AlfredPage page)
+        {
+            if (page == null)
+            {
+                throw new ArgumentNullException(nameof(page));
+            }
+
+            _registerPages.Add(page);
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the identifier for the subsystem to be used in command routing.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The identifier for the subsystem.&lt;/value&gt;
+        public override string Id
+        {
+            get { return &quot;Test&quot;; }
+        }
+
+        /// &lt;summary&gt;
+        /// Processes an Alfred Command. If the command is handled, result should be modified accordingly and the method should return true. Returning false will not stop the message from being propogated.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;command&quot;&gt;The command.&lt;/param&gt;
+        /// &lt;param name=&quot;result&quot;&gt;The result. If the command was handled, this should be updated.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;True&lt;/c&gt; if the command was handled; otherwise false.&lt;/returns&gt;
+        public override bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
+        {
+            var al = AlfredInstance as TestAlfred;
+            if (al != null)
+            {
+                al.LastCommand = command;
+            }
+
+            return base.ProcessAlfredCommand(command, result);
+        }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[32,9,32,10,1],[33,13,33,30,1],[34,9,34,10,1],[44,9,44,10,1],[46,13,46,85,1],[49,13,49,46,1],[50,13,50,107,1],[51,9,51,10,1],[61,9,61,10,1],[63,13,63,113,1],[66,13,66,46,1],[67,13,67,107,1],[68,9,68,10,1],[72,9,72,10,1],[73,13,73,31,1],[74,13,74,73,1],[76,13,76,44,1],[77,9,77,10,1],[81,9,81,10,1],[82,13,82,72,1],[84,13,84,38,1],[85,13,85,43,1],[86,9,86,10,1],[90,9,90,10,1],[91,13,91,46,1],[92,13,92,36,1],[93,13,93,73,1],[95,13,95,44,1],[96,9,96,10,1],[100,9,100,10,1],[101,13,101,46,1],[102,13,102,36,1],[103,13,103,37,1],[105,13,105,35,1],[106,13,106,73,1],[108,13,108,44,1],[109,9,109,10,1],[113,9,113,10,1],[114,13,114,83,1],[116,13,116,38,1],[117,13,117,43,1],[118,9,118,10,1],[122,9,122,10,1],[123,13,123,123,1],[125,13,125,82,1],[126,9,126,10,1]]);
+      highlightRanges([[41,13,41,14,0],[42,17,42,67,0],[156,13,156,14,0],[157,17,157,63,0],[29,34,29,68,1],[30,9,30,10,1],[31,9,31,10,1],[38,70,38,84,1],[39,9,39,10,1],[40,13,40,34,1],[45,13,45,70,1],[46,9,46,10,1],[54,17,54,18,1],[54,19,54,43,1],[54,44,54,45,1],[61,9,61,10,1],[63,13,63,20,1],[63,34,63,48,1],[63,22,63,30,1],[64,13,64,14,1],[65,17,65,32,1],[66,13,66,14,1],[63,31,63,33,1],[67,9,67,10,1],[73,39,73,43,1],[73,44,73,48,1],[75,55,75,59,1],[75,60,75,64,1],[81,49,81,53,1],[81,54,81,58,1],[87,40,87,44,1],[87,45,87,49,1],[93,43,93,47,1],[93,48,93,52,1],[100,9,100,10,1],[101,13,101,56,1],[103,13,103,46,1],[104,9,104,10,1],[111,9,111,10,1],[112,13,112,50,1],[114,13,114,40,1],[115,9,115,10,1],[121,9,121,10,1],[122,13,122,41,1],[124,13,124,38,1],[125,9,125,10,1],[132,9,132,10,1],[133,13,133,44,1],[135,13,135,46,1],[136,9,136,10,1],[142,9,142,10,1],[143,13,143,40,1],[145,13,145,36,1],[146,9,146,10,1],[154,9,154,10,1],[155,13,155,30,1],[160,13,160,38,1],[161,9,161,10,1],[169,17,169,18,1],[169,19,169,33,1],[169,34,169,35,1],[179,9,179,10,1],[180,13,180,51,1],[181,13,181,28,1],[182,13,182,14,1],[183,17,183,42,1],[184,13,184,14,1],[186,13,186,63,1],[187,9,187,10,1]]);
     </script>
   </body>
 </html>

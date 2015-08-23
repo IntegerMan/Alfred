@@ -2,393 +2,497 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.aiml\aimlstatementhandler.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\utils\settingsmanager.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AimlStatementHandler.cs
+// SettingsManager.cs
 // 
-// Created on:      08/10/2015 at 12:51 AM
-// Last Modified:   08/18/2015 at 12:23 AM
+// Created on:      08/12/2015 at 10:28 PM
+// Last Modified:   08/17/2015 at 12:21 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.ComponentModel;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Security;
 using System.Xml;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Chat.Aiml;
 using MattEland.Ani.Alfred.Core.Console;
-using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
 
-namespace MattEland.Ani.Alfred.Chat
+namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 {
     /// &lt;summary&gt;
-    ///     Handles user statements by parsing the statement through an open source AIML engine
+    ///     A dictionary for holding setting values
     /// &lt;/summary&gt;
     /// &lt;remarks&gt;
-    ///     AIML stands for Artificial Intelligence Markup Language
+    ///     This is a lot of code that seems like it could be replaced with a standard dictionary.
+    /// 
+    ///     It&#39;s odd that it doesn&#39;t implement any IEnumerable or ICollection or IDictionary interfaces.
+    /// 
+    ///     The only unique thing about this dictionary is the upper / lowercase management and the ordered
+    ///     nature of the keys
+    /// 
+    ///     TODO: Clean up this class by using more built in mechanisms
     /// &lt;/remarks&gt;
-    public sealed class AimlStatementHandler : IChatProvider, INotifyPropertyChanged
+    public class SettingsManager
     {
-        [CanBeNull]
-        private readonly ChatEngine _chatEngine;
+        [NotNull]
+        [ItemNotNull]
+        private readonly List&lt;string&gt; _orderedKeys = new List&lt;string&gt;();
 
-        [CanBeNull]
-        private readonly User _user;
-
-        [CanBeNull]
-        private IConsole _console;
-
-        [CanBeNull]
-        private string _input;
-
-        private UserStatementResponse _response;
+        [NotNull]
+        private readonly Dictionary&lt;string, string&gt; _settingsHash = new Dictionary&lt;string, string&gt;();
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;T:System.Object&quot; /&gt; class using the current
-        ///     directory for the settings path.
+        ///     Gets the number of keys in the keys collection.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;console&quot;&gt;The console.&lt;/param&gt;
-        public AimlStatementHandler([CanBeNull] IConsole console = null)
+        /// &lt;value&gt;The keys.&lt;/value&gt;
+        public int Count
         {
-            //- Logging Housekeeping
-            _console = console;
+            get { return _orderedKeys.Count; }
+        }
 
-            //+ Set up the chat engine
+        /// &lt;summary&gt;
+        ///     Gets an XML representation of this dictionary.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;An XML representation of this dictionary&lt;/value&gt;
+        /// &lt;remarks&gt;TODO: This would be nice to either remove or make use XElement / XDocument&lt;/remarks&gt;
+        [NotNull]
+        public XmlDocument ToXml
+        {
+            get
+            {
+                // Create a document to put everything into
+                var xmlDocument = new XmlDocument();
+
+                //- Add a header to the document
+                var xmlDeclaration = xmlDocument.CreateXmlDeclaration(&quot;1.0&quot;, &quot;UTF-8&quot;, &quot;&quot;);
+                xmlDocument.AppendChild(xmlDeclaration);
+
+                // Add a base node for holding entries
+                var root = xmlDocument.CreateNode(XmlNodeType.Element, &quot;root&quot;, &quot;&quot;);
+                xmlDocument.AppendChild(root);
+
+                // Loop through each child and add it to the dictionary
+                foreach (var index in _orderedKeys)
+                {
+                    // Build a node for the child
+                    var childNode = xmlDocument.CreateNode(XmlNodeType.Element, &quot;item&quot;, &quot;&quot;);
+                    Debug.Assert(childNode.Attributes != null);
+
+                    // Give it a name
+                    var nameAttribute = xmlDocument.CreateAttribute(&quot;name&quot;);
+                    nameAttribute.Value = index;
+                    childNode.Attributes.Append(nameAttribute);
+
+                    // Give it a value
+                    var valueAttribute = xmlDocument.CreateAttribute(&quot;value&quot;);
+                    valueAttribute.Value = _settingsHash[index];
+                    childNode.Attributes.Append(valueAttribute);
+
+                    // Add it to the document
+                    root.AppendChild(childNode);
+                }
+
+                // Send back the document
+                return xmlDocument;
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the setting names as an array.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The setting names.&lt;/value&gt;
+        /// &lt;remarks&gt;TODO: I&#39;d love to remove this or use IEnumerable instead&lt;/remarks&gt;
+        [NotNull, ItemNotNull]
+        public IEnumerable&lt;string&gt; Keys
+        {
+            get
+            {
+                var array = new string[_orderedKeys.Count];
+                _orderedKeys.CopyTo(array, 0);
+                return array;
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Clears current values and loads values into the dictionary from a settings file at the
+        ///     specified path.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;pathToSettings&quot;&gt;The path to the settings file.&lt;/param&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        /// &lt;exception cref=&quot;XmlException&quot;&gt;&lt;/exception&gt;
+        /// &lt;exception cref=&quot;System.ArgumentException&quot;&gt;pathToSettings did not have a value&lt;/exception&gt;
+        /// &lt;exception cref=&quot;System.IO.FileNotFoundException&quot;&gt;Could not find a settings file at the given path&lt;/exception&gt;
+        /// &lt;exception cref=&quot;SecurityException&quot;&gt;The caller does not have the required permission. &lt;/exception&gt;
+        /// &lt;exception cref=&quot;UnauthorizedAccessException&quot;&gt;
+        ///     Access to &lt;paramref name=&quot;pathToSettings&quot; /&gt; is
+        ///     denied.
+        /// &lt;/exception&gt;
+        /// &lt;exception cref=&quot;DirectoryNotFoundException&quot;&gt;
+        ///     The specified path is invalid (for example, it is on
+        ///     an unmapped drive).
+        /// &lt;/exception&gt;
+        /// &lt;exception cref=&quot;IOException&quot;&gt;An I/O error occurred while opening the file. &lt;/exception&gt;
+        public void Load([NotNull] string pathToSettings)
+        {
+            if (pathToSettings == null)
+            {
+                throw new ArgumentNullException(nameof(pathToSettings));
+            }
+            if (string.IsNullOrWhiteSpace(pathToSettings))
+            {
+                throw new ArgumentException(Resources.SettingsLoadErrorNoPathToSettings,
+                                            nameof(pathToSettings));
+            }
+
+            // Verify the settings file exists
+            if (!new FileInfo(pathToSettings).Exists)
+            {
+                throw new FileNotFoundException(Resources.SettingsLoadErrorFileNotFoundException,
+                                                pathToSettings);
+            }
+
+            // Build out an XML document from the path
+            var document = new XmlDocument();
+            document.Load(pathToSettings);
+
+            Load(document);
+        }
+
+        /// &lt;summary&gt;
+        ///     Clears current settings and loads settings from the document.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;document&quot;&gt;The settings as XML.&lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;document&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public void Load([NotNull] XmlDocument document)
+        {
+            if (document == null)
+            {
+                throw new ArgumentNullException(nameof(document));
+            }
+
+            Clear();
+
+            var childNodes = document.DocumentElement?.ChildNodes;
+            if (childNodes == null)
+            {
+                return;
+            }
+
+            // Grab values from the child nodes
+            foreach (XmlNode xmlNode in childNodes)
+            {
+
+                //- Sanity Check
+                var attributes = xmlNode?.Attributes;
+                if (attributes == null || attributes.Count &lt; 2)
+                {
+                    continue;
+                }
+
+                // Grab the name and value and add a node for these values
+                if (xmlNode.Name == &quot;item&quot; &amp; attributes.Count == 2 &amp;&amp;
+                    attributes[0]?.Name == &quot;name&quot; &amp;&amp; attributes[1]?.Name == &quot;value&quot;)
+                {
+                    var name = attributes[&quot;name&quot;]?.Value;
+                    var value = attributes[&quot;value&quot;]?.Value;
+
+                    if (!string.IsNullOrEmpty(name))
+                    {
+                        Add(name, value);
+                    }
+                }
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Adds an entry with the specified name and value
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;name&quot;&gt;The name.&lt;/param&gt;
+        /// &lt;param name=&quot;value&quot;&gt;The value.&lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;name&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public void Add([NotNull] string name, [CanBeNull] string value)
+        {
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (string.IsNullOrEmpty(name))
+            {
+                return;
+            }
+
+            name = name.ToUpperInvariant();
+            Remove(name);
+
+            _orderedKeys.Add(name);
+            _settingsHash.Add(name, value);
+        }
+
+        /// &lt;summary&gt;
+        ///     Removes an entry with the specified name
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;name&quot;&gt;The name.&lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;name&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public void Remove([NotNull] string name)
+        {
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            name = name.ToUpperInvariant();
+
+            _orderedKeys.Remove(name);
+
+            RemoveFromHash(name);
+        }
+
+        /// &lt;summary&gt;
+        ///     Removes the name entry from the settings dictionary.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;name&quot;&gt;The name.&lt;/param&gt;
+        private void RemoveFromHash([NotNull] string name)
+        {
+            _settingsHash.Remove(name.ToUpperInvariant());
+        }
+
+        /// &lt;summary&gt;
+        ///     Updates the entry under name with the specified value.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;name&quot;&gt;The name.&lt;/param&gt;
+        /// &lt;param name=&quot;value&quot;&gt;The value.&lt;/param&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        public void Update([NotNull] string name, [CanBeNull] string value)
+        {
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            name = name.ToUpperInvariant();
+
+            if (!Contains(name))
+            {
+                //? This seems like it should throw an exception or delegate to Add
+                return;
+            }
+
+            // Remove it from the list so that when we add it again it&#39;ll be at the end
+            RemoveFromHash(name);
+
+            // Do a simple add
+            _settingsHash.Add(name, value);
+        }
+
+        /// &lt;summary&gt;
+        ///     Clears the dictionary.
+        /// &lt;/summary&gt;
+        public void Clear()
+        {
+            _orderedKeys.Clear();
+            _settingsHash.Clear();
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the value under the specified name or string.Empty if no entry was found.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;name&quot;&gt;The name of the key.&lt;/param&gt;
+        /// &lt;returns&gt;The value in the dictionary&lt;/returns&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        public string GetValue([NotNull] string name)
+        {
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            name = name.ToUpperInvariant();
+
+            return Contains(name) ? _settingsHash[name] : string.Empty;
+        }
+
+        /// &lt;summary&gt;
+        ///     Determines whether this dictionary contains an entry under the given name
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;name&quot;&gt;The name.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if there is an entry for name; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        public bool Contains([NotNull] string name)
+        {
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            return _orderedKeys.Contains(name.ToUpperInvariant());
+        }
+
+        /// &lt;summary&gt;
+        ///     Copies the settings in this dictionary into the target dictionary.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;target&quot;&gt;The target dictionary.&lt;/param&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        public void CopyInto([NotNull] SettingsManager target)
+        {
+            if (target == null)
+            {
+                throw new ArgumentNullException(nameof(target));
+            }
+
+            foreach (var name in _orderedKeys)
+            {
+                target.Add(name, GetValue(name));
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Loads files from the specified settings path and logs any encountered errors to the logger.
+        ///     This method will not throw exceptions due to failures while loading the dictionary.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;pathToSettings&quot;&gt;The path to settings.&lt;/param&gt;
+        /// &lt;param name=&quot;logger&quot;&gt;The logger.&lt;/param&gt;
+        /// &lt;param name=&quot;locale&quot;&gt;The locale.&lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;pathToSettings, locale&lt;/exception&gt;
+        public void LoadSafe([NotNull] string pathToSettings,
+                             [CanBeNull] IConsole logger,
+                             [NotNull] CultureInfo locale)
+        {
+            //- Validate
+            if (pathToSettings == null)
+            {
+                throw new ArgumentNullException(nameof(pathToSettings));
+            }
+            if (locale == null)
+            {
+                throw new ArgumentNullException(nameof(locale));
+            }
+
+            // Farm out the load to the load method, but handle all expected exceptions by logging.
+            const string LogHeader = &quot;LoadSettings&quot;;
             try
             {
-                _chatEngine = new ChatEngine(console);
-                _user = new User(Resources.ChatUserName.NonNull());
-                InitializeChatEngine();
+                Load(pathToSettings);
             }
-            catch (IOException ex)
+            catch (XmlException ex)
             {
-                LogErrorInitializingChat(ex);
+                logger?.Log(LogHeader,
+                            string.Format(locale,
+                                          Resources.SettingsLoadErrorXml.NonNull(),
+                                          pathToSettings,
+                                          ex.Message),
+                            LogLevel.Error);
+            }
+            catch (FileNotFoundException)
+            {
+                logger?.Log(LogHeader,
+                            string.Format(locale,
+                                          Resources.SettingsLoadErrorFileNotFound.NonNull(),
+                                          pathToSettings),
+                            LogLevel.Error);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                logger?.Log(LogHeader,
+                            string.Format(locale,
+                                          Resources.SettingsLoadErrorUnauthorized.NonNull(),
+                                          pathToSettings,
+                                          ex.Message),
+                            LogLevel.Error);
             }
             catch (SecurityException ex)
             {
-                LogErrorInitializingChat(ex);
+                logger?.Log(LogHeader,
+                            string.Format(locale,
+                                          Resources.SettignsLoadErrorSecurity.NonNull(),
+                                          pathToSettings,
+                                          ex.Message),
+                            LogLevel.Error);
             }
-
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets or sets the console.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The console.&lt;/value&gt;
-        [CanBeNull]
-        public IConsole Console
-        {
-            [DebuggerStepThrough]
-            [UsedImplicitly]
-            get
+            catch (IOException ex)
             {
-                return _console;
-            }
-            [DebuggerStepThrough]
-            set
-            {
-                if (Equals(value, _console))
-                {
-                    return;
-                }
-
-                _console = value;
-                OnPropertyChanged();
+                logger?.Log(LogHeader,
+                            string.Format(locale,
+                                          Resources.SettingsLoadErrorIOException.NonNull(),
+                                          pathToSettings,
+                                          ex.Message),
+                            LogLevel.Error);
             }
         }
 
         /// &lt;summary&gt;
-        ///     Gets the chat engine.
+        /// Loads settings values from an XML source and logs any exceptions encountered without rethrowing
+        /// them.
         /// &lt;/summary&gt;
-        /// &lt;remarks&gt;This is present largely for testing&lt;/remarks&gt;
-        /// &lt;value&gt;The chat engine.&lt;/value&gt;
-        [CanBeNull]
-        public ChatEngine ChatEngine
-        {
-            get { return _chatEngine; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles a user statement.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;userInput&quot;&gt;The user input.&lt;/param&gt;
-        /// &lt;returns&gt;The response to the user statement&lt;/returns&gt;
-        /// &lt;exception cref=&quot;InvalidOperationException&quot;&gt;
-        ///     Cannot use the chat system when chat did not initialize
-        ///     properly
-        /// &lt;/exception&gt;
-        public UserStatementResponse HandleUserStatement(string userInput)
-        {
-            if (_chatEngine == null || _user == null)
-            {
-                throw new InvalidOperationException(Resources.AimlStatementHandlerChatOffline);
-            }
-
-            //- Log the input to the diagnostic log.
-            Console?.Log(Resources.ChatInputHeader, userInput, LogLevel.UserInput);
-
-            // Give our input to the chat ChatEngine
-            var result = GetChatResult(userInput);
-
-            //- If it&#39;s a catastrophic failure, return a blankish object
-            if (result == null)
-            {
-                return new UserStatementResponse(userInput,
-                                                 Resources.DefaultFailureResponseText,
-                                                 string.Empty,
-                                                 ChatCommand.Empty);
-            }
-
-            // Get the template out of the response so we can see if there are any OOB instructions
-            var template = GetResponseTemplate(result);
-
-            // Interpret the response 
-            var output = result.Output;
-            if (!string.IsNullOrWhiteSpace(output))
-            {
-                Console?.Log(Resources.ChatOutputHeader, output, LogLevel.ChatResponse);
-            }
-
-            //- Log the output to the diagnostic log. Sometimes - for redirect commands / etc. there&#39;s no response
-            if (!string.IsNullOrWhiteSpace(template))
-            {
-                Console?.Log(Resources.ChatOutputHeader,
-                             string.Format(CultureInfo.CurrentCulture,
-                                           &quot;Using Template: {0}&quot;,
-                                           template),
-                             LogLevel.Verbose);
-            }
-
-            //- Update query properties and return the result
-            var response = new UserStatementResponse(userInput, output, template, ChatCommand.Empty);
-            LastResponse = response;
-            LastInput = userInput;
-
-            return response;
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the last response from the system.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The last response.&lt;/value&gt;
-        [CanBeNull]
-        public UserStatementResponse LastResponse
-        {
-            get { return _response; }
-            private set
-            {
-                if (Equals(value, _response))
-                {
-                    return;
-                }
-                _response = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the last input from the user.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The last input.&lt;/value&gt;
-        [CanBeNull]
-        public string LastInput
-        {
-            get { return _input; }
-            private set
-            {
-                if (value == _input)
-                {
-                    return;
-                }
-                _input = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// &lt;summary&gt;
-        ///     Performs an initial greeting by sending hi to the conversation system
-        ///     and erasing it from the last input so the user sees Alfred greeting them.
-        /// &lt;/summary&gt;
-        public void DoInitialGreeting()
-        {
-            // Send a &quot;hi&quot; into the system
-            HandleUserStatement(Resources.InitialGreetingText.NonNull());
-
-            // Clear out the input so it doesn&#39;t look like the user typed it
-            LastInput = string.Empty;
-        }
-
-        /// &lt;summary&gt;
-        ///     Occurs when a property changes.
-        /// &lt;/summary&gt;
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// &lt;summary&gt;
-        ///     Updates the owner of the chat engine. Setting the owner allows Alfred Commands to reach Alfred
-        ///     from the chat engine.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;owner&quot;&gt;The owner.&lt;/param&gt;
-        public void UpdateOwner(IAlfredCommandRecipient owner)
-        {
-            if (_chatEngine != null)
-            {
-                _chatEngine.Owner = owner;
-            }
-        }
-
-        /// &lt;summary&gt;
-        ///     Logs an error encountered initializing chat.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;ex&quot;&gt;The ex.&lt;/param&gt;
-        private void LogErrorInitializingChat([CanBeNull] Exception ex)
-        {
-            var errorFormat = Resources.ErrorInitializingChat;
-            var message = string.Format(CultureInfo.CurrentCulture, errorFormat, ex?.Message);
-            _console?.Log(Resources.ChatProcessingHeader, message, LogLevel.Error);
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the chat result.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;userInput&quot;&gt;The user input.&lt;/param&gt;
-        /// &lt;returns&gt;The result of the communication to the chat ChatEngine&lt;/returns&gt;
-        [CanBeNull]
-        private Result GetChatResult([NotNull] string userInput)
-        {
-            if (_chatEngine == null || _user == null)
-            {
-                throw new InvalidOperationException(Resources.AimlStatementHandlerChatOffline);
-            }
-
-            var result = _chatEngine.Chat(userInput, _user);
-
-            return result;
-        }
-
-        /// &lt;summary&gt;
-        ///     Sets up the chat engine
-        /// &lt;/summary&gt;
-        private void InitializeChatEngine()
-        {
-            if (_chatEngine == null || _user == null)
-            {
-                throw new InvalidOperationException(Resources.AimlStatementHandlerChatOffline);
-            }
-
-            _chatEngine.LoadSettingsFromXml(Resources.ChatBotSettings,
-                                            Resources.ChatBotPersonSubstitutions,
-                                            Resources.ChatBotPerson2Substitutions,
-                                            Resources.ChatBotGenderSubstitutions,
-                                            Resources.ChatBotSubstitutions);
-
-            AddApplicationAimlResourcesToChatEngine(_chatEngine);
-        }
-
-        /// &lt;summary&gt;
-        ///     Adds Alfred application AIML resources to the chat engine from the internal resource files.
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        ///     This method is public and static so that it can be easily accessed by testing libraries.
-        /// &lt;/remarks&gt;
-        /// &lt;param name=&quot;engine&quot;&gt;The chat engine.&lt;/param&gt;
+        /// &lt;param name=&quot;xml&quot;&gt;The XML. This is the actual XML and not a file path.&lt;/param&gt;
+        /// &lt;param name=&quot;logger&quot;&gt;The logger.&lt;/param&gt;
+        /// &lt;param name=&quot;locale&quot;&gt;The locale.&lt;/param&gt;
         /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;
-        ///     &lt;paramref name=&quot;engine&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.
+        ///   &lt;paramref name=&quot;xml&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public void LoadXmlSafe([NotNull] string xml,
+                                [CanBeNull] IConsole logger,
+                                [CanBeNull] CultureInfo locale)
+        {
+            if (xml == null)
+            {
+                throw new ArgumentNullException(nameof(xml));
+            }
+            try
+            {
+                LoadXml(xml);
+            }
+            catch (XmlException ex)
+            {
+                locale = locale ?? CultureInfo.CurrentCulture;
+                logger?.Log(&quot;LoadSettingsXml&quot;,
+                            string.Format(locale,
+                                          Resources.LoadSettingsXmlXmlException.NonNull(),
+                                          ex.Message),
+                            LogLevel.Error);
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///     Loads settings values from an XML source.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;xml&quot;&gt;The XML. This is the actual XML and not a file path.&lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;
+        ///     &lt;paramref name=&quot;xml&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.
         /// &lt;/exception&gt;
         /// &lt;exception cref=&quot;XmlException&quot;&gt;
-        ///     There is a load or parse error in the XML. In this case, a
-        ///     &lt;see cref=&quot;T:System.IO.FileNotFoundException&quot; /&gt; is raised.
+        ///     There is a load or parse error in the XML. In this case, the
+        ///     document remains empty.
         /// &lt;/exception&gt;
-        [SuppressMessage(&quot;ReSharper&quot;, &quot;AssignNullToNotNullAttribute&quot;)]
-        public static void AddApplicationAimlResourcesToChatEngine([NotNull] ChatEngine engine)
+        public void LoadXml([NotNull] string xml)
         {
-            if (engine == null)
+            if (xml == null)
             {
-                throw new ArgumentNullException(nameof(engine));
+                throw new ArgumentNullException(nameof(xml));
             }
 
-            // TODO: Each assembly should provide their own set of resources
+            var document = new XmlDocument();
+            document.LoadXml(xml);
 
-            engine.LoadAimlFromString(Resources.AimlCoreDateTime);
-            engine.LoadAimlFromString(Resources.AimlCorePower);
-            engine.LoadAimlFromString(Resources.AimlFallback);
-            engine.LoadAimlFromString(Resources.AimlGod);
-            engine.LoadAimlFromString(Resources.AimlGreeting);
-            engine.LoadAimlFromString(Resources.AimlThanks);
-            engine.LoadAimlFromString(Resources.AimlHelp);
-            engine.LoadAimlFromString(Resources.AimlShellNavigation);
-            engine.LoadAimlFromString(Resources.AimlSysStatus);
-        }
-
-        /// &lt;summary&gt;
-        ///     Called when a property changes.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;propertyName&quot;&gt;Name of the property.&lt;/param&gt;
-        [SuppressMessage(&quot;Microsoft.Design&quot;, &quot;CA1026:DefaultParametersShouldNotBeUsed&quot;,
-            Justification =
-                &quot;Using CallerMemberName to auto-default this value from any property caller&quot;)]
-        [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the response template from the last request spawned in the AIML chat message result.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;result&quot;&gt;The result of a chat message to the AIML interpreter.&lt;/param&gt;
-        /// &lt;returns&gt;The response template&lt;/returns&gt;
-        /// &lt;remarks&gt;
-        ///     Result is not CLSCompliant so this method should not be made public
-        /// &lt;/remarks&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;result&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        [CanBeNull]
-        private static string GetResponseTemplate([NotNull] Result result)
-        {
-            if (result == null)
-            {
-                throw new ArgumentNullException(nameof(result));
-            }
-
-            // We want the last template as the other templates have redirected to it
-            var template = string.Empty;
-            var request = result.Request;
-            while (request != null)
-            {
-                // Grab the template used for this request
-                var query = request.Result?.SubQueries.FirstOrDefault();
-                if (query != null)
-                {
-                    template = query.Template;
-                }
-
-                // If it has an inner request, we&#39;ll use that for next iteration, otherwise we&#39;re done.
-                request = request.Child;
-            }
-
-            return template;
+            Load(document);
         }
     }
-
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[69,13,69,35,0],[70,13,70,14,0],[71,17,71,46,0],[72,13,72,14,0],[73,13,73,41,0],[74,13,74,14,0],[75,17,75,46,0],[76,13,76,14,0],[101,17,101,34,0],[102,17,102,37,0],[129,13,129,14,0],[130,17,130,96,0],[141,13,141,14,0],[142,17,145,69,0],[183,17,183,18,0],[183,19,183,36,0],[183,37,183,38,0],[187,17,187,18,0],[188,21,188,28,0],[206,17,206,18,0],[207,21,207,28,0],[250,9,250,10,0],[251,13,251,63,0],[252,13,252,95,0],[253,13,253,84,0],[254,9,254,10,0],[265,13,265,14,0],[266,17,266,96,0],[280,13,280,14,0],[281,17,281,96,0],[311,13,311,14,0],[312,17,312,65,0],[354,13,354,14,0],[355,17,355,65,0],[57,9,57,73,1],[58,9,58,10,1],[60,13,60,32,1],[64,13,64,14,1],[65,17,65,55,1],[66,17,66,68,1],[67,17,67,40,1],[68,13,68,14,1],[78,9,78,10,1],[90,13,90,14,1],[91,17,91,33,1],[92,13,92,14,1],[95,13,95,14,1],[96,17,96,45,1],[97,17,97,18,1],[98,21,98,28,1],[103,13,103,14,1],[114,17,114,18,1],[114,19,114,38,1],[114,39,114,40,1],[127,9,127,10,1],[128,13,128,54,1],[134,13,134,84,1],[137,13,137,51,1],[140,13,140,32,1],[149,13,149,56,1],[152,13,152,40,1],[153,13,153,52,1],[154,13,154,14,1],[155,17,155,89,1],[156,13,156,14,1],[159,13,159,54,1],[160,13,160,14,1],[161,17,165,48,1],[166,13,166,14,1],[169,13,169,102,1],[170,13,170,37,1],[171,13,171,35,1],[173,13,173,29,1],[174,9,174,10,1],[185,13,185,14,1],[186,17,186,46,1],[190,17,190,35,1],[191,17,191,37,1],[192,13,192,14,1],[202,17,202,18,1],[202,19,202,33,1],[202,34,202,35,1],[204,13,204,14,1],[205,17,205,37,1],[209,17,209,32,1],[210,17,210,37,1],[211,13,211,14,1],[219,9,219,10,1],[221,13,221,74,1],[224,13,224,38,1],[225,9,225,10,1],[238,9,238,10,1],[239,13,239,37,1],[240,13,240,14,1],[241,17,241,43,1],[242,13,242,14,1],[243,9,243,10,1],[263,9,263,10,1],[264,13,264,54,1],[269,13,269,61,1],[271,13,271,27,1],[272,9,272,10,1],[278,9,278,10,1],[279,13,279,54,1],[284,13,288,77,1],[290,13,290,66,1],[291,9,291,10,1],[309,9,309,10,1],[310,13,310,32,1],[317,13,317,67,1],[318,13,318,64,1],[319,13,319,63,1],[320,13,320,58,1],[321,13,321,63,1],[322,13,322,61,1],[323,13,323,59,1],[324,13,324,70,1],[325,13,325,64,1],[326,9,326,10,1],[337,9,337,10,1],[338,13,338,87,1],[339,9,339,10,1],[352,9,352,10,1],[353,13,353,32,1],[359,13,359,41,1],[360,13,360,42,1],[362,13,362,14,1],[364,17,364,73,1],[365,17,365,35,1],[366,17,366,18,1],[367,21,367,47,1],[368,17,368,18,1],[371,17,371,41,1],[372,13,372,14,1],[361,13,361,36,1],[374,13,374,29,1],[375,9,375,10,1]]);
+      highlightRanges([[65,13,65,14,0],[67,17,67,53,0],[70,17,70,91,0],[71,17,71,57,0],[74,17,74,84,0],[75,17,75,47,0],[78,17,78,24,0],[78,39,78,51,0],[78,26,78,35,0],[79,17,79,18,0],[81,21,81,93,0],[82,21,82,64,0],[85,21,85,77,0],[86,21,86,49,0],[87,21,87,64,0],[90,21,90,79,0],[91,21,91,65,0],[92,21,92,65,0],[95,21,95,49,0],[96,17,96,18,0],[78,36,78,38,0],[99,17,99,36,0],[100,13,100,14,0],[139,9,139,10,0],[140,13,140,40,0],[141,13,141,14,0],[142,17,142,73,0],[144,13,144,59,0],[145,13,145,14,0],[146,17,147,69,0],[151,13,151,54,0],[152,13,152,14,0],[153,17,154,65,0],[158,13,158,46,0],[159,13,159,43,0],[161,13,161,28,0],[162,9,162,10,0],[172,13,172,14,0],[173,17,173,67,0],[180,13,180,14,0],[181,17,181,24,0],[191,17,191,18,0],[192,21,192,30,0],[219,13,219,14,0],[220,17,220,63,0],[224,13,224,14,0],[225,17,225,24,0],[243,13,243,14,0],[244,17,244,63,0],[270,9,270,10,0],[271,13,271,30,0],[272,13,272,14,0],[273,17,273,63,0],[276,13,276,44,0],[278,13,278,33,0],[279,13,279,14,0],[281,17,281,24,0],[285,13,285,34,0],[288,13,288,44,0],[289,9,289,10,0],[309,13,309,14,0],[310,17,310,63,0],[327,13,327,14,0],[328,17,328,63,0],[340,9,340,10,0],[341,13,341,32,0],[342,13,342,14,0],[343,17,343,65,0],[346,13,346,20,0],[346,34,346,46,0],[346,22,346,30,0],[347,13,347,14,0],[348,17,348,50,0],[349,13,349,14,0],[346,31,346,33,0],[350,9,350,10,0],[363,9,363,10,0],[365,13,365,40,0],[366,13,366,14,0],[367,17,367,73,0],[369,13,369,32,0],[370,13,370,14,0],[371,17,371,65,0],[377,13,377,14,0],[378,17,378,38,0],[379,13,379,14,0],[380,13,380,36,0],[381,13,381,14,0],[382,17,387,45,0],[388,13,388,14,0],[389,13,389,42,0],[390,13,390,14,0],[391,17,395,45,0],[396,13,396,14,0],[397,13,397,51,0],[398,13,398,14,0],[399,17,404,45,0],[405,13,405,14,0],[406,13,406,41,0],[407,13,407,14,0],[408,17,413,45,0],[414,13,414,14,0],[415,13,415,35,0],[416,13,416,14,0],[417,17,422,45,0],[423,13,423,14,0],[424,9,424,10,0],[440,13,440,14,0],[441,17,441,62,0],[447,13,447,36,0],[448,13,448,14,0],[449,17,449,63,0],[450,17,454,45,0],[455,13,455,14,0],[472,13,472,14,0],[473,17,473,62,0],[53,17,53,18,1],[53,19,53,45,1],[53,46,53,47,1],[112,13,112,14,1],[113,17,113,60,1],[114,17,114,47,1],[115,17,115,30,1],[116,13,116,14,1],[170,9,170,10,1],[171,13,171,34,1],[176,13,176,21,1],[178,13,178,67,1],[179,13,179,36,1],[185,13,185,20,1],[185,41,185,51,1],[185,22,185,37,1],[186,13,186,14,1],[189,17,189,54,1],[190,17,190,64,1],[196,17,197,85,1],[198,17,198,18,1],[199,21,199,58,1],[200,21,200,60,1],[202,21,202,53,1],[203,21,203,22,1],[204,25,204,42,1],[205,21,205,22,1],[206,17,206,18,1],[207,13,207,14,1],[185,38,185,40,1],[208,9,208,10,1],[217,9,217,10,1],[218,13,218,30,1],[223,13,223,44,1],[228,13,228,44,1],[229,13,229,26,1],[231,13,231,36,1],[232,13,232,44,1],[233,9,233,10,1],[241,9,241,10,1],[242,13,242,30,1],[247,13,247,44,1],[249,13,249,39,1],[251,13,251,34,1],[252,9,252,10,1],[259,9,259,10,1],[260,13,260,59,1],[261,9,261,10,1],[295,9,295,10,1],[296,13,296,34,1],[297,13,297,35,1],[298,9,298,10,1],[307,9,307,10,1],[308,13,308,30,1],[313,13,313,44,1],[315,13,315,72,1],[316,9,316,10,1],[325,9,325,10,1],[326,13,326,30,1],[331,13,331,67,1],[332,9,332,10,1],[438,9,438,10,1],[439,13,439,29,1],[444,13,444,14,1],[445,17,445,30,1],[446,13,446,14,1],[456,9,456,10,1],[470,9,470,10,1],[471,13,471,29,1],[476,13,476,46,1],[477,13,477,35,1],[479,13,479,28,1],[480,9,480,10,1],[42,9,42,73,1],[45,9,45,102,1]]);
     </script>
   </body>
 </html>

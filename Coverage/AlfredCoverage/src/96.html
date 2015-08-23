@@ -2,67 +2,61 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\utils\sanitizingtexttransformer.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\taghandlers\uppercasetaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// SanitizingTextTransformer.cs
+// uppercase.cs
 // 
-// Created on:      08/13/2015 at 10:31 PM
-// Last Modified:   08/16/2015 at 1:02 AM
+// Created on:      08/12/2015 at 11:00 PM
+// Last Modified:   08/12/2015 at 11:59 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System.Text.RegularExpressions;
-
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Common;
 
-namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
+namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// &lt;summary&gt;
-    ///     A text transformer to remove illegal characters.
+    /// A tag handler for the AIML &quot;uppercase&quot; tag. This outputs its text in upper case.
     /// &lt;/summary&gt;
-    public class SanitizingTextTransformer : TextTransformer
+    [HandlesAimlTag(&quot;uppercase&quot;)]
+    public class UppercaseTagHandler : AimlTagHandler
     {
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;TextTransformer&quot; /&gt; class.
+        /// Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;chatEngine&quot;&gt;The ChatEngine.&lt;/param&gt;
-        public SanitizingTextTransformer([NotNull] ChatEngine chatEngine)
-            : base(chatEngine)
+        /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
+        public UppercaseTagHandler([NotNull] TagHandlerParameters parameters)
+            : base(parameters)
         {
-            StripperRegexPattern = @&quot;[^0-9a-zA-Z_]&quot;;
         }
 
         /// &lt;summary&gt;
-        ///     Gets or sets the illegal character stripper regex pattern.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The stripper regex pattern.&lt;/value&gt;
-        [NotNull]
-        public string StripperRegexPattern { get; }
-
-        /// &lt;summary&gt;
-        ///     Processes the input text and returns the processed value.
+        /// Processes the input text and returns the processed value.
         /// &lt;/summary&gt;
         /// &lt;returns&gt;The processed output&lt;/returns&gt;
         protected override string ProcessChange()
         {
-            // Removes illegal characters and replaces them with spaces
-            var regex = new Regex(StripperRegexPattern, RegexOptions.IgnorePatternWhitespace);
+            if (TemplateNode.Name.Matches(&quot;uppercase&quot;))
+            {
+                return TemplateNode.InnerText.ToUpper(Locale);
+            }
 
-            return regex.Replace(InputString.NonNull(), &quot; &quot;);
+            return string.Empty;
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[28,15,28,31,1],[29,9,29,10,1],[30,13,30,53,1],[31,9,31,10,1],[38,46,38,50,1],[45,9,45,10,1],[47,13,47,95,1],[49,13,49,62,1],[50,9,50,10,1]]);
+      highlightRanges([[28,15,28,31,0],[29,9,29,10,0],[30,9,30,10,0],[37,9,37,10,0],[38,13,38,56,0],[39,13,39,14,0],[40,17,40,63,0],[43,13,43,33,0],[44,9,44,10,0]]);
     </script>
   </body>
 </html>

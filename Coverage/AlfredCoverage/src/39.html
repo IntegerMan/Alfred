@@ -2,41 +2,51 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.core\widgets\warningwidget.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core\widgets\textwidget.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// TextWidget.cs
+// 
+// Created on:      07/28/2015 at 12:18 PM
+// Last Modified:   08/04/2015 at 3:03 PM
+// Original author: Matt Eland
+// ---------------------------------------------------------
+
 using JetBrains.Annotations;
 
 namespace MattEland.Ani.Alfred.Core.Widgets
 {
     /// &lt;summary&gt;
-    /// A widget used for displaying warnings or errors to the user.
+    ///     Represents a simple textual display on the user interface.
     /// &lt;/summary&gt;
-    public sealed class WarningWidget : AlfredTextWidget
+    public sealed class TextWidget : AlfredTextWidget
     {
+
         /// &lt;summary&gt;
-        /// Initializes a new instance of the &lt;see cref=&quot;WarningWidget&quot;/&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;TextWidget&quot; /&gt; class.
         /// &lt;/summary&gt;
-        public WarningWidget() : this(null)
+        public TextWidget() : this(null)
         {
         }
 
         /// &lt;summary&gt;
-        /// Initializes a new instance of the &lt;see cref=&quot;WarningWidget&quot;/&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;TextWidget&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;text&quot;&gt;The text.&lt;/param&gt;
-        public WarningWidget([CanBeNull] string text)
+        /// &lt;param name=&quot;text&quot;&gt;The text for the widget.&lt;/param&gt;
+        public TextWidget([CanBeNull] string text)
         {
             Text = text;
         }
+
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[13,34,13,44,1],[14,9,14,10,1],[15,9,15,10,1],[21,9,21,54,1],[22,9,22,10,1],[23,13,23,25,1],[24,9,24,10,1]]);
+      highlightRanges([[22,31,22,41,1],[23,9,23,10,1],[24,9,24,10,1],[30,9,30,51,1],[31,9,31,10,1],[32,13,32,25,1],[33,9,33,10,1]]);
     </script>
   </body>
 </html>

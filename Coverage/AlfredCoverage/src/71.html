@@ -2,17 +2,17 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\taghandlers\gendertaghandler.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\taghandlers\thatstartaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// GenderTagHandler.cs
+// ThatStarTagHandler.cs
 // 
-// Created on:      08/12/2015 at 10:45 PM
-// Last Modified:   08/14/2015 at 6:14 PM
+// Created on:      08/12/2015 at 10:58 PM
+// Last Modified:   08/15/2015 at 11:54 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -20,24 +20,24 @@
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// &lt;summary&gt;
-    ///     A tag handler for the AIML &quot;gender&quot; tag that subsitutes gender pronouns for their equivalent
-    ///     value in the chat engine&#39;s GenderSubstitutions
-    /// 
-    ///     See &quot;http://www.alicebot.org/TR/2005/WD-aiml/#section-gender&quot; for more on the gender tag.
+    ///     A tag handler responsible for handling AIML &quot;thatstar&quot; tags. This returns items in the query&#39;s
+    ///     ThatStar list depending on the specified index (defaults to the first one). The thatstar is
+    ///     used to referred to * items inside the &quot;that&quot; tag.
     /// &lt;/summary&gt;
-    [HandlesAimlTag(&quot;gender&quot;)]
-    public class GenderTagHandler : AimlTagHandler
+    [HandlesAimlTag(&quot;thatstar&quot;)]
+    public class ThatStarTagHandler : AimlTagHandler
     {
         /// &lt;summary&gt;
         ///     Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
-        public GenderTagHandler([NotNull] TagHandlerParameters parameters)
+        public ThatStarTagHandler([NotNull] TagHandlerParameters parameters)
             : base(parameters)
         {
         }
@@ -48,39 +48,52 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// &lt;returns&gt;The processed output&lt;/returns&gt;
         protected override string ProcessChange()
         {
-            /* Note: this tag handler uses recursion to recursively iterate through 
-            InnerText and find text that can be evaluated using substitution */
+            var element = TemplateElement;
 
-            //- Ensure this is the correct tag
-            if (TemplateNode.Name.Matches(&quot;gender&quot;))
+            //- Early exit if it&#39;s not what this should be handling
+            if (!element.Name.Matches(&quot;thatstar&quot;))
             {
                 return string.Empty;
             }
 
-            // If we have text inside the gender tag, just transform and return that
-            if (TemplateNode.InnerText.HasText())
+            // Handle case of no items in 
+            if (Query.ThatStar.Count &lt;= 0)
             {
-                /* Substitute occurrences of gender words with other values. This typically 
-                   inverts the gender on gender pronouns (&quot;he&quot; / &quot;she&quot; / etc.) */
+                Log(string.Format(Locale,
+                                  &quot;Encountered a thatstar query with no items in Query.ThatStar on request: {0}&quot;,
+                                  Request.RawInput),
+                    LogLevel.Error);
 
-                var substitutions = Librarian.GenderSubstitutions;
-                return TextSubstitutionHelper.Substitute(substitutions,
-                                                              TemplateNode.InnerText);
+                return string.Empty;
             }
 
-            // Apply an AIML &quot;star&quot; tag and store the results as our inner text
-            var star = BuildStarTagHandler();
-            TemplateNode.InnerText = star.Transform().NonNull();
+            // If there&#39;s no index, just return the first one
+            if (!element.HasAttribute(&quot;index&quot;))
+            {
+                return Query.ThatStar[0].NonNull();
+            }
 
-            //! If we still have text, we&#39;ll need to use recursion to evaluate our new value
-            return TemplateNode.InnerText.HasText() ? ProcessChange() : string.Empty;
+            // With an index, return the elemernt at the specified index.
+            var index = element.GetAttribute(&quot;index&quot;).AsInt();
+            if (index &gt; 0)
+            {
+                return Query.ThatStar[index - 1].NonNull();
+            }
+
+            // Nice one, AIML author; looks like a 0 or negative index was specified. Log it and return.
+            Log(string.Format(Locale,
+                              &quot;An input tag with a badly formed index ({0}) was encountered processing the input: {1}&quot;,
+                              element.GetAttribute(&quot;index&quot;),
+                              Request.RawInput),
+                LogLevel.Error);
+
+            return string.Empty;
         }
-
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[31,15,31,31,0],[32,9,32,10,0],[33,9,33,10,0],[40,9,40,10,0],[45,13,45,53,0],[46,13,46,14,0],[47,17,47,37,0],[51,13,51,50,0],[52,13,52,14,0],[56,17,56,67,0],[57,17,58,87,0],[62,13,62,46,0],[63,13,63,65,0],[66,13,66,86,0],[67,9,67,10,0]]);
+      highlightRanges([[31,15,31,31,0],[32,9,32,10,0],[33,9,33,10,0],[40,9,40,10,0],[41,13,41,43,0],[44,13,44,51,0],[45,13,45,14,0],[46,17,46,37,0],[50,13,50,43,0],[51,13,51,14,0],[52,17,55,37,0],[57,17,57,37,0],[61,13,61,48,0],[62,13,62,14,0],[63,17,63,52,0],[67,13,67,63,0],[68,13,68,27,0],[69,13,69,14,0],[70,17,70,60,0],[74,13,78,33,0],[80,13,80,33,0],[81,9,81,10,0]]);
     </script>
   </body>
 </html>

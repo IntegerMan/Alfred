@@ -2,92 +2,74 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\taghandlers\startaghandler.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\taghandlers\settaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// StarTagHandler.cs
+// set.cs
 // 
-// Created on:      08/12/2015 at 10:56 PM
-// Last Modified:   08/15/2015 at 11:35 PM
+// Created on:      08/12/2015 at 10:53 PM
+// Last Modified:   08/15/2015 at 1:16 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System.Collections.Generic;
-
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
-using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// &lt;summary&gt;
-    ///     An AIML tag handler that handles the &quot;star&quot; tag by returning the refernced item in the
-    ///     InputStar collection for the query. This is a way of referencing the rest of a
-    ///     sentence after handling part of the input.
+    /// A tag handler for handling the AIML &quot;set&quot; tag managing user variables.
     /// &lt;/summary&gt;
-    [HandlesAimlTag(&quot;star&quot;)]
-    public class StarTagHandler : AimlTagHandler
+    [HandlesAimlTag(&quot;set&quot;)]
+    public class SetTagHandler : AimlTagHandler
     {
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
+        /// Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
-        public StarTagHandler([NotNull] TagHandlerParameters parameters)
+        public SetTagHandler([NotNull] TagHandlerParameters parameters)
             : base(parameters)
         {
         }
 
         /// &lt;summary&gt;
-        ///     Processes the input text and returns the processed value.
+        /// Processes the input text and returns the processed value.
         /// &lt;/summary&gt;
         /// &lt;returns&gt;The processed output&lt;/returns&gt;
         protected override string ProcessChange()
         {
+            //- Validate conditions
             var element = TemplateElement;
-            if (element.Name.Matches(&quot;star&quot;))
+            if (!element.Name.Matches(&quot;set&quot;) || (!element.HasAttribute(&quot;name&quot;)))
             {
-                // Grab whatever * refers to in this particular query
-                var inputStar = Query.InputStar;
-
-                // If there&#39;s nothing in inputStar, log it and move on
-                if (inputStar.Count &lt;= 0)
-                {
-                    Log(string.Format(Locale,
-                                      Resources.StarErrorNoInputStarElements,
-                                      Request.RawInput),
-                        LogLevel.Error);
-
-                    return string.Empty;
-                }
-
-                // If they don&#39;t specify anything just get last value
-                if (!element.HasAttribute(&quot;index&quot;))
-                {
-                    return inputStar[0].NonNull();
-                }
-
-                // Grab the index as an integer
-                var indexText = element.GetAttribute(&quot;index&quot;);
-                var index = indexText.AsInt(-1) - 1;
-
-                // Bounds check followed by fetching the star value,
-                if (index &gt;= 0 &amp; index &lt; inputStar.Count)
-                {
-                    return inputStar[index].NonNull();
-                }
-
-                Log(string.Format(Locale,
-                                  Resources.StarErrorBadIndex,
-                                  Request.RawInput),
-                    LogLevel.Error);
+                return string.Empty;
             }
+
+            // Get the settng we&#39;re working with
+            var settingName = element.GetAttribute(&quot;name&quot;);
+            if (settingName.IsEmpty())
+            {
+                return string.Empty;
+            }
+
+            var innerText = element.InnerText;
+            if (innerText.HasText())
+            {
+                // Add a setting for the specified value
+                User.UserVariables.Add(settingName, innerText);
+
+                return innerText;
+            }
+
+            // We don&#39;t have text. Clear out the setting instead
+            User.UserVariables.Remove(settingName);
 
             return string.Empty;
         }
@@ -95,7 +77,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[51,17,51,18,0],[52,21,55,41,0],[57,21,57,41,0],[67,17,67,63,0],[68,17,68,53,0],[71,17,71,58,0],[72,17,72,18,0],[73,21,73,55,0],[76,17,79,37,0],[80,13,80,14,0],[82,13,82,33,0],[33,15,33,31,1],[34,9,34,10,1],[35,9,35,10,1],[42,9,42,10,1],[43,13,43,43,1],[44,13,44,46,1],[45,13,45,14,1],[47,17,47,49,1],[50,17,50,42,1],[61,17,61,52,1],[62,17,62,18,1],[63,21,63,51,1],[83,9,83,10,1]]);
+      highlightRanges([[28,15,28,31,0],[29,9,29,10,0],[30,9,30,10,0],[37,9,37,10,0],[39,13,39,43,0],[40,13,40,81,0],[41,13,41,14,0],[42,17,42,37,0],[46,13,46,60,0],[47,13,47,39,0],[48,13,48,14,0],[49,17,49,37,0],[52,13,52,47,0],[53,13,53,37,0],[54,13,54,14,0],[56,17,56,64,0],[58,17,58,34,0],[62,13,62,52,0],[64,13,64,33,0],[65,9,65,10,0]]);
     </script>
   </body>
 </html>

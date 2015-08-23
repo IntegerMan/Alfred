@@ -2,173 +2,161 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.core\console\consoleevent.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core\modules\alfredsubsystemlistmodule.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// ConsoleEvent.cs
+// AlfredSubsystemListModule.cs
 // 
-// Created on:      07/26/2015 at 2:23 PM
-// Last Modified:   08/07/2015 at 12:24 AM
+// Created on:      08/07/2015 at 11:56 PM
+// Last Modified:   08/07/2015 at 11:56 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 
 using JetBrains.Annotations;
 
-namespace MattEland.Ani.Alfred.Core.Console
+using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Core.Widgets;
+using MattEland.Common;
+
+namespace MattEland.Ani.Alfred.Core.Modules
 {
-
     /// &lt;summary&gt;
-    ///     Represents a logged event to the console
+    /// A module that lists installed subsystems
     /// &lt;/summary&gt;
-    public struct ConsoleEvent : IEquatable&lt;ConsoleEvent&gt;, IConsoleEvent
+    public sealed class AlfredSubsystemListModule : AlfredModule
     {
+
+        [NotNull, ItemNotNull]
+        private readonly ICollection&lt;AlfredWidget&gt; _widgets;
+
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;ConsoleEvent&quot; /&gt; class using the current utcTime.
+        /// Initializes a new instance of the &lt;see cref=&quot;AlfredSubsystemListModule&quot;/&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;title&quot;&gt;The title.&lt;/param&gt;
-        /// &lt;param name=&quot;message&quot;&gt;The message.&lt;/param&gt;
-        public ConsoleEvent(string title, string message) : this(title, message, LogLevel.Verbose, DateTime.UtcNow)
+        /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        public AlfredSubsystemListModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
         {
+            _widgets = platformProvider.CreateCollection&lt;AlfredWidget&gt;();
         }
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;ConsoleEvent&quot; /&gt; class.
+        ///     Gets the name of the module.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;title&quot;&gt;The title.&lt;/param&gt;
-        /// &lt;param name=&quot;message&quot;&gt;The message.&lt;/param&gt;
-        /// &lt;param name=&quot;level&quot;&gt;The logging level.&lt;/param&gt;
-        public ConsoleEvent(string title, string message, LogLevel level) : this(title, message, level, DateTime.UtcNow)
+        /// &lt;value&gt;The name of the module.&lt;/value&gt;
+        public override string Name
         {
+            get { return &quot;Subsystems&quot;; }
         }
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;ConsoleEvent&quot; /&gt; class.
+        ///     Updates the component
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;title&quot;&gt;The title.&lt;/param&gt;
-        /// &lt;param name=&quot;message&quot;&gt;The message.&lt;/param&gt;
-        /// &lt;param name=&quot;level&quot;&gt;The logging level&lt;/param&gt;
-        /// &lt;param name=&quot;utcTime&quot;&gt;The utcTime in UTC.&lt;/param&gt;
-        public ConsoleEvent(string title, string message, LogLevel level, DateTime utcTime)
+        protected override void UpdateProtected()
         {
-            UtcTime = utcTime;
-            Title = title;
-            Message = message;
-            Level = level;
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets or sets the time the event was logged in UTC.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The time the event was logged in UTC.&lt;/value&gt;
-        public DateTime UtcTime { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets or sets the title.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The title.&lt;/value&gt;
-        public string Title { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets or sets the message.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The message.&lt;/value&gt;
-        public string Message { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets or sets the time in local system time.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The time.&lt;/value&gt;
-        public DateTime Time
-        {
-            get { return UtcTime.ToLocalTime(); }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the logging level of the event. Defaults to Verbose.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The logging level.&lt;/value&gt;
-        public LogLevel Level { get; }
-
-        #region Equality Members
-
-        /// &lt;summary&gt;
-        ///     Determines if this instance is equivalent to another
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;other&quot;&gt;The other event.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the events are equivalent, &lt;c&gt;false&lt;/c&gt; otherwise.&lt;/returns&gt;
-        public bool Equals(ConsoleEvent other)
-        {
-            return UtcTime.Equals(other.UtcTime) &amp;&amp;
-                   string.Equals(Title, other.Title) &amp;&amp;
-                   string.Equals(Message, other.Message) &amp;&amp;
-                   Level == other.Level;
-        }
-
-        /// &lt;summary&gt;
-        ///     Determines whether the specified &lt;see cref=&quot;System.Object&quot; /&gt; is equal to this instance.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;obj&quot;&gt;The object to compare with the current instance.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the specified &lt;see cref=&quot;System.Object&quot; /&gt; is equal to this instance; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
-        public override bool Equals([CanBeNull] object obj)
-        {
-            if (ReferenceEquals(null, obj))
+            foreach (var widget in _widgets)
             {
-                return false;
-            }
-            return obj is ConsoleEvent &amp;&amp; Equals((ConsoleEvent)obj);
-        }
+                var textWidget = widget as AlfredTextWidget;
 
-        /// &lt;summary&gt;
-        ///     Returns a hash code for this instance.
-        /// &lt;/summary&gt;
-        /// &lt;returns&gt;A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.&lt;/returns&gt;
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                var hashCode = UtcTime.GetHashCode();
-                hashCode = (hashCode * 397) ^ (Title?.GetHashCode() ?? 0);
-                hashCode = (hashCode * 397) ^ (Message?.GetHashCode() ?? 0);
-                hashCode = (hashCode * 397) ^ (int)(Level);
-                return hashCode;
+                if (textWidget == null)
+                {
+                    continue;
+                }
+
+                // Interpret the DataContext and update its text if it&#39;s a component based on the
+                // component status. If no component context, it&#39;s assumed to be the no items label.
+                var component = widget.DataContext as IAlfredComponent;
+                if (component != null)
+                {
+                    UpdateWidgetText(textWidget, component);
+                }
+                else
+                {
+                    textWidget.Text = Resources.AlfredSubSystemListModule_NoSubsystemsDetected;
+                }
             }
         }
 
         /// &lt;summary&gt;
-        ///     Implements the == operator.
+        ///     Handles shutdown events
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;left&quot;&gt;The left operand.&lt;/param&gt;
-        /// &lt;param name=&quot;right&quot;&gt;The right operand.&lt;/param&gt;
-        /// &lt;returns&gt;The result of the operator.&lt;/returns&gt;
-        public static bool operator ==(ConsoleEvent left, ConsoleEvent right)
+        protected override void ShutdownProtected()
         {
-            return left.Equals(right);
+            _widgets.Clear();
         }
 
         /// &lt;summary&gt;
-        ///     Implements the != operator.
+        ///     Handles initialization events
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;left&quot;&gt;The left operand.&lt;/param&gt;
-        /// &lt;param name=&quot;right&quot;&gt;The right operand.&lt;/param&gt;
-        /// &lt;returns&gt;The result of the operator.&lt;/returns&gt;
-        public static bool operator !=(ConsoleEvent left, ConsoleEvent right)
+        /// &lt;param name=&quot;alfred&quot;&gt;&lt;/param&gt;
+        protected override void InitializeProtected(IAlfred alfred)
         {
-            return !left.Equals(right);
+            _widgets.Clear();
+
+            // Read the subsystems from Alfred
+            if (AlfredInstance != null)
+            {
+                foreach (var item in AlfredInstance.Subsystems)
+                {
+                    var widget = new TextWidget { DataContext = item };
+                    UpdateWidgetText(widget, item);
+
+                    _widgets.Add(widget);
+
+                    Register(widget);
+                }
+            }
+
+            // We&#39;ll want to display a fallback for no subsystems
+            if (_widgets.Count == 0)
+            {
+                var noSubsystemsDetected = Resources.AlfredSubSystemListModule_NoSubsystemsDetected.NonNull();
+
+                Log(&quot;Subsystems.Initialize&quot;, noSubsystemsDetected, LogLevel.Warning);
+
+                var widget = new TextWidget(noSubsystemsDetected);
+                _widgets.Add(widget);
+
+                Register(widget);
+            }
         }
 
-        #endregion
+        /// &lt;summary&gt;
+        /// Updates the widget&#39;s text to that matching the detected component.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;widget&quot;&gt;The widget.&lt;/param&gt;
+        /// &lt;param name=&quot;component&quot;&gt;The component.&lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;
+        /// &lt;/exception&gt;
+        [SuppressMessage(&quot;Microsoft.Globalization&quot;, &quot;CA1303:Do not pass literals as localized parameters&quot;, MessageId = &quot;MattEland.Ani.Alfred.Core.Widgets.AlfredTextWidget.set_Text(System.String)&quot;)]
+        private static void UpdateWidgetText([NotNull] AlfredTextWidget widget, [NotNull] IAlfredComponent component)
+        {
+            if (widget == null)
+            {
+                throw new ArgumentNullException(nameof(widget));
+            }
+            if (component == null)
+            {
+                throw new ArgumentNullException(nameof(component));
+            }
+
+            widget.Text = string.Format(CultureInfo.CurrentCulture, &quot;{0}: {1}&quot;, component.NameAndVersion, component.Status);
+        }
     }
 
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[26,61,26,116,0],[27,9,27,10,0],[28,9,28,10,0],[59,35,59,39,0],[71,33,71,37,0],[79,17,79,18,0],[79,19,79,48,0],[79,49,79,50,0],[96,9,96,10,0],[97,13,100,41,0],[101,9,101,10,0],[109,9,109,10,0],[110,13,110,44,0],[111,13,111,14,0],[112,17,112,30,0],[114,13,114,69,0],[115,9,115,10,0],[122,9,122,10,0],[124,13,124,14,0],[125,17,125,54,0],[126,17,126,75,0],[127,17,127,77,0],[128,17,128,60,0],[129,17,129,33,0],[131,9,131,10,0],[140,9,140,10,0],[141,13,141,39,0],[142,9,142,10,0],[151,9,151,10,0],[152,13,152,40,0],[153,9,153,10,0],[36,77,36,121,1],[37,9,37,10,1],[38,9,38,10,1],[48,9,48,10,1],[49,13,49,31,1],[50,13,50,27,1],[51,13,51,31,1],[52,13,52,27,1],[53,9,53,10,1],[65,31,65,35,1],[86,33,86,37,1]]);
+      highlightRanges([[48,17,48,18,0],[48,19,48,39,0],[48,40,48,41,0],[61,17,61,18,0],[62,21,62,30,0],[73,17,73,18,0],[74,21,74,96,0],[75,17,75,18,0],[111,13,111,14,0],[112,17,112,111,0],[114,17,114,86,0],[116,17,116,67,0],[117,17,117,38,0],[119,17,119,34,0],[120,13,120,14,0],[134,13,134,14,0],[135,17,135,65,0],[138,13,138,14,0],[139,17,139,68,0],[37,90,37,112,1],[38,9,38,10,1],[39,13,39,74,1],[40,9,40,10,1],[55,9,55,10,1],[56,13,56,20,1],[56,36,56,44,1],[56,22,56,32,1],[57,13,57,14,1],[58,17,58,61,1],[60,17,60,40,1],[67,17,67,72,1],[68,17,68,39,1],[69,17,69,18,1],[70,21,70,61,1],[71,17,71,18,1],[76,13,76,14,1],[56,33,56,35,1],[77,9,77,10,1],[83,9,83,10,1],[84,13,84,30,1],[85,9,85,10,1],[92,9,92,10,1],[93,13,93,30,1],[96,13,96,40,1],[97,13,97,14,1],[98,17,98,24,1],[98,38,98,63,1],[98,26,98,34,1],[99,17,99,18,1],[100,21,100,72,1],[101,21,101,52,1],[103,21,103,42,1],[105,21,105,38,1],[106,17,106,18,1],[98,35,98,37,1],[107,13,107,14,1],[110,13,110,37,1],[121,9,121,10,1],[132,9,132,10,1],[133,13,133,32,1],[137,13,137,35,1],[142,13,142,125,1],[143,9,143,10,1]]);
     </script>
   </body>
 </html>

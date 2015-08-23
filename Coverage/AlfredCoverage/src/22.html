@@ -2,24 +2,26 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.core.tests\chat\redirecttaghandlertests.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core.tests\chat\taghandlertests.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlfredTagHandlerTests.cs
+// ChatCommandTests.cs
 // 
-// Created on:      08/17/2015 at 10:55 PM
-// Last Modified:   08/17/2015 at 10:55 PM
+// Created on:      08/17/2015 at 9:56 PM
+// Last Modified:   08/18/2015 at 3:04 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
+using System.Linq;
 
 using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Common;
 
 using NUnit.Framework;
@@ -27,71 +29,117 @@ using NUnit.Framework;
 namespace MattEland.Ani.Alfred.Tests.Chat
 {
     /// &lt;summary&gt;
-    /// A class to test tag handlers for &quot;srai&quot; tags.
+    ///     Tests for AimlTagHandlers of concern.
     /// &lt;/summary&gt;
     [TestFixture]
-    [SuppressMessage(&quot;ReSharper&quot;, &quot;NotNullMemberIsNotInitialized&quot;)]
-    public class RedirectTagHandlerTests : ChatTestsBase
+    public class TagHandlerTests : ChatTestsBase
     {
         /// &lt;summary&gt;
-        /// Sets up the test fixture for each test.
+        ///     Sets up the testing environment prior to each test run.
         /// &lt;/summary&gt;
         [SetUp]
         public void SetUp()
         {
             InitChatSystem();
+        }
 
+        /// &lt;summary&gt;
+        ///     Tests that random tags with no children return empty results.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     See ALF-29
+        /// &lt;/remarks&gt;
+        [Test]
+        public void RandomTagWithNoChildrenReturnsEmpty()
+        {
+            // Build a handler to test with
+            var handler = BuildTagHandler&lt;RandomTagHandler&gt;(&quot;random&quot;, &quot;&lt;random /&gt;&quot;);
+
+            // Ensure that the results are what we expect
+            var result = handler.Transform();
+            Assert.That(result.IsEmpty(), $&quot;Tag Handler result of &#39;{result}&#39; was not empty as expected.&quot;);
+        }
+
+        /// &lt;summary&gt;
+        ///     Tests that random tags with unexpected children return empty results.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     See ALF-29
+        /// &lt;/remarks&gt;
+        [Test]
+        public void RandomTagWithWrongChildTypeReturnsEmpty()
+        {
+            // Build a handler to test with
+            var handler = BuildTagHandler&lt;RandomTagHandler&gt;(&quot;random&quot;, &quot;&lt;random&gt;&lt;b&gt;Dude&lt;/b&gt;&lt;b&gt;Bro&lt;/b&gt;&lt;/random&gt;&quot;);
+
+            // Ensure that the results are what we expect
+            var result = handler.Transform();
+            Assert.That(result.IsEmpty(), $&quot;Tag Handler result of &#39;{result}&#39; was not empty as expected.&quot;);
         }
 
         [Test]
-        public void RedirectOnNoTextOutputsEmpty()
+        public void TextSubstitutionHelperWithNullSettingsReturnsInput()
         {
-            var parameters = BuildTagHandlerParameters(&quot;&lt;srai /&gt;&quot;);
-            var handler = new RedirectTagHandler(parameters);
+            var input = &quot;foo&quot;;
+            var output = TextSubstitutionHelper.Substitute(null, input);
 
-            var output = handler.Transform();
-
-            Assert.That(output.IsEmpty(), $&quot;Output was not empty as expected but {output}&quot;);
+            Assert.AreEqual(input, output);
         }
 
         [Test]
-        public void RedirectOnNoTextDoesNotSpawnSecondRequest()
+        public void TextSubstitutionHelperWithNullInputReturnsEmpty()
         {
-            var parameters = BuildTagHandlerParameters(&quot;&lt;srai /&gt;&quot;);
-            var handler = new RedirectTagHandler(parameters);
+            var output = TextSubstitutionHelper.Substitute(null, null);
 
-            var output = handler.Transform();
-
-            Assert.IsNull(handler.Request.Child, &quot;Second request was spawned&quot;);
+            Assert.IsNotNull(output);
+            Assert.That(output.IsEmpty());
         }
 
         [Test]
-        public void RedirectWithTextSpawnsSecondRequest()
+        public void TextSubstitutionHelperSubstitutesText()
         {
-            var parameters = BuildTagHandlerParameters(&quot;&lt;srai&gt;Batman&lt;/srai&gt;&quot;);
-            var handler = new RedirectTagHandler(parameters);
+            var subs = new SettingsManager();
+            subs.Add(&quot;Foo&quot;, &quot;Bar&quot;);
+            var output = TextSubstitutionHelper.Substitute(subs, &quot;Foo&quot;);
 
-            var output = handler.Transform();
-
-            Assert.IsNotNull(handler.Request.Child, &quot;Second request was not spawned&quot;);
+            Assert.AreEqual(&quot;Bar&quot;, output);
         }
 
         [Test]
-        public void RedirectWithTextResultsInText()
+        public void TextSubstitutionHelperHandlesEmptyEntries()
         {
-            var parameters = BuildTagHandlerParameters(&quot;&lt;srai&gt;Batman&lt;/srai&gt;&quot;);
-            var handler = new RedirectTagHandler(parameters);
+            var subs = new SettingsManager();
+            subs.Add(&quot;Foo&quot;, &quot;Bar&quot;);
+            subs.Add(&quot;Frodo&quot;, null);
 
-            var output = handler.Transform();
+            var input = &quot;Baggins&quot;;
+            var output = TextSubstitutionHelper.Substitute(subs, input);
 
-            Assert.That(output.HasText(), &quot;Output was empty after redirect.&quot;);
+            Assert.AreEqual(input, output);
+        }
+
+        [Test]
+        public void TextSubstitutionHelperHandlesNullInput()
+        {
+            var output = TextSubstitutionHelper.Substitute(null, &quot;Bubba&quot;, &quot;Gump&quot;);
+
+            Assert.IsNotNull(output);
+            Assert.That(output.IsEmpty());
+        }
+
+        [Test]
+        public void TextSubstitutionHelperHandlesReplacement()
+        {
+            var output = TextSubstitutionHelper.Substitute(&quot;Bubbark Shrimp ZeBubba Bubbazar Bubba Gump&quot;, &quot;Bubba&quot;, &quot;Gump&quot;);
+
+            Assert.AreEqual(&quot;Bubbark Shrimp ZeBubba Bubbazar Gump Gump&quot;, output);
         }
 
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[31,9,31,10,1],[32,13,32,30,1],[34,9,34,10,1],[38,9,38,10,1],[39,13,39,68,1],[40,13,40,62,1],[42,13,42,46,1],[44,13,44,93,1],[45,9,45,10,1],[49,9,49,10,1],[50,13,50,68,1],[51,13,51,62,1],[53,13,53,46,1],[55,13,55,80,1],[56,9,56,10,1],[60,9,60,10,1],[61,13,61,79,1],[62,13,62,62,1],[64,13,64,46,1],[66,13,66,87,1],[67,9,67,10,1],[71,9,71,10,1],[72,13,72,79,1],[73,13,73,62,1],[75,13,75,46,1],[77,13,77,79,1],[78,9,78,10,1]]);
+      highlightRanges([[32,9,32,10,1],[33,13,33,30,1],[34,9,34,10,1],[44,9,44,10,1],[46,13,46,85,1],[49,13,49,46,1],[50,13,50,107,1],[51,9,51,10,1],[61,9,61,10,1],[63,13,63,113,1],[66,13,66,46,1],[67,13,67,107,1],[68,9,68,10,1],[72,9,72,10,1],[73,13,73,31,1],[74,13,74,73,1],[76,13,76,44,1],[77,9,77,10,1],[81,9,81,10,1],[82,13,82,72,1],[84,13,84,38,1],[85,13,85,43,1],[86,9,86,10,1],[90,9,90,10,1],[91,13,91,46,1],[92,13,92,36,1],[93,13,93,73,1],[95,13,95,44,1],[96,9,96,10,1],[100,9,100,10,1],[101,13,101,46,1],[102,13,102,36,1],[103,13,103,37,1],[105,13,105,35,1],[106,13,106,73,1],[108,13,108,44,1],[109,9,109,10,1],[113,9,113,10,1],[114,13,114,83,1],[116,13,116,38,1],[117,13,117,43,1],[118,9,118,10,1],[122,9,122,10,1],[123,13,123,123,1],[125,13,125,82,1],[126,9,126,10,1]]);
     </script>
   </body>
 </html>

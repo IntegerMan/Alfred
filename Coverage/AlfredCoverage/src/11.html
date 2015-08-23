@@ -2,23 +2,22 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.core.tests\subsystems\systemsubsystemtests.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core.tests\subsystems\mindexplorersubsystemtests.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// SystemSubSystemTests.cs
+// MindExplorerSubsystemTests.cs
 // 
-// Created on:      08/07/2015 at 10:01 PM
-// Last Modified:   08/07/2015 at 10:01 PM
-// Original author: Matt Eland
+// Created on:      08/22/2015 at 10:42 PM
+// Last Modified:   08/22/2015 at 11:06 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
 using System.Collections;
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
@@ -26,91 +25,137 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Ani.Alfred.Core.Pages;
+using MattEland.Ani.Alfred.Core.SubSystems;
+using MattEland.Ani.Alfred.PresentationShared.Commands;
+using MattEland.Common;
 
 using NUnit.Framework;
 
-namespace MattEland.Ani.Alfred.Tests.SubSystems
+namespace MattEland.Ani.Alfred.Tests.Subsystems
 {
     /// &lt;summary&gt;
-    /// A series of tests related to the System Monitoring SubSystem
+    ///     Contains tests related to the &lt;see cref=&quot;MindExplorerSubsystem&quot; /&gt;.
     /// &lt;/summary&gt;
+    /// &lt;remarks&gt;
+    ///     See ALF-15
+    /// &lt;/remarks&gt;
     [TestFixture]
     [SuppressMessage(&quot;ReSharper&quot;, &quot;NotNullMemberIsNotInitialized&quot;)]
-    public class SystemSubSystemTests
+    public class MindExplorerSubsystemTests
     {
+
+        /// &lt;summary&gt;
+        ///     Sets up the environment for each test.
+        /// &lt;/summary&gt;
+        [SetUp]
+        public void SetUp()
+        {
+            var bootstrapper = new AlfredBootstrapper();
+            _alfred = bootstrapper.Create();
+
+            _provider = new SimplePlatformProvider();
+            _subsystem = new MindExplorerSubsystem(_provider);
+
+            _page = _subsystem.MindExplorerPage;
+        }
+
         [NotNull]
-        private SystemMonitoringSubsystem _subsystem;
+        private MindExplorerSubsystem _subsystem;
 
         [NotNull]
         private AlfredApplication _alfred;
 
-        private ValueMetricProviderFactory _metricProviderFactory;
+        [NotNull]
+        private ExplorerPage _page;
+
+        [NotNull]
+        private SimplePlatformProvider _provider;
 
         /// &lt;summary&gt;
-        /// Sets up the test environment
+        ///     Ensures that the mind explorer subsystem can be instantiated
         /// &lt;/summary&gt;
-        /// &lt;exception cref=&quot;UnauthorizedAccessException&quot;&gt;Code that is executing without administrative privileges attempted to read a performance counter.&lt;/exception&gt;
-        /// &lt;exception cref=&quot;Win32Exception&quot;&gt;A call to an underlying system API failed.&lt;/exception&gt;
-        [SetUp]
-        public void TestSetup()
+        /// &lt;remarks&gt;
+        ///     See ALF-15
+        /// &lt;/remarks&gt;
+        [Test]
+        public void MindExplorerCanBeInitialized()
         {
-            _metricProviderFactory = new ValueMetricProviderFactory();
-            _subsystem = new SystemMonitoringSubsystem(new SimplePlatformProvider(), _metricProviderFactory);
-
-            var bootstrapper = new AlfredBootstrapper();
-            _alfred = bootstrapper.Create();
+            Assert.That(_subsystem.Name.HasText());
         }
 
+        /// &lt;summary&gt;
+        ///     Ensures that the Mind Explorer can be registered
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     See ALF-15
+        /// &lt;/remarks&gt;
         [Test]
-        public void SystemMonitoringSubsystemCanBeRegisteredInAlfred()
+        public void MindExplorerCanBeRegistered()
         {
             _alfred.Register(_subsystem);
 
-            Assert.AreEqual(1, _alfred.Subsystems.Count(), &quot;Subsystem was not registered&quot;);
-            Assert.Contains(_subsystem, _alfred.Subsystems as ICollection, &quot;The subsystem was not found in the collection&quot;);
+            Assert.Contains(_subsystem, (ICollection)_alfred.Subsystems);
+        }
+
+        /// &lt;summary&gt;
+        ///     Asserts that the Mind Explorer must register a single Mind Map page.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     See ALF-15
+        /// &lt;/remarks&gt;
+        [Test]
+        public void MindExplorerHasMindMapPage()
+        {
+            var alfredPages = _alfred.RootPages.Count();
+
+            _alfred.Register(_subsystem);
+
+            Assert.AreEqual(1,
+                            _subsystem.RootPages.Count(),
+                            &quot;Subsystem did not have the expected page count.&quot;);
+
+            Assert.AreEqual(alfredPages + 1,
+                            _alfred.RootPages.Count(),
+                            &quot;Alfred did not have the expected page count.&quot;);
+        }
+
+        /// &lt;summary&gt;
+        /// Tests that the Mind Explorer&#39;s Mind Explorer page must be of Mind Explorer Page type.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        /// See ALF-15
+        /// &lt;/remarks&gt;
+        [Test]
+        public void MindExplorerPageIsMindExplorerPageType()
+        {
+            Assert.AreEqual(typeof(ExplorerPage), _page.GetType());
+        }
+
+
+        /// &lt;summary&gt;
+        /// Tests that the Mind Explorer&#39;s Mind Explorer page must be visible.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        /// See ALF-15
+        /// &lt;/remarks&gt;
+        [Test]
+        public void MindExplorerPageIsVisible()
+        {
+            Assert.That(_page.IsVisible);
         }
 
         [Test]
-        public void SystemMonitoringSubsystemContainsModules()
+        public void ApplicationContainsMindExplorer()
         {
-            _alfred.Register(_subsystem);
-
-            var page = _subsystem.Pages.First() as AlfredModuleListPage;
-            Assert.NotNull(page);
-
-            Assert.IsTrue(page.Modules.Any(m =&gt; m is CpuMonitorModule), &quot;CPU Monitor not found&quot;);
-            Assert.IsTrue(page.Modules.Any(m =&gt; m is MemoryMonitorModule), &quot;Memory Monitor not found&quot;);
-            Assert.IsTrue(page.Modules.Any(m =&gt; m is DiskMonitorModule), &quot;Disk Monitor not found&quot;);
-        }
-
-        [Test]
-        public void SubSystemContainsAPageAfterRegistration()
-        {
-            Assert.AreEqual(0, _subsystem.Pages.Count());
-
-            _alfred.Register(_subsystem);
-            _alfred.Initialize();
-
-            Assert.AreEqual(1, _subsystem.Pages.Count());
-        }
-
-        [Test]
-        public void AlfredContainsAPageAfterRegistration()
-        {
-            var pages = _alfred.RootPages.Count();
-
-            _alfred.Register(_subsystem);
-            _alfred.Initialize();
-
-            Assert.AreEqual(pages + 1, _alfred.RootPages.Count());
+            var app = new ApplicationManager(_provider);
+            Assert.That(app.Alfred.Subsystems.Any(s =&gt; s is MindExplorerSubsystem), &quot;The Mind Explorer subsystem is not part of a typical Alfred application&quot;);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[48,9,48,10,1],[49,13,49,71,1],[50,13,50,110,1],[52,13,52,57,1],[53,13,53,45,1],[54,9,54,10,1],[58,9,58,10,1],[59,13,59,42,1],[61,13,61,92,1],[62,13,62,125,1],[63,9,63,10,1],[67,9,67,10,1],[68,13,68,42,1],[70,13,70,73,1],[71,13,71,34,1],[73,13,73,49,1],[73,70,73,98,1],[74,13,74,49,1],[74,73,74,104,1],[75,13,75,49,1],[75,71,75,100,1],[76,9,76,10,1],[80,9,80,10,1],[81,13,81,58,1],[83,13,83,42,1],[84,13,84,34,1],[86,13,86,58,1],[87,9,87,10,1],[91,9,91,10,1],[92,13,92,51,1],[94,13,94,42,1],[95,13,95,34,1],[97,13,97,67,1],[98,9,98,10,1],[73,49,73,70,1],[74,49,74,73,1],[75,49,75,71,1]]);
+      highlightRanges([[43,9,43,10,1],[44,13,44,57,1],[45,13,45,45,1],[47,13,47,54,1],[48,13,48,63,1],[50,13,50,49,1],[51,9,51,10,1],[73,9,73,10,1],[74,13,74,52,1],[75,9,75,10,1],[85,9,85,10,1],[86,13,86,42,1],[88,13,88,74,1],[89,9,89,10,1],[99,9,99,10,1],[100,13,100,57,1],[102,13,102,42,1],[104,13,106,80,1],[108,13,110,77,1],[111,9,111,10,1],[121,9,121,10,1],[122,13,122,68,1],[123,9,123,10,1],[134,9,134,10,1],[135,13,135,42,1],[136,9,136,10,1],[140,9,140,10,1],[141,13,141,57,1],[142,13,142,56,1],[142,82,142,160,1],[143,9,143,10,1],[142,56,142,82,1]]);
     </script>
   </body>
 </html>

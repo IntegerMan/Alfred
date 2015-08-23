@@ -2,22 +2,24 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\taghandlers\redirecttaghandler.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\taghandlers\sentencetaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// srai.cs
+// SentenceTagHandler.cs
 // 
-// Created on:      08/12/2015 at 10:55 PM
-// Last Modified:   08/12/2015 at 11:59 PM
+// Created on:      08/12/2015 at 10:52 PM
+// Last Modified:   08/15/2015 at 1:10 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System.Diagnostics;
+using System.Collections.Generic;
+using System.Text;
+using System.Text.RegularExpressions;
 
 using JetBrains.Annotations;
 
@@ -27,48 +29,92 @@ using MattEland.Common;
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// &lt;summary&gt;
-    /// A tag handler for the AIML &quot;srai&quot; tag governing recursive / redirect style searches.
+    ///     An AIML tag handler for interpreting the AIML &quot;sentence&quot; tag. This causes the first letter of
+    ///     every sentence to be capitalized while the rest run as lowercase.
     /// &lt;/summary&gt;
-    [HandlesAimlTag(&quot;srai&quot;)]
-    public class RedirectTagHandler : AimlTagHandler
+    [HandlesAimlTag(&quot;sentence&quot;)]
+    public class SentenceTagHandler : AimlTagHandler
     {
         /// &lt;summary&gt;
-        /// Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
-        public RedirectTagHandler([NotNull] TagHandlerParameters parameters)
+        public SentenceTagHandler([NotNull] TagHandlerParameters parameters)
             : base(parameters)
         {
         }
 
         /// &lt;summary&gt;
-        /// Processes the input text and returns the processed value.
+        ///     Processes the input input and returns the processed value.
         /// &lt;/summary&gt;
         /// &lt;returns&gt;The processed output&lt;/returns&gt;
         protected override string ProcessChange()
         {
-            //- Basic validation
-            if (!TemplateNode.Name.Matches(&quot;srai&quot;) || TemplateNode.InnerText.IsEmpty())
+            var node = TemplateNode;
+            if (!node.Name.Matches(&quot;sentence&quot;))
             {
                 return string.Empty;
             }
 
-            // Spawn a new request as a child of this current request and execute it
-            var request = new Request(TemplateNode.InnerText, User, ChatEngine, Request);
-            var result = ChatEngine.ProcessRedirectChatRequest(request);
-            Debug.Assert(result != null);
+            if (node.InnerText.HasText())
+            {
+                return ProcessSentenceText(TemplateNode.InnerText);
+            }
 
-            // This could have taken awhile. Check it for timeout
-            request.CheckForTimedOut();
+            // Evaluate everything else and stick that in our inner text
+            var star = BuildStarTagHandler();
+            node.InnerText = star.Transform().NonNull();
 
-            // Return the result of the inner request
-            return result.Output;
+            // Iterate over everything again if we now have values
+            return node.InnerText.HasText() ? ProcessChange() : string.Empty;
         }
+
+        /// &lt;summary&gt;
+        /// Handles the sentence tag input.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input.&lt;/param&gt;
+        /// &lt;returns&gt;The sentence text for the input value&lt;/returns&gt;
+        [NotNull]
+        private string ProcessSentenceText([CanBeNull] string input)
+        {
+            var sentenceSplitters = ChatEngine.SentenceSplitters;
+
+            //- Declare loop variables
+            var stringBuilder = new StringBuilder();
+
+            // Start out with a capitalized first letter
+            var isNewSentence = true;
+
+            //- Loop through all letters
+            var letters = input.NonNull().Trim().ToCharArray();
+            foreach (var t in letters)
+            {
+                var letterString = t.ToString();
+
+                if (new Regex(&quot;[a-zA-Z]&quot;).IsMatch(letterString))
+                {
+                    stringBuilder.Append(isNewSentence
+                                             ? letterString.ToUpper(Locale)
+                                             : letterString.ToLower(Locale));
+                }
+                else
+                {
+                    // It&#39;s not a letter, we don&#39;t care about its casing
+                    stringBuilder.Append(letterString);
+                }
+
+                // Evaluate for next loop through the iteration
+                isNewSentence = sentenceSplitters.Contains(letterString);
+            }
+
+            return stringBuilder.ToString();
+        }
+
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[30,15,30,31,1],[31,9,31,10,1],[32,9,32,10,1],[39,9,39,10,1],[41,13,41,88,1],[42,13,42,14,1],[43,17,43,37,1],[47,13,47,90,1],[48,13,48,73,1],[49,13,49,42,1],[52,13,52,40,1],[55,13,55,34,1],[56,9,56,10,1]]);
+      highlightRanges([[33,15,33,31,0],[34,9,34,10,0],[35,9,35,10,0],[42,9,42,10,0],[43,13,43,37,0],[44,13,44,48,0],[45,13,45,14,0],[46,17,46,37,0],[49,13,49,42,0],[50,13,50,14,0],[51,17,51,68,0],[55,13,55,46,0],[56,13,56,57,0],[59,13,59,78,0],[60,9,60,10,0],[69,9,69,10,0],[70,13,70,66,0],[73,13,73,53,0],[76,13,76,38,0],[79,13,79,64,0],[80,13,80,20,0],[80,31,80,38,0],[80,22,80,27,0],[81,13,81,14,0],[82,17,82,49,0],[84,17,84,65,0],[85,17,85,18,0],[86,21,88,78,0],[89,17,89,18,0],[91,17,91,18,0],[93,21,93,56,0],[94,17,94,18,0],[97,17,97,74,0],[98,13,98,14,0],[80,28,80,30,0],[100,13,100,45,0],[101,9,101,10,0]]);
     </script>
   </body>
 </html>

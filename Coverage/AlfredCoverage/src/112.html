@@ -2,126 +2,220 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.core.system\memorymonitormodule.cs</title>
+    <title>c:\dev\alfred\matteland.common\stringextensions.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// MemoryMonitorModule.cs
+// StringExtensions.cs
 // 
-// Created on:      08/04/2015 at 9:50 PM
-// Last Modified:   08/18/2015 at 2:06 PM
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/21/2015 at 6:06 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
+using System.Globalization;
+using System.Text;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Widgets;
-
-namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
+namespace MattEland.Common
 {
     /// &lt;summary&gt;
-    ///     A module that displays information on the system&#39;s memory utilization percentage
+    ///     Contains extension methods dealing with string operations.
     /// &lt;/summary&gt;
-    public sealed class MemoryMonitorModule : SystemMonitorModule, IDisposable
+    public static class StringExtensions
     {
-        private const string MemoryCategoryName = &quot;Memory&quot;;
-        private const string MemoryUtilizationBytesCounterName = &quot;% Committed Bytes in Use&quot;;
-
-        [NotNull]
-        private readonly MetricProviderBase _memUsedBytesCounter;
-
-        [NotNull]
-        private readonly AlfredProgressBarWidget _memWidget;
+        /// &lt;summary&gt;
+        ///     Determines if the input string is has text (is not null and has text beyond whitespace).
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the string has text; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
+        [UsedImplicitly]
+        public static bool HasText([CanBeNull] this string input)
+        {
+            return !input.IsNullOrWhitespace();
+        }
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;MemoryMonitorModule&quot; /&gt; class.
+        ///     Determines if the input string is null or an empty string.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
-        /// &lt;param name=&quot;factory&quot;&gt;The metric provider factory.&lt;/param&gt;
-        public MemoryMonitorModule([NotNull] IPlatformProvider platformProvider,
-                                   [NotNull] IMetricProviderFactory factory)
-            : base(platformProvider, factory)
+        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the string is null or empty; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
+        [UsedImplicitly]
+        public static bool IsEmpty([CanBeNull] this string input)
         {
-            _memUsedBytesCounter = MetricProvider.Build(MemoryCategoryName,
-                                                        MemoryUtilizationBytesCounterName);
+            return string.IsNullOrEmpty(input);
+        }
 
-            _memWidget = new AlfredProgressBarWidget
+        /// &lt;summary&gt;
+        ///     Determines if the input string is null, an empty string, or whitespace.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the string is null or whitespace; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
+        [UsedImplicitly]
+        public static bool IsNullOrWhitespace([CanBeNull] this string input)
+        {
+            return string.IsNullOrWhiteSpace(input);
+        }
+
+        /// &lt;summary&gt;
+        ///     Ensures that the passed in string is not null and returns either the input string or
+        ///     string.empty.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
+        /// &lt;returns&gt;A sanitized string&lt;/returns&gt;
+        [NotNull]
+        public static string NonNull([CanBeNull] this string input)
+        {
+            return input ?? string.Empty;
+        }
+
+        /// &lt;summary&gt;
+        ///     Ensures that the passed in string is not null and returns either the input string or
+        ///     replacement.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
+        /// &lt;param name=&quot;replacement&quot;&gt;The replacement string when input is null.&lt;/param&gt;
+        /// &lt;returns&gt;A sanitized string&lt;/returns&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;replacement&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        [NotNull]
+        public static string IfNull([CanBeNull] this string input, [NotNull] string replacement)
+        {
+            if (replacement == null)
             {
-                Minimum = 0,
-                Maximum = 100,
-                Text = Resources.MemoryMonitorModule_LabelName,
-                ValueFormatString = &quot;{0:F2} %&quot;
-            };
+                throw new ArgumentNullException(nameof(replacement));
+            }
+
+            return input ?? replacement;
+        }
+
+        /// &lt;summary&gt;
+        ///     Extension method to compare two strings and return true if they&#39;re equal according to the
+        ///     comparison type used. By default strings are compared ordinally ignoring casing.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
+        /// &lt;param name=&quot;other&quot;&gt;The other string.&lt;/param&gt;
+        /// &lt;param name=&quot;comparison&quot;&gt;The comparison type. Defaults to ordinal ignoring case.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the strings are equal, &lt;c&gt;false&lt;/c&gt; otherwise.&lt;/returns&gt;
+        public static bool Matches([CanBeNull] this string input,
+                                   [CanBeNull] string other,
+                                   StringComparison comparison = StringComparison.OrdinalIgnoreCase)
+        {
+            return string.Compare(input, other, comparison) == 0;
+        }
+
+        /// &lt;summary&gt;
+        ///     Converts the input string to an integer, falling back to the fallback value on parse error.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
+        /// &lt;param name=&quot;fallbackValue&quot;&gt;The fallback value. Defaults to 0.&lt;/param&gt;
+        /// &lt;returns&gt;The parsed value or the fallback value in case of parse error.&lt;/returns&gt;
+        public static int AsInt(this string input, int fallbackValue = 0)
+        {
+            int output;
+
+            // Safely cast the input as an integer. Failure will not throw an exception
+            if (!int.TryParse(input?.Trim(), out output))
+            {
+                // In case of failure, use our fallback value
+                output = fallbackValue;
+            }
+
+            return output;
+        }
+
+        /// &lt;summary&gt;
+        ///     Converts the input string to a double, falling back to the fallback value on parse error.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
+        /// &lt;param name=&quot;fallbackValue&quot;&gt;The fallback value. Defaults to 0.&lt;/param&gt;
+        /// &lt;returns&gt;The parsed value or the fallback value in case of parse error.&lt;/returns&gt;
+        public static double AsDouble(this string input, double fallbackValue = 0)
+        {
+            double output;
+
+            // Safely cast the input as an integer. Failure will not throw an exception
+            if (!double.TryParse(input?.Trim(), out output))
+            {
+                // In case of failure, use our fallback value
+                output = fallbackValue;
+            }
+
+            return output;
+        }
+
+        /// &lt;summary&gt;
+        ///     Appends to a string builder either as a standard append or as an AppendLine, depending on
+        ///     useNewLine
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;stringBuilder&quot;&gt;The string builder.&lt;/param&gt;
+        /// &lt;param name=&quot;message&quot;&gt;The message.&lt;/param&gt;
+        /// &lt;param name=&quot;useNewLine&quot;&gt;Whether or not to include line breaks.&lt;/param&gt;
+        public static void AppendConditional([NotNull] this StringBuilder stringBuilder,
+                                             string message,
+                                             bool useNewLine)
+        {
+            if (useNewLine)
+            {
+                stringBuilder.AppendLine(message);
+            }
+            else
+            {
+                stringBuilder.Append(message);
+            }
 
         }
 
         /// &lt;summary&gt;
-        ///     Gets the name of the module.
+        /// Formats the specified input using the given culture (or current culture) and optional format string.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;
-        ///     The name of the module.
-        /// &lt;/value&gt;
-        public override string Name
+        /// &lt;param name=&quot;input&quot;&gt;The input.&lt;/param&gt;
+        /// &lt;param name=&quot;culture&quot;&gt;The culture.&lt;/param&gt;
+        /// &lt;param name=&quot;format&quot;&gt;The format.&lt;/param&gt;
+        /// &lt;returns&gt;The formatted string&lt;/returns&gt;
+        [NotNull]
+        public static string Format([NotNull] this IFormattable input,
+                                            [CanBeNull] CultureInfo culture = null,
+                                            [CanBeNull] string format = null)
         {
-            // ReSharper disable once AssignNullToNotNullAttribute
-            get { return Resources.MemoryMonitorModule_Name; }
+
+            culture = culture ?? CultureInfo.CurrentCulture;
+
+            return input.ToString(format, culture);
         }
 
         /// &lt;summary&gt;
-        /// Gets the percent of memory that is utilized.
+        /// Formats the given string using the user&#39;s culture
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The memory utilization percentage.&lt;/value&gt;
-        public float MemoryUtilization
+        /// &lt;param name=&quot;input&quot;&gt;The input.&lt;/param&gt;
+        /// &lt;returns&gt;System.String.&lt;/returns&gt;
+        [NotNull]
+        public static string ForUser([NotNull] this IFormattable input)
         {
-            get { return _memUsedBytesCounter.NextValue(); }
+            return input.ToString();
         }
 
         /// &lt;summary&gt;
-        ///     Disposes this instance.
+        ///     Formats the given string using invariant culture.
         /// &lt;/summary&gt;
-        public void Dispose()
+        /// &lt;param name=&quot;input&quot;&gt;The input.&lt;/param&gt;
+        /// &lt;returns&gt;The formatted string&lt;/returns&gt;
+        [NotNull]
+        public static string Invariant([NotNull] this IFormattable input)
         {
-            _memUsedBytesCounter.Dispose();
+            return input.Format(CultureInfo.InvariantCulture);
         }
 
-        /// &lt;summary&gt;
-        ///     Handles module shutdown events
-        /// &lt;/summary&gt;
-        protected override void ShutdownProtected()
-        {
-            _memWidget.Value = 0;
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles module initialization events
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;alfred&quot;&gt;The alfred instance.&lt;/param&gt;
-        protected override void InitializeProtected(IAlfred alfred)
-        {
-            Register(_memWidget);
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles updating the module as needed
-        /// &lt;/summary&gt;
-        protected override void UpdateProtected()
-        {
-            var usedMemory = GetNextCounterValueSafe(_memUsedBytesCounter);
-
-            _memWidget.Value = usedMemory;
-        }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[64,17,64,18,0],[64,19,64,61,0],[64,62,64,63,0],[80,9,80,10,0],[81,13,81,44,0],[82,9,82,10,0],[40,15,40,46,1],[41,9,41,10,1],[42,13,43,92,1],[45,13,51,15,1],[53,9,53,10,1],[73,17,73,18,1],[73,19,73,59,1],[73,60,73,61,1],[88,9,88,10,1],[89,13,89,34,1],[90,9,90,10,1],[97,9,97,10,1],[98,13,98,34,1],[99,9,99,10,1],[105,9,105,10,1],[106,13,106,76,1],[108,13,108,43,1],[109,9,109,10,1]]);
+      highlightRanges([[78,9,78,10,0],[79,13,79,37,0],[80,13,80,14,0],[81,17,81,70,0],[84,13,84,41,0],[85,9,85,10,0],[109,9,109,10,0],[113,13,113,58,0],[114,13,114,14,0],[116,17,116,40,0],[117,13,117,14,0],[119,13,119,27,0],[120,9,120,10,0],[129,9,129,10,0],[133,13,133,61,0],[134,13,134,14,0],[136,17,136,40,0],[137,13,137,14,0],[139,13,139,27,0],[140,9,140,10,0],[152,9,152,10,0],[153,13,153,28,0],[154,13,154,14,0],[155,17,155,51,0],[156,13,156,14,0],[158,13,158,14,0],[159,17,159,47,0],[160,13,160,14,0],[162,9,162,10,0],[175,9,175,10,0],[177,13,177,61,0],[179,13,179,52,0],[180,9,180,10,0],[189,9,189,10,0],[190,13,190,37,0],[191,9,191,10,0],[200,9,200,10,0],[201,13,201,63,0],[202,9,202,10,0],[30,9,30,10,1],[31,13,31,48,1],[32,9,32,10,1],[41,9,41,10,1],[42,13,42,48,1],[43,9,43,10,1],[52,9,52,10,1],[53,13,53,53,1],[54,9,54,10,1],[64,9,64,10,1],[65,13,65,42,1],[66,9,66,10,1],[98,9,98,10,1],[99,13,99,66,1],[100,9,100,10,1]]);
     </script>
   </body>
 </html>

@@ -2,226 +2,111 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.core.system\cpumonitormodule.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core.system\systemmonitormodule.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// CpuMonitorModule.cs
+// SystemMonitorModule.cs
 // 
-// Created on:      08/03/2015 at 8:51 PM
-// Last Modified:   08/04/2015 at 10:06 PM
+// Created on:      08/04/2015 at 10:04 PM
+// Last Modified:   08/04/2015 at 10:08 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Widgets;
 
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
-
     /// &lt;summary&gt;
-    ///     A module that displays information on the system&#39;s processor utilization percentages
+    ///     The SystemMonitorModule is an abstract class for modules commonly working with performance counters.
     /// &lt;/summary&gt;
-    public sealed class CpuMonitorModule : SystemMonitorModule, IDisposable
+    public abstract class SystemMonitorModule : AlfredModule
     {
         /// &lt;summary&gt;
-        /// The performance counter CPU category name
+        ///     The performance counter instance name for total results
         /// &lt;/summary&gt;
-        public const string CpuCategoryName = &quot;Processor&quot;;
-        private const string CpuUsageCounterName = &quot;% Processor Time&quot;;
-
-        // ReSharper disable once AssignNullToNotNullAttribute
-        [NotNull]
-        private readonly string _cpuMonitorLabel = Resources.CpuMonitorModule_Cpu_Label_Format;
-
-        [NotNull]
-        [ItemNotNull]
-        private readonly List&lt;AlfredProgressBarWidget&gt; _cpuWidgets = new List&lt;AlfredProgressBarWidget&gt;();
-
-        [NotNull]
-        [ItemNotNull]
-        private readonly List&lt;MetricProviderBase&gt; _processorCounters = new List&lt;MetricProviderBase&gt;();
+        public const string TotalInstanceName = &quot;_Total&quot;;
 
         /// &lt;summary&gt;
-        /// Initializes a new instance of the &lt;see cref=&quot;CpuMonitorModule&quot; /&gt; class.
+        /// Initializes a new instance of the &lt;see cref=&quot;SystemMonitorModule&quot; /&gt; class.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
-        /// &lt;param name=&quot;factory&quot;&gt;The metric provider factory.&lt;/param&gt;
-        public CpuMonitorModule([NotNull] IPlatformProvider platformProvider,
-                                [NotNull] IMetricProviderFactory factory) : base(platformProvider, factory)
+        /// &lt;param name=&quot;metricProvider&quot;&gt;The metric provider.&lt;/param&gt;
+        protected SystemMonitorModule([NotNull] IPlatformProvider platformProvider,
+                                      [NotNull] IMetricProviderFactory metricProvider) : base(platformProvider)
         {
+            // Use the provided metric provider
+            _metricProvider = metricProvider;
         }
 
         /// &lt;summary&gt;
-        ///     Gets the name of the module.
+        ///     Gets the next counter value safely, defaulting to 0 on any error.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;
-        ///     The name of the module.
-        /// &lt;/value&gt;
+        /// &lt;param name=&quot;counter&quot;&gt;The counter.&lt;/param&gt;
+        /// &lt;returns&gt;The value returned from the counter&lt;/returns&gt;
+        protected static float GetNextCounterValueSafe([CanBeNull] MetricProviderBase counter)
+        {
+            return GetNextCounterValueSafe(counter, 0);
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the next counter value safely, defaulting to the defaultValue on any error.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;counter&quot;&gt;The counter.&lt;/param&gt;
+        /// &lt;param name=&quot;defaultValue&quot;&gt;The default value.&lt;/param&gt;
+        /// &lt;returns&gt;The value returned from the counter&lt;/returns&gt;
+        protected static float GetNextCounterValueSafe([CanBeNull] MetricProviderBase counter, float defaultValue)
+        {
+            try
+            {
+                return counter?.NextValue() ?? 0;
+            }
+            catch (Win32Exception)
+            {
+                return defaultValue;
+            }
+            catch (PlatformNotSupportedException)
+            {
+                return defaultValue;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return defaultValue;
+            }
+            catch (InvalidOperationException)
+            {
+                return defaultValue;
+            }
+        }
+
         [NotNull]
-        public override string Name
-        {
-            // ReSharper disable once AssignNullToNotNullAttribute
-            get { return Resources.CpuMonitorModule_Name; }
-        }
+        private readonly IMetricProviderFactory _metricProvider;
 
         /// &lt;summary&gt;
-        /// Gets the number of CPU cores detected.
+        /// Gets the metric provider.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The number of CPU cores.&lt;/value&gt;
-        public int NumberOfCores
+        /// &lt;value&gt;The metric provider.&lt;/value&gt;
+        [NotNull]
+        public IMetricProviderFactory MetricProvider
         {
+            [DebuggerStepThrough]
             get
-            {
-                // Don&#39;t include the aggregate counter
-                return _processorCounters.Count(c =&gt; c.Name != TotalInstanceName);
-            }
-        }
-
-        /// &lt;summary&gt;
-        /// Gets the average CPU utilization.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The average CPU utilization.&lt;/value&gt;
-        public float AverageCpuUtilization
-        {
-            get
-            {
-                // Grab the total counter and get its value
-                var aggregateCounter = _processorCounters.FirstOrDefault(c =&gt; c.Name == TotalInstanceName);
-                return aggregateCounter?.NextValue() ?? 0;
-            }
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles module shutdown events
-        /// &lt;/summary&gt;
-        protected override void ShutdownProtected()
-        {
-            // Clear out the counters, bearing in mind that they&#39;re disposable
-            foreach (var counter in _processorCounters)
-            {
-                counter.Dispose();
-            }
-            _processorCounters.Clear();
-
-            _cpuWidgets.Clear();
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles module initialization events
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;alfred&quot;&gt;&lt;/param&gt;
-        protected override void InitializeProtected(IAlfred alfred)
-        {
-            BuildCounters();
-
-            _cpuWidgets.Clear();
-
-            var core = 1;
-
-            foreach (var counter in _processorCounters.OrderBy(c =&gt; c.Name))
-            {
-                // Don&#39;t add a core indicator for the total
-                Debug.Assert(counter != null);
-                if (counter.Name == TotalInstanceName)
-                {
-                    continue;
-                }
-
-                // Create a widget for the counter
-                // Store the counter as the widget&#39;s data context for easier updating later on
-                var widget = new AlfredProgressBarWidget { DataContext = counter, Minimum = 0, Maximum = 100 };
-
-                // Get the first value of the widget and have the label applied to the widget
-                var label = string.Format(CultureInfo.CurrentCulture, _cpuMonitorLabel, core);
-                UpdateCpuWidget(widget, counter, label);
-
-                _cpuWidgets.Add(widget);
-
-                Register(widget);
-
-                core++;
-            }
-        }
-
-        /// &lt;summary&gt;
-        /// Builds the list of processor counters
-        /// &lt;/summary&gt;
-        private void BuildCounters()
-        {
-            var cpuInstanceNames = MetricProvider.GetCategoryInstanceNames(CpuCategoryName);
-
-            // Add counters for each CPU instance we&#39;re using
-            foreach (var instance in cpuInstanceNames)
-            {
-                var provider = MetricProvider.Build(CpuCategoryName, CpuUsageCounterName, instance);
-                _processorCounters.Add(provider);
-            }
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles updating the module as needed
-        /// &lt;/summary&gt;
-        protected override void UpdateProtected()
-        {
-            var core = 1;
-            foreach (var widget in _cpuWidgets)
-            {
-                var counter = widget.DataContext as MetricProviderBase;
-
-                // Update the widget using our arbitrary number instead of the instance name
-                var label = string.Format(CultureInfo.CurrentCulture, _cpuMonitorLabel, core);
-                UpdateCpuWidget(widget, counter, label);
-
-                core++;
-            }
-        }
-
-        /// &lt;summary&gt;
-        ///     Updates the cpu widget with the next value from its counter or an error message if no counter was provided or
-        ///     an error occurred reading the value.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;widget&quot;&gt; The display widget. &lt;/param&gt;
-        /// &lt;param name=&quot;counter&quot;&gt; The performance counter. &lt;/param&gt;
-        /// &lt;param name=&quot;label&quot;&gt; The label to add before the counter value. &lt;/param&gt;
-        private static void UpdateCpuWidget(
-            [NotNull] AlfredProgressBarWidget widget,
-            [CanBeNull] MetricProviderBase counter,
-            [CanBeNull] string label)
-        {
-
-            widget.Text = string.Format(CultureInfo.CurrentCulture, &quot;{0}:&quot;, label);
-
-            widget.Value = GetNextCounterValueSafe(counter, 0);
-            widget.ValueFormatString = &quot;{0:F2} %&quot;;
-        }
-
-        /// &lt;summary&gt;
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// &lt;/summary&gt;
-        public void Dispose()
-        {
-            foreach (var counter in _processorCounters)
-            {
-                counter.Dispose();
-            }
+            { return _metricProvider; }
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[66,17,66,18,0],[66,19,66,58,0],[66,59,66,60,0],[102,22,102,33,0],[103,13,103,14,0],[104,17,104,35,0],[105,13,105,14,0],[169,22,169,32,0],[170,13,170,14,0],[171,17,171,72,0],[174,17,174,95,0],[175,17,175,57,0],[177,17,177,24,0],[178,13,178,14,0],[204,9,204,10,0],[205,13,205,20,0],[205,37,205,55,0],[205,22,205,33,0],[206,13,206,14,0],[207,17,207,35,0],[208,13,208,14,0],[205,34,205,36,0],[209,9,209,10,0],[37,9,37,96,1],[41,9,41,106,1],[45,9,45,103,1],[53,77,53,108,1],[54,9,54,10,1],[55,9,55,10,1],[76,13,76,14,1],[78,17,78,54,1],[78,81,78,83,1],[79,13,79,14,1],[89,13,89,14,1],[91,17,91,79,1],[91,106,91,108,1],[92,17,92,59,1],[93,13,93,14,1],[100,9,100,10,1],[102,13,102,20,1],[102,37,102,55,1],[102,34,102,36,1],[106,13,106,40,1],[108,13,108,33,1],[109,9,109,10,1],[116,9,116,10,1],[117,13,117,29,1],[119,13,119,33,1],[121,13,121,26,1],[123,13,123,20,1],[123,37,123,69,1],[123,75,123,76,1],[123,22,123,33,1],[124,13,124,14,1],[126,17,126,47,1],[127,17,127,55,1],[128,17,128,18,1],[129,21,129,30,1],[134,17,134,112,1],[137,17,137,95,1],[138,17,138,57,1],[140,17,140,41,1],[142,17,142,34,1],[144,17,144,24,1],[145,13,145,14,1],[123,34,123,36,1],[146,9,146,10,1],[152,9,152,10,1],[153,13,153,93,1],[156,13,156,20,1],[156,38,156,54,1],[156,22,156,34,1],[157,13,157,14,1],[158,17,158,101,1],[159,17,159,50,1],[160,13,160,14,1],[156,35,156,37,1],[161,9,161,10,1],[167,9,167,10,1],[168,13,168,26,1],[169,13,169,20,1],[169,36,169,47,1],[169,33,169,35,1],[179,9,179,10,1],[192,9,192,10,1],[194,13,194,84,1],[196,13,196,64,1],[197,13,197,51,1],[198,9,198,10,1],[78,54,78,81,1],[91,79,91,106,1],[123,69,123,75,1]]);
+      highlightRanges([[63,13,63,35,0],[64,13,64,14,0],[65,17,65,37,0],[67,13,67,50,0],[68,13,68,14,0],[69,17,69,37,0],[71,13,71,48,0],[72,13,72,14,0],[73,17,73,37,0],[75,13,75,46,0],[76,13,76,14,0],[77,17,77,37,0],[35,90,35,112,1],[36,9,36,10,1],[38,13,38,46,1],[39,9,39,10,1],[47,9,47,10,1],[48,13,48,56,1],[49,9,49,10,1],[58,9,58,10,1],[60,13,60,14,1],[61,17,61,50,1],[79,9,79,10,1],[93,13,93,14,1],[93,15,93,38,1],[93,39,93,40,1]]);
     </script>
   </body>
 </html>

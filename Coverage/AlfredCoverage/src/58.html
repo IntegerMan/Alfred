@@ -2,240 +2,148 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\chatenginelibrarian.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core\definitions\userstatementresponse.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// ChatEngineLibrarian.cs
+// UserStatementResponse.cs
 // 
-// Created on:      08/16/2015 at 1:16 PM
-// Last Modified:   08/17/2015 at 12:24 AM
-// 
-// Last Modified by: Matt Eland
+// Created on:      08/10/2015 at 5:01 PM
+// Last Modified:   08/11/2015 at 1:41 PM
+// Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Security;
-using System.Xml;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Chat.Aiml.Utils;
-using MattEland.Common;
-
-namespace MattEland.Ani.Alfred.Chat.Aiml
+namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// &lt;summary&gt;
-    ///     The librarian is a helper class that manages settings for the Chat Engine
+    ///     A response to a user statement
     /// &lt;/summary&gt;
-    public class ChatEngineLibrarian
+    public struct UserStatementResponse : IEquatable&lt;UserStatementResponse&gt;
     {
-        [NotNull]
-        private readonly ChatEngine _chatEngine;
-
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;ChatEngineLibrarian&quot; /&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;T:UserStatementResponse&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;chatEngine&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        public ChatEngineLibrarian([NotNull] ChatEngine chatEngine)
+        /// &lt;param name=&quot;userInput&quot;&gt;The user input.&lt;/param&gt;
+        /// &lt;param name=&quot;responseText&quot;&gt;The response text.&lt;/param&gt;
+        /// &lt;param name=&quot;template&quot;&gt;The template.&lt;/param&gt;
+        /// &lt;param name=&quot;command&quot;&gt;The Command.&lt;/param&gt;
+        public UserStatementResponse([CanBeNull] string userInput,
+                                     [CanBeNull] string responseText,
+                                     string template,
+                                     ChatCommand command)
         {
-            //-Validate
-            if (chatEngine == null)
-            {
-                throw new ArgumentNullException(nameof(chatEngine));
-            }
-
-            _chatEngine = chatEngine;
-
-            // Initialize settings dictionaries
-            GlobalSettings = new SettingsManager();
-            GenderSubstitutions = new SettingsManager();
-            SecondPersonToFirstPersonSubstitutions = new SettingsManager();
-            FirstPersonToSecondPersonSubstitutions = new SettingsManager();
-            Substitutions = new SettingsManager();
+            UserInput = userInput ?? string.Empty;
+            ResponseText = responseText ?? string.Empty;
+            Template = template;
+            Command = command;
         }
 
         /// &lt;summary&gt;
-        ///     Gets the substitutions dictionary. Substitutions are common phrases that are condensed and
-        ///     translated to their equivalent meaning to increase bot flexibility and make content authoring
-        ///     easier.
+        ///     Gets the original user input text.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The substitutions.&lt;/value&gt;
+        /// &lt;value&gt;The user input.&lt;/value&gt;
         [NotNull]
-        public SettingsManager Substitutions { get; }
+        public string UserInput { get; }
 
         /// &lt;summary&gt;
-        ///     Gets the gender substitutions dictionary. This is a collection of male and female pronouns and
-        ///     their
-        ///     replacement values to use when the &quot;gender&quot; AIML tag is present.
+        ///     Gets the response text.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The gender substitutions dictionary.&lt;/value&gt;
+        /// &lt;value&gt;The response text.&lt;/value&gt;
         [NotNull]
-        public SettingsManager GenderSubstitutions { get; }
+        public string ResponseText { get; }
 
         /// &lt;summary&gt;
-        ///     Gets the global settings dictionary.
+        ///     Gets the AIML template used to generate a response.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The global settings.&lt;/value&gt;
-        [NotNull]
-        public SettingsManager GlobalSettings { get; }
+        /// &lt;value&gt;The template.&lt;/value&gt;
+        [CanBeNull]
+        public string Template { get; }
 
         /// &lt;summary&gt;
-        ///     Gets the person substitutions settings dictionary for second person to first person
-        ///     conversions.
+        ///     Gets the system Command to execute.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The person substitutions settings dictionary.&lt;/value&gt;
-        [NotNull]
-        public SettingsManager SecondPersonToFirstPersonSubstitutions { get; }
+        /// &lt;value&gt;The Command.&lt;/value&gt;
+        public ChatCommand Command { get; }
 
         /// &lt;summary&gt;
-        ///     Gets the person substitutions settings dictionary. This contains things related to moving from
-        ///     the first person to the second person.
+        ///     Determines if this instance is equivalent to the other instance
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The person substitutions settings dictionary.&lt;/value&gt;
-        [NotNull]
-        public SettingsManager FirstPersonToSecondPersonSubstitutions { get; }
-
-        /// &lt;summary&gt;
-        ///     Loads settings into the various dictionaries.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;pathToConfigFiles&quot;&gt;The path to the configuration files directory.&lt;/param&gt;
-        /// &lt;exception cref=&quot;ArgumentException&quot;&gt;Path to settings must be provided.&lt;/exception&gt;
-        /// &lt;exception cref=&quot;XmlException&quot;&gt;Path to settings must be provided.&lt;/exception&gt;
-        /// &lt;exception cref=&quot;FileNotFoundException&quot;&gt;The settings file was not found.&lt;/exception&gt;
-        /// &lt;exception cref=&quot;SecurityException&quot;&gt;Could not find a settings file at the given path&lt;/exception&gt;
-        /// &lt;exception cref=&quot;UnauthorizedAccessException&quot;&gt;The caller does not have the required permission.&lt;/exception&gt;
-        /// &lt;exception cref=&quot;DirectoryNotFoundException&quot;&gt;
-        ///     Access to &lt;paramref name=&quot;pathToConfigFiles&quot; /&gt; is
-        ///     denied.
-        /// &lt;/exception&gt;
-        /// &lt;exception cref=&quot;IOException&quot;&gt;
-        ///     The specified path is invalid (for example, it is on an unmapped
-        ///     drive).
-        /// &lt;/exception&gt;
-        public void LoadSettingsFromConfigDirectory([NotNull] string pathToConfigFiles)
+        /// &lt;param name=&quot;other&quot;&gt;The other instance.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the instances are equivalent, &lt;c&gt;false&lt;/c&gt; otherwise.&lt;/returns&gt;
+        public bool Equals(UserStatementResponse other)
         {
-            // Validate
-            if (pathToConfigFiles.IsEmpty())
-            {
-                throw new ArgumentException(Resources.LibrarianLoadSettingsErrorNoConfigDirectory,
-                                            nameof(pathToConfigFiles));
-            }
-
-            // Load global settings and ensure default values are present
-            var pathToSettings = Path.Combine(pathToConfigFiles, &quot;Settings.xml&quot;);
-            GlobalSettings.Load(pathToSettings);
-            AddDefaultSettings();
-
-            // Load the indiviual dictionaries. If any one of these fail, the failure will be logged but things will move on
-            var person2Path = Path.Combine(pathToConfigFiles,
-                                           GlobalSettings.GetValue(&quot;person2substitutionsfile&quot;).NonNull());
-            SecondPersonToFirstPersonSubstitutions.LoadSafe(person2Path,
-                                                            _chatEngine.Logger,
-                                                            _chatEngine.Locale);
-
-            var person1Path = Path.Combine(pathToConfigFiles,
-                                           GlobalSettings.GetValue(&quot;personsubstitutionsfile&quot;).NonNull());
-            FirstPersonToSecondPersonSubstitutions.LoadSafe(person1Path,
-                                                            _chatEngine.Logger,
-                                                            _chatEngine.Locale);
-
-            var genderPath = Path.Combine(pathToConfigFiles,
-                                          GlobalSettings.GetValue(&quot;gendersubstitutionsfile&quot;).NonNull());
-            GenderSubstitutions.LoadSafe(genderPath, _chatEngine.Logger, _chatEngine.Locale);
-
-            var substitutionPath = Path.Combine(pathToConfigFiles,
-                                                GlobalSettings.GetValue(&quot;substitutionsfile&quot;).NonNull());
-            Substitutions.LoadSafe(substitutionPath, _chatEngine.Logger, _chatEngine.Locale);
+            return string.Equals(UserInput, other.UserInput) &amp;&amp; string.Equals(ResponseText, other.ResponseText) &amp;&amp;
+                   string.Equals(Template, other.Template) &amp;&amp; Command == other.Command;
         }
 
         /// &lt;summary&gt;
-        ///     Loads various settings from XML files. Input parameters are all optional and should be the
-        ///     actual XML and not a file path.
+        ///     Determines whether the specified &lt;see cref=&quot;System.Object&quot; /&gt; is equal to this instance.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;globalXml&quot;&gt;The global XML.&lt;/param&gt;
-        /// &lt;param name=&quot;firstPersonXml&quot;&gt;The first person XML.&lt;/param&gt;
-        /// &lt;param name=&quot;secondPersonXml&quot;&gt;The second person XML.&lt;/param&gt;
-        /// &lt;param name=&quot;genderXml&quot;&gt;The gender XML.&lt;/param&gt;
-        /// &lt;param name=&quot;substitutionsXml&quot;&gt;The substitutions XML.&lt;/param&gt;
-        [SuppressMessage(&quot;ReSharper&quot;, &quot;AssignNullToNotNullAttribute&quot;)]
-        public void LoadSettingsFromXml([CanBeNull] string globalXml = null,
-                                        [CanBeNull] string firstPersonXml = null,
-                                        [CanBeNull] string secondPersonXml = null,
-                                        [CanBeNull] string genderXml = null,
-                                        [CanBeNull] string substitutionsXml = null)
+        /// &lt;param name=&quot;obj&quot;&gt;The object to compare with the current instance.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the specified &lt;see cref=&quot;System.Object&quot; /&gt; is equal to this instance; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
+        public override bool Equals(object obj)
         {
-            if (globalXml.HasText())
+            if (ReferenceEquals(null, obj))
             {
-                GlobalSettings.LoadXmlSafe(globalXml, _chatEngine.Logger, _chatEngine.Locale);
+                return false;
             }
+            return obj is UserStatementResponse &amp;&amp; Equals((UserStatementResponse)obj);
+        }
 
-            AddDefaultSettings();
+        /// &lt;summary&gt;
+        ///     Returns a hash code for this instance.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.&lt;/returns&gt;
+        [SuppressMessage(&quot;ReSharper&quot;, &quot;ConstantNullCoalescingCondition&quot;)]
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                // ?? Guards against GetHashCode getting called unexpectedly - maybe in constructor? Saw errors with
+                // unknown stack when this was not present
+                var hashCode = (UserInput ?? string.Empty).GetHashCode();
+                hashCode = (hashCode * 397) ^ (ResponseText ?? string.Empty).GetHashCode();
+                hashCode = (hashCode * 397) ^ (Template ?? string.Empty).GetHashCode();
+                hashCode = (hashCode * 397) ^ Command.GetHashCode();
 
-            if (firstPersonXml.HasText())
-            {
-                FirstPersonToSecondPersonSubstitutions.LoadXmlSafe(firstPersonXml,
-                                                                   _chatEngine.Logger,
-                                                                   _chatEngine.Locale);
-            }
-            if (secondPersonXml.HasText())
-            {
-                SecondPersonToFirstPersonSubstitutions.LoadXmlSafe(secondPersonXml,
-                                                                   _chatEngine.Logger,
-                                                                   _chatEngine.Locale);
-            }
-            if (genderXml.HasText())
-            {
-                GenderSubstitutions.LoadXmlSafe(genderXml, _chatEngine.Logger, _chatEngine.Locale);
-            }
-            if (substitutionsXml.HasText())
-            {
-                Substitutions.LoadXmlSafe(substitutionsXml, _chatEngine.Logger, _chatEngine.Locale);
+                return hashCode;
             }
         }
 
         /// &lt;summary&gt;
-        ///     Adds default settings to the global settings file.
+        ///     Implements the == operator.
         /// &lt;/summary&gt;
-        private void AddDefaultSettings()
+        /// &lt;param name=&quot;left&quot;&gt;The left.&lt;/param&gt;
+        /// &lt;param name=&quot;right&quot;&gt;The right.&lt;/param&gt;
+        /// &lt;returns&gt;The result of the operator.&lt;/returns&gt;
+        public static bool operator ==(UserStatementResponse left, UserStatementResponse right)
         {
-            AddSettingIfMissing(&quot;person2substitutionsfile&quot;, &quot;Person2Substitutions.xml&quot;);
-            AddSettingIfMissing(&quot;personsubstitutionsfile&quot;, &quot;PersonSubstitutions.xml&quot;);
-            AddSettingIfMissing(&quot;gendersubstitutionsfile&quot;, &quot;GenderSubstitutions.xml&quot;);
-            AddSettingIfMissing(&quot;substitutionsfile&quot;, &quot;Substitutions.xml&quot;);
-            AddSettingIfMissing(&quot;aimldirectory&quot;, &quot;aiml&quot;);
-            AddSettingIfMissing(&quot;configdirectory&quot;, &quot;config&quot;);
+            return left.Equals(right);
         }
 
         /// &lt;summary&gt;
-        ///     Adds a setting to the global settings dictionary if that setting is not present.
+        ///     Implements the != operator.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;settingName&quot;&gt;Name of the setting.&lt;/param&gt;
-        /// &lt;param name=&quot;defaultValue&quot;&gt;The default value.&lt;/param&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;settingName&lt;/exception&gt;
-        private void AddSettingIfMissing([NotNull] string settingName,
-                                         [CanBeNull] string defaultValue)
+        /// &lt;param name=&quot;left&quot;&gt;The left.&lt;/param&gt;
+        /// &lt;param name=&quot;right&quot;&gt;The right.&lt;/param&gt;
+        /// &lt;returns&gt;The result of the operator.&lt;/returns&gt;
+        public static bool operator !=(UserStatementResponse left, UserStatementResponse right)
         {
-            if (settingName == null)
-            {
-                throw new ArgumentNullException(nameof(settingName));
-            }
-
-            if (!GlobalSettings.Contains(settingName))
-            {
-                GlobalSettings.Add(settingName, defaultValue);
-            }
+            return !left.Equals(right);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[39,13,39,14,0],[40,17,40,69,0],[112,9,112,10,0],[114,13,114,45,0],[115,13,115,14,0],[116,17,117,72,0],[121,13,121,82,0],[122,13,122,49,0],[123,13,123,34,0],[126,13,127,107,0],[128,13,130,81,0],[132,13,133,106,0],[134,13,136,81,0],[138,13,139,105,0],[140,13,140,94,0],[142,13,143,105,0],[144,13,144,94,0],[145,9,145,10,0],[215,13,215,14,0],[216,17,216,70,0],[220,13,220,14,0],[221,17,221,63,0],[222,13,222,14,0],[35,9,35,68,1],[36,9,36,10,1],[38,13,38,36,1],[43,13,43,38,1],[46,13,46,52,1],[47,13,47,57,1],[48,13,48,76,1],[49,13,49,76,1],[50,13,50,51,1],[51,9,51,10,1],[60,48,60,52,1],[69,54,69,58,1],[76,49,76,53,1],[84,73,84,77,1],[92,73,92,77,1],[162,9,162,10,1],[163,13,163,37,1],[164,13,164,14,1],[165,17,165,95,1],[166,13,166,14,1],[168,13,168,34,1],[170,13,170,42,1],[171,13,171,14,1],[172,17,174,88,1],[175,13,175,14,1],[176,13,176,43,1],[177,13,177,14,1],[178,17,180,88,1],[181,13,181,14,1],[182,13,182,37,1],[183,13,183,14,1],[184,17,184,100,1],[185,13,185,14,1],[186,13,186,44,1],[187,13,187,14,1],[188,17,188,101,1],[189,13,189,14,1],[190,9,190,10,1],[196,9,196,10,1],[197,13,197,89,1],[198,13,198,87,1],[199,13,199,87,1],[200,13,200,75,1],[201,13,201,58,1],[202,13,202,62,1],[203,9,203,10,1],[213,9,213,10,1],[214,13,214,37,1],[219,13,219,55,1],[223,9,223,10,1]]);
+      highlightRanges([[64,38,64,42,0],[85,13,85,14,0],[86,17,86,30,0],[97,9,97,10,0],[99,13,99,14,0],[102,17,102,74,0],[103,17,103,92,0],[104,17,104,88,0],[105,17,105,69,0],[107,17,107,33,0],[109,9,109,10,0],[118,9,118,10,0],[119,13,119,39,0],[120,9,120,10,0],[129,9,129,10,0],[130,13,130,40,0],[131,9,131,10,0],[32,9,32,10,1],[33,13,33,51,1],[34,13,34,57,1],[35,13,35,33,1],[36,13,36,31,1],[37,9,37,10,1],[44,35,44,39,1],[51,38,51,42,1],[58,34,58,38,1],[72,9,72,10,1],[73,13,74,88,1],[75,9,75,10,1],[83,9,83,10,1],[84,13,84,44,1],[88,13,88,87,1],[89,9,89,10,1]]);
     </script>
   </body>
 </html>

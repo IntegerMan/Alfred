@@ -2,160 +2,88 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.core.system\diskmonitormodule.cs</title>
+    <title>c:\dev\alfred\matteland.common\integerextensions.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// DiskMonitorModule.cs
+// IntegerExtensions.cs
 // 
-// Created on:      08/05/2015 at 1:03 AM
-// Last Modified:   08/05/2015 at 3:10 PM
-// Original author: Matt Eland
+// Created on:      08/16/2015 at 12:01 AM
+// Last Modified:   08/16/2015 at 12:01 AM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Widgets;
-
-namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
+namespace MattEland.Common
 {
     /// &lt;summary&gt;
-    ///     A module that displays information on the system&#39;s disk input / output operations
+    /// A collection of extension methods related to integer operations.
     /// &lt;/summary&gt;
-    public sealed class DiskMonitorModule : SystemMonitorModule, IDisposable
+    public static class IntegerExtensions
     {
-        private const string DiskCategoryName = &quot;PhysicalDisk&quot;;
-        private const string DiskReadCounterName = &quot;% Disk Read Time&quot;;
-        private const string DiskWriteCounterName = &quot;% Disk Write Time&quot;;
-
-        [NotNull]
-        private readonly MetricProviderBase _diskReadCounter;
-
-        [NotNull]
-        private readonly AlfredProgressBarWidget _diskReadWidget;
-
-        [NotNull]
-        private readonly MetricProviderBase _diskWriteCounter;
-
-        [NotNull]
-        private readonly AlfredProgressBarWidget _diskWriteWidget;
 
         /// &lt;summary&gt;
-        /// Initializes a new instance of the &lt;see cref=&quot;MemoryMonitorModule&quot; /&gt; class.
+        /// Determines whether an index is within the bounds of the specified collection.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
-        /// &lt;param name=&quot;factory&quot;&gt;The metric provider factory&lt;/param&gt;
-        public DiskMonitorModule([NotNull] IPlatformProvider platformProvider,
-                                 [NotNull] IMetricProviderFactory factory) : base(platformProvider, factory)
+        /// &lt;param name=&quot;index&quot;&gt;The index.&lt;/param&gt;
+        /// &lt;param name=&quot;collection&quot;&gt;The collection. Cannot be null.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the index is within bounds of the specified collection; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;collection&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public static bool IsWithinBoundsOf(this int index, [NotNull] ICollection collection)
         {
-            _diskReadCounter = MetricProvider.Build(DiskCategoryName, DiskReadCounterName, TotalInstanceName);
-            _diskWriteCounter = MetricProvider.Build(DiskCategoryName, DiskWriteCounterName, TotalInstanceName);
-
-            _diskReadWidget = CreatePercentWidget();
-            _diskReadWidget.Text = Resources.DiskReadLabel;
-
-            _diskWriteWidget = CreatePercentWidget();
-            _diskWriteWidget.Text = Resources.DiskWriteLabel;
-
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the name of the module.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;
-        ///     The name of the module.
-        /// &lt;/value&gt;
-        public override string Name
-        {
-            // ReSharper disable once AssignNullToNotNullAttribute
-            get { return Resources.DiskMonitorName; }
-        }
-
-        /// &lt;summary&gt;
-        /// Gets the disk read utilization percentage.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The read utilization.&lt;/value&gt;
-        public float ReadUtilization
-        {
-            get { return _diskReadCounter.NextValue(); }
-        }
-
-        /// &lt;summary&gt;
-        /// Gets the write utilization percentage.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The write utilization.&lt;/value&gt;
-        public float WriteUtilization
-        {
-            get { return _diskWriteCounter.NextValue(); }
-        }
-
-        /// &lt;summary&gt;
-        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// &lt;/summary&gt;
-        public void Dispose()
-        {
-            _diskReadCounter.Dispose();
-            _diskWriteCounter.Dispose();
-        }
-
-        /// &lt;summary&gt;
-        ///     Creates a percentage progress bar widget.
-        /// &lt;/summary&gt;
-        /// &lt;returns&gt;A percentage progress bar widget&lt;/returns&gt;
-        [NotNull]
-        private static AlfredProgressBarWidget CreatePercentWidget()
-        {
-            var widget = new AlfredProgressBarWidget
+            if (collection == null)
             {
-                Minimum = 0,
-                Maximum = 100,
-                ValueFormatString = &quot;{0:F2} %&quot;
-            };
+                throw new ArgumentNullException(nameof(collection));
+            }
 
-            return widget;
+            return index &gt;= 0 &amp;&amp; index &lt; collection.Count;
         }
 
         /// &lt;summary&gt;
-        ///     Handles module shutdown events
+        /// Determines whether an index is within the bounds of the specified collection.
         /// &lt;/summary&gt;
-        protected override void ShutdownProtected()
+        /// &lt;param name=&quot;index&quot;&gt;The index.&lt;/param&gt;
+        /// &lt;param name=&quot;collection&quot;&gt;The collection. Cannot be null.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the index is within bounds of the specified collection; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;collection&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public static bool IsWithinBoundsOf&lt;T&gt;(this int index, [NotNull] IList&lt;T&gt; collection)
         {
-            _diskReadWidget.Value = 0;
-            _diskWriteWidget.Value = 0;
+            if (collection == null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            return index &gt;= 0 &amp;&amp; index &lt; collection.Count;
         }
 
         /// &lt;summary&gt;
-        ///     Handles module initialization events
+        /// Returns the singular value if count is 1. Otherwise plural is returned.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;alfred&quot;&gt;&lt;/param&gt;
-        protected override void InitializeProtected(IAlfred alfred)
+        /// &lt;param name=&quot;count&quot;&gt;The count.&lt;/param&gt;
+        /// &lt;param name=&quot;singular&quot;&gt;The singular return value.&lt;/param&gt;
+        /// &lt;param name=&quot;plural&quot;&gt;The plural return value.&lt;/param&gt;
+        /// &lt;returns&gt;The singular value if count is 1. Otherwise plural is returned.&lt;/returns&gt;
+        [NotNull]
+        public static string Pluralize(this int count, string singular, string plural)
         {
-            Register(_diskReadWidget);
-            Register(_diskWriteWidget);
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles updating the module as needed
-        /// &lt;/summary&gt;
-        protected override void UpdateProtected()
-        {
-            var readPercent = GetNextCounterValueSafe(_diskReadCounter);
-            var writePercent = GetNextCounterValueSafe(_diskWriteCounter);
-
-            _diskReadWidget.Value = readPercent;
-            _diskWriteWidget.Value = writePercent;
+            return count == 1 ? singular.NonNull() : plural.NonNull();
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[67,17,67,18,0],[67,19,67,52,0],[67,53,67,54,0],[92,9,92,10,0],[93,13,93,40,0],[94,13,94,41,0],[95,9,95,10,0],[45,78,45,109,1],[46,9,46,10,1],[47,13,47,111,1],[48,13,48,113,1],[50,13,50,53,1],[51,13,51,60,1],[53,13,53,54,1],[54,13,54,62,1],[56,9,56,10,1],[76,17,76,18,1],[76,19,76,55,1],[76,56,76,57,1],[85,17,85,18,1],[85,19,85,56,1],[85,57,85,58,1],[103,9,103,10,1],[104,13,109,15,1],[111,13,111,27,1],[112,9,112,10,1],[118,9,118,10,1],[119,13,119,39,1],[120,13,120,40,1],[121,9,121,10,1],[128,9,128,10,1],[129,13,129,39,1],[130,13,130,40,1],[131,9,131,10,1],[137,9,137,10,1],[138,13,138,73,1],[139,13,139,75,1],[141,13,141,49,1],[142,13,142,51,1],[143,9,143,10,1]]);
+      highlightRanges([[33,9,33,10,0],[34,13,34,36,0],[35,13,35,14,0],[36,17,36,69,0],[39,13,39,59,0],[40,9,40,10,0],[51,9,51,10,0],[52,13,52,36,0],[53,13,53,14,0],[54,17,54,69,0],[57,13,57,59,0],[58,9,58,10,0],[69,9,69,10,1],[70,13,70,71,1],[71,9,71,10,1]]);
     </script>
   </body>
 </html>

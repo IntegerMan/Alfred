@@ -2,247 +2,240 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\result.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\chatenginelibrarian.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// Result.cs
+// ChatEngineLibrarian.cs
 // 
-// Created on:      08/12/2015 at 10:23 PM
-// Last Modified:   08/13/2015 at 3:24 PM
+// Created on:      08/16/2015 at 1:16 PM
+// Last Modified:   08/17/2015 at 12:24 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Security;
+using System.Xml;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
-using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml
 {
     /// &lt;summary&gt;
-    ///     Represents the result of an Aiml query
+    ///     The librarian is a helper class that manages settings for the Chat Engine
     /// &lt;/summary&gt;
-    public class Result
+    public class ChatEngineLibrarian
     {
+        [NotNull]
+        private readonly ChatEngine _chatEngine;
+
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;Result&quot; /&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;ChatEngineLibrarian&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;user&quot;&gt;The user.&lt;/param&gt;
-        /// &lt;param name=&quot;chatEngine&quot;&gt;The chat engine.&lt;/param&gt;
-        /// &lt;param name=&quot;request&quot;&gt;The request.&lt;/param&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;user, chatEngine, request&lt;/exception&gt;
-        public Result([NotNull] User user, [NotNull] ChatEngine chatEngine, [NotNull] Request request)
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;chatEngine&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public ChatEngineLibrarian([NotNull] ChatEngine chatEngine)
         {
-            //- Validation
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
+            //-Validate
             if (chatEngine == null)
             {
                 throw new ArgumentNullException(nameof(chatEngine));
             }
-            if (request == null)
+
+            _chatEngine = chatEngine;
+
+            // Initialize settings dictionaries
+            GlobalSettings = new SettingsManager();
+            GenderSubstitutions = new SettingsManager();
+            SecondPersonToFirstPersonSubstitutions = new SettingsManager();
+            FirstPersonToSecondPersonSubstitutions = new SettingsManager();
+            Substitutions = new SettingsManager();
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the substitutions dictionary. Substitutions are common phrases that are condensed and
+        ///     translated to their equivalent meaning to increase bot flexibility and make content authoring
+        ///     easier.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The substitutions.&lt;/value&gt;
+        [NotNull]
+        public SettingsManager Substitutions { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets the gender substitutions dictionary. This is a collection of male and female pronouns and
+        ///     their
+        ///     replacement values to use when the &quot;gender&quot; AIML tag is present.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The gender substitutions dictionary.&lt;/value&gt;
+        [NotNull]
+        public SettingsManager GenderSubstitutions { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets the global settings dictionary.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The global settings.&lt;/value&gt;
+        [NotNull]
+        public SettingsManager GlobalSettings { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets the person substitutions settings dictionary for second person to first person
+        ///     conversions.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The person substitutions settings dictionary.&lt;/value&gt;
+        [NotNull]
+        public SettingsManager SecondPersonToFirstPersonSubstitutions { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets the person substitutions settings dictionary. This contains things related to moving from
+        ///     the first person to the second person.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The person substitutions settings dictionary.&lt;/value&gt;
+        [NotNull]
+        public SettingsManager FirstPersonToSecondPersonSubstitutions { get; }
+
+        /// &lt;summary&gt;
+        ///     Loads settings into the various dictionaries.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;pathToConfigFiles&quot;&gt;The path to the configuration files directory.&lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentException&quot;&gt;Path to settings must be provided.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;XmlException&quot;&gt;Path to settings must be provided.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;FileNotFoundException&quot;&gt;The settings file was not found.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;SecurityException&quot;&gt;Could not find a settings file at the given path&lt;/exception&gt;
+        /// &lt;exception cref=&quot;UnauthorizedAccessException&quot;&gt;The caller does not have the required permission.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;DirectoryNotFoundException&quot;&gt;
+        ///     Access to &lt;paramref name=&quot;pathToConfigFiles&quot; /&gt; is
+        ///     denied.
+        /// &lt;/exception&gt;
+        /// &lt;exception cref=&quot;IOException&quot;&gt;
+        ///     The specified path is invalid (for example, it is on an unmapped
+        ///     drive).
+        /// &lt;/exception&gt;
+        public void LoadSettingsFromConfigDirectory([NotNull] string pathToConfigFiles)
+        {
+            // Validate
+            if (pathToConfigFiles.IsEmpty())
             {
-                throw new ArgumentNullException(nameof(request));
+                throw new ArgumentException(Resources.LibrarianLoadSettingsErrorNoConfigDirectory,
+                                            nameof(pathToConfigFiles));
             }
 
-            //- Set Fields
-            User = user;
-            ChatEngine = chatEngine;
+            // Load global settings and ensure default values are present
+            var pathToSettings = Path.Combine(pathToConfigFiles, &quot;Settings.xml&quot;);
+            GlobalSettings.Load(pathToSettings);
+            AddDefaultSettings();
 
-            // Ensure the request is linked to this
-            Request = request;
-            Request.Result = this;
+            // Load the indiviual dictionaries. If any one of these fail, the failure will be logged but things will move on
+            var person2Path = Path.Combine(pathToConfigFiles,
+                                           GlobalSettings.GetValue(&quot;person2substitutionsfile&quot;).NonNull());
+            SecondPersonToFirstPersonSubstitutions.LoadSafe(person2Path,
+                                                            _chatEngine.Logger,
+                                                            _chatEngine.Locale);
+
+            var person1Path = Path.Combine(pathToConfigFiles,
+                                           GlobalSettings.GetValue(&quot;personsubstitutionsfile&quot;).NonNull());
+            FirstPersonToSecondPersonSubstitutions.LoadSafe(person1Path,
+                                                            _chatEngine.Logger,
+                                                            _chatEngine.Locale);
+
+            var genderPath = Path.Combine(pathToConfigFiles,
+                                          GlobalSettings.GetValue(&quot;gendersubstitutionsfile&quot;).NonNull());
+            GenderSubstitutions.LoadSafe(genderPath, _chatEngine.Logger, _chatEngine.Locale);
+
+            var substitutionPath = Path.Combine(pathToConfigFiles,
+                                                GlobalSettings.GetValue(&quot;substitutionsfile&quot;).NonNull());
+            Substitutions.LoadSafe(substitutionPath, _chatEngine.Logger, _chatEngine.Locale);
         }
 
         /// &lt;summary&gt;
-        ///     Gets the chat engine.
+        ///     Loads various settings from XML files. Input parameters are all optional and should be the
+        ///     actual XML and not a file path.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The chat engine.&lt;/value&gt;
-        [NotNull]
-        public ChatEngine ChatEngine { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets the duration of the request.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The duration.&lt;/value&gt;
-        [UsedImplicitly]
-        public TimeSpan Duration { get; private set; }
-
-        /// &lt;summary&gt;
-        ///     Gets the input sentences.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The input sentences.&lt;/value&gt;
-        [NotNull]
-        public IList&lt;string&gt; InputSentences { get; } = new List&lt;string&gt;();
-
-        /// &lt;summary&gt;
-        ///     Gets the normalized paths.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The normalized paths.&lt;/value&gt;
-        [NotNull]
-        public ICollection&lt;string&gt; NormalizedPaths { get; } = new List&lt;string&gt;();
-
-        /// &lt;summary&gt;
-        ///     Gets the output sentences.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The output sentences.&lt;/value&gt;
-        [NotNull]
-        public IList&lt;string&gt; OutputSentences { get; } = new List&lt;string&gt;();
-
-        /// &lt;summary&gt;
-        ///     Gets the request.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The request.&lt;/value&gt;
-        [NotNull]
-        public Request Request { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets the SubQueries.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The SubQueries.&lt;/value&gt;
-        [NotNull]
-        public ICollection&lt;SubQuery&gt; SubQueries { get; } = new List&lt;SubQuery&gt;();
-
-        /// &lt;summary&gt;
-        ///     Gets the user.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The user.&lt;/value&gt;
-        [NotNull]
-        public User User { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets the raw input.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The raw input.&lt;/value&gt;
-        public string RawInput
+        /// &lt;param name=&quot;globalXml&quot;&gt;The global XML.&lt;/param&gt;
+        /// &lt;param name=&quot;firstPersonXml&quot;&gt;The first person XML.&lt;/param&gt;
+        /// &lt;param name=&quot;secondPersonXml&quot;&gt;The second person XML.&lt;/param&gt;
+        /// &lt;param name=&quot;genderXml&quot;&gt;The gender XML.&lt;/param&gt;
+        /// &lt;param name=&quot;substitutionsXml&quot;&gt;The substitutions XML.&lt;/param&gt;
+        [SuppressMessage(&quot;ReSharper&quot;, &quot;AssignNullToNotNullAttribute&quot;)]
+        public void LoadSettingsFromXml([CanBeNull] string globalXml = null,
+                                        [CanBeNull] string firstPersonXml = null,
+                                        [CanBeNull] string secondPersonXml = null,
+                                        [CanBeNull] string genderXml = null,
+                                        [CanBeNull] string substitutionsXml = null)
         {
-            get { return Request.RawInput; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the output.
-        /// &lt;/summary&gt;
-        /// &lt;summary&gt;
-        ///     This is an additional layer on top of RawOutput that handles timeouts and no responses.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The output.&lt;/value&gt;
-        [NotNull]
-        public string Output
-        {
-            get
+            if (globalXml.HasText())
             {
-                // If we have sentences, just defer to the raw output
-                if (OutputSentences.Count &gt; 0)
-                {
-                    return RawOutput;
-                }
+                GlobalSettings.LoadXmlSafe(globalXml, _chatEngine.Logger, _chatEngine.Locale);
+            }
 
-                // If it timed out, we&#39;ll use the timeout message
-                if (Request.HasTimedOut)
-                {
-                    return Resources.ChatEngineRequestTimedOut.NonNull();
-                }
+            AddDefaultSettings();
 
-                // No response and it didn&#39;t time out. Log it and return a different message.
-                var stringBuilder = new StringBuilder();
-                foreach (var path in NormalizedPaths)
-                {
-                    stringBuilder.AppendFormat(ChatEngine.Locale, &quot;{0}{1}&quot;, path, Environment.NewLine);
-                }
-
-                var message = string.Format(ChatEngine.Locale,
-                                            Resources.ChatEngineErrorCouldNotFindResponse.NonNull(),
-                                            RawInput,
-                                            Environment.NewLine,
-                                            stringBuilder,
-                                            User.Id);
-                ChatEngine.Log(message, LogLevel.Warning);
-
-                return Resources.ChatEngineDontUnderstandFallback.NonNull();
+            if (firstPersonXml.HasText())
+            {
+                FirstPersonToSecondPersonSubstitutions.LoadXmlSafe(firstPersonXml,
+                                                                   _chatEngine.Logger,
+                                                                   _chatEngine.Locale);
+            }
+            if (secondPersonXml.HasText())
+            {
+                SecondPersonToFirstPersonSubstitutions.LoadXmlSafe(secondPersonXml,
+                                                                   _chatEngine.Logger,
+                                                                   _chatEngine.Locale);
+            }
+            if (genderXml.HasText())
+            {
+                GenderSubstitutions.LoadXmlSafe(genderXml, _chatEngine.Logger, _chatEngine.Locale);
+            }
+            if (substitutionsXml.HasText())
+            {
+                Substitutions.LoadXmlSafe(substitutionsXml, _chatEngine.Logger, _chatEngine.Locale);
             }
         }
 
         /// &lt;summary&gt;
-        ///     Gets the raw output. For displaying results to the user, use Output instead.
+        ///     Adds default settings to the global settings file.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The raw output.&lt;/value&gt;
-        [NotNull]
-        public string RawOutput
+        private void AddDefaultSettings()
         {
-            get
-            {
-                // Loop through each sentence and append it to the output
-                var stringBuilder = new StringBuilder();
-                foreach (var outputSentence in OutputSentences)
-                {
-                    Debug.Assert(outputSentence != null);
+            AddSettingIfMissing(&quot;person2substitutionsfile&quot;, &quot;Person2Substitutions.xml&quot;);
+            AddSettingIfMissing(&quot;personsubstitutionsfile&quot;, &quot;PersonSubstitutions.xml&quot;);
+            AddSettingIfMissing(&quot;gendersubstitutionsfile&quot;, &quot;GenderSubstitutions.xml&quot;);
+            AddSettingIfMissing(&quot;substitutionsfile&quot;, &quot;Substitutions.xml&quot;);
+            AddSettingIfMissing(&quot;aimldirectory&quot;, &quot;aiml&quot;);
+            AddSettingIfMissing(&quot;configdirectory&quot;, &quot;config&quot;);
+        }
 
-                    var sentence = outputSentence.Trim();
-                    if (!SentenceEndsWithPunctuation(sentence))
-                    {
-                        sentence += &quot;.&quot;;
-                    }
-                    stringBuilder.AppendFormat(ChatEngine.Locale, &quot;{0} &quot;, sentence);
-                }
-                return stringBuilder.ToString().Trim();
+        /// &lt;summary&gt;
+        ///     Adds a setting to the global settings dictionary if that setting is not present.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;settingName&quot;&gt;Name of the setting.&lt;/param&gt;
+        /// &lt;param name=&quot;defaultValue&quot;&gt;The default value.&lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;settingName&lt;/exception&gt;
+        private void AddSettingIfMissing([NotNull] string settingName,
+                                         [CanBeNull] string defaultValue)
+        {
+            if (settingName == null)
+            {
+                throw new ArgumentNullException(nameof(settingName));
+            }
+
+            if (!GlobalSettings.Contains(settingName))
+            {
+                GlobalSettings.Add(settingName, defaultValue);
             }
         }
-
-        /// &lt;summary&gt;
-        ///     Returns a string that represents the current object.
-        /// &lt;/summary&gt;
-        /// &lt;returns&gt;
-        ///     A string that represents the current object.
-        /// &lt;/returns&gt;
-        public override string ToString()
-        {
-            return Output;
-        }
-
-        /// &lt;summary&gt;
-        ///     Calculates whether the input sentence ends with proper punctuation
-        ///     according to the ChatEngine.SentenceSplitters collection.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;sentence&quot;&gt;The sentence.&lt;/param&gt;
-        /// &lt;returns&gt;True if the sentence has the correct punctuation; false otherwise.&lt;/returns&gt;
-        private bool SentenceEndsWithPunctuation([NotNull] string sentence)
-        {
-            return ChatEngine.SentenceSplitters.Any(splitter =&gt; sentence.Trim().EndsWith(splitter, StringComparison.OrdinalIgnoreCase));
-        }
-
-        /// &lt;summary&gt;
-        ///     Tells the result that the request completed and it should calculate the Duration of the request
-        /// &lt;/summary&gt;
-        public void Completed()
-        {
-            Duration = DateTime.Now - Request.StartedOn;
-            IsComplete = true;
-        }
-
-        /// &lt;summary&gt;
-        /// Gets or sets whether this result is complete.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The is complete.&lt;/value&gt;
-        public bool IsComplete { get; set; }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[40,13,40,14,0],[41,17,41,63,0],[44,13,44,14,0],[45,17,45,69,0],[48,13,48,14,0],[49,17,49,66,0],[73,36,73,40,0],[146,17,146,18,0],[147,21,147,74,0],[202,9,202,10,0],[203,13,203,27,0],[204,9,204,10,0],[230,34,230,38,0],[80,56,80,74,1],[87,63,87,81,1],[94,57,94,75,1],[108,60,108,80,1],[36,9,36,103,1],[37,9,37,10,1],[39,13,39,30,1],[43,13,43,36,1],[47,13,47,33,1],[53,13,53,25,1],[54,13,54,37,1],[57,13,57,31,1],[58,13,58,35,1],[59,9,59,10,1],[66,40,66,44,1],[73,41,73,53,1],[80,47,80,51,1],[87,54,87,58,1],[94,48,94,52,1],[101,34,101,38,1],[108,51,108,55,1],[115,28,115,32,1],[123,17,123,18,1],[123,19,123,43,1],[123,44,123,45,1],[137,13,137,14,1],[139,17,139,47,1],[140,17,140,18,1],[141,21,141,38,1],[145,17,145,41,1],[151,17,151,57,1],[152,17,152,24,1],[152,38,152,53,1],[152,26,152,34,1],[153,17,153,18,1],[154,21,154,104,1],[155,17,155,18,1],[152,35,152,37,1],[157,17,162,54,1],[163,17,163,59,1],[165,17,165,77,1],[166,13,166,14,1],[177,13,177,14,1],[179,17,179,57,1],[180,17,180,24,1],[180,48,180,63,1],[180,26,180,44,1],[181,17,181,18,1],[182,21,182,58,1],[184,21,184,58,1],[185,21,185,64,1],[186,21,186,22,1],[187,25,187,41,1],[188,21,188,22,1],[189,21,189,85,1],[190,17,190,18,1],[180,45,180,47,1],[191,17,191,56,1],[192,13,192,14,1],[213,9,213,10,1],[214,13,214,65,1],[214,135,214,137,1],[215,9,215,10,1],[221,9,221,10,1],[222,13,222,57,1],[223,13,223,31,1],[224,9,224,10,1],[230,39,230,43,1],[214,65,214,135,1]]);
+      highlightRanges([[39,13,39,14,0],[40,17,40,69,0],[112,9,112,10,0],[114,13,114,45,0],[115,13,115,14,0],[116,17,117,72,0],[121,13,121,82,0],[122,13,122,49,0],[123,13,123,34,0],[126,13,127,107,0],[128,13,130,81,0],[132,13,133,106,0],[134,13,136,81,0],[138,13,139,105,0],[140,13,140,94,0],[142,13,143,105,0],[144,13,144,94,0],[145,9,145,10,0],[215,13,215,14,0],[216,17,216,70,0],[220,13,220,14,0],[221,17,221,63,0],[222,13,222,14,0],[35,9,35,68,1],[36,9,36,10,1],[38,13,38,36,1],[43,13,43,38,1],[46,13,46,52,1],[47,13,47,57,1],[48,13,48,76,1],[49,13,49,76,1],[50,13,50,51,1],[51,9,51,10,1],[60,48,60,52,1],[69,54,69,58,1],[76,49,76,53,1],[84,73,84,77,1],[92,73,92,77,1],[162,9,162,10,1],[163,13,163,37,1],[164,13,164,14,1],[165,17,165,95,1],[166,13,166,14,1],[168,13,168,34,1],[170,13,170,42,1],[171,13,171,14,1],[172,17,174,88,1],[175,13,175,14,1],[176,13,176,43,1],[177,13,177,14,1],[178,17,180,88,1],[181,13,181,14,1],[182,13,182,37,1],[183,13,183,14,1],[184,17,184,100,1],[185,13,185,14,1],[186,13,186,44,1],[187,13,187,14,1],[188,17,188,101,1],[189,13,189,14,1],[190,9,190,10,1],[196,9,196,10,1],[197,13,197,89,1],[198,13,198,87,1],[199,13,199,87,1],[200,13,200,75,1],[201,13,201,58,1],[202,13,202,62,1],[203,9,203,10,1],[213,9,213,10,1],[214,13,214,37,1],[219,13,219,55,1],[223,9,223,10,1]]);
     </script>
   </body>
 </html>
