@@ -2,7 +2,7 @@
 // ApplicationManager.cs
 // 
 // Created on:      08/20/2015 at 8:14 PM
-// Last Modified:   08/22/2015 at 11:42 PM
+// Last Modified:   08/23/2015 at 1:22 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -50,47 +50,59 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         private SystemMonitoringSubsystem _systemMonitoringSubsystem;
 
         private IUserInterfaceDirector _userInterfaceDirector;
+        private bool _enableSpeech;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:System.Object" /> class with
         ///     the specified user interface director and a XAML platform provider.
         /// </summary>
         /// <param name="director">The user interface director</param>
+        /// <param name="enableSpeech">if set to <c>true</c> enable speech.</param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="director" /> is
         ///     <see langword="null" />.
         /// </exception>
-        public ApplicationManager([NotNull] IUserInterfaceDirector director)
-            : this(new XamlPlatformProvider(), director)
+        public ApplicationManager([NotNull] IUserInterfaceDirector director, bool enableSpeech = true)
+            : this(new XamlPlatformProvider(), director, enableSpeech)
+        {
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
+        /// </summary>
+        /// <param name="enableSpeech">if set to <c>true</c> enable speech.</param>
+        public ApplicationManager(bool enableSpeech = true) : this(new XamlPlatformProvider(), enableSpeech)
         {
         }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:System.Object" /> class with
-        ///     the specified user interface director and platform provider.
+        ///     the specified platform provider.
         /// </summary>
         /// <param name="platformProvider"></param>
+        /// <param name="enableSpeech">if set to <c>true</c> enable speech.</param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="platformProvider" /> is
         ///     <see langword="null" />.
         /// </exception>
-        public ApplicationManager([NotNull] IPlatformProvider platformProvider)
-            : this(platformProvider, null)
+        public ApplicationManager([NotNull] IPlatformProvider platformProvider, bool enableSpeech = true)
+            : this(platformProvider, null, enableSpeech)
         {
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Object" /> class with
-        ///     the specified user interface director and platform provider.
+        /// Initializes a new instance of the <see cref="T:System.Object" /> class with
+        /// the specified user interface director and platform provider.
         /// </summary>
-        /// <param name="platformProvider"></param>
+        /// <param name="platformProvider">The platform provider.</param>
         /// <param name="director">The user interface director</param>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="platformProvider" /> is
-        ///     <see langword="null" />.
-        /// </exception>
+        /// <param name="enableSpeech">if set to <c>true</c> enable speech.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException"><paramref name="platformProvider" /> is
+        /// <see langword="null" />.</exception>
         public ApplicationManager([NotNull] IPlatformProvider platformProvider,
-                                  [CanBeNull] IUserInterfaceDirector director)
+                                  [CanBeNull] IUserInterfaceDirector director,
+                                  bool enableSpeech = true)
         {
 
             if (platformProvider == null)
@@ -103,6 +115,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             _alfred = bootstrapper.Create();
 
             // Give Alfred a way to talk to the user and the client a way to log events that are separate from Alfred
+            EnableSpeech = enableSpeech;
             _console = InitializeConsole(platformProvider);
 
             // Set the director. This will, in turn, set the shell
@@ -123,9 +136,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         {
             [DebuggerStepThrough]
             get
-            {
-                return _userInterfaceDirector;
-            }
+            { return _userInterfaceDirector; }
             [DebuggerStepThrough]
             set
             {
@@ -166,9 +177,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         {
             [DebuggerStepThrough]
             get
-            {
-                return _alfred;
-            }
+            { return _alfred; }
         }
 
         /// <summary>
@@ -227,7 +236,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             var baseConsole = new SimpleConsole(platformProvider);
 
             // Give Alfred a voice
-            _console = new AlfredSpeechConsole(baseConsole);
+            _console = new AlfredSpeechConsole(baseConsole) { EnableSpeech = EnableSpeech };
 
             _console.Log("AppManager.InitConsole",
                          "Initializing console.",
@@ -236,6 +245,26 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
 
             return _console;
         }
+
+
+        /// <summary>
+        /// Gets or sets a value indicating whether speech synthesis is enabled.
+        /// </summary>
+        /// <value><c>true</c> if speech synthesis is enabled; otherwise, <c>false</c>.</value>
+        public bool EnableSpeech
+        {
+            get { return _enableSpeech; }
+            set
+            {
+                _enableSpeech = value;
+
+                if (_console != null)
+                {
+                    _console.EnableSpeech = value;
+                }
+            }
+        }
+
 
         /// <summary>
         ///     Initializes and register's Alfred's subsystems
@@ -325,9 +354,9 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             var seconds = TimeSpan.FromSeconds(UpdateFrequencyInSeconds);
 
             var timer = new DispatcherTimer
-                        {
-                            Interval = seconds
-                        };
+            {
+                Interval = seconds
+            };
             timer.Tick += delegate { Update(); };
 
             timer.Start();

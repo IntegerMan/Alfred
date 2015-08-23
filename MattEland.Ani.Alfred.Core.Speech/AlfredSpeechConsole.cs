@@ -77,6 +77,12 @@ namespace MattEland.Ani.Alfred.Core.Speech
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether speech synthesis is enabled.
+        /// </summary>
+        /// <value><c>true</c> if speech synthesis is enabled; otherwise, <c>false</c>.</value>
+        public bool EnableSpeech { get; set; } = true;
+
+        /// <summary>
         ///     Logs the specified message to the console.
         /// </summary>
         /// <param name="title">The title.</param>
@@ -98,7 +104,7 @@ namespace MattEland.Ani.Alfred.Core.Speech
             _console.Log(title, message, level);
 
             // If it's a significant message, tell the user via voice
-            if (_speechEnabledLogLevels.Contains(level))
+            if (EnableSpeech && _speechEnabledLogLevels.Contains(level))
             {
                 // For more serious items, have Alfred say the status beforehand
                 if (level == LogLevel.Warning || level == LogLevel.Error)
