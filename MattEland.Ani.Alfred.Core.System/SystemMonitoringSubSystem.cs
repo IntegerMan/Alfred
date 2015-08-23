@@ -15,6 +15,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Pages;
+using MattEland.Ani.Alfred.Core.SubSystems;
 using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor

@@ -9,10 +9,11 @@
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Common;
 
-namespace MattEland.Ani.Alfred.Core.Modules
+namespace MattEland.Ani.Alfred.Core.SubSystems
 {
     /// <summary>
     ///     The core subsystem provides essential monitoring and control functionality for Alfred such as the Alfred control
