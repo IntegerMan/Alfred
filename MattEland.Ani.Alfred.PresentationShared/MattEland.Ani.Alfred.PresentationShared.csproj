@@ -78,7 +78,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Alfred.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>AlfredAppTestCertificate.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="JetBrains.Annotations, Version=9.2.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
@@ -115,6 +115,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Alfred.pfx" />
+    <None Include="AlfredAppTestCertificate.snk" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
