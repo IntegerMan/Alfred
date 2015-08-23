@@ -142,7 +142,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>call "C:\Dev\Alfred\RunCoverage.bat"</PostBuildEvent>
+    <PostBuildEvent>call "C:\dev\alfred\RunCoverage.bat"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>
