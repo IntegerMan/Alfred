@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:core="clr-namespace:MattEland.Ani.Alfred.Core;assembly=MattEland.Ani.Alfred.Core"
+             x:Name="Explorer"
              mc:Ignorable="d"
              d:DesignHeight="300"
              d:DesignWidth="300">
@@ -16,6 +17,8 @@
 
         <!-- The TreeView containing the items -->
         <TreeView x:Name="TreeHierarchy"
+                  Foreground="{Binding ElementName=Explorer, Path=Foreground}"
+                  Background="{Binding ElementName=Explorer, Path=Background}"                  
                   Grid.Column="0" />
 
         <!-- The Content area containing properties on the currently selected item -->
@@ -24,8 +27,8 @@
                 BorderThickness="1,0,0,0">
 
             <!-- Inside this region will be bound to the component itself -->
-            <Grid DataContext="{Binding ElementName=TreeHierarchy, Path=SelectedItem}"
-                  d:DataContext="{d:DesignInstance core:AlfredComponent}">
+            <DockPanel DataContext="{Binding ElementName=TreeHierarchy, Path=SelectedItem}"
+                       d:DataContext="{d:DesignInstance core:AlfredComponent}">
 
                 <!-- Header -->
                 <Border DockPanel.Dock="Top"
@@ -35,14 +38,16 @@
                 </Border>
 
                 <!-- Item Content -->
-                <DataGrid x:Name="SelectedItemGrid">
+                <DataGrid x:Name="SelectedItemGrid"
+                          Foreground="{Binding ElementName=Explorer, Path=Foreground}"
+                          Background="{Binding ElementName=Explorer, Path=Background}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Name" Width="auto" IsReadOnly="True" />
                         <DataGridTextColumn Header="Value" Width="*" />
                     </DataGrid.Columns>
                 </DataGrid>
 
-            </Grid>
+            </DockPanel>
 
         </Border>
 
