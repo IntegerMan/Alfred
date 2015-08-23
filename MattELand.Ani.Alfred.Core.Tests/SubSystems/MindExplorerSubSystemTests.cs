@@ -160,5 +160,22 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
             var propItem = _subsystem as IPropertyProvider;
             Assert.IsNotNull(propItem);
         }
+
+        /// <summary>
+        /// Ensures that the explorer subsystem provides properties when GetProperties is invoked.
+        /// </summary>
+        /// <remarks>
+        /// See ALF-15
+        /// </remarks>
+        [Test]
+        [SuppressMessage("ReSharper", "UseMethodAny.1")]
+        public void SubsystemHasProperties()
+        {
+            var propItem = _subsystem as IPropertyProvider;
+            var properties = propItem.GetProperties();
+
+            Assert.IsNotNull(properties);
+            Assert.That(properties.Count() >= 1);
+        }
     }
 }

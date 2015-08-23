@@ -53,6 +53,7 @@
     <Compile Include="AlfredBootstrapper.cs" />
     <Compile Include="AlfredCommandResult.cs" />
     <Compile Include="AlfredComponent.cs" />
+    <Compile Include="Definitions\AlfredProperty.cs" />
     <Compile Include="Definitions\ChatCommand.cs" />
     <Compile Include="Definitions\IAlfred.cs" />
     <Compile Include="Definitions\IAlfredCommandRecipient.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Definitions\IAlfredSubsystem.cs" />
     <Compile Include="Console\IConsoleEvent.cs" />
     <Compile Include="Definitions\IHasIdentifier.cs" />
+    <Compile Include="Definitions\IPropertyItem.cs" />
     <Compile Include="Definitions\IPropertyProvider.cs" />
     <Compile Include="Definitions\IShellCommandRecipient.cs" />
     <Compile Include="Definitions\IStatusController.cs" />

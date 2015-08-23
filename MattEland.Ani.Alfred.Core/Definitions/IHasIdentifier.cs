@@ -20,11 +20,5 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// </summary>
         /// <value>The identifier.</value>
         string Id { get; }
-
-        /// <summary>
-        ///     Gets the name.
-        /// </summary>
-        /// <value>The name.</value>
-        string Name { get; }
     }
 }

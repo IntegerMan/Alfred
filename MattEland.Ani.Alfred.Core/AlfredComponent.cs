@@ -25,7 +25,7 @@ namespace MattEland.Ani.Alfred.Core
     /// <summary>
     ///     An abstract class containing most common shared functionality between Subsystems and Modules
     /// </summary>
-    public abstract class AlfredComponent : INotifyPropertyChanged
+    public abstract class AlfredComponent : INotifyPropertyChanged, IPropertyProvider
     {
         [CanBeNull]
         private IAlfred _alfred;
@@ -387,5 +387,19 @@ namespace MattEland.Ani.Alfred.Core
 
             _alfred.Register(chatProvider);
         }
+
+        /// <summary>
+        /// Gets a list of properties provided by this item.
+        /// </summary>
+        /// <returns>The properties</returns>
+        public virtual IEnumerable<IPropertyItem> GetProperties()
+        {
+            yield return new AlfredProperty("Name", Name);
+            yield return new AlfredProperty("Status", Status);
+            yield return new AlfredProperty("Child Items", Children.Count());
+            yield return new AlfredProperty("Visible", IsVisible);
+            yield return new AlfredProperty("Version", Version);
+        }
     }
+
 }
