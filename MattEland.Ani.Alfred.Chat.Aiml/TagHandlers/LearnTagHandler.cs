@@ -42,59 +42,61 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// <returns>The processed output</returns>
         protected override string ProcessChange()
         {
-            if (TemplateNode.Name.Matches("learn") && TemplateNode.InnerText.HasText())
+            if (!TemplateNode.Name.Matches("learn") || !TemplateNode.InnerText.HasText())
             {
-                try
-                {
-                    LearnFromDocument(TemplateNode.InnerText);
-                }
-                catch (SecurityException ex)
-                {
-                    Log(string.Format(Locale,
-                                      Resources.LearnErrorSecurityException.NonNull(),
-                                      TemplateNode.InnerText,
-                                      ex.Message),
-                        LogLevel.Error);
-                }
-                catch (UnauthorizedAccessException ex)
-                {
-                    Log(string.Format(Locale,
-                                      Resources.LearnErrorUnauthorizedException.NonNull(),
-                                      TemplateNode.InnerText,
-                                      ex.Message),
-                        LogLevel.Error);
-                }
-                catch (FileNotFoundException ex)
-                {
-                    Log(string.Format(Locale,
-                                      Resources.LearnErrorFileNotFound.NonNull(),
-                                      ex.FileName),
-                        LogLevel.Error);
-                }
-                catch (IOException ex)
-                {
-                    Log(string.Format(Locale,
-                                      Resources.LearnErrorIOException.NonNull(),
-                                      ex.GetType().Name,
-                                      ex.Message,
-                                      TemplateNode.InnerText),
-                        LogLevel.Error);
-                }
-                catch (XmlException ex)
-                {
-                    Log(string.Format(Locale,
-                                      Resources.LearnErrorXmlException.NonNull(),
-                                      ex.Message,
-                                      TemplateNode.InnerText),
-                        LogLevel.Error);
-                }
-                catch (NotSupportedException)
-                {
-                    Log(string.Format(Locale,
-                                      Resources.LearnErrorNotSupportedException.NonNull(),
-                                      TemplateNode.InnerText),
-                        LogLevel.Error);
-                }
+                return string.Empty;
+            }
+
+            try
+            {
+                LearnFromDocument(TemplateNode.InnerText);
+            }
+            catch (SecurityException ex)
+            {
+                Log(string.Format(Locale,
+                                  Resources.LearnErrorSecurityException.NonNull(),
+                                  TemplateNode.InnerText,
+                                  ex.Message),
+                    LogLevel.Error);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                Log(string.Format(Locale,
+                                  Resources.LearnErrorUnauthorizedException.NonNull(),
+                                  TemplateNode.InnerText,
+                                  ex.Message),
+                    LogLevel.Error);
+            }
+            catch (FileNotFoundException ex)
+            {
+                Log(string.Format(Locale,
+                                  Resources.LearnErrorFileNotFound.NonNull(),
+                                  ex.FileName),
+                    LogLevel.Error);
+            }
+            catch (IOException ex)
+            {
+                Log(string.Format(Locale,
+                                  Resources.LearnErrorIOException.NonNull(),
+                                  ex.GetType().Name,
+                                  ex.Message,
+                                  TemplateNode.InnerText),
+                    LogLevel.Error);
+            }
+            catch (XmlException ex)
+            {
+                Log(string.Format(Locale,
+                                  Resources.LearnErrorXmlException.NonNull(),
+                                  ex.Message,
+                                  TemplateNode.InnerText),
+                    LogLevel.Error);
+            }
+            catch (NotSupportedException)
+            {
+                Log(string.Format(Locale,
+                                  Resources.LearnErrorNotSupportedException.NonNull(),
+                                  TemplateNode.InnerText),
+                    LogLevel.Error);
             }
 
             // Learn never has any output

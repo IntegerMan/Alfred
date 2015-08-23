@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Root CoveredStatements="4273" TotalStatements="6616" CoveragePercent="65" ReportType="NDependXML" DotCoverVersion="3.1.1">
+<Root CoveredStatements="4273" TotalStatements="6603" CoveragePercent="65" ReportType="NDependXML" DotCoverVersion="3.1.1">
   <Assembly Name="MattEland.Ani.Alfred.Chat" CoveredStatements="279" TotalStatements="374" CoveragePercent="75">
     <Namespace Name="MattEland.Ani.Alfred.Chat" CoveredStatements="279" TotalStatements="374" CoveragePercent="75">
       <Type Name="AimlStatementHandler" CoveredStatements="103" TotalStatements="137" CoveragePercent="75">
@@ -95,7 +95,7 @@
       </Type>
     </Namespace>
   </Assembly>
-  <Assembly Name="MattEland.Ani.Alfred.Chat.Aiml" CoveredStatements="953" TotalStatements="2199" CoveragePercent="43">
+  <Assembly Name="MattEland.Ani.Alfred.Chat.Aiml" CoveredStatements="953" TotalStatements="2204" CoveragePercent="43">
     <Namespace Name="MattEland.Ani.Alfred.Chat.Aiml" CoveredStatements="390" TotalStatements="693" CoveragePercent="56">
       <Type Name="ChatEngine" CoveredStatements="58" TotalStatements="88" CoveragePercent="66">
         <Method Name=".ctor(IConsole)" CoveredStatements="12" TotalStatements="12" CoveragePercent="100" FirstStatementLine="135" />
@@ -247,7 +247,7 @@
         <Method Name="GetOutputSentence(Int32,Int32)" CoveredStatements="0" TotalStatements="12" CoveragePercent="0" FirstStatementLine="103" />
       </Type>
     </Namespace>
-    <Namespace Name="MattEland.Ani.Alfred.Chat.Aiml.TagHandlers" CoveredStatements="134" TotalStatements="691" CoveragePercent="19">
+    <Namespace Name="MattEland.Ani.Alfred.Chat.Aiml.TagHandlers" CoveredStatements="134" TotalStatements="696" CoveragePercent="19">
       <Type Name="BotTagHandler" CoveredStatements="0" TotalStatements="14" CoveragePercent="0">
         <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="28" />
         <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="11" CoveragePercent="0" FirstStatementLine="37" />
@@ -302,9 +302,10 @@
         <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="28" />
         <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="37" />
       </Type>
-      <Type Name="LearnTagHandler" CoveredStatements="0" TotalStatements="44" CoveragePercent="0">
-        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="34" />
-        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="41" CoveragePercent="0" FirstStatementLine="43" />
+      <Type Name="LearnTagHandler" CoveredStatements="0" TotalStatements="49" CoveragePercent="0">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="35" />
+        <Method Name="LearnFromDocument(String)" CoveredStatements="0" TotalStatements="13" CoveragePercent="0" FirstStatementLine="109" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="33" CoveragePercent="0" FirstStatementLine="44" />
       </Type>
       <Type Name="LowercaseTagHandler" CoveredStatements="0" TotalStatements="9" CoveragePercent="0">
         <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="29" />
@@ -1601,8 +1602,8 @@
       </Type>
     </Namespace>
   </Assembly>
-  <Assembly Name="MattEland.Common" CoveredStatements="64" TotalStatements="182" CoveragePercent="35">
-    <Namespace Name="MattEland.Common" CoveredStatements="64" TotalStatements="182" CoveragePercent="35">
+  <Assembly Name="MattEland.Common" CoveredStatements="64" TotalStatements="164" CoveragePercent="39">
+    <Namespace Name="MattEland.Common" CoveredStatements="64" TotalStatements="164" CoveragePercent="39">
       <Type Name="AssemblyHelper" CoveredStatements="23" TotalStatements="38" CoveragePercent="61">
         <Type Name="&lt;&gt;c__DisplayClass1_0" CoveredStatements="1" TotalStatements="1" CoveragePercent="100">
           <Method Name="&lt;GetTypesWithAttributes&gt;b__0(Type)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="77" />
@@ -1616,9 +1617,8 @@
         <Method Name="AddSafe&lt;T&gt;(ICollection&lt;T&gt;,T)" CoveredStatements="8" TotalStatements="12" CoveragePercent="67" FirstStatementLine="36" />
         <Method Name="Pluralize&lt;T&gt;(IEnumerable&lt;T&gt;,String,String)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="67" />
       </Type>
-      <Type Name="ExceptionExtensions" CoveredStatements="0" TotalStatements="32" CoveragePercent="0">
-        <Method Name="BuildAdditionalDetails(ReflectionTypeLoadException,StringBuilder,Boolean,CultureInfo)" CoveredStatements="0" TotalStatements="18" CoveragePercent="0" FirstStatementLine="85" />
-        <Method Name="BuildDetailsMessage(Exception,StringBuilder,Boolean,CultureInfo)" CoveredStatements="0" TotalStatements="14" CoveragePercent="0" FirstStatementLine="41" />
+      <Type Name="ExceptionExtensions" CoveredStatements="0" TotalStatements="14" CoveragePercent="0">
+        <Method Name="BuildDetailsMessage(Exception,StringBuilder,Boolean,CultureInfo)" CoveredStatements="0" TotalStatements="14" CoveragePercent="0" FirstStatementLine="40" />
       </Type>
       <Type Name="IntegerExtensions" CoveredStatements="3" TotalStatements="15" CoveragePercent="20">
         <Method Name="IsWithinBoundsOf(Int32,ICollection)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="33" />
