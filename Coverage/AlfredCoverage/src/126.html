@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\matteland.ani.alfred.core.system\valuemetricproviderfactory.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// ValueMetricProviderFactory.cs
+// 
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/21/2015 at 5:33 PM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.Contracts;
+
+using JetBrains.Annotations;
+
+namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
+{
+    /// &lt;summary&gt;
+    ///     A factory that builds ValueMetricProviders
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;
+    ///     This is primarily used for testing
+    /// &lt;/remarks&gt;
+    public class ValueMetricProviderFactory : IMetricProviderFactory
+    {
+        /// &lt;summary&gt;
+        ///     Gets or sets the value to provide to ValueMetricProviders that don&#39;t have values of their own
+        ///     set.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The value.&lt;/value&gt;
+        public float DefaultValue { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Gets the value providers.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The value providers.&lt;/value&gt;
+        [NotNull]
+        [ItemNotNull]
+        [UsedImplicitly]
+        public ICollection&lt;ValueMetricProvider&gt; Providers { get; } = new List&lt;ValueMetricProvider&gt;();
+
+        /// &lt;summary&gt;
+        ///     Gets the category instance names dictionary. This dictionary allows test code to register
+        ///     expected responses for when GetCategoryInstanceNames is called.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The category instance names.&lt;/value&gt;
+        [NotNull]
+        public IDictionary&lt;string, IEnumerable&lt;string&gt;&gt; CategoryInstanceNames { get; } =
+            new Dictionary&lt;string, IEnumerable&lt;string&gt;&gt;();
+
+        /// &lt;summary&gt;
+        ///     Builds a metric provider for the specified type.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;categoryName&quot;&gt;Name of the category.&lt;/param&gt;
+        /// &lt;param name=&quot;counterName&quot;&gt;Name of the counter.&lt;/param&gt;
+        /// &lt;param name=&quot;instanceName&quot;&gt;Name of the instance.&lt;/param&gt;
+        /// &lt;returns&gt;A metric provider&lt;/returns&gt;
+        [NotNull]
+        public MetricProviderBase Build([NotNull] string categoryName,
+                                        [NotNull] string counterName,
+                                        [CanBeNull] string instanceName = null)
+        {
+            var provider = new ValueMetricProvider(this, instanceName ?? counterName);
+
+            // Register the item in the list so it can be accessed during testing
+            Providers.Add(provider);
+
+            return provider;
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the names of each counter instance in a category.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;categoryName&quot;&gt;Name of the category.&lt;/param&gt;
+        /// &lt;returns&gt;A collection of counter instance names&lt;/returns&gt;
+        public IEnumerable&lt;string&gt; GetCategoryInstanceNames([NotNull] string categoryName)
+        {
+            Contract.Requires&lt;ArgumentNullException&gt;(categoryName != null);
+            if (CategoryInstanceNames.ContainsKey(categoryName))
+            {
+                return CategoryInstanceNames[categoryName];
+            }
+
+            // Fallback to an empty list
+            return new List&lt;string&gt;();
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[29,37,29,41,1],[29,42,29,46,1],[38,61,38,65,1],[46,81,46,85,1],[60,9,60,10,1],[61,13,61,87,1],[64,13,64,37,1],[66,13,66,29,1],[67,9,67,10,1],[75,9,75,10,1],[76,13,76,65,1],[77,13,77,14,1],[78,17,78,60,1],[82,13,82,39,1],[83,9,83,10,1],[38,70,38,101,1],[47,13,47,58,1]]);
+    </script>
+  </body>
+</html>

@@ -78,16 +78,16 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Shell\ShellTagHandlerTests.cs" />
-    <Compile Include="SubSystems\AlfredCoreSubSystemTests.cs" />
+    <Compile Include="Subsystems\AlfredCoreSubsystemTests.cs" />
     <Compile Include="AlfredProviderTests.cs" />
     <Compile Include="Mocks\AlfredTestModule.cs" />
-    <Compile Include="SubSystems\MindExplorerSubSystemTests.cs" />
-    <Compile Include="SubSystems\SubSystemTests.cs" />
+    <Compile Include="Subsystems\MindExplorerSubsystemTests.cs" />
+    <Compile Include="Subsystems\SubsystemTests.cs" />
     <Compile Include="Widgets\ButtonWidgetTests.cs" />
     <Compile Include="Modules\AlfredPowerModuleTests.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SubSystems\SystemSubSystemTests.cs" />
+    <Compile Include="Subsystems\SystemSubsystemTests.cs" />
     <Compile Include="Mocks\TestSubSystem.cs" />
     <Compile Include="Widgets\TextWidgetTests.cs" />
     <Compile Include="Modules\TimeModuleTests.cs" />

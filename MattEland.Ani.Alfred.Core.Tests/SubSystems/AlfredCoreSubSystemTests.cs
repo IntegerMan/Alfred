@@ -22,11 +22,11 @@ using MattEland.Ani.Alfred.Core.SubSystems;
 
 using NUnit.Framework;
 
-namespace MattEland.Ani.Alfred.Tests.SubSystems
+namespace MattEland.Ani.Alfred.Tests.Subsystems
 {
     [TestFixture]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-    public class AlfredCoreSubSystemTests
+    public class AlfredCoreSubsystemTests
     {
         [SetUp]
         public void SetUp()

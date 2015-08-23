@@ -21,14 +21,14 @@ using MattEland.Ani.Alfred.Core.Pages;
 
 using NUnit.Framework;
 
-namespace MattEland.Ani.Alfred.Tests.SubSystems
+namespace MattEland.Ani.Alfred.Tests.Subsystems
 {
     /// <summary>
     /// A series of tests related to the System Monitoring SubSystem
     /// </summary>
     [TestFixture]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-    public class SystemSubSystemTests
+    public class SystemSubsystemTests
     {
         [NotNull]
         private SystemMonitoringSubsystem _subsystem;

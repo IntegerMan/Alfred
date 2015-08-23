@@ -17,14 +17,14 @@ using MattEland.Ani.Alfred.Tests.Mocks;
 
 using NUnit.Framework;
 
-namespace MattEland.Ani.Alfred.Tests.SubSystems
+namespace MattEland.Ani.Alfred.Tests.Subsystems
 {
     /// <summary>
     /// Tests oriented around testing the subsystem update pumps and related functions
     /// </summary>
     [TestFixture]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-    public class SubSystemTests
+    public class SubsystemTests
     {
         [NotNull]
         private AlfredApplication _alfred;

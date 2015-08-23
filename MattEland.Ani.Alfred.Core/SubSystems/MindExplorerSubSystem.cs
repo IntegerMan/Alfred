@@ -18,7 +18,7 @@ namespace MattEland.Ani.Alfred.Core.SubSystems
     ///     A SubSystem that pokes around at the internal state of each of Alfred's SubSystems and their
     ///     sub-components. This SubSystem has a particular focus towards anything AI-releted.
     /// </summary>
-    public class MindExplorerSubSystem : AlfredSubsystem
+    public class MindExplorerSubsystem : AlfredSubsystem
     {
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace MattEland.Ani.Alfred.Core.SubSystems
         /// <param name="provider">The provider.</param>
         /// <param name="console">The console.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public MindExplorerSubSystem([NotNull] IPlatformProvider provider,
+        public MindExplorerSubsystem([NotNull] IPlatformProvider provider,
                                      [CanBeNull] IConsole console = null) : base(provider, console)
         {
         }

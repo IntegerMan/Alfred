@@ -75,9 +75,9 @@
     <Compile Include="Pages\AlfredPage.cs" />
     <Compile Include="Definitions\AlfredStatus.cs" />
     <Compile Include="AlfredStatusController.cs" />
-    <Compile Include="SubSystems\AlfredSubSystem.cs" />
+    <Compile Include="Subsystems\AlfredSubsystem.cs" />
     <Compile Include="Console\LogLevel.cs" />
-    <Compile Include="SubSystems\AlfredCoreSubsystem.cs" />
+    <Compile Include="Subsystems\AlfredCoreSubsystem.cs" />
     <Compile Include="Modules\AlfredSubSystemListModule.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Definitions\IPlatformProvider.cs" />
@@ -92,7 +92,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="SubSystems\MindExplorerSubSystem.cs" />
+    <Compile Include="Subsystems\MindExplorerSubsystem.cs" />
     <Compile Include="Widgets\AlfredProgressBarWidget.cs" />
     <Compile Include="Widgets\AlfredTextWidget.cs" />
     <Compile Include="Widgets\AlfredWidget.cs" />

@@ -13,13 +13,13 @@ using MattEland.Common;
 
 using NUnit.Framework;
 
-namespace MattEland.Ani.Alfred.Tests.SubSystems
+namespace MattEland.Ani.Alfred.Tests.Subsystems
 {
     /// <summary>
     /// Contains tests related to the MindExplorerSubSystem.
     /// </summary>
     [TestFixture]
-    public class MindExplorerSubSystemTests
+    public class MindExplorerSubsystemTests
     {
         /// <summary>
         /// Sets up the environment for each test.
@@ -36,7 +36,7 @@ namespace MattEland.Ani.Alfred.Tests.SubSystems
         [Test]
         public void MindExplorerCanBeInitialized()
         {
-            var subsystem = new MindExplorerSubSystem(new SimplePlatformProvider());
+            var subsystem = new MindExplorerSubsystem(new SimplePlatformProvider());
             Assert.That(subsystem.Name.HasText());
         }
 
