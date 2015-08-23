@@ -11,7 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 
 using JetBrains.Annotations;
@@ -70,41 +69,5 @@ namespace MattEland.Common
             return stringBuilder.ToString();
         }
 
-        /// <summary>
-        ///     Builds additional details for a ReflectionTypeLoadException.
-        /// </summary>
-        /// <param name="rex">The rex.</param>
-        /// <param name="stringBuilder">The string builder.</param>
-        /// <param name="useNewLine">if set to <c>true</c> new lines will be used in the message.</param>
-        /// <param name="culture">The culture.</param>
-        private static void BuildAdditionalDetails(
-            [NotNull] ReflectionTypeLoadException rex,
-            [NotNull] StringBuilder stringBuilder,
-            bool useNewLine,
-            [NotNull] CultureInfo culture)
-        {
-
-            if (rex.LoaderExceptions == null)
-            {
-                return;
-            }
-
-            var loaderExceptions = rex.LoaderExceptions.ToList();
-            if (loaderExceptions.Any())
-            {
-                stringBuilder.AppendConditional(Resources.ExceptionExtensionsLoadingLoaderExceptions, useNewLine);
-
-                // Loop through each loader exception and recursively call the core exception details message on it
-                foreach (var loaderException in loaderExceptions)
-                {
-                    var detailsMessage =
-                        loaderException.BuildDetailsMessage(stringBuilder,
-                                                                     useNewLine,
-                                                                     culture);
-
-                    stringBuilder.AppendConditional(detailsMessage, useNewLine);
-                }
-            }
-        }
     }
 }
