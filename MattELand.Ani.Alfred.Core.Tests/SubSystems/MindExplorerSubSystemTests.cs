@@ -172,7 +172,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         public void SubsystemHasProperties()
         {
             var propItem = _subsystem as IPropertyProvider;
-            var properties = propItem.GetProperties();
+            var properties = propItem.Properties;
 
             Assert.IsNotNull(properties);
             Assert.That(properties.Count() >= 1);

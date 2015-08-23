@@ -8,6 +8,7 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -265,6 +266,14 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             }
         }
 
+        /// <summary>
+        /// Gets the root nodes.
+        /// </summary>
+        /// <value>The root nodes.</value>
+        public IEnumerable<IPropertyProvider> RootNodes
+        {
+            get { yield return _alfred; }
+        }
 
         /// <summary>
         ///     Initializes and register's Alfred's subsystems

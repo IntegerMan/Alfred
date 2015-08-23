@@ -27,7 +27,7 @@ namespace MattEland.Ani.Alfred.Core
     ///     Coordinates providing personal assistance to a user interface and receiving settings and queries back from the user
     ///     interface.
     /// </summary>
-    public sealed class AlfredApplication : INotifyPropertyChanged, IAlfred
+    public sealed class AlfredApplication : INotifyPropertyChanged, IAlfred, IPropertyProvider
     {
         /// <summary>
         ///     The platform provider
@@ -351,6 +351,47 @@ namespace MattEland.Ani.Alfred.Core
 
             _subsystems.AddSafe(subsystem);
             subsystem.OnRegistered(this);
+        }
+
+        /// <summary>
+        /// Gets a list of properties provided by this item.
+        /// </summary>
+        /// <returns>The properties</returns>
+        public IEnumerable<IPropertyItem> Properties
+        {
+            get
+            {
+                yield return new AlfredProperty("Name", Name);
+                yield return new AlfredProperty("Status", Status);
+                yield return new AlfredProperty("Is Online", IsOnline);
+                yield return new AlfredProperty("Subsystems", Subsystems.Count());
+                yield return new AlfredProperty("Root Pages", RootPages.Count());
+                yield return new AlfredProperty("Version", Version);
+                yield return new AlfredProperty("Console", Console);
+                yield return new AlfredProperty("Platform Provider", PlatformProvider);
+            }
+        }
+
+        /// <summary>
+        /// Gets the property providers.
+        /// </summary>
+        /// <value>The property providers.</value>
+        public IEnumerable<IPropertyProvider> PropertyProviders
+        {
+            get
+            {
+                // Return subsystems
+                foreach (var subsystem in Subsystems)
+                {
+                    yield return subsystem;
+                }
+
+                // Return pages, though they'll be duplicated within their subsystems
+                foreach (var page in RootPages)
+                {
+                    yield return page;
+                }
+            }
         }
 
         /// <summary>

@@ -392,13 +392,28 @@ namespace MattEland.Ani.Alfred.Core
         /// Gets a list of properties provided by this item.
         /// </summary>
         /// <returns>The properties</returns>
-        public virtual IEnumerable<IPropertyItem> GetProperties()
+        public IEnumerable<IPropertyItem> Properties
         {
-            yield return new AlfredProperty("Name", Name);
-            yield return new AlfredProperty("Status", Status);
-            yield return new AlfredProperty("Child Items", Children.Count());
-            yield return new AlfredProperty("Visible", IsVisible);
-            yield return new AlfredProperty("Version", Version);
+            get
+            {
+                yield return new AlfredProperty("Name", Name);
+                yield return new AlfredProperty("Status", Status);
+                yield return new AlfredProperty("Child Items", Children.Count());
+                yield return new AlfredProperty("Visible", IsVisible);
+                yield return new AlfredProperty("Version", Version);
+            }
+        }
+
+        /// <summary>
+        /// Gets the property providers nested inside of this property provider.
+        /// </summary>
+        /// <value>The property providers.</value>
+        public IEnumerable<IPropertyProvider> PropertyProviders
+        {
+            get
+            {
+                return Children;
+            }
         }
     }
 

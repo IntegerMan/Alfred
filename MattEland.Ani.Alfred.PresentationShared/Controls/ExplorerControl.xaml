@@ -18,6 +18,7 @@
 
         <!-- The TreeView containing the items -->
         <TreeView x:Name="TreeHierarchy"
+                  x:FieldModifier="public"
                   Foreground="{Binding ElementName=Explorer, Path=Foreground}"
                   Background="{Binding ElementName=Explorer, Path=Background}"                  
                   Grid.Column="0" />
@@ -39,7 +40,8 @@
                 </Border>
 
                 <!-- Item Content -->
-                <DataGrid x:Name="SelectedItemGrid"
+                <DataGrid x:Name="GridProperties"
+                          x:FieldModifier="public"
                           Foreground="{Binding ElementName=Explorer, Path=Foreground}"
                           Background="{Binding ElementName=Explorer, Path=Background}">
                     <DataGrid.Columns>
