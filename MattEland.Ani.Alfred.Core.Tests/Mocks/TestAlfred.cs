@@ -81,6 +81,24 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
         }
 
         /// <summary>
+        /// Gets a list of properties provided by this item.
+        /// </summary>
+        /// <returns>The properties</returns>
+        public IEnumerable<IPropertyItem> Properties
+        {
+            get { yield break; }
+        }
+
+        /// <summary>
+        /// Gets the property providers.
+        /// </summary>
+        /// <value>The property providers.</value>
+        public IEnumerable<IPropertyProvider> PropertyProviders
+        {
+            get { yield break; }
+        }
+
+        /// <summary>
         ///     Initializes this instance.
         /// </summary>
         public void Initialize()

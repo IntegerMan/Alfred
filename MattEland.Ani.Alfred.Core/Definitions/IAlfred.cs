@@ -19,7 +19,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
     /// <summary>
     ///     An interface promising Alfred Framework style capabilities
     /// </summary>
-    public interface IAlfred
+    public interface IAlfred : IPropertyProvider
     {
         /// <summary>
         ///     Gets the console provider. This can be null.

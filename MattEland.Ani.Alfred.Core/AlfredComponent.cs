@@ -288,7 +288,7 @@ namespace MattEland.Ani.Alfred.Core
         /// Handles initialization events
         /// </summary>
         /// <param name="alfred">The alfred instance.</param>
-        protected virtual void InitializeProtected([CanBeNull] IAlfred alfred)
+        protected virtual void InitializeProtected([NotNull] IAlfred alfred)
         {
         }
 

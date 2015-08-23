@@ -37,6 +37,23 @@ namespace MattEland.Ani.Alfred.Core.SubSystems
         }
 
         /// <summary>
+        /// Handles initialization events
+        /// </summary>
+        /// <param name="alfred">The alfred instance.</param>
+        protected override void InitializeProtected(IAlfred alfred)
+        {
+
+            // Build out a new collection using the platform provider
+            var nodes = alfred.PlatformProvider.CreateCollection<IPropertyProvider>();
+
+            // Add alfred to the collection as the root level will only contain Alfred.
+            nodes.Add(alfred);
+
+            // Set the page's root nodes property so the UI can display things.
+            MindExplorerPage.RootNodes = nodes;
+        }
+
+        /// <summary>
         ///     Gets the Mind Explorer page.
         /// </summary>
         /// <remarks>

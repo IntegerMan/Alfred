@@ -177,5 +177,20 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
             Assert.IsNotNull(properties);
             Assert.That(properties.Count() >= 1);
         }
+
+        /// <summary>
+        /// Checks that the subsystem has items in its root nodes collection
+        /// </summary>
+        /// <remarks>
+        /// See ALF-15
+        /// </remarks>
+        [Test]
+        public void SubsystemPageHasNodes()
+        {
+            _alfred.Register(_subsystem);
+            _alfred.Initialize();
+
+            Assert.That(_page.RootNodes.Any());
+        }
     }
 }
