@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Root CoveredStatements="4061" TotalStatements="6414" CoveragePercent="63" ReportType="NDependXML" DotCoverVersion="3.1.1">
+<Root CoveredStatements="4014" TotalStatements="6093" CoveragePercent="66" ReportType="NDependXML" DotCoverVersion="3.1.1">
   <Assembly Name="MattEland.Ani.Alfred.Chat" CoveredStatements="276" TotalStatements="374" CoveragePercent="74">
     <Namespace Name="MattEland.Ani.Alfred.Chat" CoveredStatements="276" TotalStatements="374" CoveragePercent="74">
       <Type Name="AimlStatementHandler" CoveredStatements="103" TotalStatements="137" CoveragePercent="75">
@@ -1061,98 +1061,6 @@
         <Method Name="get_UsingVoiceLog()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="103" />
         <Method Name="get_VoiceFoundList()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="112" />
         <Method Name="set_Culture(CultureInfo)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="58" />
-      </Type>
-    </Namespace>
-  </Assembly>
-  <Assembly Name="MattEland.Ani.Alfred.PresentationShared" CoveredStatements="47" TotalStatements="321" CoveragePercent="15">
-    <Namespace Name="MattEland.Ani.Alfred.PresentationShared.Commands" CoveredStatements="47" TotalStatements="140" CoveragePercent="34">
-      <Type Name="ApplicationManager" CoveredStatements="47" TotalStatements="103" CoveragePercent="46">
-        <Method Name=".ctor(IPlatformProvider)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="78" />
-        <Method Name=".ctor(IPlatformProvider,IUserInterfaceDirector)" CoveredStatements="10" TotalStatements="12" CoveragePercent="83" FirstStatementLine="92" />
-        <Method Name=".ctor(IUserInterfaceDirector)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="64" />
-        <Method Name="&lt;InitializeUpdatePump&gt;b__30_0(Object,EventArgs)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="331" />
-        <Method Name="Dispose()" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="206" />
-        <Method Name="get_Alfred()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="169" />
-        <Method Name="get_Console()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="181" />
-        <Method Name="get_Locale()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="192" />
-        <Method Name="get_ShellManager()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="154" />
-        <Method Name="get_UserInterfaceDirector()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="126" />
-        <Method Name="InitializeConsole(IPlatformProvider)" CoveredStatements="8" TotalStatements="10" CoveragePercent="80" FirstStatementLine="220" />
-        <Method Name="InitializeSubsystems(IPlatformProvider)" CoveredStatements="14" TotalStatements="22" CoveragePercent="64" FirstStatementLine="245" />
-        <Method Name="InitializeUpdatePump()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="324" />
-        <Method Name="set_ShellManager(ShellCommandManager)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="156" />
-        <Method Name="set_UserInterfaceDirector(IUserInterfaceDirector)" CoveredStatements="3" TotalStatements="11" CoveragePercent="27" FirstStatementLine="131" />
-        <Method Name="Start()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="304" />
-        <Method Name="Stop()" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="312" />
-        <Method Name="Update()" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="292" />
-      </Type>
-      <Type Name="ShellCommandManager" CoveredStatements="0" TotalStatements="22" CoveragePercent="0">
-        <Method Name=".ctor(IUserInterfaceDirector,AlfredApplication)" CoveredStatements="0" TotalStatements="11" CoveragePercent="0" FirstStatementLine="38" />
-        <Method Name="HandleNavigationCommand(ShellCommand)" CoveredStatements="0" TotalStatements="5" CoveragePercent="0" FirstStatementLine="76" />
-        <Method Name="ProcessShellCommand(ShellCommand)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="58" />
-      </Type>
-      <Type Name="XamlClientCommand" CoveredStatements="0" TotalStatements="6" CoveragePercent="0">
-        <Method Name=".ctor()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="24" />
-        <Method Name=".ctor(Action)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="32" />
-      </Type>
-      <Type Name="XamlPlatformProvider" CoveredStatements="0" TotalStatements="9" CoveragePercent="0">
-        <Method Name="CreateCollection&lt;T&gt;()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="28" />
-        <Method Name="CreateCommand()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="37" />
-        <Method Name="CreateCommand(Action)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="47" />
-      </Type>
-    </Namespace>
-    <Namespace Name="MattEland.Ani.Alfred.PresentationShared.Controls" CoveredStatements="0" TotalStatements="22" CoveragePercent="0">
-      <Type Name="ChatPane" CoveredStatements="0" TotalStatements="17" CoveragePercent="0">
-        <Method Name=".ctor()" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="27" />
-        <Method Name="InitializeComponent()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="1" />
-        <Method Name="OnSubmitClicked(Object,RoutedEventArgs)" CoveredStatements="0" TotalStatements="11" CoveragePercent="0" FirstStatementLine="39" />
-        <Method Name="System.Windows.Markup.IComponentConnector.Connect(Int32,Object)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="38" />
-      </Type>
-      <Type Name="ExplorerControl" CoveredStatements="0" TotalStatements="5" CoveragePercent="0">
-        <Method Name=".ctor()" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="15" />
-        <Method Name="InitializeComponent()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="1" />
-      </Type>
-    </Namespace>
-    <Namespace Name="MattEland.Ani.Alfred.PresentationShared.Converters" CoveredStatements="0" TotalStatements="113" CoveragePercent="0">
-      <Type Name="LogLevelToBrushConverter" CoveredStatements="0" TotalStatements="94" CoveragePercent="0">
-        <Method Name=".cctor()" CoveredStatements="0" TotalStatements="7" CoveragePercent="0" FirstStatementLine="32" />
-        <Method Name="Convert(Object,Type,Object,CultureInfo)" CoveredStatements="0" TotalStatements="12" CoveragePercent="0" FirstStatementLine="280" />
-        <Method Name="ConvertBack(Object,Type,Object,CultureInfo)" CoveredStatements="0" TotalStatements="2" CoveragePercent="0" FirstStatementLine="318" />
-        <Method Name="get_ChatResponseBrush()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="252" />
-        <Method Name="get_DefaultBrush()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="156" />
-        <Method Name="get_ErrorBrush()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="132" />
-        <Method Name="get_InfoBrush()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="204" />
-        <Method Name="get_UserInputBrush()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="228" />
-        <Method Name="get_VerboseBrush()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="110" />
-        <Method Name="get_WarningBrush()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="180" />
-        <Method Name="GetBrushForLevel(LogLevel)" CoveredStatements="0" TotalStatements="10" CoveragePercent="0" FirstStatementLine="329" />
-        <Method Name="set_ChatResponseBrush(Brush)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="254" />
-        <Method Name="set_DefaultBrush(Brush)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="158" />
-        <Method Name="set_ErrorBrush(Brush)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="134" />
-        <Method Name="set_InfoBrush(Brush)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="206" />
-        <Method Name="set_UserInputBrush(Brush)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="230" />
-        <Method Name="set_VerboseBrush(Brush)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="112" />
-        <Method Name="set_WarningBrush(Brush)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="182" />
-      </Type>
-      <Type Name="VisibilityConverter" CoveredStatements="0" TotalStatements="19" CoveragePercent="0">
-        <Method Name="Convert(Object,Type,Object,CultureInfo)" CoveredStatements="0" TotalStatements="15" CoveragePercent="0" FirstStatementLine="36" />
-        <Method Name="ConvertBack(Object,Type,Object,CultureInfo)" CoveredStatements="0" TotalStatements="2" CoveragePercent="0" FirstStatementLine="68" />
-        <Method Name="get_Invert()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="23" />
-        <Method Name="set_Invert(Boolean)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="23" />
-      </Type>
-    </Namespace>
-    <Namespace Name="MattEland.Ani.Alfred.PresentationShared.Helpers" CoveredStatements="0" TotalStatements="46" CoveragePercent="0">
-      <Type Name="SelectionHelper" CoveredStatements="0" TotalStatements="27" CoveragePercent="0">
-        <Type Name="&lt;&gt;c__DisplayClass0_0" CoveredStatements="0" TotalStatements="1" CoveragePercent="0">
-          <Method Name="&lt;SelectItemById&gt;b__0(IHasIdentifier)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="50" />
-        </Type>
-        <Method Name="SelectFirstItem(Selector)" CoveredStatements="0" TotalStatements="9" CoveragePercent="0" FirstStatementLine="68" />
-        <Method Name="SelectItemById(Selector,String)" CoveredStatements="0" TotalStatements="17" CoveragePercent="0" FirstStatementLine="35" />
-      </Type>
-      <Type Name="SharedResourceDictionary" CoveredStatements="0" TotalStatements="19" CoveragePercent="0">
-        <Method Name=".cctor()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="31" />
-        <Method Name="get_Source()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="50" />
-        <Method Name="set_Source(Uri)" CoveredStatements="0" TotalStatements="15" CoveragePercent="0" FirstStatementLine="53" />
       </Type>
     </Namespace>
   </Assembly>

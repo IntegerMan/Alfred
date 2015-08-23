@@ -70,10 +70,6 @@ namespace MattEland.Ani.Alfred.WPF
                 _app.Start();
             }
 
-            // Auto-select the first tab if any tabs are present
-            Debug.Assert(tabPages != null);
-            SelectionHelper.SelectFirstItem(tabPages);
-
             // Log that we're good to go
             _app.Console?.Log(logHeader, Res.AppOnlineLogMessage.NonNull(), LogLevel.Info);
         }
@@ -104,12 +100,7 @@ namespace MattEland.Ani.Alfred.WPF
         /// <returns>Whether or not the command was handled</returns>
         public bool HandlePageNavigationCommand(ShellCommand command)
         {
-            if (!command.Data.HasText() || tabPages == null)
-            {
-                return false;
-            }
-
-            return SelectionHelper.SelectItemById(tabPages, command.Data);
+            return PagesControl.HandlePageNavigationCommand(command);
         }
     }
 }

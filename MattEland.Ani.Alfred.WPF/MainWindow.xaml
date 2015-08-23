@@ -55,28 +55,7 @@
         </Border>
 
         <!-- Tabbed Content Regions -->
-        <TabControl x:Name="tabPages"
-                    Margin="8, 8, 8, 8"
-                    ItemsSource="{Binding Alfred.RootPages}">
-
-            <TabControl.ItemTemplate>
-                <DataTemplate>
-                    <!-- Tabs are pretty simple; just show the name -->
-                    <TextBlock Text="{Binding Name}" />
-                </DataTemplate>
-            </TabControl.ItemTemplate>
-            
-            <TabControl.ContentTemplate>
-                <DataTemplate>
-
-                    <!-- Present the content inside of an auto-scrolling region. 
-                            Let the data template for the type of content handle the presentation -->
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="8" Content="{Binding}" />
-
-                </DataTemplate>
-            </TabControl.ContentTemplate>
-
-        </TabControl>
+        <controls:RootPagesControl x:Name="PagesControl" />
 
     </DockPanel>
 

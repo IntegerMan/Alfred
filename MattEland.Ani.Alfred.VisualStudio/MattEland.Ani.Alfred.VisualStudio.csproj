@@ -47,7 +47,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>true</RunCodeAnalysis>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\Alfred Code Analysis.ruleset</CodeAnalysisRuleSet>
     <DeployExtension>True</DeployExtension>
     <CreateVsixContainer>True</CreateVsixContainer>
     <DocumentationFile>bin\Debug\MattEland.Ani.Alfred.VisualStudio.XML</DocumentationFile>

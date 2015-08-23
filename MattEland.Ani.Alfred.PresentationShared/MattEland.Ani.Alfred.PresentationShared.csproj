@@ -65,6 +65,7 @@
     <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
     <CodeContractsReferenceAssembly>%28none%29</CodeContractsReferenceAssembly>
     <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
+    <CodeAnalysisRuleSet>..\Alfred Code Analysis.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -108,6 +109,9 @@
     </Compile>
     <Compile Include="Controls\ExplorerControl.xaml.cs">
       <DependentUpon>ExplorerControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\RootPagesControl.xaml.cs">
+      <DependentUpon>RootPagesControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\LogLevelToBrushConverter.cs" />
     <Compile Include="Commands\IUserInterfaceDirector.cs" />
@@ -155,6 +159,10 @@
     <Page Include="Controls\ExplorerControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\RootPagesControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dictionaries\VsStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
