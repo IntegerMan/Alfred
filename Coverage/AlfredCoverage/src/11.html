@@ -145,11 +145,47 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
             Assert.That(_page.IsVisible);
         }
 
+        /// &lt;summary&gt;
+        /// Tests that standard applications contains the mind explorer subsystem.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        /// See ALF-15
+        /// &lt;/remarks&gt;
         [Test]
         public void ApplicationContainsMindExplorer()
         {
             var app = new ApplicationManager(_provider);
             Assert.That(app.Alfred.Subsystems.Any(s =&gt; s is MindExplorerSubsystem), &quot;The Mind Explorer subsystem is not part of a typical Alfred application&quot;);
+        }
+
+        /// &lt;summary&gt;
+        /// Ensures that the explorer subsystem is in of itself an &lt;see cref=&quot;IPropertyProvider&quot;/&gt;
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        /// See ALF-15
+        /// &lt;/remarks&gt;
+        [Test]
+        public void SubsystemIsPropertyProvider()
+        {
+            var propItem = _subsystem as IPropertyProvider;
+            Assert.IsNotNull(propItem);
+        }
+
+        /// &lt;summary&gt;
+        /// Ensures that the explorer subsystem provides properties when GetProperties is invoked.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        /// See ALF-15
+        /// &lt;/remarks&gt;
+        [Test]
+        [SuppressMessage(&quot;ReSharper&quot;, &quot;UseMethodAny.1&quot;)]
+        public void SubsystemHasProperties()
+        {
+            var propItem = _subsystem as IPropertyProvider;
+            var properties = propItem.GetProperties();
+
+            Assert.IsNotNull(properties);
+            Assert.That(properties.Count() &gt;= 1);
         }
     }
 }

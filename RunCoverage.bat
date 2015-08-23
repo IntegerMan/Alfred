@@ -1,0 +1,3 @@
+C:\Dev\TeamCity\buildAgent\tools\dotCover\dotCover.exe a /TargetExecutable="C:\Program Files (x86)\NUnit 2.6.4\bin\nunit-console.exe" /TargetArguments="C:\Dev\Alfred\MattELand.Ani.Alfred.Core.Tests\bin\Debug\MattEland.Ani.Alfred.Tests.dll" /Output="C:\Dev\Alfred\AlfredCoverage.xml" /WorkingDir="C:\Dev\Alfred\Coverage" /ReportType="NDependXML" /SymbolSearchPaths="C:\Dev\Alfred\MattELand.Ani.Alfred.Core.Tests\bin\Debug\*.pdb"
+
+Pause
