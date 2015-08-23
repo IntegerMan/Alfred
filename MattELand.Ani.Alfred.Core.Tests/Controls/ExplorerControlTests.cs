@@ -63,5 +63,15 @@ namespace MattEland.Ani.Alfred.Tests.Controls
             Assert.That(_control.GridProperties is DataGrid);
         }
 
+        /// <summary>
+        /// Controls the has items by default.
+        /// </summary>
+        [Test, STAThread]
+        public void ControlHasItemsByDefault()
+        {
+            Assert.IsNotNull(_control.RootNodes);
+            Assert.AreEqual(_control.RootNodes, _control.TreeHierarchy?.ItemsSource);
+        }
+
     }
 }
