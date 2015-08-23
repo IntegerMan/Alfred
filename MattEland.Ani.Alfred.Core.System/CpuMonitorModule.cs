@@ -16,6 +16,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
@@ -101,7 +102,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             // Clear out the counters, bearing in mind that they're disposable
             foreach (var counter in _processorCounters)
             {
-                counter.Dispose();
+                counter.TryDispose();
             }
             _processorCounters.Clear();
 
@@ -204,7 +205,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         {
             foreach (var counter in _processorCounters)
             {
-                counter.Dispose();
+                counter.TryDispose();
             }
         }
     }

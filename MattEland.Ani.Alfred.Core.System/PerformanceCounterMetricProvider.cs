@@ -65,10 +65,8 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged
         ///     resources.
         /// </summary>
-        public override void Dispose()
+        public void Dispose()
         {
-            base.Dispose();
-
             _counter.Dispose();
         }
     }

@@ -34,14 +34,6 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         public string Name { get; }
 
         /// <summary>
-        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged
-        ///     resources.
-        /// </summary>
-        public virtual void Dispose()
-        {
-        }
-
-        /// <summary>
         ///     Gets the next value from the metric provider
         /// </summary>
         /// <returns>The next value</returns>
