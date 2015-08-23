@@ -9,7 +9,6 @@
     <Name>MattEland.Ani.Alfred.Chat</Name>
     <Name>MattEland.Ani.Alfred.Chat.Aiml</Name>
     <Name>MattEland.Common</Name>
-    <Name>MattEland.Ani.Alfred.VisualStudio</Name>
     <Name>MattEland.Ani.Alfred.PresentationShared</Name>
     <Name>MattEland.Ani.Alfred.Tests</Name>
   </Assemblies>
@@ -23,9 +22,6 @@
     <Name>PresentationCore</Name>
     <Name>System.Speech</Name>
     <Name>System.Xml</Name>
-    <Name>Microsoft.VisualStudio.Shell.14.0</Name>
-    <Name>Microsoft.VisualStudio.Shell.Interop</Name>
-    <Name>System.Design</Name>
     <Name>nunit.framework</Name>
   </FrameworkAssemblies>
   <Dirs>

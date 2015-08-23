@@ -1,0 +1,50 @@
+﻿<UserControl x:Class="MattEland.Ani.Alfred.PresentationShared.Controls.ExplorerControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:core="clr-namespace:MattEland.Ani.Alfred.Core;assembly=MattEland.Ani.Alfred.Core"
+             mc:Ignorable="d"
+             d:DesignHeight="300"
+             d:DesignWidth="300">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <!-- The content is generally more important than the explorer so give it 3/5 of the width -->
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- The TreeView containing the items -->
+        <TreeView x:Name="TreeHierarchy"
+                  Grid.Column="0" />
+
+        <!-- The Content area containing properties on the currently selected item -->
+        <Border Grid.Column="1"
+                BorderBrush="{DynamicResource AppBorderBrush}"
+                BorderThickness="1,0,0,0">
+
+            <!-- Inside this region will be bound to the component itself -->
+            <Grid DataContext="{Binding ElementName=TreeHierarchy, Path=SelectedItem}"
+                  d:DataContext="{d:DesignInstance core:AlfredComponent}">
+
+                <!-- Header -->
+                <Border DockPanel.Dock="Top"
+                        Style="{DynamicResource HeaderBannerBorderStyle}">
+                    <TextBlock Text="{Binding Name}"
+                               Style="{DynamicResource HeaderBannerTextBlockStyle}" />
+                </Border>
+
+                <!-- Item Content -->
+                <DataGrid x:Name="SelectedItemGrid">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Name" Width="auto" IsReadOnly="True" />
+                        <DataGridTextColumn Header="Value" Width="*" />
+                    </DataGrid.Columns>
+                </DataGrid>
+
+            </Grid>
+
+        </Border>
+
+    </Grid>
+</UserControl>

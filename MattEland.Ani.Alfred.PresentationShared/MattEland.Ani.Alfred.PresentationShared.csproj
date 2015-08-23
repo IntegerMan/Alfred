@@ -106,6 +106,9 @@
     <Compile Include="Controls\ChatPane.xaml.cs">
       <DependentUpon>ChatPane.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ExplorerControl.xaml.cs">
+      <DependentUpon>ExplorerControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\LogLevelToBrushConverter.cs" />
     <Compile Include="Commands\IUserInterfaceDirector.cs" />
     <Compile Include="Converters\VisibilityConverter.cs" />
@@ -146,6 +149,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Controls\ChatPane.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\ExplorerControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

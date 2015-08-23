@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:pages="clr-namespace:MattEland.Ani.Alfred.Core.Pages;assembly=MattEland.Ani.Alfred.Core">
+                    xmlns:pages="clr-namespace:MattEland.Ani.Alfred.Core.Pages;assembly=MattEland.Ani.Alfred.Core"
+                    xmlns:controls="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Controls">
 
     <!-- Pages -->
     
@@ -20,6 +21,10 @@
     <DataTemplate DataType="{x:Type pages:AlfredEventLogPage}">
         <ItemsControl ItemsSource="{Binding Path=Events}"                                                                
                       BorderThickness="0" />
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type pages:ExplorerPage}">
+        <controls:ExplorerControl DataContext="{Binding}" />
     </DataTemplate>
 
 </ResourceDictionary>
