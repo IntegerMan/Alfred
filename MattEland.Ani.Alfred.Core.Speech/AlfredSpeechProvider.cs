@@ -1,9 +1,10 @@
 ﻿// ---------------------------------------------------------
 // AlfredSpeechProvider.cs
 // 
-// Created on:      08/07/2015 at 2:00 PM
-// Last Modified:   08/07/2015 at 3:41 PM
-// Original author: Matt Eland
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/22/2015 at 11:46 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
@@ -42,9 +43,11 @@ namespace MattEland.Ani.Alfred.Core.Speech
             // Let's get verbose with the console
             if (console != null)
             {
-                console.Log(LogHeader, Resources.InitializingSpeechModule.NonNull(), LogLevel.Verbose);
+                console.Log(LogHeader,
+                            Resources.InitializingSpeechModule.NonNull(),
+                            LogLevel.Verbose);
 
-                // Enumerate all detected voices for diagnostic purposes
+                // Enumerate all detected voices for diagnostic purposes. This takes ~60ms.
                 LogInstalledVoices(console);
             }
 
@@ -65,7 +68,9 @@ namespace MattEland.Ani.Alfred.Core.Speech
             var voice = _speech.Voice;
             if (voice != null)
             {
-                var message = string.Format(CultureInfo.CurrentCulture, Resources.UsingVoiceLog.NonNull(), voice.Name);
+                var message = string.Format(CultureInfo.CurrentCulture,
+                                            Resources.UsingVoiceLog.NonNull(),
+                                            voice.Name);
                 console.Log(LogHeader,
                             message.NonNull(),
                             LogLevel.Verbose);
@@ -79,8 +84,20 @@ namespace MattEland.Ani.Alfred.Core.Speech
         }
 
         /// <summary>
+        ///     Disposes of all allocated resources
+        /// </summary>
+        public void Dispose()
+        {
+            _speech.Dispose();
+        }
+
+        /// <summary>
         ///     Logs detected voices to the console
         /// </summary>
+        /// <remarks>
+        ///     This contains a call to get installed voices which is expensive and should not be performed in
+        ///     performance critical scenarios.
+        /// </remarks>
         /// <param name="console">The console.</param>
         private void LogInstalledVoices([NotNull] IConsole console)
         {
@@ -92,6 +109,7 @@ namespace MattEland.Ani.Alfred.Core.Speech
             const LogLevel Level = LogLevel.Verbose;
             console.Log(LogHeader, Resources.FindVoiceModules.NonNull(), Level);
 
+            // NOTE: This call is relatively expensive
             var voices = _speech.GetInstalledVoices();
 
             foreach (var voice in voices)
@@ -101,11 +119,12 @@ namespace MattEland.Ani.Alfred.Core.Speech
         }
 
         /// <summary>
-        /// Logs the detected voice's information to the console.
+        ///     Logs the detected voice's information to the console.
         /// </summary>
         /// <param name="console">The console.</param>
         /// <param name="voice">The voice.</param>
-        private static void LogDetectedVoice([NotNull] IConsole console, [CanBeNull] InstalledVoice voice)
+        private static void LogDetectedVoice([NotNull] IConsole console,
+                                             [CanBeNull] InstalledVoice voice)
         {
             // We have a voice; log what we've found
             if (voice != null)
@@ -143,14 +162,6 @@ namespace MattEland.Ani.Alfred.Core.Speech
 
             // Actually speak things
             _speech.SpeakAsync(phrase);
-        }
-
-        /// <summary>
-        /// Disposes of all allocated resources
-        /// </summary>
-        public void Dispose()
-        {
-            _speech.Dispose();
         }
     }
 }
