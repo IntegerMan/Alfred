@@ -17,6 +17,7 @@ using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Ani.Alfred.Core.SubSystems;
+using MattEland.Ani.Alfred.PresentationShared.Commands;
 using MattEland.Common;
 
 using NUnit.Framework;
@@ -43,7 +44,8 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
             var bootstrapper = new AlfredBootstrapper();
             _alfred = bootstrapper.Create();
 
-            _subsystem = new MindExplorerSubsystem(new SimplePlatformProvider());
+            _provider = new SimplePlatformProvider();
+            _subsystem = new MindExplorerSubsystem(_provider);
 
             _page = _subsystem.MindExplorerPage;
         }
@@ -56,6 +58,9 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
 
         [NotNull]
         private ExplorerPage _page;
+
+        [NotNull]
+        private SimplePlatformProvider _provider;
 
         /// <summary>
         ///     Ensures that the mind explorer subsystem can be instantiated
@@ -130,5 +135,11 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
             Assert.That(_page.IsVisible);
         }
 
+        [Test]
+        public void ApplicationContainsMindExplorer()
+        {
+            var app = new ApplicationManager(_provider);
+            Assert.That(app.Alfred.Subsystems.Any(s => s is MindExplorerSubsystem), "The Mind Explorer subsystem is not part of a typical Alfred application");
+        }
     }
 }

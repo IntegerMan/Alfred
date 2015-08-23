@@ -2,7 +2,7 @@
 // ApplicationManager.cs
 // 
 // Created on:      08/20/2015 at 8:14 PM
-// Last Modified:   08/21/2015 at 1:13 AM
+// Last Modified:   08/22/2015 at 11:42 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -20,7 +20,6 @@ using MattEland.Ani.Alfred.Chat;
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Ani.Alfred.Core.Speech;
 using MattEland.Ani.Alfred.Core.SubSystems;
@@ -47,7 +46,10 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         private AlfredCoreSubsystem _alfredCoreSubsystem;
         private AlfredChatSubsystem _chatSubsystem;
         private AlfredSpeechConsole _console;
+        private MindExplorerSubsystem _mindExplorerSubsystem;
         private SystemMonitoringSubsystem _systemMonitoringSubsystem;
+
+        private IUserInterfaceDirector _userInterfaceDirector;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:System.Object" /> class with
@@ -72,7 +74,8 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         ///     <paramref name="platformProvider" /> is
         ///     <see langword="null" />.
         /// </exception>
-        public ApplicationManager([NotNull] IPlatformProvider platformProvider) : this(platformProvider, null)
+        public ApplicationManager([NotNull] IPlatformProvider platformProvider)
+            : this(platformProvider, null)
         {
         }
 
@@ -86,7 +89,8 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         ///     <paramref name="platformProvider" /> is
         ///     <see langword="null" />.
         /// </exception>
-        public ApplicationManager([NotNull] IPlatformProvider platformProvider, [CanBeNull] IUserInterfaceDirector director)
+        public ApplicationManager([NotNull] IPlatformProvider platformProvider,
+                                  [CanBeNull] IUserInterfaceDirector director)
         {
 
             if (platformProvider == null)
@@ -110,8 +114,6 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             InitializeUpdatePump();
         }
 
-        private IUserInterfaceDirector _userInterfaceDirector;
-
         /// <summary>
         ///     Gets the user interface director.
         /// </summary>
@@ -121,7 +123,9 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         {
             [DebuggerStepThrough]
             get
-            { return _userInterfaceDirector; }
+            {
+                return _userInterfaceDirector;
+            }
             [DebuggerStepThrough]
             set
             {
@@ -162,7 +166,9 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         {
             [DebuggerStepThrough]
             get
-            { return _alfred; }
+            {
+                return _alfred;
+            }
         }
 
         /// <summary>
@@ -273,6 +279,10 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             // Init Chat
             _chatSubsystem = new AlfredChatSubsystem(platformProvider, _alfred.Console);
             _alfred.Register(_chatSubsystem);
+
+            // Init Mind Explorer
+            _mindExplorerSubsystem = new MindExplorerSubsystem(platformProvider, _alfred.Console);
+            _alfred.Register(_mindExplorerSubsystem);
         }
 
         /// <summary>
@@ -315,9 +325,9 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             var seconds = TimeSpan.FromSeconds(UpdateFrequencyInSeconds);
 
             var timer = new DispatcherTimer
-            {
-                Interval = seconds
-            };
+                        {
+                            Interval = seconds
+                        };
             timer.Tick += delegate { Update(); };
 
             timer.Start();
