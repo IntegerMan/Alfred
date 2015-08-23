@@ -13,15 +13,8 @@ namespace MattEland.Ani.Alfred.Core.Definitions
     /// <summary>
     ///     An abstract component of Alfred
     /// </summary>
-    public interface IAlfredComponent
+    public interface IAlfredComponent : IPropertyProvider
     {
-        /// <summary>
-        ///     Gets the name of the component.
-        /// </summary>
-        /// <value>The name.</value>
-        [NotNull]
-        string Name { get; }
-
         /// <summary>
         ///     Gets the name and version of the component.
         /// </summary>

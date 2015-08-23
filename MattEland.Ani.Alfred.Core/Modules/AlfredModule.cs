@@ -119,6 +119,16 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
+        ///     Gets the identifier.
+        /// </summary>
+        /// <value>The identifier.</value>
+        [NotNull]
+        public virtual string Id
+        {
+            get { return Name; }
+        }
+
+        /// <summary>
         /// Processes an Alfred Command. If the command is handled, result should be modified accordingly and the method should return true. Returning false will not stop the message from being propogated.
         /// </summary>
         /// <param name="command">The command.</param>

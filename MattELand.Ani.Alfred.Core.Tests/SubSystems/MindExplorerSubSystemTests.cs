@@ -135,11 +135,30 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
             Assert.That(_page.IsVisible);
         }
 
+        /// <summary>
+        /// Tests that standard applications contains the mind explorer subsystem.
+        /// </summary>
+        /// <remarks>
+        /// See ALF-15
+        /// </remarks>
         [Test]
         public void ApplicationContainsMindExplorer()
         {
             var app = new ApplicationManager(_provider);
             Assert.That(app.Alfred.Subsystems.Any(s => s is MindExplorerSubsystem), "The Mind Explorer subsystem is not part of a typical Alfred application");
+        }
+
+        /// <summary>
+        /// Ensures that the explorer subsystem is in of itself an <see cref="IPropertyProvider"/>
+        /// </summary>
+        /// <remarks>
+        /// See ALF-15
+        /// </remarks>
+        [Test]
+        public void SubsystemIsPropertyProvider()
+        {
+            var propItem = _subsystem as IPropertyProvider;
+            Assert.IsNotNull(propItem);
         }
     }
 }

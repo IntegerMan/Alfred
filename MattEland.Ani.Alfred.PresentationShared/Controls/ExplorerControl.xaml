@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:core="clr-namespace:MattEland.Ani.Alfred.Core;assembly=MattEland.Ani.Alfred.Core"
+             xmlns:definitions="clr-namespace:MattEland.Ani.Alfred.Core.Definitions;assembly=MattEland.Ani.Alfred.Core"
              x:Name="Explorer"
              mc:Ignorable="d"
              d:DesignHeight="300"
@@ -28,7 +29,7 @@
 
             <!-- Inside this region will be bound to the component itself -->
             <DockPanel DataContext="{Binding ElementName=TreeHierarchy, Path=SelectedItem}"
-                       d:DataContext="{d:DesignInstance core:AlfredComponent}">
+                       d:DataContext="{d:DesignInstance definitions:IPropertyProvider}">
 
                 <!-- Header -->
                 <Border DockPanel.Dock="Top"

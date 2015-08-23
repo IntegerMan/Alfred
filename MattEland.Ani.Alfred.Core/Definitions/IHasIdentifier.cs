@@ -16,9 +16,15 @@ namespace MattEland.Ani.Alfred.Core.Definitions
     public interface IHasIdentifier
     {
         /// <summary>
-        ///     Gets the page identifier.
+        ///     Gets the identifier.
         /// </summary>
         /// <value>The identifier.</value>
         string Id { get; }
+
+        /// <summary>
+        ///     Gets the name.
+        /// </summary>
+        /// <value>The name.</value>
+        string Name { get; }
     }
 }
