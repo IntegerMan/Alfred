@@ -2,10 +2,12 @@
 // MindExplorerSubsystem.cs
 // 
 // Created on:      08/22/2015 at 10:48 PM
-// Last Modified:   08/22/2015 at 11:09 PM
+// Last Modified:   08/22/2015 at 11:15 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
+
+using System.Diagnostics;
 
 using JetBrains.Annotations;
 
@@ -21,8 +23,6 @@ namespace MattEland.Ani.Alfred.Core.SubSystems
     /// </summary>
     public class MindExplorerSubsystem : AlfredSubsystem
     {
-        [NotNull]
-        private readonly AlfredModuleListPage _mindMapPage;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
@@ -33,7 +33,21 @@ namespace MattEland.Ani.Alfred.Core.SubSystems
         public MindExplorerSubsystem([NotNull] IPlatformProvider provider,
                                      [CanBeNull] IConsole console = null) : base(provider, console)
         {
-            _mindMapPage = new AlfredModuleListPage(provider, "Mind Explorer", "MindMap");
+            MindExplorerPage = new ExplorerPage(provider, "Mind Explorer", "MindMap");
+        }
+
+        /// <summary>
+        ///     Gets the Mind Explorer page.
+        /// </summary>
+        /// <remarks>
+        ///     This is intended primarily for testing
+        /// </remarks>
+        /// <value>The Mind Explorer page.</value>
+        [NotNull]
+        public ExplorerPage MindExplorerPage
+        {
+            [DebuggerStepThrough]
+            get;
         }
 
         /// <summary>
@@ -61,7 +75,7 @@ namespace MattEland.Ani.Alfred.Core.SubSystems
         {
             base.RegisterControls();
 
-            Register(_mindMapPage);
+            Register(MindExplorerPage);
         }
     }
 }

@@ -18,7 +18,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
     /// <summary>
     ///     A metric provider based on a performance counter.
     /// </summary>
-    public sealed class CounterMetricProvider : MetricProviderBase
+    public sealed class CounterMetricProvider : MetricProviderBase, IDisposable
     {
         [NotNull]
         private readonly PerformanceCounter _counter;

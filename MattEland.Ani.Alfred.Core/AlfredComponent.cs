@@ -352,6 +352,7 @@ namespace MattEland.Ani.Alfred.Core
         /// Called when a property changes.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         [NotifyPropertyChangedInvocator]
         [SuppressMessage("ReSharper", "CatchAllClause")]
         protected void OnPropertyChanged([CanBeNull] string propertyName)

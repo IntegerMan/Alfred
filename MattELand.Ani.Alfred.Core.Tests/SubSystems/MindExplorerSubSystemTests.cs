@@ -15,6 +15,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Ani.Alfred.Core.SubSystems;
 using MattEland.Common;
 
@@ -43,6 +44,8 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
             _alfred = bootstrapper.Create();
 
             _subsystem = new MindExplorerSubsystem(new SimplePlatformProvider());
+
+            _page = _subsystem.MindExplorerPage;
         }
 
         [NotNull]
@@ -50,6 +53,9 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
 
         [NotNull]
         private AlfredApplication _alfred;
+
+        [NotNull]
+        private ExplorerPage _page;
 
         /// <summary>
         ///     Ensures that the mind explorer subsystem can be instantiated
@@ -98,5 +104,31 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
                             _alfred.RootPages.Count(),
                             "Alfred did not have the expected page count.");
         }
+
+        /// <summary>
+        /// Tests that the Mind Explorer's Mind Explorer page must be of Mind Explorer Page type.
+        /// </summary>
+        /// <remarks>
+        /// See ALF-15
+        /// </remarks>
+        [Test]
+        public void MindExplorerPageIsMindExplorerPageType()
+        {
+            Assert.AreEqual(typeof(ExplorerPage), _page.GetType());
+        }
+
+
+        /// <summary>
+        /// Tests that the Mind Explorer's Mind Explorer page must be visible.
+        /// </summary>
+        /// <remarks>
+        /// See ALF-15
+        /// </remarks>
+        [Test]
+        public void MindExplorerPageIsVisible()
+        {
+            Assert.That(_page.IsVisible);
+        }
+
     }
 }
