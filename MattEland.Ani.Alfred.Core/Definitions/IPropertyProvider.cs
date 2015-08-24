@@ -37,6 +37,13 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <value>The property providers.</value>
         [NotNull, ItemNotNull]
         IEnumerable<IPropertyProvider> PropertyProviders { get; }
+
+        /// <summary>
+        /// Gets the display name for use in the user interface.
+        /// </summary>
+        /// <value>The display name.</value>
+        [NotNull]
+        string DisplayName { get; }
     }
 
 }

@@ -2320,7 +2320,7 @@ select t
 // To fix a violation of this rule, provide an implementation 
 // of *Equals()* and implement the equality and inequality operators.
 //</HowToFix>]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Check that all namespaces begins with MattEland</Name>
+      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="True"><![CDATA[// <Name>Check that all namespaces begins with MattEland</Name>
 warnif count > 0 from n in Application.Namespaces where 
   !n.NameLike (@"^MattEland")
 select new { n, n.NbLinesOfCode } 

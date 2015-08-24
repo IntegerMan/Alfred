@@ -16,12 +16,39 @@
             <ColumnDefinition Width="3*" />
         </Grid.ColumnDefinitions>
 
-        <!-- The TreeView containing the items -->
-        <TreeView x:Name="TreeHierarchy"
+        <!-- Tree View Scroller -->
+        <ScrollViewer Grid.Column="0"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Auto">
+
+            <!-- The TreeView containing the items -->
+            <TreeView x:Name="TreeHierarchy"
                   x:FieldModifier="public"
-                  Foreground="{Binding ElementName=Explorer, Path=Foreground}"
-                  Background="{Binding ElementName=Explorer, Path=Background}"                  
-                  Grid.Column="0" />
+                  Background="Transparent">
+
+                <TreeView.ItemContainerStyle>
+                    <Style TargetType="{x:Type TreeViewItem}">
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Foreground" Value="{DynamicResource AppBackgroundBrush}" />
+                            </Trigger>
+                        </Style.Triggers>
+                        <Setter Property="Foreground" Value="{DynamicResource AppForegroundBrush}" />
+                    </Style>
+                </TreeView.ItemContainerStyle>
+
+                <TreeView.ItemTemplate>
+                    <!-- This lets us define a hierarchy we can explore -->
+                    <HierarchicalDataTemplate DataType="definitions:IPropertyProvider"
+                                          ItemsSource="{Binding PropertyProviders}">
+
+                        <TextBlock Text="{Binding DisplayName}"
+                               ToolTip="{Binding DisplayName}" />
+
+                    </HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>
+            </TreeView>
+        </ScrollViewer>
 
         <!-- The Content area containing properties on the currently selected item -->
         <Border Grid.Column="1"

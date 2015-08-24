@@ -2,7 +2,7 @@
 // ChatPane.xaml.cs
 // 
 // Created on:      08/20/2015 at 8:14 PM
-// Last Modified:   08/22/2015 at 2:22 PM
+// Last Modified:   08/24/2015 at 6:21 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -41,19 +41,20 @@ namespace MattEland.Ani.Alfred.PresentationShared.Controls
             var text = InputText.Text;
             if (string.IsNullOrWhiteSpace(text))
             {
-                MessageBox.Show("No Message", "Please type a message before hitting send.");
+                MessageBox.Show("Please type a message before hitting send.",
+                                "No Message",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Asterisk);
                 return;
             }
 
-            var chatHandler = (IChatProvider)DataContext;
-
             // Send it to the page object (which will route it through to the chat subsystem)
+            var chatHandler = (IChatProvider)DataContext;
             chatHandler.HandleUserStatement(text.Trim());
 
             // Clear out the input for the next time around
             InputText.Text = string.Empty;
             InputText.Focus();
-
         }
     }
 }

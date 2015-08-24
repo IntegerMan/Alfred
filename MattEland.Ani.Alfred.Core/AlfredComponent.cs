@@ -415,6 +415,15 @@ namespace MattEland.Ani.Alfred.Core
                 return Children;
             }
         }
+
+        /// <summary>
+        /// Gets the display name for use in the user interface.
+        /// </summary>
+        /// <value>The display name.</value>
+        public virtual string DisplayName
+        {
+            get { return Name; }
+        }
     }
 
 }

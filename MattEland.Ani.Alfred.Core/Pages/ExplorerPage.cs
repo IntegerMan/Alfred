@@ -2,7 +2,7 @@
 // ExplorerPage.cs
 // 
 // Created on:      08/22/2015 at 11:16 PM
-// Last Modified:   08/23/2015 at 3:38 PM
+// Last Modified:   08/24/2015 at 5:38 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -30,18 +30,23 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <param name="provider">The platform provider.</param>
         /// <param name="name">The name.</param>
         /// <param name="id">The ID</param>
+        /// <param name="displayName">The display name.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentNullException"><paramref name="name" /> is <see langword="null" />.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="id" /> is <see langword="null" />.</exception>
         public ExplorerPage([NotNull] IPlatformProvider provider,
                             [NotNull] string name,
-                            [NotNull] string id) : base(name, id)
+                            [NotNull] string id,
+                            [CanBeNull] string displayName = "Name") : base(name, id)
         {
-            if (provider == null)
-            {
-                throw new ArgumentNullException(nameof(provider));
-            }
+            //- Validation
+            if (provider == null) { throw new ArgumentNullException(nameof(provider)); }
 
+            // Set Display Name
+            if (displayName == null) { displayName = "Name"; }
+            DisplayNameProperty = displayName;
+
+            // Set the root nodes collection
             RootNodes = provider.CreateCollection<IPropertyProvider>();
         }
 
@@ -76,5 +81,12 @@ namespace MattEland.Ani.Alfred.Core.Pages
         [NotNull]
         [ItemNotNull]
         public IEnumerable<IPropertyProvider> RootNodes { get; set; }
+
+        /// <summary>
+        /// Gets the property to use to represent the item in the explorer grid.
+        /// </summary>
+        /// <value>The display property to use.</value>
+        [NotNull]
+        public string DisplayNameProperty { get; }
     }
 }
