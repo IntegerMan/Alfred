@@ -116,7 +116,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// </summary>
         /// <value>The root node.</value>
         [NotNull]
-        public Node RootNode { get; }
+        internal Node RootNode { get; }
 
         /// <summary>
         ///     Gets the count of AIML nodes in memory.

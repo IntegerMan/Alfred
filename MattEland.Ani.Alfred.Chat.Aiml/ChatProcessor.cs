@@ -2,13 +2,12 @@
 // ChatProcessor.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   08/24/2015 at 1:07 AM
+// Last Modified:   08/24/2015 at 1:45 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
@@ -237,50 +236,68 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             var nodeContents = string.Format(Locale, "<node>{0}</node>", handler.Transform());
 
             // Build a node out of the output of the transform
-            Debug.Assert(nodeContents != null);
             var evaluatedNode = AimlTagHandler.BuildElement(nodeContents);
 
-            // If it's simple, just return it
-            if (!evaluatedNode.HasChildNodes) { return evaluatedNode.InnerXml.NonNull(); }
+            /* If it's simple, just return it otherwise recursively process each child node and 
+               build out our output from their values. */
+            return !evaluatedNode.HasChildNodes
+                       ? evaluatedNode.InnerXml.NonNull()
+                       : ProcessChildNodes(evaluatedNode, user, request, query, result);
 
-            // Recursively process each child node and build out our output from their values.
+        }
+
+        /// <summary>
+        ///     Processes the child nodes and returns the compound result of processing them.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="user">The user.</param>
+        /// <param name="request">The request.</param>
+        /// <param name="query">The query.</param>
+        /// <param name="result">The result.</param>
+        /// <returns>The result of processing each child.</returns>
+        [NotNull]
+        private string ProcessChildNodes([NotNull] XmlNode node,
+                                         [NotNull] User user,
+                                         [NotNull] Request request,
+                                         [NotNull] SubQuery query,
+                                         [NotNull] Result result)
+        {
             var sbOutput = new StringBuilder();
-            foreach (XmlNode childNode in evaluatedNode.ChildNodes)
+
+            foreach (XmlNode childNode in node.ChildNodes)
             {
-                ProcessChildNode(childNode, sbOutput, user, request, query, result);
+                ProcessChildNode(childNode, user, request, query, result);
             }
 
             return sbOutput.ToString();
         }
 
         /// <summary>
-        /// Processes the child node and adds the results to the string builder
+        ///     Processes the child node and returns the result
         /// </summary>
         /// <param name="childNode">The child node.</param>
-        /// <param name="stringBuilder">The string builder.</param>
         /// <param name="user">The user.</param>
         /// <param name="request">The request.</param>
         /// <param name="query">The query.</param>
         /// <param name="result">The result.</param>
-        private void ProcessChildNode([CanBeNull] XmlNode childNode, [NotNull] StringBuilder stringBuilder, [NotNull] User user, [NotNull] Request request, [NotNull] SubQuery query, [NotNull] Result result)
+        private string ProcessChildNode([CanBeNull] XmlNode childNode,
+                                        [NotNull] User user,
+                                        [NotNull] Request request,
+                                        [NotNull] SubQuery query,
+                                        [NotNull] Result result)
         {
-            // If it's XmlText, just append it
+            // If it's XmlText, just return it
             var childText = childNode as XmlText;
-            if (childText != null)
-            {
-                stringBuilder.Append(childText.InnerText);
-                return;
-            }
+            if (childText != null) { return childText.InnerText; }
 
             // For XmlElements, go through the main processing loop
             var childElement = childNode as XmlElement;
             if (childElement != null)
             {
-                var processResult = ProcessNode(childElement, query, request, result, user);
-                stringBuilder.Append(processResult);
-
-                return;
+                return ProcessNode(childElement, query, request, result, user);
             }
+
+            return string.Empty;
         }
 
         /// <summary>
@@ -320,7 +337,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                     var childElement = childNode as XmlElement;
                     if (childElement != null)
                     {
-                        childElement.InnerXml = ProcessNode(childElement, query, request, result, user);
+                        childElement.InnerXml = ProcessNode(childElement,
+                                                            query,
+                                                            request,
+                                                            result,
+                                                            user);
                     }
                 }
             }
@@ -352,14 +373,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             if (result == null) { throw new ArgumentNullException(nameof(result)); }
             if (user == null) { throw new ArgumentNullException(nameof(user)); }
 
+            //- Early Exit for no children
+            if (!node.HasChildNodes) { return string.Empty; }
+
             // Loop through all contained children and process them, returning the results
             var sbOutput = new StringBuilder();
-            if (node.HasChildNodes)
+            foreach (XmlNode childNode in node.ChildNodes)
             {
-                foreach (XmlNode childNode in node.ChildNodes)
-                {
-                    ProcessChildNode(childNode, sbOutput, user, request, query, result);
-                }
+                var value = ProcessChildNode(childNode, user, request, query, result);
+                sbOutput.Append(value);
             }
 
             return sbOutput.ToString();
