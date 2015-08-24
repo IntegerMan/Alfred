@@ -51,13 +51,6 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         IEnumerable<IAlfredPage> RootPages { get; }
 
         /// <summary>
-        ///     Gets the name.
-        /// </summary>
-        /// <value>The name.</value>
-        [NotNull]
-        string Name { get; }
-
-        /// <summary>
         ///     Initializes this instance.
         /// </summary>
         void Initialize();
