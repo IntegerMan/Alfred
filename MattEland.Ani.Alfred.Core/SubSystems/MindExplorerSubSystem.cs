@@ -15,7 +15,7 @@ using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Pages;
 
-namespace MattEland.Ani.Alfred.Core.SubSystems
+namespace MattEland.Ani.Alfred.Core.Subsystems
 {
     /// <summary>
     ///     A SubSystem that pokes around at the internal state of each of Alfred's SubSystems and their

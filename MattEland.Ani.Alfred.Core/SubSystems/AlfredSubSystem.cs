@@ -18,7 +18,7 @@ using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
 
-namespace MattEland.Ani.Alfred.Core.SubSystems
+namespace MattEland.Ani.Alfred.Core.Subsystems
 {
     /// <summary>
     ///     Represents a subsystem on the Alfred Framework. Subsystems are ways of providing multiple

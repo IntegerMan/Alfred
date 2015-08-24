@@ -89,6 +89,7 @@
     <Compile Include="AssemblyExtensions.cs" />
     <Compile Include="CollectionExtensions.cs" />
     <Compile Include="ExceptionExtensions.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IntegerExtensions.cs" />
     <Compile Include="ObjectExtensions.cs" />
     <Compile Include="StringExtensions.cs" />

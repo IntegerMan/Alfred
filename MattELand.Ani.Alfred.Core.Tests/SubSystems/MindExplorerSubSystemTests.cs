@@ -16,7 +16,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Pages;
-using MattEland.Ani.Alfred.Core.SubSystems;
+using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Ani.Alfred.PresentationShared.Commands;
 using MattEland.Common;
 

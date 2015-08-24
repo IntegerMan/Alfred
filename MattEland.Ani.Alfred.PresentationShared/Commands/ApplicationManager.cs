@@ -23,7 +23,7 @@ using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Ani.Alfred.Core.Speech;
-using MattEland.Ani.Alfred.Core.SubSystems;
+using MattEland.Ani.Alfred.Core.Subsystems;
 
 namespace MattEland.Ani.Alfred.PresentationShared.Commands
 {

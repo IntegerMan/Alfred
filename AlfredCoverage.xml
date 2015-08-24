@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Root CoveredStatements="4273" TotalStatements="6603" CoveragePercent="65" ReportType="NDependXML" DotCoverVersion="3.1.1">
-  <Assembly Name="MattEland.Ani.Alfred.Chat" CoveredStatements="279" TotalStatements="374" CoveragePercent="75">
-    <Namespace Name="MattEland.Ani.Alfred.Chat" CoveredStatements="279" TotalStatements="374" CoveragePercent="75">
+<Root CoveredStatements="4274" TotalStatements="6598" CoveragePercent="65" ReportType="NDependXML" DotCoverVersion="3.1.1">
+  <Assembly Name="MattEland.Ani.Alfred.Chat" CoveredStatements="273" TotalStatements="365" CoveragePercent="75">
+    <Namespace Name="MattEland.Ani.Alfred.Chat" CoveredStatements="273" TotalStatements="365" CoveragePercent="75">
       <Type Name="AimlStatementHandler" CoveredStatements="103" TotalStatements="137" CoveragePercent="75">
         <Method Name=".ctor(IConsole)" CoveredStatements="9" TotalStatements="17" CoveragePercent="53" FirstStatementLine="57" />
         <Method Name="AddApplicationAimlResourcesToChatEngine(ChatEngine)" CoveredStatements="12" TotalStatements="14" CoveragePercent="86" FirstStatementLine="309" />
@@ -39,9 +39,9 @@
         <Method Name="ProcessShellCommand(ShellCommand)" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="87" />
         <Method Name="set_Alfred(IAlfred)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="32" />
       </Type>
-      <Type Name="AlfredTagHandler" CoveredStatements="17" TotalStatements="17" CoveragePercent="100">
-        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="102" />
-        <Method Name="ProcessChange()" CoveredStatements="14" TotalStatements="14" CoveragePercent="100" FirstStatementLine="111" />
+      <Type Name="AlfredTagHandler" CoveredStatements="15" TotalStatements="18" CoveragePercent="83">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="35" />
+        <Method Name="ProcessChange()" CoveredStatements="12" TotalStatements="15" CoveragePercent="80" FirstStatementLine="44" />
       </Type>
       <Type Name="ChatPage" CoveredStatements="4" TotalStatements="9" CoveragePercent="44">
         <Type Name="&lt;get_Children&gt;d__5" CoveredStatements="0" TotalStatements="2" CoveragePercent="0">
@@ -89,13 +89,13 @@
         <Method Name="get_ResourceManager()" CoveredStatements="8" TotalStatements="8" CoveragePercent="100" FirstStatementLine="40" />
         <Method Name="set_Culture(CultureInfo)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="58" />
       </Type>
-      <Type Name="ShellTagHandler" CoveredStatements="19" TotalStatements="30" CoveragePercent="63">
-        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="35" />
-        <Method Name="ProcessChange()" CoveredStatements="16" TotalStatements="27" CoveragePercent="59" FirstStatementLine="45" />
+      <Type Name="ShellTagHandler" CoveredStatements="15" TotalStatements="20" CoveragePercent="75">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="24" />
+        <Method Name="ProcessChange()" CoveredStatements="12" TotalStatements="17" CoveragePercent="71" FirstStatementLine="34" />
       </Type>
     </Namespace>
   </Assembly>
-  <Assembly Name="MattEland.Ani.Alfred.Chat.Aiml" CoveredStatements="953" TotalStatements="2204" CoveragePercent="43">
+  <Assembly Name="MattEland.Ani.Alfred.Chat.Aiml" CoveredStatements="960" TotalStatements="2208" CoveragePercent="43">
     <Namespace Name="MattEland.Ani.Alfred.Chat.Aiml" CoveredStatements="390" TotalStatements="693" CoveragePercent="56">
       <Type Name="ChatEngine" CoveredStatements="58" TotalStatements="88" CoveragePercent="66">
         <Method Name=".ctor(IConsole)" CoveredStatements="12" TotalStatements="12" CoveragePercent="100" FirstStatementLine="135" />
@@ -247,7 +247,7 @@
         <Method Name="GetOutputSentence(Int32,Int32)" CoveredStatements="0" TotalStatements="12" CoveragePercent="0" FirstStatementLine="103" />
       </Type>
     </Namespace>
-    <Namespace Name="MattEland.Ani.Alfred.Chat.Aiml.TagHandlers" CoveredStatements="134" TotalStatements="696" CoveragePercent="19">
+    <Namespace Name="MattEland.Ani.Alfred.Chat.Aiml.TagHandlers" CoveredStatements="134" TotalStatements="688" CoveragePercent="19">
       <Type Name="BotTagHandler" CoveredStatements="0" TotalStatements="14" CoveragePercent="0">
         <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="28" />
         <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="11" CoveragePercent="0" FirstStatementLine="37" />
@@ -344,9 +344,9 @@
         <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="28" />
         <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="37" />
       </Type>
-      <Type Name="StarRedirectTagHandler" CoveredStatements="0" TotalStatements="19" CoveragePercent="0">
-        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="32" />
-        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="16" CoveragePercent="0" FirstStatementLine="41" />
+      <Type Name="StarRedirectTagHandler" CoveredStatements="0" TotalStatements="11" CoveragePercent="0">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="29" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="8" CoveragePercent="0" FirstStatementLine="38" />
       </Type>
       <Type Name="StarTagHandler" CoveredStatements="13" TotalStatements="24" CoveragePercent="54">
         <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="33" />
@@ -391,7 +391,7 @@
         <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="37" />
       </Type>
     </Namespace>
-    <Namespace Name="MattEland.Ani.Alfred.Chat.Aiml.Utils" CoveredStatements="429" TotalStatements="815" CoveragePercent="53">
+    <Namespace Name="MattEland.Ani.Alfred.Chat.Aiml.Utils" CoveredStatements="436" TotalStatements="827" CoveragePercent="53">
       <Type Name="AimlLoader" CoveredStatements="93" TotalStatements="221" CoveragePercent="42">
         <Type Name="&lt;&gt;c__DisplayClass12_0" CoveredStatements="1" TotalStatements="1" CoveragePercent="100">
           <Method Name="&lt;FindChildNode&gt;b__0(XmlNode)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="376" />
@@ -410,11 +410,12 @@
         <Method Name="ProcessCategory(XmlNode,String)" CoveredStatements="10" TotalStatements="18" CoveragePercent="56" FirstStatementLine="286" />
         <Method Name="ProcessTopic(XmlNode)" CoveredStatements="0" TotalStatements="15" CoveragePercent="0" FirstStatementLine="232" />
       </Type>
-      <Type Name="AimlTagHandler" CoveredStatements="33" TotalStatements="54" CoveragePercent="61">
+      <Type Name="AimlTagHandler" CoveredStatements="40" TotalStatements="66" CoveragePercent="61">
         <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="11" TotalStatements="13" CoveragePercent="85" FirstStatementLine="54" />
         <Method Name="BuildNode(String)" CoveredStatements="8" TotalStatements="10" CoveragePercent="80" FirstStatementLine="112" />
         <Method Name="BuildStarNode()" CoveredStatements="0" TotalStatements="10" CoveragePercent="0" FirstStatementLine="152" />
         <Method Name="BuildStarTagHandler()" CoveredStatements="0" TotalStatements="5" CoveragePercent="0" FirstStatementLine="175" />
+        <Method Name="DoRedirect(String)" CoveredStatements="7" TotalStatements="12" CoveragePercent="58" FirstStatementLine="189" />
         <Method Name="get_IsRecursive()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="54" />
         <Method Name="get_Query()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="61" />
         <Method Name="get_Request()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="68" />

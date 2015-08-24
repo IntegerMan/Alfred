@@ -43,6 +43,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         ///     expected responses for when GetCategoryInstanceNames is called.
         /// </summary>
         /// <value>The category instance names.</value>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [NotNull, ItemNotNull]
         public IDictionary<string, IEnumerable<string>> CategoryInstanceNames { get; } =
             new Dictionary<string, IEnumerable<string>>();

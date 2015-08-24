@@ -89,7 +89,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             // Read all types in the provided assembly that have this attribute.
             try
             {
-                var types = assembly.GetTypesInAssemblyWithAttribute<HandlesAimlTagAttribute>(false);
+                var types = assembly.GetTypesInAssemblyWithAttribute(typeof(HandlesAimlTagAttribute), false);
 
                 //- Loop through each type and register it
                 foreach (var type in types)

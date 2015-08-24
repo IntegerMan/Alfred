@@ -169,6 +169,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Gossip from user &apos;{0}&apos;: &apos;{1}&apos;.
+        /// </summary>
+        internal static string GossipTagHandleLogMessage {
+            get {
+                return ResourceManager.GetString("GossipTagHandleLogMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An input tag with a badly formed index ({0}) was encountered processing the input: {1}.
         /// </summary>
         internal static string InputErrorBadlyFormedIndex {
@@ -390,15 +399,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml {
         internal static string SettingsLoadErrorXml {
             get {
                 return ResourceManager.GetString("SettingsLoadErrorXml", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Error processing sr operation: {0}.
-        /// </summary>
-        internal static string SrTagHandlerError {
-            get {
-                return ResourceManager.GetString("SrTagHandlerError", resourceCulture);
             }
         }
         

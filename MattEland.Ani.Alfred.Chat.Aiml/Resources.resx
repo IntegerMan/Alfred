@@ -247,4 +247,8 @@
   <data name="LoadSettingsXmlXmlException" xml:space="preserve">
     <value>Xml Error Encountered: {0}</value>
   </data>
+  <data name="GossipTagHandleLogMessage" xml:space="preserve">
+    <value>Gossip from user '{0}': '{1}'</value>
+    <comment>0 = user, 1 = gossip</comment>
+  </data>
 </root>
