@@ -60,7 +60,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         {
             Alfred.Shutdown();
             MetricProviderFactory.DefaultValue = 42.0f;
-            MetricProviderFactory.CategoryInstanceNames.Add(CpuMonitorModule.ProcessorCategoryName,
+            MetricProviderFactory.CategoryInstanceNameMappings.Add(CpuMonitorModule.ProcessorCategoryName,
                                                             BuildInstanceNamesWithTotal(72));
             Alfred.Initialize();
 

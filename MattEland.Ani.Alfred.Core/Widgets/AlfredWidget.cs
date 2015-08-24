@@ -2,7 +2,7 @@
 // AlfredWidget.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   08/22/2015 at 12:48 AM
+// Last Modified:   08/23/2015 at 11:40 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -14,8 +14,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 using JetBrains.Annotations;
-
-using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Core.Widgets
 {
@@ -32,6 +30,12 @@ namespace MattEland.Ani.Alfred.Core.Widgets
 
         private bool _isVisible = true;
 
+
+
+
+
+
+
         /// <summary>
         ///     Gets or sets whether or not the widget is visible. This defaults to <c>true</c>.
         /// </summary>
@@ -41,14 +45,17 @@ namespace MattEland.Ani.Alfred.Core.Widgets
             get { return _isVisible; }
             set
             {
-                if (value == _isVisible)
-                {
-                    return;
-                }
+                if (value == _isVisible) { return; }
                 _isVisible = value;
                 OnPropertyChanged(nameof(IsVisible));
             }
         }
+
+
+
+
+
+
 
         /// <summary>
         ///     Gets or sets the data context.
@@ -66,14 +73,17 @@ namespace MattEland.Ani.Alfred.Core.Widgets
             get { return _dataContext; }
             set
             {
-                if (Equals(value, _dataContext))
-                {
-                    return;
-                }
+                if (Equals(value, _dataContext)) { return; }
                 _dataContext = value;
                 OnPropertyChanged(nameof(DataContext));
             }
         }
+
+
+
+
+
+
 
         /// <summary>
         ///     Occurs when a property changes.
@@ -108,6 +118,8 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         /// </summary>
         /// <param name="header">The error header.</param>
         /// <param name="message">The error message.</param>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
+            Justification = "This should eventually log to an instance field")]
         protected void Error([NotNull] string header, [NotNull] string message)
         {
             // TODO: It'd be very good to get this to Alfred's console

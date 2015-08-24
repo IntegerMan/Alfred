@@ -1,4 +1,14 @@
-﻿using System;
+﻿// ---------------------------------------------------------
+// ShellCommand.cs
+// 
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/23/2015 at 11:44 PM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using System;
+using System.Globalization;
 
 using JetBrains.Annotations;
 
@@ -7,12 +17,12 @@ using MattEland.Common;
 namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>
-    /// Represents a command to execute against the application shell
+    ///     Represents a command to execute against the application shell
     /// </summary>
     public struct ShellCommand : IEquatable<ShellCommand>
     {
         /// <summary>
-        /// Gets the target of the command
+        ///     Gets the target of the command
         /// </summary>
         /// <value>The target of the command</value>
         [NotNull]
@@ -33,12 +43,13 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         public string Data { get; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ShellCommand" /> struct.
+        ///     Initializes a new instance of the <see cref="ShellCommand" /> struct.
         /// </summary>
         /// <param name="name">The command name.</param>
         /// <param name="target">The target.</param>
         /// <param name="data">The data.</param>
-        public ShellCommand([CanBeNull] string name, [CanBeNull] string target,
+        public ShellCommand([CanBeNull] string name,
+                            [CanBeNull] string target,
                             [CanBeNull] string data)
         {
             Target = target.NonNull();
@@ -47,42 +58,54 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         }
 
         /// <summary>
-        /// Gets a string representation of this struct
+        ///     Gets a string representation of this struct
         /// </summary>
         /// <returns>A string representation of this struct</returns>
         public override string ToString()
         {
-            return $"Target: {Target}, Name: {Name}, Data: {Data}";
+            return string.Format(CultureInfo.CurrentCulture,
+                                 "Target: {0}, Name: {1}, Data: {2}",
+                                 Target,
+                                 Name,
+                                 Data);
         }
 
         /// <summary>
         ///     Determines whether the specified <see cref="ShellCommand" /> is equal to this instance.
         /// </summary>
         /// <param name="other">The other instance.</param>
-        /// <returns><c>true</c> if the specified <see cref="ShellCommand" /> is equal to this instance; otherwise, <c>false</c>.</returns>
+        /// <returns>
+        ///     <c>true</c> if the specified <see cref="ShellCommand" /> is equal to this instance;
+        ///     otherwise, <c>false</c>.
+        /// </returns>
         public bool Equals(ShellCommand other)
         {
-            return string.Equals(Target, other.Target) && string.Equals(Name, other.Name) && string.Equals(Data, other.Data);
+            return string.Equals(Target, other.Target) && string.Equals(Name, other.Name)
+                   && string.Equals(Data, other.Data);
         }
 
         /// <summary>
         ///     Determines whether the specified <see cref="System.Object" /> is equal to this instance.
         /// </summary>
         /// <param name="obj">The object to compare with the current instance.</param>
-        /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
+        /// <returns>
+        ///     <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance;
+        ///     otherwise, <c>false</c>.
+        /// </returns>
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
+            if (ReferenceEquals(null, obj)) { return false; }
+
             return obj is ChatCommand && Equals((ChatCommand)obj);
         }
 
         /// <summary>
         ///     Returns a hash code for this instance.
         /// </summary>
-        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
+        /// <returns>
+        ///     A hash code for this instance, suitable for use in hashing algorithms and data structures
+        ///     like a hash table.
+        /// </returns>
         public override int GetHashCode()
         {
             unchecked
