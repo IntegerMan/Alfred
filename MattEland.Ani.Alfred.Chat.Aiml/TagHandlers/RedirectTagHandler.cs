@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
-// srai.cs
+// RedirectTagHandler.cs
 // 
-// Created on:      08/12/2015 at 10:55 PM
-// Last Modified:   08/12/2015 at 11:59 PM
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/24/2015 at 12:10 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -17,34 +17,28 @@ using MattEland.Common;
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// <summary>
-    /// A tag handler for the AIML "srai" tag governing recursive / redirect style searches.
+    ///     A tag handler for the AIML "srai" tag governing recursive / redirect style searches.
     /// </summary>
     [HandlesAimlTag("srai")]
     public class RedirectTagHandler : AimlTagHandler
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AimlTagHandler" /> class.
+        ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
-        public RedirectTagHandler([NotNull] TagHandlerParameters parameters)
-            : base(parameters)
-        {
-        }
+        public RedirectTagHandler([NotNull] TagHandlerParameters parameters) : base(parameters) { }
 
         /// <summary>
-        /// Processes the input text and returns the processed value.
+        ///     Processes the input text and returns the processed value.
         /// </summary>
         /// <returns>The processed output</returns>
         protected override string ProcessChange()
         {
             //- Basic validation
-            if (!TemplateNode.Name.Matches("srai") || TemplateNode.InnerText.IsEmpty())
-            {
-                return string.Empty;
-            }
+            if (Contents.IsEmpty()) { return string.Empty; }
 
             // Spawn a new request as a child of this current request and execute it
-            var request = new Request(TemplateNode.InnerText, User, ChatEngine, Request);
+            var request = new Request(Contents, User, ChatEngine, Request);
             var result = ChatEngine.ProcessRedirectChatRequest(request);
             Debug.Assert(result != null);
 

@@ -44,7 +44,6 @@ namespace MattEland.Ani.Alfred.Chat
         {
             var result = new AlfredCommandResult();
 
-            var element = TemplateElement;
             var recipient = ChatEngine.Owner as IAlfredCommandRecipient;
 
             // Check to make sure we have a recipient to talk to
@@ -56,9 +55,9 @@ namespace MattEland.Ani.Alfred.Chat
             }
 
             // Build a command
-            var name = GetAttributeSafe(element, "command");
-            var subsystem = GetAttributeSafe(element, "subsystem");
-            var data = GetAttributeSafe(element, "data");
+            var name = GetAttribute("command");
+            var subsystem = GetAttribute("subsystem");
+            var data = GetAttribute("data");
 
             var command = new ChatCommand(subsystem, name, data);
 
@@ -68,5 +67,6 @@ namespace MattEland.Ani.Alfred.Chat
             // Get the output value from the result in case it was set externally
             return result.Output.NonNull();
         }
+
     }
 }

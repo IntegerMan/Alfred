@@ -42,20 +42,20 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// <returns>The processed output</returns>
         protected override string ProcessChange()
         {
-            if (!TemplateNode.Name.Matches("learn") || !TemplateNode.InnerText.HasText())
+            if (!NodeName.Matches("learn") || !Contents.HasText())
             {
                 return string.Empty;
             }
 
             try
             {
-                LearnFromDocument(TemplateNode.InnerText);
+                LearnFromDocument(Contents);
             }
             catch (SecurityException ex)
             {
                 Log(string.Format(Locale,
                                   Resources.LearnErrorSecurityException.NonNull(),
-                                  TemplateNode.InnerText,
+                                  Contents,
                                   ex.Message),
                     LogLevel.Error);
             }
@@ -63,7 +63,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             {
                 Log(string.Format(Locale,
                                   Resources.LearnErrorUnauthorizedException.NonNull(),
-                                  TemplateNode.InnerText,
+                                  Contents,
                                   ex.Message),
                     LogLevel.Error);
             }
@@ -80,7 +80,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                                   Resources.LearnErrorIOException.NonNull(),
                                   ex.GetType().Name,
                                   ex.Message,
-                                  TemplateNode.InnerText),
+                                  Contents),
                     LogLevel.Error);
             }
             catch (XmlException ex)
@@ -88,14 +88,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                 Log(string.Format(Locale,
                                   Resources.LearnErrorXmlException.NonNull(),
                                   ex.Message,
-                                  TemplateNode.InnerText),
+                                  Contents),
                     LogLevel.Error);
             }
             catch (NotSupportedException)
             {
                 Log(string.Format(Locale,
                                   Resources.LearnErrorNotSupportedException.NonNull(),
-                                  TemplateNode.InnerText),
+                                  Contents),
                     LogLevel.Error);
             }
 

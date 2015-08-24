@@ -282,17 +282,23 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         [NotNull]
         protected TagHandlerParameters BuildTagHandlerParameters([NotNull] string xml)
         {
-            var node = AimlTagHandler.BuildNode(xml);
-            return BuildTagHandlerParameters("Testing is fun", node);
+            var element = AimlTagHandler.BuildElement(xml);
+            return BuildTagHandlerParameters("Testing is fun", element);
         }
 
+        /// <summary>
+        /// Builds the tag handler parameters.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <param name="element">The element.</param>
+        /// <returns>Parameters for these elements.</returns>
         [NotNull]
-        private TagHandlerParameters BuildTagHandlerParameters([NotNull] string input, [NotNull] XmlNode node)
+        private TagHandlerParameters BuildTagHandlerParameters([NotNull] string input, [NotNull] XmlElement element)
         {
             var query = new SubQuery();
             var request = new Request(input, User, Engine);
             var result = new Result(User, Engine, request);
-            return new TagHandlerParameters(Engine, User, query, request, result, node);
+            return new TagHandlerParameters(Engine, User, query, request, result, element);
         }
 
         /// <summary>

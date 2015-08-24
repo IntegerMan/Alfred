@@ -36,11 +36,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// <returns>The processed output</returns>
         protected override string ProcessChange()
         {
-            if (!TemplateNode.Name.Matches("sr"))
-            {
-                return string.Empty;
-            }
-
             // Execute a star operation
             var star = BuildStarTagHandler();
             var starResult = star.Transform();

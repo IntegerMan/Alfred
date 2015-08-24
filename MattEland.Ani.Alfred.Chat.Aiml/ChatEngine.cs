@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
 // ChatEngine.cs
 // 
-// Created on:      08/12/2015 at 9:45 PM
-// Last Modified:   08/18/2015 at 12:21 AM
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/24/2015 at 12:58 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -163,10 +163,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         public Result Chat([NotNull] string input, [NotNull] User user)
         {
             //- Validate
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
+            if (user == null) { throw new ArgumentNullException(nameof(user)); }
             if (input.IsNullOrWhitespace())
             {
                 throw new ArgumentException(Resources.ChatErrorNoMessage, nameof(input));
@@ -186,10 +183,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// </exception>
         internal Result ProcessRedirectChatRequest([NotNull] Request request)
         {
-            if (request == null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            if (request == null) { throw new ArgumentNullException(nameof(request)); }
 
             return _chatProcessor.ProcessChatRequest(request);
         }
@@ -214,10 +208,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         [UsedImplicitly]
         public void LoadAimlFromDirectory([NotNull] string directoryPath)
         {
-            if (directoryPath == null)
-            {
-                throw new ArgumentNullException(nameof(directoryPath));
-            }
+            if (directoryPath == null) { throw new ArgumentNullException(nameof(directoryPath)); }
 
             _aimlLoader.LoadAiml(directoryPath);
         }
@@ -230,10 +221,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         public void LoadAimlFile([NotNull] XmlDocument aimlFile)
         {
             //- Validate
-            if (aimlFile == null)
-            {
-                throw new ArgumentNullException(nameof(aimlFile));
-            }
+            if (aimlFile == null) { throw new ArgumentNullException(nameof(aimlFile)); }
 
             // Load the file
             _aimlLoader.LoadAimlFromXml(aimlFile);
@@ -250,10 +238,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <exception cref="ArgumentNullException"><paramref name="aiml" /> is <see langword="null" />.</exception>
         public void LoadAimlFromString([NotNull] string aiml)
         {
-            if (aiml.IsEmpty())
-            {
-                throw new ArgumentNullException(nameof(aiml));
-            }
+            if (aiml.IsEmpty()) { throw new ArgumentNullException(nameof(aiml)); }
 
             var document = new XmlDocument();
             document.LoadXml(aiml);
@@ -326,20 +311,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         public void AddCategoryToGraph([NotNull] XmlNode node, [NotNull] string path)
         {
             //- Validate
-            if (path == null)
-            {
-                throw new ArgumentNullException(nameof(path));
-            }
-            if (node == null)
-            {
-                throw new ArgumentNullException(nameof(node));
-            }
+            if (path == null) { throw new ArgumentNullException(nameof(path)); }
+            if (node == null) { throw new ArgumentNullException(nameof(node)); }
 
             // You can't add nodes with an empty path
             if (string.IsNullOrEmpty(path))
             {
                 var message = string.Format(Locale,
-                                            Resources.ChatEngineAddCategoryErrorNoPath,
+                                            Resources.ChatEngineAddCategoryErrorNoPath.NonNull(),
                                             path,
                                             node.OuterXml);
                 Log(message, LogLevel.Warning);
@@ -348,6 +327,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
             // Add the node to the graph
             RootNode.AddCategory(path, node.OuterXml);
+        }
+
+        /// <summary>
+        ///     Logs the specified error message.
+        /// </summary>
+        /// <param name="message">The error message.</param>
+        public void Error([CanBeNull] string message)
+        {
+            Log(message, LogLevel.Error);
         }
     }
 

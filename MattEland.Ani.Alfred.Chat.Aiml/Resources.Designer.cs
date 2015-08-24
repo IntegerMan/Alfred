@@ -106,6 +106,24 @@ namespace MattEland.Ani.Alfred.Chat.Aiml {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; resulted in an invalid XmlElement..
+        /// </summary>
+        internal static string AimlTagHandlerBuildElementBadXml {
+            get {
+                return ResourceManager.GetString("AimlTagHandlerBuildElementBadXml", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not redirect to &apos;{0}&apos; due to bad XML: {1}.
+        /// </summary>
+        internal static string AimlTagHandlerDoRedirectBadXml {
+            get {
+                return ResourceManager.GetString("AimlTagHandlerDoRedirectBadXml", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Attempted to load a new category with an empty pattern where the directoryPath = {0} and template = {1} produced by a category..
         /// </summary>
         internal static string ChatEngineAddCategoryErrorNoPath {
@@ -331,6 +349,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An input tag with a badly formed index ({0}) was encountered processing the input: {1}.
+        /// </summary>
+        internal static string OutputTagHandlerProcessChangeInvalidIndex {
+            get {
+                return ResourceManager.GetString("OutputTagHandlerProcessChangeInvalidIndex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Request timeout. User: {0} raw input: &quot;{1}&quot;.
         /// </summary>
         internal static string RequestTimedOut {
@@ -426,6 +453,44 @@ namespace MattEland.Ani.Alfred.Chat.Aiml {
         internal static string SystemNotImplemented {
             get {
                 return ResourceManager.GetString("SystemNotImplemented", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dynamic tag handler for {0} encountered a missing method error instantiating type {1}: {2}
+        /// Disabling this handler..
+        /// </summary>
+        internal static string TagHandlerFactoryBuildTagHandlerDynamicMissingMethod {
+            get {
+                return ResourceManager.GetString("TagHandlerFactoryBuildTagHandlerDynamicMissingMethod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dynamic tag handler for {0} encountered an invocation error instantiating type {1}: {2}
+        /// Disabling this handler..
+        /// </summary>
+        internal static string TagHandlerFactoryBuildTagHandlerDynamicTargetInvocation {
+            get {
+                return ResourceManager.GetString("TagHandlerFactoryBuildTagHandlerDynamicTargetInvocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dynamic tag handler for {0} instantiated an instance of type {1} that was not an AimlTagHandler. Disabling this handler..
+        /// </summary>
+        internal static string TagHandlerFactoryBuildTagHandlerDynamicWrongType {
+            get {
+                return ResourceManager.GetString("TagHandlerFactoryBuildTagHandlerDynamicWrongType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An input tag with a badly formed index ({0}) was encountered processing the input: {1}.
+        /// </summary>
+        internal static string ThatStarTagHandlerProcessChangeInvalidIndex {
+            get {
+                return ResourceManager.GetString("ThatStarTagHandlerProcessChangeInvalidIndex", resourceCulture);
             }
         }
         

@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
 // SentenceTagHandler.cs
 // 
-// Created on:      08/12/2015 at 10:52 PM
-// Last Modified:   08/15/2015 at 1:10 AM
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/24/2015 at 12:12 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -23,14 +23,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     ///     every sentence to be capitalized while the rest run as lowercase.
     /// </summary>
     [HandlesAimlTag("sentence")]
+    [UsedImplicitly]
     public class SentenceTagHandler : AimlTagHandler
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
-        public SentenceTagHandler([NotNull] TagHandlerParameters parameters)
-            : base(parameters)
+        public SentenceTagHandler([NotNull] TagHandlerParameters parameters) : base(parameters)
         {
         }
 
@@ -40,27 +40,18 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// <returns>The processed output</returns>
         protected override string ProcessChange()
         {
-            var node = TemplateNode;
-            if (!node.Name.Matches("sentence"))
-            {
-                return string.Empty;
-            }
-
-            if (node.InnerText.HasText())
-            {
-                return ProcessSentenceText(TemplateNode.InnerText);
-            }
+            if (Contents.HasText()) { return ProcessSentenceText(Contents); }
 
             // Evaluate everything else and stick that in our inner text
             var star = BuildStarTagHandler();
-            node.InnerText = star.Transform().NonNull();
+            Contents = star.Transform().NonNull();
 
             // Iterate over everything again if we now have values
-            return node.InnerText.HasText() ? ProcessChange() : string.Empty;
+            return Contents.HasText() ? ProcessChange() : string.Empty;
         }
 
         /// <summary>
-        /// Handles the sentence tag input.
+        ///     Handles the sentence tag input.
         /// </summary>
         /// <param name="input">The input.</param>
         /// <returns>The sentence text for the input value</returns>
@@ -99,6 +90,5 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 
             return stringBuilder.ToString();
         }
-
     }
 }

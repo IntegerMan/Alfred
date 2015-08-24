@@ -32,23 +32,22 @@ namespace MattEland.Ani.Alfred.Chat
         [NotNull]
         protected override string ProcessChange()
         {
-            var element = TemplateElement;
             var recipient = ChatEngine.Owner as IShellCommandRecipient;
 
             // If there's no target or no recipient, don't bother
-            if (!element.HasAttribute("target") || recipient == null)
+            if (!HasAttribute("target") || recipient == null)
             {
                 return string.Empty;
             }
 
             // Build a command
-            var name = GetAttributeSafe(element, "command");
+            var name = GetAttribute("command");
             if (name.IsEmpty())
             {
                 name = "nav";
             }
-            var target = GetAttributeSafe(element, "target");
-            var data = GetAttributeSafe(element, "data");
+            var target = GetAttribute("target");
+            var data = GetAttribute("data");
 
             var command = new ShellCommand(name, target, data);
 

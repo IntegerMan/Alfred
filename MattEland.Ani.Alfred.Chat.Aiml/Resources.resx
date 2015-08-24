@@ -251,4 +251,27 @@
     <value>Gossip from user '{0}': '{1}'</value>
     <comment>0 = user, 1 = gossip</comment>
   </data>
+  <data name="OutputTagHandlerProcessChangeInvalidIndex" xml:space="preserve">
+    <value>An input tag with a badly formed index ({0}) was encountered processing the input: {1}</value>
+  </data>
+  <data name="ThatStarTagHandlerProcessChangeInvalidIndex" xml:space="preserve">
+    <value>An input tag with a badly formed index ({0}) was encountered processing the input: {1}</value>
+  </data>
+  <data name="TagHandlerFactoryBuildTagHandlerDynamicWrongType" xml:space="preserve">
+    <value>Dynamic tag handler for {0} instantiated an instance of type {1} that was not an AimlTagHandler. Disabling this handler.</value>
+  </data>
+  <data name="TagHandlerFactoryBuildTagHandlerDynamicTargetInvocation" xml:space="preserve">
+    <value>Dynamic tag handler for {0} encountered an invocation error instantiating type {1}: {2}
+ Disabling this handler.</value>
+  </data>
+  <data name="TagHandlerFactoryBuildTagHandlerDynamicMissingMethod" xml:space="preserve">
+    <value>Dynamic tag handler for {0} encountered a missing method error instantiating type {1}: {2}
+ Disabling this handler.</value>
+  </data>
+  <data name="AimlTagHandlerDoRedirectBadXml" xml:space="preserve">
+    <value>Could not redirect to '{0}' due to bad XML: {1}</value>
+  </data>
+  <data name="AimlTagHandlerBuildElementBadXml" xml:space="preserve">
+    <value>'{0}' resulted in an invalid XmlElement.</value>
+  </data>
 </root>

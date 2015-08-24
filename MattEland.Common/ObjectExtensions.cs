@@ -8,6 +8,7 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Globalization;
 
 using JetBrains.Annotations;
 
@@ -28,6 +29,20 @@ namespace MattEland.Common
         {
             var disposable = item as IDisposable;
             disposable?.Dispose();
+        }
+
+        /// <summary>
+        /// Turns the object into a string representation with null results represented as string.Empty.
+        /// </summary>
+        /// <param name="item">The item. Can be null.</param>
+        /// <returns>A non-null string representation of item.</returns>
+        [NotNull]
+        public static string AsNonNullString([CanBeNull] this object item)
+        {
+            if (item == null) { return string.Empty; }
+
+            var result = item.ToString();
+            return result.NonNull();
         }
     }
 }

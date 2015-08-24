@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
 // TagHandlerParameters.cs
 // 
-// Created on:      08/14/2015 at 1:24 PM
-// Last Modified:   08/15/2015 at 11:16 PM
+// Created on:      08/22/2015 at 11:36 PM
+// Last Modified:   08/24/2015 at 12:49 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -21,22 +21,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
     /// </summary>
     public class TagHandlerParameters
     {
-        [NotNull]
-        private readonly ChatEngine _chatEngine;
-
-        [NotNull]
-        private readonly SubQuery _query;
-
-        [NotNull]
-        private readonly Request _request;
-
-        private readonly Result _result;
-
-        [NotNull]
-        private readonly XmlNode _templateNode;
-
-        [NotNull]
-        private readonly User _user;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="TagHandlerParameters" /> class.
@@ -46,43 +30,32 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <param name="query">The query.</param>
         /// <param name="request">The request.</param>
         /// <param name="result">The result.</param>
-        /// <param name="templateNode">The template node.</param>
+        /// <param name="element">The template node.</param>
         /// <exception cref="ArgumentNullException">
-        ///     <paramref name="query" />, <paramref name="request" />, <paramref name="user" />, <paramref name="chatEngine" />, or
-        ///     <paramref name="templateNode" /> are <see langword="null" />.
+        ///     <paramref name="query" />, <paramref name="request" />, <paramref name="user" />,
+        ///     <paramref name="chatEngine" />, or
+        ///     <paramref name="element" /> are <see langword="null" />.
         /// </exception>
         public TagHandlerParameters([NotNull] ChatEngine chatEngine,
                                     [NotNull] User user,
                                     [NotNull] SubQuery query,
                                     [NotNull] Request request,
                                     Result result,
-                                    [NotNull] XmlNode templateNode)
+                                    [NotNull] XmlElement element)
         {
             //- Validate
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            if (query == null)
-            {
-                throw new ArgumentNullException(nameof(query));
-            }
-            if (request == null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
-            if (templateNode == null)
-            {
-                throw new ArgumentNullException(nameof(templateNode));
-            }
+            if (user == null) { throw new ArgumentNullException(nameof(user)); }
+            if (query == null) { throw new ArgumentNullException(nameof(query)); }
+            if (request == null) { throw new ArgumentNullException(nameof(request)); }
+            if (element == null) { throw new ArgumentNullException(nameof(element)); }
 
             //- Set Properties
-            _chatEngine = chatEngine;
-            _user = user;
-            _query = query;
-            _request = request;
-            _result = result;
-            _templateNode = templateNode;
+            ChatEngine = chatEngine;
+            User = user;
+            Query = query;
+            Request = request;
+            Result = result;
+            Element = element;
         }
 
         /// <summary>
@@ -90,58 +63,40 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// </summary>
         /// <value>The chat engine.</value>
         [NotNull]
-        public ChatEngine ChatEngine
-        {
-            get { return _chatEngine; }
-        }
+        public ChatEngine ChatEngine { get; }
 
         /// <summary>
         ///     Gets the user.
         /// </summary>
         /// <value>The user.</value>
         [NotNull]
-        public User User
-        {
-            get { return _user; }
-        }
+        public User User { get; }
 
         /// <summary>
         ///     Gets the query.
         /// </summary>
         /// <value>The query.</value>
         [NotNull]
-        public SubQuery Query
-        {
-            get { return _query; }
-        }
+        public SubQuery Query { get; }
 
         /// <summary>
         ///     Gets the request.
         /// </summary>
         /// <value>The request.</value>
         [NotNull]
-        public Request Request
-        {
-            get { return _request; }
-        }
+        public Request Request { get; }
 
         /// <summary>
         ///     Gets the result.
         /// </summary>
         /// <value>The result.</value>
-        public Result Result
-        {
-            get { return _result; }
-        }
+        public Result Result { get; }
 
         /// <summary>
         ///     Gets the template node.
         /// </summary>
         /// <value>The template node.</value>
         [NotNull]
-        public XmlNode TemplateNode
-        {
-            get { return _templateNode; }
-        }
+        public XmlElement Element { get; }
     }
 }

@@ -92,7 +92,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Controls
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="RoutedEventArgs" /> instance containing the event data.</param>
-        public void HandleControlLoaded([CanBeNull] object sender, [NotNull] RoutedEventArgs e)
+        private void HandleControlLoaded([CanBeNull] object sender, [NotNull] RoutedEventArgs e)
         {
             SelectFirstTab();
         }

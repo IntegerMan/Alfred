@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
 // FormalTagHandler.cs
 // 
-// Created on:      08/12/2015 at 10:44 PM
-// Last Modified:   08/14/2015 at 5:50 PM
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/24/2015 at 12:04 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -29,10 +29,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
-        public FormalTagHandler([NotNull] TagHandlerParameters parameters)
-            : base(parameters)
-        {
-        }
+        public FormalTagHandler([NotNull] TagHandlerParameters parameters) : base(parameters) { }
 
         /// <summary>
         ///     Processes the input text and returns the processed value.
@@ -41,26 +38,17 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         protected override string ProcessChange()
         {
             //- Ensure we're looking at the correct tag
-            var node = TemplateNode;
-            var innerText = node.InnerText;
-            if (!node.Name.Matches("formal") || innerText.IsEmpty())
-            {
-                return string.Empty;
-            }
-
-            var stringBuilder = new StringBuilder();
+            if (!NodeName.Matches("formal") || Contents.IsEmpty()) { return string.Empty; }
 
             // Start lowercase
-            innerText = innerText.ToLower(Locale);
+            var stringBuilder = new StringBuilder();
+            var innerText = Contents.ToLower(Locale);
 
             // Cycle through each word in the string
             foreach (var word in innerText.Split())
             {
                 //- Sanity check
-                if (word == null)
-                {
-                    continue;
-                }
+                if (word == null) { continue; }
 
                 //? ALF-19: It'd be cool to optionally NOT formal case "a" "it" "is" etc.
 
@@ -68,13 +56,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
                 var newWord = word.Substring(0, 1).ToUpper(Locale);
 
                 // Tack on the rest of the word
-                if (word.Length > 1)
-                {
-                    newWord += word.Substring(1);
-                }
+                if (word.Length > 1) { newWord += word.Substring(1); }
 
                 // Build out the new sentence with word breaks
-                stringBuilder.AppendFormat(Locale, "{0} ", newWord);
+                stringBuilder.Append(newWord);
+                stringBuilder.Append(" ");
             }
 
             // Return Our New Sentence In Formal Case

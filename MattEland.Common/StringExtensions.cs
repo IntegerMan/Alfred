@@ -2,7 +2,7 @@
 // StringExtensions.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   08/21/2015 at 6:06 PM
+// Last Modified:   08/24/2015 at 1:06 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -76,10 +76,7 @@ namespace MattEland.Common
         [NotNull]
         public static string IfNull([CanBeNull] this string input, [NotNull] string replacement)
         {
-            if (replacement == null)
-            {
-                throw new ArgumentNullException(nameof(replacement));
-            }
+            if (replacement == null) { throw new ArgumentNullException(nameof(replacement)); }
 
             return input ?? replacement;
         }
@@ -158,11 +155,11 @@ namespace MattEland.Common
             {
                 stringBuilder.Append(message);
             }
-
         }
 
         /// <summary>
-        /// Formats the specified input using the given culture (or current culture) and optional format string.
+        ///     Formats the specified input using the given culture (or current culture) and optional format
+        ///     string.
         /// </summary>
         /// <param name="input">The input.</param>
         /// <param name="culture">The culture.</param>
@@ -170,21 +167,21 @@ namespace MattEland.Common
         /// <returns>The formatted string</returns>
         [NotNull]
         public static string Format([NotNull] this IFormattable input,
-                                            [CanBeNull] CultureInfo culture = null,
-                                            [CanBeNull] string format = null)
+                                    [CanBeNull] CultureInfo culture = null,
+                                    [CanBeNull] string format = null)
         {
-
             culture = culture ?? CultureInfo.CurrentCulture;
 
             return input.ToString(format, culture);
         }
 
         /// <summary>
-        /// Formats the given string using the user's culture
+        ///     Formats the given string using the user's culture
         /// </summary>
         /// <param name="input">The input.</param>
         /// <returns>System.String.</returns>
         [NotNull]
+        [UsedImplicitly]
         public static string ForUser([NotNull] this IFormattable input)
         {
             return input.ToString();
@@ -196,10 +193,10 @@ namespace MattEland.Common
         /// <param name="input">The input.</param>
         /// <returns>The formatted string</returns>
         [NotNull]
+        [UsedImplicitly]
         public static string Invariant([NotNull] this IFormattable input)
         {
             return input.Format(CultureInfo.InvariantCulture);
         }
-
     }
 }

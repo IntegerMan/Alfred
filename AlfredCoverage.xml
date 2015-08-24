@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Root CoveredStatements="4275" TotalStatements="6602" CoveragePercent="65" ReportType="NDependXML" DotCoverVersion="3.1.1">
+<Root CoveredStatements="4278" TotalStatements="6605" CoveragePercent="65" ReportType="NDependXML" DotCoverVersion="3.1.1">
   <Assembly Name="MattEland.Ani.Alfred.Chat" CoveredStatements="273" TotalStatements="365" CoveragePercent="75">
     <Namespace Name="MattEland.Ani.Alfred.Chat" CoveredStatements="273" TotalStatements="365" CoveragePercent="75">
       <Type Name="AimlStatementHandler" CoveredStatements="103" TotalStatements="137" CoveragePercent="75">
@@ -916,13 +916,13 @@
         <Method Name="set_Text(String)" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="32" />
       </Type>
       <Type Name="AlfredWidget" CoveredStatements="24" TotalStatements="36" CoveragePercent="67">
-        <Method Name=".ctor()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="33" />
-        <Method Name="Error(String,String)" CoveredStatements="0" TotalStatements="5" CoveragePercent="0" FirstStatementLine="112" />
-        <Method Name="get_DataContext()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="66" />
-        <Method Name="get_IsVisible()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="41" />
-        <Method Name="OnPropertyChanged(String)" CoveredStatements="5" TotalStatements="10" CoveragePercent="50" FirstStatementLine="90" />
-        <Method Name="set_DataContext(Object)" CoveredStatements="5" TotalStatements="7" CoveragePercent="71" FirstStatementLine="68" />
-        <Method Name="set_IsVisible(Boolean)" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="43" />
+        <Method Name=".ctor()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="31" />
+        <Method Name="Error(String,String)" CoveredStatements="0" TotalStatements="5" CoveragePercent="0" FirstStatementLine="124" />
+        <Method Name="get_DataContext()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="73" />
+        <Method Name="get_IsVisible()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="45" />
+        <Method Name="OnPropertyChanged(String)" CoveredStatements="5" TotalStatements="10" CoveragePercent="50" FirstStatementLine="100" />
+        <Method Name="set_DataContext(Object)" CoveredStatements="5" TotalStatements="7" CoveragePercent="71" FirstStatementLine="75" />
+        <Method Name="set_IsVisible(Boolean)" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="47" />
       </Type>
       <Type Name="ButtonWidget" CoveredStatements="33" TotalStatements="39" CoveragePercent="85">
         <Method Name=".ctor()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="36" />
@@ -943,16 +943,16 @@
       </Type>
     </Namespace>
   </Assembly>
-  <Assembly Name="MattEland.Ani.Alfred.Core.Modules.SysMonitor" CoveredStatements="254" TotalStatements="338" CoveragePercent="75">
-    <Namespace Name="MattEland.Ani.Alfred.Core.Modules.SysMonitor" CoveredStatements="254" TotalStatements="338" CoveragePercent="75">
+  <Assembly Name="MattEland.Ani.Alfred.Core.Modules.SysMonitor" CoveredStatements="257" TotalStatements="341" CoveragePercent="75">
+    <Namespace Name="MattEland.Ani.Alfred.Core.Modules.SysMonitor" CoveredStatements="257" TotalStatements="341" CoveragePercent="75">
       <Type Name="CounterMetricProvider" CoveredStatements="8" TotalStatements="11" CoveragePercent="73">
         <Method Name=".ctor(String,String,String)" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="41" />
         <Method Name="Dispose()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="69" />
         <Method Name="NextValue()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="60" />
       </Type>
       <Type Name="CounterMetricProviderFactory" CoveredStatements="7" TotalStatements="7" CoveragePercent="100">
-        <Method Name="Build(String,String,String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="37" />
-        <Method Name="GetCategoryInstanceNames(String)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="52" />
+        <Method Name="Build(String,String,String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="46" />
+        <Method Name="GetCategoryInstanceNames(String)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="61" />
       </Type>
       <Type Name="CpuMonitorModule" CoveredStatements="66" TotalStatements="89" CoveragePercent="74">
         <Type Name="&lt;&gt;c" CoveredStatements="3" TotalStatements="3" CoveragePercent="100">
@@ -1032,14 +1032,14 @@
         <Method Name="NextValue()" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="71" />
         <Method Name="set_Value(Nullable&lt;Single&gt;)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="63" />
       </Type>
-      <Type Name="ValueMetricProviderFactory" CoveredStatements="19" TotalStatements="19" CoveragePercent="100">
-        <Method Name=".ctor()" CoveredStatements="2" TotalStatements="2" CoveragePercent="100" FirstStatementLine="39" />
-        <Method Name="Build(String,String,String)" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="62" />
-        <Method Name="get_CategoryInstanceNames()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="48" />
-        <Method Name="get_DefaultValue()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="30" />
-        <Method Name="get_Providers()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="39" />
-        <Method Name="GetCategoryInstanceNames(String)" CoveredStatements="8" TotalStatements="8" CoveragePercent="100" FirstStatementLine="78" />
-        <Method Name="set_DefaultValue(Single)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="30" />
+      <Type Name="ValueMetricProviderFactory" CoveredStatements="22" TotalStatements="22" CoveragePercent="100">
+        <Method Name=".ctor()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="29" />
+        <Method Name="Build(String,String,String)" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="72" />
+        <Method Name="get_CategoryInstanceNameMappings()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="59" />
+        <Method Name="get_DefaultValue()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="40" />
+        <Method Name="get_Providers()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="49" />
+        <Method Name="GetCategoryInstanceNames(String)" CoveredStatements="8" TotalStatements="8" CoveragePercent="100" FirstStatementLine="88" />
+        <Method Name="set_DefaultValue(Single)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="40" />
       </Type>
     </Namespace>
   </Assembly>

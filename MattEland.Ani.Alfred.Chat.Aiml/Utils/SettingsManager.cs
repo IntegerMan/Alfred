@@ -303,6 +303,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <param name="name">The name of the key.</param>
         /// <returns>The value in the dictionary</returns>
         /// <exception cref="System.ArgumentNullException"></exception>
+        [NotNull]
         public string GetValue([NotNull] string name)
         {
             if (name == null)
@@ -312,7 +313,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 
             name = name.ToUpperInvariant();
 
-            return Contains(name) ? _settingsHash[name] : string.Empty;
+            return Contains(name) ? _settingsHash[name].NonNull() : string.Empty;
         }
 
         /// <summary>

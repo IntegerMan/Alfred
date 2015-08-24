@@ -27,7 +27,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     ///     See "http://www.alicebot.org/documentation/aiml-reference.html#random" for more information on
     ///     the random tag.
     /// </remarks>
-    [HandlesAimlTag("random")]
+    [HandlesAimlTag("random"), UsedImplicitly]
     public class RandomTagHandler : AimlTagHandler
     {
         [NotNull]
@@ -51,13 +51,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         protected override string ProcessChange()
         {
             // Don't return anything if there aren't any children.
-            if (!TemplateNode.HasChildNodes)
+            if (!HasChildNodes)
             {
                 return string.Empty;
             }
 
             //- Looking at the children...
-            var childNodes = TemplateNode.ChildNodes.Cast<XmlNode>();
+            var childNodes = ChildNodes.Cast<XmlNode>();
             var list = childNodes.Where(xmlNode => xmlNode?.Name == "li").ToList();
 
             //- Ensure we have items
