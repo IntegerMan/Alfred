@@ -144,9 +144,6 @@
   <data name="LearnErrorNotSupportedException" xml:space="preserve">
     <value>Could not load learning file due to an invalid format on file {0}</value>
   </data>
-  <data name="SrTagHandlerError" xml:space="preserve">
-    <value>Error processing sr operation: {0}</value>
-  </data>
   <data name="UserCtorNullId" xml:space="preserve">
     <value>The id cannot be empty</value>
   </data>

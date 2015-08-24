@@ -304,7 +304,7 @@
       </Type>
       <Type Name="LearnTagHandler" CoveredStatements="0" TotalStatements="49" CoveragePercent="0">
         <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="35" />
-        <Method Name="LearnFromDocument(String)" CoveredStatements="0" TotalStatements="13" CoveragePercent="0" FirstStatementLine="109" />
+        <Method Name="LearnFromDocument(String)" CoveredStatements="0" TotalStatements="13" CoveragePercent="0" FirstStatementLine="111" />
         <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="33" CoveragePercent="0" FirstStatementLine="44" />
       </Type>
       <Type Name="LowercaseTagHandler" CoveredStatements="0" TotalStatements="9" CoveragePercent="0">

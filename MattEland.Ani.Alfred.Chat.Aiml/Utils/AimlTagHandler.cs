@@ -178,5 +178,34 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 
             return new StarTagHandler(parameters);
         }
+
+        /// <summary>
+        ///     Executes a redirect to the specified target and returns the results
+        /// </summary>
+        /// <param name="redirectTarget">The redirect target.</param>
+        /// <returns>The result text from the redirection</returns>
+        [NotNull]
+        protected string DoRedirect(string redirectTarget)
+        {
+            try
+            {
+                var nodeText = string.Format(Locale, "<srai>{0}</srai>", redirectTarget);
+                var node = BuildNode(nodeText.NonNull());
+                var parameters = GetTagHandlerParametersForNode(node);
+
+                return new RedirectTagHandler(parameters).Transform();
+            }
+            catch (XmlException xmlEx)
+            {
+                var message = string.Format(Locale,
+                                            "Could not redirect to '{0}' due to bad XML: {1}",
+                                            xmlEx.Message,
+                                            redirectTarget);
+
+                Error(message);
+
+                return string.Empty;
+            }
+        }
     }
 }

@@ -7,12 +7,9 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System.Xml;
-
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
-using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
@@ -49,19 +46,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             var starResult = star.Transform();
 
             // Execute a redirect to the result of the star operation
-            try
-            {
-                var node = BuildNode(string.Format(Locale, "<srai>{0}</srai>", starResult).NonNull());
-                var parameters = GetTagHandlerParametersForNode(node);
-                return new RedirectTagHandler(parameters).Transform();
-
-            }
-            catch (XmlException xmlEx)
-            {
-                Log(string.Format(Locale, Resources.SrTagHandlerError, xmlEx.Message), LogLevel.Error);
-            }
-
-            return string.Empty;
+            return DoRedirect(starResult);
         }
     }
 }
