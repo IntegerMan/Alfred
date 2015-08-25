@@ -34,9 +34,6 @@ namespace MattEland.Ani.Alfred.Chat
         [NotNull]
         private readonly AlfredCommandRouter _commandRouter = new AlfredCommandRouter();
 
-        [NotNull]
-        private readonly ChatHistoryContainer _chatHistory;
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
@@ -48,7 +45,6 @@ namespace MattEland.Ani.Alfred.Chat
         {
             ChatHandler = new AimlStatementHandler(console);
             _chatPage = new ChatPage(Res.ChatModuleName.NonNull(), ChatHandler);
-            _chatHistory = new ChatHistoryContainer();
         }
 
         /// <summary>
@@ -105,9 +101,9 @@ namespace MattEland.Ani.Alfred.Chat
             get
             {
                 // We still want the default nodes
-                foreach (var provider in base.PropertyProviders) { yield return provider; }
+                foreach (IPropertyProvider provider in base.PropertyProviders) { yield return provider; }
 
-                yield return _chatHistory;
+                foreach (IPropertyProvider provider in ChatHandler.PropertyProviders) { yield return provider; }
             }
         }
 
@@ -156,6 +152,7 @@ namespace MattEland.Ani.Alfred.Chat
             // Say hi so Alfred greets the user
             AlfredInstance?.ChatProvider?.DoInitialGreeting();
         }
+
     }
 
 }

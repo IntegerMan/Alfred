@@ -55,7 +55,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AimlStatementHandler.cs" />
-    <Compile Include="ChatHistoryContainer.cs" />
+    <Compile Include="ChatHandlersProvider.cs" />
+    <Compile Include="ChatHistoryProvider.cs" />
     <Compile Include="ChatSubsystem.cs" />
     <Compile Include="AlfredCommandRouter.cs" />
     <Compile Include="AlfredTagHandler.cs" />

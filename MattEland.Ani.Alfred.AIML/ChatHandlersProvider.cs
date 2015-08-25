@@ -1,29 +1,29 @@
-// ---------------------------------------------------------
-// ChatHistoryContainer.cs
+﻿// ---------------------------------------------------------
+// ChatHandlersProvider.cs
 // 
-// Created on:      08/25/2015 at 11:07 AM
-// Last Modified:   08/25/2015 at 11:12 AM
+// Created on:      08/25/2015 at 11:26 AM
+// Last Modified:   08/25/2015 at 11:26 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System.Collections.Generic;
 
+using MattEland.Ani.Alfred.Chat.Aiml;
 using MattEland.Ani.Alfred.Core.Definitions;
 
 namespace MattEland.Ani.Alfred.Chat
 {
     /// <summary>
-    ///     An <see cref="IPropertyProvider" /> that stores and retrieves chat history entries for inputs
-    ///     and outputs involving the <see cref="IChatProvider" />.
+    ///     An <see cref="IPropertyProvider" /> that provides explorer nodes for nodes inside of the
+    ///     <see cref="ChatEngine" />'s AIML tree.
     /// </summary>
-    public class ChatHistoryContainer : IPropertyProvider
+    public class ChatHandlersProvider : IPropertyProvider
     {
-
         /// <summary>
-        ///     The display name used for each instance's display name
+        ///     The display name that will be used for each instance
         /// </summary>
-        public const string InstanceDisplayName = "Chat History";
+        public const string InstanceDisplayName = "Chat Handlers";
 
         /// <summary>
         ///     Gets the display name for use in the user interface.
@@ -70,12 +70,7 @@ namespace MattEland.Ani.Alfred.Chat
         /// <value>The property providers.</value>
         public IEnumerable<IPropertyProvider> PropertyProviders
         {
-            get
-            {
-                // TODO: Chat history should go in here
-
-                yield break;
-            }
+            get { yield break; }
         }
     }
 }

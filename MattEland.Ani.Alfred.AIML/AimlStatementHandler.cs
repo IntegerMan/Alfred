@@ -8,6 +8,7 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -56,10 +57,12 @@ namespace MattEland.Ani.Alfred.Chat
         /// <param name="console">The console.</param>
         public AimlStatementHandler([CanBeNull] IConsole console = null)
         {
-            //- Logging Housekeeping
+            // Set up simple internal fields
             _console = console;
+            _chatHistory = new ChatHistoryProvider();
+            _chatHandlerProvider = new ChatHandlersProvider();
 
-            //+ Set up the chat engine
+            // Set up the chat engine
             try
             {
                 _chatEngine = new ChatEngine(console);
@@ -136,7 +139,7 @@ namespace MattEland.Ani.Alfred.Chat
             // Give our input to the chat ChatEngine
             var result = GetChatResult(userInput);
 
-            //- If it's a catastrophic failure, return a blankish object
+            //- If it's a catastrophic failure, return a nearly empty object
             if (result == null)
             {
                 return new UserStatementResponse(userInput,
@@ -211,6 +214,25 @@ namespace MattEland.Ani.Alfred.Chat
             }
         }
 
+        [NotNull]
+        private readonly ChatHistoryProvider _chatHistory;
+
+        [NotNull]
+        private readonly ChatHandlersProvider _chatHandlerProvider;
+
+        /// <summary>
+        /// Gets the property providers representing broad chat categories.
+        /// </summary>
+        /// <value>The property providers.</value>
+        public IEnumerable<IPropertyProvider> PropertyProviders
+        {
+            get
+            {
+                yield return _chatHistory;
+                yield return _chatHandlerProvider;
+            }
+        }
+
         /// <summary>
         ///     Performs an initial greeting by sending hi to the conversation system
         ///     and erasing it from the last input so the user sees Alfred greeting them.
@@ -248,7 +270,7 @@ namespace MattEland.Ani.Alfred.Chat
         /// <param name="ex">The ex.</param>
         private void LogErrorInitializingChat([CanBeNull] Exception ex)
         {
-            var errorFormat = Resources.ErrorInitializingChat;
+            var errorFormat = Resources.ErrorInitializingChat.NonNull();
             var message = string.Format(CultureInfo.CurrentCulture, errorFormat, ex?.Message);
             _console?.Log(Resources.ChatProcessingHeader, message, LogLevel.Error);
         }
