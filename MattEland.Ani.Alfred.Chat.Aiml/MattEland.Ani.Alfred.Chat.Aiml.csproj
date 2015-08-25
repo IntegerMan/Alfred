@@ -107,7 +107,7 @@
     <Compile Include="Utils\SettingsManager.cs" />
     <Compile Include="Utils\SubQuery.cs" />
     <Compile Include="Utils\TagHandlerParameters.cs" />
-    <Compile Include="Utils\TextTransformer.cs" />
+    <Compile Include="Utils\TextTransformerBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MattEland.Ani.Alfred.Core\MattEland.Ani.Alfred.Core.csproj">

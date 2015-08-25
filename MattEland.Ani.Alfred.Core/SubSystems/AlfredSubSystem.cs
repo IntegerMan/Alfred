@@ -25,7 +25,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
     ///     related modules and
     ///     capabilities to Alfred.
     /// </summary>
-    public abstract class AlfredSubsystem : AlfredComponent, IAlfredSubsystem
+    public abstract class AlfredSubsystem : ComponentBase, IAlfredSubsystem
     {
         [NotNull]
         [ItemNotNull]

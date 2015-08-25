@@ -28,7 +28,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
     ///     Widgets do not contain user interface elements but tell the
     ///     client what user interface elements to create.
     /// </summary>
-    public abstract class AlfredWidget : INotifyPropertyChanged, IPropertyProvider
+    public abstract class WidgetBase : INotifyPropertyChanged, IPropertyProvider
     {
 
         [CanBeNull]
@@ -37,10 +37,10 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         private bool _isVisible = true;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredWidget" /> class.
+        ///     Initializes a new instance of the <see cref="WidgetBase" /> class.
         /// </summary>
         /// <param name="parameters">The creation parameters.</param>
-        protected AlfredWidget([NotNull] WidgetCreationParameters parameters)
+        protected WidgetBase([NotNull] WidgetCreationParameters parameters)
         {
             if (parameters == null) { throw new ArgumentNullException(nameof(parameters)); }
 

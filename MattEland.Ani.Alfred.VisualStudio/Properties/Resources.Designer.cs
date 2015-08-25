@@ -113,5 +113,14 @@ namespace MattEland.Ani.Alfred.VisualStudio.Properties {
                 return ResourceManager.GetString("AlfredToolWindowControlInitializeLogMessage", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Window is now loaded.
+        /// </summary>
+        internal static string AlfredToolWindowWindowLoadedMessage {
+            get {
+                return ResourceManager.GetString("AlfredToolWindowWindowLoadedMessage", resourceCulture);
+            }
+        }
     }
 }

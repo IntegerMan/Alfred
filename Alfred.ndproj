@@ -4396,8 +4396,8 @@ select new { tAttr, types , methods, fields }
 //</HowToFix>]]></Query>
     </Group>
     <Group Name="Visibility" Active="True" ShownInReport="False">
-      <Query Active="False" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Methods that could have a lower visibility</Name>
-warnif count > 0 from m in JustMyCode.Methods where 
+      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Methods that could have a lower visibility</Name>
+from m in JustMyCode.Methods where 
   m.Visibility != m.OptimalVisibility &&
   !m.ParentNamespace.NameLike(".Test") &&
   !m.FullNameLike("WPF") &&
@@ -4450,118 +4450,8 @@ select new {
 // *finer solution* by tagging each concerned method with 
 // *CannotDecreaseVisibilityAttribute*.
 //</HowToFix>]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Types that could have a lower visibility</Name>
-warnif count > 0 from t in JustMyCode.Types where 
+      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Types that could be declared as private, nested in a parent type</Name>
 
-  t.Visibility != t.OptimalVisibility &&
-
-  // If you don't want to link NDepend.API.dll, you can use your own attributes
-  // and adapt the source code of this rule.
-  !t.HasAttribute("NDepend.Attributes.CannotDecreaseVisibilityAttribute".AllowNoMatch()) &&
-  !t.HasAttribute("NDepend.Attributes.IsNotDeadCodeAttribute".AllowNoMatch()) &&
-
-  // XML serialized type must remain public.
-  !t.HasAttribute("System.Xml.Serialization.XmlRootAttribute".AllowNoMatch()) &&
-
-  // Static types that define only const fields cannot be seen as used in IL code.
-  // They don't have to be tagged with CannotDecreaseVisibilityAttribute.
-  !( t.IsStatic && 
-    !t.Methods.Any(m => !m.IsClassConstructor) && 
-    !t.Fields.Any(f => !f.IsLiteral && !(f.IsStatic && f.IsInitOnly))) &&
-
-  // A type used by an interface that has the same visibility
-  // cannot have its visibility decreased, else a compilation error occurs!
-  !t.TypesUsingMe.Any(tUser => 
-        tUser.IsInterface && 
-        tUser.Visibility == t.Visibility) &&
-
-  // Don't change the visibility of a type that contain an entry point method.
-  !t.Methods.Any(m =>m.IsEntryPoint)
-
-select new { 
-   t, 
-   t.Visibility , 
-   CouldBeDeclared = t.OptimalVisibility, 
-   t.TypesUsingMe
-}
-
-//<Description>
-// This rule warns about types that can be declared with a lower visibility
-// without provoking any compilation error.
-// For example *private* is a visibility lower than *internal* 
-// which is lower than *public*.
-//
-// **Narrowing visibility** is a good practice because doing so **promotes encapsulation**.
-// The scope from which types can be consumed is then reduced to a minimum. 
-//
-// Notice that types tagged with one of the attribute
-// *NDepend.Attributes.CannotDecreaseVisibilityAttribute* or
-// *NDepend.Attributes.IsNotDeadCodeAttribute*, found in *NDepend.API.dll*
-// are not matched. If you don't want to link *NDepend.API.dll* but still
-// wish to rely on this facility, you can declare these attributes in your code.
-//</Description>
-
-//<HowToFix>
-// Declare each matched type with the specified *optimal visibility*
-// in the *CouldBeDeclared* rule result column.
-//
-// By default, this rule matches *public types*. If you are publishing an API
-// many public types matched should remain public. In such situation,
-// you can opt for the *coarse solution* to this problem by adding in the 
-// rule source code *&& !m.IsPubliclyVisible* or you can prefer the 
-// *finer solution* by tagging each concerned type with 
-// *CannotDecreaseVisibilityAttribute*.
-//</HowToFix>]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Fields that could have a lower visibility</Name>
-warnif count > 0 from f in JustMyCode.Fields where 
-  f.Visibility != f.OptimalVisibility &&
- !f.NameLike("<>") &&
- !f.HasAttribute("NDepend.Attributes.CannotDecreaseVisibilityAttribute".AllowNoMatch()) &&
- !f.HasAttribute("NDepend.Attributes.IsNotDeadCodeAttribute".AllowNoMatch()) &&
-  // If you don't want to link NDepend.API.dll, you can use your own attributes
-  // and adapt the source code of this rule.
-  
-  // XML serialized fields must remain public.
- !f.HasAttribute("System.Xml.Serialization.XmlElementAttribute".AllowNoMatch()) && 
- !f.HasAttribute("System.Xml.Serialization.XmlAttributeAttribute".AllowNoMatch()) 
-  
-select new { 
-   f, 
-   f.Visibility , 
-   CouldBeDeclared = f.OptimalVisibility,
-   f.MethodsUsingMe
-}
-
-//<Description>
-// This rule warns about fields that can be declared with a lower visibility
-// without provoking any compilation error.
-// For example *private* is a visibility lower than *internal* 
-// which is lower than *public*.
-//
-// **Narrowing visibility** is a good practice because doing so **promotes encapsulation**.
-// The scope from which fields can be consumed is then reduced to a minimum. 
-//
-// Notice that fields tagged with one of the attribute
-// *NDepend.Attributes.CannotDecreaseVisibilityAttribute* or
-// *NDepend.Attributes.IsNotDeadCodeAttribute*, found in *NDepend.API.dll*
-// are not matched. If you don't want to link *NDepend.API.dll* but still
-// wish to rely on this facility, you can declare these attributes in your code.
-//</Description>
-
-//<HowToFix>
-// Declare each matched field with the specified *optimal visibility*
-// in the *CouldBeDeclared* rule result column.
-//
-// By default, this rule matches *public fields*. If you are publishing an API
-// some public fields matched should remain public. In such situation,
-// you can opt for the *coarse solution* to this problem by adding in the 
-// rule source code *&& !m.IsPubliclyVisible* or you can prefer the 
-// *finer solution* by tagging eah concerned field with 
-// *CannotDecreaseVisibilityAttribute*.
-//</HowToFix>]]></Query>
-      <Query Active="False" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Types that could be declared as private, nested in a parent type</Name>
-
-warnif count > 0 
 from t in Application.Types
 where !t.IsGeneratedByCompiler &&
       !t.IsNested &&
@@ -4642,6 +4532,7 @@ warnif count > 0 from f in Application.Fields where
  !f.IsLiteral && 
  !f.IsEnumValue &&
  !f.NameLike("<>") &&
+ !f.FullNameLike("Control") &&
  !f.FullNameLike("WPF")
 
 // A non-private field assigned from outside its class,
@@ -4869,6 +4760,115 @@ select new { m,m.Visibility }
 // Certainly you don't want the other class to click a button; you 
 // want your other class to do something that clicking a button  
 // also do. 
+//</HowToFix>]]></Query>
+      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Fields that could have a lower visibility</Name>
+from f in JustMyCode.Fields where 
+  f.Visibility != f.OptimalVisibility &&
+ !f.NameLike("<>") &&
+ !f.HasAttribute("NDepend.Attributes.CannotDecreaseVisibilityAttribute".AllowNoMatch()) &&
+ !f.HasAttribute("NDepend.Attributes.IsNotDeadCodeAttribute".AllowNoMatch()) &&
+  // If you don't want to link NDepend.API.dll, you can use your own attributes
+  // and adapt the source code of this rule.
+  
+  // XML serialized fields must remain public.
+ !f.HasAttribute("System.Xml.Serialization.XmlElementAttribute".AllowNoMatch()) && 
+ !f.HasAttribute("System.Xml.Serialization.XmlAttributeAttribute".AllowNoMatch()) 
+  
+select new { 
+   f, 
+   f.Visibility , 
+   CouldBeDeclared = f.OptimalVisibility,
+   f.MethodsUsingMe
+}
+
+//<Description>
+// This rule warns about fields that can be declared with a lower visibility
+// without provoking any compilation error.
+// For example *private* is a visibility lower than *internal* 
+// which is lower than *public*.
+//
+// **Narrowing visibility** is a good practice because doing so **promotes encapsulation**.
+// The scope from which fields can be consumed is then reduced to a minimum. 
+//
+// Notice that fields tagged with one of the attribute
+// *NDepend.Attributes.CannotDecreaseVisibilityAttribute* or
+// *NDepend.Attributes.IsNotDeadCodeAttribute*, found in *NDepend.API.dll*
+// are not matched. If you don't want to link *NDepend.API.dll* but still
+// wish to rely on this facility, you can declare these attributes in your code.
+//</Description>
+
+//<HowToFix>
+// Declare each matched field with the specified *optimal visibility*
+// in the *CouldBeDeclared* rule result column.
+//
+// By default, this rule matches *public fields*. If you are publishing an API
+// some public fields matched should remain public. In such situation,
+// you can opt for the *coarse solution* to this problem by adding in the 
+// rule source code *&& !m.IsPubliclyVisible* or you can prefer the 
+// *finer solution* by tagging eah concerned field with 
+// *CannotDecreaseVisibilityAttribute*.
+//</HowToFix>]]></Query>
+      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Types that could have a lower visibility</Name>
+from t in JustMyCode.Types where 
+
+  t.Visibility != t.OptimalVisibility &&
+
+  // If you don't want to link NDepend.API.dll, you can use your own attributes
+  // and adapt the source code of this rule.
+  !t.HasAttribute("NDepend.Attributes.CannotDecreaseVisibilityAttribute".AllowNoMatch()) &&
+  !t.HasAttribute("NDepend.Attributes.IsNotDeadCodeAttribute".AllowNoMatch()) &&
+
+  // XML serialized type must remain public.
+  !t.HasAttribute("System.Xml.Serialization.XmlRootAttribute".AllowNoMatch()) &&
+
+  // Static types that define only const fields cannot be seen as used in IL code.
+  // They don't have to be tagged with CannotDecreaseVisibilityAttribute.
+  !( t.IsStatic && !t.FullNameLike("Test") &&
+    !t.Methods.Any(m => !m.IsClassConstructor) && 
+    !t.Fields.Any(f => !f.IsLiteral && !(f.IsStatic && f.IsInitOnly))) &&
+
+  // A type used by an interface that has the same visibility
+  // cannot have its visibility decreased, else a compilation error occurs!
+  !t.TypesUsingMe.Any(tUser => 
+        tUser.IsInterface && 
+        tUser.Visibility == t.Visibility) &&
+
+  // Don't change the visibility of a type that contain an entry point method.
+  !t.Methods.Any(m =>m.IsEntryPoint)
+
+select new { 
+   t, 
+   t.Visibility , 
+   CouldBeDeclared = t.OptimalVisibility, 
+   t.TypesUsingMe
+}
+
+//<Description>
+// This rule warns about types that can be declared with a lower visibility
+// without provoking any compilation error.
+// For example *private* is a visibility lower than *internal* 
+// which is lower than *public*.
+//
+// **Narrowing visibility** is a good practice because doing so **promotes encapsulation**.
+// The scope from which types can be consumed is then reduced to a minimum. 
+//
+// Notice that types tagged with one of the attribute
+// *NDepend.Attributes.CannotDecreaseVisibilityAttribute* or
+// *NDepend.Attributes.IsNotDeadCodeAttribute*, found in *NDepend.API.dll*
+// are not matched. If you don't want to link *NDepend.API.dll* but still
+// wish to rely on this facility, you can declare these attributes in your code.
+//</Description>
+
+//<HowToFix>
+// Declare each matched type with the specified *optimal visibility*
+// in the *CouldBeDeclared* rule result column.
+//
+// By default, this rule matches *public types*. If you are publishing an API
+// many public types matched should remain public. In such situation,
+// you can opt for the *coarse solution* to this problem by adding in the 
+// rule source code *&& !m.IsPubliclyVisible* or you can prefer the 
+// *finer solution* by tagging each concerned type with 
+// *CannotDecreaseVisibilityAttribute*.
 //</HowToFix>]]></Query>
     </Group>
     <Group Name="Immutability" Active="True" ShownInReport="False">
@@ -5697,7 +5697,7 @@ select new {
 //<HowToFix>
 // To fix a violation of this rule, rename concerned types.
 //</HowToFix>]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Avoid prefixing type name with parent namespace name</Name>
+      <Query Active="False" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Avoid prefixing type name with parent namespace name</Name>
 warnif count > 0
 
 from n in Application.Namespaces
@@ -6991,7 +6991,7 @@ select t
 //</HowToFix>]]></Query>
       </Group>
       <Group Name="System.Globalization" Active="True" ShownInReport="False">
-        <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Float and Date Parsing must be culture aware</Name>
+        <Query Active="False" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Float and Date Parsing must be culture aware</Name>
 warnif count > 0 
 from m in ThirdParty.Types.WithFullNameIn( 
              "System.DateTime", 

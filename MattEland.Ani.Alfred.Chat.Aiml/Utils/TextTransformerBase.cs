@@ -22,15 +22,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
     /// <summary>
     ///     An abstract class representing a class that will transform input text into output text.
     /// </summary>
-    public abstract class TextTransformer
+    public abstract class TextTransformerBase
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="TextTransformer" /> class.
+        ///     Initializes a new instance of the <see cref="TextTransformerBase" /> class.
         /// </summary>
         /// <param name="chatEngine">The ChatEngine.</param>
         /// <param name="input">The input string.</param>
         /// <exception cref="ArgumentNullException"><paramref name="chatEngine" /> is <see langword="null" />.</exception>
-        protected TextTransformer([NotNull] ChatEngine chatEngine, [CanBeNull] string input)
+        protected TextTransformerBase([NotNull] ChatEngine chatEngine, [CanBeNull] string input)
         {
             if (chatEngine == null)
             {
@@ -42,11 +42,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="TextTransformer" /> class.
+        ///     Initializes a new instance of the <see cref="TextTransformerBase" /> class.
         /// </summary>
         /// <param name="chatEngine">The ChatEngine.</param>
         /// <exception cref="ArgumentNullException"><paramref name="chatEngine" /> is <see langword="null" />.</exception>
-        protected TextTransformer([NotNull] ChatEngine chatEngine) : this(chatEngine, null)
+        protected TextTransformerBase([NotNull] ChatEngine chatEngine) : this(chatEngine, null)
         {
         }
 

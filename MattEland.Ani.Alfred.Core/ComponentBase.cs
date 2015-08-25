@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
-// AlfredComponent.cs
+// ComponentBase.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   08/24/2015 at 11:48 PM
+// Last Modified:   08/25/2015 at 5:44 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -27,7 +27,7 @@ namespace MattEland.Ani.Alfred.Core
     /// <summary>
     ///     An abstract class containing most common shared functionality between Subsystems and Modules
     /// </summary>
-    public abstract class AlfredComponent : INotifyPropertyChanged, IPropertyProvider
+    public abstract class ComponentBase : INotifyPropertyChanged, IPropertyProvider
     {
 
         [CanBeNull]
@@ -43,10 +43,10 @@ namespace MattEland.Ani.Alfred.Core
         private AlfredStatus _status;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredComponent" /> class.
+        ///     Initializes a new instance of the <see cref="ComponentBase" /> class.
         /// </summary>
         /// <param name="console">The console.</param>
-        protected AlfredComponent([CanBeNull] IConsole console = null)
+        protected ComponentBase([CanBeNull] IConsole console = null)
         {
             _console = console;
         }
@@ -192,7 +192,8 @@ namespace MattEland.Ani.Alfred.Core
         ///     Gets the property providers nested inside of this property provider.
         /// </summary>
         /// <value>The property providers.</value>
-        [NotNull, ItemNotNull]
+        [NotNull]
+        [ItemNotNull]
         public virtual IEnumerable<IPropertyProvider> PropertyProviders
         {
             get { return Children; }
@@ -411,8 +412,9 @@ namespace MattEland.Ani.Alfred.Core
             catch (Exception ex)
             {
                 Log("Component.PropertyChanged",
-                    "Encountered an exception raising a property changed event: "
-                    + ex.BuildDetailsMessage(),
+                    string.Format(Locale,
+                                  Resources.ComponentBasePropertyChangedException.NonNull(),
+                                  ex.BuildDetailsMessage()),
                     LogLevel.Error);
             }
         }

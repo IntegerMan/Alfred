@@ -69,7 +69,7 @@
 
             <!-- Inside this region will be bound to the component itself -->
             <DockPanel DataContext="{Binding ElementName=TreeHierarchy, Path=SelectedItem}"
-                       d:DataContext="{d:DesignInstance core:AlfredComponent}">
+                       d:DataContext="{d:DesignInstance core:ComponentBase}">
 
                 <!-- Header -->
                 <Border DockPanel.Dock="Top"

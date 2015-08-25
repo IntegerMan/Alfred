@@ -26,16 +26,16 @@ namespace MattEland.Ani.Alfred.Core.Modules
     {
         [NotNull]
         [ItemNotNull]
-        private readonly ICollection<AlfredWidget> _widgets;
+        private readonly ICollection<WidgetBase> _widgets;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredPagesListModule" /> class.
         /// </summary>
         /// <param name="platformProvider">The platform provider.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public AlfredPagesListModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
+        internal AlfredPagesListModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
         {
-            _widgets = platformProvider.CreateCollection<AlfredWidget>();
+            _widgets = platformProvider.CreateCollection<WidgetBase>();
         }
 
         /// <summary>

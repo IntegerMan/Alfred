@@ -18,7 +18,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
     /// <summary>
     ///     A page that can be used in Alfred
     /// </summary>
-    public abstract class AlfredPage : AlfredComponent, IAlfredPage
+    public abstract class AlfredPage : ComponentBase, IAlfredPage
     {
         [NotNull]
         private readonly string _name;

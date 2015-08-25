@@ -18,10 +18,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
     /// <summary>
     ///     A text transformer to remove illegal characters.
     /// </summary>
-    public class SanitizingTextTransformer : TextTransformer
+    public class SanitizingTextTransformer : TextTransformerBase
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="TextTransformer" /> class.
+        ///     Initializes a new instance of the <see cref="TextTransformerBase" /> class.
         /// </summary>
         /// <param name="chatEngine">The ChatEngine.</param>
         public SanitizingTextTransformer([NotNull] ChatEngine chatEngine)

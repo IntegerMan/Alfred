@@ -14,7 +14,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
     /// <summary>
     ///     Represents a widget that operates off of a Text field to present its contents.
     /// </summary>
-    public abstract class AlfredTextWidget : AlfredWidget
+    public abstract class AlfredTextWidget : WidgetBase
     {
 
         [CanBeNull]

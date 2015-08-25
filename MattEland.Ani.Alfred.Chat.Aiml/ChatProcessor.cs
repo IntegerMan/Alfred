@@ -319,7 +319,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                                             [NotNull] Request request,
                                             [NotNull] Result result,
                                             [NotNull] User user,
-                                            [NotNull] TextTransformer handler)
+                                            [NotNull] TextTransformerBase handler)
         {
             //- Validation
             if (node == null) { throw new ArgumentNullException(nameof(node)); }

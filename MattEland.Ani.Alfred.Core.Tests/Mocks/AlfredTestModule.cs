@@ -15,10 +15,10 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
     internal sealed class AlfredTestModule : AlfredModule
     {
         [NotNull]
-        private readonly ICollection<AlfredWidget> _widgetsToAddOnInit = new List<AlfredWidget>();
+        private readonly ICollection<WidgetBase> _widgetsToAddOnInit = new List<WidgetBase>();
 
         [NotNull]
-        private readonly ICollection<AlfredWidget> _widgetsToAddOnShutdown = new List<AlfredWidget>();
+        private readonly ICollection<WidgetBase> _widgetsToAddOnShutdown = new List<WidgetBase>();
 
         /// <summary>
         ///     Initializes a new instance of the
@@ -58,10 +58,10 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
         /// </summary>
         /// <value>The widgets to register on initialize.</value>
         [NotNull]
-        internal ICollection<AlfredWidget> WidgetsToRegisterOnInitialize { get { return _widgetsToAddOnInit; } }
+        internal ICollection<WidgetBase> WidgetsToRegisterOnInitialize { get { return _widgetsToAddOnInit; } }
 
         [NotNull]
-        internal ICollection<AlfredWidget> WidgetsToRegisterOnShutdown { get { return _widgetsToAddOnShutdown; } }
+        internal ICollection<WidgetBase> WidgetsToRegisterOnShutdown { get { return _widgetsToAddOnShutdown; } }
 
         /// <summary>
         ///     Handles module initialization events

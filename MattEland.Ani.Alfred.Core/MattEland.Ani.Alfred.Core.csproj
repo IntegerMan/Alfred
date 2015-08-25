@@ -52,14 +52,13 @@
   <ItemGroup>
     <Compile Include="AlfredBootstrapper.cs" />
     <Compile Include="AlfredCommandResult.cs" />
-    <Compile Include="AlfredComponent.cs" />
+    <Compile Include="ComponentBase.cs" />
     <Compile Include="Definitions\AlfredProperty.cs" />
     <Compile Include="Definitions\ChatCommand.cs" />
     <Compile Include="Definitions\IAlfred.cs" />
     <Compile Include="Definitions\IAlfredCommandRecipient.cs" />
     <Compile Include="Definitions\IAlfredModule.cs" />
     <Compile Include="Definitions\IAlfredPage.cs" />
-    <Compile Include="Definitions\IAlfredShell.cs" />
     <Compile Include="Definitions\IAlfredSubsystem.cs" />
     <Compile Include="Console\IConsoleEvent.cs" />
     <Compile Include="Definitions\IHasIdentifier.cs" />
@@ -99,7 +98,7 @@
     <Compile Include="Subsystems\MindExplorerSubsystem.cs" />
     <Compile Include="Widgets\AlfredProgressBarWidget.cs" />
     <Compile Include="Widgets\AlfredTextWidget.cs" />
-    <Compile Include="Widgets\AlfredWidget.cs" />
+    <Compile Include="Widgets\WidgetBase.cs" />
     <Compile Include="Widgets\ButtonWidget.cs" />
     <Compile Include="Definitions\AlfredCommand.cs" />
     <Compile Include="Widgets\TextWidget.cs" />

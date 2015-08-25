@@ -22,7 +22,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
     /// <summary>
     ///     An abstract class representing a TextTransformer that can also handle an AIML tag.
     /// </summary>
-    public abstract class AimlTagHandler : TextTransformer
+    public abstract class AimlTagHandler : TextTransformerBase
     {
 
         /// <summary>

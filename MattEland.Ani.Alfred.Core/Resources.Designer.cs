@@ -358,6 +358,15 @@ namespace MattEland.Ani.Alfred.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Encountered an exception raising a property changed event: {0}.
+        /// </summary>
+        internal static string ComponentBasePropertyChangedException {
+            get {
+                return ResourceManager.GetString("ComponentBasePropertyChangedException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Initialize.
         /// </summary>
         internal static string InitializeButtonText {

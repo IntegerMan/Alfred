@@ -18,14 +18,6 @@ namespace MattEland.Ani.Alfred.Core.Console
     /// </summary>
     public struct ConsoleEvent : IEquatable<ConsoleEvent>, IConsoleEvent
     {
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="ConsoleEvent" /> class using the current utcTime.
-        /// </summary>
-        /// <param name="title">The title.</param>
-        /// <param name="message">The message.</param>
-        public ConsoleEvent(string title, string message) : this(title, message, LogLevel.Verbose, DateTime.UtcNow)
-        {
-        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ConsoleEvent" /> class.
@@ -33,7 +25,7 @@ namespace MattEland.Ani.Alfred.Core.Console
         /// <param name="title">The title.</param>
         /// <param name="message">The message.</param>
         /// <param name="level">The logging level.</param>
-        public ConsoleEvent(string title, string message, LogLevel level) : this(title, message, level, DateTime.UtcNow)
+        internal ConsoleEvent(string title, string message, LogLevel level) : this(title, message, level, DateTime.UtcNow)
         {
         }
 
@@ -44,7 +36,7 @@ namespace MattEland.Ani.Alfred.Core.Console
         /// <param name="message">The message.</param>
         /// <param name="level">The logging level</param>
         /// <param name="utcTime">The utcTime in UTC.</param>
-        public ConsoleEvent(string title, string message, LogLevel level, DateTime utcTime)
+        private ConsoleEvent(string title, string message, LogLevel level, DateTime utcTime)
         {
             UtcTime = utcTime;
             Title = title;

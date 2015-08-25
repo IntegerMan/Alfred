@@ -22,11 +22,11 @@ namespace MattEland.Ani.Alfred.Core.Modules
     /// <summary>
     ///     Represents a module within Alfred. Modules contain different bits of information to present to the user.
     /// </summary>
-    public abstract class AlfredModule : AlfredComponent, IAlfredModule
+    public abstract class AlfredModule : ComponentBase, IAlfredModule
     {
         [NotNull]
         [ItemNotNull]
-        private readonly ICollection<AlfredWidget> _widgets;
+        private readonly ICollection<WidgetBase> _widgets;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredModule" /> class.
@@ -40,7 +40,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
                 throw new ArgumentNullException(nameof(platformProvider));
             }
 
-            _widgets = platformProvider.CreateCollection<AlfredWidget>();
+            _widgets = platformProvider.CreateCollection<WidgetBase>();
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         /// <value>The user interface widgets.</value>
         [NotNull]
-        public IEnumerable<AlfredWidget> Widgets
+        public IEnumerable<WidgetBase> Widgets
         {
             get { return _widgets; }
         }
@@ -89,7 +89,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <param name="widget">
         ///     The widget.
         /// </param>
-        protected void Register([NotNull] AlfredWidget widget)
+        protected void Register([NotNull] WidgetBase widget)
         {
             _widgets.AddSafe(widget);
 
@@ -104,7 +104,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         ///     The widgets.
         /// </param>
         /// <exception cref="ArgumentNullException"><paramref name="widgets"/> is <see langword="null" />.</exception>
-        protected void Register([NotNull] IEnumerable<AlfredWidget> widgets)
+        protected void Register([NotNull] IEnumerable<WidgetBase> widgets)
         {
             if (widgets == null)
             {

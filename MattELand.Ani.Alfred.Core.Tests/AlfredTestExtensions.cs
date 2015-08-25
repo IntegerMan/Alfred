@@ -11,7 +11,7 @@ namespace MattEland.Ani.Alfred.Tests
     /// <summary>
     /// Contains extension methods useful for testing parts of various Alfred assemblies.
     /// </summary>
-    public static class AlfredTestExtensions
+    internal static class AlfredTestExtensions
     {
         /// <summary>
         ///     Finds the provider with the specified name.
@@ -24,7 +24,7 @@ namespace MattEland.Ani.Alfred.Tests
             [NotNull] this IEnumerable<IPropertyProvider> providers,
             string name)
         {
-            return providers.FirstOrDefault(p => p != null && StringExtensions.Matches(p.DisplayName, name));
+            return providers.FirstOrDefault(p => p != null && p.DisplayName.Matches(name));
         }
 
     }

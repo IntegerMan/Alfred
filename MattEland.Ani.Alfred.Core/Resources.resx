@@ -264,4 +264,7 @@
   <data name="ButtonWidgetClickCantExecuteErrorMessage" xml:space="preserve">
     <value>Tried to click the button when CanExecute on ClickCommand returned false.</value>
   </data>
+  <data name="ComponentBasePropertyChangedException" xml:space="preserve">
+    <value>Encountered an exception raising a property changed event: {0}</value>
+  </data>
 </root>

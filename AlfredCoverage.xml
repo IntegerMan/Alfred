@@ -1,6 +1,1299 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Root CoveredStatements="1501" TotalStatements="1687" CoveragePercent="89" ReportType="NDependXML" DotCoverVersion="3.1.1">
-  <Assembly Name="MattEland.Ani.Alfred.Tests" CoveredStatements="1436" TotalStatements="1513" CoveragePercent="95">
+<Root CoveredStatements="4553" TotalStatements="6916" CoveragePercent="66" ReportType="NDependXML" DotCoverVersion="3.1.1">
+  <Assembly Name="MattEland.Ani.Alfred.Chat" CoveredStatements="344" TotalStatements="481" CoveragePercent="72">
+    <Namespace Name="MattEland.Ani.Alfred.Chat" CoveredStatements="344" TotalStatements="481" CoveragePercent="72">
+      <Type Name="AimlStatementHandler" CoveredStatements="120" TotalStatements="155" CoveragePercent="77">
+        <Type Name="&lt;get_PropertyProviders&gt;d__15" CoveredStatements="3" TotalStatements="4" CoveragePercent="75">
+          <Method Name="MoveNext()" CoveredStatements="3" TotalStatements="4" CoveragePercent="75" FirstStatementLine="147" />
+        </Type>
+        <Method Name=".ctor(String,IPlatformProvider,IConsole)" CoveredStatements="14" TotalStatements="26" CoveragePercent="54" FirstStatementLine="72" />
+        <Method Name="AddApplicationAimlResourcesToChatEngine(ChatEngine)" CoveredStatements="12" TotalStatements="14" CoveragePercent="86" FirstStatementLine="359" />
+        <Method Name="AddHistoryEntry(User,String)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="239" />
+        <Method Name="DoInitialGreeting()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="158" />
+        <Method Name="get_ChatEngine()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="137" />
+        <Method Name="get_Console()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="118" />
+        <Method Name="get_LastInput()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="255" />
+        <Method Name="get_LastResponse()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="271" />
+        <Method Name="GetChatResult(String)" CoveredStatements="5" TotalStatements="7" CoveragePercent="71" FirstStatementLine="313" />
+        <Method Name="GetResponseTemplate(Result)" CoveredStatements="15" TotalStatements="17" CoveragePercent="88" FirstStatementLine="396" />
+        <Method Name="HandleUserStatement(String)" CoveredStatements="23" TotalStatements="27" CoveragePercent="85" FirstStatementLine="176" />
+        <Method Name="InitializeChatEngine()" CoveredStatements="5" TotalStatements="7" CoveragePercent="71" FirstStatementLine="328" />
+        <Method Name="LogErrorInitializingChat(Exception)" CoveredStatements="0" TotalStatements="5" CoveragePercent="0" FirstStatementLine="300" />
+        <Method Name="OnPropertyChanged(String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="384" />
+        <Method Name="set_Console(IConsole)" CoveredStatements="5" TotalStatements="7" CoveragePercent="71" FirstStatementLine="123" />
+        <Method Name="set_LastInput(String)" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="257" />
+        <Method Name="set_LastResponse(UserStatementResponse)" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="273" />
+        <Method Name="UpdateOwner(IAlfredCommandRecipient)" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="291" />
+      </Type>
+      <Type Name="AlfredCommandRouter" CoveredStatements="27" TotalStatements="29" CoveragePercent="93">
+        <Method Name="get_Alfred()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="32" />
+        <Method Name="ProcessAlfredCommand(ChatCommand,AlfredCommandResult)" CoveredStatements="19" TotalStatements="21" CoveragePercent="90" FirstStatementLine="43" />
+        <Method Name="ProcessShellCommand(ShellCommand)" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="87" />
+        <Method Name="set_Alfred(IAlfred)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="32" />
+      </Type>
+      <Type Name="AlfredTagHandler" CoveredStatements="14" TotalStatements="17" CoveragePercent="82">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="35" />
+        <Method Name="ProcessChange()" CoveredStatements="11" TotalStatements="14" CoveragePercent="79" FirstStatementLine="44" />
+      </Type>
+      <Type Name="ChatHandlersProvider" CoveredStatements="6" TotalStatements="14" CoveragePercent="43">
+        <Type Name="&lt;get_Properties&gt;d__8" CoveredStatements="0" TotalStatements="3" CoveragePercent="0">
+          <Method Name="MoveNext()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="64" />
+        </Type>
+        <Type Name="&lt;get_PropertyProviders&gt;d__10" CoveredStatements="0" TotalStatements="2" CoveragePercent="0">
+          <Method Name="MoveNext()" CoveredStatements="0" TotalStatements="2" CoveragePercent="0" FirstStatementLine="73" />
+        </Type>
+        <Method Name="get_DisplayName()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="34" />
+        <Method Name="get_ItemTypeName()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="46" />
+        <Method Name="get_Name()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="55" />
+      </Type>
+      <Type Name="ChatHistoryEntry" CoveredStatements="19" TotalStatements="37" CoveragePercent="51">
+        <Type Name="&lt;get_Properties&gt;d__16" CoveredStatements="0" TotalStatements="5" CoveragePercent="0">
+          <Method Name="MoveNext()" CoveredStatements="0" TotalStatements="5" CoveragePercent="0" FirstStatementLine="116" />
+        </Type>
+        <Type Name="&lt;get_PropertyProviders&gt;d__18" CoveredStatements="0" TotalStatements="2" CoveragePercent="0">
+          <Method Name="MoveNext()" CoveredStatements="0" TotalStatements="2" CoveragePercent="0" FirstStatementLine="129" />
+        </Type>
+        <Method Name=".ctor(User,String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="35" />
+        <Method Name=".ctor(User,String,DateTime)" CoveredStatements="8" TotalStatements="12" CoveragePercent="67" FirstStatementLine="46" />
+        <Method Name="get_DateTime()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="76" />
+        <Method Name="get_DateTimeUtc()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="68" />
+        <Method Name="get_DisplayName()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="138" />
+        <Method Name="get_ItemTypeName()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="150" />
+        <Method Name="get_Message()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="96" />
+        <Method Name="get_Name()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="106" />
+        <Method Name="get_User()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="86" />
+      </Type>
+      <Type Name="ChatHistoryProvider" CoveredStatements="19" TotalStatements="29" CoveragePercent="66">
+        <Type Name="&lt;get_Properties&gt;d__12" CoveredStatements="0" TotalStatements="3" CoveragePercent="0">
+          <Method Name="MoveNext()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="89" />
+        </Type>
+        <Method Name=".ctor(IPlatformProvider)" CoveredStatements="5" TotalStatements="7" CoveragePercent="71" FirstStatementLine="36" />
+        <Method Name="Add(ChatHistoryEntry)" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="107" />
+        <Method Name="get_DisplayName()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="59" />
+        <Method Name="get_HistoryEntries()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="51" />
+        <Method Name="get_ItemTypeName()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="71" />
+        <Method Name="get_Name()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="80" />
+        <Method Name="get_PropertyProviders()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="98" />
+      </Type>
+      <Type Name="ChatPage" CoveredStatements="4" TotalStatements="9" CoveragePercent="44">
+        <Type Name="&lt;get_Children&gt;d__5" CoveredStatements="0" TotalStatements="2" CoveragePercent="0">
+          <Method Name="MoveNext()" CoveredStatements="0" TotalStatements="2" CoveragePercent="0" FirstStatementLine="48" />
+        </Type>
+        <Method Name=".ctor(String,IChatProvider)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="36" />
+        <Method Name="get_ChatHandler()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="28" />
+      </Type>
+      <Type Name="ChatSubsystem" CoveredStatements="41" TotalStatements="50" CoveragePercent="82">
+        <Type Name="&lt;get_PropertyProviders&gt;d__15" CoveredStatements="11" TotalStatements="16" CoveragePercent="69">
+          <Method Name="MoveNext()" CoveredStatements="11" TotalStatements="16" CoveragePercent="69" FirstStatementLine="106" />
+        </Type>
+        <Method Name=".ctor(IPlatformProvider,IConsole,String)" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="35" />
+        <Method Name="get_ChatHandler()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="61" />
+        <Method Name="get_Id()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="96" />
+        <Method Name="get_Name()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="86" />
+        <Method Name="get_RegisterPage()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="74" />
+        <Method Name="InitializeProtected(IAlfred)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="119" />
+        <Method Name="OnInitializationCompleted()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="155" />
+        <Method Name="RegisterControls()" CoveredStatements="6" TotalStatements="9" CoveragePercent="67" FirstStatementLine="138" />
+        <Method Name="set_RegisterPage(Boolean)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="75" />
+        <Method Name="ShutdownProtected()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="129" />
+      </Type>
+      <Type Name="Resources" CoveredStatements="80" TotalStatements="122" CoveragePercent="66">
+        <Method Name=".ctor()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="32" />
+        <Method Name="get_AimlCoreDateTime()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="93" />
+        <Method Name="get_AimlCorePower()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="123" />
+        <Method Name="get_AimlFallback()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="152" />
+        <Method Name="get_AimlGod()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="181" />
+        <Method Name="get_AimlGreeting()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="210" />
+        <Method Name="get_AimlHelp()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="240" />
+        <Method Name="get_AimlShellNavigation()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="272" />
+        <Method Name="get_AimlStatementHandlerChatOffline()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="281" />
+        <Method Name="get_AimlStatementHandlerUsingTemplate()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="290" />
+        <Method Name="get_AimlSysStatus()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="321" />
+        <Method Name="get_AimlThanks()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="353" />
+        <Method Name="get_AlfredCommandRouterProcessAlfredCommandLogHeader()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="362" />
+        <Method Name="get_AlfredCommandRouterProcessAlfredCommandLogMessage()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="371" />
+        <Method Name="get_AlfredCommandRouterProcessShellCommandLogHeader()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="380" />
+        <Method Name="get_AlfredCommandRouterProcessShellCommandMessage()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="389" />
+        <Method Name="get_AlfredTagHandlerProcessChangeNoRecipient()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="398" />
+        <Method Name="get_ChatBotGenderSubstitutions()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="419" />
+        <Method Name="get_ChatBotPerson2Substitutions()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="440" />
+        <Method Name="get_ChatBotPersonSubstitutions()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="460" />
+        <Method Name="get_ChatBotSettings()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="479" />
+        <Method Name="get_ChatBotSubstitutions()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="502" />
+        <Method Name="get_ChatErrorLastLogMessageFormat()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="511" />
+        <Method Name="get_ChatInputHeader()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="520" />
+        <Method Name="get_ChatModuleName()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="529" />
+        <Method Name="get_ChatOutputHeader()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="538" />
+        <Method Name="get_ChatProcessingHeader()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="547" />
+        <Method Name="get_ChatUserName()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="556" />
+        <Method Name="get_Culture()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="55" />
+        <Method Name="get_DefaultFailureResponseText()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="565" />
+        <Method Name="get_ErrorInitializingChat()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="574" />
+        <Method Name="get_ErrorParsingCommand()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="583" />
+        <Method Name="get_InitialGreeting()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="592" />
+        <Method Name="get_InitialGreetingText()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="601" />
+        <Method Name="get_NoEndTagForOobCommand()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="610" />
+        <Method Name="get_NoSettingsPathError()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="619" />
+        <Method Name="get_OobRootNotAlfredXElement()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="628" />
+        <Method Name="get_ResourceManager()" CoveredStatements="8" TotalStatements="8" CoveragePercent="100" FirstStatementLine="40" />
+        <Method Name="set_Culture(CultureInfo)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="58" />
+      </Type>
+      <Type Name="ShellTagHandler" CoveredStatements="14" TotalStatements="19" CoveragePercent="74">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="24" />
+        <Method Name="ProcessChange()" CoveredStatements="11" TotalStatements="16" CoveragePercent="69" FirstStatementLine="34" />
+      </Type>
+    </Namespace>
+  </Assembly>
+  <Assembly Name="MattEland.Ani.Alfred.Chat.Aiml" CoveredStatements="962" TotalStatements="2164" CoveragePercent="44">
+    <Namespace Name="MattEland.Ani.Alfred.Chat.Aiml" CoveredStatements="396" TotalStatements="729" CoveragePercent="54">
+      <Type Name="ChatEngine" CoveredStatements="61" TotalStatements="94" CoveragePercent="65">
+        <Method Name=".ctor(IConsole)" CoveredStatements="13" TotalStatements="13" CoveragePercent="100" FirstStatementLine="138" />
+        <Method Name="AddCategoryToGraph(XmlNode,String)" CoveredStatements="6" TotalStatements="14" CoveragePercent="43" FirstStatementLine="322" />
+        <Method Name="Chat(String,User)" CoveredStatements="5" TotalStatements="9" CoveragePercent="56" FirstStatementLine="174" />
+        <Method Name="Error(String)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="347" />
+        <Method Name="get_FallbackResponse()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="153" />
+        <Method Name="get_Librarian()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="77" />
+        <Method Name="get_Locale()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="102" />
+        <Method Name="get_Logger()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="93" />
+        <Method Name="get_MaxThatSize()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="115" />
+        <Method Name="get_NodeCount()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="130" />
+        <Method Name="get_Owner()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="146" />
+        <Method Name="get_RootNode()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="122" />
+        <Method Name="get_SentenceSplitters()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="86" />
+        <Method Name="get_Timeout()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="109" />
+        <Method Name="get_TrustAiml()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="138" />
+        <Method Name="LoadAimlFile(XmlDocument)" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="232" />
+        <Method Name="LoadAimlFromDirectory(String)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="220" />
+        <Method Name="LoadAimlFromString(String)" CoveredStatements="6" TotalStatements="8" CoveragePercent="75" FirstStatementLine="250" />
+        <Method Name="LoadSettingsFromDirectory(String)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="280" />
+        <Method Name="LoadSettingsFromXml(String,String,String,String,String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="305" />
+        <Method Name="Log(String,LogLevel)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="161" />
+        <Method Name="ProcessRedirectChatRequest(Request)" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="195" />
+        <Method Name="set_FallbackResponse(String)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="153" />
+        <Method Name="set_Owner(Object)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="146" />
+      </Type>
+      <Type Name="ChatEngineLibrarian" CoveredStatements="50" TotalStatements="73" CoveragePercent="68">
+        <Method Name=".ctor(ChatEngine)" CoveredStatements="10" TotalStatements="12" CoveragePercent="83" FirstStatementLine="35" />
+        <Method Name="AddDefaultSettings()" CoveredStatements="8" TotalStatements="8" CoveragePercent="100" FirstStatementLine="196" />
+        <Method Name="AddSettingIfMissing(String,String)" CoveredStatements="4" TotalStatements="9" CoveragePercent="44" FirstStatementLine="213" />
+        <Method Name="get_FirstPersonToSecondPersonSubstitutions()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="92" />
+        <Method Name="get_GenderSubstitutions()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="69" />
+        <Method Name="get_GlobalSettings()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="76" />
+        <Method Name="get_SecondPersonToFirstPersonSubstitutions()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="84" />
+        <Method Name="get_Substitutions()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="60" />
+        <Method Name="LoadSettingsFromConfigDirectory(String)" CoveredStatements="0" TotalStatements="16" CoveragePercent="0" FirstStatementLine="112" />
+        <Method Name="LoadSettingsFromXml(String,String,String,String,String)" CoveredStatements="23" TotalStatements="23" CoveragePercent="100" FirstStatementLine="162" />
+      </Type>
+      <Type Name="ChatProcessor" CoveredStatements="135" TotalStatements="197" CoveragePercent="69">
+        <Type Name="&lt;&gt;c" CoveredStatements="1" TotalStatements="1" CoveragePercent="100">
+          <Method Name="&lt;ProcessChatRequest&gt;b__7_0(SubQuery)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="119" />
+        </Type>
+        <Method Name=".ctor(ChatEngine)" CoveredStatements="7" TotalStatements="9" CoveragePercent="78" FirstStatementLine="45" />
+        <Method Name="Error(String)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="175" />
+        <Method Name="get_Locale()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="61" />
+        <Method Name="Log(String,LogLevel)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="70" />
+        <Method Name="ProcessChatRequest(Request)" CoveredStatements="33" TotalStatements="35" CoveragePercent="94" FirstStatementLine="81" />
+        <Method Name="ProcessChildNode(XmlNode,User,Request,SubQuery,Result)" CoveredStatements="10" TotalStatements="11" CoveragePercent="91" FirstStatementLine="288" />
+        <Method Name="ProcessChildNodes(XmlNode,User,Request,SubQuery,Result)" CoveredStatements="11" TotalStatements="11" CoveragePercent="100" FirstStatementLine="264" />
+        <Method Name="ProcessNode(XmlElement,SubQuery,Request,Result,User)" CoveredStatements="19" TotalStatements="33" CoveragePercent="58" FirstStatementLine="196" />
+        <Method Name="ProcessRecursiveNode(XmlNode,SubQuery,Request,Result,User,TextTransformerBase)" CoveredStatements="20" TotalStatements="35" CoveragePercent="57" FirstStatementLine="323" />
+        <Method Name="ProcessSubQuery(Request,SubQuery,Result)" CoveredStatements="13" TotalStatements="23" CoveragePercent="57" FirstStatementLine="141" />
+        <Method Name="ProcessTemplateNode(XmlNode,SubQuery,Request,Result,User)" CoveredStatements="18" TotalStatements="30" CoveragePercent="60" FirstStatementLine="368" />
+      </Type>
+      <Type Name="Request" CoveredStatements="45" TotalStatements="63" CoveragePercent="71">
+        <Method Name=".ctor(String,User,ChatEngine)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="37" />
+        <Method Name=".ctor(String,User,ChatEngine,Request)" CoveredStatements="19" TotalStatements="25" CoveragePercent="76" FirstStatementLine="50" />
+        <Method Name="CheckForTimedOut()" CoveredStatements="7" TotalStatements="16" CoveragePercent="44" FirstStatementLine="178" />
+        <Method Name="get_ChatEngine()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="96" />
+        <Method Name="get_Child()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="152" />
+        <Method Name="get_HasTimedOut()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="103" />
+        <Method Name="get_Parent()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="140" />
+        <Method Name="get_RawInput()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="110" />
+        <Method Name="get_Result()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="117" />
+        <Method Name="get_StartedOn()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="123" />
+        <Method Name="get_User()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="130" />
+        <Method Name="RegisterChild(Request)" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="161" />
+        <Method Name="set_HasTimedOut(Boolean)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="103" />
+        <Method Name="set_Parent(Request)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="140" />
+        <Method Name="set_Result(Result)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="117" />
+      </Type>
+      <Type Name="Resources" CoveredStatements="14" TotalStatements="170" CoveragePercent="8">
+        <Method Name=".ctor()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="32" />
+        <Method Name="get_AddCategoryErrorEmptyTemplateTag()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="67" />
+        <Method Name="get_AimlLoaderErrorIOException()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="76" />
+        <Method Name="get_AimlLoaderErrorSecurityException()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="85" />
+        <Method Name="get_AimlLoaderErrorXmlException()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="94" />
+        <Method Name="get_AimlLoaderProcessingFile()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="103" />
+        <Method Name="get_AimlTagHandlerBuildElementBadXml()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="112" />
+        <Method Name="get_AimlTagHandlerDoRedirectBadXml()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="121" />
+        <Method Name="get_ChatEngineAddCategoryErrorNoPath()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="130" />
+        <Method Name="get_ChatEngineDontUnderstandFallback()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="139" />
+        <Method Name="get_ChatEngineErrorCouldNotFindResponse()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="148" />
+        <Method Name="get_ChatEngineNotAcceptingUserInputMessage()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="157" />
+        <Method Name="get_ChatEngineRequestTimedOut()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="166" />
+        <Method Name="get_ChatErrorNoMessage()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="175" />
+        <Method Name="get_ChatProcessNodeError()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="184" />
+        <Method Name="get_Culture()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="55" />
+        <Method Name="get_GossipTagHandleLogMessage()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="193" />
+        <Method Name="get_InputErrorBadlyFormedIndex()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="202" />
+        <Method Name="get_InputErrorOverflow()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="211" />
+        <Method Name="get_JavaScriptNotSupportedMessage()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="220" />
+        <Method Name="get_LearnErrorFileNotFound()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="229" />
+        <Method Name="get_LearnErrorIOException()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="238" />
+        <Method Name="get_LearnErrorNotSupportedException()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="247" />
+        <Method Name="get_LearnErrorSecurityException()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="256" />
+        <Method Name="get_LearnErrorUnauthorizedException()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="265" />
+        <Method Name="get_LearnErrorXmlException()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="274" />
+        <Method Name="get_LibrarianLoadSettingsErrorNoConfigDirectory()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="283" />
+        <Method Name="get_LibrarianLoadSettingsErrorNoPath()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="292" />
+        <Method Name="get_LoadAimlDirectoryNotFound()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="301" />
+        <Method Name="get_LoadAimlErrorNoDirectoryPath()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="310" />
+        <Method Name="get_LoadAimlFinishedLoading()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="319" />
+        <Method Name="get_LoadAimlNoFilesInDirectory()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="328" />
+        <Method Name="get_LoadAimlStartingToLoad()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="337" />
+        <Method Name="get_LoadSettingsXmlXmlException()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="346" />
+        <Method Name="get_OutputTagHandlerProcessChangeInvalidIndex()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="355" />
+        <Method Name="get_RequestTimedOut()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="364" />
+        <Method Name="get_ResourceManager()" CoveredStatements="8" TotalStatements="8" CoveragePercent="100" FirstStatementLine="40" />
+        <Method Name="get_SettignsLoadErrorSecurity()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="373" />
+        <Method Name="get_SettingsLoadErrorFileNotFound()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="382" />
+        <Method Name="get_SettingsLoadErrorFileNotFoundException()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="391" />
+        <Method Name="get_SettingsLoadErrorIOException()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="400" />
+        <Method Name="get_SettingsLoadErrorNoPathToSettings()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="409" />
+        <Method Name="get_SettingsLoadErrorUnauthorized()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="418" />
+        <Method Name="get_SettingsLoadErrorXml()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="427" />
+        <Method Name="get_StarErrorBadIndex()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="436" />
+        <Method Name="get_StarErrorNoInputStarElements()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="445" />
+        <Method Name="get_SystemNotImplemented()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="454" />
+        <Method Name="get_TagHandlerFactoryBuildTagHandlerDynamicMissingMethod()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="464" />
+        <Method Name="get_TagHandlerFactoryBuildTagHandlerDynamicTargetInvocation()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="474" />
+        <Method Name="get_TagHandlerFactoryBuildTagHandlerDynamicWrongType()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="483" />
+        <Method Name="get_ThatStarTagHandlerProcessChangeInvalidIndex()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="492" />
+        <Method Name="get_TopicStarErrorNoItems()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="501" />
+        <Method Name="get_TopicStarErrorOutOfRange()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="510" />
+        <Method Name="get_UserCtorNullId()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="519" />
+        <Method Name="set_Culture(CultureInfo)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="58" />
+      </Type>
+      <Type Name="Result" CoveredStatements="68" TotalStatements="81" CoveragePercent="84">
+        <Type Name="&lt;&gt;c__DisplayClass33_0" CoveredStatements="1" TotalStatements="1" CoveragePercent="100">
+          <Method Name="&lt;SentenceEndsWithPunctuation&gt;b__0(String)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="214" />
+        </Type>
+        <Method Name=".ctor(User,ChatEngine,Request)" CoveredStatements="14" TotalStatements="20" CoveragePercent="70" FirstStatementLine="80" />
+        <Method Name="Completed()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="221" />
+        <Method Name="get_ChatEngine()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="66" />
+        <Method Name="get_Duration()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="73" />
+        <Method Name="get_InputSentences()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="80" />
+        <Method Name="get_IsComplete()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="230" />
+        <Method Name="get_NormalizedPaths()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="87" />
+        <Method Name="get_Output()" CoveredStatements="17" TotalStatements="19" CoveragePercent="89" FirstStatementLine="137" />
+        <Method Name="get_OutputSentences()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="94" />
+        <Method Name="get_RawInput()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="123" />
+        <Method Name="get_RawOutput()" CoveredStatements="17" TotalStatements="17" CoveragePercent="100" FirstStatementLine="177" />
+        <Method Name="get_Request()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="101" />
+        <Method Name="get_SubQueries()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="108" />
+        <Method Name="get_User()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="115" />
+        <Method Name="SentenceEndsWithPunctuation(String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="213" />
+        <Method Name="set_Duration(TimeSpan)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="73" />
+        <Method Name="set_IsComplete(Boolean)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="230" />
+        <Method Name="ToString()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="202" />
+      </Type>
+      <Type Name="User" CoveredStatements="23" TotalStatements="51" CoveragePercent="45">
+        <Method Name=".ctor(String)" CoveredStatements="8" TotalStatements="10" CoveragePercent="80" FirstStatementLine="29" />
+        <Method Name="AddResult(Result)" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="160" />
+        <Method Name="get_Id()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="63" />
+        <Method Name="get_LastChatOutput()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="92" />
+        <Method Name="get_LastResult()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="82" />
+        <Method Name="get_Topic()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="72" />
+        <Method Name="get_UserVariables()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="56" />
+        <Method Name="GetInputSentence(Int32,Int32)" CoveredStatements="0" TotalStatements="12" CoveragePercent="0" FirstStatementLine="132" />
+        <Method Name="GetOutputSentence(Int32,Int32)" CoveredStatements="0" TotalStatements="12" CoveragePercent="0" FirstStatementLine="103" />
+      </Type>
+    </Namespace>
+    <Namespace Name="MattEland.Ani.Alfred.Chat.Aiml.TagHandlers" CoveredStatements="130" TotalStatements="628" CoveragePercent="21">
+      <Type Name="BotTagHandler" CoveredStatements="0" TotalStatements="10" CoveragePercent="0">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="28" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="7" CoveragePercent="0" FirstStatementLine="37" />
+      </Type>
+      <Type Name="ConditionTagHandler" CoveredStatements="0" TotalStatements="74" CoveragePercent="0">
+        <Type Name="&lt;&gt;c" CoveredStatements="0" TotalStatements="1" CoveragePercent="0">
+          <Method Name="&lt;EvaluateConditionWithNameAndChildNodes&gt;b__3_0(XmlElement)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="107" />
+        </Type>
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="34" />
+        <Method Name="BuildValidationRegex(String)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="175" />
+        <Method Name="EvaluateConditionWithNameAndChildNodes(String)" CoveredStatements="0" TotalStatements="19" CoveragePercent="0" FirstStatementLine="102" />
+        <Method Name="EvaluateLooseConditionWithChildNodes()" CoveredStatements="0" TotalStatements="21" CoveragePercent="0" FirstStatementLine="70" />
+        <Method Name="EvaluateSimpleConditionNode(String,String)" CoveredStatements="0" TotalStatements="8" CoveragePercent="0" FirstStatementLine="141" />
+        <Method Name="IsRegexMatch(String,String)" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="162" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="11" CoveragePercent="0" FirstStatementLine="44" />
+      </Type>
+      <Type Name="DateTagHandler" CoveredStatements="12" TotalStatements="12" CoveragePercent="100">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="29" />
+        <Method Name="ProcessChange()" CoveredStatements="9" TotalStatements="9" CoveragePercent="100" FirstStatementLine="36" />
+      </Type>
+      <Type Name="FirstPersonToSecondPersonTagHandler" CoveredStatements="0" TotalStatements="18" CoveragePercent="0">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="30" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="15" CoveragePercent="0" FirstStatementLine="39" />
+      </Type>
+      <Type Name="FormalTagHandler" CoveredStatements="0" TotalStatements="27" CoveragePercent="0">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="32" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="24" CoveragePercent="0" FirstStatementLine="39" />
+      </Type>
+      <Type Name="GenderTagHandler" CoveredStatements="0" TotalStatements="15" CoveragePercent="0">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="31" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="12" CoveragePercent="0" FirstStatementLine="40" />
+      </Type>
+      <Type Name="GetTagHandler" CoveredStatements="0" TotalStatements="13" CoveragePercent="0">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="28" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="10" CoveragePercent="0" FirstStatementLine="35" />
+      </Type>
+      <Type Name="GossipTagHandler" CoveredStatements="0" TotalStatements="11" CoveragePercent="0">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="31" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="8" CoveragePercent="0" FirstStatementLine="40" />
+      </Type>
+      <Type Name="HandlesAimlTagAttribute" CoveredStatements="5" TotalStatements="5" CoveragePercent="100">
+        <Method Name=".ctor(String)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="28" />
+        <Method Name="get_Name()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="40" />
+      </Type>
+      <Type Name="InputTagHandler" CoveredStatements="0" TotalStatements="28" CoveragePercent="0">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="29" />
+        <Method Name="LogBadIndex(String)" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="74" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="21" CoveragePercent="0" FirstStatementLine="38" />
+      </Type>
+      <Type Name="JavaScriptTagHandler" CoveredStatements="0" TotalStatements="7" CoveragePercent="0">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="28" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="37" />
+      </Type>
+      <Type Name="LearnTagHandler" CoveredStatements="0" TotalStatements="49" CoveragePercent="0">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="35" />
+        <Method Name="LearnFromDocument(String)" CoveredStatements="0" TotalStatements="13" CoveragePercent="0" FirstStatementLine="111" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="33" CoveragePercent="0" FirstStatementLine="44" />
+      </Type>
+      <Type Name="LowercaseTagHandler" CoveredStatements="0" TotalStatements="9" CoveragePercent="0">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="29" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="36" />
+      </Type>
+      <Type Name="OutputTagHandler" CoveredStatements="0" TotalStatements="24" CoveragePercent="0">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="29" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="21" CoveragePercent="0" FirstStatementLine="38" />
+      </Type>
+      <Type Name="RandomTagHandler" CoveredStatements="21" TotalStatements="25" CoveragePercent="84">
+        <Type Name="&lt;&gt;c" CoveredStatements="1" TotalStatements="1" CoveragePercent="100">
+          <Method Name="&lt;ProcessChange&gt;b__2_0(XmlNode)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="61" />
+        </Type>
+        <Method Name=".cctor()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="34" />
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="42" />
+        <Method Name="ProcessChange()" CoveredStatements="15" TotalStatements="19" CoveragePercent="79" FirstStatementLine="52" />
+      </Type>
+      <Type Name="RedirectTagHandler" CoveredStatements="13" TotalStatements="13" CoveragePercent="100">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="29" />
+        <Method Name="ProcessChange()" CoveredStatements="10" TotalStatements="10" CoveragePercent="100" FirstStatementLine="36" />
+      </Type>
+      <Type Name="SecondPersonToFirstPersonTagHandler" CoveredStatements="0" TotalStatements="15" CoveragePercent="0">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="30" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="12" CoveragePercent="0" FirstStatementLine="39" />
+      </Type>
+      <Type Name="SentenceTagHandler" CoveredStatements="0" TotalStatements="33" CoveragePercent="0">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="33" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="8" CoveragePercent="0" FirstStatementLine="42" />
+        <Method Name="ProcessSentenceText(String)" CoveredStatements="0" TotalStatements="22" CoveragePercent="0" FirstStatementLine="60" />
+      </Type>
+      <Type Name="SetTagHandler" CoveredStatements="0" TotalStatements="18" CoveragePercent="0">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="28" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="15" CoveragePercent="0" FirstStatementLine="35" />
+      </Type>
+      <Type Name="SizeTagHandler" CoveredStatements="0" TotalStatements="7" CoveragePercent="0">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="28" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="35" />
+      </Type>
+      <Type Name="StarRedirectTagHandler" CoveredStatements="0" TotalStatements="8" CoveragePercent="0">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="29" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="5" CoveragePercent="0" FirstStatementLine="38" />
+      </Type>
+      <Type Name="StarTagHandler" CoveredStatements="10" TotalStatements="20" CoveragePercent="50">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="31" />
+        <Method Name="ProcessChange()" CoveredStatements="7" TotalStatements="17" CoveragePercent="41" FirstStatementLine="40" />
+      </Type>
+      <Type Name="SystemTagHandler" CoveredStatements="0" TotalStatements="7" CoveragePercent="0">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="28" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="37" />
+      </Type>
+      <Type Name="TagHandlerFactory" CoveredStatements="69" TotalStatements="115" CoveragePercent="60">
+        <Type Name="&lt;&gt;c" CoveredStatements="1" TotalStatements="1" CoveragePercent="100">
+          <Method Name="&lt;RegisterTagHandlersInAppDomain&gt;b__3_0(Assembly)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="64" />
+        </Type>
+        <Method Name=".ctor(ChatEngine)" CoveredStatements="9" TotalStatements="9" CoveragePercent="100" FirstStatementLine="36" />
+        <Method Name="Build(XmlElement,SubQuery,Request,Result,User,String)" CoveredStatements="9" TotalStatements="19" CoveragePercent="47" FirstStatementLine="153" />
+        <Method Name="BuildTagHandlerDynamic(String,TagHandlerParameters)" CoveredStatements="20" TotalStatements="35" CoveragePercent="57" FirstStatementLine="186" />
+        <Method Name="RegisterTagHandlersInAppDomain()" CoveredStatements="10" TotalStatements="10" CoveragePercent="100" FirstStatementLine="59" />
+        <Method Name="RegisterTagHandlersInAssembly(Assembly)" CoveredStatements="20" TotalStatements="41" CoveragePercent="49" FirstStatementLine="78" />
+      </Type>
+      <Type Name="ThatStarTagHandler" CoveredStatements="0" TotalStatements="18" CoveragePercent="0">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="30" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="15" CoveragePercent="0" FirstStatementLine="39" />
+      </Type>
+      <Type Name="ThinkTagHandler" CoveredStatements="0" TotalStatements="6" CoveragePercent="0">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="27" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="36" />
+      </Type>
+      <Type Name="TopicStarTagHandler" CoveredStatements="0" TotalStatements="19" CoveragePercent="0">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="31" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="16" CoveragePercent="0" FirstStatementLine="40" />
+      </Type>
+      <Type Name="UppercaseTagHandler" CoveredStatements="0" TotalStatements="7" CoveragePercent="0">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="27" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="34" />
+      </Type>
+      <Type Name="UserIdTagHandler" CoveredStatements="0" TotalStatements="7" CoveragePercent="0">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="29" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="38" />
+      </Type>
+      <Type Name="VersionTagHandler" CoveredStatements="0" TotalStatements="8" CoveragePercent="0">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="28" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="5" CoveragePercent="0" FirstStatementLine="35" />
+      </Type>
+    </Namespace>
+    <Namespace Name="MattEland.Ani.Alfred.Chat.Aiml.Utils" CoveredStatements="436" TotalStatements="807" CoveragePercent="54">
+      <Type Name="AimlLoader" CoveredStatements="93" TotalStatements="221" CoveragePercent="42">
+        <Type Name="&lt;&gt;c__DisplayClass12_0" CoveredStatements="1" TotalStatements="1" CoveragePercent="100">
+          <Method Name="&lt;FindChildNode&gt;b__0(XmlNode)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="376" />
+        </Type>
+        <Method Name=".ctor(ChatEngine)" CoveredStatements="5" TotalStatements="7" CoveragePercent="71" FirstStatementLine="38" />
+        <Method Name="BuildPathString(String,String,String,Boolean)" CoveredStatements="26" TotalStatements="37" CoveragePercent="70" FirstStatementLine="396" />
+        <Method Name="BuildPathString(XmlNode,String,Boolean)" CoveredStatements="9" TotalStatements="13" CoveragePercent="69" FirstStatementLine="334" />
+        <Method Name="FindChildNode(String,XmlNode)" CoveredStatements="5" TotalStatements="9" CoveragePercent="56" FirstStatementLine="365" />
+        <Method Name="get_Locale()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="54" />
+        <Method Name="GetNameFromNode(XmlNode)" CoveredStatements="0" TotalStatements="16" CoveragePercent="0" FirstStatementLine="256" />
+        <Method Name="LoadAiml(String)" CoveredStatements="0" TotalStatements="40" CoveragePercent="0" FirstStatementLine="72" />
+        <Method Name="LoadAimlFile(String)" CoveredStatements="0" TotalStatements="9" CoveragePercent="0" FirstStatementLine="169" />
+        <Method Name="LoadAimlFromXml(XmlDocument)" CoveredStatements="15" TotalStatements="23" CoveragePercent="65" FirstStatementLine="191" />
+        <Method Name="Log(String,LogLevel)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="136" />
+        <Method Name="Normalize(String,Boolean)" CoveredStatements="19" TotalStatements="24" CoveragePercent="79" FirstStatementLine="458" />
+        <Method Name="ProcessCategory(XmlNode,String)" CoveredStatements="10" TotalStatements="18" CoveragePercent="56" FirstStatementLine="286" />
+        <Method Name="ProcessTopic(XmlNode)" CoveredStatements="0" TotalStatements="15" CoveragePercent="0" FirstStatementLine="232" />
+      </Type>
+      <Type Name="AimlTagHandler" CoveredStatements="53" TotalStatements="86" CoveragePercent="62">
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="11" TotalStatements="13" CoveragePercent="85" FirstStatementLine="53" />
+        <Method Name="BuildElement(String)" CoveredStatements="9" TotalStatements="13" CoveragePercent="69" FirstStatementLine="254" />
+        <Method Name="BuildStarElement()" CoveredStatements="0" TotalStatements="10" CoveragePercent="0" FirstStatementLine="175" />
+        <Method Name="BuildStarTagHandler()" CoveredStatements="0" TotalStatements="5" CoveragePercent="0" FirstStatementLine="202" />
+        <Method Name="DoRedirect(String)" CoveredStatements="7" TotalStatements="11" CoveragePercent="64" FirstStatementLine="218" />
+        <Method Name="get_ChildNodes()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="92" />
+        <Method Name="get_Contents()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="102" />
+        <Method Name="get_HasChildNodes()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="81" />
+        <Method Name="get_IsRecursive()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="53" />
+        <Method Name="get_NodeName()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="113" />
+        <Method Name="get_Query()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="60" />
+        <Method Name="get_Request()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="67" />
+        <Method Name="get_Result()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="73" />
+        <Method Name="get_TemplateElement()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="128" />
+        <Method Name="get_User()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="121" />
+        <Method Name="GetAttribute(String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="155" />
+        <Method Name="GetTagHandlerParametersForNode(XmlElement)" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="141" />
+        <Method Name="HasAttribute(String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="165" />
+        <Method Name="set_Contents(String)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="103" />
+        <Method Name="set_IsRecursive(Boolean)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="53" />
+      </Type>
+      <Type Name="Node" CoveredStatements="114" TotalStatements="197" CoveragePercent="58">
+        <Method Name=".ctor()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="33" />
+        <Method Name="AddCategory(String,String)" CoveredStatements="22" TotalStatements="25" CoveragePercent="88" FirstStatementLine="63" />
+        <Method Name="AddWordToStringBuilder(String,StringBuilder)" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="369" />
+        <Method Name="Evaluate(String,SubQuery,Request,MatchState,StringBuilder)" CoveredStatements="35" TotalStatements="55" CoveragePercent="64" FirstStatementLine="127" />
+        <Method Name="EvaluateAsterixChildNode(SubQuery,Request,MatchState,IReadOnlyList&lt;String&gt;,String)" CoveredStatements="19" TotalStatements="31" CoveragePercent="61" FirstStatementLine="212" />
+        <Method Name="EvaluateKeyedChildNode(SubQuery,Request,MatchState,String,String)" CoveredStatements="21" TotalStatements="38" CoveragePercent="55" FirstStatementLine="262" />
+        <Method Name="EvaluateUnderscoreChild(SubQuery,Request,MatchState,IReadOnlyList&lt;String&gt;,String)" CoveredStatements="0" TotalStatements="31" CoveragePercent="0" FirstStatementLine="325" />
+        <Method Name="get_ChildrenCount()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="53" />
+        <Method Name="get_Template()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="39" />
+        <Method Name="get_Word()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="45" />
+        <Method Name="set_Template(String)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="39" />
+        <Method Name="set_Word(String)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="45" />
+      </Type>
+      <Type Name="SanitizingTextTransformer" CoveredStatements="9" TotalStatements="9" CoveragePercent="100">
+        <Method Name=".ctor(ChatEngine)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="28" />
+        <Method Name="get_StripperRegexPattern()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="38" />
+        <Method Name="ProcessChange()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="45" />
+      </Type>
+      <Type Name="SettingsManager" CoveredStatements="75" TotalStatements="168" CoveragePercent="45">
+        <Method Name=".ctor()" CoveredStatements="2" TotalStatements="2" CoveragePercent="100" FirstStatementLine="41" />
+        <Method Name="Add(String,String)" CoveredStatements="8" TotalStatements="12" CoveragePercent="67" FirstStatementLine="169" />
+        <Method Name="Clear()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="247" />
+        <Method Name="Contains(String)" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="278" />
+        <Method Name="CopyInto(SettingsManager)" CoveredStatements="0" TotalStatements="12" CoveragePercent="0" FirstStatementLine="293" />
+        <Method Name="get_Count()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="52" />
+        <Method Name="get_Keys()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="64" />
+        <Method Name="GetValue(String)" CoveredStatements="5" TotalStatements="7" CoveragePercent="71" FirstStatementLine="260" />
+        <Method Name="Load(String)" CoveredStatements="0" TotalStatements="14" CoveragePercent="0" FirstStatementLine="91" />
+        <Method Name="Load(XmlDocument)" CoveredStatements="23" TotalStatements="29" CoveragePercent="79" FirstStatementLine="122" />
+        <Method Name="LoadSafe(String,IConsole,CultureInfo)" CoveredStatements="0" TotalStatements="31" CoveragePercent="0" FirstStatementLine="316" />
+        <Method Name="LoadXml(String)" CoveredStatements="6" TotalStatements="8" CoveragePercent="75" FirstStatementLine="423" />
+        <Method Name="LoadXmlSafe(String,IConsole,CultureInfo)" CoveredStatements="6" TotalStatements="13" CoveragePercent="46" FirstStatementLine="391" />
+        <Method Name="Remove(String)" CoveredStatements="6" TotalStatements="8" CoveragePercent="75" FirstStatementLine="193" />
+        <Method Name="RemoveFromHash(String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="211" />
+        <Method Name="Update(String,String)" CoveredStatements="0" TotalStatements="11" CoveragePercent="0" FirstStatementLine="222" />
+      </Type>
+      <Type Name="SplitSentenceHelper" CoveredStatements="7" TotalStatements="11" CoveragePercent="64">
+        <Type Name="&lt;&gt;c" CoveredStatements="1" TotalStatements="1" CoveragePercent="100">
+          <Method Name="&lt;Split&gt;b__0_0(String)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="50" />
+        </Type>
+        <Method Name="Split(String,ChatEngine)" CoveredStatements="6" TotalStatements="10" CoveragePercent="60" FirstStatementLine="35" />
+      </Type>
+      <Type Name="SubQuery" CoveredStatements="8" TotalStatements="9" CoveragePercent="89">
+        <Method Name=".ctor()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="27" />
+        <Method Name="get_InputStar()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="48" />
+        <Method Name="get_Template()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="27" />
+        <Method Name="get_ThatStar()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="34" />
+        <Method Name="get_TopicStar()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="41" />
+        <Method Name="set_Template(String)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="27" />
+      </Type>
+      <Type Name="TagHandlerParameters" CoveredStatements="19" TotalStatements="27" CoveragePercent="70">
+        <Method Name=".ctor(ChatEngine,User,SubQuery,Request,Result,XmlElement)" CoveredStatements="13" TotalStatements="21" CoveragePercent="62" FirstStatementLine="39" />
+        <Method Name="get_ChatEngine()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="66" />
+        <Method Name="get_Element()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="100" />
+        <Method Name="get_Query()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="80" />
+        <Method Name="get_Request()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="87" />
+        <Method Name="get_Result()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="93" />
+        <Method Name="get_User()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="73" />
+      </Type>
+      <Type Name="TextSubstitutionHelper" CoveredStatements="29" TotalStatements="31" CoveragePercent="94">
+        <Method Name="Substitute(SettingsManager,String)" CoveredStatements="16" TotalStatements="16" CoveragePercent="100" FirstStatementLine="39" />
+        <Method Name="Substitute(String,String,String)" CoveredStatements="13" TotalStatements="15" CoveragePercent="87" FirstStatementLine="72" />
+      </Type>
+      <Type Name="TextTransformerBase" CoveredStatements="29" TotalStatements="48" CoveragePercent="60">
+        <Method Name=".ctor(ChatEngine)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="49" />
+        <Method Name=".ctor(ChatEngine,String)" CoveredStatements="6" TotalStatements="8" CoveragePercent="75" FirstStatementLine="33" />
+        <Method Name="Error(String)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="156" />
+        <Method Name="get_ChatEngine()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="60" />
+        <Method Name="get_InputString()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="79" />
+        <Method Name="get_Librarian()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="98" />
+        <Method Name="get_Locale()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="71" />
+        <Method Name="get_OutputString()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="88" />
+        <Method Name="GetAttributeSafe(XmlElement,String)" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="183" />
+        <Method Name="GetGlobalSetting(String)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="167" />
+        <Method Name="Log(String,LogLevel)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="147" />
+        <Method Name="set_InputString(String)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="79" />
+        <Method Name="Transform()" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="123" />
+        <Method Name="Transform(String)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="109" />
+      </Type>
+    </Namespace>
+  </Assembly>
+  <Assembly Name="MattEland.Ani.Alfred.Core" CoveredStatements="1194" TotalStatements="1649" CoveragePercent="72">
+    <Namespace Name="MattEland.Ani.Alfred.Core" CoveredStatements="442" TotalStatements="609" CoveragePercent="73">
+      <Type Name="AlfredApplication" CoveredStatements="91" TotalStatements="138" CoveragePercent="66">
+        <Type Name="&lt;get_Properties&gt;d__54" CoveredStatements="0" TotalStatements="10" CoveragePercent="0">
+          <Method Name="MoveNext()" CoveredStatements="0" TotalStatements="10" CoveragePercent="0" FirstStatementLine="371" />
+        </Type>
+        <Method Name=".ctor(IPlatformProvider,IStatusController)" CoveredStatements="11" TotalStatements="16" CoveragePercent="69" FirstStatementLine="352" />
+        <Method Name="get_ChatProvider()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="127" />
+        <Method Name="get_Console()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="144" />
+        <Method Name="get_DisplayName()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="332" />
+        <Method Name="get_IsOnline()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="166" />
+        <Method Name="get_ItemTypeName()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="344" />
+        <Method Name="get_Locale()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="352" />
+        <Method Name="get_Name()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="361" />
+        <Method Name="get_NameAndVersion()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="100" />
+        <Method Name="get_PlatformProvider()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="176" />
+        <Method Name="get_PropertyProviders()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="390" />
+        <Method Name="get_RootPages()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="248" />
+        <Method Name="get_ShellCommandHandler()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="259" />
+        <Method Name="get_Status()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="279" />
+        <Method Name="get_Subsystems()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="299" />
+        <Method Name="get_Version()" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="111" />
+        <Method Name="Initialize()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="153" />
+        <Method Name="OnPropertyChanged(String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="401" />
+        <Method Name="Register(AlfredSubsystem)" CoveredStatements="10" TotalStatements="10" CoveragePercent="100" FirstStatementLine="226" />
+        <Method Name="Register(IAlfredPage)" CoveredStatements="8" TotalStatements="10" CoveragePercent="80" FirstStatementLine="184" />
+        <Method Name="Register(IChatProvider)" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="213" />
+        <Method Name="Register(IShellCommandRecipient)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="199" />
+        <Method Name="set_ChatProvider(IChatProvider)" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="131" />
+        <Method Name="set_Console(IConsole)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="144" />
+        <Method Name="set_Locale(CultureInfo)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="352" />
+        <Method Name="set_ShellCommandHandler(IShellCommandRecipient)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="259" />
+        <Method Name="set_Status(AlfredStatus)" CoveredStatements="8" TotalStatements="8" CoveragePercent="100" FirstStatementLine="281" />
+        <Method Name="Shutdown()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="268" />
+        <Method Name="Update()" CoveredStatements="12" TotalStatements="12" CoveragePercent="100" FirstStatementLine="309" />
+      </Type>
+      <Type Name="AlfredBootstrapper" CoveredStatements="18" TotalStatements="52" CoveragePercent="35">
+        <Method Name=".ctor()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="36" />
+        <Method Name=".ctor(IPlatformProvider)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="45" />
+        <Method Name=".ctor(IPlatformProvider,IStatusController)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="65" />
+        <Method Name=".ctor(IPlatformProvider,IStatusController,IConsole)" CoveredStatements="8" TotalStatements="12" CoveragePercent="67" FirstStatementLine="77" />
+        <Method Name=".ctor(IStatusController)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="54" />
+        <Method Name="Create()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="159" />
+        <Method Name="get_Console()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="147" />
+        <Method Name="get_PlatformProvider()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="104" />
+        <Method Name="get_StatusController()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="126" />
+        <Method Name="set_Console(IConsole)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="150" />
+        <Method Name="set_PlatformProvider(IPlatformProvider)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="107" />
+        <Method Name="set_StatusController(IStatusController)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="129" />
+      </Type>
+      <Type Name="AlfredCommandResult" CoveredStatements="2" TotalStatements="6" CoveragePercent="33">
+        <Method Name="get_NewLastInput()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="16" />
+        <Method Name="get_Output()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="25" />
+        <Method Name="get_RedirectToChat()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="37" />
+        <Method Name="set_NewLastInput(String)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="16" />
+        <Method Name="set_Output(String)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="25" />
+        <Method Name="set_RedirectToChat(String)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="37" />
+      </Type>
+      <Type Name="AlfredStatusController" CoveredStatements="92" TotalStatements="99" CoveragePercent="93">
+        <Method Name=".ctor()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="31" />
+        <Method Name=".ctor(IAlfred)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="39" />
+        <Method Name="EnsureAlfredOffline(IAlfred,IConsole,String)" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="152" />
+        <Method Name="EnsureAlfredOnline(IAlfred,IConsole,String)" CoveredStatements="6" TotalStatements="9" CoveragePercent="67" FirstStatementLine="220" />
+        <Method Name="get_Alfred()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="50" />
+        <Method Name="Initialize()" CoveredStatements="26" TotalStatements="28" CoveragePercent="93" FirstStatementLine="61" />
+        <Method Name="InitializeComponent(IConsole,IAlfredComponent,String)" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="171" />
+        <Method Name="set_Alfred(IAlfred)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="51" />
+        <Method Name="Shutdown()" CoveredStatements="25" TotalStatements="27" CoveragePercent="93" FirstStatementLine="108" />
+        <Method Name="ShutdownComponent(IConsole,IAlfredComponent,String)" CoveredStatements="8" TotalStatements="8" CoveragePercent="100" FirstStatementLine="198" />
+      </Type>
+      <Type Name="ComponentBase" CoveredStatements="153" TotalStatements="180" CoveragePercent="85">
+        <Type Name="&lt;&gt;c__DisplayClass45_0" CoveredStatements="1" TotalStatements="1" CoveragePercent="100">
+          <Method Name="&lt;OnShutdownCompleted&gt;b__0(IAlfredComponent)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="343" />
+        </Type>
+        <Type Name="&lt;get_Properties&gt;d__35" CoveredStatements="7" TotalStatements="7" CoveragePercent="100">
+          <Method Name="MoveNext()" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="182" />
+        </Type>
+        <Method Name=".ctor(IConsole)" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="142" />
+        <Method Name="BuildWidgetParameters(String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="453" />
+        <Method Name="ClearChildCollections()" CoveredStatements="2" TotalStatements="2" CoveragePercent="100" FirstStatementLine="283" />
+        <Method Name="get_AlfredInstance()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="61" />
+        <Method Name="get_Console()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="142" />
+        <Method Name="get_DisplayName()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="155" />
+        <Method Name="get_Locale()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="131" />
+        <Method Name="get_NameAndVersion()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="73" />
+        <Method Name="get_PropertyProviders()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="199" />
+        <Method Name="get_Status()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="96" />
+        <Method Name="get_Version()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="84" />
+        <Method Name="Initialize(IAlfred)" CoveredStatements="18" TotalStatements="23" CoveragePercent="78" FirstStatementLine="209" />
+        <Method Name="InitializeProtected(IAlfred)" CoveredStatements="2" TotalStatements="2" CoveragePercent="100" FirstStatementLine="363" />
+        <Method Name="Log(String,String,LogLevel)" CoveredStatements="9" TotalStatements="13" CoveragePercent="69" FirstStatementLine="375" />
+        <Method Name="OnInitializationCompleted()" CoveredStatements="9" TotalStatements="9" CoveragePercent="100" FirstStatementLine="319" />
+        <Method Name="OnPropertyChanged(String)" CoveredStatements="5" TotalStatements="9" CoveragePercent="56" FirstStatementLine="407" />
+        <Method Name="OnRegistered(IAlfred)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="391" />
+        <Method Name="OnShutdownCompleted()" CoveredStatements="22" TotalStatements="22" CoveragePercent="100" FirstStatementLine="330" />
+        <Method Name="Register(IChatProvider)" CoveredStatements="5" TotalStatements="9" CoveragePercent="56" FirstStatementLine="435" />
+        <Method Name="RegisterControls()" CoveredStatements="2" TotalStatements="2" CoveragePercent="100" FirstStatementLine="243" />
+        <Method Name="set_AlfredInstance(IAlfred)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="63" />
+        <Method Name="set_Console(IConsole)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="142" />
+        <Method Name="set_Status(AlfredStatus)" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="98" />
+        <Method Name="Shutdown()" CoveredStatements="16" TotalStatements="19" CoveragePercent="84" FirstStatementLine="253" />
+        <Method Name="ShutdownProtected()" CoveredStatements="2" TotalStatements="2" CoveragePercent="100" FirstStatementLine="355" />
+        <Method Name="Update()" CoveredStatements="11" TotalStatements="14" CoveragePercent="79" FirstStatementLine="291" />
+        <Method Name="UpdateProtected()" CoveredStatements="2" TotalStatements="2" CoveragePercent="100" FirstStatementLine="310" />
+      </Type>
+      <Type Name="Resources" CoveredStatements="86" TotalStatements="134" CoveragePercent="64">
+        <Method Name=".ctor()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="32" />
+        <Method Name="get_AlfredComponent_ShutdownAlreadyOffline()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="67" />
+        <Method Name="get_AlfredControlSubSystem_Name()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="76" />
+        <Method Name="get_AlfredCoreModule_AlfredNotSet()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="85" />
+        <Method Name="get_AlfredCoreModule_AlfredStatusText()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="94" />
+        <Method Name="get_AlfredCoreModule_Name()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="103" />
+        <Method Name="get_AlfredItemOfflineButToldToUpdate()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="112" />
+        <Method Name="get_AlfredModule_InitializeAlreadyOnline()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="121" />
+        <Method Name="get_AlfredProvider_AddModules_ErrorNullModule()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="130" />
+        <Method Name="get_AlfredProvider_AssertMustBeOffline_ErrorNotOffline()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="139" />
+        <Method Name="get_AlfredProvider_Name()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="148" />
+        <Method Name="get_AlfredProvider_Update_ErrorMustBeOnline()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="157" />
+        <Method Name="get_AlfredStatusController_ComponentOffline()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="166" />
+        <Method Name="get_AlfredStatusController_Initialize_AlfredOnline()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="175" />
+        <Method Name="get_AlfredStatusController_Initialize_ErrorAlreadyOnline()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="184" />
+        <Method Name="get_AlfredStatusController_Initialize_Initializing()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="193" />
+        <Method Name="get_AlfredStatusController_Initialize_InitilizationCompleted()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="202" />
+        <Method Name="get_AlfredStatusController_Initialize_LogHeader()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="211" />
+        <Method Name="get_AlfredStatusController_InitializeComponentInitialized()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="220" />
+        <Method Name="get_AlfredStatusController_InitializingComponent()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="229" />
+        <Method Name="get_AlfredStatusController_Shutdown_Completed()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="238" />
+        <Method Name="get_AlfredStatusController_Shutdown_ErrorAlreadyOffline()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="247" />
+        <Method Name="get_AlfredStatusController_Shutdown_ErrorAlreadyTerminating()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="256" />
+        <Method Name="get_AlfredStatusController_Shutdown_LogHeader()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="265" />
+        <Method Name="get_AlfredStatusController_Shutdown_Shutting_down()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="274" />
+        <Method Name="get_AlfredStatusController_ShuttingDownComponent()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="283" />
+        <Method Name="get_AlfredSubSystemListModule_NoSubsystemsDetected()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="292" />
+        <Method Name="get_AlfredTimeModule_AlfredTimeModule_BedtimeNagMessage()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="301" />
+        <Method Name="get_AlfredTimeModule_Name()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="310" />
+        <Method Name="get_AlfredTimeModule_Update_CurrentTimeDisplayString()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="319" />
+        <Method Name="get_AppOnlineLogMessage()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="328" />
+        <Method Name="get_ButtonWidgetClickCantExecuteErrorMessage()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="337" />
+        <Method Name="get_ChatCommandToString()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="346" />
+        <Method Name="get_ChatModuleName()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="355" />
+        <Method Name="get_ComponentBasePropertyChangedException()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="364" />
+        <Method Name="get_Culture()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="55" />
+        <Method Name="get_InitializeButtonText()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="373" />
+        <Method Name="get_NoAlfredInstance()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="382" />
+        <Method Name="get_NoAlfredText()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="391" />
+        <Method Name="get_NoPagesDetected()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="400" />
+        <Method Name="get_ResourceManager()" CoveredStatements="8" TotalStatements="8" CoveragePercent="100" FirstStatementLine="40" />
+        <Method Name="get_ShutdownButtonText()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="409" />
+        <Method Name="set_Culture(CultureInfo)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="58" />
+      </Type>
+    </Namespace>
+    <Namespace Name="MattEland.Ani.Alfred.Core.Console" CoveredStatements="32" TotalStatements="69" CoveragePercent="46">
+      <Type Name="ConsoleEvent" CoveredStatements="11" TotalStatements="39" CoveragePercent="28">
+        <Method Name=".ctor(String,String,LogLevel)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="28" />
+        <Method Name=".ctor(String,String,LogLevel,DateTime)" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="40" />
+        <Method Name="Equals(ConsoleEvent)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="88" />
+        <Method Name="Equals(Object)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="101" />
+        <Method Name="get_Level()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="78" />
+        <Method Name="get_Message()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="63" />
+        <Method Name="get_Time()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="71" />
+        <Method Name="get_Title()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="57" />
+        <Method Name="get_UtcTime()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="51" />
+        <Method Name="GetHashCode()" CoveredStatements="0" TotalStatements="8" CoveragePercent="0" FirstStatementLine="114" />
+        <Method Name="op_Equality(ConsoleEvent,ConsoleEvent)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="132" />
+        <Method Name="op_Inequality(ConsoleEvent,ConsoleEvent)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="143" />
+      </Type>
+      <Type Name="SimpleConsole" CoveredStatements="21" TotalStatements="30" CoveragePercent="70">
+        <Method Name=".ctor()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="30" />
+        <Method Name=".ctor(IPlatformProvider)" CoveredStatements="5" TotalStatements="7" CoveragePercent="71" FirstStatementLine="39" />
+        <Method Name="get_Events()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="90" />
+        <Method Name="Log(IConsoleEvent)" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="73" />
+        <Method Name="Log(String,String,LogLevel)" CoveredStatements="6" TotalStatements="11" CoveragePercent="55" FirstStatementLine="56" />
+      </Type>
+    </Namespace>
+    <Namespace Name="MattEland.Ani.Alfred.Core.Definitions" CoveredStatements="96" TotalStatements="185" CoveragePercent="52">
+      <Type Name="AlfredCommand" CoveredStatements="33" TotalStatements="33" CoveragePercent="100">
+        <Method Name=".ctor()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="42" />
+        <Method Name=".ctor(Action)" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="35" />
+        <Method Name="CanExecute(Object)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="100" />
+        <Method Name="Execute(Object)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="112" />
+        <Method Name="get_ExecuteAction()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="66" />
+        <Method Name="get_IsEnabled()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="77" />
+        <Method Name="RaiseCanExecuteChanged()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="127" />
+        <Method Name="set_ExecuteAction(Action)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="67" />
+        <Method Name="set_IsEnabled(Boolean)" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="79" />
+      </Type>
+      <Type Name="AlfredProperty" CoveredStatements="7" TotalStatements="27" CoveragePercent="26">
+        <Method Name=".ctor(String,Object,Boolean)" CoveredStatements="7" TotalStatements="9" CoveragePercent="78" FirstStatementLine="20" />
+        <Method Name="get_DisplayName()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="40" />
+        <Method Name="get_DisplayValue()" CoveredStatements="0" TotalStatements="7" CoveragePercent="0" FirstStatementLine="78" />
+        <Method Name="get_IsEditable()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="46" />
+        <Method Name="get_Value()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="58" />
+        <Method Name="set_Value(Object)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="60" />
+      </Type>
+      <Type Name="ChatCommand" CoveredStatements="22" TotalStatements="50" CoveragePercent="44">
+        <Method Name=".cctor()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="25" />
+        <Method Name=".ctor(String)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="31" />
+        <Method Name=".ctor(String,String)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="40" />
+        <Method Name=".ctor(String,String,String)" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="50" />
+        <Method Name="Equals(ChatCommand)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="81" />
+        <Method Name="Equals(Object)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="103" />
+        <Method Name="get_Data()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="73" />
+        <Method Name="get_IsAddressed()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="163" />
+        <Method Name="get_IsUnaddressed()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="171" />
+        <Method Name="get_Name()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="67" />
+        <Method Name="get_Subsystem()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="61" />
+        <Method Name="GetHashCode()" CoveredStatements="0" TotalStatements="7" CoveragePercent="0" FirstStatementLine="116" />
+        <Method Name="IsFor(IAlfredSubsystem)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="154" />
+        <Method Name="op_Equality(ChatCommand,ChatCommand)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="133" />
+        <Method Name="op_Inequality(ChatCommand,ChatCommand)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="144" />
+        <Method Name="ToString()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="91" />
+      </Type>
+      <Type Name="ShellCommand" CoveredStatements="8" TotalStatements="33" CoveragePercent="24">
+        <Method Name=".ctor(String,String,String)" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="54" />
+        <Method Name="Equals(Object)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="96" />
+        <Method Name="Equals(ShellCommand)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="82" />
+        <Method Name="get_Data()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="43" />
+        <Method Name="get_Name()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="36" />
+        <Method Name="get_Target()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="29" />
+        <Method Name="GetHashCode()" CoveredStatements="0" TotalStatements="7" CoveragePercent="0" FirstStatementLine="110" />
+        <Method Name="op_Equality(ShellCommand,ShellCommand)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="127" />
+        <Method Name="op_Inequality(ShellCommand,ShellCommand)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="138" />
+        <Method Name="ToString()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="65" />
+      </Type>
+      <Type Name="SimplePlatformProvider" CoveredStatements="9" TotalStatements="9" CoveragePercent="100">
+        <Method Name="CreateCollection&lt;T&gt;()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="32" />
+        <Method Name="CreateCommand()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="42" />
+        <Method Name="CreateCommand(Action)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="53" />
+      </Type>
+      <Type Name="UserStatementResponse" CoveredStatements="17" TotalStatements="33" CoveragePercent="52">
+        <Method Name=".ctor(String,String,String,ChatCommand)" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="32" />
+        <Method Name="Equals(Object)" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="83" />
+        <Method Name="Equals(UserStatementResponse)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="72" />
+        <Method Name="get_Command()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="64" />
+        <Method Name="get_ResponseText()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="51" />
+        <Method Name="get_Template()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="58" />
+        <Method Name="get_UserInput()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="44" />
+        <Method Name="GetHashCode()" CoveredStatements="0" TotalStatements="8" CoveragePercent="0" FirstStatementLine="97" />
+        <Method Name="op_Equality(UserStatementResponse,UserStatementResponse)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="118" />
+        <Method Name="op_Inequality(UserStatementResponse,UserStatementResponse)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="129" />
+      </Type>
+    </Namespace>
+    <Namespace Name="MattEland.Ani.Alfred.Core.Modules" CoveredStatements="322" TotalStatements="377" CoveragePercent="85">
+      <Type Name="AlertVisibilityCalculator" CoveredStatements="21" TotalStatements="21" CoveragePercent="100">
+        <Method Name="CalculateAlertVisibility(Int32,Int32,Int32,Int32,Int32)" CoveredStatements="14" TotalStatements="14" CoveragePercent="100" FirstStatementLine="30" />
+        <Method Name="CalculateVisibilityAfterAlarmHour(Int32,Int32,Int32,Int32,Int32)" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="72" />
+      </Type>
+      <Type Name="AlfredModule" CoveredStatements="33" TotalStatements="47" CoveragePercent="70">
+        <Type Name="&lt;&gt;c" CoveredStatements="0" TotalStatements="1" CoveragePercent="0">
+          <Method Name="&lt;get_IsVisible&gt;b__3_0(WidgetBase)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="52" />
+        </Type>
+        <Type Name="&lt;get_Children&gt;d__5" CoveredStatements="2" TotalStatements="2" CoveragePercent="100">
+          <Method Name="MoveNext()" CoveredStatements="2" TotalStatements="2" CoveragePercent="100" FirstStatementLine="62" />
+        </Type>
+        <Method Name=".ctor(IPlatformProvider)" CoveredStatements="5" TotalStatements="7" CoveragePercent="71" FirstStatementLine="36" />
+        <Method Name="ClearChildCollections()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="79" />
+        <Method Name="get_IsVisible()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="52" />
+        <Method Name="get_ItemTypeName()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="141" />
+        <Method Name="get_PropertyProviders()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="151" />
+        <Method Name="get_Widgets()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="72" />
+        <Method Name="ProcessAlfredCommand(ChatCommand,AlfredCommandResult)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="128" />
+        <Method Name="Register(IEnumerable&lt;WidgetBase&gt;)" CoveredStatements="10" TotalStatements="12" CoveragePercent="83" FirstStatementLine="108" />
+        <Method Name="Register(WidgetBase)" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="93" />
+      </Type>
+      <Type Name="AlfredPagesListModule" CoveredStatements="55" TotalStatements="70" CoveragePercent="79">
+        <Method Name=".ctor(IPlatformProvider)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="36" />
+        <Method Name="get_IsVisible()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="93" />
+        <Method Name="get_Name()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="47" />
+        <Method Name="OnInitializationCompleted()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="161" />
+        <Method Name="RegisterControls()" CoveredStatements="25" TotalStatements="25" CoveragePercent="100" FirstStatementLine="102" />
+        <Method Name="ShutdownProtected()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="82" />
+        <Method Name="UpdateProtected()" CoveredStatements="15" TotalStatements="20" CoveragePercent="75" FirstStatementLine="54" />
+        <Method Name="UpdateWidgetText(AlfredTextWidget,IAlfredPage)" CoveredStatements="5" TotalStatements="9" CoveragePercent="56" FirstStatementLine="143" />
+      </Type>
+      <Type Name="AlfredPowerModule" CoveredStatements="88" TotalStatements="95" CoveragePercent="93">
+        <Method Name=".ctor(IPlatformProvider)" CoveredStatements="8" TotalStatements="8" CoveragePercent="100" FirstStatementLine="37" />
+        <Method Name="AddOfflineWidgets()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="135" />
+        <Method Name="AddOnlineWidgets()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="113" />
+        <Method Name="ExecuteInitializeCommand()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="88" />
+        <Method Name="ExecuteShutdownCommand()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="96" />
+        <Method Name="get_AlfredStatusWidget()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="68" />
+        <Method Name="get_InitializeButton()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="75" />
+        <Method Name="get_Name()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="60" />
+        <Method Name="get_ShutdownButton()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="82" />
+        <Method Name="InitializeProtected(IAlfred)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="105" />
+        <Method Name="OnInitializationCompleted()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="241" />
+        <Method Name="OnRegistered(IAlfred)" CoveredStatements="11" TotalStatements="14" CoveragePercent="79" FirstStatementLine="154" />
+        <Method Name="OnShutdownCompleted()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="253" />
+        <Method Name="ProcessAlfredCommand(ChatCommand,AlfredCommandResult)" CoveredStatements="6" TotalStatements="7" CoveragePercent="86" FirstStatementLine="225" />
+        <Method Name="ShutdownProtected()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="123" />
+        <Method Name="UpdateAlfredProviderStatus()" CoveredStatements="26" TotalStatements="26" CoveragePercent="100" FirstStatementLine="177" />
+        <Method Name="UpdateProtected()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="145" />
+      </Type>
+      <Type Name="AlfredSubsystemListModule" CoveredStatements="49" TotalStatements="68" CoveragePercent="72">
+        <Method Name=".ctor(IPlatformProvider)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="40" />
+        <Method Name="BuildSubsystemWidget(IAlfredSubsystem)" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="131" />
+        <Method Name="get_Name()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="51" />
+        <Method Name="InitializeProtected(IAlfred)" CoveredStatements="16" TotalStatements="23" CoveragePercent="70" FirstStatementLine="92" />
+        <Method Name="ShutdownProtected()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="83" />
+        <Method Name="UpdateProtected()" CoveredStatements="15" TotalStatements="20" CoveragePercent="75" FirstStatementLine="58" />
+        <Method Name="UpdateWidgetText(AlfredTextWidget,IAlfredComponent)" CoveredStatements="5" TotalStatements="9" CoveragePercent="56" FirstStatementLine="153" />
+      </Type>
+      <Type Name="AlfredTimeModule" CoveredStatements="76" TotalStatements="76" CoveragePercent="100">
+        <Method Name=".ctor(IPlatformProvider)" CoveredStatements="11" TotalStatements="11" CoveragePercent="100" FirstStatementLine="46" />
+        <Method Name="ClearLastTimeRun()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="232" />
+        <Method Name="get_AlertDurationInHours()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="111" />
+        <Method Name="get_AlertHour()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="99" />
+        <Method Name="get_AlertMinute()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="105" />
+        <Method Name="get_AlertWidget()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="93" />
+        <Method Name="get_CurrentDateWidget()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="84" />
+        <Method Name="get_CurrentTime()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="125" />
+        <Method Name="get_CurrentTimeWidget()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="77" />
+        <Method Name="get_IsAlertEnabled()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="117" />
+        <Method Name="get_Name()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="69" />
+        <Method Name="InitializeProtected(IAlfred)" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="134" />
+        <Method Name="set_AlertDurationInHours(Int32)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="111" />
+        <Method Name="set_AlertHour(Int32)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="99" />
+        <Method Name="set_AlertMinute(Int32)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="105" />
+        <Method Name="set_CurrentTime(DateTime)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="126" />
+        <Method Name="set_IsAlertEnabled(Boolean)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="117" />
+        <Method Name="ShutdownProtected()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="219" />
+        <Method Name="Update(DateTime)" CoveredStatements="19" TotalStatements="19" CoveragePercent="100" FirstStatementLine="160" />
+        <Method Name="UpdateBedtimeAlertVisibility(DateTime)" CoveredStatements="9" TotalStatements="9" CoveragePercent="100" FirstStatementLine="198" />
+        <Method Name="UpdateProtected()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="148" />
+      </Type>
+    </Namespace>
+    <Namespace Name="MattEland.Ani.Alfred.Core.Pages" CoveredStatements="78" TotalStatements="108" CoveragePercent="72">
+      <Type Name="AlfredEventLogPage" CoveredStatements="7" TotalStatements="15" CoveragePercent="47">
+        <Type Name="&lt;get_Children&gt;d__7" CoveredStatements="2" TotalStatements="2" CoveragePercent="100">
+          <Method Name="MoveNext()" CoveredStatements="2" TotalStatements="2" CoveragePercent="100" FirstStatementLine="80" />
+        </Type>
+        <Method Name=".ctor(IConsole,String)" CoveredStatements="5" TotalStatements="7" CoveragePercent="71" FirstStatementLine="36" />
+        <Method Name="get_Console()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="51" />
+        <Method Name="get_Events()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="69" />
+      </Type>
+      <Type Name="AlfredModuleListPage" CoveredStatements="34" TotalStatements="43" CoveragePercent="79">
+        <Type Name="&lt;&gt;c" CoveredStatements="0" TotalStatements="2" CoveragePercent="0">
+          <Method Name="&lt;get_IsVisible&gt;b__7_0(IAlfredModule)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="87" />
+          <Method Name="&lt;get_IsVisible&gt;b__7_1(WidgetBase)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="87" />
+        </Type>
+        <Type Name="&lt;get_Children&gt;d__5" CoveredStatements="9" TotalStatements="9" CoveragePercent="100">
+          <Method Name="MoveNext()" CoveredStatements="9" TotalStatements="9" CoveragePercent="100" FirstStatementLine="70" />
+        </Type>
+        <Method Name=".ctor(IPlatformProvider,String,String)" CoveredStatements="5" TotalStatements="7" CoveragePercent="71" FirstStatementLine="40" />
+        <Method Name="ClearModules()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="107" />
+        <Method Name="get_IsVisible()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="85" />
+        <Method Name="get_Modules()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="58" />
+        <Method Name="ProcessAlfredCommand(ChatCommand,AlfredCommandResult)" CoveredStatements="10" TotalStatements="12" CoveragePercent="83" FirstStatementLine="120" />
+        <Method Name="Register(IAlfredModule)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="98" />
+      </Type>
+      <Type Name="AlfredPage" CoveredStatements="20" TotalStatements="29" CoveragePercent="69">
+        <Method Name=".ctor(String,String)" CoveredStatements="11" TotalStatements="11" CoveragePercent="100" FirstStatementLine="35" />
+        <Method Name="get_Id()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="79" />
+        <Method Name="get_IsRootLevel()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="88" />
+        <Method Name="get_IsVisible()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="56" />
+        <Method Name="get_ItemTypeName()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="111" />
+        <Method Name="get_Name()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="68" />
+        <Method Name="ProcessAlfredCommand(ChatCommand,AlfredCommandResult)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="98" />
+      </Type>
+      <Type Name="ExplorerPage" CoveredStatements="17" TotalStatements="21" CoveragePercent="81">
+        <Method Name=".ctor(IPlatformProvider,String,String,String)" CoveredStatements="9" TotalStatements="12" CoveragePercent="75" FirstStatementLine="40" />
+        <Method Name="get_Children()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="61" />
+        <Method Name="get_DisplayNameProperty()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="90" />
+        <Method Name="get_IsVisible()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="71" />
+        <Method Name="get_RootNodes()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="83" />
+        <Method Name="set_RootNodes(IEnumerable&lt;IPropertyProvider&gt;)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="83" />
+      </Type>
+    </Namespace>
+    <Namespace Name="MattEland.Ani.Alfred.Core.Subsystems" CoveredStatements="100" TotalStatements="114" CoveragePercent="88">
+      <Type Name="AlfredCoreSubsystem" CoveredStatements="36" TotalStatements="36" CoveragePercent="100">
+        <Method Name=".ctor()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="48" />
+        <Method Name=".ctor(IPlatformProvider)" CoveredStatements="8" TotalStatements="8" CoveragePercent="100" FirstStatementLine="57" />
+        <Method Name="get_ControlPageName()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="98" />
+        <Method Name="get_EventLogPageName()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="108" />
+        <Method Name="get_Id()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="126" />
+        <Method Name="get_Name()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="117" />
+        <Method Name="RegisterControls()" CoveredStatements="13" TotalStatements="13" CoveragePercent="100" FirstStatementLine="73" />
+      </Type>
+      <Type Name="AlfredSubsystem" CoveredStatements="43" TotalStatements="55" CoveragePercent="78">
+        <Type Name="&lt;&gt;c" CoveredStatements="1" TotalStatements="1" CoveragePercent="100">
+          <Method Name="&lt;get_RootPages&gt;b__7_0(IAlfredPage)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="77" />
+        </Type>
+        <Method Name=".ctor(IPlatformProvider,IConsole)" CoveredStatements="5" TotalStatements="7" CoveragePercent="71" FirstStatementLine="41" />
+        <Method Name="ClearChildCollections()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="118" />
+        <Method Name="get_Children()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="68" />
+        <Method Name="get_IsVisible()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="57" />
+        <Method Name="get_ItemTypeName()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="162" />
+        <Method Name="get_Pages()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="94" />
+        <Method Name="get_RootPages()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="77" />
+        <Method Name="ProcessAlfredCommand(ChatCommand,AlfredCommandResult)" CoveredStatements="15" TotalStatements="18" CoveragePercent="83" FirstStatementLine="132" />
+        <Method Name="Register(IAlfredPage)" CoveredStatements="6" TotalStatements="10" CoveragePercent="60" FirstStatementLine="102" />
+      </Type>
+      <Type Name="MindExplorerSubsystem" CoveredStatements="21" TotalStatements="23" CoveragePercent="91">
+        <Method Name=".ctor(IPlatformProvider,IConsole)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="35" />
+        <Method Name="get_Id()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="87" />
+        <Method Name="get_MindExplorerPage()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="68" />
+        <Method Name="get_Name()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="78" />
+        <Method Name="InitializeProtected(IAlfred)" CoveredStatements="6" TotalStatements="8" CoveragePercent="75" FirstStatementLine="45" />
+        <Method Name="RegisterControls()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="94" />
+      </Type>
+    </Namespace>
+    <Namespace Name="MattEland.Ani.Alfred.Core.Widgets" CoveredStatements="124" TotalStatements="187" CoveragePercent="66">
+      <Type Name="AlfredProgressBarWidget" CoveredStatements="26" TotalStatements="53" CoveragePercent="49">
+        <Method Name=".ctor(WidgetCreationParameters)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="23" />
+        <Method Name="get_ItemTypeName()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="135" />
+        <Method Name="get_Maximum()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="61" />
+        <Method Name="get_Minimum()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="44" />
+        <Method Name="get_Value()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="78" />
+        <Method Name="get_ValueFormatString()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="113" />
+        <Method Name="get_ValueText()" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="98" />
+        <Method Name="set_Maximum(Single)" CoveredStatements="3" TotalStatements="7" CoveragePercent="43" FirstStatementLine="63" />
+        <Method Name="set_Minimum(Single)" CoveredStatements="3" TotalStatements="7" CoveragePercent="43" FirstStatementLine="46" />
+        <Method Name="set_Value(Single)" CoveredStatements="8" TotalStatements="8" CoveragePercent="100" FirstStatementLine="80" />
+        <Method Name="set_ValueFormatString(String)" CoveredStatements="8" TotalStatements="8" CoveragePercent="100" FirstStatementLine="115" />
+      </Type>
+      <Type Name="AlfredTextWidget" CoveredStatements="13" TotalStatements="13" CoveragePercent="100">
+        <Method Name=".ctor(WidgetCreationParameters)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="27" />
+        <Method Name="get_Text()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="38" />
+        <Method Name="set_Text(String)" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="40" />
+      </Type>
+      <Type Name="ButtonWidget" CoveredStatements="27" TotalStatements="36" CoveragePercent="75">
+        <Method Name=".ctor(String,AlfredCommand,WidgetCreationParameters)" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="50" />
+        <Method Name=".ctor(WidgetCreationParameters)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="37" />
+        <Method Name="Click()" CoveredStatements="9" TotalStatements="15" CoveragePercent="60" FirstStatementLine="98" />
+        <Method Name="get_ClickCommand()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="63" />
+        <Method Name="get_ItemTypeName()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="83" />
+        <Method Name="set_ClickCommand(AlfredCommand)" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="65" />
+      </Type>
+      <Type Name="TextWidget" CoveredStatements="7" TotalStatements="10" CoveragePercent="70">
+        <Method Name=".ctor(String,WidgetCreationParameters)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="35" />
+        <Method Name=".ctor(WidgetCreationParameters)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="24" />
+        <Method Name="get_ItemTypeName()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="49" />
+      </Type>
+      <Type Name="WarningWidget" CoveredStatements="7" TotalStatements="10" CoveragePercent="70">
+        <Method Name=".ctor(String,WidgetCreationParameters)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="35" />
+        <Method Name=".ctor(WidgetCreationParameters)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="25" />
+        <Method Name="get_ItemTypeName()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="49" />
+      </Type>
+      <Type Name="WidgetBase" CoveredStatements="35" TotalStatements="56" CoveragePercent="63">
+        <Type Name="&lt;get_Properties&gt;d__26" CoveredStatements="0" TotalStatements="2" CoveragePercent="0">
+          <Method Name="MoveNext()" CoveredStatements="0" TotalStatements="2" CoveragePercent="0" FirstStatementLine="146" />
+        </Type>
+        <Type Name="&lt;get_PropertyProviders&gt;d__28" CoveredStatements="0" TotalStatements="2" CoveragePercent="0">
+          <Method Name="MoveNext()" CoveredStatements="0" TotalStatements="2" CoveragePercent="0" FirstStatementLine="155" />
+        </Type>
+        <Method Name=".ctor(WidgetCreationParameters)" CoveredStatements="8" TotalStatements="10" CoveragePercent="80" FirstStatementLine="37" />
+        <Method Name="Error(String,String)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="188" />
+        <Method Name="get_Console()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="59" />
+        <Method Name="get_DataContext()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="101" />
+        <Method Name="get_DisplayName()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="121" />
+        <Method Name="get_IsVisible()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="79" />
+        <Method Name="get_Locale()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="69" />
+        <Method Name="get_Name()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="138" />
+        <Method Name="Log(String,String,LogLevel)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="202" />
+        <Method Name="OnPropertyChanged(String)" CoveredStatements="5" TotalStatements="10" CoveragePercent="50" FirstStatementLine="166" />
+        <Method Name="set_DataContext(Object)" CoveredStatements="5" TotalStatements="7" CoveragePercent="71" FirstStatementLine="103" />
+        <Method Name="set_IsVisible(Boolean)" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="81" />
+      </Type>
+      <Type Name="WidgetCreationParameters" CoveredStatements="9" TotalStatements="9" CoveragePercent="100">
+        <Method Name=".ctor(String,IConsole,CultureInfo)" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="30" />
+        <Method Name="get_Console()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="52" />
+        <Method Name="get_Locale()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="59" />
+        <Method Name="get_Name()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="45" />
+      </Type>
+    </Namespace>
+  </Assembly>
+  <Assembly Name="MattEland.Ani.Alfred.Core.Modules.SysMonitor" CoveredStatements="262" TotalStatements="348" CoveragePercent="75">
+    <Namespace Name="MattEland.Ani.Alfred.Core.Modules.SysMonitor" CoveredStatements="262" TotalStatements="348" CoveragePercent="75">
+      <Type Name="CounterMetricProvider" CoveredStatements="8" TotalStatements="11" CoveragePercent="73">
+        <Method Name=".ctor(String,String,String)" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="41" />
+        <Method Name="Dispose()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="69" />
+        <Method Name="NextValue()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="60" />
+      </Type>
+      <Type Name="CounterMetricProviderFactory" CoveredStatements="7" TotalStatements="7" CoveragePercent="100">
+        <Method Name="Build(String,String,String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="46" />
+        <Method Name="GetCategoryInstanceNames(String)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="61" />
+      </Type>
+      <Type Name="CpuMonitorModule" CoveredStatements="70" TotalStatements="93" CoveragePercent="75">
+        <Type Name="&lt;&gt;c" CoveredStatements="3" TotalStatements="3" CoveragePercent="100">
+          <Method Name="&lt;get_AverageProcessorUtilization&gt;b__11_0(MetricProviderBase)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="98" />
+          <Method Name="&lt;get_NumberOfCores&gt;b__9_0(MetricProviderBase)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="84" />
+          <Method Name="&lt;InitializeProtected&gt;b__14_0(MetricProviderBase)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="136" />
+        </Type>
+        <Method Name=".ctor(IPlatformProvider,IMetricProviderFactory)" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="39" />
+        <Method Name="BuildCounters()" CoveredStatements="11" TotalStatements="11" CoveragePercent="100" FirstStatementLine="166" />
+        <Method Name="Dispose()" CoveredStatements="0" TotalStatements="9" CoveragePercent="0" FirstStatementLine="108" />
+        <Method Name="get_AverageProcessorUtilization()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="95" />
+        <Method Name="get_Name()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="72" />
+        <Method Name="get_NumberOfCores()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="82" />
+        <Method Name="InitializeProtected(IAlfred)" CoveredStatements="25" TotalStatements="25" CoveragePercent="100" FirstStatementLine="129" />
+        <Method Name="ShutdownProtected()" CoveredStatements="7" TotalStatements="11" CoveragePercent="64" FirstStatementLine="116" />
+        <Method Name="UpdateCpuWidget(AlfredProgressBarWidget,MetricProviderBase,String)" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="209" />
+        <Method Name="UpdateProtected()" CoveredStatements="6" TotalStatements="13" CoveragePercent="46" FirstStatementLine="183" />
+      </Type>
+      <Type Name="DiskMonitorModule" CoveredStatements="33" TotalStatements="40" CoveragePercent="83">
+        <Method Name=".ctor(IPlatformProvider,IMetricProviderFactory)" CoveredStatements="9" TotalStatements="9" CoveragePercent="100" FirstStatementLine="46" />
+        <Method Name="CreatePercentWidget(WidgetCreationParameters)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="105" />
+        <Method Name="Dispose()" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="93" />
+        <Method Name="get_Name()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="68" />
+        <Method Name="get_ReadUtilization()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="77" />
+        <Method Name="get_WriteUtilization()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="86" />
+        <Method Name="InitializeProtected(IAlfred)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="130" />
+        <Method Name="ShutdownProtected()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="120" />
+        <Method Name="UpdateProtected()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="139" />
+      </Type>
+      <Type Name="MemoryMonitorModule" CoveredStatements="18" TotalStatements="24" CoveragePercent="75">
+        <Method Name=".ctor(IPlatformProvider,IMetricProviderFactory)" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="41" />
+        <Method Name="Dispose()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="81" />
+        <Method Name="get_MemoryUtilization()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="74" />
+        <Method Name="get_Name()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="65" />
+        <Method Name="InitializeProtected(IAlfred)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="98" />
+        <Method Name="ShutdownProtected()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="89" />
+        <Method Name="UpdateProtected()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="106" />
+      </Type>
+      <Type Name="MetricProviderBase" CoveredStatements="5" TotalStatements="8" CoveragePercent="63">
+        <Method Name=".ctor(String)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="24" />
+        <Method Name="get_Name()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="34" />
+        <Method Name="NextValue()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="41" />
+      </Type>
+      <Type Name="Resources" CoveredStatements="23" TotalStatements="41" CoveragePercent="56">
+        <Method Name=".ctor()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="32" />
+        <Method Name="get_CpuMonitorModule_Cpu_Label_Format()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="67" />
+        <Method Name="get_CpuMonitorModule_Name()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="76" />
+        <Method Name="get_Culture()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="55" />
+        <Method Name="get_DiskMonitorName()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="85" />
+        <Method Name="get_DiskReadLabel()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="94" />
+        <Method Name="get_DiskWriteLabel()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="103" />
+        <Method Name="get_MemoryMonitorModule_LabelName()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="112" />
+        <Method Name="get_MemoryMonitorModule_Name()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="121" />
+        <Method Name="get_ResourceManager()" CoveredStatements="8" TotalStatements="8" CoveragePercent="100" FirstStatementLine="40" />
+        <Method Name="get_SystemMonitoringSystem_Name()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="130" />
+        <Method Name="set_Culture(CultureInfo)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="58" />
+      </Type>
+      <Type Name="SystemMonitoringSubsystem" CoveredStatements="49" TotalStatements="59" CoveragePercent="83">
+        <Method Name=".ctor(IPlatformProvider,IMetricProviderFactory)" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="48" />
+        <Method Name="Dispose()" CoveredStatements="0" TotalStatements="5" CoveragePercent="0" FirstStatementLine="84" />
+        <Method Name="get_Id()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="170" />
+        <Method Name="get_Name()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="77" />
+        <Method Name="GetStatusText(String)" CoveredStatements="22" TotalStatements="24" CoveragePercent="92" FirstStatementLine="112" />
+        <Method Name="ProcessAlfredCommand(ChatCommand,AlfredCommandResult)" CoveredStatements="7" TotalStatements="10" CoveragePercent="70" FirstStatementLine="99" />
+        <Method Name="RegisterControls()" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="61" />
+      </Type>
+      <Type Name="SystemMonitorModule" CoveredStatements="14" TotalStatements="26" CoveragePercent="54">
+        <Method Name=".ctor(IPlatformProvider,IMetricProviderFactory)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="35" />
+        <Method Name="get_MetricProvider()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="93" />
+        <Method Name="GetNextCounterValueSafe(MetricProviderBase)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="47" />
+        <Method Name="GetNextCounterValueSafe(MetricProviderBase,Single)" CoveredStatements="4" TotalStatements="16" CoveragePercent="25" FirstStatementLine="58" />
+      </Type>
+      <Type Name="ValueMetricProvider" CoveredStatements="13" TotalStatements="17" CoveragePercent="76">
+        <Method Name=".ctor(ValueMetricProviderFactory,String,Nullable&lt;Single&gt;)" CoveredStatements="6" TotalStatements="8" CoveragePercent="75" FirstStatementLine="37" />
+        <Method Name="get_Factory()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="53" />
+        <Method Name="get_Value()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="62" />
+        <Method Name="NextValue()" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="71" />
+        <Method Name="set_Value(Nullable&lt;Single&gt;)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="63" />
+      </Type>
+      <Type Name="ValueMetricProviderFactory" CoveredStatements="22" TotalStatements="22" CoveragePercent="100">
+        <Method Name=".ctor()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="29" />
+        <Method Name="Build(String,String,String)" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="72" />
+        <Method Name="get_CategoryInstanceNameMappings()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="59" />
+        <Method Name="get_DefaultValue()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="40" />
+        <Method Name="get_Providers()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="49" />
+        <Method Name="GetCategoryInstanceNames(String)" CoveredStatements="8" TotalStatements="8" CoveragePercent="100" FirstStatementLine="88" />
+        <Method Name="set_DefaultValue(Single)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="40" />
+      </Type>
+    </Namespace>
+  </Assembly>
+  <Assembly Name="MattEland.Ani.Alfred.Core.Speech" CoveredStatements="78" TotalStatements="136" CoveragePercent="57">
+    <Namespace Name="MattEland.Ani.Alfred.Core.Speech" CoveredStatements="78" TotalStatements="136" CoveragePercent="57">
+      <Type Name="AlfredSpeechConsole" CoveredStatements="16" TotalStatements="40" CoveragePercent="40">
+        <Method Name=".ctor(IConsole)" CoveredStatements="8" TotalStatements="11" CoveragePercent="73" FirstStatementLine="83" />
+        <Method Name="Dispose()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="123" />
+        <Method Name="get_EnableSpeech()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="83" />
+        <Method Name="get_Events()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="76" />
+        <Method Name="get_SpeechEnabledLogLevels()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="65" />
+        <Method Name="Log(String,String,LogLevel)" CoveredStatements="6" TotalStatements="18" CoveragePercent="33" FirstStatementLine="92" />
+        <Method Name="set_EnableSpeech(Boolean)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="83" />
+      </Type>
+      <Type Name="AlfredSpeechProvider" CoveredStatements="42" TotalStatements="61" CoveragePercent="69">
+        <Method Name=".ctor(IConsole)" CoveredStatements="19" TotalStatements="24" CoveragePercent="79" FirstStatementLine="39" />
+        <Method Name="Dispose()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="90" />
+        <Method Name="LogDetectedVoice(IConsole,InstalledVoice)" CoveredStatements="11" TotalStatements="14" CoveragePercent="79" FirstStatementLine="128" />
+        <Method Name="LogInstalledVoices(IConsole)" CoveredStatements="12" TotalStatements="14" CoveragePercent="86" FirstStatementLine="103" />
+        <Method Name="Say(String)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="157" />
+      </Type>
+      <Type Name="Resources" CoveredStatements="20" TotalStatements="35" CoveragePercent="57">
+        <Method Name=".ctor()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="32" />
+        <Method Name="get_Culture()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="55" />
+        <Method Name="get_FindVoiceModules()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="67" />
+        <Method Name="get_InitializingSpeechModule()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="76" />
+        <Method Name="get_ResourceManager()" CoveredStatements="8" TotalStatements="8" CoveragePercent="100" FirstStatementLine="40" />
+        <Method Name="get_UnknownVoiceFound()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="85" />
+        <Method Name="get_UsingUnknownVoice()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="94" />
+        <Method Name="get_UsingVoiceLog()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="103" />
+        <Method Name="get_VoiceFoundList()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="112" />
+        <Method Name="set_Culture(CultureInfo)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="58" />
+      </Type>
+    </Namespace>
+  </Assembly>
+  <Assembly Name="MattEland.Ani.Alfred.PresentationShared" CoveredStatements="181" TotalStatements="418" CoveragePercent="43">
+    <Namespace Name="MattEland.Ani.Alfred.PresentationShared.Commands" CoveredStatements="70" TotalStatements="157" CoveragePercent="45">
+      <Type Name="ApplicationManager" CoveredStatements="61" TotalStatements="120" CoveragePercent="51">
+        <Type Name="&lt;get_RootNodes&gt;d__30" CoveredStatements="3" TotalStatements="3" CoveragePercent="100">
+          <Method Name="MoveNext()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="237" />
+        </Type>
+        <Method Name=".ctor(Boolean)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="77" />
+        <Method Name=".ctor(IPlatformProvider,Boolean)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="93" />
+        <Method Name=".ctor(IPlatformProvider,IUserInterfaceDirector,Boolean)" CoveredStatements="11" TotalStatements="13" CoveragePercent="85" FirstStatementLine="109" />
+        <Method Name=".ctor(IUserInterfaceDirector,Boolean)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="68" />
+        <Method Name="&lt;InitializeUpdatePump&gt;b__37_0(Object,EventArgs)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="362" />
+        <Method Name="Dispose()" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="248" />
+        <Method Name="get_Alfred()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="187" />
+        <Method Name="get_Console()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="199" />
+        <Method Name="get_EnableSpeech()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="222" />
+        <Method Name="get_Locale()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="210" />
+        <Method Name="get_ShellManager()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="172" />
+        <Method Name="get_UserInterfaceDirector()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="145" />
+        <Method Name="InitializeConsole(IPlatformProvider)" CoveredStatements="8" TotalStatements="10" CoveragePercent="80" FirstStatementLine="262" />
+        <Method Name="InitializeSubsystems(IPlatformProvider)" CoveredStatements="14" TotalStatements="22" CoveragePercent="64" FirstStatementLine="285" />
+        <Method Name="InitializeUpdatePump()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="358" />
+        <Method Name="set_EnableSpeech(Boolean)" CoveredStatements="4" TotalStatements="7" CoveragePercent="57" FirstStatementLine="224" />
+        <Method Name="set_ShellManager(ShellCommandManager)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="174" />
+        <Method Name="set_UserInterfaceDirector(IUserInterfaceDirector)" CoveredStatements="3" TotalStatements="11" CoveragePercent="27" FirstStatementLine="150" />
+        <Method Name="Start()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="341" />
+        <Method Name="Stop()" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="349" />
+        <Method Name="Update()" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="332" />
+      </Type>
+      <Type Name="ShellCommandManager" CoveredStatements="0" TotalStatements="22" CoveragePercent="0">
+        <Method Name=".ctor(IUserInterfaceDirector,AlfredApplication)" CoveredStatements="0" TotalStatements="11" CoveragePercent="0" FirstStatementLine="38" />
+        <Method Name="HandleNavigationCommand(ShellCommand)" CoveredStatements="0" TotalStatements="5" CoveragePercent="0" FirstStatementLine="76" />
+        <Method Name="ProcessShellCommand(ShellCommand)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="58" />
+      </Type>
+      <Type Name="XamlClientCommand" CoveredStatements="3" TotalStatements="6" CoveragePercent="50">
+        <Method Name=".ctor()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="24" />
+        <Method Name=".ctor(Action)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="32" />
+      </Type>
+      <Type Name="XamlPlatformProvider" CoveredStatements="6" TotalStatements="9" CoveragePercent="67">
+        <Method Name="CreateCollection&lt;T&gt;()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="28" />
+        <Method Name="CreateCommand()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="37" />
+        <Method Name="CreateCommand(Action)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="47" />
+      </Type>
+    </Namespace>
+    <Namespace Name="MattEland.Ani.Alfred.PresentationShared.Controls" CoveredStatements="90" TotalStatements="102" CoveragePercent="88">
+      <Type Name="ChatPane" CoveredStatements="29" TotalStatements="36" CoveragePercent="81">
+        <Method Name=".ctor()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="32" />
+        <Method Name="HandleSubmitClicked()" CoveredStatements="7" TotalStatements="11" CoveragePercent="64" FirstStatementLine="59" />
+        <Method Name="InitializeComponent()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="1" />
+        <Method Name="OnSubmitClicked(Object,RoutedEventArgs)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="51" />
+        <Method Name="SendChatMessage(IChatProvider,String)" CoveredStatements="14" TotalStatements="14" CoveragePercent="100" FirstStatementLine="84" />
+        <Method Name="SimulateLoadedEvent()" CoveredStatements="2" TotalStatements="2" CoveragePercent="100" FirstStatementLine="41" />
+        <Method Name="System.Windows.Markup.IComponentConnector.Connect(Int32,Object)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="39" />
+      </Type>
+      <Type Name="ExplorerControl" CoveredStatements="26" TotalStatements="26" CoveragePercent="100">
+        <Method Name=".cctor()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="49" />
+        <Method Name=".ctor()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="31" />
+        <Method Name=".ctor(IEnumerable&lt;IPropertyProvider&gt;)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="40" />
+        <Method Name="get_RootNodes()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="82" />
+        <Method Name="HandleRootNodesChanged()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="90" />
+        <Method Name="InitializeComponent()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="1" />
+        <Method Name="OnRootNodesChanged(DependencyObject,DependencyPropertyChangedEventArgs)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="68" />
+        <Method Name="set_RootNodes(IEnumerable&lt;IPropertyProvider&gt;)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="83" />
+        <Method Name="SimulateLoadedEvent()" CoveredStatements="2" TotalStatements="2" CoveragePercent="100" FirstStatementLine="99" />
+      </Type>
+      <Type Name="RootPagesControl" CoveredStatements="35" TotalStatements="40" CoveragePercent="88">
+        <Method Name=".ctor()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="31" />
+        <Method Name=".ctor(ApplicationManager)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="40" />
+        <Method Name="get_AppManager()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="57" />
+        <Method Name="HandleControlLoaded(Object,RoutedEventArgs)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="97" />
+        <Method Name="HandlePageNavigationCommand(ShellCommand)" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="107" />
+        <Method Name="InitializeComponent()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="1" />
+        <Method Name="SelectFirstTab()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="85" />
+        <Method Name="set_AppManager(ApplicationManager)" CoveredStatements="11" TotalStatements="11" CoveragePercent="100" FirstStatementLine="59" />
+        <Method Name="SimulateLoadedEvent()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="120" />
+        <Method Name="System.Windows.Markup.IComponentConnector.Connect(Int32,Object)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="7" />
+      </Type>
+    </Namespace>
+    <Namespace Name="MattEland.Ani.Alfred.PresentationShared.Converters" CoveredStatements="0" TotalStatements="113" CoveragePercent="0">
+      <Type Name="LogLevelToBrushConverter" CoveredStatements="0" TotalStatements="94" CoveragePercent="0">
+        <Method Name=".cctor()" CoveredStatements="0" TotalStatements="7" CoveragePercent="0" FirstStatementLine="32" />
+        <Method Name="Convert(Object,Type,Object,CultureInfo)" CoveredStatements="0" TotalStatements="12" CoveragePercent="0" FirstStatementLine="280" />
+        <Method Name="ConvertBack(Object,Type,Object,CultureInfo)" CoveredStatements="0" TotalStatements="2" CoveragePercent="0" FirstStatementLine="318" />
+        <Method Name="get_ChatResponseBrush()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="252" />
+        <Method Name="get_DefaultBrush()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="156" />
+        <Method Name="get_ErrorBrush()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="132" />
+        <Method Name="get_InfoBrush()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="204" />
+        <Method Name="get_UserInputBrush()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="228" />
+        <Method Name="get_VerboseBrush()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="110" />
+        <Method Name="get_WarningBrush()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="180" />
+        <Method Name="GetBrushForLevel(LogLevel)" CoveredStatements="0" TotalStatements="10" CoveragePercent="0" FirstStatementLine="329" />
+        <Method Name="set_ChatResponseBrush(Brush)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="254" />
+        <Method Name="set_DefaultBrush(Brush)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="158" />
+        <Method Name="set_ErrorBrush(Brush)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="134" />
+        <Method Name="set_InfoBrush(Brush)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="206" />
+        <Method Name="set_UserInputBrush(Brush)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="230" />
+        <Method Name="set_VerboseBrush(Brush)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="112" />
+        <Method Name="set_WarningBrush(Brush)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="182" />
+      </Type>
+      <Type Name="VisibilityConverter" CoveredStatements="0" TotalStatements="19" CoveragePercent="0">
+        <Method Name="Convert(Object,Type,Object,CultureInfo)" CoveredStatements="0" TotalStatements="15" CoveragePercent="0" FirstStatementLine="36" />
+        <Method Name="ConvertBack(Object,Type,Object,CultureInfo)" CoveredStatements="0" TotalStatements="2" CoveragePercent="0" FirstStatementLine="68" />
+        <Method Name="get_Invert()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="23" />
+        <Method Name="set_Invert(Boolean)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="23" />
+      </Type>
+    </Namespace>
+    <Namespace Name="MattEland.Ani.Alfred.PresentationShared.Helpers" CoveredStatements="21" TotalStatements="46" CoveragePercent="46">
+      <Type Name="SelectionHelper" CoveredStatements="21" TotalStatements="27" CoveragePercent="78">
+        <Type Name="&lt;&gt;c__DisplayClass0_0" CoveredStatements="1" TotalStatements="1" CoveragePercent="100">
+          <Method Name="&lt;SelectItemById&gt;b__0(IHasIdentifier)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="50" />
+        </Type>
+        <Method Name="SelectFirstItem(Selector)" CoveredStatements="7" TotalStatements="9" CoveragePercent="78" FirstStatementLine="68" />
+        <Method Name="SelectItemById(Selector,String)" CoveredStatements="13" TotalStatements="17" CoveragePercent="76" FirstStatementLine="35" />
+      </Type>
+      <Type Name="SharedResourceDictionary" CoveredStatements="0" TotalStatements="19" CoveragePercent="0">
+        <Method Name=".cctor()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="31" />
+        <Method Name="get_Source()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="50" />
+        <Method Name="set_Source(Uri)" CoveredStatements="0" TotalStatements="15" CoveragePercent="0" FirstStatementLine="53" />
+      </Type>
+    </Namespace>
+  </Assembly>
+  <Assembly Name="MattEland.Ani.Alfred.Tests" CoveredStatements="1467" TotalStatements="1542" CoveragePercent="95">
     <Namespace Name="MattEland.Ani.Alfred.Tests" CoveredStatements="174" TotalStatements="192" CoveragePercent="91">
       <Type Name="AlfredProviderTests" CoveredStatements="144" TotalStatements="153" CoveragePercent="94">
         <Type Name="&lt;&gt;c" CoveredStatements="2" TotalStatements="2" CoveragePercent="100">
@@ -101,22 +1394,22 @@
         <Method Name="set_Engine(ChatEngine)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="110" />
       </Type>
       <Type Name="ConversationTests" CoveredStatements="62" TotalStatements="62" CoveragePercent="100">
-        <Method Name="AskingForCurrentDayContainsCurrentDay()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="86" />
-        <Method Name="AskingForCurrentTimeContainsCurrentTime()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="103" />
-        <Method Name="AskingForCurrentTimeRevealsRedirectedTemplate()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="120" />
-        <Method Name="ChatCoreTests(String,String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="44" />
-        <Method Name="ChatEngineHasNodes()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="132" />
-        <Method Name="ChatRedirectTests(String,String)" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="70" />
-        <Method Name="ChatTemplateTests(String,String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="61" />
-        <Method Name="FirstPersonSubstitutionsHasEntries()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="138" />
-        <Method Name="GenderSubstitutionsHasEntries()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="146" />
-        <Method Name="GlobalSettingsHaveEntries()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="154" />
-        <Method Name="HiShouldNotResultInFallback()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="169" />
-        <Method Name="SecondPersonSubstitutionsHasEntries()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="177" />
-        <Method Name="SetUp()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="37" />
-        <Method Name="StartupLeavesLastInputClear()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="185" />
-        <Method Name="StartupResultsInGreeting()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="195" />
-        <Method Name="SubstitutionsHasEntries()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="206" />
+        <Method Name="AskingForCurrentDayContainsCurrentDay()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="88" />
+        <Method Name="AskingForCurrentTimeContainsCurrentTime()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="105" />
+        <Method Name="AskingForCurrentTimeRevealsRedirectedTemplate()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="122" />
+        <Method Name="ChatCoreTests(String,String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="46" />
+        <Method Name="ChatEngineHasNodes()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="134" />
+        <Method Name="ChatRedirectTests(String,String)" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="72" />
+        <Method Name="ChatTemplateTests(String,String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="63" />
+        <Method Name="FirstPersonSubstitutionsHasEntries()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="140" />
+        <Method Name="GenderSubstitutionsHasEntries()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="148" />
+        <Method Name="GlobalSettingsHaveEntries()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="156" />
+        <Method Name="HiShouldNotResultInFallback()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="171" />
+        <Method Name="SecondPersonSubstitutionsHasEntries()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="179" />
+        <Method Name="SetUp()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="39" />
+        <Method Name="StartupLeavesLastInputClear()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="187" />
+        <Method Name="StartupResultsInGreeting()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="197" />
+        <Method Name="SubstitutionsHasEntries()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="208" />
       </Type>
       <Type Name="RedirectTagHandlerTests" CoveredStatements="27" TotalStatements="27" CoveragePercent="100">
         <Method Name="RedirectOnNoTextDoesNotSpawnSecondRequest()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="49" />
@@ -282,7 +1575,7 @@
         <Method Name="UpdateProtected()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="142" />
       </Type>
     </Namespace>
-    <Namespace Name="MattEland.Ani.Alfred.Tests.Modules" CoveredStatements="290" TotalStatements="296" CoveragePercent="98">
+    <Namespace Name="MattEland.Ani.Alfred.Tests.Modules" CoveredStatements="296" TotalStatements="300" CoveragePercent="99">
       <Type Name="AlfredPowerModuleTests" CoveredStatements="100" TotalStatements="104" CoveragePercent="96">
         <Method Name="AfterShutdownSystemWidgetIsStillPresentInModule()" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="86" />
         <Method Name="AtInitialStateInitializeIsVisible()" CoveredStatements="10" TotalStatements="10" CoveragePercent="100" FirstStatementLine="99" />
@@ -300,8 +1593,9 @@
         <Method Name="WhenOnlineTheInitializeButtonDoesNotAppear()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="181" />
         <Method Name="WhenOnlineTheShutdownButtonAppears()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="169" />
       </Type>
-      <Type Name="ModuleTests" CoveredStatements="6" TotalStatements="8" CoveragePercent="75">
-        <Method Name="ModulesWithWidgetsShouldListAllChildWidgets()" CoveredStatements="6" TotalStatements="8" CoveragePercent="75" FirstStatementLine="30" />
+      <Type Name="ModuleTests" CoveredStatements="12" TotalStatements="12" CoveragePercent="100">
+        <Method Name="BuildWidgetParams(String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="36" />
+        <Method Name="ModulesWithWidgetsShouldListAllChildWidgets()" CoveredStatements="9" TotalStatements="9" CoveragePercent="100" FirstStatementLine="48" />
       </Type>
       <Type Name="TimeModuleTests" CoveredStatements="184" TotalStatements="184" CoveragePercent="100">
         <Type Name="&lt;&gt;c" CoveredStatements="3" TotalStatements="3" CoveragePercent="100">
@@ -358,38 +1652,44 @@
     </Namespace>
     <Namespace Name="MattEland.Ani.Alfred.Tests.Shell" CoveredStatements="11" TotalStatements="11" CoveragePercent="100">
       <Type Name="ShellTagHandlerTests" CoveredStatements="11" TotalStatements="11" CoveragePercent="100">
-        <Method Name="SetUp()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="40" />
-        <Method Name="ShellHandlerHasAppropriateAttributes()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="48" />
+        <Method Name="SetUp()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="39" />
+        <Method Name="ShellHandlerHasAppropriateAttributes()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="47" />
       </Type>
     </Namespace>
-    <Namespace Name="MattEland.Ani.Alfred.Tests.Subsystems" CoveredStatements="194" TotalStatements="194" CoveragePercent="100">
+    <Namespace Name="MattEland.Ani.Alfred.Tests.Subsystems" CoveredStatements="219" TotalStatements="219" CoveragePercent="100">
       <Type Name="AlfredCoreSubsystemTests" CoveredStatements="70" TotalStatements="70" CoveragePercent="100">
         <Type Name="&lt;&gt;c" CoveredStatements="7" TotalStatements="7" CoveragePercent="100">
-          <Method Name="&lt;AssertExpectedModules&gt;b__10_0(IAlfredModule)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="133" />
-          <Method Name="&lt;AssertExpectedModules&gt;b__10_1(IAlfredModule)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="134" />
-          <Method Name="&lt;AssertExpectedModules&gt;b__10_2(IAlfredModule)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="135" />
-          <Method Name="&lt;AssertExpectedModules&gt;b__10_3(IAlfredModule)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="136" />
-          <Method Name="&lt;ControlPageIsPresentInAlfredAfterInitialization&gt;b__4_0(IAlfredPage)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="64" />
-          <Method Name="&lt;EventLogPageIsNotPresentInAlfredAfterInitializationWhenNoConsoleIsProvided&gt;b__6_0(IAlfredPage)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="89" />
-          <Method Name="&lt;EventLogPageIsPresentInAlfredAfterInitializationWhenConsoleIsProvided&gt;b__5_0(IAlfredPage)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="78" />
+          <Method Name="&lt;AssertExpectedModules&gt;b__3_0(IAlfredModule)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="50" />
+          <Method Name="&lt;AssertExpectedModules&gt;b__3_1(IAlfredModule)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="51" />
+          <Method Name="&lt;AssertExpectedModules&gt;b__3_2(IAlfredModule)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="52" />
+          <Method Name="&lt;AssertExpectedModules&gt;b__3_3(IAlfredModule)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="54" />
+          <Method Name="&lt;ControlPageIsPresentInAlfredAfterInitialization&gt;b__7_0(IAlfredPage)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="107" />
+          <Method Name="&lt;EventLogPageIsNotPresentInAlfredAfterInitializationWhenNoConsoleIsProvided&gt;b__8_0(IAlfredPage)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="118" />
+          <Method Name="&lt;EventLogPageIsPresentInAlfredAfterInitializationWhenConsoleIsProvided&gt;b__9_0(IAlfredPage)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="132" />
         </Type>
-        <Type Name="&lt;&gt;c__DisplayClass11_0&lt;T&gt;" CoveredStatements="1" TotalStatements="1" CoveragePercent="100">
-          <Method Name="&lt;FindPage&gt;b__0(IAlfredPage)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="148" />
+        <Type Name="&lt;&gt;c__DisplayClass4_0&lt;T&gt;" CoveredStatements="1" TotalStatements="1" CoveragePercent="100">
+          <Method Name="&lt;FindPage&gt;b__0(IAlfredPage)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="67" />
         </Type>
-        <Method Name="AlfredContainsAPageAfterRegistration()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="48" />
-        <Method Name="AssertExpectedModules(IEnumerable&lt;IAlfredModule&gt;)" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="131" />
-        <Method Name="ControlPageContainsCorrectModules()" CoveredStatements="8" TotalStatements="8" CoveragePercent="100" FirstStatementLine="117" />
-        <Method Name="ControlPageIsPresentInAlfredAfterInitialization()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="59" />
-        <Method Name="EventLogPageIsNotPresentInAlfredAfterInitializationWhenNoConsoleIsProvided()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="84" />
-        <Method Name="EventLogPageIsPresentInAlfredAfterInitializationWhenConsoleIsProvided()" CoveredStatements="8" TotalStatements="8" CoveragePercent="100" FirstStatementLine="70" />
-        <Method Name="FindPage&lt;T&gt;(String)" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="147" />
-        <Method Name="SetUp()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="33" />
-        <Method Name="SubsystemCanBeRegisteredInAlfred()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="95" />
-        <Method Name="SubSystemContainsAPageAfterRegistration()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="106" />
+        <Method Name="AlfredContainsAPageAfterRegistration()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="75" />
+        <Method Name="AssertExpectedModules(IEnumerable&lt;IAlfredModule&gt;)" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="48" />
+        <Method Name="ControlPageContainsCorrectModules()" CoveredStatements="8" TotalStatements="8" CoveragePercent="100" FirstStatementLine="86" />
+        <Method Name="ControlPageIsPresentInAlfredAfterInitialization()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="101" />
+        <Method Name="EventLogPageIsNotPresentInAlfredAfterInitializationWhenNoConsoleIsProvided()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="113" />
+        <Method Name="EventLogPageIsPresentInAlfredAfterInitializationWhenConsoleIsProvided()" CoveredStatements="8" TotalStatements="8" CoveragePercent="100" FirstStatementLine="124" />
+        <Method Name="FindPage&lt;T&gt;(String)" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="66" />
+        <Method Name="SetUp()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="34" />
+        <Method Name="SubsystemCanBeRegisteredInAlfred()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="138" />
+        <Method Name="SubSystemContainsAPageAfterRegistration()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="149" />
       </Type>
-      <Type Name="ChatSubsystemTests" CoveredStatements="7" TotalStatements="7" CoveragePercent="100">
-        <Method Name="ChatSubsystemListsCorrectNodes(String)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="53" />
-        <Method Name="SetUp()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="36" />
+      <Type Name="ChatSubsystemTests" CoveredStatements="32" TotalStatements="32" CoveragePercent="100">
+        <Type Name="&lt;&gt;c" CoveredStatements="2" TotalStatements="2" CoveragePercent="100">
+          <Method Name="&lt;ChatHistoryHasNodesAfterConversation&gt;b__3_0(IAlfredSubsystem)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="73" />
+          <Method Name="&lt;ChatHistoryHasNodesAfterConversation&gt;b__3_1(IPropertyProvider)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="104" />
+        </Type>
+        <Method Name="ChatHistoryHasNodesAfterConversation()" CoveredStatements="18" TotalStatements="18" CoveragePercent="100" FirstStatementLine="69" />
+        <Method Name="ChatHistoryHasNoNodesInitially()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="115" />
+        <Method Name="ChatSubsystemListsCorrectNodes(String)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="55" />
+        <Method Name="SetUp()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="38" />
       </Type>
       <Type Name="MindExplorerSubsystemTests" CoveredStatements="46" TotalStatements="46" CoveragePercent="100">
         <Type Name="&lt;&gt;c" CoveredStatements="1" TotalStatements="1" CoveragePercent="100">
@@ -461,8 +1761,8 @@
       </Type>
     </Namespace>
   </Assembly>
-  <Assembly Name="MattEland.Common" CoveredStatements="65" TotalStatements="174" CoveragePercent="37">
-    <Namespace Name="MattEland.Common" CoveredStatements="65" TotalStatements="174" CoveragePercent="37">
+  <Assembly Name="MattEland.Common" CoveredStatements="65" TotalStatements="178" CoveragePercent="37">
+    <Namespace Name="MattEland.Common" CoveredStatements="65" TotalStatements="178" CoveragePercent="37">
       <Type Name="AssemblyHelper" CoveredStatements="24" TotalStatements="41" CoveragePercent="59">
         <Type Name="&lt;&gt;c__DisplayClass1_0" CoveredStatements="1" TotalStatements="1" CoveragePercent="100">
           <Method Name="&lt;GetTypesWithAttributes&gt;b__0(Type)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="74" />
@@ -484,9 +1784,9 @@
         <Method Name="IsWithinBoundsOf&lt;T&gt;(Int32,IList&lt;T&gt;)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="51" />
         <Method Name="Pluralize(Int32,String,String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="69" />
       </Type>
-      <Type Name="ObjectExtensions" CoveredStatements="0" TotalStatements="11" CoveragePercent="0">
-        <Method Name="AsNonNullString(Object)" CoveredStatements="0" TotalStatements="7" CoveragePercent="0" FirstStatementLine="41" />
-        <Method Name="TryDispose(Object)" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="29" />
+      <Type Name="ObjectExtensions" CoveredStatements="0" TotalStatements="12" CoveragePercent="0">
+        <Method Name="AsNonNullString(Object)" CoveredStatements="0" TotalStatements="7" CoveragePercent="0" FirstStatementLine="45" />
+        <Method Name="TryDispose(Object)" CoveredStatements="0" TotalStatements="5" CoveragePercent="0" FirstStatementLine="31" />
       </Type>
       <Type Name="Resources" CoveredStatements="11" TotalStatements="23" CoveragePercent="48">
         <Method Name=".ctor()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="32" />
@@ -496,18 +1796,18 @@
         <Method Name="get_ResourceManager()" CoveredStatements="8" TotalStatements="8" CoveragePercent="100" FirstStatementLine="40" />
         <Method Name="set_Culture(CultureInfo)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="58" />
       </Type>
-      <Type Name="StringExtensions" CoveredStatements="15" TotalStatements="54" CoveragePercent="28">
-        <Method Name="AppendConditional(StringBuilder,String,Boolean)" CoveredStatements="0" TotalStatements="9" CoveragePercent="0" FirstStatementLine="149" />
-        <Method Name="AsDouble(String,Double)" CoveredStatements="0" TotalStatements="7" CoveragePercent="0" FirstStatementLine="126" />
-        <Method Name="AsInt(String,Int32)" CoveredStatements="0" TotalStatements="7" CoveragePercent="0" FirstStatementLine="106" />
-        <Method Name="Format(IFormattable,CultureInfo,String)" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="172" />
-        <Method Name="ForUser(IFormattable)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="186" />
+      <Type Name="StringExtensions" CoveredStatements="15" TotalStatements="57" CoveragePercent="26">
+        <Method Name="AppendConditional(StringBuilder,String,Boolean)" CoveredStatements="0" TotalStatements="12" CoveragePercent="0" FirstStatementLine="151" />
+        <Method Name="AsDouble(String,Double)" CoveredStatements="0" TotalStatements="7" CoveragePercent="0" FirstStatementLine="127" />
+        <Method Name="AsInt(String,Int32)" CoveredStatements="0" TotalStatements="7" CoveragePercent="0" FirstStatementLine="107" />
+        <Method Name="Format(IFormattable,IFormatProvider,String)" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="177" />
+        <Method Name="ForUser(IFormattable)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="191" />
         <Method Name="HasText(String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="30" />
         <Method Name="IfNull(String,String)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="78" />
-        <Method Name="Invariant(IFormattable)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="198" />
+        <Method Name="Invariant(IFormattable)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="203" />
         <Method Name="IsEmpty(String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="41" />
         <Method Name="IsNullOrWhitespace(String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="52" />
-        <Method Name="Matches(String,String,StringComparison)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="95" />
+        <Method Name="Matches(String,String,StringComparison)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="96" />
         <Method Name="NonNull(String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="64" />
       </Type>
     </Namespace>

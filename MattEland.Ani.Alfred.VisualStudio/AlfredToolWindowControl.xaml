@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:helpers="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Helpers;assembly=MattEland.Ani.Alfred.PresentationShared"
-             xmlns:controls="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Controls;assembly=MattEland.Ani.Alfred.PresentationShared"
              xmlns:definitions="clr-namespace:MattEland.Ani.Alfred.Core.Definitions;assembly=MattEland.Ani.Alfred.Core"
              xmlns:commands="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Commands;assembly=MattEland.Ani.Alfred.PresentationShared"
              Loaded="OnWindowLoaded"
@@ -31,7 +30,7 @@
 
         <!-- Tabbed Content Regions -->
         <!-- TODO: Follow VS styles -->
-        <TabControl x:Name="tabPages"
+        <TabControl x:Name="TabPages"
                     TabStripPlacement="Bottom"
                     Margin="2"
                     ItemsSource="{Binding Alfred.RootPages}">

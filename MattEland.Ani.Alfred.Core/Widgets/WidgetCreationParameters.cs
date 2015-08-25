@@ -16,7 +16,7 @@ using MattEland.Ani.Alfred.Core.Console;
 namespace MattEland.Ani.Alfred.Core.Widgets
 {
     /// <summary>
-    ///     Contains common parameters needed to create any <see cref="AlfredWidget" />
+    ///     Contains common parameters needed to create any <see cref="WidgetBase" />
     /// </summary>
     public class WidgetCreationParameters
     {
@@ -41,21 +41,21 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         ///     Gets the name of this instance of the widget.
         /// </summary>
         /// <value>The name.</value>
-        [NotNull]
+        [NotNull, UsedImplicitly]
         public string Name { get; }
 
         /// <summary>
         ///     Gets the logging console.
         /// </summary>
         /// <value>The console.</value>
-        [CanBeNull]
+        [CanBeNull, UsedImplicitly]
         public IConsole Console { get; }
 
         /// <summary>
         ///     Gets the locale.
         /// </summary>
         /// <value>The locale.</value>
-        [NotNull]
+        [NotNull, UsedImplicitly]
         public CultureInfo Locale { get; }
     }
 }

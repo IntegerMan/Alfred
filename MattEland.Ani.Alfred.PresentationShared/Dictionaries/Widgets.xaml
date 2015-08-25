@@ -88,7 +88,7 @@
     </DataTemplate>
 
     <!-- Fallback type of widget Template -->
-    <DataTemplate DataType="{x:Type widgets:AlfredWidget}">
+    <DataTemplate DataType="{x:Type widgets:WidgetBase}">
 
         <TextBlock
             Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"

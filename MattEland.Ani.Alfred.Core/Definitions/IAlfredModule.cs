@@ -21,6 +21,6 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         ///     Gets the user interface widgets for the module.
         /// </summary>
         /// <value>The user interface widgets.</value>
-        IEnumerable<AlfredWidget> Widgets { get; }
+        IEnumerable<WidgetBase> Widgets { get; }
     }
 }

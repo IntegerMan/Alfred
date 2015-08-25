@@ -20,7 +20,7 @@ namespace MattEland.Ani.Alfred.Core
     /// <summary>
     ///     A utility class that helps control Alfred's status and monitors the initialization and shutdown processes.
     /// </summary>
-    public sealed class AlfredStatusController : IStatusController
+    internal sealed class AlfredStatusController : IStatusController
     {
         [CanBeNull]
         private IAlfred _alfred;
@@ -28,7 +28,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredStatusController" /> class.
         /// </summary>
-        public AlfredStatusController() : this(null)
+        internal AlfredStatusController() : this(null)
         {
         }
 
@@ -36,7 +36,7 @@ namespace MattEland.Ani.Alfred.Core
         ///     Initializes a new instance of the <see cref="AlfredStatusController" /> class.
         /// </summary>
         /// <param name="alfred">The alfred provider.</param>
-        public AlfredStatusController([CanBeNull] IAlfred alfred)
+        internal AlfredStatusController([CanBeNull] IAlfred alfred)
         {
             Alfred = alfred;
         }

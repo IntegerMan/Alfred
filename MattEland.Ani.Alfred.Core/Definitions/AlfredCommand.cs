@@ -71,6 +71,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         ///     Gets or sets a value indicating whether this command is enabled.
         /// </summary>
         /// <value><c>true</c> if this command is enabled; otherwise, <c>false</c>.</value>
+        [UsedImplicitly]
         public bool IsEnabled
         {
             get { return _isEnabled; }
