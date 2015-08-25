@@ -20,7 +20,7 @@ namespace MattEland.Ani.Alfred.Tests.Controls
     [TestFixture]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "IsExpressionAlwaysTrue")]
-    public class RootPagesControlTests
+    public class RootPagesControlTests : UserInterfaceTestBase
     {
         [NotNull]
         private RootPagesControl _control;
@@ -38,19 +38,15 @@ namespace MattEland.Ani.Alfred.Tests.Controls
             _control = new RootPagesControl(_app);
             _app.Alfred.Initialize();
 
-            // Simulate a page load
-            _control.SimulateLoadedEvent();
+            // Get the control ready for interaction
+            InitializeControl(_control);
         }
 
         /// <summary>
         /// Ensures that the RootPagesControl has a TabControl named TabPages
         /// </summary>
         [Test, STAThread]
-        public void ControlHasTabPages()
-        {
-            Assert.IsNotNull(_control.TabPages);
-            Assert.That(_control.TabPages is TabControl);
-        }
+        public void ControlHasTabPages() { AssertHasTabControl(_control.TabPages); }
 
         /// <summary>
         /// Checks that the control auto-selects the first tab.

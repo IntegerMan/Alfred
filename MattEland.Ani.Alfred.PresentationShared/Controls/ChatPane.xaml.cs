@@ -55,7 +55,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Controls
         /// <summary>
         ///     Handles the submit button click event by sending the current text to the chat provider.
         /// </summary>
-        private void HandleSubmitClicked()
+        public void HandleSubmitClicked()
         {
             // Validate input
             var text = InputText?.Text;

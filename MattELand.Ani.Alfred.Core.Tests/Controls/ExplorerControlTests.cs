@@ -6,7 +6,6 @@ using System.Windows.Controls;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.PresentationShared.Commands;
 using MattEland.Ani.Alfred.PresentationShared.Controls;
 
@@ -17,10 +16,10 @@ namespace MattEland.Ani.Alfred.Tests.Controls
     /// <summary>
     /// Tests related to <see cref="ExplorerControl"/>
     /// </summary>
-    [TestFixture]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "IsExpressionAlwaysTrue")]
-    public class ExplorerControlTests
+    [TestFixture]
+    public class ExplorerControlTests : UserInterfaceTestBase
     {
         [NotNull]
         private ExplorerControl _control;
@@ -38,8 +37,8 @@ namespace MattEland.Ani.Alfred.Tests.Controls
             _control = new ExplorerControl(_app.RootNodes);
             _app.Alfred.Initialize();
 
-            // Simulate a page load
-            _control.SimulateLoadedEvent();
+            // Get the control ready for interaction
+            InitializeControl(_control);
         }
 
         /// <summary>
@@ -48,8 +47,7 @@ namespace MattEland.Ani.Alfred.Tests.Controls
         [Test, STAThread]
         public void ControlHasTreeView()
         {
-            Assert.IsNotNull(_control.TreeHierarchy);
-            Assert.That(_control.TreeHierarchy is TreeView);
+            AssertHasTreeView(_control.TreeHierarchy);
         }
 
 
@@ -59,8 +57,7 @@ namespace MattEland.Ani.Alfred.Tests.Controls
         [Test, STAThread]
         public void ControlHasDataGrid()
         {
-            Assert.IsNotNull(_control.GridProperties);
-            Assert.That(_control.GridProperties is DataGrid);
+            AssertHasDataGrid(_control.GridProperties);
         }
 
         /// <summary>
