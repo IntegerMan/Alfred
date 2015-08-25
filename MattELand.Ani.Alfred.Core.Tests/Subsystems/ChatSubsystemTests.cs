@@ -55,6 +55,22 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
 
             Assert.IsNotNull(providers.Find(name), $"{name} node was missing");
         }
+
+        /// <summary>
+        /// Tests that the chat history explorer node has no child nodes initially.
+        /// </summary>
+        /// <remarks>
+        /// Test ALF-79 for story ALF-62
+        /// </remarks>
+        [Test]
+        public void ChatHistoryHasNoNodesInitially()
+        {
+            var node = _chat.PropertyProviders.Find(ChatHistoryProvider.InstanceDisplayName);
+            Assert.IsNotNull(node, "Could not find Chat History node");
+
+            // Check to see that it has no children.
+            Assert.AreEqual(0, node.PropertyProviders.Count());
+        }
     }
 
 }
