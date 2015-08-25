@@ -1,9 +1,10 @@
 ﻿// ---------------------------------------------------------
 // AlfredEventLogPage.cs
 // 
-// Created on:      08/08/2015 at 7:23 PM
-// Last Modified:   08/09/2015 at 10:03 PM
-// Original author: Matt Eland
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/25/2015 at 12:06 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
@@ -17,7 +18,8 @@ using MattEland.Ani.Alfred.Core.Definitions;
 namespace MattEland.Ani.Alfred.Core.Pages
 {
     /// <summary>
-    ///     An event logging page. This will need a special client-side implementation to list out the details
+    ///     An event logging page. This will need a special client-side implementation to list out the
+    ///     details
     /// </summary>
     public sealed class AlfredEventLogPage : AlfredPage
     {
@@ -30,12 +32,10 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <param name="console">The console.</param>
         /// <param name="name">The name.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public AlfredEventLogPage([NotNull] IConsole console, [NotNull] string name) : base(name, "Log")
+        public AlfredEventLogPage([NotNull] IConsole console, [NotNull] string name)
+            : base(name, "Log")
         {
-            if (console == null)
-            {
-                throw new ArgumentNullException(nameof(console));
-            }
+            if (console == null) { throw new ArgumentNullException(nameof(console)); }
             _console = console;
         }
 
@@ -45,9 +45,16 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <value>The console.</value>
         [NotNull]
         [UsedImplicitly]
-        public IConsole Console
+        public new IConsole Console
         {
-            get { return _console; }
+            get
+            {
+                /* Use the base console by default, but fallback to this instance's
+                console if no Console is available yet from Alfred. This is useful 
+                for logging during initialization. */
+
+                return base.Console ?? _console;
+            }
         }
 
         /// <summary>
@@ -63,7 +70,8 @@ namespace MattEland.Ani.Alfred.Core.Pages
         }
 
         /// <summary>
-        ///     Gets the children of this component. Depending on the type of component this is, the children will
+        ///     Gets the children of this component. Depending on the type of component this is, the children
+        ///     will
         ///     vary in their own types.
         /// </summary>
         /// <value>The children.</value>
