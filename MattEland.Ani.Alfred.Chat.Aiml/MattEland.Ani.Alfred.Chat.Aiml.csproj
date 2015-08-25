@@ -58,6 +58,7 @@
     <Compile Include="ChatEngineLibrarian.cs" />
     <Compile Include="ChatProcessor.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Utils\NodeEvaluator.cs" />
     <Compile Include="Utils\TextSubstitutionHelper.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>

@@ -2,7 +2,7 @@
 // ChatProcessor.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   08/24/2015 at 1:45 AM
+// Last Modified:   08/25/2015 at 6:15 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -96,21 +96,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                 result.NormalizedPaths.Add(str);
             }
 
-            // Build out SubQueries with appropriate templates based on the paths detected
+            /* Build out SubQueries with appropriate templates based on the paths detected.
+               Note that typically there will only be one path */
+
             foreach (var path in result.NormalizedPaths)
             {
-                // Build out a query based on the path
-                var query = new SubQuery();
+                // This does the bulk of the work of conversation processing
+                var query = EvaluateSubQuery(request, path);
 
-                // Search the node tree for the template most closely matched to this request
-                var template = _chatEngine.RootNode.Evaluate(path,
-                                                             query,
-                                                             request,
-                                                             MatchState.UserInput,
-                                                             new StringBuilder());
-                query.Template = template.NonNull();
-
-                // Now that the query is polished, add it to the subqueries
+                // Now that the query is polished, add it to the collection
                 result.SubQueries.Add(query);
             }
 
@@ -128,6 +122,30 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         }
 
         /// <summary>
+        /// Builds and evaluates a sub query for the request given the specified path.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="sentence">The sentence.</param>
+        /// <returns>The SubQuery.</returns>
+        private SubQuery EvaluateSubQuery([NotNull] Request request, string sentence)
+        {
+            // Build out a query based on the path
+            var query = new SubQuery();
+
+            // Search the node tree for the template most closely matched to this request
+            var evaluator = _chatEngine.RootNode.Evaluator;
+
+            // TODO: It'd be nice to introduce a new class to encapsulate these args
+            var template = evaluator.Evaluate(sentence,
+                                              query,
+                                              request,
+                                              MatchState.UserInput,
+                                              new StringBuilder());
+            query.Template = template.NonNull();
+            return query;
+        }
+
+        /// <summary>
         ///     Processes a chat SubQuery.
         /// </summary>
         /// <param name="request">The request.</param>
@@ -135,9 +153,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <param name="result">The result.</param>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         [SuppressMessage("ReSharper", "CatchAllClause")]
-        private void ProcessSubQuery([NotNull] Request request,
-                                     [NotNull] SubQuery query,
-                                     [NotNull] Result result)
+        private void ProcessSubQuery(
+            [NotNull] Request request,
+            [NotNull] SubQuery query,
+            [NotNull] Result result)
         {
             //- Validate
             if (request == null) { throw new ArgumentNullException(nameof(request)); }
@@ -188,11 +207,12 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <param name="user">The user.</param>
         /// <returns>The textual result of evaluating the node</returns>
         [NotNull]
-        private string ProcessNode([NotNull] XmlElement element,
-                                   [NotNull] SubQuery query,
-                                   [NotNull] Request request,
-                                   [NotNull] Result result,
-                                   [NotNull] User user)
+        private string ProcessNode(
+            [NotNull] XmlElement element,
+            [NotNull] SubQuery query,
+            [NotNull] Request request,
+            [NotNull] Result result,
+            [NotNull] User user)
         {
             //- Validation
             if (element == null) { throw new ArgumentNullException(nameof(element)); }
@@ -243,7 +263,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             return !evaluatedNode.HasChildNodes
                        ? evaluatedNode.InnerXml.NonNull()
                        : ProcessChildNodes(evaluatedNode, user, request, query, result);
-
         }
 
         /// <summary>
@@ -256,11 +275,12 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <param name="result">The result.</param>
         /// <returns>The result of processing each child.</returns>
         [NotNull]
-        private string ProcessChildNodes([NotNull] XmlNode node,
-                                         [NotNull] User user,
-                                         [NotNull] Request request,
-                                         [NotNull] SubQuery query,
-                                         [NotNull] Result result)
+        private string ProcessChildNodes(
+            [NotNull] XmlNode node,
+            [NotNull] User user,
+            [NotNull] Request request,
+            [NotNull] SubQuery query,
+            [NotNull] Result result)
         {
             var sbOutput = new StringBuilder();
 
@@ -280,11 +300,12 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <param name="request">The request.</param>
         /// <param name="query">The query.</param>
         /// <param name="result">The result.</param>
-        private string ProcessChildNode([CanBeNull] XmlNode childNode,
-                                        [NotNull] User user,
-                                        [NotNull] Request request,
-                                        [NotNull] SubQuery query,
-                                        [NotNull] Result result)
+        private string ProcessChildNode(
+            [CanBeNull] XmlNode childNode,
+            [NotNull] User user,
+            [NotNull] Request request,
+            [NotNull] SubQuery query,
+            [NotNull] Result result)
         {
             // If it's XmlText, just return it
             var childText = childNode as XmlText;
@@ -314,12 +335,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <param name="handler">The handler.</param>
         /// <returns>System.String.</returns>
         [NotNull]
-        private string ProcessRecursiveNode([NotNull] XmlNode node,
-                                            [NotNull] SubQuery query,
-                                            [NotNull] Request request,
-                                            [NotNull] Result result,
-                                            [NotNull] User user,
-                                            [NotNull] TextTransformerBase handler)
+        private string ProcessRecursiveNode(
+            [NotNull] XmlNode node,
+            [NotNull] SubQuery query,
+            [NotNull] Request request,
+            [NotNull] Result result,
+            [NotNull] User user,
+            [NotNull] TextTransformerBase handler)
         {
             //- Validation
             if (node == null) { throw new ArgumentNullException(nameof(node)); }
@@ -360,11 +382,12 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <param name="user">The user.</param>
         /// <returns>The output text.</returns>
         [NotNull]
-        private string ProcessTemplateNode([NotNull] XmlNode node,
-                                           [NotNull] SubQuery query,
-                                           [NotNull] Request request,
-                                           [NotNull] Result result,
-                                           [NotNull] User user)
+        private string ProcessTemplateNode(
+            [NotNull] XmlNode node,
+            [NotNull] SubQuery query,
+            [NotNull] Request request,
+            [NotNull] Result result,
+            [NotNull] User user)
         {
             //- Validation
             if (node == null) { throw new ArgumentNullException(nameof(node)); }

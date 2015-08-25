@@ -119,7 +119,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// </summary>
         /// <value>The root node.</value>
         [NotNull]
-        internal Node RootNode { get; }
+        public Node RootNode { get; }
 
         /// <summary>
         ///     Gets the count of AIML nodes in memory.
@@ -127,7 +127,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <value>The count of AIML nodes.</value>
         public int NodeCount
         {
-            get { return RootNode.ChildrenCount; }
+            get { return RootNode.Children.Count; }
         }
 
         /// <summary>
@@ -336,7 +336,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             }
 
             // Add the node to the graph
-            RootNode.AddCategory(path, node.OuterXml);
+            RootNode.AddTemplate(path, node.OuterXml);
         }
 
         /// <summary>
