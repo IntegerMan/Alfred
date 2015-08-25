@@ -119,16 +119,6 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        ///     Gets the identifier.
-        /// </summary>
-        /// <value>The identifier.</value>
-        [NotNull]
-        public virtual string Id
-        {
-            get { return Name; }
-        }
-
-        /// <summary>
         /// Processes an Alfred Command. If the command is handled, result should be modified accordingly and the method should return true. Returning false will not stop the message from being propogated.
         /// </summary>
         /// <param name="command">The command.</param>
@@ -138,5 +128,18 @@ namespace MattEland.Ani.Alfred.Core.Modules
         {
             return false;
         }
+
+        /// <summary>
+        /// Gets the name of the broad categorization or type that this item is.
+        /// </summary>
+        /// <example>
+        /// Some examples of ItemTypeName values might be "Folder", "Application", "User", etc.
+        /// </example>
+        /// <value>The item type's name.</value>
+        public override string ItemTypeName
+        {
+            get { return "Module"; }
+        }
+
     }
 }

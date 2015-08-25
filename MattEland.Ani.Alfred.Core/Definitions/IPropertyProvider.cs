@@ -44,6 +44,16 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <value>The display name.</value>
         [NotNull]
         string DisplayName { get; }
+
+        /// <summary>
+        /// Gets the name of the broad categorization or type that this item is.
+        /// </summary>
+        /// <example>
+        /// Some examples of ItemTypeName values might be "Folder", "Application", "User", etc.
+        /// </example>
+        /// <value>The item type's name.</value>
+        [NotNull]
+        string ItemTypeName { get; }
     }
 
 }

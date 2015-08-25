@@ -159,6 +159,18 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
         }
 
         /// <summary>
+        /// Gets the name of the broad categorization or type that this item is.
+        /// </summary>
+        /// <example>
+        /// Some examples of ItemTypeName values might be "Folder", "Application", "User", etc.
+        /// </example>
+        /// <value>The item type's name.</value>
+        public string ItemTypeName
+        {
+            get { return "Test Framework"; }
+        }
+
+        /// <summary>
         ///     Gets the name.
         /// </summary>
         /// <value>The name.</value>

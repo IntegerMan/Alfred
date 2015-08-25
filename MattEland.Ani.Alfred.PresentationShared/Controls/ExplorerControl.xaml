@@ -42,8 +42,14 @@
                     <HierarchicalDataTemplate DataType="definitions:IPropertyProvider"
                                           ItemsSource="{Binding PropertyProviders}">
 
-                        <TextBlock Text="{Binding DisplayName}"
-                               ToolTip="{Binding DisplayName}" />
+                        <StackPanel Orientation="Horizontal" ToolTip="{Binding DisplayName}">
+                            
+                            <TextBlock Text="{Binding DisplayName}" />
+
+                            <TextBlock Text="{Binding ItemTypeName}"
+                                       Margin="{DynamicResource TextSpacingMargin}" />
+
+                        </StackPanel>
 
                     </HierarchicalDataTemplate>
                 </TreeView.ItemTemplate>
@@ -62,8 +68,19 @@
                 <!-- Header -->
                 <Border DockPanel.Dock="Top"
                         Style="{DynamicResource HeaderBannerBorderStyle}">
-                    <TextBlock Text="{Binding Name}"
-                               Style="{DynamicResource HeaderBannerTextBlockStyle}" />
+                    
+                    <StackPanel Orientation="Horizontal" 
+                                HorizontalAlignment="Center">
+                        
+                        <TextBlock Text="{Binding Name}"
+                                   Style="{DynamicResource HeaderBannerTextBlockStyle}" />
+
+                        <TextBlock Text="{Binding ItemTypeName}"
+                                   Style="{DynamicResource HeaderBannerTextBlockStyle}"
+                                   Margin="{DynamicResource TextSpacingMargin}" />
+                        
+                    </StackPanel>
+
                 </Border>
 
                 <!-- Item Content -->

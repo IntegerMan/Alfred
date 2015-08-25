@@ -333,6 +333,18 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
+        /// Gets the name of the broad categorization or type that this item is.
+        /// </summary>
+        /// <example>
+        /// Some examples of ItemTypeName values might be "Folder", "Application", "User", etc.
+        /// </example>
+        /// <value>The item type's name.</value>
+        public string ItemTypeName
+        {
+            get { return "App Framework"; }
+        }
+
+        /// <summary>
         ///     Gets the name of the framework.
         /// </summary>
         /// <value>The name.</value>
