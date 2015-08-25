@@ -2,7 +2,7 @@
 // StringExtensions.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   08/24/2015 at 1:06 AM
+// Last Modified:   08/25/2015 at 4:29 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -89,9 +89,10 @@ namespace MattEland.Common
         /// <param name="other">The other string.</param>
         /// <param name="comparison">The comparison type. Defaults to ordinal ignoring case.</param>
         /// <returns><c>true</c> if the strings are equal, <c>false</c> otherwise.</returns>
-        public static bool Matches([CanBeNull] this string input,
-                                   [CanBeNull] string other,
-                                   StringComparison comparison = StringComparison.OrdinalIgnoreCase)
+        public static bool Matches(
+            [CanBeNull] this string input,
+            [CanBeNull] string other,
+            StringComparison comparison = StringComparison.OrdinalIgnoreCase)
         {
             return string.Compare(input, other, comparison) == 0;
         }
@@ -102,7 +103,7 @@ namespace MattEland.Common
         /// <param name="input">The input string.</param>
         /// <param name="fallbackValue">The fallback value. Defaults to 0.</param>
         /// <returns>The parsed value or the fallback value in case of parse error.</returns>
-        public static int AsInt(this string input, int fallbackValue = 0)
+        public static int AsInt([CanBeNull] this string input, int fallbackValue = 0)
         {
             int output;
 
@@ -122,7 +123,7 @@ namespace MattEland.Common
         /// <param name="input">The input string.</param>
         /// <param name="fallbackValue">The fallback value. Defaults to 0.</param>
         /// <returns>The parsed value or the fallback value in case of parse error.</returns>
-        public static double AsDouble(this string input, double fallbackValue = 0)
+        public static double AsDouble([CanBeNull] this string input, double fallbackValue = 0)
         {
             double output;
 
@@ -143,10 +144,13 @@ namespace MattEland.Common
         /// <param name="stringBuilder">The string builder.</param>
         /// <param name="message">The message.</param>
         /// <param name="useNewLine">Whether or not to include line breaks.</param>
-        public static void AppendConditional([NotNull] this StringBuilder stringBuilder,
-                                             string message,
-                                             bool useNewLine)
+        public static void AppendConditional(
+            [CanBeNull] this StringBuilder stringBuilder,
+            [CanBeNull] string message,
+            bool useNewLine)
         {
+            if (stringBuilder == null) { return; }
+
             if (useNewLine)
             {
                 stringBuilder.AppendLine(message);
@@ -163,16 +167,17 @@ namespace MattEland.Common
         /// </summary>
         /// <param name="input">The input.</param>
         /// <param name="culture">The culture.</param>
-        /// <param name="format">The format.</param>
+        /// <param name="outputFormat">The format string to use.</param>
         /// <returns>The formatted string</returns>
         [NotNull]
-        public static string Format([NotNull] this IFormattable input,
-                                    [CanBeNull] CultureInfo culture = null,
-                                    [CanBeNull] string format = null)
+        public static string Format(
+            [CanBeNull] this IFormattable input,
+            [CanBeNull] IFormatProvider culture = null,
+            [CanBeNull] string outputFormat = null)
         {
             culture = culture ?? CultureInfo.CurrentCulture;
 
-            return input.ToString(format, culture);
+            return input?.ToString(outputFormat, culture) ?? string.Empty;
         }
 
         /// <summary>
@@ -182,9 +187,9 @@ namespace MattEland.Common
         /// <returns>System.String.</returns>
         [NotNull]
         [UsedImplicitly]
-        public static string ForUser([NotNull] this IFormattable input)
+        public static string ForUser([CanBeNull] this IFormattable input)
         {
-            return input.ToString();
+            return input.AsNonNullString();
         }
 
         /// <summary>
@@ -194,9 +199,9 @@ namespace MattEland.Common
         /// <returns>The formatted string</returns>
         [NotNull]
         [UsedImplicitly]
-        public static string Invariant([NotNull] this IFormattable input)
+        public static string Invariant([CanBeNull] this IFormattable input)
         {
-            return input.Format(CultureInfo.InvariantCulture);
+            return input?.Format(CultureInfo.InvariantCulture) ?? string.Empty;
         }
     }
 }

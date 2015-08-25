@@ -7,6 +7,7 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Diagnostics;
 
 using JetBrains.Annotations;
@@ -42,6 +43,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// <param name="alfred">The alfred instance.</param>
         protected override void InitializeProtected(IAlfred alfred)
         {
+            if (alfred == null) { throw new ArgumentNullException(nameof(alfred)); }
 
             // Build out a new collection using the platform provider
             var nodes = alfred.PlatformProvider.CreateCollection<IPropertyProvider>();

@@ -11,9 +11,8 @@
              d:DesignWidth="300">
     <Grid>
         <Grid.ColumnDefinitions>
-            <!-- The content is generally more important than the explorer so give it 3/5 of the width -->
-            <ColumnDefinition Width="2*" />
-            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
         <!-- Tree View Scroller -->
@@ -24,6 +23,7 @@
             <!-- The TreeView containing the items -->
             <TreeView x:Name="TreeHierarchy"
                   x:FieldModifier="public"
+                  BorderThickness="0"
                   Background="Transparent">
 
                 <TreeView.ItemContainerStyle>

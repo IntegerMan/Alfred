@@ -128,9 +128,14 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// <param name="result">The result. If the command was handled, this should be updated.</param>
         /// <returns><c>True</c> if the command was handled; otherwise false.</returns>
         public virtual bool ProcessAlfredCommand(ChatCommand command,
-                                                 [NotNull] AlfredCommandResult result)
+                                                 [CanBeNull] AlfredCommandResult result)
         {
-            // Only route messages to sub-components if they are for this subsystem or unaddressed
+            /* If there's no result, there's no way any feedback could get back. 
+            This is just here to protect against bad input */
+
+            if (result == null) { return false; }
+
+            // Only route messages to sub-components if they don't have a destination
             if (command.Subsystem.IsEmpty() || command.Subsystem.Matches(Id))
             {
                 foreach (var page in Pages)

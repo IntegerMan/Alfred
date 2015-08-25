@@ -7,6 +7,7 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -93,8 +94,11 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <param name="command">The command.</param>
         /// <param name="result">The result. If the command was handled, this should be updated.</param>
         /// <returns><c>True</c> if the command was handled; otherwise false.</returns>
-        public override bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
+        public override bool ProcessAlfredCommand(ChatCommand command,
+                                                  [CanBeNull] AlfredCommandResult result)
         {
+            if (result == null) { return false; }
+
             if (command.IsFor(this) && command.Name.Matches("Status"))
             {
                 result.Output = GetStatusText(command.Data);

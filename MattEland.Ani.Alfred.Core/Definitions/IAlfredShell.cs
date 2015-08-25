@@ -11,6 +11,9 @@ namespace MattEland.Ani.Alfred.Core.Definitions
     /// <summary>
     /// An interface describing the capabilities provided by a user interface implementation for an Alfred application.
     /// </summary>
+    /// <remarks>
+    /// TODO: Use this or kill it
+    /// </remarks>
     public interface IAlfredShell : IShellCommandRecipient
     {
 
