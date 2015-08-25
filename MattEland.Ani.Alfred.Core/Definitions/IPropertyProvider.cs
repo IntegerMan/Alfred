@@ -22,6 +22,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         ///     Gets the name of the item.
         /// </summary>
         /// <value>The name.</value>
+        [NotNull]
         string Name { get; }
 
         /// <summary>

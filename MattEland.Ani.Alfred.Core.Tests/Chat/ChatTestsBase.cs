@@ -40,7 +40,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         private TestAlfred _alfred;
 
         private IChatProvider _chat;
-        private AlfredChatSubsystem _chatSubsystem;
+        private ChatSubsystem _chatSubsystem;
         private AlfredCoreSubsystem _coreSubsystem;
 
         [NotNull]
@@ -93,7 +93,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             }
         }
 
-        public AlfredChatSubsystem ChatSubsystem
+        public ChatSubsystem ChatSubsystem
         {
             [DebuggerStepThrough]
             get
@@ -250,7 +250,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             _coreSubsystem = new AlfredCoreSubsystem(_alfred.PlatformProvider);
             _alfred.Register(_coreSubsystem);
 
-            _chatSubsystem = new AlfredChatSubsystem(_alfred.PlatformProvider, _alfred.Console);
+            _chatSubsystem = new ChatSubsystem(_alfred.PlatformProvider, _alfred.Console);
             _alfred.Register(_chatSubsystem);
 
             _testSubsystem = new TestSubsystem(_alfred.PlatformProvider);

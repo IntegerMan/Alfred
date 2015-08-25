@@ -91,6 +91,7 @@
     <Compile Include="Subsystems\AlfredCoreSubsystemTests.cs" />
     <Compile Include="AlfredProviderTests.cs" />
     <Compile Include="Mocks\AlfredTestModule.cs" />
+    <Compile Include="Subsystems\ChatSubsystemTests.cs" />
     <Compile Include="Subsystems\MindExplorerSubsystemTests.cs" />
     <Compile Include="Subsystems\SubsystemTests.cs" />
     <Compile Include="Widgets\ButtonWidgetTests.cs" />

@@ -98,10 +98,9 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         ///     Registers a page.
         /// </summary>
         /// <param name="page">The page.</param>
-        [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods",
-            MessageId = "0")]
         protected void Register([NotNull] IAlfredPage page)
         {
+            if (page == null) { throw new ArgumentNullException(nameof(page)); }
             _pages.AddSafe(page);
 
             if (AlfredInstance == null)

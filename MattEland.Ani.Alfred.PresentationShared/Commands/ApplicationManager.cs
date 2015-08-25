@@ -2,7 +2,7 @@
 // ApplicationManager.cs
 // 
 // Created on:      08/20/2015 at 8:14 PM
-// Last Modified:   08/23/2015 at 1:22 PM
+// Last Modified:   08/25/2015 at 11:09 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -45,13 +45,13 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         private readonly AlfredApplication _alfred;
 
         private AlfredCoreSubsystem _alfredCoreSubsystem;
-        private AlfredChatSubsystem _chatSubsystem;
+        private ChatSubsystem _chatSubsystem;
         private AlfredSpeechConsole _console;
+        private bool _enableSpeech;
         private MindExplorerSubsystem _mindExplorerSubsystem;
         private SystemMonitoringSubsystem _systemMonitoringSubsystem;
 
         private IUserInterfaceDirector _userInterfaceDirector;
-        private bool _enableSpeech;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:System.Object" /> class with
@@ -63,8 +63,9 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         ///     <paramref name="director" /> is
         ///     <see langword="null" />.
         /// </exception>
-        public ApplicationManager([NotNull] IUserInterfaceDirector director, bool enableSpeech = true)
-            : this(new XamlPlatformProvider(), director, enableSpeech)
+        public ApplicationManager(
+            [NotNull] IUserInterfaceDirector director,
+            bool enableSpeech = true) : this(new XamlPlatformProvider(), director, enableSpeech)
         {
         }
 
@@ -72,7 +73,8 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
         /// </summary>
         /// <param name="enableSpeech">if set to <c>true</c> enable speech.</param>
-        public ApplicationManager(bool enableSpeech = true) : this(new XamlPlatformProvider(), enableSpeech)
+        public ApplicationManager(bool enableSpeech = true)
+            : this(new XamlPlatformProvider(), enableSpeech)
         {
         }
 
@@ -86,26 +88,29 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         ///     <paramref name="platformProvider" /> is
         ///     <see langword="null" />.
         /// </exception>
-        public ApplicationManager([NotNull] IPlatformProvider platformProvider, bool enableSpeech = true)
-            : this(platformProvider, null, enableSpeech)
+        public ApplicationManager(
+            [NotNull] IPlatformProvider platformProvider,
+            bool enableSpeech = true) : this(platformProvider, null, enableSpeech)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:System.Object" /> class with
-        /// the specified user interface director and platform provider.
+        ///     Initializes a new instance of the <see cref="T:System.Object" /> class with
+        ///     the specified user interface director and platform provider.
         /// </summary>
         /// <param name="platformProvider">The platform provider.</param>
         /// <param name="director">The user interface director</param>
         /// <param name="enableSpeech">if set to <c>true</c> enable speech.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        /// <exception cref="ArgumentNullException"><paramref name="platformProvider" /> is
-        /// <see langword="null" />.</exception>
-        public ApplicationManager([NotNull] IPlatformProvider platformProvider,
-                                  [CanBeNull] IUserInterfaceDirector director,
-                                  bool enableSpeech = true)
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="platformProvider" /> is
+        ///     <see langword="null" />.
+        /// </exception>
+        public ApplicationManager(
+            [NotNull] IPlatformProvider platformProvider,
+            [CanBeNull] IUserInterfaceDirector director,
+            bool enableSpeech = true)
         {
-
             if (platformProvider == null)
             {
                 throw new ArgumentNullException(nameof(platformProvider));
@@ -137,7 +142,9 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         {
             [DebuggerStepThrough]
             get
-            { return _userInterfaceDirector; }
+            {
+                return _userInterfaceDirector;
+            }
             [DebuggerStepThrough]
             set
             {
@@ -152,7 +159,6 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
                         _alfred.Register(ShellManager);
                     }
                 }
-
             }
         }
 
@@ -178,7 +184,9 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         {
             [DebuggerStepThrough]
             get
-            { return _alfred; }
+            {
+                return _alfred;
+            }
         }
 
         /// <summary>
@@ -203,6 +211,30 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
                 //? It might make sense to make this a property on Alfred.
                 return CultureInfo.CurrentCulture;
             }
+        }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether speech synthesis is enabled.
+        /// </summary>
+        /// <value><c>true</c> if speech synthesis is enabled; otherwise, <c>false</c>.</value>
+        public bool EnableSpeech
+        {
+            get { return _enableSpeech; }
+            set
+            {
+                _enableSpeech = value;
+
+                if (_console != null) { _console.EnableSpeech = value; }
+            }
+        }
+
+        /// <summary>
+        ///     Gets the root nodes.
+        /// </summary>
+        /// <value>The root nodes.</value>
+        public IEnumerable<IPropertyProvider> RootNodes
+        {
+            get { yield return _alfred; }
         }
 
         /// <summary>
@@ -239,40 +271,10 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             // Give Alfred a voice
             _console = new AlfredSpeechConsole(baseConsole) { EnableSpeech = EnableSpeech };
 
-            _console.Log("AppManager.InitConsole",
-                         "Initializing console.",
-                         LogLevel.Verbose);
+            _console.Log("AppManager.InitConsole", "Initializing console.", LogLevel.Verbose);
             _alfred.Console = _console;
 
             return _console;
-        }
-
-
-        /// <summary>
-        /// Gets or sets a value indicating whether speech synthesis is enabled.
-        /// </summary>
-        /// <value><c>true</c> if speech synthesis is enabled; otherwise, <c>false</c>.</value>
-        public bool EnableSpeech
-        {
-            get { return _enableSpeech; }
-            set
-            {
-                _enableSpeech = value;
-
-                if (_console != null)
-                {
-                    _console.EnableSpeech = value;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the root nodes.
-        /// </summary>
-        /// <value>The root nodes.</value>
-        public IEnumerable<IPropertyProvider> RootNodes
-        {
-            get { yield return _alfred; }
         }
 
         /// <summary>
@@ -315,7 +317,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             }
 
             // Init Chat
-            _chatSubsystem = new AlfredChatSubsystem(platformProvider, _alfred.Console);
+            _chatSubsystem = new ChatSubsystem(platformProvider, _alfred.Console);
             _alfred.Register(_chatSubsystem);
 
             // Init Mind Explorer
@@ -329,10 +331,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         public void Update()
         {
             // If Alfred is online, ask it to update its modules
-            if (_alfred.Status == AlfredStatus.Online)
-            {
-                _alfred.Update();
-            }
+            if (_alfred.Status == AlfredStatus.Online) { _alfred.Update(); }
         }
 
         /// <summary>
@@ -349,10 +348,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         public void Stop()
         {
             // Make sure we clean up Alfred
-            if (_alfred.Status != AlfredStatus.Offline)
-            {
-                _alfred.Shutdown();
-            }
+            if (_alfred.Status != AlfredStatus.Offline) { _alfred.Shutdown(); }
         }
 
         /// <summary>
@@ -362,14 +358,10 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         {
             var seconds = TimeSpan.FromSeconds(UpdateFrequencyInSeconds);
 
-            var timer = new DispatcherTimer
-            {
-                Interval = seconds
-            };
+            var timer = new DispatcherTimer { Interval = seconds };
             timer.Tick += delegate { Update(); };
 
             timer.Start();
-
         }
     }
 }
