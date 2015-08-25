@@ -162,7 +162,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                                             User.Id);
                 ChatEngine.Log(message, LogLevel.Warning);
 
-                return Resources.ChatEngineDontUnderstandFallback.NonNull();
+                return ChatEngine.FallbackResponse;
             }
         }
 

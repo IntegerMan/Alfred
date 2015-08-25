@@ -64,6 +64,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
             // Populate smaller value dictionaries
             SentenceSplitters = new List<string> { ".", "!", "?", ";" };
+
+            // Set the failure message's default value.
+            FallbackResponse = Resources.ChatEngineDontUnderstandFallback.NonNull();
         }
 
         /// <summary>
@@ -141,6 +144,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <value>The owner.</value>
         [CanBeNull]
         public object Owner { get; set; }
+
+        /// <summary>
+        /// Gets or sets the response that is given to the user when the input is not understood.
+        /// </summary>
+        /// <value>The fallback response.</value>
+        [NotNull]
+        public string FallbackResponse { get; set; }
 
         /// <summary>
         ///     Logs the specified message to the logger.
