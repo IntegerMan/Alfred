@@ -145,7 +145,8 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// Gets the property providers.
         /// </summary>
         /// <value>The property providers.</value>
-        public IEnumerable<IPropertyProvider> PropertyProviders
+        [NotNull, ItemNotNull]
+        public override IEnumerable<IPropertyProvider> PropertyProviders
         {
             get { return Widgets; }
         }

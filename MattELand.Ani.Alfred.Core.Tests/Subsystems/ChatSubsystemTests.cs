@@ -15,7 +15,6 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Common;
 
 using NUnit.Framework;
 
@@ -42,20 +41,6 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         private ChatSubsystem _chat;
 
         /// <summary>
-        ///     Finds the provider with the specified name.
-        /// </summary>
-        /// <param name="providers">The providers.</param>
-        /// <param name="name">The name.</param>
-        /// <returns>The provider</returns>
-        [CanBeNull]
-        private static IPropertyProvider FindProvider(
-            [NotNull] IEnumerable<IPropertyProvider> providers,
-            string name)
-        {
-            return providers.FirstOrDefault(p => p != null && p.DisplayName.Matches(name));
-        }
-
-        /// <summary>
         ///     Checks that the Chat History and Chat Handler nodes are present in the property providers for
         ///     the Chat Subsystem.
         /// </summary>
@@ -68,7 +53,8 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         {
             var providers = _chat.PropertyProviders;
 
-            Assert.IsNotNull(FindProvider(providers, name), $"{name} node was missing");
+            Assert.IsNotNull(providers.Find(name), $"{name} node was missing");
         }
     }
+
 }

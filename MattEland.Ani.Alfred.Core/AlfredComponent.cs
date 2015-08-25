@@ -192,6 +192,7 @@ namespace MattEland.Ani.Alfred.Core
         ///     Gets the property providers nested inside of this property provider.
         /// </summary>
         /// <value>The property providers.</value>
+        [NotNull, ItemNotNull]
         public virtual IEnumerable<IPropertyProvider> PropertyProviders
         {
             get { return Children; }
