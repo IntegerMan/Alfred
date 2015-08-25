@@ -2,7 +2,7 @@
 // ChatSubsystemTests.cs
 // 
 // Created on:      08/25/2015 at 10:53 AM
-// Last Modified:   08/25/2015 at 11:34 AM
+// Last Modified:   08/25/2015 at 3:03 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -15,6 +15,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.PresentationShared.Commands;
 
 using NUnit.Framework;
 
@@ -25,6 +26,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
     /// </summary>
     [TestFixture]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
+    [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     public class ChatSubsystemTests
     {
 
@@ -57,10 +59,57 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         }
 
         /// <summary>
-        /// Tests that the chat history explorer node has no child nodes initially.
+        ///     Tests that the chat history explorer node has nodes after a few chat exchanges
         /// </summary>
         /// <remarks>
-        /// Test ALF-79 for story ALF-62
+        ///     Test ALF-80 for story ALF-62
+        /// </remarks>
+        [Test, Ignore("Still under development")]
+        public void ChatHistoryHasNodesAfterConversation()
+        {
+            // Initialize an Alfred application
+            var app = new ApplicationManager(false);
+            var alfred = app.Alfred;
+            var chat = alfred.Subsystems.First(s => s is ChatSubsystem);
+            alfred.Initialize();
+
+            // Find the chat system
+            var node = chat.PropertyProviders.Find(ChatHistoryProvider.InstanceDisplayName);
+            Assert.IsNotNull(node, "Could not find Chat History node");
+
+            /* The chat history node is going to already have a few entries from coming online. 
+            We want a count of new history entries after startup. */
+
+            var count = node.PropertyProviders.Count();
+
+            // Say the same thing repeatedly to Alfred, thus driving him insane.
+            const string ChatInput = "What's your favorite color?";
+            const int NumChats = 25;
+            for (var i = 0; i < NumChats; i++)
+            {
+                alfred.ChatProvider.HandleUserStatement(ChatInput);
+            }
+
+            // Grab the response once and move it to a list so we can examine it
+            var children = node.PropertyProviders.ToList();
+
+            /* We expect there to be a statement and a reply for every entry in the chat history
+            plus the initial number of chat entries. */
+
+            Assert.AreEqual(count + (NumChats * 2),
+                            children.Count(),
+                            "The chat history did not have the expected number of nodes");
+
+            // We expect that what we said will only appear on nodes originating from the "user".
+            Assert.AreEqual(NumChats,
+                            children.Where(p => p.DisplayName.Contains(ChatInput)));
+        }
+
+        /// <summary>
+        ///     Tests that the chat history explorer node has no child nodes initially.
+        /// </summary>
+        /// <remarks>
+        ///     Test ALF-79 for story ALF-62
         /// </remarks>
         [Test]
         public void ChatHistoryHasNoNodesInitially()
