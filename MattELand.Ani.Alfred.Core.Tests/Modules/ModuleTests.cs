@@ -10,6 +10,8 @@
 using System.Linq;
 
 using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Ani.Alfred.Tests.Mocks;
 

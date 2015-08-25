@@ -2,7 +2,7 @@
 // ChatSubsystem.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   08/25/2015 at 11:08 AM
+// Last Modified:   08/25/2015 at 4:19 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -39,11 +39,15 @@ namespace MattEland.Ani.Alfred.Chat
         /// </summary>
         /// <param name="provider">The provider.</param>
         /// <param name="console">The console.</param>
+        /// <param name="engineName">Name of the chat engine.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public ChatSubsystem([NotNull] IPlatformProvider provider, [CanBeNull] IConsole console)
-            : base(provider, console)
+        public ChatSubsystem(
+            [NotNull] IPlatformProvider provider,
+            [CanBeNull] IConsole console,
+            [NotNull] string engineName) : base(provider, console)
         {
-            ChatHandler = new AimlStatementHandler(console);
+            // Instantiate composite objects
+            ChatHandler = new AimlStatementHandler(engineName, provider, console);
             _chatPage = new ChatPage(Res.ChatModuleName.NonNull(), ChatHandler);
         }
 
@@ -101,9 +105,9 @@ namespace MattEland.Ani.Alfred.Chat
             get
             {
                 // We still want the default nodes
-                foreach (IPropertyProvider provider in base.PropertyProviders) { yield return provider; }
+                foreach (var provider in base.PropertyProviders) { yield return provider; }
 
-                foreach (IPropertyProvider provider in ChatHandler.PropertyProviders) { yield return provider; }
+                foreach (var provider in ChatHandler.PropertyProviders) { yield return provider; }
             }
         }
 
@@ -152,7 +156,6 @@ namespace MattEland.Ani.Alfred.Chat
             // Say hi so Alfred greets the user
             AlfredInstance?.ChatProvider?.DoInitialGreeting();
         }
-
     }
 
 }

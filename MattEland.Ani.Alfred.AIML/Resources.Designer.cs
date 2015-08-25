@@ -284,6 +284,15 @@ namespace MattEland.Ani.Alfred.Chat {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Using Template: {0}.
+        /// </summary>
+        internal static string AimlStatementHandlerUsingTemplate {
+            get {
+                return ResourceManager.GetString("AimlStatementHandlerUsingTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
         ///
         ///&lt;!-- 
@@ -378,6 +387,15 @@ namespace MattEland.Ani.Alfred.Chat {
         internal static string AlfredCommandRouterProcessShellCommandMessage {
             get {
                 return ResourceManager.GetString("AlfredCommandRouterProcessShellCommandMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attempted to execute command, but no valid recipient.
+        /// </summary>
+        internal static string AlfredTagHandlerProcessChangeNoRecipient {
+            get {
+                return ResourceManager.GetString("AlfredTagHandlerProcessChangeNoRecipient", resourceCulture);
             }
         }
         
@@ -531,7 +549,7 @@ namespace MattEland.Ani.Alfred.Chat {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Batman.
+        ///   Looks up a localized string similar to User.
         /// </summary>
         internal static string ChatUserName {
             get {

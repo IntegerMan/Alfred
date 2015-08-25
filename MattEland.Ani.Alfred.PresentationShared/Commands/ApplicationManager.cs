@@ -317,7 +317,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             }
 
             // Init Chat
-            _chatSubsystem = new ChatSubsystem(platformProvider, _alfred.Console);
+            _chatSubsystem = new ChatSubsystem(platformProvider, _alfred.Console, _alfred.Name);
             _alfred.Register(_chatSubsystem);
 
             // Init Mind Explorer

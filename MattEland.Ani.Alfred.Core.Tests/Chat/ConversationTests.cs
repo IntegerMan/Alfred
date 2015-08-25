@@ -14,6 +14,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat;
 using MattEland.Ani.Alfred.Chat.Aiml;
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
 
 using NUnit.Framework;
@@ -27,6 +28,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
     [SuppressMessage("ReSharper", "UnusedParameter.Local")]
+    [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     public class ConversationTests : ChatTestsBase
     {
         /// <summary>
@@ -183,7 +185,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         [Test]
         public void StartupLeavesLastInputClear()
         {
-            var chat = new AimlStatementHandler();
+            var chat = new AimlStatementHandler("Alfredo", new SimplePlatformProvider());
             chat.DoInitialGreeting();
 
             Assert.That(!chat.LastInput.HasText(),

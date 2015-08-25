@@ -2,7 +2,7 @@
 // ChatSubsystemTests.cs
 // 
 // Created on:      08/25/2015 at 10:53 AM
-// Last Modified:   08/25/2015 at 3:03 PM
+// Last Modified:   08/25/2015 at 3:25 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -36,7 +36,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         [SetUp]
         public void SetUp()
         {
-            _chat = new ChatSubsystem(new SimplePlatformProvider(), null);
+            _chat = new ChatSubsystem(new SimplePlatformProvider(), null, "Alfredo");
         }
 
         [NotNull]
@@ -64,7 +64,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         /// <remarks>
         ///     Test ALF-80 for story ALF-62
         /// </remarks>
-        [Test, Ignore("Still under development")]
+        [Test]
         public void ChatHistoryHasNodesAfterConversation()
         {
             // Initialize an Alfred application
@@ -101,8 +101,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
                             "The chat history did not have the expected number of nodes");
 
             // We expect that what we said will only appear on nodes originating from the "user".
-            Assert.AreEqual(NumChats,
-                            children.Where(p => p.DisplayName.Contains(ChatInput)));
+            Assert.AreEqual(NumChats, children.Count(p => p.DisplayName.Contains(ChatInput)));
         }
 
         /// <summary>

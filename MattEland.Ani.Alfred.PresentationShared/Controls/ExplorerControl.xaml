@@ -42,12 +42,18 @@
                     <HierarchicalDataTemplate DataType="definitions:IPropertyProvider"
                                           ItemsSource="{Binding PropertyProviders}">
 
-                        <StackPanel Orientation="Horizontal" ToolTip="{Binding DisplayName}">
+                        <StackPanel Orientation="Horizontal" 
+                                    ToolTip="{Binding DisplayName}"
+                                    VerticalAlignment="Center">
                             
+                            <!-- Item Display Name -->
                             <TextBlock Text="{Binding DisplayName}" />
 
-                            <TextBlock Text="{Binding ItemTypeName}"
-                                       Margin="{DynamicResource TextSpacingMargin}" />
+                            <!-- Item Classifier -->
+                            <TextBlock Text="{Binding ItemTypeName, StringFormat='({0})'}"
+                                       Margin="{DynamicResource TextSpacingMargin}"
+                                       Foreground="{DynamicResource AppMutedForegroundBrush}"
+                                       FontSize="{DynamicResource FontSizeSmall}" />
 
                         </StackPanel>
 
@@ -70,6 +76,7 @@
                         Style="{DynamicResource HeaderBannerBorderStyle}">
                     
                     <StackPanel Orientation="Horizontal" 
+                                VerticalAlignment="Center"
                                 HorizontalAlignment="Center">
                         
                         <TextBlock Text="{Binding Name}"
@@ -77,6 +84,8 @@
 
                         <TextBlock Text="{Binding ItemTypeName}"
                                    Style="{DynamicResource HeaderBannerTextBlockStyle}"
+                                   FontSize="{DynamicResource FontSizeSmall}"
+                                   Foreground="{DynamicResource AppMutedForegroundBrush}"
                                    Margin="{DynamicResource TextSpacingMargin}" />
                         
                     </StackPanel>
@@ -85,13 +94,23 @@
 
                 <!-- Item Content -->
                 <DataGrid x:Name="GridProperties"
-                          x:FieldModifier="public"
-                          Foreground="{Binding ElementName=Explorer, Path=Foreground}"
-                          Background="{Binding ElementName=Explorer, Path=Background}">
+                          x:FieldModifier="public"                          
+                          IsReadOnly="True"
+                          AutoGenerateColumns="False"
+                          ItemsSource="{Binding Properties}">
+
+                    <!-- Use our predefined columns, not the auto-generated ones -->
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Name" Width="auto" IsReadOnly="True" />
-                        <DataGridTextColumn Header="Value" Width="*" />
+                        <DataGridTextColumn Header="Name" 
+                                            Binding="{Binding DisplayName}" 
+                                            Width="auto" 
+                                            IsReadOnly="True" />
+                        
+                        <DataGridTextColumn Header="Value" 
+                                            Binding="{Binding DisplayValue}" 
+                                            Width="*" />
                     </DataGrid.Columns>
+
                 </DataGrid>
 
             </DockPanel>

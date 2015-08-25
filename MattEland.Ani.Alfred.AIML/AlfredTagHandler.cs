@@ -49,7 +49,7 @@ namespace MattEland.Ani.Alfred.Chat
             // Check to make sure we have a recipient to talk to
             if (recipient == null)
             {
-                Log("Attempted to execute command, but no valid recipient", LogLevel.Warning);
+                Log(Resources.AlfredTagHandlerProcessChangeNoRecipient, LogLevel.Warning);
 
                 return result.Output.NonNull();
             }

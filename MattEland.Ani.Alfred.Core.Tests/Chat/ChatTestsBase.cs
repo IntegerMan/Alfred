@@ -250,7 +250,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             _coreSubsystem = new AlfredCoreSubsystem(_alfred.PlatformProvider);
             _alfred.Register(_coreSubsystem);
 
-            _chatSubsystem = new ChatSubsystem(_alfred.PlatformProvider, _alfred.Console);
+            _chatSubsystem = new ChatSubsystem(_alfred.PlatformProvider, _alfred.Console, "Alfredo");
             _alfred.Register(_chatSubsystem);
 
             _testSubsystem = new TestSubsystem(_alfred.PlatformProvider);

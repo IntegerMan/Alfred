@@ -151,7 +151,7 @@
     <value>No end tag for OOB command: {0}</value>
   </data>
   <data name="ChatUserName" xml:space="preserve">
-    <value>Batman</value>
+    <value>User</value>
   </data>
   <data name="ChatProcessingHeader" xml:space="preserve">
     <value>Chat.Processing</value>
@@ -219,5 +219,11 @@
   </data>
   <data name="AlfredCommandRouterProcessAlfredCommandLogHeader" xml:space="preserve">
     <value>CommandRouting</value>
+  </data>
+  <data name="AlfredTagHandlerProcessChangeNoRecipient" xml:space="preserve">
+    <value>Attempted to execute command, but no valid recipient</value>
+  </data>
+  <data name="AimlStatementHandlerUsingTemplate" xml:space="preserve">
+    <value>Using Template: {0}</value>
   </data>
 </root>
