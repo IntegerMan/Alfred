@@ -2,12 +2,13 @@
 // TestAlfred.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   08/24/2015 at 5:58 PM
+// Last Modified:   08/24/2015 at 11:48 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 using JetBrains.Annotations;
@@ -68,6 +69,16 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
         public bool IsOnline
         {
             get { return Status == AlfredStatus.Online; }
+        }
+
+        /// <summary>
+        ///     Gets the locale.
+        /// </summary>
+        /// <value>The locale.</value>
+        [NotNull]
+        public CultureInfo Locale
+        {
+            get { return CultureInfo.CurrentCulture; }
         }
 
         /// <summary>
@@ -159,10 +170,10 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
         }
 
         /// <summary>
-        /// Gets the name of the broad categorization or type that this item is.
+        ///     Gets the name of the broad categorization or type that this item is.
         /// </summary>
         /// <example>
-        /// Some examples of ItemTypeName values might be "Folder", "Application", "User", etc.
+        ///     Some examples of ItemTypeName values might be "Folder", "Application", "User", etc.
         /// </example>
         /// <value>The item type's name.</value>
         public string ItemTypeName

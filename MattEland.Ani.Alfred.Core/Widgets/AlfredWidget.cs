@@ -2,12 +2,13 @@
 // AlfredWidget.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   08/23/2015 at 11:40 PM
+// Last Modified:   08/24/2015 at 11:33 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -15,26 +16,59 @@ using System.Globalization;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Core.Definitions;
+
 namespace MattEland.Ani.Alfred.Core.Widgets
 {
+
     /// <summary>
     ///     Any sort of user interface widget for representing a module.
     ///     Widgets can range from simple text to interactive components.
     ///     Widgets do not contain user interface elements but tell the
     ///     client what user interface elements to create.
     /// </summary>
-    public abstract class AlfredWidget : INotifyPropertyChanged
+    public abstract class AlfredWidget : INotifyPropertyChanged, IPropertyProvider
     {
+
         [CanBeNull]
         private object _dataContext;
 
         private bool _isVisible = true;
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="AlfredWidget" /> class.
+        /// </summary>
+        /// <param name="parameters">The creation parameters.</param>
+        protected AlfredWidget([NotNull] WidgetCreationParameters parameters)
+        {
+            if (parameters == null) { throw new ArgumentNullException(nameof(parameters)); }
 
+            Name = parameters.Name;
+            Console = parameters.Console;
+            Locale = parameters.Locale;
+        }
 
+        /// <summary>
+        ///     Gets the logging console.
+        /// </summary>
+        /// <value>The console.</value>
+        [CanBeNull]
+        public IConsole Console
+        {
+            [DebuggerStepThrough]
+            get;
+        }
 
-
-
+        /// <summary>
+        ///     Gets the locale.
+        /// </summary>
+        /// <value>The locale.</value>
+        public CultureInfo Locale
+        {
+            [DebuggerStepThrough]
+            get;
+        }
 
         /// <summary>
         ///     Gets or sets whether or not the widget is visible. This defaults to <c>true</c>.
@@ -50,12 +84,6 @@ namespace MattEland.Ani.Alfred.Core.Widgets
                 OnPropertyChanged(nameof(IsVisible));
             }
         }
-
-
-
-
-
-
 
         /// <summary>
         ///     Gets or sets the data context.
@@ -79,16 +107,53 @@ namespace MattEland.Ani.Alfred.Core.Widgets
             }
         }
 
-
-
-
-
-
-
         /// <summary>
         ///     Occurs when a property changes.
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        ///     Gets the display name for use in the user interface.
+        /// </summary>
+        /// <value>The display name.</value>
+        public string DisplayName
+        {
+            get { return Name; }
+        }
+
+        /// <summary>
+        ///     Gets the name of the broad categorization or type that this item is.
+        /// </summary>
+        /// <example>
+        ///     Some examples of ItemTypeName values might be "Folder", "Application", "User", etc.
+        /// </example>
+        /// <value>The item type's name.</value>
+        public abstract string ItemTypeName { get; }
+
+        /// <summary>
+        ///     Gets the name of the item.
+        /// </summary>
+        /// <value>The name.</value>
+        [NotNull]
+        public string Name { get; }
+
+        /// <summary>
+        ///     Gets a list of properties provided by this item.
+        /// </summary>
+        /// <returns>The properties</returns>
+        public IEnumerable<IPropertyItem> Properties
+        {
+            get { yield break; }
+        }
+
+        /// <summary>
+        ///     Gets the property providers.
+        /// </summary>
+        /// <value>The property providers.</value>
+        public IEnumerable<IPropertyProvider> PropertyProviders
+        {
+            get { yield break; }
+        }
 
         /// <summary>
         ///     Called when a property changes.
@@ -104,7 +169,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
             }
             catch (Exception ex)
             {
-                var message = string.Format(CultureInfo.CurrentCulture,
+                var message = string.Format(Locale,
                                             "Error encountered changing property '{0}' :{1}",
                                             propertyName,
                                             ex.GetBaseException());
@@ -114,20 +179,27 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         }
 
         /// <summary>
-        ///     Handles a widget error.
+        ///     Handles a widget error by logging it to the console.
         /// </summary>
         /// <param name="header">The error header.</param>
         /// <param name="message">The error message.</param>
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
-            Justification = "This should eventually log to an instance field")]
         protected void Error([NotNull] string header, [NotNull] string message)
         {
-            // TODO: It'd be very good to get this to Alfred's console
+            Console?.Log(header, message, LogLevel.Error);
+        }
 
-            var format = string.Format(CultureInfo.CurrentCulture, "{0}: {1}", header, message);
-            Debug.WriteLine(format);
-
-            Debugger.Break();
+        /// <summary>
+        ///     Logs a message to the console if a console is configured.
+        /// </summary>
+        /// <param name="header">The header.</param>
+        /// <param name="message">The message.</param>
+        /// <param name="level">The log level. Defaults to Verbose.</param>
+        protected void Log(
+            [NotNull] string header,
+            [NotNull] string message,
+            LogLevel level = LogLevel.Verbose)
+        {
+            Console?.Log(header, message, level);
         }
     }
 }

@@ -1,9 +1,10 @@
 ﻿// ---------------------------------------------------------
 // AlfredProviderTests.cs
 // 
-// Created on:      07/25/2015 at 11:43 PM
-// Last Modified:   08/10/2015 at 10:34 PM
-// Original author: Matt Eland
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/24/2015 at 11:51 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
@@ -15,7 +16,6 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Ani.Alfred.Core.Widgets;
@@ -55,6 +55,17 @@ namespace MattEland.Ani.Alfred.Tests
         [NotNull]
         private AlfredModuleListPage _page;
 
+        /// <summary>
+        ///     Builds widget parameters.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>The WidgetCreationParameters.</returns>
+        [NotNull]
+        private WidgetCreationParameters BuildWidgetParams(string name = "WidgetTest")
+        {
+            return new WidgetCreationParameters(name);
+        }
+
         [Test]
         public void AddingStandardModulesAddsModules()
         {
@@ -87,7 +98,9 @@ namespace MattEland.Ani.Alfred.Tests
         [Test]
         public void AlfredStartsWithNoSubSystems()
         {
-            Assert.AreEqual(0, _alfred.Subsystems.Count(), "Alfred started with subsystems when none were expected.");
+            Assert.AreEqual(0,
+                            _alfred.Subsystems.Count(),
+                            "Alfred started with subsystems when none were expected.");
         }
 
         [Test]
@@ -128,7 +141,9 @@ namespace MattEland.Ani.Alfred.Tests
 
             _alfred.Initialize();
 
-            Assert.Greater(console.Events.Count(), numEvents, "Initializing Alfred did not create any log entries.");
+            Assert.Greater(console.Events.Count(),
+                           numEvents,
+                           "Initializing Alfred did not create any log entries.");
         }
 
         [Test]
@@ -140,8 +155,8 @@ namespace MattEland.Ani.Alfred.Tests
             {
                 _alfred.Initialize();
 
-                Assert.Fail("Expected an InvalidOperationException since Alfred was already initialized.");
-
+                Assert.Fail(
+                            "Expected an InvalidOperationException since Alfred was already initialized.");
             }
             catch (InvalidOperationException)
             {
@@ -177,7 +192,9 @@ namespace MattEland.Ani.Alfred.Tests
 
             console.Log("Alfred Test Framework", "Testing logging to Alfred", LogLevel.Verbose);
 
-            Assert.AreEqual(numEvents + 1, console.Events.Count(), "Event count did not increase after logging.");
+            Assert.AreEqual(numEvents + 1,
+                            console.Events.Count(),
+                            "Event count did not increase after logging.");
         }
 
         [Test]
@@ -203,7 +220,7 @@ namespace MattEland.Ani.Alfred.Tests
         {
             var testModule = new AlfredTestModule();
 
-            var textWidget = new TextWidget();
+            var textWidget = new TextWidget(BuildWidgetParams());
             testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
             testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
 
@@ -228,7 +245,7 @@ namespace MattEland.Ani.Alfred.Tests
         {
             var testModule = new AlfredTestModule();
 
-            var textWidget = new TextWidget();
+            var textWidget = new TextWidget(BuildWidgetParams());
             testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
             testModule.WidgetsToRegisterOnShutdown.Add(textWidget);
 
@@ -246,7 +263,6 @@ namespace MattEland.Ani.Alfred.Tests
             Assert.AreEqual(1,
                             testModule.Widgets.Count(),
                             "Widgets were not properly cleared from list after re-initialize");
-
         }
 
         [Test]
@@ -276,7 +292,9 @@ namespace MattEland.Ani.Alfred.Tests
 
             _alfred.Shutdown();
 
-            Assert.Greater(console.Events.Count(), numEvents, "Shutting Alfred down did not create any log entries.");
+            Assert.Greater(console.Events.Count(),
+                           numEvents,
+                           "Shutting Alfred down did not create any log entries.");
         }
 
         [Test]
@@ -286,8 +304,8 @@ namespace MattEland.Ani.Alfred.Tests
             {
                 _alfred.Shutdown();
 
-                Assert.Fail("Expected an InvalidOperationException since Alfred was already offline.");
-
+                Assert.Fail(
+                            "Expected an InvalidOperationException since Alfred was already offline.");
             }
             catch (InvalidOperationException)
             {

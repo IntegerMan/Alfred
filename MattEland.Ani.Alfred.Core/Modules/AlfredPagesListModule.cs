@@ -107,7 +107,9 @@ namespace MattEland.Ani.Alfred.Core.Modules
             {
                 foreach (var page in AlfredInstance.RootPages)
                 {
-                    var widget = new TextWidget { DataContext = page };
+                    var lblId = string.Format(Locale, "lblPage{0}", page.Id);
+                    var widget = new TextWidget(BuildWidgetParameters(lblId)) { DataContext = page };
+
                     UpdateWidgetText(widget, page);
 
                     _widgets.Add(widget);
@@ -123,7 +125,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
 
                 Log("Pages.Initialize", noItemsDetected, LogLevel.Warning);
 
-                var widget = new TextWidget(noItemsDetected);
+                var widget = new TextWidget(noItemsDetected, BuildWidgetParameters("lblNoItems"));
                 _widgets.Add(widget);
 
                 Register(widget);

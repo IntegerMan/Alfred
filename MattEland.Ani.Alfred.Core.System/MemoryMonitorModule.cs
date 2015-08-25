@@ -43,7 +43,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             _memUsedBytesCounter = MetricProvider.Build(MemoryCategoryName,
                                                         MemoryUtilizationBytesCounterName);
 
-            _memWidget = new AlfredProgressBarWidget
+            _memWidget = new AlfredProgressBarWidget(BuildWidgetParameters("progMemoryUsed"))
             {
                 Minimum = 0,
                 Maximum = 100,

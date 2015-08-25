@@ -1,9 +1,10 @@
 ﻿// ---------------------------------------------------------
 // AlfredComponent.cs
 // 
-// Created on:      08/07/2015 at 10:53 PM
-// Last Modified:   08/07/2015 at 11:43 PM
-// Original author: Matt Eland
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/24/2015 at 11:48 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
@@ -18,6 +19,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Core
@@ -27,22 +29,21 @@ namespace MattEland.Ani.Alfred.Core
     /// </summary>
     public abstract class AlfredComponent : INotifyPropertyChanged, IPropertyProvider
     {
+
         [CanBeNull]
-        private IAlfred _alfred;
-
-        private AlfredStatus _status;
-
-        [CanBeNull, ItemNotNull]
+        [ItemNotNull]
         private IEnumerable<IAlfredComponent> _childrenOnShutdown;
 
         /// <summary>
-        /// The logging console
+        ///     The logging console
         /// </summary>
         [CanBeNull]
         private IConsole _console;
 
+        private AlfredStatus _status;
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlfredComponent"/> class.
+        ///     Initializes a new instance of the <see cref="AlfredComponent" /> class.
         /// </summary>
         /// <param name="console">The console.</param>
         protected AlfredComponent([CanBeNull] IConsole console = null)
@@ -51,15 +52,15 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        /// Gets the alfred instance associated with this component.
+        ///     Gets the alfred instance associated with this component.
         /// </summary>
         /// <value>The alfred instance.</value>
         [CanBeNull]
         public IAlfred AlfredInstance
         {
             [DebuggerStepThrough]
-            get
-            { return _alfred; }
+            get;
+            private set;
         }
 
         /// <summary>
@@ -104,6 +105,67 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
+        ///     Gets whether or not the component is visible to the user interface.
+        /// </summary>
+        /// <value>Whether or not the component is visible.</value>
+        public abstract bool IsVisible { get; }
+
+        /// <summary>
+        ///     Gets the children of this component. Depending on the type of component this is, the children
+        ///     will
+        ///     vary in their own types.
+        /// </summary>
+        /// <value>The children.</value>
+        [NotNull]
+        [ItemNotNull]
+        public abstract IEnumerable<IAlfredComponent> Children { get; }
+
+        /// <summary>
+        ///     Gets the locale.
+        /// </summary>
+        /// <value>The locale.</value>
+        [NotNull]
+        public CultureInfo Locale
+        {
+            get
+            {
+                if (AlfredInstance != null) { return AlfredInstance.Locale; }
+                return CultureInfo.CurrentCulture;
+            }
+        }
+
+        /// <summary>
+        ///     Gets or sets the logging console.
+        /// </summary>
+        /// <value>The console.</value>
+        [CanBeNull]
+        public IConsole Console { get; protected set; } = null;
+
+        /// <summary>
+        ///     Occurs when a property changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        ///     Gets the display name for use in the user interface.
+        /// </summary>
+        /// <value>The display name.</value>
+        public virtual string DisplayName
+        {
+            get { return Name; }
+        }
+
+        /// <summary>
+        ///     Gets the name of the broad categorization or type that this item is.
+        /// </summary>
+        /// <example>
+        ///     Some examples of ItemTypeName values might be "Folder", "Application", "User", etc.
+        /// </example>
+        /// <value>The item type's name.</value>
+        [NotNull]
+        public abstract string ItemTypeName { get; }
+
+        /// <summary>
         ///     Gets the name of the component.
         /// </summary>
         /// <value>The name of the component.</value>
@@ -111,23 +173,39 @@ namespace MattEland.Ani.Alfred.Core
         public abstract string Name { get; }
 
         /// <summary>
-        ///     Gets whether or not the component is visible to the user interface.
+        ///     Gets a list of properties provided by this item.
         /// </summary>
-        /// <value>Whether or not the component is visible.</value>
-        public abstract bool IsVisible { get; }
+        /// <returns>The properties</returns>
+        public IEnumerable<IPropertyItem> Properties
+        {
+            get
+            {
+                yield return new AlfredProperty("Name", Name);
+                yield return new AlfredProperty("Status", Status);
+                yield return new AlfredProperty("Child Items", Children.Count());
+                yield return new AlfredProperty("Visible", IsVisible);
+                yield return new AlfredProperty("Version", Version);
+            }
+        }
+
+        /// <summary>
+        ///     Gets the property providers nested inside of this property provider.
+        /// </summary>
+        /// <value>The property providers.</value>
+        public IEnumerable<IPropertyProvider> PropertyProviders
+        {
+            get { return Children; }
+        }
 
         /// <summary>
         ///     Initializes the component.
         /// </summary>
         /// <param name="alfred">The alfred framework.</param>
         /// <exception cref="InvalidOperationException">Already online when told to initialize.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="alfred"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="alfred" /> is <see langword="null" />.</exception>
         public virtual void Initialize([NotNull] IAlfred alfred)
         {
-            if (alfred == null)
-            {
-                throw new ArgumentNullException(nameof(alfred));
-            }
+            if (alfred == null) { throw new ArgumentNullException(nameof(alfred)); }
 
             if (Status == AlfredStatus.Online)
             {
@@ -139,7 +217,7 @@ namespace MattEland.Ani.Alfred.Core
 
             Status = AlfredStatus.Initializing;
 
-            _alfred = alfred;
+            AlfredInstance = alfred;
 
             // Reset our children collections so that other collections can be registered during shutdown
             ClearChildCollections();
@@ -149,10 +227,7 @@ namespace MattEland.Ani.Alfred.Core
             InitializeProtected(alfred);
 
             // Pass on the message to the children
-            foreach (var child in Children)
-            {
-                child.Initialize(alfred);
-            }
+            foreach (var child in Children) { child.Initialize(alfred); }
 
             Status = AlfredStatus.Online;
 
@@ -160,7 +235,7 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        /// Allows components to define controls
+        ///     Allows components to define controls
         /// </summary>
         protected virtual void RegisterControls()
         {
@@ -177,17 +252,16 @@ namespace MattEland.Ani.Alfred.Core
             if (Status == AlfredStatus.Offline)
             {
                 var format = Resources.AlfredComponent_ShutdownAlreadyOffline.NonNull();
-                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, format, NameAndVersion));
+                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture,
+                                                                  format,
+                                                                  NameAndVersion));
             }
 
             Status = AlfredStatus.Terminating;
 
             // Pass on the message to the children
             _childrenOnShutdown = Children.ToList();
-            foreach (var child in _childrenOnShutdown)
-            {
-                child?.Shutdown();
-            }
+            foreach (var child in _childrenOnShutdown) { child?.Shutdown(); }
 
             // Reset our children collections so that other collections can be registered during shutdown
             ClearChildCollections();
@@ -201,7 +275,7 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        /// Clears all child collections
+        ///     Clears all child collections
         /// </summary>
         protected virtual void ClearChildCollections()
         {
@@ -224,11 +298,7 @@ namespace MattEland.Ani.Alfred.Core
             UpdateProtected();
 
             // Pass on the message to the children
-            foreach (var child in Children)
-            {
-                child.Update();
-            }
-
+            foreach (var child in Children) { child.Update(); }
         }
 
         /// <summary>
@@ -239,20 +309,19 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     A notification method that is invoked when initialization for Alfred is complete so the UI can be fully enabled or
+        ///     A notification method that is invoked when initialization for Alfred is complete so the UI can
+        ///     be fully enabled or
         ///     adjusted
         /// </summary>
         public virtual void OnInitializationCompleted()
         {
             // Pass on the message to the children
-            foreach (var child in Children)
-            {
-                child.OnInitializationCompleted();
-            }
+            foreach (var child in Children) { child.OnInitializationCompleted(); }
         }
 
         /// <summary>
-        ///     A notification method that is invoked when shutdown for Alfred is complete so the UI can be fully enabled or
+        ///     A notification method that is invoked when shutdown for Alfred is complete so the UI can be
+        ///     fully enabled or
         ///     adjusted
         /// </summary>
         public virtual void OnShutdownCompleted()
@@ -285,7 +354,7 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        /// Handles initialization events
+        ///     Handles initialization events
         /// </summary>
         /// <param name="alfred">The alfred instance.</param>
         protected virtual void InitializeProtected([NotNull] IAlfred alfred)
@@ -298,58 +367,35 @@ namespace MattEland.Ani.Alfred.Core
         /// <param name="title">The title of the message.</param>
         /// <param name="message">The message body.</param>
         /// <param name="level">The logging level.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="message"/> is <see langword="null" />.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="title"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="message" /> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="title" /> is <see langword="null" />.</exception>
         protected void Log([NotNull] string title, [NotNull] string message, LogLevel level)
         {
-            if (title == null)
-            {
-                throw new ArgumentNullException(nameof(title));
-            }
-            if (message == null)
-            {
-                throw new ArgumentNullException(nameof(message));
-            }
+            if (title == null) { throw new ArgumentNullException(nameof(title)); }
+            if (message == null) { throw new ArgumentNullException(nameof(message)); }
 
             // Grab the console as Alfred may not have had the console object set during this module's construction
-            if (_console == null)
-            {
-                _console = _alfred?.Console;
-            }
+            if (_console == null) { _console = AlfredInstance?.Console; }
 
             // Send it on to the console, if we have one. It'll figure it out from there
             _console?.Log(title, message, level);
-
         }
 
         /// <summary>
-        /// Gets the children of this component. Depending on the type of component this is, the children will
-        /// vary in their own types.
-        /// </summary>
-        /// <value>The children.</value>
-        [NotNull, ItemNotNull]
-        public abstract IEnumerable<IAlfredComponent> Children { get; }
-
-        /// <summary>
-        /// Called when the component is registered.
+        ///     Called when the component is registered.
         /// </summary>
         /// <param name="alfred">The alfred.</param>
         public virtual void OnRegistered([CanBeNull] IAlfred alfred)
         {
             // Hang on to the reference now so AlfredInstance doesn't lie and we can tell
             // our children who Alfred is before the whole update process happens
-            _alfred = alfred;
+            AlfredInstance = alfred;
 
             RegisterControls();
         }
 
         /// <summary>
-        /// Occurs when a property changes.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// Called when a property changes.
+        ///     Called when a property changes.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
@@ -363,77 +409,47 @@ namespace MattEland.Ani.Alfred.Core
             }
             catch (Exception ex)
             {
-                Log("Component.PropertyChanged", "Encountered an exception raising a property changed event: " + ex.BuildDetailsMessage(), LogLevel.Error);
+                Log("Component.PropertyChanged",
+                    "Encountered an exception raising a property changed event: "
+                    + ex.BuildDetailsMessage(),
+                    LogLevel.Error);
             }
         }
 
         /// <summary>
-        /// Registers the chat provider as the framework's chat provider.
+        ///     Registers the chat provider as the framework's chat provider.
         /// </summary>
         /// <param name="chatProvider">The chat provider.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="chatProvider"/> is <see langword="null" />.</exception>
-        /// <exception cref="InvalidOperationException">If Register is called when Alfred is null (prior to initialization)</exception>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="chatProvider" /> is <see langword="null" />
+        ///     .
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        ///     If Register is called when Alfred is null (prior to
+        ///     initialization)
+        /// </exception>
         protected void Register([NotNull] IChatProvider chatProvider)
         {
-            if (chatProvider == null)
-            {
-                throw new ArgumentNullException(nameof(chatProvider));
-            }
+            if (chatProvider == null) { throw new ArgumentNullException(nameof(chatProvider)); }
 
-            if (_alfred == null)
+            if (AlfredInstance == null)
             {
                 throw new InvalidOperationException(Resources.NoAlfredInstance);
             }
 
-            _alfred.Register(chatProvider);
+            AlfredInstance.Register(chatProvider);
         }
 
         /// <summary>
-        /// Gets a list of properties provided by this item.
+        ///     Builds widget creation parameters for creating a widget.
         /// </summary>
-        /// <returns>The properties</returns>
-        public IEnumerable<IPropertyItem> Properties
-        {
-            get
-            {
-                yield return new AlfredProperty("Name", Name);
-                yield return new AlfredProperty("Status", Status);
-                yield return new AlfredProperty("Child Items", Children.Count());
-                yield return new AlfredProperty("Visible", IsVisible);
-                yield return new AlfredProperty("Version", Version);
-            }
-        }
-
-        /// <summary>
-        /// Gets the property providers nested inside of this property provider.
-        /// </summary>
-        /// <value>The property providers.</value>
-        public IEnumerable<IPropertyProvider> PropertyProviders
-        {
-            get
-            {
-                return Children;
-            }
-        }
-
-        /// <summary>
-        /// Gets the display name for use in the user interface.
-        /// </summary>
-        /// <value>The display name.</value>
-        public virtual string DisplayName
-        {
-            get { return Name; }
-        }
-
-        /// <summary>
-        /// Gets the name of the broad categorization or type that this item is.
-        /// </summary>
-        /// <example>
-        /// Some examples of ItemTypeName values might be "Folder", "Application", "User", etc.
-        /// </example>
-        /// <value>The item type's name.</value>
+        /// <param name="name">The name of the widget.</param>
+        /// <returns>Usable WidgetCreationParameters.</returns>
         [NotNull]
-        public abstract string ItemTypeName { get; }
+        protected WidgetCreationParameters BuildWidgetParameters([NotNull] string name)
+        {
+            return new WidgetCreationParameters(name, Console, Locale);
+        }
     }
 
 }

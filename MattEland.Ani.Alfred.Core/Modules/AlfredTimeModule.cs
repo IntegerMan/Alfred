@@ -45,9 +45,9 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </param>
         public AlfredTimeModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
         {
-            CurrentDateWidget = new TextWidget();
-            CurrentTimeWidget = new TextWidget();
-            AlertWidget = new WarningWidget
+            CurrentDateWidget = new TextWidget(BuildWidgetParameters("lblCurrentDate"));
+            CurrentTimeWidget = new TextWidget(BuildWidgetParameters("lblCurrentTime"));
+            AlertWidget = new WarningWidget(BuildWidgetParameters("warnAlert"))
             {
                 IsVisible = false,
                 Text = Resources.AlfredTimeModule_AlfredTimeModule_BedtimeNagMessage

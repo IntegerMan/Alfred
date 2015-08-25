@@ -97,7 +97,8 @@ namespace MattEland.Ani.Alfred.Core.Modules
             {
                 foreach (var item in AlfredInstance.Subsystems)
                 {
-                    var widget = new TextWidget { DataContext = item };
+                    var id = string.Format(Locale, "lblSubsystem{0}", item.Id);
+                    var widget = new TextWidget(BuildWidgetParameters(id)) { DataContext = item };
                     UpdateWidgetText(widget, item);
 
                     _widgets.Add(widget);
@@ -113,7 +114,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
 
                 Log("Subsystems.Initialize", noSubsystemsDetected, LogLevel.Warning);
 
-                var widget = new TextWidget(noSubsystemsDetected);
+                var widget = new TextWidget(noSubsystemsDetected, BuildWidgetParameters("lblNoSubsystems"));
                 _widgets.Add(widget);
 
                 Register(widget);

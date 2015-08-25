@@ -48,10 +48,10 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             _diskReadCounter = MetricProvider.Build(DiskCategoryName, DiskReadCounterName, TotalInstanceName);
             _diskWriteCounter = MetricProvider.Build(DiskCategoryName, DiskWriteCounterName, TotalInstanceName);
 
-            _diskReadWidget = CreatePercentWidget();
+            _diskReadWidget = CreatePercentWidget(BuildWidgetParameters("progDiskTotalRead"));
             _diskReadWidget.Text = Resources.DiskReadLabel;
 
-            _diskWriteWidget = CreatePercentWidget();
+            _diskWriteWidget = CreatePercentWidget(BuildWidgetParameters("progDiskTotalWrite"));
             _diskWriteWidget.Text = Resources.DiskWriteLabel;
 
         }
@@ -100,9 +100,10 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// </summary>
         /// <returns>A percentage progress bar widget</returns>
         [NotNull]
-        private static AlfredProgressBarWidget CreatePercentWidget()
+        private static AlfredProgressBarWidget CreatePercentWidget(
+            [NotNull] WidgetCreationParameters parameters)
         {
-            var widget = new AlfredProgressBarWidget
+            var widget = new AlfredProgressBarWidget(parameters)
             {
                 Minimum = 0,
                 Maximum = 100,

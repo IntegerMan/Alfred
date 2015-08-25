@@ -22,7 +22,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
         [Test]
         public void CanInstantiateWarningWidget()
         {
-            var widget = new WarningWidget();
+            var widget = new WarningWidget(new WidgetCreationParameters("Test"));
         }
     }
 }

@@ -107,6 +107,7 @@
     <Compile Include="Console\SimpleConsole.cs" />
     <Compile Include="Definitions\SimplePlatformProvider.cs" />
     <Compile Include="Widgets\WarningWidget.cs" />
+    <Compile Include="Widgets\WidgetCreationParameters.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">

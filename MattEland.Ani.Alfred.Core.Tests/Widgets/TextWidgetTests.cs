@@ -9,6 +9,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using JetBrains.Annotations;
+
 using MattEland.Ani.Alfred.Core.Widgets;
 
 using NUnit.Framework;
@@ -26,7 +28,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
         [Test]
         public void TextWidgetConstructorTextTests()
         {
-            var widget = new TextWidget(TestString);
+            var widget = new TextWidget(TestString, BuildWidgetParams());
 
             Assert.AreEqual(TestString, widget.Text);
         }
@@ -34,9 +36,21 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
         [Test]
         public void TextWidgetTextTests()
         {
-            var widget = new TextWidget { Text = TestString };
+            var widget = new TextWidget(BuildWidgetParams()) { Text = TestString };
 
             Assert.AreEqual(TestString, widget.Text);
         }
+
+        /// <summary>
+        ///     Builds widget parameters.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>The WidgetCreationParameters.</returns>
+        [NotNull]
+        private WidgetCreationParameters BuildWidgetParams(string name = "WidgetTest")
+        {
+            return new WidgetCreationParameters(name);
+        }
+
     }
 }

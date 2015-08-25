@@ -8,6 +8,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 using JetBrains.Annotations;
 
@@ -85,6 +86,13 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <value>The shell command handler.</value>
         [CanBeNull]
         IShellCommandRecipient ShellCommandHandler { get; }
+
+        /// <summary>
+        /// Gets the locale.
+        /// </summary>
+        /// <value>The locale.</value>
+        [NotNull]
+        CultureInfo Locale { get; }
 
         /// <summary>
         /// Registers the shell command recipient that will allow the shell to get commands from the Alfred layer.

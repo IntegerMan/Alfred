@@ -1,25 +1,39 @@
 ﻿// ---------------------------------------------------------
 // AlfredProgressBarWidget.cs
 // 
-// Created on:      08/04/2015 at 3:34 PM
-// Last Modified:   08/04/2015 at 4:04 PM
-// Original author: Matt Eland
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/24/2015 at 11:22 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System.Globalization;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Console;
+
 namespace MattEland.Ani.Alfred.Core.Widgets
 {
     /// <summary>
-    /// A progress bar widget to be interpreted at the user interface layer
+    ///     A progress bar widget to be interpreted at the user interface layer
     /// </summary>
     public sealed class AlfredProgressBarWidget : AlfredTextWidget
     {
         private float _maximum = 100;
         private float _minimum;
         private float _value;
+
+        [CanBeNull]
+        private string _valueFormatString;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AlfredProgressBarWidget" /> class.
+        /// </summary>
+        /// <param name="parameters">The parameters.</param>
+        public AlfredProgressBarWidget([NotNull] WidgetCreationParameters parameters) : base(parameters)
+        {
+        }
 
         /// <summary>
         ///     Gets or sets the minimum value to display on the bar.
@@ -88,12 +102,9 @@ namespace MattEland.Ani.Alfred.Core.Widgets
             }
         }
 
-        [CanBeNull]
-        private string _valueFormatString;
-
         /// <summary>
-        /// Gets or sets the value format string. This is used for driving the ValueText field.
-        /// This can be null for default representation. Use {0} to represent the value.
+        ///     Gets or sets the value format string. This is used for driving the ValueText field.
+        ///     This can be null for default representation. Use {0} to represent the value.
         /// </summary>
         /// <value>The value format string.</value>
         [CanBeNull]
@@ -110,6 +121,18 @@ namespace MattEland.Ani.Alfred.Core.Widgets
                     OnPropertyChanged(nameof(ValueText));
                 }
             }
+        }
+
+        /// <summary>
+        ///     Gets the name of the broad categorization or type that this item is.
+        /// </summary>
+        /// <example>
+        ///     Some examples of ItemTypeName values might be "Folder", "Application", "User", etc.
+        /// </example>
+        /// <value>The item type's name.</value>
+        public override string ItemTypeName
+        {
+            get { return "Progress Bar"; }
         }
     }
 }

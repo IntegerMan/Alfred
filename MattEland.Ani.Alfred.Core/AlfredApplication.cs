@@ -345,6 +345,13 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
+        /// Gets the locale.
+        /// </summary>
+        /// <value>The locale.</value>
+        [NotNull]
+        public CultureInfo Locale { get; set; } = CultureInfo.CurrentCulture;
+
+        /// <summary>
         ///     Gets the name of the framework.
         /// </summary>
         /// <value>The name.</value>
