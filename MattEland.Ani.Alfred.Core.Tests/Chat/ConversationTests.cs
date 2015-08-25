@@ -162,7 +162,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         ///     This is really a test that given a valid template, the <see cref="ChatEngine" /> is able to
         ///     parse it and return a value from it.
         /// 
-        ///     See test ALF-67 for issue ALF-65
+        ///     See test ALF-66 for issue ALF-65
         /// </remarks>
         [Test]
         public void HiShouldNotResultInFallback()

@@ -266,7 +266,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
             foreach (XmlNode childNode in node.ChildNodes)
             {
-                ProcessChildNode(childNode, user, request, query, result);
+                sbOutput.Append(ProcessChildNode(childNode, user, request, query, result));
             }
 
             return sbOutput.ToString();
