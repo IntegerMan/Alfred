@@ -14,32 +14,35 @@
         <StackPanel>
 
             <TextBlock Foreground="{DynamicResource AppForegroundBrush}" 
-                   Text="Alfred:" />
+                       Text="Alfred:" />
 
             <TextBlock Foreground="{DynamicResource AlfredBrush}" 
-                   Margin="0,4,0,0"
-                   TextWrapping="Wrap"
-                   ToolTip="{Binding Path=LastInput, StringFormat='In response to: {0}'}"
-                   Text="{Binding Path=LastResponse.ResponseText}"/>
+                       Margin="0,4,0,0"
+                       TextWrapping="Wrap"
+                       ToolTip="{Binding Path=LastInput, StringFormat='In response to: {0}'}"
+                       Text="{Binding Path=LastResponse.ResponseText}"/>
 
         </StackPanel>
 
         <!-- User Input area -->
         <StackPanel>
-        <TextBlock Margin="0,8,0,4"
-                   Text="Input:"
-                   Foreground="{DynamicResource AppForegroundBrush}" />
+            <TextBlock Margin="0,8,0,4"
+                       Text="Input:"
+                       Foreground="{DynamicResource AppForegroundBrush}" />
 
             <DockPanel>
                 <Button x:Name="SubmitButton" 
-                    Margin="8,0,0,0"
-                    Padding="8,0"
-                    IsDefault="True"
-                    Click="OnSubmitClicked"
-                    DockPanel.Dock="Right"
-                    Content="Submit" />
+                        x:FieldModifier="public"
+                        Margin="8,0,0,0"
+                        Padding="8,0"
+                        IsDefault="True"
+                        Click="OnSubmitClicked"
+                        DockPanel.Dock="Right"
+                        Content="Submit" />
+                
                 <TextBox x:Name="InputText"
-                    ToolTip="Enter your statement here and click Submit once you're ready." />
+                         x:FieldModifier="public"
+                         ToolTip="Enter your statement here and click Submit once you're ready." />
 
             </DockPanel>
         </StackPanel>

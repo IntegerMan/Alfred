@@ -110,6 +110,7 @@
     <Compile Include="Controls\ExplorerControl.xaml.cs">
       <DependentUpon>ExplorerControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\IUserInterfaceTestable.cs" />
     <Compile Include="Controls\RootPagesControl.xaml.cs">
       <DependentUpon>RootPagesControl.xaml</DependentUpon>
     </Compile>

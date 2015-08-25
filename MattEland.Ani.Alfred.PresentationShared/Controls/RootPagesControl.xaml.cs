@@ -9,6 +9,7 @@
 
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls;
 
 using JetBrains.Annotations;
 
@@ -22,7 +23,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Controls
     /// <summary>
     ///     The Root Pages Control contains a <see cref="TabControl" /> with all of Alfred's Root Pages.
     /// </summary>
-    public partial class RootPagesControl
+    public partial class RootPagesControl : IUserInterfaceTestable
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="RootPagesControl" /> class.

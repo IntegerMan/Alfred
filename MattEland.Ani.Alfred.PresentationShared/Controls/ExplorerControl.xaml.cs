@@ -18,10 +18,11 @@ using MattEland.Ani.Alfred.Core.Definitions;
 
 namespace MattEland.Ani.Alfred.PresentationShared.Controls
 {
+
     /// <summary>
     ///     Interaction logic for ExplorerControl.xaml
     /// </summary>
-    public partial class ExplorerControl
+    public partial class ExplorerControl : IUserInterfaceTestable
     {
 
         /// <summary>
@@ -56,7 +57,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Controls
         /// <summary>
         ///     Handles the <see cref="E:RootNodesChanged" /> event.
         /// </summary>
-        /// <param name="d">The d.</param>
+        /// <param name="d">The dependence object.</param>
         /// <param name="e">
         ///     The <see cref="System.Windows.DependencyPropertyChangedEventArgs" /> instance
         ///     containing the event data.

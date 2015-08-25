@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Root CoveredStatements="4314" TotalStatements="6670" CoveragePercent="65" ReportType="NDependXML" DotCoverVersion="3.1.1">
+<Root CoveredStatements="4315" TotalStatements="6670" CoveragePercent="65" ReportType="NDependXML" DotCoverVersion="3.1.1">
   <Assembly Name="MattEland.Ani.Alfred.Chat" CoveredStatements="271" TotalStatements="363" CoveragePercent="75">
     <Namespace Name="MattEland.Ani.Alfred.Chat" CoveredStatements="271" TotalStatements="363" CoveragePercent="75">
       <Type Name="AimlStatementHandler" CoveredStatements="103" TotalStatements="137" CoveragePercent="75">
@@ -1241,7 +1241,7 @@
       </Type>
     </Namespace>
   </Assembly>
-  <Assembly Name="MattEland.Ani.Alfred.Tests" CoveredStatements="1359" TotalStatements="1430" CoveragePercent="95">
+  <Assembly Name="MattEland.Ani.Alfred.Tests" CoveredStatements="1360" TotalStatements="1430" CoveragePercent="95">
     <Namespace Name="MattEland.Ani.Alfred.Tests" CoveredStatements="170" TotalStatements="188" CoveragePercent="90">
       <Type Name="AlfredProviderTests" CoveredStatements="144" TotalStatements="153" CoveragePercent="94">
         <Type Name="&lt;&gt;c" CoveredStatements="2" TotalStatements="2" CoveragePercent="100">
@@ -1286,7 +1286,7 @@
         <Method Name="set_Culture(CultureInfo)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="64" />
       </Type>
     </Namespace>
-    <Namespace Name="MattEland.Ani.Alfred.Tests.Chat" CoveredStatements="327" TotalStatements="349" CoveragePercent="94">
+    <Namespace Name="MattEland.Ani.Alfred.Tests.Chat" CoveredStatements="328" TotalStatements="349" CoveragePercent="94">
       <Type Name="AlfredTagHandlerTests" CoveredStatements="21" TotalStatements="21" CoveragePercent="100">
         <Method Name="AlfredTagHandlerCausesCommandToBeInvoked()" CoveredStatements="10" TotalStatements="10" CoveragePercent="100" FirstStatementLine="59" />
         <Method Name="AlfredTagHandlerHasHandlesAttribute()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="49" />
@@ -1335,7 +1335,7 @@
         <Method Name="Say(String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="201" />
         <Method Name="set_Engine(ChatEngine)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="110" />
       </Type>
-      <Type Name="ConversationTests" CoveredStatements="61" TotalStatements="62" CoveragePercent="98">
+      <Type Name="ConversationTests" CoveredStatements="62" TotalStatements="62" CoveragePercent="100">
         <Method Name="AskingForCurrentDayContainsCurrentDay()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="86" />
         <Method Name="AskingForCurrentTimeContainsCurrentTime()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="103" />
         <Method Name="AskingForCurrentTimeRevealsRedirectedTemplate()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="120" />
@@ -1346,7 +1346,7 @@
         <Method Name="FirstPersonSubstitutionsHasEntries()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="138" />
         <Method Name="GenderSubstitutionsHasEntries()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="146" />
         <Method Name="GlobalSettingsHaveEntries()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="154" />
-        <Method Name="HiShouldNotResultInFallback()" CoveredStatements="3" TotalStatements="4" CoveragePercent="75" FirstStatementLine="169" />
+        <Method Name="HiShouldNotResultInFallback()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="169" />
         <Method Name="SecondPersonSubstitutionsHasEntries()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="177" />
         <Method Name="SetUp()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="37" />
         <Method Name="StartupLeavesLastInputClear()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="185" />
