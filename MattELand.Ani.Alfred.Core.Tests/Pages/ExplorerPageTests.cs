@@ -86,7 +86,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
 
             return new List<IPropertyProvider>
                    {
-                       new AlfredEventLogPage(new SimpleConsole(), "Event Test")
+                       new AlfredEventLogPage(new SimplePlatformProvider(), new SimpleConsole(), "Event Test")
                    };
         }
     }

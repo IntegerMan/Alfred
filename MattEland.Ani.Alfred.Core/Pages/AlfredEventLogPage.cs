@@ -2,7 +2,7 @@
 // AlfredEventLogPage.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   08/25/2015 at 12:06 PM
+// Last Modified:   08/26/2015 at 1:09 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -27,17 +27,33 @@ namespace MattEland.Ani.Alfred.Core.Pages
         [NotNull]
         private readonly IConsole _console;
 
+        [NotNull]
+        private readonly ICollection<IPropertyProvider> _providers;
+
+        /// <summary>
+        ///     The last time from a logged event that has been moved to the _providers collection.
+        /// </summary>
+        private DateTime _lastTimeLogged = DateTime.MinValue;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredEventLogPage" /> class.
         /// </summary>
+        /// <param name="platform">The platform provider.</param>
         /// <param name="console">The console.</param>
         /// <param name="name">The name.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        public AlfredEventLogPage([NotNull] IConsole console, [NotNull] string name)
-            : base(name, "Log")
+        /// <exception cref="System.ArgumentNullException">
+        /// </exception>
+        public AlfredEventLogPage(
+            [NotNull] IPlatformProvider platform,
+            [NotNull] IConsole console,
+            [NotNull] string name) : base(name, "Log")
         {
+            //- Validate
+            if (platform == null) { throw new ArgumentNullException(nameof(platform)); }
             if (console == null) { throw new ArgumentNullException(nameof(console)); }
+
             _console = console;
+            _providers = platform.CreateCollection<IPropertyProvider>();
         }
 
         /// <summary>
@@ -87,9 +103,42 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <value>The property providers.</value>
         public override IEnumerable<IPropertyProvider> PropertyProviders
         {
-            get
+            get { return _providers; }
+        }
+
+        /// <summary>
+        ///     Updates the component
+        /// </summary>
+        protected override void UpdateProtected()
+        {
+            base.UpdateProtected();
+
+            AddNewEventsToProviders();
+        }
+
+        /// <summary>
+        ///     Adds new events to the providers collection. This is necessary because we're doing a cast to
+        ///     IPropertyProvider and can't rely on any observable collection to relay this information.
+        /// </summary>
+        private void AddNewEventsToProviders()
+        {
+            // Find new events that are IPropertyProviders
+            var newEvents =
+                _console.Events.Where(e => e.Time > _lastTimeLogged && e is IPropertyProvider)
+                        .ToList();
+
+            if (newEvents.Any())
             {
-                return Events.Cast<IPropertyProvider>();
+                // Gets the events in order with casting
+                var newProviders = newEvents.OrderBy(e => e.Time).Cast<IPropertyProvider>();
+
+                foreach (var provider in newProviders.Where(provider => provider != null))
+                {
+                    _providers.Add(provider);
+                }
+
+                // Update our last logged time
+                _lastTimeLogged = newEvents.Max(e => e.Time);
             }
         }
     }

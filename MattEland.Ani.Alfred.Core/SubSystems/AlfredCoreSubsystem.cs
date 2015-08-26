@@ -1,9 +1,10 @@
 ﻿// ---------------------------------------------------------
 // AlfredCoreSubsystem.cs
 // 
-// Created on:      08/08/2015 at 6:12 PM
-// Last Modified:   08/08/2015 at 6:58 PM
-// Original author: Matt Eland
+// Created on:      08/22/2015 at 10:47 PM
+// Last Modified:   08/26/2015 at 12:56 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using JetBrains.Annotations;
@@ -16,31 +17,33 @@ using MattEland.Common;
 namespace MattEland.Ani.Alfred.Core.Subsystems
 {
     /// <summary>
-    ///     The core subsystem provides essential monitoring and control functionality for Alfred such as the Alfred control
+    ///     The core subsystem provides essential monitoring and control functionality for Alfred such as
+    ///     the Alfred control
     ///     page, an event log page, etc. as well as monitoring of the current time and date.
     /// </summary>
     /// <remarks>
-    /// TODO: Once Alfred has a calendar subsystem, the time / date functionality may need to move there
+    ///     TODO: Once Alfred has a calendar subsystem, the time / date functionality may need to move
+    ///     there
     /// </remarks>
     public sealed class AlfredCoreSubsystem : AlfredSubsystem
     {
         [NotNull]
         private readonly AlfredModuleListPage _controlPage;
 
-        [CanBeNull]
-        private AlfredEventLogPage _eventLogPage;
+        [NotNull]
+        private readonly AlfredPagesListModule _pagesModule;
 
         [NotNull]
         private readonly AlfredPowerModule _powerModule;
 
         [NotNull]
-        private readonly AlfredTimeModule _timeModule;
-
-        [NotNull]
         private readonly AlfredSubsystemListModule _systemsModule;
 
         [NotNull]
-        private readonly AlfredPagesListModule _pagesModule;
+        private readonly AlfredTimeModule _timeModule;
+
+        [CanBeNull]
+        private AlfredEventLogPage _eventLogPage;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
@@ -63,29 +66,6 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
             _timeModule = new AlfredTimeModule(provider);
             _systemsModule = new AlfredSubsystemListModule(provider);
             _pagesModule = new AlfredPagesListModule(provider);
-
-        }
-
-        /// <summary>
-        /// Registers the controls for this component.
-        /// </summary>
-        protected override void RegisterControls()
-        {
-            Register(_controlPage);
-
-            // Build out our control page
-            _controlPage.ClearModules();
-            _controlPage.Register(_powerModule);
-            _controlPage.Register(_timeModule);
-            _controlPage.Register(_systemsModule);
-            _controlPage.Register(_pagesModule);
-
-            // Don't include the event log page if there are no events
-            if (AlfredInstance?.Console != null)
-            {
-                _eventLogPage = new AlfredEventLogPage(AlfredInstance.Console, EventLogPageName);
-                Register(_eventLogPage);
-            }
         }
 
         /// <summary>
@@ -126,5 +106,28 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
             get { return "Core"; }
         }
 
+        /// <summary>
+        ///     Registers the controls for this component.
+        /// </summary>
+        protected override void RegisterControls()
+        {
+            Register(_controlPage);
+
+            // Build out our control page
+            _controlPage.ClearModules();
+            _controlPage.Register(_powerModule);
+            _controlPage.Register(_timeModule);
+            _controlPage.Register(_systemsModule);
+            _controlPage.Register(_pagesModule);
+
+            // Don't include the event log page if there are no events
+            if (AlfredInstance?.Console != null)
+            {
+                _eventLogPage = new AlfredEventLogPage(AlfredInstance.PlatformProvider,
+                                                       AlfredInstance.Console,
+                                                       EventLogPageName);
+                Register(_eventLogPage);
+            }
+        }
     }
 }
