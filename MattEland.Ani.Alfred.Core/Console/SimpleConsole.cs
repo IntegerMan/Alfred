@@ -27,23 +27,28 @@ namespace MattEland.Ani.Alfred.Core.Console
         /// <summary>
         ///     Initializes a new instance of the <see cref="SimpleConsole" /> class.
         /// </summary>
-        public SimpleConsole() : this(new SimplePlatformProvider())
+        public SimpleConsole() : this(new SimplePlatformProvider(), new ConsoleEventFactory())
         {
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="SimpleConsole" /> class.
+        /// Initializes a new instance of the <see cref="SimpleConsole" /> class.
         /// </summary>
         /// <param name="provider">The platform provider used to initialize the collection of events.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        public SimpleConsole([NotNull] IPlatformProvider provider)
+        /// <param name="factory">The console event factory.</param>
+        /// <exception cref="System.ArgumentNullException">provider, factory
+        /// </exception>
+        public SimpleConsole([NotNull] IPlatformProvider provider,
+                             [NotNull] ConsoleEventFactory factory)
         {
             if (provider == null)
             {
                 throw new ArgumentNullException(nameof(provider));
             }
+            if (factory == null) { throw new ArgumentNullException(nameof(factory)); }
 
             _events = provider.CreateCollection<IConsoleEvent>();
+            EventFactory = factory;
         }
 
         /// <summary>
@@ -64,18 +69,17 @@ namespace MattEland.Ani.Alfred.Core.Console
                 return;
             }
 
-            var evt = new ConsoleEvent(title, message, level);
+            var evt = EventFactory.CreateEvent(title, message, level);
 
             Log(evt);
         }
 
+        /// <summary>
+        /// Logs the specified console event.
+        /// </summary>
+        /// <param name="consoleEvent">The console event.</param>
         private void Log([NotNull] IConsoleEvent consoleEvent)
         {
-            if (consoleEvent == null)
-            {
-                throw new ArgumentNullException(nameof(consoleEvent));
-            }
-
             _events.Add(consoleEvent);
         }
 
@@ -89,5 +93,13 @@ namespace MattEland.Ani.Alfred.Core.Console
         {
             get { return _events; }
         }
+
+        /// <summary>
+        /// Gets the console event factory used for creating new events.
+        /// </summary>
+        /// <value>The console event factory.</value>
+        [NotNull]
+        public ConsoleEventFactory EventFactory { get; }
     }
+
 }

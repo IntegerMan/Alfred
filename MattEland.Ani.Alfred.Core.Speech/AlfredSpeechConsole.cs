@@ -33,18 +33,22 @@ namespace MattEland.Ani.Alfred.Core.Speech
         private readonly HashSet<LogLevel> _speechEnabledLogLevels;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredSpeechConsole" /> class.
+        /// Initializes a new instance of the <see cref="AlfredSpeechConsole" /> class.
         /// </summary>
         /// <param name="console">The console that events should be logged to.</param>
-        public AlfredSpeechConsole([CanBeNull] IConsole console)
+        /// <param name="factory">The event factory.</param>
+        public AlfredSpeechConsole([CanBeNull] IConsole console, [CanBeNull] ConsoleEventFactory factory)
         {
             // This class can decorate other consoles, but for an empty implementation it can rely on an internal collection
             if (console == null)
             {
                 console = new SimpleConsole();
             }
-
             _console = console;
+
+            // Set up the event factory
+            if (factory == null) { factory = new ConsoleEventFactory(); }
+            EventFactory = factory;
 
             // Tell it what log levels we care about
             _speechEnabledLogLevels = new HashSet<LogLevel> { LogLevel.ChatResponse, LogLevel.Warning, LogLevel.Error };
@@ -115,6 +119,12 @@ namespace MattEland.Ani.Alfred.Core.Speech
                 _speech.Say(message.NonNull());
             }
         }
+
+        /// <summary>
+        /// Gets the console event factory used for creating new events.
+        /// </summary>
+        /// <value>The console event factory.</value>
+        public ConsoleEventFactory EventFactory { get; }
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.

@@ -8,14 +8,12 @@
 
 using System;
 
-using MattEland.Ani.Alfred.Core.Definitions;
-
 namespace MattEland.Ani.Alfred.Core.Console
 {
     /// <summary>
     ///     Represents an event logged to the monitoring console
     /// </summary>
-    public interface IConsoleEvent : IPropertyProvider
+    public interface IConsoleEvent
     {
         /// <summary>
         /// Gets the title of the event.

@@ -266,10 +266,10 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             }
 
             // Give Alfred a way to talk to the application
-            var baseConsole = new SimpleConsole(platformProvider);
+            var baseConsole = new SimpleConsole(platformProvider, new ExplorerEventFactory());
 
             // Give Alfred a voice
-            _console = new AlfredSpeechConsole(baseConsole) { EnableSpeech = EnableSpeech };
+            _console = new AlfredSpeechConsole(baseConsole, baseConsole.EventFactory) { EnableSpeech = EnableSpeech };
 
             _console.Log("AppManager.InitConsole", "Initializing console.", LogLevel.Verbose);
             _alfred.Console = _console;
