@@ -1,14 +1,19 @@
 ﻿// ---------------------------------------------------------
 // ConsoleEvent.cs
 // 
-// Created on:      07/26/2015 at 2:23 PM
-// Last Modified:   08/07/2015 at 12:24 AM
-// Original author: Matt Eland
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/26/2015 at 1:04 AM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 
 using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Core.Definitions;
 
 namespace MattEland.Ani.Alfred.Core.Console
 {
@@ -16,7 +21,7 @@ namespace MattEland.Ani.Alfred.Core.Console
     /// <summary>
     ///     Represents a logged event to the console
     /// </summary>
-    public struct ConsoleEvent : IEquatable<ConsoleEvent>, IConsoleEvent
+    public struct ConsoleEvent : IEquatable<ConsoleEvent>, IConsoleEvent, IPropertyProvider
     {
 
         /// <summary>
@@ -25,7 +30,8 @@ namespace MattEland.Ani.Alfred.Core.Console
         /// <param name="title">The title.</param>
         /// <param name="message">The message.</param>
         /// <param name="level">The logging level.</param>
-        internal ConsoleEvent(string title, string message, LogLevel level) : this(title, message, level, DateTime.UtcNow)
+        internal ConsoleEvent(string title, string message, LogLevel level)
+            : this(title, message, level, DateTime.UtcNow)
         {
         }
 
@@ -86,30 +92,31 @@ namespace MattEland.Ani.Alfred.Core.Console
         /// <returns><c>true</c> if the events are equivalent, <c>false</c> otherwise.</returns>
         public bool Equals(ConsoleEvent other)
         {
-            return UtcTime.Equals(other.UtcTime) &&
-                   string.Equals(Title, other.Title) &&
-                   string.Equals(Message, other.Message) &&
-                   Level == other.Level;
+            return UtcTime.Equals(other.UtcTime) && string.Equals(Title, other.Title)
+                   && string.Equals(Message, other.Message) && Level == other.Level;
         }
 
         /// <summary>
         ///     Determines whether the specified <see cref="System.Object" /> is equal to this instance.
         /// </summary>
         /// <param name="obj">The object to compare with the current instance.</param>
-        /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
+        /// <returns>
+        ///     <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance;
+        ///     otherwise, <c>false</c>.
+        /// </returns>
         public override bool Equals([CanBeNull] object obj)
         {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
+            if (ReferenceEquals(null, obj)) { return false; }
             return obj is ConsoleEvent && Equals((ConsoleEvent)obj);
         }
 
         /// <summary>
         ///     Returns a hash code for this instance.
         /// </summary>
-        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
+        /// <returns>
+        ///     A hash code for this instance, suitable for use in hashing algorithms and data structures
+        ///     like a hash table.
+        /// </returns>
         public override int GetHashCode()
         {
             unchecked
@@ -145,6 +152,69 @@ namespace MattEland.Ani.Alfred.Core.Console
         }
 
         #endregion
+
+        /// <summary>
+        ///     Gets the name of the item.
+        /// </summary>
+        /// <value>The name.</value>
+        public string Name
+        {
+            get { return string.Format(CultureInfo.InvariantCulture, "{0}: {1}", Title, Message); }
+        }
+
+        /// <summary>
+        ///     Renders a string representation of this object.
+        /// </summary>
+        /// <returns>The string representation.</returns>
+        public override string ToString()
+        {
+            return Name;
+        }
+
+        /// <summary>
+        ///     Gets a list of properties provided by this item.
+        /// </summary>
+        /// <returns>The properties</returns>
+        public IEnumerable<IPropertyItem> Properties
+        {
+            get
+            {
+                yield return new AlfredProperty("Title", Title);
+                yield return new AlfredProperty("Message", Message);
+                yield return new AlfredProperty("Level", Level);
+                yield return new AlfredProperty("Created", Time);
+            }
+        }
+
+        /// <summary>
+        ///     Gets the property providers.
+        /// </summary>
+        /// <value>The property providers.</value>
+        public IEnumerable<IPropertyProvider> PropertyProviders
+        {
+            get { yield break; }
+        }
+
+        /// <summary>
+        ///     Gets the display name for use in the user interface.
+        /// </summary>
+        /// <value>The display name.</value>
+        public string DisplayName
+        {
+            get { return Name; }
+        }
+
+        /// <summary>
+        ///     Gets the name of the broad categorization or type that this item is.
+        /// </summary>
+        /// <example>
+        ///     Some examples of ItemTypeName values might be "Folder", "Application", "User", etc.
+        /// </example>
+        /// <value>The item type's name.</value>
+        public string ItemTypeName
+        {
+            get { return string.Format(CultureInfo.InvariantCulture, "{0} Event", Level); }
+        }
     }
 
 }

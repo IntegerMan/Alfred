@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using JetBrains.Annotations;
 
@@ -78,6 +79,23 @@ namespace MattEland.Ani.Alfred.Core.Pages
         public override IEnumerable<IAlfredComponent> Children
         {
             get { yield break; }
+        }
+
+        /// <summary>
+        ///     Gets the property providers nested inside of this property provider.
+        /// </summary>
+        /// <value>The property providers.</value>
+        public override IEnumerable<IPropertyProvider> PropertyProviders
+        {
+            get
+            {
+                /* TODO: I don't really like just doing a direct IPropertyProvider on ConsoleEvent.
+                   It'd be better to have an adapter class be injected into newly-created events
+                   so they can remain pure but we can be reasonably sure of encountering a list of
+                   IPropertyProvider classes that also happen to be IConsoleEvent */
+
+                return Events;
+            }
         }
     }
 }
