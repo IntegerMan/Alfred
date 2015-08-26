@@ -85,7 +85,6 @@ namespace MattEland.Ani.Alfred.Chat
             // Set up simple internal fields
             _console = console;
             _chatHistory = new ChatHistoryProvider(provider);
-            _chatHandlerProvider = new ChatHandlersProvider();
 
             // Set up the chat engine
             try
@@ -93,6 +92,7 @@ namespace MattEland.Ani.Alfred.Chat
                 ChatEngine = new ChatEngine(console);
                 _user = new User(Resources.ChatUserName.NonNull());
                 _engineUser = new User(engineName);
+                _chatHandlerProvider = new ChatHandlersProvider(provider, ChatEngine);
                 InitializeChatEngine();
             }
             catch (IOException ex)
