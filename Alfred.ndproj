@@ -2322,7 +2322,7 @@ select t
 //</HowToFix>]]></Query>
       <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="True"><![CDATA[// <Name>Check that all namespaces begins with MattEland</Name>
 warnif count > 0 from n in Application.Namespaces where 
-  !n.NameLike (@"^MattEland")
+  !n.NameLike (@"^MattEland") && !n.NameLike(@"^Xaml")
 select new { n, n.NbLinesOfCode } 
 
 //<Description>
