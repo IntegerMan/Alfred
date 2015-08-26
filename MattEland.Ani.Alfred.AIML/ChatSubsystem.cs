@@ -2,7 +2,7 @@
 // ChatSubsystem.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   08/25/2015 at 4:19 PM
+// Last Modified:   08/25/2015 at 9:54 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -148,13 +148,17 @@ namespace MattEland.Ani.Alfred.Chat
 
         /// <summary>
         ///     A notification method that is invoked when initialization for Alfred is complete so the UI can
-        ///     be fully enabled or
-        ///     adjusted
+        ///     be fully enabled or adjusted
         /// </summary>
         public override void OnInitializationCompleted()
         {
+            /* The chat provider may not be the one that we gave to Alfred or it may be a decorator around it.
+               Either way, use Alfred's implementation. */
+
+            var chatProvider = AlfredInstance?.ChatProvider;
+
             // Say hi so Alfred greets the user
-            AlfredInstance?.ChatProvider?.DoInitialGreeting();
+            chatProvider?.DoInitialGreeting();
         }
     }
 

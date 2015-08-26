@@ -131,11 +131,12 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         }
 
         /// <summary>
-        ///     Gets a value indicating whether input in AIML files should be trusted.
+        ///     Gets a value indicating whether input in new AIML files should be trusted.
         ///     If false the input will go through the full normalization process.
         /// </summary>
-        /// <value>Whether or not AIML files are trusted.</value>
-        public bool TrustAiml { get; } = true;
+        /// <value>Whether or not AIML files encountered from now on are trusted.</value>
+        [UsedImplicitly]
+        public bool TrustAiml { get; set; } = true;
 
         /// <summary>
         ///     Gets or sets the owner of this chat engine. This can be used by tag handlers to get custom
@@ -228,7 +229,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// </summary>
         /// <param name="aimlFile">The aiml file.</param>
         /// <exception cref="ArgumentNullException"><paramref name="aimlFile" /> is <see langword="null" />.</exception>
-        public void LoadAimlFile([NotNull] XmlDocument aimlFile)
+        internal void LoadAimlFile([NotNull] XmlDocument aimlFile)
         {
             //- Validate
             if (aimlFile == null) { throw new ArgumentNullException(nameof(aimlFile)); }

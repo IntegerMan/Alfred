@@ -49,7 +49,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         /// <remarks>
         ///     Test ALF-78 for tasks ALF-59 and ALF-61
         /// </remarks>
-        [TestCase(ChatHistoryProvider.InstanceDisplayName)]
+        [TestCase("Chat History")]
         [TestCase(ChatHandlersProvider.InstanceDisplayName)]
         public void ChatSubsystemListsCorrectNodes(string name)
         {
@@ -74,7 +74,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
             alfred.Initialize();
 
             // Find the chat system
-            var node = chat.PropertyProviders.Find(ChatHistoryProvider.InstanceDisplayName);
+            var node = chat.PropertyProviders.Find("Chat History");
             Assert.IsNotNull(node, "Could not find Chat History node");
 
             /* The chat history node is going to already have a few entries from coming online. 
@@ -113,7 +113,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         [Test]
         public void ChatHistoryHasNoNodesInitially()
         {
-            var node = _chat.PropertyProviders.Find(ChatHistoryProvider.InstanceDisplayName);
+            var node = _chat.PropertyProviders.Find("Chat History");
             Assert.IsNotNull(node, "Could not find Chat History node");
 
             // Check to see that it has no children.

@@ -2,7 +2,7 @@
 // ChatHistoryProvider.cs
 // 
 // Created on:      08/25/2015 at 11:07 AM
-// Last Modified:   08/25/2015 at 3:32 PM
+// Last Modified:   08/25/2015 at 9:57 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -22,18 +22,13 @@ namespace MattEland.Ani.Alfred.Chat
     ///     An <see cref="IPropertyProvider" /> that stores and retrieves chat history entries for inputs
     ///     and outputs involving the <see cref="IChatProvider" />.
     /// </summary>
-    public sealed class ChatHistoryProvider : IPropertyProvider
+    internal sealed class ChatHistoryProvider : IPropertyProvider
     {
-
-        /// <summary>
-        ///     The display name used for each instance's display name
-        /// </summary>
-        public const string InstanceDisplayName = "Chat History";
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ChatHistoryProvider" /> class.
         /// </summary>
-        public ChatHistoryProvider([NotNull] IPlatformProvider provider)
+        internal ChatHistoryProvider([NotNull] IPlatformProvider provider)
         {
             //- Validate
             if (provider == null) { throw new ArgumentNullException(nameof(provider)); }
@@ -48,7 +43,7 @@ namespace MattEland.Ani.Alfred.Chat
         /// <value>The history entries.</value>
         [NotNull]
         [ItemNotNull]
-        public ICollection<ChatHistoryEntry> HistoryEntries { get; }
+        private ICollection<ChatHistoryEntry> HistoryEntries { get; }
 
         /// <summary>
         ///     Gets the display name for use in the user interface.
@@ -77,7 +72,7 @@ namespace MattEland.Ani.Alfred.Chat
         /// <value>The name.</value>
         public string Name
         {
-            get { return InstanceDisplayName; }
+            get { return "Chat History"; }
         }
 
         /// <summary>
@@ -99,15 +94,29 @@ namespace MattEland.Ani.Alfred.Chat
         }
 
         /// <summary>
-        /// Adds a statement with attribution to a specific <see cref="User" />.
+        ///     Adds a statement with attribution to a specific <see cref="User" />.
         /// </summary>
         /// <param name="entry">The entry.</param>
         /// <exception cref="System.ArgumentNullException">entry</exception>
-        public void Add([NotNull] ChatHistoryEntry entry)
+        internal void Add([NotNull] ChatHistoryEntry entry)
         {
             if (entry == null) { throw new ArgumentNullException(nameof(entry)); }
 
             HistoryEntries.Add(entry);
+        }
+
+        /// <summary>
+        ///     Gets the last message from the specified user.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <returns>The last ChatHistoryEntry for that user.</returns>
+        [CanBeNull]
+        internal ChatHistoryEntry GetLastMessageFromUser([NotNull] User user)
+        {
+            if (user == null) { throw new ArgumentNullException(nameof(user)); }
+
+            var userEntries = HistoryEntries.Where(e => e.User == user);
+            return userEntries.OrderBy(e => e.DateTimeUtc).FirstOrDefault();
         }
     }
 

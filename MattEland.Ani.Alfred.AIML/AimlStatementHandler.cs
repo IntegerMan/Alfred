@@ -2,7 +2,7 @@
 // AimlStatementHandler.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   08/25/2015 at 3:24 PM
+// Last Modified:   08/25/2015 at 10:18 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -13,10 +13,8 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Security;
 using System.Xml;
 
 using JetBrains.Annotations;
@@ -44,25 +42,22 @@ namespace MattEland.Ani.Alfred.Chat
         private readonly ChatHistoryProvider _chatHistory;
 
         /// <summary>
-        /// The <see cref="User"/> that represents the chat engine.
+        ///     The <see cref="User" /> that represents the chat engine.
         /// </summary>
-        [CanBeNull]
+        [NotNull]
         private readonly User _engineUser;
 
-        [CanBeNull]
+        [NotNull]
         private readonly User _user;
 
         [CanBeNull]
         private IConsole _console;
 
-        [CanBeNull]
-        private string _input;
-
         private UserStatementResponse _response;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:System.Object" /> class using the current
-        /// directory for the settings path.
+        ///     Initializes a new instance of the <see cref="T:System.Object" /> class using the current
+        ///     directory for the settings path.
         /// </summary>
         /// <param name="engineName">Name of the chat engine.</param>
         /// <param name="provider">The platform provider.</param>
@@ -74,7 +69,6 @@ namespace MattEland.Ani.Alfred.Chat
             [NotNull] IPlatformProvider provider,
             [CanBeNull] IConsole console = null)
         {
-
             //- Validate
             if (engineName == null || engineName.IsEmpty())
             {
@@ -87,22 +81,11 @@ namespace MattEland.Ani.Alfred.Chat
             _chatHistory = new ChatHistoryProvider(provider);
 
             // Set up the chat engine
-            try
-            {
-                ChatEngine = new ChatEngine(console);
-                _user = new User(Resources.ChatUserName.NonNull());
-                _engineUser = new User(engineName);
-                _chatHandlerProvider = new ChatHandlersProvider(provider, ChatEngine);
-                InitializeChatEngine();
-            }
-            catch (IOException ex)
-            {
-                LogErrorInitializingChat(ex);
-            }
-            catch (SecurityException ex)
-            {
-                LogErrorInitializingChat(ex);
-            }
+            ChatEngine = new ChatEngine(console);
+            _user = new User(Resources.ChatUserName.NonNull());
+            _engineUser = new User(engineName);
+            _chatHandlerProvider = new ChatHandlersProvider(provider, ChatEngine);
+            InitializeChatEngine();
         }
 
         /// <summary>
@@ -110,7 +93,7 @@ namespace MattEland.Ani.Alfred.Chat
         /// </summary>
         /// <value>The console.</value>
         [CanBeNull]
-        public IConsole Console
+        internal IConsole Console
         {
             [DebuggerStepThrough]
             [UsedImplicitly]
@@ -133,15 +116,16 @@ namespace MattEland.Ani.Alfred.Chat
         /// </summary>
         /// <remarks>This is present largely for testing</remarks>
         /// <value>The chat engine.</value>
-        [CanBeNull]
+        [NotNull]
         public ChatEngine ChatEngine { get; }
 
         /// <summary>
         ///     Gets the property providers representing broad chat categories.
         /// </summary>
         /// <value>The property providers.</value>
-        [NotNull, ItemNotNull]
-        public IEnumerable<IPropertyProvider> PropertyProviders
+        [NotNull]
+        [ItemNotNull]
+        internal IEnumerable<IPropertyProvider> PropertyProviders
         {
             get
             {
@@ -157,22 +141,15 @@ namespace MattEland.Ani.Alfred.Chat
         public void DoInitialGreeting()
         {
             // Send a "hi" into the system
-            HandleUserStatement(Resources.InitialGreetingText.NonNull());
-
-            // Clear out the input so it doesn't look like the user typed it
-            LastInput = string.Empty;
+            HandleUserStatementInternal(Resources.InitialGreetingText.NonNull(), false);
         }
 
         /// <summary>
         ///     Handles a user statement.
         /// </summary>
         /// <param name="userInput">The user input.</param>
-        /// <returns>The response to the user statement</returns>
-        /// <exception cref="InvalidOperationException">
-        ///     Cannot use the chat system when chat did not initialize
-        ///     properly
-        /// </exception>
-        public UserStatementResponse HandleUserStatement(string userInput)
+        /// <returns>The <see cref="UserStatementResponse" />.</returns>
+        public UserStatementResponse HandleUserStatement([CanBeNull] string userInput)
         {
             if (ChatEngine == null || _user == null || _engineUser == null)
             {
@@ -182,11 +159,67 @@ namespace MattEland.Ani.Alfred.Chat
             //- Trim for housekeeping purposes since this will be displayed / stored.
             userInput = userInput.NonNull().Trim();
 
+            return HandleUserStatementInternal(userInput);
+        }
+
+        /// <summary>
+        ///     Gets the last input from the user.
+        /// </summary>
+        /// <value>The last input.</value>
+        [CanBeNull]
+        public string LastInput
+        {
+            get
+            {
+                var entry = _chatHistory.GetLastMessageFromUser(_user);
+                return entry?.Message;
+            }
+        }
+
+        /// <summary>
+        ///     Gets the last response from the system.
+        /// </summary>
+        /// <value>The last response.</value>
+        [CanBeNull]
+        public UserStatementResponse LastResponse
+        {
+            get { return _response; }
+            private set
+            {
+                if (Equals(value, _response)) { return; }
+                _response = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        ///     Occurs when a property changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        ///     The internal implementation of <see cref="AimlStatementHandler.HandleUserStatement" /> which
+        ///     handles input text by submitting it to the chat engine as if from the current user and then
+        ///     returning the result. This internal implementation also has the ability to not save this
+        ///     statement to the log. This can be useful for automated events needing to interact with the
+        ///     <see cref="ChatEngine" /> as if they were from the user.
+        /// </summary>
+        /// <param name="userInput">The user input.</param>
+        /// <param name="saveToLog">
+        ///     Whether or not the events should be saved to the log and have a
+        ///     <see cref="ChatHistoryEntry" /> created for them.
+        /// </param>
+        /// <returns>The <see cref="UserStatementResponse" />.</returns>
+        [NotNull]
+        private UserStatementResponse HandleUserStatementInternal(
+            [NotNull] string userInput,
+            bool saveToLog = true)
+        {
             //- Log the input to the diagnostic log.
             Console?.Log(Resources.ChatInputHeader, userInput, LogLevel.UserInput);
 
-            // Store the input in chat history
-            AddHistoryEntry(_user, userInput);
+            // Store the input in chat history (only if we're logging it)
+            if (saveToLog) { AddHistoryEntry(_user, userInput); }
 
             // Give our input to the chat ChatEngine
             var result = GetChatResult(userInput);
@@ -225,13 +258,12 @@ namespace MattEland.Ani.Alfred.Chat
             //- Update query properties and return the result
             var response = new UserStatementResponse(userInput, output, template, ChatCommand.Empty);
             LastResponse = response;
-            LastInput = userInput;
 
             return response;
         }
 
         /// <summary>
-        /// Adds a new history entry.
+        ///     Adds a new history entry.
         /// </summary>
         /// <param name="user">The user.</param>
         /// <param name="message">The message.</param>
@@ -242,65 +274,16 @@ namespace MattEland.Ani.Alfred.Chat
 
             // Add the entry to the collection
             _chatHistory.Add(entry);
-
         }
-
-        /// <summary>
-        ///     Gets the last input from the user.
-        /// </summary>
-        /// <value>The last input.</value>
-        [CanBeNull]
-        public string LastInput
-        {
-            get { return _input; }
-            private set
-            {
-                if (value == _input) { return; }
-                _input = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        ///     Gets the last response from the system.
-        /// </summary>
-        /// <value>The last response.</value>
-        [CanBeNull]
-        public UserStatementResponse LastResponse
-        {
-            get { return _response; }
-            private set
-            {
-                if (Equals(value, _response)) { return; }
-                _response = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        ///     Occurs when a property changes.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         ///     Updates the owner of the chat engine. Setting the owner allows Alfred Commands to reach Alfred
         ///     from the chat engine.
         /// </summary>
         /// <param name="owner">The owner.</param>
-        public void UpdateOwner(IAlfredCommandRecipient owner)
+        internal void UpdateOwner(IAlfredCommandRecipient owner)
         {
-            if (ChatEngine != null) { ChatEngine.Owner = owner; }
-        }
-
-        /// <summary>
-        ///     Logs an error encountered initializing chat.
-        /// </summary>
-        /// <param name="ex">The ex.</param>
-        private void LogErrorInitializingChat([CanBeNull] Exception ex)
-        {
-            var errorFormat = Resources.ErrorInitializingChat.NonNull();
-            var message = string.Format(CultureInfo.CurrentCulture, errorFormat, ex?.Message);
-            _console?.Log(Resources.ChatProcessingHeader, message, LogLevel.Error);
+            ChatEngine.Owner = owner;
         }
 
         /// <summary>
@@ -337,39 +320,59 @@ namespace MattEland.Ani.Alfred.Chat
                                            Resources.ChatBotGenderSubstitutions,
                                            Resources.ChatBotSubstitutions);
 
-            AddApplicationAimlResourcesToChatEngine(ChatEngine);
+            AddApplicationAimlResourcesToChatEngine();
         }
 
         /// <summary>
         ///     Adds Alfred application AIML resources to the chat engine from the internal resource files.
         /// </summary>
-        /// <remarks>
-        ///     This method is public and static so that it can be easily accessed by testing libraries.
-        /// </remarks>
-        /// <param name="engine">The chat engine.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="engine" /> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="XmlException">
-        ///     There is a load or parse error in the XML. In this case, a
-        ///     <see cref="T:System.IO.FileNotFoundException" /> is raised.
-        /// </exception>
-        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-        public static void AddApplicationAimlResourcesToChatEngine([NotNull] ChatEngine engine)
+        private void AddApplicationAimlResourcesToChatEngine()
         {
-            if (engine == null) { throw new ArgumentNullException(nameof(engine)); }
-
             // TODO: Each assembly should provide their own set of resources
 
-            engine.LoadAimlFromString(Resources.AimlCoreDateTime);
-            engine.LoadAimlFromString(Resources.AimlCorePower);
-            engine.LoadAimlFromString(Resources.AimlFallback);
-            engine.LoadAimlFromString(Resources.AimlGod);
-            engine.LoadAimlFromString(Resources.AimlGreeting);
-            engine.LoadAimlFromString(Resources.AimlThanks);
-            engine.LoadAimlFromString(Resources.AimlHelp);
-            engine.LoadAimlFromString(Resources.AimlShellNavigation);
-            engine.LoadAimlFromString(Resources.AimlSysStatus);
+            var loaded = 0;
+
+            if (TryLoadAimlFile(Resources.AimlCoreDateTime)) { loaded++; }
+            if (TryLoadAimlFile(Resources.AimlCorePower)) { loaded++; }
+            if (TryLoadAimlFile(Resources.AimlFallback)) { loaded++; }
+            if (TryLoadAimlFile(Resources.AimlGod)) { loaded++; }
+            if (TryLoadAimlFile(Resources.AimlGreeting)) { loaded++; }
+            if (TryLoadAimlFile(Resources.AimlThanks)) { loaded++; }
+            if (TryLoadAimlFile(Resources.AimlHelp)) { loaded++; }
+            if (TryLoadAimlFile(Resources.AimlShellNavigation)) { loaded++; }
+            if (TryLoadAimlFile(Resources.AimlSysStatus)) { loaded++; }
+
+            const string Singular = "1 AIML File Parsed";
+            const string PluralFormat = "{0} AIML Files Parsed";
+
+            var plural = string.Format(ChatEngine.Locale, PluralFormat, loaded);
+
+            var message = loaded.Pluralize(Singular, plural);
+            Console?.Log("Chat.Load", message, LogLevel.Verbose);
+        }
+
+        /// <summary>
+        ///     Tries to load raw AIML markup into the chat engine.
+        /// </summary>
+        /// <param name="markup">The markup.</param>
+        /// <returns>True if the AIML was processed; otherwise false.</returns>
+        /// <exception cref="XmlException">There is a load or parse error in the XML.</exception>
+        private bool TryLoadAimlFile([CanBeNull] string markup)
+        {
+            try
+            {
+                ChatEngine.LoadAimlFromString(markup.NonNull());
+                return true;
+            }
+            catch (XmlException ex)
+            {
+                Console?.Log("Chat.Load",
+                             "XmlException while loading Aiml: " + ex.Message + " for AIML: "
+                             + markup,
+                             LogLevel.Warning);
+
+                return false;
+            }
         }
 
         /// <summary>
