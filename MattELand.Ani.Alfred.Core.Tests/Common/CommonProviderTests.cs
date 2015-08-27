@@ -8,6 +8,7 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
 
@@ -22,9 +23,13 @@ namespace MattEland.Ani.Alfred.Tests.Common
     ///     MattEland.Common
     /// </summary>
     [TestFixture]
+    [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
     public class CommonProviderTests
     {
-        public class CommonProviderTestObjectBase
+        /// <summary>
+        /// An abstract class for testing <see cref="CommonProvider"/>
+        /// </summary>
+        public abstract class CommonProviderTestObjectBase
         {
             /// <summary>
             ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
@@ -126,16 +131,30 @@ namespace MattEland.Ani.Alfred.Tests.Common
         }
 
         /// <summary>
-        ///     Tests that using the IoC container to activate a base class throws an exception.
+        ///     Tests that using the IoC container to activate an abstract class throws an exception.
         /// </summary>
         /// <remarks>
         ///     See ALF-98
         /// </remarks>
         [Test]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void RegisterBaseTypeUsingDefaultConstructorThrowsException()
+        public void CreateBaseTypeUsingDefaultConstructorThrowsException()
         {
             CommonProvider.Create<CommonProviderTestObjectBase>();
         }
+
+        /// <summary>
+        ///     Tests that using the IoC container to register an abstract class throws an exception.
+        /// </summary>
+        /// <remarks>
+        ///     See ALF-98
+        /// </remarks>
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void RegisterBaseTypeForBaseTypeThrowsInvalidOperationException()
+        {
+            CommonProvider.Register(typeof(CommonProviderTestObjectBase));
+        }
+
     }
 }
