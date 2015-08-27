@@ -18,6 +18,7 @@ namespace MattEland.Common
     /// <summary>
     ///     A set of extension methods related to collections
     /// </summary>
+    [PublicAPI]
     public static class CollectionExtensions
     {
         /// <summary>

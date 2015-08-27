@@ -17,6 +17,7 @@ namespace MattEland.Common
     /// <summary>
     ///     Extension methods for all classes.
     /// </summary>
+    [PublicAPI]
     public static class ObjectExtensions
     {
 

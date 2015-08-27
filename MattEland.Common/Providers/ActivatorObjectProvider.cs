@@ -18,7 +18,8 @@ namespace MattEland.Common.Providers
     ///     <see cref="Activator" />. Instances can be configured to create types other than the requested
     ///     type via the <see cref="ActivatorObjectProvider(Type)"/> constructor.
     /// </summary>
-    internal sealed class ActivatorObjectProvider : IObjectProvider
+    [PublicAPI]
+    public sealed class ActivatorObjectProvider : IObjectProvider
     {
 
         /// <summary>

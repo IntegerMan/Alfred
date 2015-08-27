@@ -18,6 +18,7 @@ namespace MattEland.Common
     /// <summary>
     ///     Contains extension methods dealing with string operations.
     /// </summary>
+    [PublicAPI]
     public static class StringExtensions
     {
         /// <summary>
@@ -25,7 +26,6 @@ namespace MattEland.Common
         /// </summary>
         /// <param name="input">The input string.</param>
         /// <returns><c>true</c> if the string has text; otherwise, <c>false</c>.</returns>
-        [UsedImplicitly]
         public static bool HasText([CanBeNull] this string input)
         {
             return !input.IsNullOrWhitespace();
@@ -36,7 +36,6 @@ namespace MattEland.Common
         /// </summary>
         /// <param name="input">The input string.</param>
         /// <returns><c>true</c> if the string is null or empty; otherwise, <c>false</c>.</returns>
-        [UsedImplicitly]
         public static bool IsEmpty([CanBeNull] this string input)
         {
             return string.IsNullOrEmpty(input);
@@ -47,7 +46,6 @@ namespace MattEland.Common
         /// </summary>
         /// <param name="input">The input string.</param>
         /// <returns><c>true</c> if the string is null or whitespace; otherwise, <c>false</c>.</returns>
-        [UsedImplicitly]
         public static bool IsNullOrWhitespace([CanBeNull] this string input)
         {
             return string.IsNullOrWhiteSpace(input);
@@ -186,7 +184,6 @@ namespace MattEland.Common
         /// <param name="input">The input.</param>
         /// <returns>System.String.</returns>
         [NotNull]
-        [UsedImplicitly]
         public static string ForUser([CanBeNull] this IFormattable input)
         {
             return input.AsNonNullString();
@@ -198,7 +195,6 @@ namespace MattEland.Common
         /// <param name="input">The input.</param>
         /// <returns>The formatted string</returns>
         [NotNull]
-        [UsedImplicitly]
         public static string Invariant([CanBeNull] this IFormattable input)
         {
             return input?.Format(CultureInfo.InvariantCulture) ?? string.Empty;

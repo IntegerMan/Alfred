@@ -20,6 +20,7 @@ namespace MattEland.Common.Providers
     ///     A dependency injection container used to quickly instantiate classes without coupling ourselves
     ///     to that implementation.
     /// </summary>
+    [PublicAPI]
     public static class CommonProvider
     {
 

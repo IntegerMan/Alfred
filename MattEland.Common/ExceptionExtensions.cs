@@ -20,6 +20,7 @@ namespace MattEland.Common
     /// <summary>
     ///     Contains extension methods related to <see cref="Exception" /> classes.
     /// </summary>
+    [PublicAPI]
     public static class ExceptionExtensions
     {
         /// <summary>

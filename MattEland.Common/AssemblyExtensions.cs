@@ -18,6 +18,7 @@ using JetBrains.Annotations;
 
 namespace MattEland.Common
 {
+    [PublicAPI]
     public static class AssemblyHelper
     {
         /// <summary>
@@ -32,7 +33,6 @@ namespace MattEland.Common
         /// <exception cref="System.ArgumentNullException"></exception>
         [NotNull]
         [ItemNotNull]
-        [UsedImplicitly]
         public static IEnumerable<Type> GetTypesInAssemblyWithAttribute(
             [NotNull] this Assembly assembly,
             [NotNull] Type attributeType,
@@ -62,7 +62,6 @@ namespace MattEland.Common
         [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         [NotNull]
         [ItemNotNull]
-        [UsedImplicitly]
         public static IEnumerable<Type> GetTypesWithAttributes([NotNull] IEnumerable<Type> types,
                                                                [NotNull] Type attributeType,
                                                                bool inherit)
