@@ -11,13 +11,13 @@ using MattEland.Common;
 
 using NUnit.Framework;
 
-namespace MattEland.Ani.Alfred.Tests
+namespace MattEland.Ani.Alfred.Tests.Common
 {
     /// <summary>
-    /// Contains tests related to MattEland.Common functionality
+    /// Contains tests related to MattEland.Common extensions
     /// </summary>
     [TestFixture]
-    public class CommonTests
+    public class CommonExtensionTests
     {
 
         [Test]
