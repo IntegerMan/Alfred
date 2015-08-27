@@ -16,12 +16,11 @@ namespace MattEland.Common.Providers
     /// <summary>
     ///     An <see cref="IObjectProvider" /> that provides the requested type via using the
     ///     <see cref="Activator" />. Instances can be configured to create types other than the requested
-    ///     type via the <see cref="ActivatorObjectProvider(Type)"/> constructor.
+    ///     type via the <see cref="ActivatorObjectProvider(System.Type,object[])"/> constructor.
     /// </summary>
     [PublicAPI]
     public sealed class ActivatorObjectProvider : IObjectProvider
     {
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="ActivatorObjectProvider" /> class.
         ///     This constructor sets up the provider to always create the requested type.
@@ -29,7 +28,6 @@ namespace MattEland.Common.Providers
         public ActivatorObjectProvider() : this(null)
         {
         }
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="ActivatorObjectProvider" /> class.
         ///     This constructor takes a <paramref name="typeToCreate" /> parameter that allows
@@ -37,10 +35,18 @@ namespace MattEland.Common.Providers
         ///     null, the <see cref="Activator" /> will be invoked on the requested type.
         /// </summary>
         /// <param name="typeToCreate">The type to create when <see cref="CreateInstance" /> is called.</param>
-        public ActivatorObjectProvider([CanBeNull] Type typeToCreate)
+        /// <param name="arguments"></param>
+        public ActivatorObjectProvider([CanBeNull] Type typeToCreate, params object[] arguments)
         {
             TypeToCreate = typeToCreate;
+            Arguments = arguments;
         }
+
+        /// <summary>
+        /// Gets the arguments to pass in to the class constructor on instantiation.
+        /// </summary>
+        /// <value>The arguments.</value>
+        public object[] Arguments { get; }
 
         /// <summary>
         ///     Gets the type to create when <see cref="CreateInstance" /> is called.
@@ -61,7 +67,7 @@ namespace MattEland.Common.Providers
 
             var typeToCreate = TypeToCreate ?? requestedType;
 
-            return Activator.CreateInstance(typeToCreate);
+            return Activator.CreateInstance(typeToCreate, Arguments);
         }
     }
 }

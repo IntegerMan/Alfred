@@ -84,28 +84,17 @@ namespace MattEland.Common.Providers
         /// <summary>
         ///     Registers the preferred type as the type to instantiate when the base type is requested.
         /// </summary>
-        /// <param name="baseType">Type of the base.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="baseType" /> is <see langword="null" />.
-        /// </exception>
-        public static void Register([NotNull] Type baseType)
-        {
-            Register(baseType, baseType);
-        }
-
-        /// <summary>
-        ///     Registers the preferred type as the type to instantiate when the base type is requested.
-        /// </summary>
         /// <param name="baseType">The type that will be requested.</param>
         /// <param name="preferredType">
         ///     The type that should be created when <see cref="baseType" /> is
         ///     requested.
         /// </param>
+        /// <param name="arguments">The arguments (if any) to pass to the class's constructor.</param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="baseType" /> or
         ///     <paramref name="preferredType" /> is <see langword="null" />.
         /// </exception>
-        public static void Register([NotNull] Type baseType, [NotNull] Type preferredType)
+        public static void Register([NotNull] Type baseType, [NotNull] Type preferredType, [CanBeNull] params object[] arguments)
         {
             //- Validate
             if (baseType == null) { throw new ArgumentNullException(nameof(baseType)); }
@@ -118,7 +107,7 @@ namespace MattEland.Common.Providers
             ValidateInstantiationType(preferredType);
 
             // Register the type mapping using the default Activator-based model.
-            ProviderMappings[baseType] = new ActivatorObjectProvider(preferredType);
+            ProviderMappings[baseType] = new ActivatorObjectProvider(preferredType, arguments);
         }
 
         /// <summary>
@@ -223,6 +212,7 @@ namespace MattEland.Common.Providers
         {
             ProviderMappings.Clear();
         }
+
     }
 
 }
