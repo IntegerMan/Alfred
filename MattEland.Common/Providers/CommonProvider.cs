@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
@@ -31,6 +32,15 @@ namespace MattEland.Common.Providers
         [NotNull]
         [ItemNotNull]
         private static IDictionary<Type, Type> TypeMappings { get; } = new Dictionary<Type, Type>();
+
+        /// <summary>
+        ///     Gets the function mappings dictionary used to instantiate instances of requested types. The keys
+        ///     are the class that will be requested and the values are activator functions that will invoke and return the desired class
+        ///     in that case.
+        /// </summary>
+        /// <value>The function mappings.</value>
+        [NotNull, ItemNotNull]
+        private static IDictionary<Type, Func<object>> FunctionMappings { get; } = new Dictionary<Type, Func<object>>();
 
         /// <summary>
         ///     Registers the preferred type as the type to instantiate when the base type is requested.
@@ -90,7 +100,6 @@ namespace MattEland.Common.Providers
         /// </summary>
         /// <typeparam name="TRequested">The type that was requested to be created.</typeparam>
         /// <returns>An instance of the requested type</returns>
-        /// <exception cref="TypeInitializationException">The type could not be initialized.</exception>
         /// <exception cref="InvalidOperationException">
         ///     The type is not correctly configured to allow for
         ///     instantiation.
@@ -101,7 +110,7 @@ namespace MattEland.Common.Providers
             var requestedType = typeof(TRequested);
 
             // Determine which type to create
-            var instantiateType = CalculateTypeToInstantiate(requestedType);
+            var activator = GetTypeActivatorFunction(requestedType);
 
             try
             {
@@ -109,7 +118,14 @@ namespace MattEland.Common.Providers
                    determined earlier. This can throw many exceptions which will be
                    wrapped into more user-friendly exceptions with easier error handling. */
 
-                var instance = CreateInstance(instantiateType);
+                // ReSharper disable once EventExceptionNotDocumented
+                var instance = activator.Invoke();
+
+                if (instance == null)
+                {
+                    throw new InvalidOperationException("The activator function for creating " + requestedType.FullName + " returned a null value.");
+                }
+
                 return (TRequested)instance;
             }
             catch (MissingMemberException ex)
@@ -124,18 +140,25 @@ namespace MattEland.Common.Providers
 
         /// <summary>
         ///     Calculates the type to instantiate given the type requested.
-        ///     This is influenced by the <see cref="Register(Type)" /> method.
+        ///     This is influenced by the Register methods.
         /// </summary>
         /// <param name="requestedType">Type that was requested.</param>
-        /// <returns>The type to instantiate.</returns>
+        /// <returns>An activator function to instantiate the requested type.</returns>
         [NotNull]
-        private static Type CalculateTypeToInstantiate([NotNull] Type requestedType)
+        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
+        private static Func<object> GetTypeActivatorFunction([NotNull] Type requestedType)
         {
-            Type instantiateType;
-            TypeMappings.TryGetValue(requestedType, out instantiateType);
-            instantiateType = instantiateType ?? requestedType;
+            if (TypeMappings.ContainsKey(requestedType))
+            {
+                return () => CreateInstance(TypeMappings[requestedType]);
+            }
 
-            return instantiateType;
+            if (FunctionMappings.ContainsKey(requestedType))
+            {
+                return FunctionMappings[requestedType];
+            }
+
+            return () => CreateInstance(requestedType);
         }
 
         /// <summary>
@@ -153,6 +176,34 @@ namespace MattEland.Common.Providers
 
             // Shouldn't be null here (should error out), but just in case throw the exception
             throw new TypeInitializationException(instantiateType.FullName, null);
+        }
+
+        /// <summary>
+        /// Registers an activator function responsible for instantiating the desired type.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="activator">The activator.</param>
+        /// <exception cref="ArgumentNullException">
+        ///   <paramref name="type" /> or <paramref name="activator" /> is <see langword="null" />.</exception>
+        public static void Register([NotNull] Type type, [NotNull] Func<object> activator)
+        {
+            //- Validate
+            if (type == null) { throw new ArgumentNullException(nameof(type)); }
+            if (activator == null) { throw new ArgumentNullException(nameof(activator)); }
+
+            FunctionMappings.Add(type, activator);
+        }
+
+        /// <summary>
+        /// Clears all mappings for creating types.
+        /// </summary>
+        /// <remarks>
+        /// This is useful for unit testing for cleaning up before invoking each time
+        /// </remarks>
+        public static void ClearMappings()
+        {
+            FunctionMappings.Clear();
+            TypeMappings.Clear();
         }
     }
 }

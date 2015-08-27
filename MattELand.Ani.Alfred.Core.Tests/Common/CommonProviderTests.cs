@@ -2,7 +2,7 @@
 // CommonProviderTests.cs
 // 
 // Created on:      08/27/2015 at 2:49 PM
-// Last Modified:   08/27/2015 at 3:54 PM
+// Last Modified:   08/27/2015 at 4:21 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -24,18 +24,23 @@ namespace MattEland.Ani.Alfred.Tests.Common
     /// </summary>
     [TestFixture]
     [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
+    [SuppressMessage("ReSharper", "ExceptionNotDocumentedOptional")]
+    [SuppressMessage("ReSharper", "EventExceptionNotDocumented")]
     public class CommonProviderTests
     {
+        [SetUp]
+        public void SetUp() { CommonProvider.ClearMappings(); }
+
         /// <summary>
-        /// An abstract class for testing <see cref="CommonProvider"/>
+        ///     An abstract class for testing <see cref="CommonProvider" />
         /// </summary>
-        public abstract class CommonProviderTestObjectBase
+        private abstract class CommonProviderTestObjectBase
         {
             /// <summary>
-            ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
+            ///     Initializes a new instance of the <see cref="CommonProviderTestObjectBase" /> class.
             /// </summary>
             /// <param name="value">The base property value.</param>
-            public CommonProviderTestObjectBase(int value)
+            protected CommonProviderTestObjectBase(int value)
             {
                 BaseProperty = value;
             }
@@ -44,19 +49,47 @@ namespace MattEland.Ani.Alfred.Tests.Common
             ///     Gets or sets the base property.
             /// </summary>
             /// <value>The base property.</value>
-            public int BaseProperty { get; set; }
+            internal int BaseProperty { get; set; }
+        }
+
+        /// <summary>
+        /// A private class for testing <see cref="CommonProvider"/>
+        /// </summary>
+        private class CommonProviderPrivateTestObject : CommonProviderTestObjectBase
+        {
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="CommonProviderPrivateTestObject" /> class.
+            /// </summary>
+            private CommonProviderPrivateTestObject() : base(42)
+            {
+            }
+
+            /// <summary>
+            /// Builds an instance of <see cref="CommonProviderPrivateTestObject"/>.
+            /// </summary>
+            /// <returns>A new instance of <see cref="CommonProviderPrivateTestObject"/></returns>
+            internal static CommonProviderPrivateTestObject CreateInstance()
+            {
+                return new CommonProviderPrivateTestObject();
+            }
         }
 
         /// <summary>
         ///     A testing class used by <see cref="CommonProviderTests" />
         /// </summary>
-        public class CommonProviderTestObject : CommonProviderTestObjectBase
+        private class CommonProviderTestObject : CommonProviderTestObjectBase
         {
             internal const string DefaultConstructorUsed = "Default Constructor was Used";
 
             /// <summary>
             ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
             /// </summary>
+            /// <remarks>
+            ///     This is public so that it can be instantiated by
+            ///     <see cref="CommonProvider.Create{TRequested}" />
+            /// </remarks>
+            [UsedImplicitly]
             public CommonProviderTestObject() : this(DefaultConstructorUsed)
             {
             }
@@ -64,7 +97,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
             /// <summary>
             ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
             /// </summary>
-            public CommonProviderTestObject([CanBeNull] object data)
+            private CommonProviderTestObject([CanBeNull] object data)
                 : base(data?.GetHashCode() ?? 42)
             {
                 Data = data;
@@ -75,7 +108,36 @@ namespace MattEland.Ani.Alfred.Tests.Common
             /// </summary>
             /// <value>The data.</value>
             [CanBeNull]
-            public object Data { get; set; }
+            internal object Data { get; }
+        }
+
+        /// <summary>
+        ///     Tests that using the IoC container to activate an abstract class throws an exception.
+        /// </summary>
+        /// <remarks>
+        ///     See ALF-98
+        /// </remarks>
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void CreateBaseTypeUsingDefaultConstructorThrowsException()
+        {
+            CommonProvider.Create<CommonProviderTestObjectBase>();
+        }
+
+        /// <summary>
+        ///     Tests that the IoC container provides new instances of the requested type when a type is
+        ///     registered for itself.
+        /// </summary>
+        /// <remarks>
+        ///     See ALF-98
+        /// </remarks>
+        [Test]
+        public void CreateTypeMultipleTimesCreatesMultipleObjects()
+        {
+            var a = CommonProvider.Create<CommonProviderTestObject>();
+            var b = CommonProvider.Create<CommonProviderTestObject>();
+
+            Assert.AreNotSame(a, b, "CommonProvider.Create should create multiple instances");
         }
 
         /// <summary>
@@ -131,19 +193,6 @@ namespace MattEland.Ani.Alfred.Tests.Common
         }
 
         /// <summary>
-        ///     Tests that using the IoC container to activate an abstract class throws an exception.
-        /// </summary>
-        /// <remarks>
-        ///     See ALF-98
-        /// </remarks>
-        [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void CreateBaseTypeUsingDefaultConstructorThrowsException()
-        {
-            CommonProvider.Create<CommonProviderTestObjectBase>();
-        }
-
-        /// <summary>
         ///     Tests that using the IoC container to register an abstract class throws an exception.
         /// </summary>
         /// <remarks>
@@ -156,5 +205,22 @@ namespace MattEland.Ani.Alfred.Tests.Common
             CommonProvider.Register(typeof(CommonProviderTestObjectBase));
         }
 
+        /// <summary>
+        ///     Tests that using the IoC container we can instantiate classes using activator functions.
+        /// </summary>
+        /// <remarks>
+        ///     See ALF-98
+        /// </remarks>
+        [Test]
+        public void RegisterTypeUsingActivationFunction()
+        {
+            Func<CommonProviderPrivateTestObject> activator = CommonProviderPrivateTestObject.CreateInstance;
+
+            CommonProvider.Register(typeof(CommonProviderPrivateTestObject), activator);
+
+            var result = CommonProvider.Create<CommonProviderPrivateTestObject>();
+
+            Assert.IsNotNull(result, "The desired type was not instantiated");
+        }
     }
 }
