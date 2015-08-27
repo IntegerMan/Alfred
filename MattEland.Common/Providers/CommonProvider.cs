@@ -2,12 +2,13 @@
 // CommonProvider.cs
 // 
 // Created on:      08/27/2015 at 2:55 PM
-// Last Modified:   08/27/2015 at 3:20 PM
+// Last Modified:   08/27/2015 at 3:51 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 
 using JetBrains.Annotations;
 
@@ -21,10 +22,23 @@ namespace MattEland.Common.Providers
     {
 
         /// <summary>
+        ///     Gets the type mappings dictionary used to instantiate instances of requested types. The keys
+        ///     are the class that will be requested and the values are the types that should be instantiated
+        ///     in that case.
+        /// </summary>
+        /// <value>The type mappings.</value>
+        [NotNull]
+        [ItemNotNull]
+        private static IDictionary<Type, Type> TypeMappings { get; } = new Dictionary<Type, Type>();
+
+        /// <summary>
         ///     Registers the preferred type as the type to instantiate when the base type is requested.
         /// </summary>
         /// <param name="baseType">Type of the base.</param>
-        public static void Register([NotNull] Type baseType) { Register(baseType, baseType); }
+        public static void Register([NotNull] Type baseType)
+        {
+            Register(baseType, baseType);
+        }
 
         /// <summary>
         ///     Registers the preferred type as the type to instantiate when the base type is requested.
@@ -40,7 +54,8 @@ namespace MattEland.Common.Providers
             if (baseType == null) { throw new ArgumentNullException(nameof(baseType)); }
             if (preferredType == null) { throw new ArgumentNullException(nameof(preferredType)); }
 
-            // TODO: Register
+            // Register the type mapping
+            TypeMappings.Add(baseType, preferredType);
         }
 
         /// <summary>
@@ -52,13 +67,44 @@ namespace MattEland.Common.Providers
         [NotNull]
         public static TRequested Create<TRequested>()
         {
+            var requestedType = typeof(TRequested);
+
             // Determine which type to create
-            var instantiateType = typeof(TRequested);
+            var instantiateType = CalculateTypeToInstantiate(requestedType);
 
-            // Create and return an instance of the requested type
-            var instance = CreateInstance(instantiateType);
+            try
+            {
+                /* Create and return an instance of the requested type using the type 
+                   determined earlier. This can throw many exceptions which will be
+                   wrapped into more user-friendly exceptions with easier error handling. */
 
-            return (TRequested)instance;
+                var instance = CreateInstance(instantiateType);
+                return (TRequested)instance;
+            }
+            catch (MissingMemberException ex)
+            {
+                // Improve the thrown exception with more information.
+                string message =
+                    $"Could not instantiate {requestedType.FullName} due to missing member exception: '{ex.Message}'";
+
+                throw new InvalidOperationException(message, ex);
+            }
+        }
+
+        /// <summary>
+        ///     Calculates the type to instantiate given the type requested.
+        ///     This is influenced by the <see cref="Register(Type)" /> method.
+        /// </summary>
+        /// <param name="requestedType">Type that was requested.</param>
+        /// <returns>The type to instantiate.</returns>
+        [NotNull]
+        private static Type CalculateTypeToInstantiate([NotNull] Type requestedType)
+        {
+            Type instantiateType;
+            TypeMappings.TryGetValue(requestedType, out instantiateType);
+            instantiateType = instantiateType ?? requestedType;
+
+            return instantiateType;
         }
 
         /// <summary>
