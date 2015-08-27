@@ -9,6 +9,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 using JetBrains.Annotations;
 
@@ -80,6 +81,26 @@ namespace MattEland.Ani.Alfred.Tests.Common
             internal static PrivateTestClass CreateInstance()
             {
                 return new PrivateTestClass();
+            }
+
+            /// <summary>
+            /// Builds an instance of <see cref="PrivateTestClass" />.
+            /// </summary>
+            /// <param name="args">The arguments.</param>
+            /// <returns>A new instance of <see cref="PrivateTestClass" /></returns>
+            [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
+            internal static PrivateTestClass CreateInstanceWithParams(params object[] args)
+            {
+                var sum = 0;
+
+                // Add items to the sum
+                if (args != null)
+                {
+                    sum += args.Cast<int>().Sum();
+                }
+
+                // Pass in the value to the object so we can validate it
+                return new PrivateTestClass(sum);
             }
         }
 
@@ -229,6 +250,26 @@ namespace MattEland.Ani.Alfred.Tests.Common
             var result = CommonProvider.Create<PrivateTestClass>();
 
             Assert.IsNotNull(result, "The desired type was not instantiated");
+        }
+
+        /// <summary>
+        ///     Tests that using the IoC container we can instantiate classes using activator functions with parameters.
+        /// </summary>
+        /// <remarks>
+        ///     See ALF-98
+        /// </remarks>
+        [Test]
+        public void RegisterTypeUsingParameterizedActivationFunction()
+        {
+            var activator = new Func<object[], PrivateTestClass>(PrivateTestClass.CreateInstanceWithParams);
+
+            CommonProvider.Register(typeof(PrivateTestClass), activator, 1, 3);
+
+            var result = CommonProvider.Create<PrivateTestClass>();
+
+            Assert.IsNotNull(result, "The desired type was not instantiated");
+
+            Assert.AreEqual(4, result.BaseProperty, "Test object was not created using the correct constructor");
         }
 
         /// <summary>

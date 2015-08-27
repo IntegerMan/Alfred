@@ -2,12 +2,13 @@
 // DelegateObjectProvider.cs
 // 
 // Created on:      08/27/2015 at 6:19 PM
-// Last Modified:   08/27/2015 at 6:24 PM
+// Last Modified:   08/27/2015 at 7:11 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
+using System.Linq;
 
 using JetBrains.Annotations;
 
@@ -64,7 +65,10 @@ namespace MattEland.Common.Providers
         /// <exception cref="Exception">A delegate callback throws an exception.</exception>
         public object CreateInstance(Type requestedType)
         {
-            return ActivationDelegate.DynamicInvoke(ActivationArguments);
+            var hasArgs = ActivationArguments == null || !ActivationArguments.Any();
+            return hasArgs
+                       ? ActivationDelegate.DynamicInvoke()
+                       : ActivationDelegate.DynamicInvoke(new object[] { ActivationArguments });
         }
     }
 }

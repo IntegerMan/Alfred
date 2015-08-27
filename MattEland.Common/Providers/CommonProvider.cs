@@ -183,21 +183,21 @@ namespace MattEland.Common.Providers
         }
 
         /// <summary>
-        ///     Registers an activator function responsible for instantiating the desired type.
+        /// Registers an activator function responsible for instantiating the desired type.
         /// </summary>
         /// <param name="type">The type.</param>
-        /// <param name="activator">The activator.</param>
+        /// <param name="activator">The activator function.</param>
+        /// <param name="arguments">The arguments to pass in to the activator function.</param>
         /// <exception cref="ArgumentNullException">
-        ///     <paramref name="type" /> or <paramref name="activator" /> is <see langword="null" />.
-        /// </exception>
-        public static void Register([NotNull] Type type, [NotNull] Func<object> activator)
+        ///   <paramref name="type" /> or <paramref name="activator" /> is <see langword="null" />.</exception>
+        public static void Register([NotNull] Type type, [NotNull] Delegate activator, [CanBeNull] params object[] arguments)
         {
             //- Validate
             if (type == null) { throw new ArgumentNullException(nameof(type)); }
             if (activator == null) { throw new ArgumentNullException(nameof(activator)); }
 
             // Build a function-based provider
-            var provider = new DelegateObjectProvider(activator);
+            var provider = new DelegateObjectProvider(activator, arguments);
 
             ProviderMappings[type] = provider;
         }
