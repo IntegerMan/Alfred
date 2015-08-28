@@ -2,7 +2,7 @@
 // CommonProvider.cs
 // 
 // Created on:      08/27/2015 at 2:55 PM
-// Last Modified:   08/27/2015 at 6:18 PM
+// Last Modified:   08/27/2015 at 10:11 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -94,32 +94,50 @@ namespace MattEland.Common.Providers
         ///     <paramref name="baseType" /> or
         ///     <paramref name="preferredType" /> is <see langword="null" />.
         /// </exception>
-        public static void Register([NotNull] Type baseType, [NotNull] Type preferredType, [CanBeNull] params object[] arguments)
+        public static void Register(
+            [NotNull] Type baseType,
+            [NotNull] Type preferredType,
+            [CanBeNull] params object[] arguments)
         {
             //- Validate
             if (baseType == null) { throw new ArgumentNullException(nameof(baseType)); }
             if (preferredType == null) { throw new ArgumentNullException(nameof(preferredType)); }
 
-            /* Ensure that preferredType is something we can create. 
-               This will throw an InvalidOperationException if the class is something 
-               that cannot be created */
-
-            ValidateInstantiationType(preferredType);
+            ValidateTypeRegistration(baseType, preferredType);
 
             // Register the type mapping using the default Activator-based model.
-            ProviderMappings[baseType] = new ActivatorObjectProvider(preferredType, arguments);
+            var provider = new ActivatorObjectProvider(preferredType, arguments);
+            ProviderMappings[baseType] = provider;
         }
 
         /// <summary>
         ///     Validates that <see cref="preferredType" /> is something that can be created.
         /// </summary>
-        /// <param name="preferredType">Type of the preferred.</param>
-        [SuppressMessage("ReSharper", "UnusedParameter.Local")]
-        private static void ValidateInstantiationType([NotNull] Type preferredType)
+        /// <param name="baseType">The type that will be requested.</param>
+        /// <param name="preferredType">
+        ///     The type that should be created when <see cref="baseType" /> is
+        ///     requested.
+        /// </param>
+        /// <exception cref="InvalidOperationException">
+        ///     Various scenarios where
+        ///     <paramref name="preferredType" /> cannot be instantiated or cannot be cast to
+        ///     <paramref name="baseType" />.
+        /// </exception>
+        private static void ValidateTypeRegistration(
+            [NotNull] Type baseType,
+            [NotNull] Type preferredType)
         {
+            // Ya kinda can't instantiate an abstract type
             if (preferredType.IsAbstract)
             {
                 throw new InvalidOperationException("Cannot create an abstract type");
+            }
+
+            // Check interface implementation, inheritance, and whether they're the same type
+            if (!baseType.IsAssignableFrom(preferredType))
+            {
+                throw new InvalidOperationException(
+                    $"{preferredType.FullName} cannot be cast to {baseType.FullName}");
             }
         }
 
@@ -183,14 +201,18 @@ namespace MattEland.Common.Providers
         }
 
         /// <summary>
-        /// Registers an activator function responsible for instantiating the desired type.
+        ///     Registers an activator function responsible for instantiating the desired type.
         /// </summary>
         /// <param name="type">The type.</param>
         /// <param name="activator">The activator function.</param>
         /// <param name="arguments">The arguments to pass in to the activator function.</param>
         /// <exception cref="ArgumentNullException">
-        ///   <paramref name="type" /> or <paramref name="activator" /> is <see langword="null" />.</exception>
-        public static void Register([NotNull] Type type, [NotNull] Delegate activator, [CanBeNull] params object[] arguments)
+        ///     <paramref name="type" /> or <paramref name="activator" /> is <see langword="null" />.
+        /// </exception>
+        public static void Register(
+            [NotNull] Type type,
+            [NotNull] Delegate activator,
+            [CanBeNull] params object[] arguments)
         {
             //- Validate
             if (type == null) { throw new ArgumentNullException(nameof(type)); }
@@ -212,7 +234,6 @@ namespace MattEland.Common.Providers
         {
             ProviderMappings.Clear();
         }
-
     }
 
 }

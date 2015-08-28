@@ -2,7 +2,7 @@
 // ActivatorObjectProvider.cs
 // 
 // Created on:      08/27/2015 at 5:49 PM
-// Last Modified:   08/27/2015 at 5:57 PM
+// Last Modified:   08/27/2015 at 9:57 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -16,7 +16,7 @@ namespace MattEland.Common.Providers
     /// <summary>
     ///     An <see cref="IObjectProvider" /> that provides the requested type via using the
     ///     <see cref="Activator" />. Instances can be configured to create types other than the requested
-    ///     type via the <see cref="ActivatorObjectProvider(System.Type,object[])"/> constructor.
+    ///     type via the <see cref="ActivatorObjectProvider(System.Type,object[])" /> constructor.
     /// </summary>
     [PublicAPI]
     public sealed class ActivatorObjectProvider : IObjectProvider
@@ -28,6 +28,7 @@ namespace MattEland.Common.Providers
         public ActivatorObjectProvider() : this(null)
         {
         }
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="ActivatorObjectProvider" /> class.
         ///     This constructor takes a <paramref name="typeToCreate" /> parameter that allows
@@ -35,7 +36,7 @@ namespace MattEland.Common.Providers
         ///     null, the <see cref="Activator" /> will be invoked on the requested type.
         /// </summary>
         /// <param name="typeToCreate">The type to create when <see cref="CreateInstance" /> is called.</param>
-        /// <param name="arguments"></param>
+        /// <param name="arguments">Constructor arguments</param>
         public ActivatorObjectProvider([CanBeNull] Type typeToCreate, params object[] arguments)
         {
             TypeToCreate = typeToCreate;
@@ -43,7 +44,7 @@ namespace MattEland.Common.Providers
         }
 
         /// <summary>
-        /// Gets the arguments to pass in to the class constructor on instantiation.
+        ///     Gets the arguments to pass in to the class constructor on instantiation.
         /// </summary>
         /// <value>The arguments.</value>
         public object[] Arguments { get; }
@@ -69,5 +70,6 @@ namespace MattEland.Common.Providers
 
             return Activator.CreateInstance(typeToCreate, Arguments);
         }
+
     }
 }

@@ -10,6 +10,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text;
 
 using JetBrains.Annotations;
 
@@ -292,6 +293,18 @@ namespace MattEland.Ani.Alfred.Tests.Common
                              $"The result was not TestClass. Instead was {result.GetType().FullName}");
 
             Assert.AreEqual(Data, test.Data, "Test object was not created using the correct constructor");
+        }
+
+        /// <summary>
+        ///     Tests that using the IoC container cannot register a concrete type that is unrelated to the type it is being registered to handle
+        /// </summary>
+        /// <remarks>
+        ///     See ALF-98
+        /// </remarks>
+        [Test, ExpectedException(typeof(InvalidOperationException))]
+        public void CannotRegisterUnrelatedTypes()
+        {
+            CommonProvider.Register(typeof(StringBuilder), typeof(DateTime));
         }
     }
 }
