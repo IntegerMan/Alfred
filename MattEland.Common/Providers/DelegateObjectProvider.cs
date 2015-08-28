@@ -41,14 +41,7 @@ namespace MattEland.Common.Providers
             }
 
             ActivationDelegate = activationDelegate;
-            ActivationArguments = args;
         }
-
-        /// <summary>
-        ///     The activation arguments to pass to <see cref="ActivationDelegate" /> when
-        ///     <see cref="CreateInstance" /> is called.
-        /// </summary>
-        public object[] ActivationArguments { get; }
 
         /// <summary>
         ///     Gets the activation delegate that will be invoked when a new instance is required.
@@ -58,17 +51,18 @@ namespace MattEland.Common.Providers
         public Delegate ActivationDelegate { get; }
 
         /// <summary>
-        ///     Creates an instance of the requested type.
+        /// Creates an instance of the requested type.
         /// </summary>
         /// <param name="requestedType">The type that was requested.</param>
+        /// <param name="args">The arguments</param>
         /// <returns>A new instance of the requested type</returns>
         /// <exception cref="Exception">A delegate callback throws an exception.</exception>
-        public object CreateInstance(Type requestedType)
+        public object CreateInstance(Type requestedType, params object[] args)
         {
-            var hasArgs = ActivationArguments == null || !ActivationArguments.Any();
+            var hasArgs = args == null || !args.Any();
             return hasArgs
                        ? ActivationDelegate.DynamicInvoke()
-                       : ActivationDelegate.DynamicInvoke(new object[] { ActivationArguments });
+                       : ActivationDelegate.DynamicInvoke(new object[] { args });
         }
     }
 }

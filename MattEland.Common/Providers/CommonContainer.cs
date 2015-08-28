@@ -127,7 +127,7 @@ namespace MattEland.Common.Providers
 
                 if (Mappings.ContainsKey(typeof(IObjectProvider)))
                 {
-                    provider = ProvideInstance<IObjectProvider>();
+                    provider = Provide<IObjectProvider>();
                 }
                 else
                 {
@@ -159,10 +159,11 @@ namespace MattEland.Common.Providers
         ///     Creates an instance of the requested type.
         /// </summary>
         /// <param name="requestedType">The type that was requested.</param>
+        /// <param name="args">The arguments</param>
         /// <returns>A new instance of the requested type</returns>
-        public object CreateInstance(Type requestedType)
+        object IObjectProvider.CreateInstance(Type requestedType, params object[] args)
         {
-            return null;
+            return ProvideType(requestedType, true, args);
         }
 
         /// <summary>
@@ -175,11 +176,11 @@ namespace MattEland.Common.Providers
         ///     instantiation.
         /// </exception>
         [NotNull]
-        public TRequested ProvideInstance<TRequested>()
+        public TRequested Provide<TRequested>(params object[] args)
         {
             var type = typeof(TRequested);
 
-            var instance = ProvideInstanceOfType(type);
+            var instance = ProvideType(type, true, args);
             Debug.Assert(instance != null);
 
             return (TRequested)instance;
@@ -252,7 +253,7 @@ namespace MattEland.Common.Providers
             ValidateTypeRegistration(baseType, preferredType);
 
             // Register the type mapping using the default Activator-based model.
-            var provider = new ActivatorObjectProvider(preferredType, arguments);
+            var provider = new ActivatorObjectProvider(preferredType);
             Register(baseType, provider);
         }
 
@@ -305,7 +306,7 @@ namespace MattEland.Common.Providers
         /// </exception>
         /// <exception cref="ArgumentNullException"><paramref name="type" /> is <see langword="null" />.</exception>
         [CanBeNull]
-        public object ProvideInstanceOfType([NotNull] Type type, bool errorOnNoInstance = true)
+        public object ProvideType([NotNull] Type type, bool errorOnNoInstance, params object[] args)
         {
             if (type == null) { throw new ArgumentNullException(nameof(type)); }
 
@@ -324,7 +325,7 @@ namespace MattEland.Common.Providers
                    determined earlier. This can throw many exceptions which will be
                    wrapped into more user-friendly exceptions with easier error handling. */
 
-                var instance = provider.CreateInstance(type);
+                var instance = provider.CreateInstance(type, args);
 
                 // Some callers want exceptions on not found; others don't
                 if (instance == null && errorOnNoInstance)
@@ -345,19 +346,20 @@ namespace MattEland.Common.Providers
         }
 
         /// <summary>
-        ///     Tries to provide an instance of type <typeparamref name="T" /> and returns null if it cannot.
+        /// Tries to provide an instance of type <typeparamref name="T" /> and returns null if it cannot.
         /// </summary>
         /// <typeparam name="T">The type to return</typeparam>
+        /// <param name="args">The arguments.</param>
         /// <returns>A new instance if things were successful; otherwise false.</returns>
         [CanBeNull]
         [SuppressMessage("ReSharper", "CatchAllClause")]
         [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
         [SuppressMessage("ReSharper", "ThrowingSystemException")]
-        public T TryProvideInstance<T>() where T : class
+        public T TryProvideInstance<T>([CanBeNull] params object[] args) where T : class
         {
             try
             {
-                var instance = ProvideInstanceOfType(typeof(T), false);
+                var instance = ProvideType(typeof(T), false, args);
 
                 return instance as T;
             }

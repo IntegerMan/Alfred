@@ -40,21 +40,19 @@ namespace MattEland.Common.Providers
         ///     The type that should be created when <see cref="baseType" /> is
         ///     requested.
         /// </param>
-        /// <param name="arguments">The arguments (if any) to pass to the class's constructor.</param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="baseType" /> or
         ///     <paramref name="preferredType" /> is <see langword="null" />.
         /// </exception>
         public static void Register(
             [NotNull] Type baseType,
-            [NotNull] Type preferredType,
-            [CanBeNull] params object[] arguments)
+            [NotNull] Type preferredType)
         {
             //- Validate
             if (baseType == null) { throw new ArgumentNullException(nameof(baseType)); }
             if (preferredType == null) { throw new ArgumentNullException(nameof(preferredType)); }
 
-            Container.Register(baseType, preferredType, arguments);
+            Container.Register(baseType, preferredType);
         }
 
         /// <summary>
@@ -67,11 +65,11 @@ namespace MattEland.Common.Providers
         ///     instantiation.
         /// </exception>
         [NotNull]
-        public static TRequested ProvideInstance<TRequested>()
+        public static TRequested Provide<TRequested>(params object[] args)
         {
             var type = typeof(TRequested);
 
-            var instance = ProvideInstanceOfType(type);
+            var instance = ProvideType(type, true, args);
             Debug.Assert(instance != null);
 
             return (TRequested)instance;
@@ -88,27 +86,28 @@ namespace MattEland.Common.Providers
         /// </exception>
         /// <exception cref="ArgumentNullException"><paramref name="type" /> is <see langword="null" />.</exception>
         [CanBeNull]
-        public static object ProvideInstanceOfType(
-            [NotNull] Type type,
-            bool errorOnNoInstance = true)
+        private static object ProvideType([NotNull] Type type, bool errorOnNoInstance, params object[] args)
         {
             if (type == null) { throw new ArgumentNullException(nameof(type)); }
 
-            return Container.ProvideInstanceOfType(type, errorOnNoInstance);
+            return Container.ProvideType(type, errorOnNoInstance, args);
         }
 
         /// <summary>
-        ///     Throws the not provided <see cref="NotSupportedException" />.
+        ///     Provides an instance of the requested type.
         /// </summary>
-        /// <param name="typeName">The name of the type that was requested</param>
+        /// <paramref name="type">The type that was requested to be provided.</paramref>
+        /// <returns>An instance of the requested type</returns>
         /// <exception cref="NotSupportedException">
-        ///     Thrown if the operation was not supported given the current
-        ///     configuration.
+        ///     The type is not correctly configured to allow for
+        ///     instantiation.
         /// </exception>
-        private static void ThrowNotProvidedException(string typeName)
+        /// <exception cref="ArgumentNullException"><paramref name="type"/> is <see langword="null" />.</exception>
+        [CanBeNull]
+        public static object ProvideType([NotNull] Type type)
         {
-            var message = $"The activator function for creating {typeName} returned a null value.";
-            throw new NotSupportedException(message);
+            if (type == null) { throw new ArgumentNullException(nameof(type)); }
+            return ProvideType(type, true);
         }
 
         /// <summary>
@@ -162,14 +161,15 @@ namespace MattEland.Common.Providers
         }
 
         /// <summary>
-        ///     Tries to provide an instance of type <typeparamref name="T" /> and returns null if it cannot.
+        /// Tries to provide an instance of type <typeparamref name="T" /> and returns null if it cannot.
         /// </summary>
         /// <typeparam name="T">The type to return</typeparam>
+        /// <param name="args">The arguments.</param>
         /// <returns>A new instance if things were successful; otherwise false.</returns>
         [CanBeNull]
-        public static T TryProvideInstance<T>() where T : class
+        public static T TryProvideInstance<T>([CanBeNull] params object[] args) where T : class
         {
-            return Container.TryProvideInstance<T>();
+            return Container.TryProvideInstance<T>(args);
         }
 
         /// <summary>
@@ -200,6 +200,7 @@ namespace MattEland.Common.Providers
         {
             Container.FallbackProvider = provider;
         }
+
     }
 
 }

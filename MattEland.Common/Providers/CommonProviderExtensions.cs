@@ -26,21 +26,19 @@ namespace MattEland.Common.Providers
         /// </summary>
         /// <param name="baseType">Type that will be requested in the future.</param>
         /// <param name="preferredType">Type to instantiate instead of the base type.</param>
-        /// <param name="arguments">The arguments to pass to the constructor.</param>
         /// <exception cref="System.ArgumentNullException">
         ///     baseType or preferredType
         /// </exception>
         public static void RegisterProvider(
             [NotNull] this Type baseType,
-            [NotNull] Type preferredType,
-            [CanBeNull] params object[] arguments)
+            [NotNull] Type preferredType)
         {
             //- Validate
             if (baseType == null) { throw new ArgumentNullException(nameof(baseType)); }
             if (preferredType == null) { throw new ArgumentNullException(nameof(preferredType)); }
 
             // Register with the common provider
-            CommonProvider.Register(baseType, preferredType, arguments);
+            CommonProvider.Register(baseType, preferredType);
         }
 
         /// <summary>
@@ -79,23 +77,22 @@ namespace MattEland.Common.Providers
         }
 
         /// <summary>
-        ///     Provides the instance of the type using the <see cref="CommonProvider" />.
+        /// Provides the instance of the type using the <see cref="CommonProvider" />.
         /// </summary>
         /// <param name="type">The type.</param>
+        /// <param name="args">The arguments.</param>
         /// <returns>The provided instance.</returns>
-        /// <exception cref="NotSupportedException">
-        ///     The type is not correctly configured to allow for
-        ///     instantiation.
-        /// </exception>
+        /// <exception cref="NotSupportedException">The type is not correctly configured to allow for
+        /// instantiation.</exception>
         public static object ProvideInstanceOf([NotNull] this Type type)
         {
-            return CommonProvider.ProvideInstanceOfType(type);
+            return CommonProvider.ProvideType(type);
         }
 
         /// <summary>
         ///     Registers the instance as the instance that will be provided when
-        ///     <see cref="CommonProvider.ProvideInstance{TRequested}" /> or
-        ///     <see cref="CommonProvider.ProvideInstanceOfType" /> is called for type <paramref name="type" />
+        ///     <see cref="CommonProvider.Provide{TRequested}" /> or
+        ///     <see cref="CommonProvider.ProvideType" /> is called for type <paramref name="type" />
         ///     .
         /// </summary>
         /// <param name="instance">The instance.</param>

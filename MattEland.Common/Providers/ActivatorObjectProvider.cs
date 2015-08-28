@@ -16,7 +16,7 @@ namespace MattEland.Common.Providers
     /// <summary>
     ///     An <see cref="IObjectProvider" /> that provides the requested type via using the
     ///     <see cref="Activator" />. Instances can be configured to create types other than the requested
-    ///     type via the <see cref="ActivatorObjectProvider(System.Type,object[])" /> constructor.
+    ///     type via the <see cref="ActivatorObjectProvider(System.Type)" /> constructor.
     /// </summary>
     [PublicAPI]
     public sealed class ActivatorObjectProvider : IObjectProvider
@@ -36,18 +36,11 @@ namespace MattEland.Common.Providers
         ///     null, the <see cref="Activator" /> will be invoked on the requested type.
         /// </summary>
         /// <param name="typeToCreate">The type to create when <see cref="CreateInstance" /> is called.</param>
-        /// <param name="arguments">Constructor arguments</param>
-        public ActivatorObjectProvider([CanBeNull] Type typeToCreate, params object[] arguments)
+        public ActivatorObjectProvider([CanBeNull] Type typeToCreate)
         {
             TypeToCreate = typeToCreate;
-            Arguments = arguments;
         }
 
-        /// <summary>
-        ///     Gets the arguments to pass in to the class constructor on instantiation.
-        /// </summary>
-        /// <value>The arguments.</value>
-        public object[] Arguments { get; }
 
         /// <summary>
         ///     Gets the type to create when <see cref="CreateInstance" /> is called.
@@ -56,11 +49,12 @@ namespace MattEland.Common.Providers
         private Type TypeToCreate { get; }
 
         /// <summary>
-        ///     Creates an instance of the requested type.
+        /// Creates an instance of the requested type.
         /// </summary>
         /// <param name="requestedType">The type that was requested.</param>
+        /// <param name="args">The arguments</param>
         /// <returns>A new instance of the requested type</returns>
-        public object CreateInstance(Type requestedType)
+        public object CreateInstance(Type requestedType, params object[] args)
         {
             /* If we were set up to create using a specific type, use that type instead of 
             the requested type. This allows us to set up this class to create instances of
@@ -68,7 +62,7 @@ namespace MattEland.Common.Providers
 
             var typeToCreate = TypeToCreate ?? requestedType;
 
-            return Activator.CreateInstance(typeToCreate, Arguments);
+            return Activator.CreateInstance(typeToCreate, args);
         }
 
     }

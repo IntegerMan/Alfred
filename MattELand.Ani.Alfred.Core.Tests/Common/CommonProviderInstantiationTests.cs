@@ -135,7 +135,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
             /// </summary>
             /// <remarks>
             ///     This is public so that it can be instantiated by
-            ///     <see cref="CommonProvider.ProvideInstance{TRequested}" />
+            ///     <see cref="CommonProvider.Provide{TRequested}" />
             /// </remarks>
             [UsedImplicitly]
             public TestClass() : this(DefaultConstructorUsed)
@@ -172,7 +172,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
             CommonProvider.RegisterDefaultProvider(provider);
 
             // Grab the instance and check to see if its our string
-            var instance = CommonProvider.ProvideInstance<string>();
+            var instance = CommonProvider.Provide<string>();
             Assert.AreSame(instance, Bubba);
         }
 
@@ -237,7 +237,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
             parent.Register(t, typeof(TestClass));
 
             // Build our instances
-            var instance = child.ProvideInstance<TestClassBase>();
+            var instance = child.Provide<TestClassBase>();
 
             // Check that the item was provided
             Assert.IsNotNull(instance);
@@ -253,7 +253,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
         [ExpectedException(typeof(NotSupportedException))]
         public void CreateBaseTypeUsingDefaultConstructorThrowsException()
         {
-            CommonProvider.ProvideInstance<TestClassBase>();
+            CommonProvider.Provide<TestClassBase>();
         }
 
         /// <summary>
@@ -266,8 +266,8 @@ namespace MattEland.Ani.Alfred.Tests.Common
         [Test]
         public void CreateTypeMultipleTimesCreatesMultipleObjects()
         {
-            var a = CommonProvider.ProvideInstance<TestClass>();
-            var b = CommonProvider.ProvideInstance<TestClass>();
+            var a = CommonProvider.Provide<TestClass>();
+            var b = CommonProvider.Provide<TestClass>();
 
             Assert.That(a != b, "CommonProvider.Create should create multiple instances");
         }
@@ -282,9 +282,9 @@ namespace MattEland.Ani.Alfred.Tests.Common
         public void CreateTypeWithParameterizedConstructor()
         {
             const int Data = 1980;
-            CommonProvider.Register(typeof(TestClassBase), typeof(TestClass), Data);
+            CommonProvider.Register(typeof(TestClassBase), typeof(TestClass));
 
-            var result = CommonProvider.ProvideInstance<TestClassBase>();
+            var result = CommonProvider.Provide<TestClassBase>(Data);
 
             Assert.IsNotNull(result, "The desired type was not instantiated");
             var test = result as TestClass;
@@ -335,11 +335,11 @@ namespace MattEland.Ani.Alfred.Tests.Common
             // Register the same type for both containers with different implementations
             var t = typeof(TestClassBase);
             containerA.Register(t, typeof(TestClass));
-            containerB.Register(t, (Func<object>)PrivateTestClass.CreateInstance);
+            containerB.Register(t, (Func<object[], object>)PrivateTestClass.CreateInstanceWithParams);
 
             // Build our instances
-            var instanceA = containerA.ProvideInstance<TestClassBase>();
-            var instanceB = containerB.ProvideInstance<TestClassBase>();
+            var instanceA = containerA.Provide<TestClassBase>(35);
+            var instanceB = containerB.Provide<TestClassBase>(1, 1);
 
             // Assert we have different strokes for different folks
             Assert.AreNotSame(containerA, containerB);
@@ -366,7 +366,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
             CommonProvider.Register(typeof(ITestInterfaceDerived), typeof(TestClass));
 
             // Use the container to create the instance we want
-            var result = CommonProvider.ProvideInstance<ITestInterfaceDerived>();
+            var result = CommonProvider.Provide<ITestInterfaceDerived>();
 
             // Check to see that the container created the object using the default constructor
             Assert.IsNotNull(result, "Item was not instantiated.");
@@ -390,7 +390,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
             type.RegisterProvider(type);
 
             // Use the container to create the instance we want
-            var result = CommonProvider.ProvideInstance<TestClass>();
+            var result = CommonProvider.Provide<TestClass>();
 
             // Check to see that the container created the object using the default constructor
             Assert.IsNotNull(result, "Item was not instantiated.");
@@ -415,7 +415,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
             baseType.RegisterProvider(preferredType);
 
             // Use the container to create the instance we want
-            var result = CommonProvider.ProvideInstance<TestClassBase>();
+            var result = CommonProvider.Provide<TestClassBase>();
 
             // Check to see that the container created the object using the default constructor
             Assert.IsNotNull(result, "Item was not instantiated.");
@@ -479,7 +479,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
 
             CommonProvider.Register(typeof(PrivateTestClass), activator);
 
-            var result = CommonProvider.ProvideInstance<PrivateTestClass>();
+            var result = CommonProvider.Provide<PrivateTestClass>();
 
             Assert.IsNotNull(result, "The desired type was not instantiated");
         }
@@ -497,9 +497,9 @@ namespace MattEland.Ani.Alfred.Tests.Common
             var activator =
                 new Func<object[], PrivateTestClass>(PrivateTestClass.CreateInstanceWithParams);
 
-            CommonProvider.Register(typeof(PrivateTestClass), activator, 1, 3);
+            CommonProvider.Register(typeof(PrivateTestClass), activator);
 
-            var result = CommonProvider.TryProvideInstance<PrivateTestClass>();
+            var result = CommonProvider.TryProvideInstance<PrivateTestClass>(1, 3);
 
             Assert.IsNotNull(result, "The desired type was not instantiated");
 
@@ -584,7 +584,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
             t.RegisterProvider(typeof(TestClass));
 
             // Use non-generic retrieval method
-            var instance = CommonProvider.ProvideInstanceOfType(t);
+            var instance = CommonProvider.ProvideType(t);
 
             // Make sure we got what we thought we did
             Assert.IsNotNull(instance);

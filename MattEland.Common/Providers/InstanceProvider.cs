@@ -59,14 +59,15 @@ namespace MattEland.Common.Providers
         public IObjectProvider FallbackProvider { get; set; }
 
         /// <summary>
-        ///     Creates an instance of the requested type using the pre-defined mappings. If no mapping is
-        ///     found, the <see cref="FallbackProvider" /> will be used. If there is no mapping and no
-        ///     <see cref="FallbackProvider" />, this will return null.
+        /// Creates an instance of the requested type using the pre-defined mappings. If no mapping is
+        /// found, the <see cref="FallbackProvider" /> will be used. If there is no mapping and no
+        /// <see cref="FallbackProvider" />, this will return null.
         /// </summary>
         /// <param name="requestedType">The type that was requested.</param>
+        /// <param name="args">The arguments.</param>
         /// <returns>A new instance of the requested type or null</returns>
         [CanBeNull]
-        public object CreateInstance([NotNull] Type requestedType)
+        public object CreateInstance([NotNull] Type requestedType, params object[] args)
         {
             /* Grab from our mappings if present, otherwise defer to the fallback
                provider if present. If one isn't, send back null. The system will 
