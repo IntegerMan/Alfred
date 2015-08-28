@@ -59,7 +59,7 @@ namespace MattEland.Common.Providers
 
                     if (ProviderMappings.ContainsKey(typeof(IObjectProvider)))
                     {
-                        provider = Create<IObjectProvider>();
+                        provider = ProvideInstance<IObjectProvider>();
                     }
                     else
                     {
@@ -107,7 +107,7 @@ namespace MattEland.Common.Providers
 
             // Register the type mapping using the default Activator-based model.
             var provider = new ActivatorObjectProvider(preferredType, arguments);
-            ProviderMappings[baseType] = provider;
+            Register(baseType, provider);
         }
 
         /// <summary>
@@ -142,16 +142,16 @@ namespace MattEland.Common.Providers
         }
 
         /// <summary>
-        ///     Creates an instance of the requested type.
+        ///     Provides an instance of the requested type.
         /// </summary>
-        /// <typeparam name="TRequested">The type that was requested to be created.</typeparam>
+        /// <typeparam name="TRequested">The type that was requested to be provided.</typeparam>
         /// <returns>An instance of the requested type</returns>
         /// <exception cref="InvalidOperationException">
         ///     The type is not correctly configured to allow for
         ///     instantiation.
         /// </exception>
         [NotNull]
-        public static TRequested Create<TRequested>()
+        public static TRequested ProvideInstance<TRequested>()
         {
             var requestedType = typeof(TRequested);
 
@@ -195,6 +195,10 @@ namespace MattEland.Common.Providers
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         private static IObjectProvider GetObjectProvider([NotNull] Type requestedType)
         {
+
+            //- TODO: It might be nice to have an option to disable defaulting and throw an exception instead
+
+            // Grab our registered mapping. If we don't have one, then use our default provider
             return ProviderMappings.ContainsKey(requestedType)
                        ? ProviderMappings[requestedType]
                        : DefaultObjectProvider;
@@ -220,6 +224,25 @@ namespace MattEland.Common.Providers
 
             // Build a function-based provider
             var provider = new DelegateObjectProvider(activator, arguments);
+
+            Register(type, provider);
+        }
+
+        /// <summary>
+        ///     Registers a custom <see cref="IObjectProvider"/> as a source for future requests for <paramref name="type"/>
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="provider">The object provider.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="type" /> or <paramref name="provider" /> is <see langword="null" />.
+        /// </exception>
+        public static void Register(
+            [NotNull] Type type,
+            [NotNull] IObjectProvider provider)
+        {
+            //- Validate
+            if (type == null) { throw new ArgumentNullException(nameof(type)); }
+            if (provider == null) { throw new ArgumentNullException(nameof(provider)); }
 
             ProviderMappings[type] = provider;
         }

@@ -33,6 +33,8 @@ namespace MattEland.Ani.Alfred.Tests.Common
         [SetUp]
         public void SetUp() { CommonProvider.ClearMappings(); }
 
+        #region Test Classes / Interfaces
+
         public interface ITestInterfaceBase
         {
             int BaseProperty { get; set; }
@@ -81,7 +83,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
             /// Initializes a new instance of the <see cref="PrivateTestClass" /> class.
             /// </summary>
             /// <param name="value">The value to use to set the base property.</param>
-            internal PrivateTestClass(int value) : base(value)
+            private PrivateTestClass(int value) : base(value)
             {
             }
 
@@ -127,7 +129,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
             /// </summary>
             /// <remarks>
             ///     This is public so that it can be instantiated by
-            ///     <see cref="CommonProvider.Create{TRequested}" />
+            ///     <see cref="CommonProvider.ProvideInstance{TRequested}" />
             /// </remarks>
             [UsedImplicitly]
             public TestClass() : this(DefaultConstructorUsed)
@@ -151,6 +153,8 @@ namespace MattEland.Ani.Alfred.Tests.Common
             public object Data { get; }
         }
 
+        #endregion
+
         /// <summary>
         ///     Tests that using the IoC container to activate an abstract class throws an exception.
         /// </summary>
@@ -161,7 +165,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
         [ExpectedException(typeof(InvalidOperationException))]
         public void CreateBaseTypeUsingDefaultConstructorThrowsException()
         {
-            CommonProvider.Create<TestClassBase>();
+            CommonProvider.ProvideInstance<TestClassBase>();
         }
 
         /// <summary>
@@ -174,8 +178,8 @@ namespace MattEland.Ani.Alfred.Tests.Common
         [Test]
         public void CreateTypeMultipleTimesCreatesMultipleObjects()
         {
-            var a = CommonProvider.Create<TestClass>();
-            var b = CommonProvider.Create<TestClass>();
+            var a = CommonProvider.ProvideInstance<TestClass>();
+            var b = CommonProvider.ProvideInstance<TestClass>();
 
             Assert.That(a != b, "CommonProvider.Create should create multiple instances");
         }
@@ -191,10 +195,11 @@ namespace MattEland.Ani.Alfred.Tests.Common
         public void RegisterAndCreateInstantiatesUsingDefaultConstructor()
         {
             // Tell the container to create types of our object when that type is requested
-            CommonProvider.Register(typeof(TestClass), typeof(TestClass));
+            var type = typeof(TestClass);
+            type.RegisterProvider(type);
 
             // Use the container to create the instance we want
-            var result = CommonProvider.Create<TestClass>();
+            var result = CommonProvider.ProvideInstance<TestClass>();
 
             // Check to see that the container created the object using the default constructor
             Assert.IsNotNull(result, "Item was not instantiated.");
@@ -216,7 +221,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
             CommonProvider.Register(typeof(ITestInterfaceDerived), typeof(TestClass));
 
             // Use the container to create the instance we want
-            var result = CommonProvider.Create<ITestInterfaceDerived>();
+            var result = CommonProvider.ProvideInstance<ITestInterfaceDerived>();
 
             // Check to see that the container created the object using the default constructor
             Assert.IsNotNull(result, "Item was not instantiated.");
@@ -236,11 +241,12 @@ namespace MattEland.Ani.Alfred.Tests.Common
         public void RegisterBaseTypeAndCreateInstantiatesUsingDefaultConstructor()
         {
             // Tell the container to create types of our object when that type is requested
-            CommonProvider.Register(typeof(TestClassBase),
-                                    typeof(TestClass));
+            var baseType = typeof(TestClassBase);
+            var preferredType = typeof(TestClass);
+            baseType.RegisterProvider(preferredType);
 
             // Use the container to create the instance we want
-            var result = CommonProvider.Create<TestClassBase>();
+            var result = CommonProvider.ProvideInstance<TestClassBase>();
 
             // Check to see that the container created the object using the default constructor
             Assert.IsNotNull(result, "Item was not instantiated.");
@@ -280,7 +286,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
 
             CommonProvider.Register(typeof(PrivateTestClass), activator);
 
-            var result = CommonProvider.Create<PrivateTestClass>();
+            var result = CommonProvider.ProvideInstance<PrivateTestClass>();
 
             Assert.IsNotNull(result, "The desired type was not instantiated");
         }
@@ -298,7 +304,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
 
             CommonProvider.Register(typeof(PrivateTestClass), activator, 1, 3);
 
-            var result = CommonProvider.Create<PrivateTestClass>();
+            var result = CommonProvider.ProvideInstance<PrivateTestClass>();
 
             Assert.IsNotNull(result, "The desired type was not instantiated");
 
@@ -317,7 +323,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
             const int Data = 1980;
             CommonProvider.Register(typeof(TestClassBase), typeof(TestClass), Data);
 
-            var result = CommonProvider.Create<TestClassBase>();
+            var result = CommonProvider.ProvideInstance<TestClassBase>();
 
             Assert.IsNotNull(result, "The desired type was not instantiated");
             var test = result as TestClass;

@@ -94,6 +94,7 @@
     <Compile Include="ObjectExtensions.cs" />
     <Compile Include="Providers\ActivatorObjectProvider.cs" />
     <Compile Include="Providers\CommonProvider.cs" />
+    <Compile Include="Providers\CommonProviderExtensions.cs" />
     <Compile Include="Providers\DelegateObjectProvider.cs" />
     <Compile Include="Providers\IObjectProvider.cs" />
     <Compile Include="StringExtensions.cs" />
