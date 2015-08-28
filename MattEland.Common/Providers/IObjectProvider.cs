@@ -24,6 +24,7 @@ namespace MattEland.Common.Providers
         /// </summary>
         /// <param name="requestedType">The type that was requested.</param>
         /// <returns>A new instance of the requested type</returns>
+        [CanBeNull]
         object CreateInstance([NotNull] Type requestedType);
     }
 }

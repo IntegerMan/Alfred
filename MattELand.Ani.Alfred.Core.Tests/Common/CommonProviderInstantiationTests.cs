@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
-// CommonProviderTests.cs
+// CommonProviderInstantiationTests.cs
 // 
 // Created on:      08/27/2015 at 2:49 PM
-// Last Modified:   08/27/2015 at 4:21 PM
+// Last Modified:   08/28/2015 at 12:24 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -31,14 +31,17 @@ namespace MattEland.Ani.Alfred.Tests.Common
     [SuppressMessage("ReSharper", "EventExceptionNotDocumented")]
     public class CommonProviderInstantiationTests
     {
+        /// <summary>
+        ///     Sets up the test environment for test runs.
+        /// </summary>
         [SetUp]
+        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public void SetUp()
         {
+            // These things live at the static level. Clear so tests don't hit each other
             CommonProvider.ResetMappings();
             CommonProvider.DefaultProvider = null;
         }
-
-        #region Test Classes / Interfaces
 
         public interface ITestInterfaceBase
         {
@@ -72,7 +75,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
         }
 
         /// <summary>
-        /// A private class for testing <see cref="CommonProvider"/>
+        ///     A private class for testing <see cref="CommonProvider" />
         /// </summary>
         private class PrivateTestClass : TestClassBase
         {
@@ -85,7 +88,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
             }
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="PrivateTestClass" /> class.
+            ///     Initializes a new instance of the <see cref="PrivateTestClass" /> class.
             /// </summary>
             /// <param name="value">The value to use to set the base property.</param>
             private PrivateTestClass(int value) : base(value)
@@ -93,9 +96,9 @@ namespace MattEland.Ani.Alfred.Tests.Common
             }
 
             /// <summary>
-            /// Builds an instance of <see cref="PrivateTestClass"/>.
+            ///     Builds an instance of <see cref="PrivateTestClass" />.
             /// </summary>
-            /// <returns>A new instance of <see cref="PrivateTestClass"/></returns>
+            /// <returns>A new instance of <see cref="PrivateTestClass" /></returns>
             [NotNull]
             internal static PrivateTestClass CreateInstance()
             {
@@ -103,7 +106,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
             }
 
             /// <summary>
-            /// Builds an instance of <see cref="PrivateTestClass" />.
+            ///     Builds an instance of <see cref="PrivateTestClass" />.
             /// </summary>
             /// <param name="args">The arguments.</param>
             /// <returns>A new instance of <see cref="PrivateTestClass" /></returns>
@@ -113,10 +116,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
                 var sum = 0;
 
                 // Add items to the sum
-                if (args != null)
-                {
-                    sum += args.Cast<int>().Sum();
-                }
+                if (args != null) { sum += args.Cast<int>().Sum(); }
 
                 // Pass in the value to the object so we can validate it
                 return new PrivateTestClass(sum);
@@ -145,8 +145,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
             /// <summary>
             ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
             /// </summary>
-            public TestClass([CanBeNull] object data)
-                : base(data?.GetHashCode() ?? 42)
+            public TestClass([CanBeNull] object data) : base(data?.GetHashCode() ?? 42)
             {
                 Data = data;
             }
@@ -159,7 +158,65 @@ namespace MattEland.Ani.Alfred.Tests.Common
             public object Data { get; }
         }
 
-        #endregion
+        /// <summary>
+        ///     Determines whether this instance [can define custom default provider].
+        /// </summary>
+        [Test]
+        public void CanDefineCustomDefaultProvider()
+        {
+            const string Bubba = "Bubba";
+
+            // Change the fallback / default provider to be something that yields our magic string
+            var provider = new InstanceProvider(null);
+            provider.Register(typeof(string), Bubba);
+            CommonProvider.DefaultProvider = provider;
+
+            // Grab the instance and check to see if its our string
+            var instance = CommonProvider.ProvideInstance<string>();
+            Assert.AreSame(instance, Bubba);
+        }
+
+        /// <summary>
+        ///     Tests that using the IoC container cannot register an interface to be instantiated, even if it
+        ///     does have inheritance.
+        /// </summary>
+        /// <remarks>
+        ///     See ALF-98
+        /// </remarks>
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void CannotRegisterAnInterface()
+        {
+            CommonProvider.Register(typeof(ITestInterfaceBase), typeof(ITestInterfaceDerived));
+        }
+
+        /// <summary>
+        ///     Tests that using the IoC container cannot register a concrete type that does not implement an
+        ///     interface.
+        /// </summary>
+        /// <remarks>
+        ///     See ALF-98
+        /// </remarks>
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void CannotRegisterUnimplementedInterface()
+        {
+            CommonProvider.Register(typeof(ICustomFormatter), typeof(DateTime));
+        }
+
+        /// <summary>
+        ///     Tests that using the IoC container cannot register a concrete type that is unrelated to the
+        ///     type it is being registered to handle
+        /// </summary>
+        /// <remarks>
+        ///     See ALF-98
+        /// </remarks>
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void CannotRegisterUnrelatedTypes()
+        {
+            CommonProvider.Register(typeof(StringBuilder), typeof(DateTime));
+        }
 
         /// <summary>
         ///     Tests that using the IoC container to activate an abstract class throws an exception.
@@ -168,7 +225,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
         ///     See ALF-98
         /// </remarks>
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
+        [ExpectedException(typeof(NotSupportedException))]
         public void CreateBaseTypeUsingDefaultConstructorThrowsException()
         {
             CommonProvider.ProvideInstance<TestClassBase>();
@@ -191,6 +248,76 @@ namespace MattEland.Ani.Alfred.Tests.Common
         }
 
         /// <summary>
+        ///     Tests that using the IoC container we can instantiate classes using parameterized constructors.
+        /// </summary>
+        /// <remarks>
+        ///     See ALF-98
+        /// </remarks>
+        [Test]
+        public void CreateTypeWithParameterizedConstructor()
+        {
+            const int Data = 1980;
+            CommonProvider.Register(typeof(TestClassBase), typeof(TestClass), Data);
+
+            var result = CommonProvider.ProvideInstance<TestClassBase>();
+
+            Assert.IsNotNull(result, "The desired type was not instantiated");
+            var test = result as TestClass;
+            Assert.IsNotNull(test,
+                             $"The result was not TestClass. Instead was {result.GetType().FullName}");
+
+            Assert.AreEqual(Data,
+                            test.Data,
+                            "Test object was not created using the correct constructor");
+        }
+
+        /// <summary>
+        ///     Ensures the dependency container uses itself to get a default provider when lazy loading.
+        /// </summary>
+        /// <remarks>
+        ///     See ALF-98
+        /// </remarks>
+        [Test]
+        public void EnsureDependencyContainerUsesItselfToGetDefaultProvider()
+        {
+            // Create our default provider with instructions to yield itself as an IObjectProvider
+            var instanceProvider = new InstanceProvider(null);
+            instanceProvider.Register(typeof(IObjectProvider), instanceProvider);
+
+            // Register the new provider as a source for IObjectProvider
+            CommonProvider.Register(typeof(IObjectProvider), instanceProvider);
+
+            // Cause DefaultProvider to be lazy loaded and store the result
+            var defaultProvider = CommonProvider.DefaultProvider;
+
+            // Check that they're the same object
+            Assert.AreSame(instanceProvider, defaultProvider);
+        }
+
+        /// <summary>
+        ///     Tests that the IoC container allows interfaces to registered as the base type with an
+        ///     implementing concrete class as the instantiated type.
+        /// </summary>
+        /// <remarks>
+        ///     See ALF-98
+        /// </remarks>
+        [Test]
+        public void RegisterAndCreateForInterfaceBaseTypeWorks()
+        {
+            // Tell the container to create types of our object when that type is requested
+            CommonProvider.Register(typeof(ITestInterfaceDerived), typeof(TestClass));
+
+            // Use the container to create the instance we want
+            var result = CommonProvider.ProvideInstance<ITestInterfaceDerived>();
+
+            // Check to see that the container created the object using the default constructor
+            Assert.IsNotNull(result, "Item was not instantiated.");
+            Assert.AreEqual(TestClass.DefaultConstructorUsed,
+                            result.Data,
+                            "Default constructor was not used");
+        }
+
+        /// <summary>
         ///     Tests that the IoC container provides new instances of the requested type when a type is
         ///     registered for itself.
         /// </summary>
@@ -206,28 +333,6 @@ namespace MattEland.Ani.Alfred.Tests.Common
 
             // Use the container to create the instance we want
             var result = CommonProvider.ProvideInstance<TestClass>();
-
-            // Check to see that the container created the object using the default constructor
-            Assert.IsNotNull(result, "Item was not instantiated.");
-            Assert.AreEqual(TestClass.DefaultConstructorUsed,
-                            result.Data,
-                            "Default constructor was not used");
-        }
-
-        /// <summary>
-        ///     Tests that the IoC container allows interfaces to registered as the base type with an implementing concrete class as the instantiated type.
-        /// </summary>
-        /// <remarks>
-        ///     See ALF-98
-        /// </remarks>
-        [Test]
-        public void RegisterAndCreateForInterfaceBaseTypeWorks()
-        {
-            // Tell the container to create types of our object when that type is requested
-            CommonProvider.Register(typeof(ITestInterfaceDerived), typeof(TestClass));
-
-            // Use the container to create the instance we want
-            var result = CommonProvider.ProvideInstance<ITestInterfaceDerived>();
 
             // Check to see that the container created the object using the default constructor
             Assert.IsNotNull(result, "Item was not instantiated.");
@@ -298,7 +403,8 @@ namespace MattEland.Ani.Alfred.Tests.Common
         }
 
         /// <summary>
-        ///     Tests that using the IoC container we can instantiate classes using activator functions with parameters.
+        ///     Tests that using the IoC container we can instantiate classes using activator functions with
+        ///     parameters.
         /// </summary>
         /// <remarks>
         ///     See ALF-98
@@ -306,114 +412,75 @@ namespace MattEland.Ani.Alfred.Tests.Common
         [Test]
         public void RegisterTypeUsingParameterizedActivationFunction()
         {
-            var activator = new Func<object[], PrivateTestClass>(PrivateTestClass.CreateInstanceWithParams);
+            var activator =
+                new Func<object[], PrivateTestClass>(PrivateTestClass.CreateInstanceWithParams);
 
             CommonProvider.Register(typeof(PrivateTestClass), activator, 1, 3);
 
-            var result = CommonProvider.ProvideInstance<PrivateTestClass>();
+            var result = CommonProvider.TryProvideInstance<PrivateTestClass>();
 
             Assert.IsNotNull(result, "The desired type was not instantiated");
 
-            Assert.AreEqual(4, result.BaseProperty, "Test object was not created using the correct constructor");
+            Assert.AreEqual(4,
+                            result.BaseProperty,
+                            "Test object was not created using the correct constructor");
         }
 
         /// <summary>
-        ///     Tests that using the IoC container we can instantiate classes using parameterized constructors.
+        ///     Test that requesting an unknown type causes the instance provider to throw a
+        ///     <see cref="NotSupportedException" />.
         /// </summary>
         /// <remarks>
         ///     See ALF-98
         /// </remarks>
         [Test]
-        public void CreateTypeWithParameterizedConstructor()
+        [ExpectedException(typeof(NotSupportedException))]
+        public void RequestingAnUnknownTypeCausesInstanceProviderToError()
         {
-            const int Data = 1980;
-            CommonProvider.Register(typeof(TestClassBase), typeof(TestClass), Data);
+            // Don't do this. I'm just testing extension methods
+            new InstanceProvider().RegisterAsDefaultProvider();
 
-            var result = CommonProvider.ProvideInstance<TestClassBase>();
-
-            Assert.IsNotNull(result, "The desired type was not instantiated");
-            var test = result as TestClass;
-            Assert.IsNotNull(test,
-                             $"The result was not TestClass. Instead was {result.GetType().FullName}");
-
-            Assert.AreEqual(Data, test.Data, "Test object was not created using the correct constructor");
+            // Don't code like this either.
+            typeof(string).ProvideInstanceOf();
         }
 
         /// <summary>
-        ///     Tests that using the IoC container cannot register a concrete type that is unrelated to the type it is being registered to handle
+        ///     Test that using the non-generic <see cref="CommonProvider.ProvideInstanceOfType" /> provides
+        ///     instances as expected
         /// </summary>
         /// <remarks>
         ///     See ALF-98
-        /// </remarks>
-        [Test, ExpectedException(typeof(InvalidOperationException))]
-        public void CannotRegisterUnrelatedTypes()
-        {
-            CommonProvider.Register(typeof(StringBuilder), typeof(DateTime));
-        }
-
-        /// <summary>
-        ///     Tests that using the IoC container cannot register a concrete type that does not implement an interface.
-        /// </summary>
-        /// <remarks>
-        ///     See ALF-98
-        /// </remarks>
-        [Test, ExpectedException(typeof(InvalidOperationException))]
-        public void CannotRegisterUnimplementedInterface()
-        {
-            CommonProvider.Register(typeof(ICustomFormatter), typeof(DateTime));
-        }
-
-        /// <summary>
-        ///     Tests that using the IoC container cannot register an interface to be instantiated, even if it does have inheritance.
-        /// </summary>
-        /// <remarks>
-        ///     See ALF-98
-        /// </remarks>
-        [Test, ExpectedException(typeof(InvalidOperationException))]
-        public void CannotRegisterAnInterface()
-        {
-            CommonProvider.Register(typeof(ITestInterfaceBase), typeof(ITestInterfaceDerived));
-        }
-
-        /// <summary>
-        /// Determines whether this instance [can define custom default provider].
-        /// </summary>
-        [Test]
-        public void CanDefineCustomDefaultProvider()
-        {
-            const string Bubba = "Bubba";
-
-            // Change the fallback / default provider to be something that yields our magic string
-            var provider = new InstanceProvider(null);
-            provider.Register(typeof(string), Bubba);
-            CommonProvider.DefaultProvider = provider;
-
-            // Grab the instance and check to see if its our string
-            var instance = CommonProvider.ProvideInstance<string>();
-            Assert.AreSame(instance, Bubba);
-        }
-
-        /// <summary>
-        /// Ensures the dependency container uses itself to get a default provider when lazy loading.
-        /// </summary>
-        /// <remarks>
-        /// See ALF-98
         /// </remarks>
         [Test]
-        public void EnsureDependencyContainerUsesItselfToGetDefaultProvider()
+        public void RequestingTypeSafeReturnsNullWhenNoMapping()
         {
-            // Create our default provider with instructions to yield itself as an IObjectProvider
-            var instanceProvider = new InstanceProvider(null);
-            instanceProvider.Register(typeof(IObjectProvider), instanceProvider);
+            // Use non-generic retrieval method
+            var instance = CommonProvider.TryProvideInstance<IDisposable>();
 
-            // Register the new provider as a source for IObjectProvider
-            CommonProvider.Register(typeof(IObjectProvider), instanceProvider);
+            // Make sure we didn't get a result
+            Assert.IsNull(instance);
+        }
 
-            // Cause DefaultProvider to be lazy loaded and store the result
-            var defaultProvider = CommonProvider.DefaultProvider;
+        /// <summary>
+        ///     Test that using the non-generic <see cref="CommonProvider.ProvideInstanceOfType" /> provides
+        ///     instances as expected
+        /// </summary>
+        /// <remarks>
+        ///     See ALF-98
+        /// </remarks>
+        [Test]
+        public void RequestingTypeUsingProvideInstanceOfTypeWorks()
+        {
+            // Register using extension methods
+            var t = typeof(ITestInterfaceBase);
+            t.RegisterProvider(typeof(TestClass));
 
-            // Check that they're the same object
-            Assert.AreSame(instanceProvider, defaultProvider);
+            // Use non-generic retrieval method
+            var instance = CommonProvider.ProvideInstanceOfType(t);
+
+            // Make sure we got what we thought we did
+            Assert.IsNotNull(instance);
+            Assert.That(instance is ITestInterfaceBase);
         }
     }
 

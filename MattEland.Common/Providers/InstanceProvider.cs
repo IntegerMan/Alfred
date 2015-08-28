@@ -2,7 +2,7 @@
 // InstanceProvider.cs
 // 
 // Created on:      08/27/2015 at 11:12 PM
-// Last Modified:   08/27/2015 at 11:24 PM
+// Last Modified:   08/28/2015 at 12:18 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -31,6 +31,10 @@ namespace MattEland.Common.Providers
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InstanceProvider"/> class.
+        /// </summary>
+        /// <param name="fallbackProvider">The fallback provider.</param>
         public InstanceProvider([CanBeNull] IObjectProvider fallbackProvider)
         {
             FallbackProvider = fallbackProvider;
@@ -57,22 +61,20 @@ namespace MattEland.Common.Providers
         /// <summary>
         ///     Creates an instance of the requested type using the pre-defined mappings. If no mapping is
         ///     found, the <see cref="FallbackProvider" /> will be used. If there is no mapping and no
-        ///     <see cref="FallbackProvider" />, a <see cref="NotSupportedException" /> will be thrown.
+        ///     <see cref="FallbackProvider" />, this will return null.
         /// </summary>
         /// <param name="requestedType">The type that was requested.</param>
-        /// <returns>A new instance of the requested type</returns>
-        /// <exception cref="NotSupportedException">
-        ///     Thrown when a type was requested where there was no mapping
-        ///     provided and no <see cref="FallbackProvider" /> was set.
-        /// </exception>
-        public object CreateInstance(Type requestedType)
+        /// <returns>A new instance of the requested type or null</returns>
+        [CanBeNull]
+        public object CreateInstance([NotNull] Type requestedType)
         {
-            if (Mappings.ContainsKey(requestedType)) { return Mappings[requestedType]; }
+            /* Grab from our mappings if present, otherwise defer to the fallback
+               provider if present. If one isn't, send back null. The system will 
+               have to deal with null and throw exceptions as needed. */
 
-            if (FallbackProvider != null) { return FallbackProvider.CreateInstance(requestedType); }
-
-            throw new NotSupportedException(
-                $"No mapping exists for {requestedType} and no FallbackProvider was provided.");
+            return Mappings.ContainsKey(requestedType)
+                       ? Mappings[requestedType]
+                       : FallbackProvider?.CreateInstance(requestedType);
         }
 
         /// <summary>

@@ -8,6 +8,7 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
 
@@ -65,6 +66,30 @@ namespace MattEland.Common.Providers
 
             // Register with the common provider
             CommonProvider.Register(baseType, activationDelegate, arguments);
+        }
+
+        /// <summary>
+        /// Registers the provider as the default provider.
+        /// </summary>
+        /// <param name="provider">The provider.</param>
+        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
+        public static void RegisterAsDefaultProvider([CanBeNull] this IObjectProvider provider)
+        {
+            CommonProvider.DefaultProvider = provider;
+        }
+
+        /// <summary>
+        /// Provides the instance of the type using the <see cref="CommonProvider"/>.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>The provided instance.</returns>
+        /// <exception cref="InvalidOperationException">
+        ///     The type is not correctly configured to allow for
+        ///     instantiation.
+        /// </exception>
+        public static object ProvideInstanceOf([NotNull] this Type type)
+        {
+            return CommonProvider.ProvideInstanceOfType(type);
         }
     }
 }

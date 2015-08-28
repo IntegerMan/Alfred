@@ -2,13 +2,14 @@
 // CommonProvider.cs
 // 
 // Created on:      08/27/2015 at 2:55 PM
-// Last Modified:   08/27/2015 at 10:11 PM
+// Last Modified:   08/28/2015 at 12:21 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
@@ -140,17 +141,37 @@ namespace MattEland.Common.Providers
         /// </summary>
         /// <typeparam name="TRequested">The type that was requested to be provided.</typeparam>
         /// <returns>An instance of the requested type</returns>
-        /// <exception cref="InvalidOperationException">
+        /// <exception cref="NotSupportedException">
         ///     The type is not correctly configured to allow for
         ///     instantiation.
         /// </exception>
         [NotNull]
         public static TRequested ProvideInstance<TRequested>()
         {
-            var requestedType = typeof(TRequested);
+            var type = typeof(TRequested);
 
+            var instance = ProvideInstanceOfType(type, true);
+            Debug.Assert(instance != null);
+
+            return (TRequested)instance;
+        }
+
+        /// <summary>
+        ///     Provides an instance of the requested type.
+        /// </summary>
+        /// <paramref name="type">The type that was requested to be provided.</paramref>
+        /// <returns>An instance of the requested type</returns>
+        /// <exception cref="NotSupportedException">
+        ///     The type is not correctly configured to allow for
+        ///     instantiation.
+        /// </exception>
+        [CanBeNull]
+        public static object ProvideInstanceOfType(
+            [NotNull] Type type,
+            bool errorOnNoInstance = true)
+        {
             // Determine which type to create
-            var provider = GetObjectProvider(requestedType);
+            var provider = GetObjectProvider(type);
 
             try
             {
@@ -158,24 +179,38 @@ namespace MattEland.Common.Providers
                    determined earlier. This can throw many exceptions which will be
                    wrapped into more user-friendly exceptions with easier error handling. */
 
-                var instance = provider.CreateInstance(requestedType);
+                var instance = provider.CreateInstance(type);
 
-                if (instance == null)
+                // Some callers want exceptions on not found; others don't
+                if (instance == null && errorOnNoInstance)
                 {
-                    var message = $"The activator function for creating {requestedType.FullName} returned a null value.";
-                    throw new InvalidOperationException(message);
+                    ThrowNotProvidedException(type.FullName);
                 }
 
-                return (TRequested)instance;
+                return instance;
             }
             catch (MissingMemberException ex)
             {
-                // Improve the thrown exception with more information.
-                string message =
-                    $"Could not instantiate {requestedType.FullName} due to missing member exception: '{ex.Message}'";
+                // Try to throw the same type of exception with additional information.
+                string msg =
+                    $"Could not instantiate {type.FullName} due to missing member exception: '{ex.Message}'";
 
-                throw new InvalidOperationException(message, ex);
+                throw new NotSupportedException(msg, ex);
             }
+        }
+
+        /// <summary>
+        ///     Throws the not provided <see cref="NotSupportedException" />.
+        /// </summary>
+        /// <param name="typeName">The name of the type that was requested</param>
+        /// <exception cref="NotSupportedException">
+        ///     Thrown if the operation was not supported given the current
+        ///     configuration.
+        /// </exception>
+        private static void ThrowNotProvidedException(string typeName)
+        {
+            var message = $"The activator function for creating {typeName} returned a null value.";
+            throw new NotSupportedException(message);
         }
 
         /// <summary>
@@ -187,7 +222,6 @@ namespace MattEland.Common.Providers
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         private static IObjectProvider GetObjectProvider([NotNull] Type requestedType)
         {
-
             //- TODO: It might be nice to have an option to disable defaulting and throw an exception instead
 
             // Grab our registered mapping. If we don't have one, then use our default provider
@@ -221,16 +255,15 @@ namespace MattEland.Common.Providers
         }
 
         /// <summary>
-        ///     Registers a custom <see cref="IObjectProvider"/> as a source for future requests for <paramref name="type"/>
+        ///     Registers a custom <see cref="IObjectProvider" /> as a source for future requests for
+        ///     <paramref name="type" />
         /// </summary>
         /// <param name="type">The type.</param>
         /// <param name="provider">The object provider.</param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="type" /> or <paramref name="provider" /> is <see langword="null" />.
         /// </exception>
-        public static void Register(
-            [NotNull] Type type,
-            [NotNull] IObjectProvider provider)
+        public static void Register([NotNull] Type type, [NotNull] IObjectProvider provider)
         {
             //- Validate
             if (type == null) { throw new ArgumentNullException(nameof(type)); }
@@ -252,6 +285,38 @@ namespace MattEland.Common.Providers
 
             // Reset the default provider as well
             _defaultObjectProvider = null;
+        }
+
+        /// <summary>
+        ///     Tries to provide an instance of type <typeparamref name="T" /> and returns null if it cannot.
+        /// </summary>
+        /// <typeparam name="T">The type to return</typeparam>
+        /// <returns>A new instance if things were successful; otherwise false.</returns>
+        [CanBeNull]
+        [SuppressMessage("ReSharper", "CatchAllClause")]
+        [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
+        [SuppressMessage("ReSharper", "ThrowingSystemException")]
+        public static T TryProvideInstance<T>() where T : class
+        {
+            try
+            {
+                var instance = ProvideInstanceOfType(typeof(T), false);
+
+                return instance as T;
+            }
+            catch (Exception ex)
+            {
+                // We only want certain Exceptions, but enough to not use multiple catches
+                if (ex is MissingMemberException || ex is TypeInitializationException
+                    || ex is NotSupportedException || ex is InvalidOperationException
+                    || ex is InvalidCastException)
+                {
+                    return null;
+                }
+
+                // Rethrow anything else we caught in this block
+                throw;
+            }
         }
     }
 
