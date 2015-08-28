@@ -8,6 +8,8 @@
 
 using JetBrains.Annotations;
 
+using MattEland.Common.Providers;
+
 namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>
@@ -53,6 +55,13 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         ///     Called when shutdown completes.
         /// </summary>
         void OnShutdownCompleted();
+
+        /// <summary>
+        /// Gets the dependency injection container.
+        /// </summary>
+        /// <value>The dependency injection container.</value>
+        [NotNull]
+        CommonContainer Container { get; }
 
         /// <summary>
         ///     Called when a component is registered with an alfred instance.

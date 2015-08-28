@@ -15,6 +15,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Common;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Modules
 {
@@ -149,6 +150,15 @@ namespace MattEland.Ani.Alfred.Core.Modules
         public override IEnumerable<IPropertyProvider> PropertyProviders
         {
             get { return Widgets; }
+        }
+
+        /// <summary>
+        /// Gets the dependency injection container.
+        /// </summary>
+        /// <value>The dependency injection container.</value>
+        public CommonContainer Container
+        {
+            get { return CommonProvider.Container; }
         }
 
     }

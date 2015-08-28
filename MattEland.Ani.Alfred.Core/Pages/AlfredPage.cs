@@ -12,6 +12,7 @@ using System.Diagnostics;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Pages
 {
@@ -109,6 +110,15 @@ namespace MattEland.Ani.Alfred.Core.Pages
         public override string ItemTypeName
         {
             get { return "Page"; }
+        }
+
+        /// <summary>
+        /// Gets the dependency injection container.
+        /// </summary>
+        /// <value>The dependency injection container.</value>
+        public CommonContainer Container
+        {
+            get { return CommonProvider.Container; }
         }
 
     }
