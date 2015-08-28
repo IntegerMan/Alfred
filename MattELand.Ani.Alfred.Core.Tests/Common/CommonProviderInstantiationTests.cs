@@ -28,15 +28,25 @@ namespace MattEland.Ani.Alfred.Tests.Common
     [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
     [SuppressMessage("ReSharper", "ExceptionNotDocumentedOptional")]
     [SuppressMessage("ReSharper", "EventExceptionNotDocumented")]
-    public class CommonProviderTests
+    public class CommonProviderInstantiationTests
     {
         [SetUp]
         public void SetUp() { CommonProvider.ClearMappings(); }
 
+        public interface ITestInterfaceBase
+        {
+            int BaseProperty { get; set; }
+        }
+
+        public interface ITestInterfaceDerived : ITestInterfaceBase
+        {
+            object Data { get; }
+        }
+
         /// <summary>
         ///     An abstract class for testing <see cref="CommonProvider" />
         /// </summary>
-        public abstract class TestClassBase
+        public abstract class TestClassBase : ITestInterfaceBase
         {
             /// <summary>
             ///     Initializes a new instance of the <see cref="TestClassBase" /> class.
@@ -51,7 +61,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
             ///     Gets or sets the base property.
             /// </summary>
             /// <value>The base property.</value>
-            internal int BaseProperty { get; set; }
+            public int BaseProperty { get; set; }
         }
 
         /// <summary>
@@ -106,9 +116,9 @@ namespace MattEland.Ani.Alfred.Tests.Common
         }
 
         /// <summary>
-        ///     A testing class used by <see cref="CommonProviderTests" />
+        ///     A testing class used by <see cref="CommonProviderInstantiationTests" />
         /// </summary>
-        public class TestClass : TestClassBase
+        public class TestClass : TestClassBase, ITestInterfaceDerived
         {
             internal const string DefaultConstructorUsed = "Default Constructor was Used";
 
@@ -138,7 +148,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
             /// </summary>
             /// <value>The data.</value>
             [CanBeNull]
-            internal object Data { get; }
+            public object Data { get; }
         }
 
         /// <summary>
@@ -185,6 +195,28 @@ namespace MattEland.Ani.Alfred.Tests.Common
 
             // Use the container to create the instance we want
             var result = CommonProvider.Create<TestClass>();
+
+            // Check to see that the container created the object using the default constructor
+            Assert.IsNotNull(result, "Item was not instantiated.");
+            Assert.AreEqual(TestClass.DefaultConstructorUsed,
+                            result.Data,
+                            "Default constructor was not used");
+        }
+
+        /// <summary>
+        ///     Tests that the IoC container allows interfaces to registered as the base type with an implementing concrete class as the instantiated type.
+        /// </summary>
+        /// <remarks>
+        ///     See ALF-98
+        /// </remarks>
+        [Test]
+        public void RegisterAndCreateForInterfaceBaseTypeWorks()
+        {
+            // Tell the container to create types of our object when that type is requested
+            CommonProvider.Register(typeof(ITestInterfaceDerived), typeof(TestClass));
+
+            // Use the container to create the instance we want
+            var result = CommonProvider.Create<ITestInterfaceDerived>();
 
             // Check to see that the container created the object using the default constructor
             Assert.IsNotNull(result, "Item was not instantiated.");
@@ -305,6 +337,30 @@ namespace MattEland.Ani.Alfred.Tests.Common
         public void CannotRegisterUnrelatedTypes()
         {
             CommonProvider.Register(typeof(StringBuilder), typeof(DateTime));
+        }
+
+        /// <summary>
+        ///     Tests that using the IoC container cannot register a concrete type that does not implement an interface.
+        /// </summary>
+        /// <remarks>
+        ///     See ALF-98
+        /// </remarks>
+        [Test, ExpectedException(typeof(InvalidOperationException))]
+        public void CannotRegisterUnimplementedInterface()
+        {
+            CommonProvider.Register(typeof(ICustomFormatter), typeof(DateTime));
+        }
+
+        /// <summary>
+        ///     Tests that using the IoC container cannot register an interface to be instantiated, even if it does have inheritance.
+        /// </summary>
+        /// <remarks>
+        ///     See ALF-98
+        /// </remarks>
+        [Test, ExpectedException(typeof(InvalidOperationException))]
+        public void CannotRegisterAnInterface()
+        {
+            CommonProvider.Register(typeof(ITestInterfaceBase), typeof(ITestInterfaceDerived));
         }
     }
 }
