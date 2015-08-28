@@ -54,42 +54,7 @@ namespace MattEland.Common.Providers
             if (baseType == null) { throw new ArgumentNullException(nameof(baseType)); }
             if (preferredType == null) { throw new ArgumentNullException(nameof(preferredType)); }
 
-            ValidateTypeRegistration(baseType, preferredType);
-
-            // Register the type mapping using the default Activator-based model.
-            var provider = new ActivatorObjectProvider(preferredType, arguments);
-            Register(baseType, provider);
-        }
-
-        /// <summary>
-        ///     Validates that <see cref="preferredType" /> is something that can be created.
-        /// </summary>
-        /// <param name="baseType">The type that will be requested.</param>
-        /// <param name="preferredType">
-        ///     The type that should be created when <see cref="baseType" /> is
-        ///     requested.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        ///     Various scenarios where
-        ///     <paramref name="preferredType" /> cannot be instantiated or cannot be cast to
-        ///     <paramref name="baseType" />.
-        /// </exception>
-        private static void ValidateTypeRegistration(
-            [NotNull] Type baseType,
-            [NotNull] Type preferredType)
-        {
-            // Ya kinda can't instantiate an abstract type
-            if (preferredType.IsAbstract)
-            {
-                throw new InvalidOperationException("Cannot create an abstract type");
-            }
-
-            // Check interface implementation, inheritance, and whether they're the same type
-            if (!baseType.IsAssignableFrom(preferredType))
-            {
-                throw new InvalidOperationException(
-                    $"{preferredType.FullName} cannot be cast to {baseType.FullName}");
-            }
+            Container.Register(baseType, preferredType, arguments);
         }
 
         /// <summary>
@@ -164,10 +129,7 @@ namespace MattEland.Common.Providers
             if (type == null) { throw new ArgumentNullException(nameof(type)); }
             if (activator == null) { throw new ArgumentNullException(nameof(activator)); }
 
-            // Build a function-based provider
-            var provider = new DelegateObjectProvider(activator, arguments);
-
-            Register(type, provider);
+            Container.Register(type, activator, arguments);
         }
 
         /// <summary>
@@ -205,30 +167,9 @@ namespace MattEland.Common.Providers
         /// <typeparam name="T">The type to return</typeparam>
         /// <returns>A new instance if things were successful; otherwise false.</returns>
         [CanBeNull]
-        [SuppressMessage("ReSharper", "CatchAllClause")]
-        [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
-        [SuppressMessage("ReSharper", "ThrowingSystemException")]
         public static T TryProvideInstance<T>() where T : class
         {
-            try
-            {
-                var instance = ProvideInstanceOfType(typeof(T), false);
-
-                return instance as T;
-            }
-            catch (Exception ex)
-            {
-                // We only want certain Exceptions, but enough to not use multiple catches
-                if (ex is MissingMemberException || ex is TypeInitializationException
-                    || ex is NotSupportedException || ex is InvalidOperationException
-                    || ex is InvalidCastException)
-                {
-                    return null;
-                }
-
-                // Rethrow anything else we caught in this block
-                throw;
-            }
+            return Container.TryProvideInstance<T>();
         }
 
         /// <summary>

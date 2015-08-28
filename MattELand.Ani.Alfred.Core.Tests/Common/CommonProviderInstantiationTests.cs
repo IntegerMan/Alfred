@@ -2,7 +2,7 @@
 // CommonProviderInstantiationTests.cs
 // 
 // Created on:      08/27/2015 at 2:49 PM
-// Last Modified:   08/28/2015 at 12:24 AM
+// Last Modified:   08/28/2015 at 1:53 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -219,6 +219,31 @@ namespace MattEland.Ani.Alfred.Tests.Common
         }
 
         /// <summary>
+        ///     Tests containers request values from their parent before a fallback is used when a parent is
+        ///     present and no mapping was found.
+        /// </summary>
+        /// <remarks>
+        ///     See ALF-98
+        /// </remarks>
+        [Test]
+        public void ContainersCanGetMappingsFromTheirParent()
+        {
+            // Get the containers
+            var parent = CommonProvider.Container;
+            var child = new CommonContainer(parent);
+
+            // Register the same type for both containers with different implementations
+            var t = typeof(TestClassBase);
+            parent.Register(t, typeof(TestClass));
+
+            // Build our instances
+            var instance = child.ProvideInstance<TestClassBase>();
+
+            // Check that the item was provided
+            Assert.IsNotNull(instance);
+        }
+
+        /// <summary>
         ///     Tests that using the IoC container to activate an abstract class throws an exception.
         /// </summary>
         /// <remarks>
@@ -292,6 +317,39 @@ namespace MattEland.Ani.Alfred.Tests.Common
 
             // Check that they're the same object
             Assert.AreSame(instanceProvider, defaultProvider);
+        }
+
+        /// <summary>
+        ///     Tests that multiple containers can exist side by side
+        /// </summary>
+        /// <remarks>
+        ///     See ALF-98
+        /// </remarks>
+        [Test]
+        public void MultipleContainersCanExist()
+        {
+            // Get the containers
+            var containerA = CommonProvider.Container;
+            var containerB = new CommonContainer();
+
+            // Register the same type for both containers with different implementations
+            var t = typeof(TestClassBase);
+            containerA.Register(t, typeof(TestClass));
+            containerB.Register(t, (Func<object>)PrivateTestClass.CreateInstance);
+
+            // Build our instances
+            var instanceA = containerA.ProvideInstance<TestClassBase>();
+            var instanceB = containerB.ProvideInstance<TestClassBase>();
+
+            // Assert we have different strokes for different folks
+            Assert.AreNotSame(containerA, containerB);
+            Assert.AreNotSame(instanceA, instanceB);
+
+            Assert.IsNotNull(instanceA, "A was null");
+            Assert.IsNotNull(instanceB, "B was null");
+
+            Assert.That(instanceA is TestClass, "A was not expected type");
+            Assert.That(instanceB is PrivateTestClass, "B was not expected type");
         }
 
         /// <summary>
@@ -385,6 +443,30 @@ namespace MattEland.Ani.Alfred.Tests.Common
         }
 
         /// <summary>
+        ///     Tests that registering an object as the provided instance causes that instance to be returned
+        ///     when the given type is requested.
+        /// </summary>
+        /// <remarks>
+        ///     See ALF-98
+        /// </remarks>
+        [Test]
+        public void RegisteringAnInstanceAsSingletonProvidesInstance()
+        {
+            var t = typeof(ITestInterfaceBase);
+            var instance = new TestClass(42);
+
+            // Register the instance (not type)
+            CommonProvider.RegisterProvidedInstance(t, instance);
+
+            // Get the instance from common provider
+            var result = t.ProvideInstanceOf();
+
+            // Validate
+            Assert.IsNotNull(result);
+            Assert.AreSame(instance, result);
+        }
+
+        /// <summary>
         ///     Tests that using the IoC container we can instantiate classes using activator functions.
         /// </summary>
         /// <remarks>
@@ -445,6 +527,32 @@ namespace MattEland.Ani.Alfred.Tests.Common
         }
 
         /// <summary>
+        ///     Tests that registering an object as the provided instance causes that instance to be returned
+        ///     when the given type is requested.
+        /// </summary>
+        /// <remarks>
+        ///     See ALF-98
+        /// </remarks>
+        [Test]
+        public void RequestingMultipleInstancesAfterRegisteringProvidedInstanceReturnsSameInstance()
+        {
+            var t = typeof(ITestInterfaceBase);
+            var instance = new TestClass(42);
+
+            // Register as singleton
+            instance.RegisterAsProvidedInstance(t);
+
+            // Grab a few instances
+            var a = t.ProvideInstanceOf();
+            var b = t.ProvideInstanceOf();
+
+            // Check that the items are the same instance
+            Assert.AreSame(instance, a);
+            Assert.AreSame(instance, b);
+            Assert.AreSame(a, b);
+        }
+
+        /// <summary>
         ///     Test that using the non-generic <see cref="CommonProvider.ProvideInstanceOfType" /> provides
         ///     instances as expected
         /// </summary>
@@ -481,54 +589,6 @@ namespace MattEland.Ani.Alfred.Tests.Common
             // Make sure we got what we thought we did
             Assert.IsNotNull(instance);
             Assert.That(instance is ITestInterfaceBase);
-        }
-
-        /// <summary>
-        /// Tests that registering an object as the provided instance causes that instance to be returned when the given type is requested.
-        /// </summary>
-        /// <remarks>
-        /// See ALF-98
-        /// </remarks>
-        [Test]
-        public void RegisteringAnInstanceAsSingletonProvidesInstance()
-        {
-            var t = typeof(ITestInterfaceBase);
-            var instance = new TestClass(42);
-
-            // Register the instance (not type)
-            CommonProvider.RegisterProvidedInstance(t, instance);
-
-            // Get the instance from common provider
-            var result = t.ProvideInstanceOf();
-
-            // Validate
-            Assert.IsNotNull(result);
-            Assert.AreSame(instance, result);
-        }
-
-        /// <summary>
-        /// Tests that registering an object as the provided instance causes that instance to be returned when the given type is requested.
-        /// </summary>
-        /// <remarks>
-        /// See ALF-98
-        /// </remarks>
-        [Test]
-        public void RequestingMultipleInstancesAfterRegisteringProvidedInstanceReturnsSameInstance()
-        {
-            var t = typeof(ITestInterfaceBase);
-            var instance = new TestClass(42);
-
-            // Register as singleton
-            instance.RegisterAsProvidedInstance(t);
-
-            // Grab a few instances
-            var a = t.ProvideInstanceOf();
-            var b = t.ProvideInstanceOf();
-
-            // Check that the items are the same instance
-            Assert.AreSame(instance, a);
-            Assert.AreSame(instance, b);
-            Assert.AreSame(a, b);
         }
     }
 
