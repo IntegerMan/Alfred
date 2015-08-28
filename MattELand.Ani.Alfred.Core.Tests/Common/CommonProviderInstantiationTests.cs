@@ -8,6 +8,7 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
@@ -31,7 +32,11 @@ namespace MattEland.Ani.Alfred.Tests.Common
     public class CommonProviderInstantiationTests
     {
         [SetUp]
-        public void SetUp() { CommonProvider.ClearMappings(); }
+        public void SetUp()
+        {
+            CommonProvider.ResetMappings();
+            CommonProvider.DefaultProvider = null;
+        }
 
         #region Test Classes / Interfaces
 
@@ -91,6 +96,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
             /// Builds an instance of <see cref="PrivateTestClass"/>.
             /// </summary>
             /// <returns>A new instance of <see cref="PrivateTestClass"/></returns>
+            [NotNull]
             internal static PrivateTestClass CreateInstance()
             {
                 return new PrivateTestClass();
@@ -368,5 +374,47 @@ namespace MattEland.Ani.Alfred.Tests.Common
         {
             CommonProvider.Register(typeof(ITestInterfaceBase), typeof(ITestInterfaceDerived));
         }
+
+        /// <summary>
+        /// Determines whether this instance [can define custom default provider].
+        /// </summary>
+        [Test]
+        public void CanDefineCustomDefaultProvider()
+        {
+            const string Bubba = "Bubba";
+
+            // Change the fallback / default provider to be something that yields our magic string
+            var provider = new InstanceProvider(null);
+            provider.Register(typeof(string), Bubba);
+            CommonProvider.DefaultProvider = provider;
+
+            // Grab the instance and check to see if its our string
+            var instance = CommonProvider.ProvideInstance<string>();
+            Assert.AreSame(instance, Bubba);
+        }
+
+        /// <summary>
+        /// Ensures the dependency container uses itself to get a default provider when lazy loading.
+        /// </summary>
+        /// <remarks>
+        /// See ALF-98
+        /// </remarks>
+        [Test]
+        public void EnsureDependencyContainerUsesItselfToGetDefaultProvider()
+        {
+            // Create our default provider with instructions to yield itself as an IObjectProvider
+            var instanceProvider = new InstanceProvider(null);
+            instanceProvider.Register(typeof(IObjectProvider), instanceProvider);
+
+            // Register the new provider as a source for IObjectProvider
+            CommonProvider.Register(typeof(IObjectProvider), instanceProvider);
+
+            // Cause DefaultProvider to be lazy loaded and store the result
+            var defaultProvider = CommonProvider.DefaultProvider;
+
+            // Check that they're the same object
+            Assert.AreSame(instanceProvider, defaultProvider);
+        }
     }
+
 }

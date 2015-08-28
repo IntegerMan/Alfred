@@ -41,12 +41,8 @@ namespace MattEland.Common.Providers
         ///     Gets the <see cref="IObjectProvider" /> to use when no provider is found.
         /// </summary>
         /// <value>The default object provider.</value>
-        /// <exception cref="ArgumentNullException"
-        ///            accessor="set">
-        ///     <paramref name="value" /> is <see langword="null" />.
-        /// </exception>
         [NotNull]
-        public static IObjectProvider DefaultObjectProvider
+        public static IObjectProvider DefaultProvider
         {
             get
             {
@@ -73,9 +69,7 @@ namespace MattEland.Common.Providers
             }
             set
             {
-                if (value == null) { throw new ArgumentNullException(nameof(value)); }
-
-                // TODO: Test this!
+                // Null is allowable since the next time get is called it will reset itself
 
                 _defaultObjectProvider = value;
             }
@@ -164,14 +158,12 @@ namespace MattEland.Common.Providers
                    determined earlier. This can throw many exceptions which will be
                    wrapped into more user-friendly exceptions with easier error handling. */
 
-                // ReSharper disable once EventExceptionNotDocumented
                 var instance = provider.CreateInstance(requestedType);
 
                 if (instance == null)
                 {
-                    throw new InvalidOperationException("The activator function for creating "
-                                                        + requestedType.FullName
-                                                        + " returned a null value.");
+                    var message = $"The activator function for creating {requestedType.FullName} returned a null value.";
+                    throw new InvalidOperationException(message);
                 }
 
                 return (TRequested)instance;
@@ -201,7 +193,7 @@ namespace MattEland.Common.Providers
             // Grab our registered mapping. If we don't have one, then use our default provider
             return ProviderMappings.ContainsKey(requestedType)
                        ? ProviderMappings[requestedType]
-                       : DefaultObjectProvider;
+                       : DefaultProvider;
         }
 
         /// <summary>
@@ -248,14 +240,18 @@ namespace MattEland.Common.Providers
         }
 
         /// <summary>
-        ///     Clears all mappings for creating types.
+        ///     Resets all mappings for creating types to their default values.
         /// </summary>
         /// <remarks>
         ///     This is useful for unit testing for cleaning up before invoking each time
         /// </remarks>
-        public static void ClearMappings()
+        public static void ResetMappings()
         {
+            // Clear out all usages
             ProviderMappings.Clear();
+
+            // Reset the default provider as well
+            _defaultObjectProvider = null;
         }
     }
 
