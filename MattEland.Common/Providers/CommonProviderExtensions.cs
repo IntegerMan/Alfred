@@ -83,7 +83,7 @@ namespace MattEland.Common.Providers
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>The provided instance.</returns>
-        /// <exception cref="InvalidOperationException">
+        /// <exception cref="NotSupportedException">
         ///     The type is not correctly configured to allow for
         ///     instantiation.
         /// </exception>
