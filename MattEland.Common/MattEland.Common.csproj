@@ -93,6 +93,7 @@
     <Compile Include="IntegerExtensions.cs" />
     <Compile Include="ObjectExtensions.cs" />
     <Compile Include="Providers\ActivatorObjectProvider.cs" />
+    <Compile Include="Providers\CommonContainer.cs" />
     <Compile Include="Providers\CommonProvider.cs" />
     <Compile Include="Providers\CommonProviderExtensions.cs" />
     <Compile Include="Providers\DelegateObjectProvider.cs" />

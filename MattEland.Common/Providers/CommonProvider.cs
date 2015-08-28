@@ -2,7 +2,7 @@
 // CommonProvider.cs
 // 
 // Created on:      08/27/2015 at 2:55 PM
-// Last Modified:   08/28/2015 at 12:42 AM
+// Last Modified:   08/28/2015 at 1:11 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -25,64 +25,12 @@ namespace MattEland.Common.Providers
     public static class CommonProvider
     {
 
-        private static IObjectProvider _defaultObjectProvider;
-
         /// <summary>
-        ///     Gets the mapping dictionary that provides a map from a requested <see cref="Type" /> to an
-        ///     <see cref="IObjectProvider" /> capable of providing an instance of that type. The key is the
-        ///     <see cref="Type" /> requested and the value is the <see cref="IObjectProvider" />.
+        ///     Gets the default dependency injection container.
         /// </summary>
-        /// <value>The provider mappings dictionary.</value>
+        /// <value>The container.</value>
         [NotNull]
-        [ItemNotNull]
-        private static IDictionary<Type, IObjectProvider> ProviderMappings { get; } =
-            new Dictionary<Type, IObjectProvider>();
-
-        /// <summary>
-        ///     Gets the <see cref="IObjectProvider" /> to use when no provider is found.
-        /// </summary>
-        /// <value>The default object provider.</value>
-        [NotNull]
-        public static IObjectProvider DefaultProvider
-        {
-            get
-            {
-                var provider = _defaultObjectProvider;
-
-                if (provider == null)
-                {
-                    /* Here we're going to use the container to try to create an instance to use
-                    for the default provider. If none is found, we'll use the default activator type. */
-
-                    if (ProviderMappings.ContainsKey(typeof(IObjectProvider)))
-                    {
-                        provider = ProvideInstance<IObjectProvider>();
-                    }
-                    else
-                    {
-                        provider = new ActivatorObjectProvider();
-                    }
-
-                    _defaultObjectProvider = provider;
-                }
-
-                return provider;
-            }
-            set
-            {
-                // Null is allowable since the next time get is called it will reset itself
-
-                _defaultObjectProvider = value;
-            }
-        }
-
-        /// <summary>
-        ///     Gets the instance provider that is used as the provider when
-        ///     <see cref="RegisterProvidedInstance" /> is called.
-        /// </summary>
-        /// <value>The instance provider.</value>
-        [NotNull]
-        private static InstanceProvider InstanceProvider { get; } = new InstanceProvider();
+        public static CommonContainer Container { get; } = new CommonContainer();
 
         /// <summary>
         ///     Registers the preferred type as the type to instantiate when the base type is requested.
@@ -158,7 +106,7 @@ namespace MattEland.Common.Providers
         {
             var type = typeof(TRequested);
 
-            var instance = ProvideInstanceOfType(type, true);
+            var instance = ProvideInstanceOfType(type);
             Debug.Assert(instance != null);
 
             return (TRequested)instance;
@@ -173,44 +121,15 @@ namespace MattEland.Common.Providers
         ///     The type is not correctly configured to allow for
         ///     instantiation.
         /// </exception>
+        /// <exception cref="ArgumentNullException"><paramref name="type" /> is <see langword="null" />.</exception>
         [CanBeNull]
         public static object ProvideInstanceOfType(
             [NotNull] Type type,
             bool errorOnNoInstance = true)
         {
-            // Determine which type to create
-            var provider = GetObjectProvider(type);
+            if (type == null) { throw new ArgumentNullException(nameof(type)); }
 
-            // When using the Instance Provider, make sure the fallback is accurate
-            if (provider == InstanceProvider)
-            {
-                InstanceProvider.FallbackProvider = DefaultProvider;
-            }
-
-            try
-            {
-                /* Create and return an instance of the requested type using the type 
-                   determined earlier. This can throw many exceptions which will be
-                   wrapped into more user-friendly exceptions with easier error handling. */
-
-                var instance = provider.CreateInstance(type);
-
-                // Some callers want exceptions on not found; others don't
-                if (instance == null && errorOnNoInstance)
-                {
-                    ThrowNotProvidedException(type.FullName);
-                }
-
-                return instance;
-            }
-            catch (MissingMemberException ex)
-            {
-                // Try to throw the same type of exception with additional information.
-                string msg =
-                    $"Could not instantiate {type.FullName} due to missing member exception: '{ex.Message}'";
-
-                throw new NotSupportedException(msg, ex);
-            }
+            return Container.ProvideInstanceOfType(type, errorOnNoInstance);
         }
 
         /// <summary>
@@ -225,23 +144,6 @@ namespace MattEland.Common.Providers
         {
             var message = $"The activator function for creating {typeName} returned a null value.";
             throw new NotSupportedException(message);
-        }
-
-        /// <summary>
-        ///     Gets the object provider for the requested type.
-        /// </summary>
-        /// <param name="requestedType">Type that was requested.</param>
-        /// <returns>The object provider.</returns>
-        [NotNull]
-        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-        private static IObjectProvider GetObjectProvider([NotNull] Type requestedType)
-        {
-            //- TODO: It might be nice to have an option to disable defaulting and throw an exception instead
-
-            // Grab our registered mapping. If we don't have one, then use our default provider
-            return ProviderMappings.ContainsKey(requestedType)
-                       ? ProviderMappings[requestedType]
-                       : DefaultProvider;
         }
 
         /// <summary>
@@ -283,7 +185,7 @@ namespace MattEland.Common.Providers
             if (type == null) { throw new ArgumentNullException(nameof(type)); }
             if (provider == null) { throw new ArgumentNullException(nameof(provider)); }
 
-            ProviderMappings[type] = provider;
+            Container.Register(type, provider);
         }
 
         /// <summary>
@@ -294,11 +196,7 @@ namespace MattEland.Common.Providers
         /// </remarks>
         public static void ResetMappings()
         {
-            // Clear out all usages
-            ProviderMappings.Clear();
-
-            // Reset the default provider as well
-            _defaultObjectProvider = null;
+            Container.ResetMappings();
         }
 
         /// <summary>
@@ -349,11 +247,17 @@ namespace MattEland.Common.Providers
             if (type == null) { throw new ArgumentNullException(nameof(type)); }
             if (instance == null) { throw new ArgumentNullException(nameof(instance)); }
 
-            // Put this instance inside the instance provider
-            InstanceProvider.Register(type, instance);
+            // Delegate to the container
+            Container.RegisterProvidedInstance(type, instance);
+        }
 
-            // Tell the system to read from the Instance Provider when getting values for this.
-            ProviderMappings.Add(type, InstanceProvider);
+        /// <summary>
+        ///     Registers the provider as the default provider.
+        /// </summary>
+        /// <param name="provider">The provider.</param>
+        public static void RegisterDefaultProvider(IObjectProvider provider)
+        {
+            Container.FallbackProvider = provider;
         }
     }
 

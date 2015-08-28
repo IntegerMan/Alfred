@@ -40,7 +40,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
         {
             // These things live at the static level. Clear so tests don't hit each other
             CommonProvider.ResetMappings();
-            CommonProvider.DefaultProvider = null;
+            CommonProvider.RegisterDefaultProvider(null);
         }
 
         public interface ITestInterfaceBase
@@ -169,7 +169,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
             // Change the fallback / default provider to be something that yields our magic string
             var provider = new InstanceProvider(null);
             provider.Register(typeof(string), Bubba);
-            CommonProvider.DefaultProvider = provider;
+            CommonProvider.RegisterDefaultProvider(provider);
 
             // Grab the instance and check to see if its our string
             var instance = CommonProvider.ProvideInstance<string>();
@@ -288,7 +288,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
             CommonProvider.Register(typeof(IObjectProvider), instanceProvider);
 
             // Cause DefaultProvider to be lazy loaded and store the result
-            var defaultProvider = CommonProvider.DefaultProvider;
+            var defaultProvider = CommonProvider.Container.FallbackProvider;
 
             // Check that they're the same object
             Assert.AreSame(instanceProvider, defaultProvider);

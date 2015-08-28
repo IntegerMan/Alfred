@@ -75,7 +75,7 @@ namespace MattEland.Common.Providers
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public static void RegisterAsDefaultProvider([CanBeNull] this IObjectProvider provider)
         {
-            CommonProvider.DefaultProvider = provider;
+            CommonProvider.RegisterDefaultProvider(provider);
         }
 
         /// <summary>
