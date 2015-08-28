@@ -482,6 +482,54 @@ namespace MattEland.Ani.Alfred.Tests.Common
             Assert.IsNotNull(instance);
             Assert.That(instance is ITestInterfaceBase);
         }
+
+        /// <summary>
+        /// Tests that registering an object as the provided instance causes that instance to be returned when the given type is requested.
+        /// </summary>
+        /// <remarks>
+        /// See ALF-98
+        /// </remarks>
+        [Test]
+        public void RegisteringAnInstanceAsSingletonProvidesInstance()
+        {
+            var t = typeof(ITestInterfaceBase);
+            var instance = new TestClass(42);
+
+            // Register the instance (not type)
+            CommonProvider.RegisterProvidedInstance(t, instance);
+
+            // Get the instance from common provider
+            var result = t.ProvideInstanceOf();
+
+            // Validate
+            Assert.IsNotNull(result);
+            Assert.AreSame(instance, result);
+        }
+
+        /// <summary>
+        /// Tests that registering an object as the provided instance causes that instance to be returned when the given type is requested.
+        /// </summary>
+        /// <remarks>
+        /// See ALF-98
+        /// </remarks>
+        [Test]
+        public void RequestingMultipleInstancesAfterRegisteringProvidedInstanceReturnsSameInstance()
+        {
+            var t = typeof(ITestInterfaceBase);
+            var instance = new TestClass(42);
+
+            // Register as singleton
+            instance.RegisterAsProvidedInstance(t);
+
+            // Grab a few instances
+            var a = t.ProvideInstanceOf();
+            var b = t.ProvideInstanceOf();
+
+            // Check that the items are the same instance
+            Assert.AreSame(instance, a);
+            Assert.AreSame(instance, b);
+            Assert.AreSame(a, b);
+        }
     }
 
 }

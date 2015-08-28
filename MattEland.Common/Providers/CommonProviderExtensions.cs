@@ -2,7 +2,7 @@
 // CommonProviderExtensions.cs
 // 
 // Created on:      08/27/2015 at 10:32 PM
-// Last Modified:   08/27/2015 at 10:40 PM
+// Last Modified:   08/28/2015 at 12:42 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -69,7 +69,7 @@ namespace MattEland.Common.Providers
         }
 
         /// <summary>
-        /// Registers the provider as the default provider.
+        ///     Registers the provider as the default provider.
         /// </summary>
         /// <param name="provider">The provider.</param>
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
@@ -79,7 +79,7 @@ namespace MattEland.Common.Providers
         }
 
         /// <summary>
-        /// Provides the instance of the type using the <see cref="CommonProvider"/>.
+        ///     Provides the instance of the type using the <see cref="CommonProvider" />.
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>The provided instance.</returns>
@@ -90,6 +90,27 @@ namespace MattEland.Common.Providers
         public static object ProvideInstanceOf([NotNull] this Type type)
         {
             return CommonProvider.ProvideInstanceOfType(type);
+        }
+
+        /// <summary>
+        ///     Registers the instance as the instance that will be provided when
+        ///     <see cref="CommonProvider.ProvideInstance{TRequested}" /> or
+        ///     <see cref="CommonProvider.ProvideInstanceOfType" /> is called for type <paramref name="type" />
+        ///     .
+        /// </summary>
+        /// <param name="instance">The instance.</param>
+        /// <param name="type">The type that will be requested.</param>
+        /// <exception cref="System.ArgumentNullException">type, instance</exception>
+        public static void RegisterAsProvidedInstance(
+            [NotNull] this object instance,
+            [NotNull] Type type)
+        {
+            //- Validate
+            if (instance == null) { throw new ArgumentNullException(nameof(instance)); }
+            if (type == null) { throw new ArgumentNullException(nameof(type)); }
+
+            // Register
+            CommonProvider.RegisterProvidedInstance(type, instance);
         }
     }
 }

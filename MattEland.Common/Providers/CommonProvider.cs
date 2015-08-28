@@ -2,7 +2,7 @@
 // CommonProvider.cs
 // 
 // Created on:      08/27/2015 at 2:55 PM
-// Last Modified:   08/28/2015 at 12:21 AM
+// Last Modified:   08/28/2015 at 12:42 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -75,6 +75,14 @@ namespace MattEland.Common.Providers
                 _defaultObjectProvider = value;
             }
         }
+
+        /// <summary>
+        ///     Gets the instance provider that is used as the provider when
+        ///     <see cref="RegisterProvidedInstance" /> is called.
+        /// </summary>
+        /// <value>The instance provider.</value>
+        [NotNull]
+        private static InstanceProvider InstanceProvider { get; } = new InstanceProvider();
 
         /// <summary>
         ///     Registers the preferred type as the type to instantiate when the base type is requested.
@@ -172,6 +180,12 @@ namespace MattEland.Common.Providers
         {
             // Determine which type to create
             var provider = GetObjectProvider(type);
+
+            // When using the Instance Provider, make sure the fallback is accurate
+            if (provider == InstanceProvider)
+            {
+                InstanceProvider.FallbackProvider = DefaultProvider;
+            }
 
             try
             {
@@ -317,6 +331,29 @@ namespace MattEland.Common.Providers
                 // Rethrow anything else we caught in this block
                 throw;
             }
+        }
+
+        /// <summary>
+        ///     Registers the provided instance as the object to return when <paramref name="type" /> is
+        ///     requested.
+        /// </summary>
+        /// <param name="type">The type that will be requested.</param>
+        /// <param name="instance">The instance that will be returned.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="type" /> or <paramref name="instance" /> is
+        ///     <see langword="null" />.
+        /// </exception>
+        public static void RegisterProvidedInstance([NotNull] Type type, [NotNull] object instance)
+        {
+            //- Validate
+            if (type == null) { throw new ArgumentNullException(nameof(type)); }
+            if (instance == null) { throw new ArgumentNullException(nameof(instance)); }
+
+            // Put this instance inside the instance provider
+            InstanceProvider.Register(type, instance);
+
+            // Tell the system to read from the Instance Provider when getting values for this.
+            ProviderMappings.Add(type, InstanceProvider);
         }
     }
 
