@@ -2,7 +2,7 @@
 // AimlStatementHandler.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   08/25/2015 at 10:18 PM
+// Last Modified:   08/28/2015 at 10:27 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -23,6 +23,7 @@ using MattEland.Ani.Alfred.Chat.Aiml;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Chat
 {
@@ -62,12 +63,14 @@ namespace MattEland.Ani.Alfred.Chat
         /// <param name="engineName">Name of the chat engine.</param>
         /// <param name="provider">The platform provider.</param>
         /// <param name="console">The console.</param>
+        /// <param name="container"></param>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
         public AimlStatementHandler(
             [NotNull] string engineName,
             [NotNull] IPlatformProvider provider,
-            [CanBeNull] IConsole console = null)
+            [CanBeNull] IConsole console,
+            CommonContainer container)
         {
             //- Validate
             if (engineName == null || engineName.IsEmpty())
@@ -85,6 +88,7 @@ namespace MattEland.Ani.Alfred.Chat
             _user = new User(Resources.ChatUserName.NonNull());
             _engineUser = new User(engineName);
             _chatHandlerProvider = new ChatHandlersProvider(provider, ChatEngine);
+
             InitializeChatEngine();
         }
 

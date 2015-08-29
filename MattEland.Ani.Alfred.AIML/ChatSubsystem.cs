@@ -47,7 +47,7 @@ namespace MattEland.Ani.Alfred.Chat
             [NotNull] string engineName) : base(provider, console)
         {
             // Instantiate composite objects
-            ChatHandler = new AimlStatementHandler(engineName, provider, console);
+            ChatHandler = new AimlStatementHandler(engineName, provider, console, Container);
             _chatPage = new ChatPage(Res.ChatModuleName.NonNull(), ChatHandler);
         }
 

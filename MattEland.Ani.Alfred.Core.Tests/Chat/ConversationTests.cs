@@ -16,8 +16,11 @@ using MattEland.Ani.Alfred.Chat;
 using MattEland.Ani.Alfred.Chat.Aiml;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
+using MattEland.Common.Providers;
 
 using NUnit.Framework;
+
+using Shouldly;
 
 namespace MattEland.Ani.Alfred.Tests.Chat
 {
@@ -31,6 +34,8 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     public class ConversationTests : ChatTestsBase
     {
+        private readonly CommonContainer _container = CommonProvider.Container;
+
         /// <summary>
         ///     Sets up the testing environment prior to each test run.
         /// </summary>
@@ -185,11 +190,10 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         [Test]
         public void StartupLeavesLastInputClear()
         {
-            var chat = new AimlStatementHandler("Alfredo", new SimplePlatformProvider());
+            var chat = new AimlStatementHandler("Alfredo", new SimplePlatformProvider(), null, _container);
             chat.DoInitialGreeting();
 
-            Assert.That(!chat.LastInput.HasText(),
-                        $"Startup did not clear last input. Actual was: {chat.LastInput}");
+            chat.LastInput.ShouldBeNullOrEmpty("Startup did not clear last input.");
         }
 
         [Test]
