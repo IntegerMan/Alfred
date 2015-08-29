@@ -55,7 +55,8 @@
         </Border>
 
         <!-- Tabbed Content Regions -->
-        <controls:RootPagesControl x:Name="PagesControl" />
+        <controls:RootPagesControl x:Name="PagesControl"
+                                   x:FieldModifier="public"/>
 
     </DockPanel>
 

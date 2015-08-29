@@ -18,7 +18,6 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.PresentationShared.Commands;
-using MattEland.Ani.Alfred.PresentationShared.Helpers;
 using MattEland.Ani.Alfred.WPF.Properties;
 using MattEland.Common;
 using MattEland.Common.Providers;
@@ -95,10 +94,10 @@ namespace MattEland.Ani.Alfred.WPF
         }
 
         /// <summary>
-        /// Handles the page navigation command.
+        ///     Handles the page navigation <paramref name="command" /> .
         /// </summary>
         /// <param name="command">The command.</param>
-        /// <returns>Whether or not the command was handled</returns>
+        /// <returns>Whether or not the <paramref name="command"/> was handled</returns>
         public bool HandlePageNavigationCommand(ShellCommand command)
         {
             return PagesControl.HandlePageNavigationCommand(command);
