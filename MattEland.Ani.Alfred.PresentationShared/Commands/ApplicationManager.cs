@@ -66,7 +66,6 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         /// Initializes a new instance of the <see cref="T:System.Object" /> class with
         /// the specified user interface director and platform provider.
         /// </summary>
-        /// <param name="platformProvider">The platform provider.</param>
         /// <param name="director">The user interface director</param>
         /// <param name="container">The container.</param>
         /// <param name="enableSpeech">if set to <c>true</c> enable speech.</param>
