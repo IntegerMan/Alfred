@@ -100,6 +100,7 @@ namespace MattEland.Ani.Alfred.WPF
         /// <returns>Whether or not the <paramref name="command"/> was handled</returns>
         public bool HandlePageNavigationCommand(ShellCommand command)
         {
+            Debug.Assert(PagesControl != null);
             return PagesControl.HandlePageNavigationCommand(command);
         }
     }

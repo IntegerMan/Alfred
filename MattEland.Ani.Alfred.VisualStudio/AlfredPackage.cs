@@ -13,6 +13,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.PresentationShared.Commands;
 using MattEland.Ani.Alfred.VisualStudio.Properties;
+using MattEland.Common.Providers;
 
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -77,7 +78,7 @@ namespace MattEland.Ani.Alfred.VisualStudio
             if (_app == null)
             {
                 var provider = new XamlPlatformProvider();
-                _app = new ApplicationManager(provider, null);
+                _app = new ApplicationManager(CommonProvider.Container, provider);
                 _app.Console?.Log(Resources.AlfredPackageInstantiatingAlfredLogHeader, Resources.AlfredPackageInstantiatingAlfredLogMessage, LogLevel.Verbose);
 
                 Debug.Assert(Settings.Default != null);
