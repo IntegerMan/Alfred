@@ -28,24 +28,5 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         {
             return new ObservableCollection<T>();
         }
-
-        /// <summary>
-        ///     Creates a platform-friendly version of an AlfredCommand.
-        /// </summary>
-        /// <returns>An AlfredCommand.</returns>
-        public AlfredCommand CreateCommand()
-        {
-            return new XamlClientCommand();
-        }
-
-        /// <summary>
-        ///     Creates a platform-friendly version of an AlfredCommand with a pre-defined action.
-        /// </summary>
-        /// <param name="executeAction">The action a button click should execute.</param>
-        /// <returns>An AlfredCommand.</returns>
-        public AlfredCommand CreateCommand(Action executeAction)
-        {
-            return new XamlClientCommand(executeAction);
-        }
     }
 }
