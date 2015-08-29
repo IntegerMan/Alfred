@@ -30,19 +30,12 @@ namespace MattEland.Ani.Alfred.Core.Modules
         private readonly ICollection<WidgetBase> _widgets;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlfredModule" /> class.
+        ///     Initializes a new instance of the <see cref="AlfredModule" /> class.
         /// </summary>
-        /// <param name="container">The container.</param>
-        /// <param name="platformProvider">The platform provider.</param>
-        /// <exception cref="System.ArgumentNullException">container, platformProvider</exception>
-        protected AlfredModule([NotNull] IObjectContainer container, [NotNull] IPlatformProvider platformProvider) : base(container)
+        /// <param name="container"> The container. </param>
+        protected AlfredModule([NotNull] IObjectContainer container) : base(container)
         {
-            if (platformProvider == null)
-            {
-                throw new ArgumentNullException(nameof(platformProvider));
-            }
-
-            _widgets = platformProvider.CreateCollection<WidgetBase>();
+            _widgets = container.ProvideCollection<WidgetBase>();
         }
 
         /// <summary>
@@ -68,7 +61,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         ///     Gets the user interface widgets for the module.
         /// </summary>
         /// <value>The user interface widgets.</value>
-        [NotNull]
+        [NotNull, ItemNotNull]
         public IEnumerable<WidgetBase> Widgets
         {
             get { return _widgets; }
@@ -153,5 +146,19 @@ namespace MattEland.Ani.Alfred.Core.Modules
             get { return Widgets; }
         }
 
+        /// <summary>
+        ///     Creates an <see cref="AlfredCommand"/> with the specified <see cref="Action" />.
+        /// </summary>
+        /// <param name="action"> The <see cref="Action" /> to take when the command is executed. </param>
+        /// <returns>
+        ///     The new command.
+        /// </returns>
+        [NotNull]
+        protected AlfredCommand CreateCommand([CanBeNull] Action action)
+        {
+            var command = Container.Provide<AlfredCommand>(action);
+
+            return command;
+        }
     }
 }

@@ -153,7 +153,7 @@ namespace MattEland.Ani.Alfred.Core
                 // If we don't have a console, query the container for one.
                 if (_console == null)
                 {
-                    _console = Container.Provide<IConsole>();
+                    _console = Container.TryProvide<IConsole>();
                 }
 
                 return _console;

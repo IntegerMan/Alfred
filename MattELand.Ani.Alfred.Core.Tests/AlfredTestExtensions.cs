@@ -28,26 +28,19 @@ namespace MattEland.Ani.Alfred.Tests
     internal static class AlfredTestExtensions
     {
         /// <summary>
-        ///     Registers the default Alfred <paramref name="container" /> with good
-        ///     default testing values.
+        ///     Registers the default Alfred <paramref name="container" /> with good default testing
+        ///     values.
         /// </summary>
-        /// <remarks>This returns the container to allow for more elegant test syntax.</remarks>
-        /// <param name="container">The container.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="container" />
-        /// </exception>
-        public static IObjectContainer RegisterDefaultAlfredMappings(
-            [NotNull] this IObjectContainer container)
+        /// <exception cref="ArgumentNullException"> <paramref name="container" /> </exception>
+        /// <param name="container"> The container. </param>
+        public static void RegisterDefaultAlfredMappings([NotNull] this IObjectContainer container)
         {
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
 
-            var console = new SimpleConsole();
-            console.RegisterAsProvidedInstance(typeof(IConsole));
+            var console = new SimpleConsole(container);
+            console.RegisterAsProvidedInstance(typeof(IConsole), container);
 
-            var provider = new SimplePlatformProvider();
-            provider.RegisterAsProvidedInstance(typeof(IPlatformProvider));
-
-            return container;
+            container.Register(typeof(IConsoleEvent), typeof(ConsoleEvent));
         }
 
         /// <summary>

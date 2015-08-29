@@ -33,15 +33,18 @@ namespace MattEland.Ani.Alfred.Core.Modules
         private readonly ICollection<WidgetBase> _widgets;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlfredSubsystemListModule" /> class.
+        ///     Initializes a new instance of the <see cref="AlfredSubsystemListModule" /> class.
         /// </summary>
-        /// <param name="container">The container.</param>
-        /// <param name="platformProvider">The platform provider.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        internal AlfredSubsystemListModule([NotNull] IObjectContainer container, [NotNull] IPlatformProvider platformProvider)
-            : base(container, platformProvider)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when one or more required arguments are null.
+        /// </exception>
+        /// <param name="container"> The container. </param>
+        internal AlfredSubsystemListModule([NotNull] IObjectContainer container)
+            : base(container)
         {
-            _widgets = platformProvider.CreateCollection<WidgetBase>();
+            if (container == null) { throw new ArgumentNullException(nameof(container)); }
+
+            _widgets = container.ProvideCollection<WidgetBase>();
         }
 
         /// <summary>

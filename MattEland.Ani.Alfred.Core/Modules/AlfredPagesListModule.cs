@@ -32,11 +32,10 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredPagesListModule" /> class.
         /// </summary>
-        /// <param name="platformProvider">The platform provider.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        internal AlfredPagesListModule([NotNull] IObjectContainer container, [NotNull] IPlatformProvider platformProvider) : base(container, platformProvider)
+        /// <param name="container"> The container. </param>
+        internal AlfredPagesListModule([NotNull] IObjectContainer container) : base(container)
         {
-            _widgets = platformProvider.CreateCollection<WidgetBase>();
+            _widgets = container.ProvideCollection<WidgetBase>();
         }
 
         /// <summary>

@@ -30,10 +30,10 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <summary>
         ///     Initializes a new instance of the <see cref="SystemMonitorModule" /> class.
         /// </summary>
-        /// <param name="platformProvider">The platform provider.</param>
-        /// <param name="metricProvider">The metric provider.</param>
-        protected SystemMonitorModule([NotNull] IObjectContainer container, [NotNull] IPlatformProvider platformProvider,
-                                      [NotNull] IMetricProviderFactory metricProvider) : base(container, platformProvider)
+        /// <param name="container"> The container. </param>
+        /// <param name="metricProvider"> The metric provider. </param>
+        protected SystemMonitorModule([NotNull] IObjectContainer container,
+                                      [NotNull] IMetricProviderFactory metricProvider) : base(container)
         {
             // Use the provided metric provider
             _metricProvider = metricProvider;

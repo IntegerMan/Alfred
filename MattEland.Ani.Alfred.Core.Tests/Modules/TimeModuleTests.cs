@@ -37,8 +37,8 @@ namespace MattEland.Ani.Alfred.Tests.Modules
             var bootstrapper = new AlfredBootstrapper();
             _alfred = bootstrapper.Create();
 
-            _page = new AlfredModuleListPage(Container, _alfred.PlatformProvider, "Time", "Time");
-            _module = new AlfredTimeModule(Container, _alfred.PlatformProvider);
+            _page = new AlfredModuleListPage(Container, "Time", "Time");
+            _module = new AlfredTimeModule(Container);
             _page.Register(_module);
             _subsystem = new TestSubsystem(Container);
             _subsystem.AddAutoRegisterPage(_page);

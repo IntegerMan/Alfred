@@ -35,11 +35,11 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <summary>
         ///     Initializes a new instance of the <see cref="MemoryMonitorModule" /> class.
         /// </summary>
-        /// <param name="platformProvider">The platform provider.</param>
-        /// <param name="factory">The metric provider factory.</param>
-        internal MemoryMonitorModule([NotNull] IObjectContainer container, [NotNull] IPlatformProvider platformProvider,
+        /// <param name="container"> The container. </param>
+        /// <param name="factory"> The metric provider factory. </param>
+        internal MemoryMonitorModule([NotNull] IObjectContainer container,
                                    [NotNull] IMetricProviderFactory factory)
-            : base(container, platformProvider, factory)
+            : base(container, factory)
         {
             _usedBytesCounter = MetricProvider.Build(MemoryCategoryName,
                                                         MemoryUtilizationBytesCounterName);

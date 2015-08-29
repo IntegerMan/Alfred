@@ -86,7 +86,6 @@
     <Compile Include="Subsystems\AlfredCoreSubsystem.cs" />
     <Compile Include="Modules\AlfredSubSystemListModule.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Definitions\IPlatformProvider.cs" />
     <Compile Include="Modules\AlfredTimeModule.cs" />
     <Compile Include="Modules\AlfredModule.cs" />
     <Compile Include="AlfredApplication.cs" />
@@ -107,7 +106,6 @@
     <Compile Include="Widgets\TextWidget.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Console\SimpleConsole.cs" />
-    <Compile Include="Definitions\SimplePlatformProvider.cs" />
     <Compile Include="Widgets\WarningWidget.cs" />
     <Compile Include="Widgets\WidgetCreationParameters.cs" />
   </ItemGroup>

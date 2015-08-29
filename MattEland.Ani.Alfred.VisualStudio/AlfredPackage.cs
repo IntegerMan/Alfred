@@ -75,8 +75,7 @@ namespace MattEland.Ani.Alfred.VisualStudio
         {
             if (_app == null)
             {
-                var provider = new XamlPlatformProvider();
-                _app = new ApplicationManager(CommonProvider.Container, provider);
+                _app = new ApplicationManager(CommonProvider.Container);
                 _app.Console?.Log(Resources.AlfredPackageInstantiatingAlfredLogHeader, Resources.AlfredPackageInstantiatingAlfredLogMessage, LogLevel.Verbose);
 
                 Debug.Assert(Settings.Default != null);

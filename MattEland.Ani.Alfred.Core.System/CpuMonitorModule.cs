@@ -53,11 +53,9 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         ///     Initializes a new instance of the <see cref="CpuMonitorModule" /> class.
         /// </summary>
         /// <param name="container">The container.</param>
-        /// <param name="platformProvider">The platform provider.</param>
         /// <param name="factory">The metric provider factory.</param>
         internal CpuMonitorModule([NotNull] IObjectContainer container,
-            [NotNull] IPlatformProvider platformProvider,
-            [NotNull] IMetricProviderFactory factory) : base(container, platformProvider, factory)
+            [NotNull] IMetricProviderFactory factory) : base(container, factory)
         {
         }
 

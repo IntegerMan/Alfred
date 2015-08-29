@@ -32,21 +32,20 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredModuleListPage" /> class.
         /// </summary>
-        /// <param name="provider">The provider.</param>
-        /// <param name="name">The name.</param>
-        /// <param name="id">The identifier.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        public AlfredModuleListPage([NotNull] IObjectContainer container,
-            [NotNull] IPlatformProvider provider,
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when one or more required arguments are null.
+        /// </exception>
+        /// <param name="container"> The container. </param>
+        /// <param name="name"> The name. </param>
+        /// <param name="id"> The identifier. </param>
+        public AlfredModuleListPage(
+            [NotNull] IObjectContainer container,
                                     [NotNull] string name,
                                     [NotNull] string id) : base(container, name, id)
         {
-            if (provider == null)
-            {
-                throw new ArgumentNullException(nameof(provider));
-            }
+            if (container == null) { throw new ArgumentNullException(nameof(container)); }
 
-            _modules = provider.CreateCollection<IAlfredModule>();
+            _modules = container.ProvideCollection<IAlfredModule>();
         }
 
         /// <summary>

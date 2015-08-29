@@ -192,7 +192,6 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         [Test]
         public void StartupLeavesLastInputClear()
         {
-            _container.Register(typeof(IPlatformProvider), typeof(SimplePlatformProvider));
             var chat = new AimlStatementHandler(_container, "Alfredo");
             chat.DoInitialGreeting();
 

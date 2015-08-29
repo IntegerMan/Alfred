@@ -36,25 +36,26 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// </summary>
         private DateTime _lastTimeLogged = DateTime.MinValue;
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredEventLogPage" /> class.
-        /// </summary>
-        /// <param name="platform">The platform provider.</param>
-        /// <param name="console">The console.</param>
-        /// <param name="name">The name.</param>
-        /// <exception cref="System.ArgumentNullException">
-        /// </exception>
+        ///  <summary>
+        ///      Initializes a new instance of the <see cref="AlfredEventLogPage" /> class.
+        ///  </summary>
+        ///  <exception cref="ArgumentNullException">
+        ///      Thrown when one or more required arguments are null.
+        ///  </exception>
+        ///  <param name="container"> The container. </param>
+        /// <param name="console"> The console. </param>
+        ///  <param name="name"> The name. </param>
+        /// 
+        ///  ### <exception cref="System.ArgumentNullException"> . </exception>
         public AlfredEventLogPage([NotNull] IObjectContainer container,
-            [NotNull] IPlatformProvider platform,
             [NotNull] IConsole console,
             [NotNull] string name) : base(container, name, "Log")
         {
             //- Validate
-            if (platform == null) { throw new ArgumentNullException(nameof(platform)); }
             if (console == null) { throw new ArgumentNullException(nameof(console)); }
 
             _console = console;
-            _providers = platform.CreateCollection<IPropertyProvider>();
+            _providers = container.ProvideCollection<IPropertyProvider>();
         }
 
         /// <summary>

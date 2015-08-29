@@ -28,8 +28,6 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
     [SuppressMessage("ReSharper", "ObjectCreationAsStatement")]
     public class ExplorerWidgetTests : AlfredTestBase
     {
-        [NotNull]
-        private SimplePlatformProvider _provider;
         private const string TestPageId = "TestExp";
         private const string TestPageName = "Explorer Page";
 
@@ -40,8 +38,6 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
         public override void SetUp()
         {
             base.SetUp();
-
-            _provider = new SimplePlatformProvider();
         }
 
         /// <summary>
@@ -53,18 +49,18 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
         [Test]
         public void ExplorerPageCanBeCreated()
         {
-            var page = new ExplorerPage(Container, _provider, TestPageName, TestPageId);
+            var page = new ExplorerPage(Container, TestPageName, TestPageId);
             Assert.AreEqual(TestPageId, page.Id);
             Assert.AreEqual(TestPageName, page.Name);
         }
 
         /// <summary>
-        /// Simple constructor test for <see cref="ExplorerPage"/> checking parameter validation on provider
+        /// Simple constructor test for <see cref="ExplorerPage"/> checking parameter validation on container
         /// </summary>
         [Test, ExpectedException(typeof(ArgumentNullException))]
-        public void ExplorerPageThrowsOnNoProvider()
+        public void ExplorerPageThrowsOnNoContainer()
         {
-            new ExplorerPage(Container, null, TestPageName, TestPageId);
+            new ExplorerPage(null, TestPageName, TestPageId);
         }
         /// <summary>
         /// Simple constructor test for <see cref="ExplorerPage"/> checking parameter validation on name
@@ -72,7 +68,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
         [Test, ExpectedException(typeof(ArgumentNullException))]
         public void ExplorerPageThrowsOnNoName()
         {
-            new ExplorerPage(Container, _provider, null, TestPageId);
+            new ExplorerPage(Container, null, TestPageId);
         }
         /// <summary>
         /// Simple constructor test for <see cref="ExplorerPage"/> checking parameter validation on id
@@ -80,7 +76,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
         [Test, ExpectedException(typeof(ArgumentNullException))]
         public void ExplorerPageThrowsOnNoId()
         {
-            new ExplorerPage(Container, _provider, TestPageName, null);
+            new ExplorerPage(Container, TestPageName, null);
         }
 
         /// <summary>
@@ -89,7 +85,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
         [Test]
         public void ExplorerPageIsVisible()
         {
-            var page = new ExplorerPage(Container, _provider, TestPageName, TestPageId);
+            var page = new ExplorerPage(Container, TestPageName, TestPageId);
 
             Assert.That(page.IsVisible);
         }

@@ -24,18 +24,20 @@ namespace MattEland.Ani.Alfred.Core.Modules
     /// </summary>
     public sealed class AlfredPowerModule : AlfredModule
     {
-
         /// <summary>
-        /// Initializes a new instance of the
-        /// <see cref="AlfredPowerModule" />
-        /// class.
+        ///     Initializes a new instance of the
+        ///     <see cref="AlfredPowerModule" />
+        ///     class.
         /// </summary>
-        /// <param name="container">The container.</param>
-        /// <param name="platformProvider">The platform provider.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        public AlfredPowerModule([NotNull] IObjectContainer container, [NotNull] IPlatformProvider platformProvider)
-            : base(container, platformProvider)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when one or more required arguments are null.
+        /// </exception>
+        /// <param name="container"> The container. </param>
+        public AlfredPowerModule([NotNull] IObjectContainer container)
+            : base(container)
         {
+            if (container == null) { throw new ArgumentNullException(nameof(container)); }
+
             AlfredStatusWidget = new TextWidget(Resources.AlfredCoreModule_AlfredNotSet,
                                                 BuildWidgetParameters(@"lblStatus"));
 
@@ -46,23 +48,6 @@ namespace MattEland.Ani.Alfred.Core.Modules
             ShutdownButton = new ButtonWidget(Resources.ShutdownButtonText,
                                               CreateCommand(ExecuteShutdownCommand),
                                               BuildWidgetParameters(@"btnShutdown"));
-        }
-
-        /// <summary>
-        ///     Creates an <see cref="AlfredCommand"/> with the specified <see cref="Action" />.
-        /// </summary>
-        /// <param name="action"> The <see cref="Action" /> to take when the command is executed. </param>
-        /// <returns>
-        ///     The new command.
-        /// </returns>
-        [NotNull]
-        private AlfredCommand CreateCommand([CanBeNull] Action action)
-        {
-            var command = Container.Provide<AlfredCommand>();
-
-            command.ExecuteAction = action;
-
-            return command;
         }
 
         /// <summary>
@@ -215,15 +200,14 @@ namespace MattEland.Ani.Alfred.Core.Modules
                                                         AlfredInstance.Status);
 
                 // Show the shutdown button while online and initialize button while offline
+                var isOnline = AlfredInstance.Status == AlfredStatus.Online;
                 if (ShutdownButton.ClickCommand != null)
                 {
-                    ShutdownButton.ClickCommand.IsEnabled = AlfredInstance.Status
-                                                            == AlfredStatus.Online;
+                    ShutdownButton.ClickCommand.IsEnabled = isOnline;
                 }
                 if (InitializeButton.ClickCommand != null)
                 {
-                    InitializeButton.ClickCommand.IsEnabled = AlfredInstance.Status
-                                                              == AlfredStatus.Offline;
+                    InitializeButton.ClickCommand.IsEnabled = !isOnline;
                 }
             }
         }

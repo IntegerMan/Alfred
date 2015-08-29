@@ -38,7 +38,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
         {
             base.SetUp();
 
-            _page = new ExplorerPage(Container, new SimplePlatformProvider(), "Test Page", "TestExp");
+            _page = new ExplorerPage(Container, "Test Page", "TestExp");
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
 
             return new List<IPropertyProvider>
                    {
-                       new AlfredEventLogPage(Container, new SimplePlatformProvider(), new SimpleConsole(), "Event Test")
+                       new AlfredEventLogPage(Container, new SimpleConsole(), "Event Test")
                    };
         }
     }

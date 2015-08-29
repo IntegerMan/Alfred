@@ -24,31 +24,28 @@ namespace MattEland.Ani.Alfred.Core.Pages
     /// </summary>
     public class ExplorerPage : AlfredPage
     {
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="ExplorerPage" /> class.
         /// </summary>
-        /// <param name="provider">The platform provider.</param>
-        /// <param name="name">The name.</param>
-        /// <param name="id">The ID</param>
-        /// <param name="displayName">The display name.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentNullException"><paramref name="name" /> is <see langword="null" />.</exception>
-        public ExplorerPage([NotNull] IObjectContainer container, [NotNull] IPlatformProvider provider,
+        /// <exception cref="ArgumentNullException"> . </exception>
+        /// <param name="container"> The container. </param>
+        /// <param name="name"> The name. </param>
+        /// <param name="id"> The ID. </param>
+        /// <param name="displayName"> The display name. </param>
+        public ExplorerPage(
+            [NotNull] IObjectContainer container,
                             [NotNull] string name,
                             [NotNull] string id,
                             [CanBeNull] string displayName = "Name") : base(container, name, id)
         {
             //- Validation
-            if (provider == null) { throw new ArgumentNullException(nameof(provider)); }
+            if (container == null) { throw new ArgumentNullException(nameof(container)); }
 
             // Set Display Name
-            if (displayName == null) { displayName = "Name"; }
-            DisplayNameProperty = displayName;
+            DisplayNameProperty = displayName ?? "Name";
 
             // Set the root nodes collection
-            RootNodes = provider.CreateCollection<IPropertyProvider>();
+            RootNodes = container.ProvideCollection<IPropertyProvider>();
         }
 
         /// <summary>

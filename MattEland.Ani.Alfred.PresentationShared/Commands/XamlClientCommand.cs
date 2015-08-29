@@ -9,6 +9,8 @@
 using System;
 using System.Windows.Input;
 
+using JetBrains.Annotations;
+
 using MattEland.Ani.Alfred.Core.Definitions;
 
 namespace MattEland.Ani.Alfred.PresentationShared.Commands
@@ -21,6 +23,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         /// <summary>
         ///     Initializes a new instance of the <see cref="XamlClientCommand" /> class.
         /// </summary>
+        [UsedImplicitly]
         public XamlClientCommand() : this(null)
         {
         }

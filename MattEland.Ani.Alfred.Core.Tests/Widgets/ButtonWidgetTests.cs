@@ -25,9 +25,6 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
     [TestFixture]
     public class ButtonWidgetTests : AlfredTestBase
     {
-        [NotNull]
-        private readonly SimplePlatformProvider _platformProvider = new SimplePlatformProvider();
-
         [Test]
         public void ButtonCommandDefaultsToNull()
         {

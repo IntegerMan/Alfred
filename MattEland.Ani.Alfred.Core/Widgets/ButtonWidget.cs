@@ -20,7 +20,7 @@ using MattEland.Common;
 namespace MattEland.Ani.Alfred.Core.Widgets
 {
     /// <summary>
-    ///     Represents a button that's clickable in the user interface.
+    ///     Represents a button that the user can click in the user interface.
     /// </summary>
     public sealed class ButtonWidget : AlfredTextWidget
     {

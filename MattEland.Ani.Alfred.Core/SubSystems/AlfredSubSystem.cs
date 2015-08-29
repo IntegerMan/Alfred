@@ -36,8 +36,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// <param name="container">The container.</param>
         protected AlfredSubsystem([NotNull] IObjectContainer container) : base(container)
         {
-            var provider = container.Provide<IPlatformProvider>();
-            _pages = provider.CreateCollection<IAlfredPage>();
+            _pages = container.ProvideCollection<IAlfredPage>();
         }
 
         /// <summary>

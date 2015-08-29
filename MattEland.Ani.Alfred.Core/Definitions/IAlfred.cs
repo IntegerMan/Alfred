@@ -14,6 +14,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Subsystems;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Definitions
 {
@@ -74,11 +75,13 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         IChatProvider ChatProvider { get; }
 
         /// <summary>
-        /// Gets the platform provider.
+        ///     Gets the container.
         /// </summary>
-        /// <value>The platform provider.</value>
+        /// <value>
+        ///     The container.
+        /// </value>
         [NotNull]
-        IPlatformProvider PlatformProvider { get; }
+        IObjectContainer Container { get; }
 
         /// <summary>
         /// Gets the shell command handler that can pass shell commands on to the user interface.

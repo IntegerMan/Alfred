@@ -25,18 +25,20 @@ namespace MattEland.Ani.Alfred.Chat
     /// </summary>
     internal sealed class ChatHistoryProvider : IPropertyProvider
     {
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="ChatHistoryProvider" /> class.
         /// </summary>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="container"/> is <see langword="null" />.
+        /// </exception>
+        /// <param name="container"> The container. </param>
         internal ChatHistoryProvider([NotNull] IObjectContainer container)
         {
             //- Validate
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
 
             // Create the collection. We need it to be in an observable collection for XAML systems
-            var provider = container.Provide<IPlatformProvider>();
-            HistoryEntries = provider.CreateCollection<ChatHistoryEntry>();
+            HistoryEntries = container.ProvideCollection<ChatHistoryEntry>();
         }
 
         /// <summary>
@@ -111,7 +113,7 @@ namespace MattEland.Ani.Alfred.Chat
         ///     Gets the last message from the specified user.
         /// </summary>
         /// <param name="user">The user.</param>
-        /// <returns>The last ChatHistoryEntry for that user.</returns>
+        /// <returns>The last <see cref="ChatHistoryEntry"/> for that user.</returns>
         [CanBeNull]
         internal ChatHistoryEntry GetLastMessageFromUser([NotNull] User user)
         {

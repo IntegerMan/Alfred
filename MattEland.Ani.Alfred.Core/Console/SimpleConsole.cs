@@ -13,6 +13,7 @@ using System.Linq;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Console
 {
@@ -27,27 +28,39 @@ namespace MattEland.Ani.Alfred.Core.Console
         /// <summary>
         ///     Initializes a new instance of the <see cref="SimpleConsole" /> class.
         /// </summary>
-        public SimpleConsole() : this(new SimplePlatformProvider(), new ConsoleEventFactory())
+        public SimpleConsole() : this(CommonProvider.Container)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SimpleConsole" /> class.
+        ///     Initializes a new instance of the <see cref="SimpleConsole" /> class.
         /// </summary>
-        /// <param name="provider">The platform provider used to initialize the collection of events.</param>
-        /// <param name="factory">The console event factory.</param>
-        /// <exception cref="System.ArgumentNullException">provider, factory
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when one or more required arguments are null.
         /// </exception>
-        public SimpleConsole([NotNull] IPlatformProvider provider,
+        /// <param name="container"> The container. </param>
+        public SimpleConsole([NotNull] IObjectContainer container) : this(container, new ConsoleEventFactory())
+        {
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="SimpleConsole" /> class.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when one or more required arguments are null.
+        /// </exception>
+        /// <param name="container"> The container. </param>
+        /// <param name="factory"> The console event factory. </param>
+        public SimpleConsole([NotNull] IObjectContainer container,
                              [NotNull] ConsoleEventFactory factory)
         {
-            if (provider == null)
+            if (container == null)
             {
-                throw new ArgumentNullException(nameof(provider));
+                throw new ArgumentNullException(nameof(container));
             }
             if (factory == null) { throw new ArgumentNullException(nameof(factory)); }
 
-            _events = provider.CreateCollection<IConsoleEvent>();
+            _events = container.ProvideCollection<IConsoleEvent>();
             EventFactory = factory;
         }
 

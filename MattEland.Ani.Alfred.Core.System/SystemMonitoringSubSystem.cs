@@ -41,22 +41,25 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         [NotNull]
         private readonly AlfredModuleListPage _page;
 
-        /// <summary>Initializes a new instance of the <see cref="AlfredSubsystem" /> class.</summary>
-        /// <param name="container">The container.</param>
-        /// <param name="provider">The provider.</param>
-        /// <param name="factory">The factory.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when one or more required arguments are null.
+        /// </exception>
+        /// <param name="container"> The container. </param>
+        /// <param name="factory"> The factory. </param>
         public SystemMonitoringSubsystem(
             [NotNull] IObjectContainer container,
-            [NotNull] IPlatformProvider provider,
             [NotNull] IMetricProviderFactory factory) : base(container)
         {
-            _cpuModule = new CpuMonitorModule(container, provider, factory);
-            _memoryModule = new MemoryMonitorModule(container, provider, factory);
-            _diskModule = new DiskMonitorModule(container, provider, factory);
+            if (container == null) { throw new ArgumentNullException(nameof(container)); }
+
+            _cpuModule = new CpuMonitorModule(container, factory);
+            _memoryModule = new MemoryMonitorModule(container, factory);
+            _diskModule = new DiskMonitorModule(container, factory);
 
             _page = new AlfredModuleListPage(container,
-                                             provider,
                                              Resources.SystemMonitoringSystem_Name.NonNull(),
                                              "Sys");
         }

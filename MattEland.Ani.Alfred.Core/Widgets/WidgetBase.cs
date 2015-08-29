@@ -39,7 +39,10 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         /// <summary>
         ///     Initializes a new instance of the <see cref="WidgetBase" /> class.
         /// </summary>
-        /// <param name="parameters">The creation parameters.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when one or more required arguments are null.
+        /// </exception>
+        /// <param name="parameters"> The creation parameters. </param>
         protected WidgetBase([NotNull] WidgetCreationParameters parameters)
         {
             if (parameters == null) { throw new ArgumentNullException(nameof(parameters)); }

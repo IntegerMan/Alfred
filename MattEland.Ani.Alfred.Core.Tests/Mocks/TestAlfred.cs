@@ -16,6 +16,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Subsystems;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Tests.Mocks
 {
@@ -42,6 +43,17 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
         /// </summary>
         /// <value>The chat provider.</value>
         public IChatProvider ChatProvider { get; private set; }
+
+        /// <summary>
+        ///     Gets the container.
+        /// </summary>
+        /// <value>
+        ///     The container.
+        /// </value>
+        public IObjectContainer Container
+        {
+            get { return CommonProvider.Container; }
+        }
 
         /// <summary>
         ///     Gets the console provider. This can be null.
@@ -80,13 +92,6 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
         {
             get { return CultureInfo.CurrentCulture; }
         }
-
-        /// <summary>
-        ///     Gets the platform provider.
-        /// </summary>
-        /// <value>The platform provider.</value>
-        [NotNull]
-        public IPlatformProvider PlatformProvider { get; } = new SimplePlatformProvider();
 
         /// <summary>
         ///     Registers the page as a root page.

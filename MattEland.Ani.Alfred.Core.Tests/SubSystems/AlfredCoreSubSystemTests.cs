@@ -31,13 +31,13 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
     public class AlfredCoreSubsystemTests : AlfredTestBase
     {
         [SetUp]
-        public void SetUp()
+        public override void SetUp()
         {
             base.SetUp();
 
             _subsystem = new AlfredCoreSubsystem(Container);
 
-            var bootstrapper = new AlfredBootstrapper();
+            var bootstrapper = new AlfredBootstrapper(Container);
             _alfred = bootstrapper.Create();
         }
 

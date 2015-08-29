@@ -22,19 +22,8 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
         /// class.
         /// </summary>
         /// <param name="container">The container.</param>
-        internal AlfredTestModule([NotNull] IObjectContainer container) : this(container, new SimplePlatformProvider())
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the
-        /// <see cref="AlfredTestModule" />
-        /// class.
-        /// </summary>
-        /// <param name="container">The container.</param>
-        /// <param name="platformProvider">The collection provider.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        private AlfredTestModule([NotNull] IObjectContainer container, [NotNull] IPlatformProvider platformProvider) : base(container, platformProvider)
+        internal AlfredTestModule([NotNull] IObjectContainer container) : base(container)
         {
             WidgetsToRegisterOnShutdown = new List<WidgetBase>();
             WidgetsToRegisterOnInitialize = new List<WidgetBase>();

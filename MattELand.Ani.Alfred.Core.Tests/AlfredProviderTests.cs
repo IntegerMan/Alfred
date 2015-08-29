@@ -45,8 +45,8 @@ namespace MattEland.Ani.Alfred.Tests
             _alfred = bootstrapper.Create();
             _alfred.Console = new SimpleConsole();
 
-            _subsystem = new TestSubsystem(Container, _alfred.PlatformProvider);
-            _page = new AlfredModuleListPage(Container, _alfred.PlatformProvider, "Test Page", "Test");
+            _subsystem = new TestSubsystem(Container);
+            _page = new AlfredModuleListPage(Container, "Test Page", "Test");
         }
 
         [NotNull]
@@ -72,7 +72,7 @@ namespace MattEland.Ani.Alfred.Tests
         [Test]
         public void AddingStandardModulesAddsModules()
         {
-            _alfred.Register(new AlfredCoreSubsystem(Container, _alfred.PlatformProvider));
+            _alfred.Register(new AlfredCoreSubsystem(Container));
 
             var numModules =
                 _alfred.Subsystems.SelectMany(subsystem => subsystem.Pages)
@@ -173,7 +173,7 @@ namespace MattEland.Ani.Alfred.Tests
         [Test]
         public void InitializingInitializesComponents()
         {
-            _alfred.Register(new AlfredCoreSubsystem(Container, _alfred.PlatformProvider));
+            _alfred.Register(new AlfredCoreSubsystem(Container));
 
             _alfred.Initialize();
 
@@ -205,14 +205,14 @@ namespace MattEland.Ani.Alfred.Tests
         public void ModulesCannotBeAddedWhileOnline()
         {
             _alfred.Initialize();
-            _alfred.Register(new AlfredCoreSubsystem(Container, _alfred.PlatformProvider));
+            _alfred.Register(new AlfredCoreSubsystem(Container));
         }
 
         [Test]
         [ExpectedException(typeof(InvalidOperationException))]
         public void ModulesCannotUpdateWhileOffline()
         {
-            _alfred.Register(new AlfredCoreSubsystem(Container, _alfred.PlatformProvider));
+            _alfred.Register(new AlfredCoreSubsystem(Container));
 
             _alfred.Update();
         }
@@ -322,7 +322,7 @@ namespace MattEland.Ani.Alfred.Tests
         [Test]
         public void ShuttingDownShutsDownComponents()
         {
-            _alfred.Register(new AlfredCoreSubsystem(Container, _alfred.PlatformProvider));
+            _alfred.Register(new AlfredCoreSubsystem(Container));
 
             _alfred.Initialize();
             _alfred.Shutdown();

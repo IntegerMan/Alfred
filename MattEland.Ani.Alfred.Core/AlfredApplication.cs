@@ -21,6 +21,7 @@ using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Common;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core
 {
@@ -31,11 +32,6 @@ namespace MattEland.Ani.Alfred.Core
     /// </summary>
     public sealed class AlfredApplication : INotifyPropertyChanged, IAlfred
     {
-        /// <summary>
-        ///     The platform provider
-        /// </summary>
-        [NotNull]
-        private readonly IPlatformProvider _platformProvider;
 
         /// <summary>
         ///     The root pages collection
@@ -68,27 +64,38 @@ namespace MattEland.Ani.Alfred.Core
         ///     Initializes a new instance of the <see cref="AlfredApplication" /> class.
         /// </summary>
         /// <remarks>
-        ///     Initialization should come from AlfredBootstrapper
+        ///     Initialization should come from AlfredBootstrapper.
         /// </remarks>
-        /// <param name="provider">The provider.</param>
-        /// <param name="controller">The controller.</param>
-        /// <exception cref="System.ArgumentNullException">provider</exception>
-        internal AlfredApplication([NotNull] IPlatformProvider provider,
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when one or more required arguments are null.
+        /// </exception>
+        /// <param name="container"> The container. </param>
+        /// <param name="controller"> The controller. </param>
+        internal AlfredApplication(
+            [NotNull] IObjectContainer container,
                                    [CanBeNull] IStatusController controller)
         {
+            // Validate
+            if (container == null) { throw new ArgumentNullException(nameof(container)); }
+            Container = container;
+
             // Set the controller
             if (controller == null) { controller = new AlfredStatusController(this); }
             _statusController = controller;
             _statusController.Alfred = this;
 
-            // Set the provider
-            if (provider == null) { throw new ArgumentNullException(nameof(provider)); }
-            _platformProvider = provider;
-
             // Build out sub-collections
-            _subsystems = provider.CreateCollection<IAlfredSubsystem>();
-            _rootPages = provider.CreateCollection<IAlfredPage>();
+            _subsystems = Container.ProvideCollection<IAlfredSubsystem>();
+            _rootPages = Container.ProvideCollection<IAlfredPage>();
         }
+
+        /// <summary>
+        ///     Gets the container.
+        /// </summary>
+        /// <value>
+        ///     The container.
+        /// </value>
+        public IObjectContainer Container { get; }
 
         /// <summary>
         ///     Gets the name and version of Alfred.
@@ -137,7 +144,7 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     Gets or sets the console provider. This can be null.
+        ///     Gets or sets the console provider. This can be <see langword="null"/>.
         /// </summary>
         /// <value>The console.</value>
         [CanBeNull]
@@ -167,19 +174,12 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     Gets the collection provider used for cross platform portability.
-        /// </summary>
-        /// <value>The collection provider.</value>
-        [NotNull]
-        public IPlatformProvider PlatformProvider
-        {
-            get { return _platformProvider; }
-        }
-
-        /// <summary>
         ///     Registers the page as a root page.
         /// </summary>
-        /// <param name="page">The page.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when one or more required arguments are null.
+        /// </exception>
+        /// <param name="page"> The page. </param>
         public void Register(IAlfredPage page)
         {
             if (page == null) { throw new ArgumentNullException(nameof(page)); }
@@ -376,7 +376,7 @@ namespace MattEland.Ani.Alfred.Core
                 yield return new AlfredProperty("Root Pages", RootPages.Count());
                 yield return new AlfredProperty("Version", Version);
                 yield return new AlfredProperty("Console", Console);
-                yield return new AlfredProperty("Platform Provider", PlatformProvider);
+                yield return new AlfredProperty("Container", Container);
             }
         }
 

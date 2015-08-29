@@ -28,28 +28,12 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
         private readonly ICollection<AlfredPage> _registerPages;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
-        /// </summary>
-        /// <param name="container">The container.</param>
-        internal TestSubsystem([NotNull] IObjectContainer container) : this(container, new SimplePlatformProvider())
-        {
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="TestSubsystem" /> class.
         /// </summary>
         /// <param name="container">The container.</param>
-        /// <param name="provider">The provider.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        /// <exception cref="ArgumentNullException"><paramref name="provider" /> is <see langword="null" />.</exception>
-        internal TestSubsystem([NotNull] IObjectContainer container, [NotNull] IPlatformProvider provider) : base(container)
+        internal TestSubsystem([NotNull] IObjectContainer container) : base(container)
         {
-            if (provider == null)
-            {
-                throw new ArgumentNullException(nameof(provider));
-            }
-
-            _registerPages = provider.CreateCollection<AlfredPage>();
+            _registerPages = container.ProvideCollection<AlfredPage>();
         }
 
         /// <summary>
@@ -79,6 +63,12 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
         /// <value>The last time the module was updated.</value>
         internal DateTime LastUpdated { get; set; }
 
+        /// <summary>
+        ///     Gets or sets the Date/Time of the last initialization completed event.
+        /// </summary>
+        /// <value>
+        ///     The time of the last initialization completed event.
+        /// </value>
         internal DateTime LastInitializationCompleted { get; set; }
 
         /// <summary>

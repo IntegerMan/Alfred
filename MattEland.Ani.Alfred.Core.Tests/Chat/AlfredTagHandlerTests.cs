@@ -42,8 +42,6 @@ namespace MattEland.Ani.Alfred.Tests.Chat
 
             InitializeChatSystem();
 
-            CommonProvider.Container.RegisterDefaultAlfredMappings();
-
             var parameters = BuildTagHandlerParameters(@"<alfred submodule=""core"" command=""shutdown"" />");
             _handler = new AlfredTagHandler(parameters);
         }

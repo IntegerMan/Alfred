@@ -70,7 +70,6 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         /// <param name="container">The container.</param>
         /// <param name="enableSpeech">if set to <c>true</c> enable speech.</param>
         public ApplicationManager([CanBeNull] IObjectContainer container,
-            [CanBeNull] IPlatformProvider platformProvider = null,
             [CanBeNull] IUserInterfaceDirector director = null,
             bool enableSpeech = false)
         {
@@ -86,23 +85,19 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
 
             // TODO: Grab things from the container!
 
-            // Add a single shared IPlatformProvider
-            platformProvider = platformProvider ?? new SimplePlatformProvider();
-            platformProvider.RegisterAsProvidedInstance(typeof(IPlatformProvider));
-
             // Create Alfred. It won't be online and running yet, but create it.
-            var bootstrapper = new AlfredBootstrapper(platformProvider);
+            var bootstrapper = new AlfredBootstrapper(Container);
             _alfred = bootstrapper.Create();
             _alfred.RegisterAsProvidedInstance(typeof(IAlfred), Container);
 
             // Give Alfred a way to talk to the user and the client a way to log events that are separate from Alfred
             EnableSpeech = enableSpeech;
-            _console = InitializeConsole(platformProvider);
+            _console = InitializeConsole();
 
             // Set the director. This will, in turn, set the shell
             UserInterfaceDirector = director;
 
-            InitializeSubsystems(_alfred.PlatformProvider);
+            InitializeSubsystems();
 
             // Create an update pump on a dispatcher timer that will automatically get Alfred to regularly update any modules it has
             InitializeUpdatePump();
@@ -229,19 +224,13 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         ///     Initializes the console for the application and returns the instantiated
         ///     console.
         /// </summary>
-        /// <param name="platformProvider">The platform provider.</param>
         /// <returns>The instantiated console.</returns>
         /// <exception cref="System.ArgumentNullException">platformProvider</exception>
         [NotNull]
-        private AlfredSpeechConsole InitializeConsole([NotNull] IPlatformProvider platformProvider)
+        private AlfredSpeechConsole InitializeConsole()
         {
-            if (platformProvider == null)
-            {
-                throw new ArgumentNullException(nameof(platformProvider));
-            }
-
             // Give Alfred a way to talk to the application
-            var baseConsole = new SimpleConsole(platformProvider, new ExplorerEventFactory());
+            var baseConsole = new SimpleConsole(Container, new ExplorerEventFactory());
 
             // Give Alfred a voice
             _console = new AlfredSpeechConsole(baseConsole, baseConsole.EventFactory) { EnableSpeech = EnableSpeech };
@@ -258,22 +247,21 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         /// <summary>
         ///     Initializes and register's Alfred's subsystems
         /// </summary>
-        /// <param name="platformProvider">The platform provider</param>
-        private void InitializeSubsystems([NotNull] IPlatformProvider platformProvider)
+        private void InitializeSubsystems()
         {
             // Log header
             const string LogHeader = "AppManager.Initialize";
             _console?.Log(LogHeader, "Initializing subsystems", LogLevel.Verbose);
 
             // Init Core
-            _alfredCoreSubsystem = new AlfredCoreSubsystem(Container, platformProvider);
+            _alfredCoreSubsystem = new AlfredCoreSubsystem(Container);
             _alfred.Register(_alfredCoreSubsystem);
 
             // Initialize System Monitor - this can throw a few exceptions so may not be available.
             try
             {
                 var metricProviderFactory = new CounterMetricProviderFactory();
-                _systemMonitoringSubsystem = new SystemMonitoringSubsystem(Container, platformProvider,
+                _systemMonitoringSubsystem = new SystemMonitoringSubsystem(Container,
                                                                            metricProviderFactory);
                 _alfred.Register(_systemMonitoringSubsystem);
             }
@@ -299,7 +287,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             _alfred.Register(_chatSubsystem);
 
             // Initialize Mind Explorer
-            _mindExplorerSubsystem = new MindExplorerSubsystem(Container, platformProvider);
+            _mindExplorerSubsystem = new MindExplorerSubsystem(Container);
             _alfred.Register(_mindExplorerSubsystem);
         }
 

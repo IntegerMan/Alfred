@@ -231,17 +231,17 @@ namespace MattEland.Ani.Alfred.Tests.Chat
 
             // Add Subsystems to Alfred
 
-            CoreSubsystem = new AlfredCoreSubsystem(CommonProvider.Container, _alfred.PlatformProvider);
+            CoreSubsystem = new AlfredCoreSubsystem(CommonProvider.Container);
             _alfred.Register(CoreSubsystem);
 
             ChatSubsystem = new ChatSubsystem(Container, "Alfredo");
             _alfred.Register(ChatSubsystem);
 
-            _testSubsystem = new TestSubsystem(Container, _alfred.PlatformProvider);
+            _testSubsystem = new TestSubsystem(Container);
             _alfred.Register(_testSubsystem);
 
             MetricProviderFactory = new ValueMetricProviderFactory();
-            _sysSubsystem = new SystemMonitoringSubsystem(Container, _alfred.PlatformProvider, MetricProviderFactory);
+            _sysSubsystem = new SystemMonitoringSubsystem(Container, MetricProviderFactory);
             _alfred.Register(_sysSubsystem);
 
             // Store Chat Handler Details

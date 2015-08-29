@@ -28,11 +28,10 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
-        /// <param name="provider">The provider.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public MindExplorerSubsystem([NotNull] IObjectContainer container, [NotNull] IPlatformProvider provider) : base(container)
+        public MindExplorerSubsystem([NotNull] IObjectContainer container) : base(container)
         {
-            MindExplorerPage = new ExplorerPage(container, provider, "Mind Explorer", "MindMap");
+            MindExplorerPage = new ExplorerPage(container, "Mind Explorer", "MindMap");
         }
 
         /// <summary>
@@ -44,8 +43,8 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         {
             if (alfred == null) { throw new ArgumentNullException(nameof(alfred)); }
 
-            // Build out a new collection using the platform provider
-            var nodes = alfred.PlatformProvider.CreateCollection<IPropertyProvider>();
+            // Build out a new collection
+            var nodes = Container.ProvideCollection<IPropertyProvider>();
 
             // Add alfred to the collection as the root level will only contain Alfred.
             nodes.Add(alfred);

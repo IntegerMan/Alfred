@@ -39,12 +39,12 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         private readonly AlfredProgressBarWidget _diskWriteWidget;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MemoryMonitorModule" /> class.
+        ///     Initializes a new instance of the <see cref="MemoryMonitorModule" /> class.
         /// </summary>
-        /// <param name="platformProvider">The platform provider.</param>
-        /// <param name="factory">The metric provider factory</param>
-        internal DiskMonitorModule([NotNull] IObjectContainer container, [NotNull] IPlatformProvider platformProvider,
-                                 [NotNull] IMetricProviderFactory factory) : base(container, platformProvider, factory)
+        /// <param name="container"> The container. </param>
+        /// <param name="factory"> The metric provider factory. </param>
+        internal DiskMonitorModule([NotNull] IObjectContainer container,
+                                 [NotNull] IMetricProviderFactory factory) : base(container, factory)
         {
             _diskReadCounter = MetricProvider.Build(DiskCategoryName, DiskReadCounterName, TotalInstanceName);
             _diskWriteCounter = MetricProvider.Build(DiskCategoryName, DiskWriteCounterName, TotalInstanceName);

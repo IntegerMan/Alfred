@@ -131,9 +131,16 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <summary>
         ///     Raises the <see cref="CanExecuteChanged"/> event.
         /// </summary>
-        private void RaiseCanExecuteChanged()
+        public void RaiseCanExecuteChanged()
         {
-            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+            try
+            {
+                CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+            }
+            catch
+            {
+                // TODO: Log this
+            }
         }
     }
 }

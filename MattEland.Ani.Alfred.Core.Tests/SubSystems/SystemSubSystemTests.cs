@@ -15,11 +15,12 @@ using System.Linq;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core;
-using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Ani.Alfred.Core.Pages;
 
 using NUnit.Framework;
+
+using Shouldly;
 
 namespace MattEland.Ani.Alfred.Tests.Subsystems
 {
@@ -47,7 +48,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
             base.SetUp();
 
             _metricProviderFactory = new ValueMetricProviderFactory();
-            _subsystem = new SystemMonitoringSubsystem(Container, new SimplePlatformProvider(), _metricProviderFactory);
+            _subsystem = new SystemMonitoringSubsystem(Container, _metricProviderFactory);
 
             var bootstrapper = new AlfredBootstrapper();
             _alfred = bootstrapper.Create();
@@ -58,8 +59,8 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         {
             _alfred.Register(_subsystem);
 
-            Assert.AreEqual(1, _alfred.Subsystems.Count(), "Subsystem was not registered");
-            Assert.Contains(_subsystem, _alfred.Subsystems as ICollection, "The subsystem was not found in the collection");
+            _alfred.Subsystems.Count().ShouldBe(1);
+            _alfred.Subsystems.ShouldContain(_subsystem);
         }
 
         [Test]

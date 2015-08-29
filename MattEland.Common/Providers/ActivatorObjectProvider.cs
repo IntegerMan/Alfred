@@ -49,11 +49,19 @@ namespace MattEland.Common.Providers
         private Type TypeToCreate { get; }
 
         /// <summary>
-        /// Creates an instance of the requested type.
+        ///     Creates an instance of the requested type.
         /// </summary>
-        /// <param name="requestedType">The type that was requested.</param>
-        /// <param name="args">The arguments</param>
-        /// <returns>A new instance of the requested type</returns>
+        /// <exception cref="NotSupportedException">
+        ///     Thrown when the requested operation is not supported.
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        ///     Thrown when the requested operation is invalid.
+        /// </exception>
+        /// <param name="requestedType"> The type that was requested. </param>
+        /// <param name="args"> The arguments. </param>
+        /// <returns>
+        ///     A new instance of the requested type.
+        /// </returns>
         public object CreateInstance(Type requestedType, params object[] args)
         {
             /* If we were set up to create using a specific type, use that type instead of 
@@ -62,7 +70,28 @@ namespace MattEland.Common.Providers
 
             var typeToCreate = TypeToCreate ?? requestedType;
 
-            return Activator.CreateInstance(typeToCreate, args);
+            // Validate against interfaces
+            if (typeToCreate.IsInterface)
+            {
+                throw new NotSupportedException("Cannot create an interface");
+            }
+
+            // Validate against abstract classes
+            if (typeToCreate.IsAbstract)
+            {
+                throw new NotSupportedException("Cannot create an abstract class");
+            }
+
+            var instance = Activator.CreateInstance(typeToCreate, args);
+
+            if (instance == null)
+            {
+                string message = $"Activator did not create instance for {typeToCreate.FullName} when {requestedType.FullName} was requested.";
+
+                throw new InvalidOperationException(message);
+            }
+
+            return instance;
         }
 
     }

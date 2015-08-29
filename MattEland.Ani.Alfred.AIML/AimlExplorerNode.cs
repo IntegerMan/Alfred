@@ -39,10 +39,7 @@ namespace MattEland.Ani.Alfred.Chat
 
             _node = node;
             _container = container;
-
-            // TODO: Use the container to build collections
-            var provider = container.Provide<IPlatformProvider>();
-            _children = provider.CreateCollection<AimlExplorerNode>();
+            _children = container.ProvideCollection<AimlExplorerNode>();
         }
 
         /// <summary>
