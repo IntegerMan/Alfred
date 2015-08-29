@@ -48,6 +48,7 @@ namespace MattEland.Ani.Alfred.Core
         protected ComponentBase([NotNull] IObjectContainer container)
         {
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
+
             Container = container;
         }
 

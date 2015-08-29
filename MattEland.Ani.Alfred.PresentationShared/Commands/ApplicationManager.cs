@@ -62,75 +62,29 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         public IObjectContainer Container { get; }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Object" /> class with
-        ///     the specified user interface director and a XAML platform provider.
-        /// </summary>
-        /// <param name="director">The user interface director</param>
-        /// <param name="enableSpeech">if set to <c>true</c> enable speech.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="director" /> is
-        ///     <see langword="null" />.
-        /// </exception>
-        public ApplicationManager(
-            [NotNull] IUserInterfaceDirector director,
-            bool enableSpeech = true) : this(new XamlPlatformProvider(), director, enableSpeech)
-        {
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
-        /// </summary>
-        /// <param name="enableSpeech">if set to <c>true</c> enable speech.</param>
-        public ApplicationManager(bool enableSpeech = true)
-            : this(new XamlPlatformProvider(), enableSpeech)
-        {
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Object" /> class with
-        ///     the specified platform provider.
-        /// </summary>
-        /// <param name="platformProvider"></param>
-        /// <param name="enableSpeech">if set to <c>true</c> enable speech.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="platformProvider" /> is
-        ///     <see langword="null" />.
-        /// </exception>
-        public ApplicationManager(
-            [NotNull] IPlatformProvider platformProvider,
-            bool enableSpeech = true) : this(platformProvider, null, enableSpeech)
-        {
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Object" /> class with
-        ///     the specified user interface director and platform provider.
+        /// Initializes a new instance of the <see cref="T:System.Object" /> class with
+        /// the specified user interface director and platform provider.
         /// </summary>
         /// <param name="platformProvider">The platform provider.</param>
         /// <param name="director">The user interface director</param>
+        /// <param name="container">The container.</param>
         /// <param name="enableSpeech">if set to <c>true</c> enable speech.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="platformProvider" /> is
-        ///     <see langword="null" />.
-        /// </exception>
-        public ApplicationManager(
-            [NotNull] IPlatformProvider platformProvider,
-            [CanBeNull] IUserInterfaceDirector director,
-            bool enableSpeech = true)
+        public ApplicationManager([CanBeNull] IObjectContainer container,
+            [CanBeNull] IPlatformProvider platformProvider = null,
+            [CanBeNull] IUserInterfaceDirector director = null,
+            bool enableSpeech = false)
         {
-            if (platformProvider == null)
-            {
-                throw new ArgumentNullException(nameof(platformProvider));
-            }
 
             // Everything will need a container. Provide one.
-            Container = CommonProvider.Container;
+            Container = container ?? CommonProvider.Container;
 
             // Use this container whenever a container is requested
             Container.RegisterAsProvidedInstance(typeof(IObjectContainer));
 
+            // TODO: Grab things from the container!
+
             // Add a single shared IPlatformProvider
+            platformProvider = platformProvider ?? new SimplePlatformProvider();
             platformProvider.RegisterAsProvidedInstance(typeof(IPlatformProvider));
 
             // Create Alfred. It won't be online and running yet, but create it.

@@ -36,7 +36,7 @@ namespace MattEland.Ani.Alfred.Tests.Controls
         {
             base.SetUp();
 
-            _app = new ApplicationManager(enableSpeech: false);
+            _app = new ApplicationManager(Container, null, null, false);
             _control = new RootPagesControl(_app);
             _app.Alfred.Initialize();
 

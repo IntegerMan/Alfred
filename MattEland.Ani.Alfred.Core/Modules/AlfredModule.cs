@@ -153,14 +153,5 @@ namespace MattEland.Ani.Alfred.Core.Modules
             get { return Widgets; }
         }
 
-        /// <summary>
-        /// Gets the dependency injection container.
-        /// </summary>
-        /// <value>The dependency injection container.</value>
-        public IObjectContainer Container
-        {
-            get { return CommonProvider.Container; }
-        }
-
     }
 }

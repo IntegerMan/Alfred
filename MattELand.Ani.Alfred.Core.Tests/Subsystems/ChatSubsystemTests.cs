@@ -70,7 +70,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         public void ChatHistoryHasNodesAfterConversation()
         {
             // Initialize an Alfred application
-            var app = new ApplicationManager(false);
+            var app = new ApplicationManager(Container);
             var alfred = app.Alfred;
             var chat = alfred.Subsystems.First(s => s is ChatSubsystem);
             alfred.Initialize();

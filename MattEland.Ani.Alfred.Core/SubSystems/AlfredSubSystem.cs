@@ -90,15 +90,6 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         }
 
         /// <summary>
-        ///     Gets the dependency injection <see cref="IObjectContainer"/>.
-        /// </summary>
-        /// <value>The dependency injection container.</value>
-        public IObjectContainer Container
-        {
-            get { return CommonProvider.Container; }
-        }
-
-        /// <summary>
         ///     Gets the identifier for the <see cref="IAlfredSubsystem"/> to be used in command routing.
         /// </summary>
         /// <value>The identifier for the subsystem.</value>

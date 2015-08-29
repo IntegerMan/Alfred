@@ -116,7 +116,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
                 Log("Subsystems.Initialize", noSubsystemsDetected, LogLevel.Warning);
 
                 var widget = new TextWidget(noSubsystemsDetected,
-                                            BuildWidgetParameters("lblNoSubsystems"));
+                                            BuildWidgetParameters(@"lblNoSubsystems"));
                 _widgets.Add(widget);
 
                 Register(widget);
@@ -131,7 +131,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         [NotNull]
         private TextWidget BuildSubsystemWidget([NotNull] IAlfredSubsystem subsystem)
         {
-            var id = string.Format(Locale, "lblSubsystem{0}", subsystem.Id);
+            var id = string.Format(Locale, @"lblSubsystem{0}", subsystem.Id);
             var widget = new TextWidget(BuildWidgetParameters(id)) { DataContext = subsystem };
             UpdateWidgetText(widget, subsystem);
 
@@ -143,12 +143,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         /// <param name="widget">The widget.</param>
         /// <param name="component">The component.</param>
-        /// <exception cref="ArgumentNullException">
-        /// </exception>
-        [SuppressMessage("Microsoft.Globalization",
-            "CA1303:Do not pass literals as localized parameters",
-            MessageId = "MattEland.Ani.Alfred.Core.Widgets.AlfredTextWidget.set_Text(System.String)"
-            )]
+        /// <exception cref="ArgumentNullException" />
         private static void UpdateWidgetText(
             [NotNull] AlfredTextWidget widget,
             [NotNull] IAlfredComponent component)
@@ -157,7 +152,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
             if (component == null) { throw new ArgumentNullException(nameof(component)); }
 
             widget.Text = string.Format(CultureInfo.CurrentCulture,
-                                        "{0}: {1}",
+                                        @"{0}: {1}",
                                         component.NameAndVersion,
                                         component.Status);
         }

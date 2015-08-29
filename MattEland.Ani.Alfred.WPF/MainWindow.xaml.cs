@@ -21,6 +21,7 @@ using MattEland.Ani.Alfred.PresentationShared.Commands;
 using MattEland.Ani.Alfred.PresentationShared.Helpers;
 using MattEland.Ani.Alfred.WPF.Properties;
 using MattEland.Common;
+using MattEland.Common.Providers;
 
 using Res = MattEland.Ani.Alfred.WPF.Properties.Resources;
 
@@ -45,7 +46,7 @@ namespace MattEland.Ani.Alfred.WPF
             // Do not allow topmost window mode while debugging
             Topmost = false;
 #endif
-            _app = new ApplicationManager(new XamlPlatformProvider(), this);
+            _app = new ApplicationManager(CommonProvider.Container, new XamlPlatformProvider(), this, enableSpeech: true);
 
             // DataBindings rely on Alfred presently as there hasn't been a need for a page ViewModel yet
             DataContext = _app;

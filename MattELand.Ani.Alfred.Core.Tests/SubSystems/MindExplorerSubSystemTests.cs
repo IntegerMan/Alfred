@@ -147,7 +147,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         [Test]
         public void ApplicationContainsMindExplorer()
         {
-            var app = new ApplicationManager(_provider);
+            var app = new ApplicationManager(Container, _provider);
             Assert.That(app.Alfred.Subsystems.Any(s => s is MindExplorerSubsystem), "The Mind Explorer subsystem is not part of a typical Alfred application");
         }
 
