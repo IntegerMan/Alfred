@@ -6,7 +6,6 @@
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 
 using JetBrains.Annotations;
@@ -30,19 +29,5 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         [NotNull]
         ICollection<T> CreateCollection<T>();
 
-        /// <summary>
-        ///     Creates a platform-friendly version of an AlfredCommand.
-        /// </summary>
-        /// <returns>An AlfredCommand.</returns>
-        [NotNull]
-        AlfredCommand CreateCommand();
-
-        /// <summary>
-        ///     Creates a platform-friendly version of an AlfredCommand with a pre-defined action.
-        /// </summary>
-        /// <param name="executeAction">The action a button click should execute.</param>
-        /// <returns>An AlfredCommand.</returns>
-        [NotNull]
-        AlfredCommand CreateCommand(Action executeAction);
     }
 }

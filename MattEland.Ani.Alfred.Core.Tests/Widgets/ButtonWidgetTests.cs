@@ -44,8 +44,8 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
         public void ButtonCommandsDoNotExecuteWhenButtonIsNotClicked()
         {
             var executed = false;
-            Action executeAction = () => { executed = true; };
-            var command = _platformProvider.CreateCommand(executeAction);
+            var command = Container.Provide<AlfredCommand>();
+            command.ExecuteAction = () => { executed = true; };
 
             var button = new ButtonWidget("Click Me", command, BuildWidgetParams());
 
@@ -65,11 +65,14 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
             return new WidgetCreationParameters(name);
         }
 
+        /// <summary>
+        ///     Button commands execute when clicked.
+        /// </summary>
         [Test]
         public void ButtonCommandsExecuteWhenClicked()
         {
             var executed = false;
-            var command = _platformProvider.CreateCommand();
+            var command = Container.Provide<AlfredCommand>();
             command.ExecuteAction = () => { executed = true; };
 
             var button = new ButtonWidget(BuildWidgetParams()) { ClickCommand = command };

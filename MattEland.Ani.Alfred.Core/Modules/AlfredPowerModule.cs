@@ -7,6 +7,7 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Globalization;
 
 using JetBrains.Annotations;
@@ -38,15 +39,30 @@ namespace MattEland.Ani.Alfred.Core.Modules
             AlfredStatusWidget = new TextWidget(Resources.AlfredCoreModule_AlfredNotSet,
                                                 BuildWidgetParameters(@"lblStatus"));
 
-            var initializeCommand = platformProvider.CreateCommand(ExecuteInitializeCommand);
             InitializeButton = new ButtonWidget(Resources.InitializeButtonText,
-                                                initializeCommand,
+                                                CreateCommand(ExecuteInitializeCommand),
                                                 BuildWidgetParameters(@"btnInitialize"));
 
-            var shutdownCommand = platformProvider.CreateCommand(ExecuteShutdownCommand);
             ShutdownButton = new ButtonWidget(Resources.ShutdownButtonText,
-                                              shutdownCommand,
+                                              CreateCommand(ExecuteShutdownCommand),
                                               BuildWidgetParameters(@"btnShutdown"));
+        }
+
+        /// <summary>
+        ///     Creates an <see cref="AlfredCommand"/> with the specified <see cref="Action" />.
+        /// </summary>
+        /// <param name="action"> The <see cref="Action" /> to take when the command is executed. </param>
+        /// <returns>
+        ///     The new command.
+        /// </returns>
+        [NotNull]
+        private AlfredCommand CreateCommand([CanBeNull] Action action)
+        {
+            var command = Container.Provide<AlfredCommand>();
+
+            command.ExecuteAction = action;
+
+            return command;
         }
 
         /// <summary>

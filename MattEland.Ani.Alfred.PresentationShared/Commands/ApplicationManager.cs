@@ -81,6 +81,9 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             // Use this container whenever a container is requested
             Container.RegisterAsProvidedInstance(typeof(IObjectContainer));
 
+            // Register default mappings
+            Container.Register(typeof(AlfredCommand), typeof(XamlClientCommand));
+
             // TODO: Grab things from the container!
 
             // Add a single shared IPlatformProvider
