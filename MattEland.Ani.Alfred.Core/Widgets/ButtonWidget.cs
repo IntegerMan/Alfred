@@ -9,11 +9,9 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
 
@@ -65,10 +63,33 @@ namespace MattEland.Ani.Alfred.Core.Widgets
             {
                 if (!Equals(value, _clickCommand))
                 {
+                    // Unsubscribe from old command's events
+                    if (_clickCommand != null)
+                    {
+                        _clickCommand.CanExecuteChanged -= OnClickCommandPropertyChanged;
+                    }
+
+                    // Perform the change and notify anyone who is interested
                     _clickCommand = value;
                     OnPropertyChanged(nameof(ClickCommand));
+
+                    // Subscribe to new command's events
+                    if (_clickCommand != null)
+                    {
+                        _clickCommand.CanExecuteChanged += OnClickCommandPropertyChanged;
+                    }
                 }
             }
+        }
+
+        /// <summary>
+        ///     Raises the click command property changed event.
+        /// </summary>
+        /// <param name="sender"> Source of the event. </param>
+        /// <param name="e"> Event information to send to registered event handlers. </param>
+        private void OnClickCommandPropertyChanged(object sender, EventArgs e)
+        {
+            OnPropertyChanged(nameof(IsVisible));
         }
 
         /// <summary>
