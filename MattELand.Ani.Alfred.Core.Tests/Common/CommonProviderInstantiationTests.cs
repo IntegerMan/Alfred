@@ -19,6 +19,8 @@ using MattEland.Common.Providers;
 
 using NUnit.Framework;
 
+using Shouldly;
+
 namespace MattEland.Ani.Alfred.Tests.Common
 {
     /// <summary>
@@ -173,7 +175,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
 
             // Grab the instance and check to see if its our string
             var instance = CommonProvider.Provide<string>();
-            Assert.AreSame(instance, Bubba);
+            instance.ShouldBeSameAs(Bubba);
         }
 
         /// <summary>
@@ -240,7 +242,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
             var instance = child.Provide<TestClassBase>();
 
             // Check that the item was provided
-            Assert.IsNotNull(instance);
+            instance.ShouldNotBeNull();
         }
 
         /// <summary>
@@ -269,7 +271,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
             var a = CommonProvider.Provide<TestClass>();
             var b = CommonProvider.Provide<TestClass>();
 
-            Assert.That(a != b, "CommonProvider.Create should create multiple instances");
+            a.ShouldNotBeSameAs(b, "CommonProvider.Create should create multiple instances");
         }
 
         /// <summary>
@@ -286,13 +288,11 @@ namespace MattEland.Ani.Alfred.Tests.Common
 
             var result = CommonProvider.Provide<TestClassBase>(Data);
 
-            Assert.IsNotNull(result, "The desired type was not instantiated");
+            result.ShouldNotBeNull("The desired type was not instantiated");
             var test = result as TestClass;
-            Assert.IsNotNull(test,
-                             $"The result was not TestClass. Instead was {result.GetType().FullName}");
+            test.ShouldNotBeNull($"The result was not TestClass. Instead was {result.GetType().FullName}");
 
-            Assert.AreEqual(Data,
-                            test.Data,
+            test.Data.ShouldBe(Data,
                             "Test object was not created using the correct constructor");
         }
 
@@ -316,7 +316,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
             var defaultProvider = CommonProvider.Container.FallbackProvider;
 
             // Check that they're the same object
-            Assert.AreSame(instanceProvider, defaultProvider);
+            instanceProvider.ShouldBeSameAs(defaultProvider);
         }
 
         /// <summary>
@@ -342,14 +342,14 @@ namespace MattEland.Ani.Alfred.Tests.Common
             var instanceB = containerB.Provide<TestClassBase>(1, 1);
 
             // Assert we have different strokes for different folks
-            Assert.AreNotSame(containerA, containerB);
-            Assert.AreNotSame(instanceA, instanceB);
+            containerA.ShouldNotBeSameAs(containerB);
+            instanceA.ShouldNotBeSameAs(instanceB);
 
-            Assert.IsNotNull(instanceA, "A was null");
-            Assert.IsNotNull(instanceB, "B was null");
+            instanceA.ShouldNotBeNull("A was null");
+            instanceB.ShouldNotBeNull("B was null");
 
-            Assert.That(instanceA is TestClass, "A was not expected type");
-            Assert.That(instanceB is PrivateTestClass, "B was not expected type");
+            instanceA.ShouldBeOfType<TestClass>("A was not expected type");
+            instanceB.ShouldBeOfType<PrivateTestClass>("B was not expected type");
         }
 
         /// <summary>
@@ -369,10 +369,8 @@ namespace MattEland.Ani.Alfred.Tests.Common
             var result = CommonProvider.Provide<ITestInterfaceDerived>();
 
             // Check to see that the container created the object using the default constructor
-            Assert.IsNotNull(result, "Item was not instantiated.");
-            Assert.AreEqual(TestClass.DefaultConstructorUsed,
-                            result.Data,
-                            "Default constructor was not used");
+            result.ShouldNotBeNull();
+            result.Data.ShouldBe(result.Data, "Default constructor was not used");
         }
 
         /// <summary>
@@ -393,10 +391,8 @@ namespace MattEland.Ani.Alfred.Tests.Common
             var result = CommonProvider.Provide<TestClass>();
 
             // Check to see that the container created the object using the default constructor
-            Assert.IsNotNull(result, "Item was not instantiated.");
-            Assert.AreEqual(TestClass.DefaultConstructorUsed,
-                            result.Data,
-                            "Default constructor was not used");
+            result.ShouldNotBeNull();
+            result.Data.ShouldBe(TestClass.DefaultConstructorUsed, "Default constructor was not used");
         }
 
         /// <summary>
@@ -462,8 +458,8 @@ namespace MattEland.Ani.Alfred.Tests.Common
             var result = t.ProvideInstanceOf();
 
             // Validate
-            Assert.IsNotNull(result);
-            Assert.AreSame(instance, result);
+            result.ShouldNotBeNull();
+            result.ShouldBeSameAs(instance);
         }
 
         /// <summary>
@@ -481,7 +477,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
 
             var result = CommonProvider.Provide<PrivateTestClass>();
 
-            Assert.IsNotNull(result, "The desired type was not instantiated");
+            result.ShouldNotBe(null, "The desired type was not instantiated");
         }
 
         /// <summary>
@@ -501,11 +497,8 @@ namespace MattEland.Ani.Alfred.Tests.Common
 
             var result = CommonProvider.TryProvideInstance<PrivateTestClass>(1, 3);
 
-            Assert.IsNotNull(result, "The desired type was not instantiated");
-
-            Assert.AreEqual(4,
-                            result.BaseProperty,
-                            "Test object was not created using the correct constructor");
+            result.ShouldNotBe(null, "The desired type was not instantiated");
+            result.BaseProperty.ShouldBe(4, "Test object was not created using the correct constructor");
         }
 
         /// <summary>
@@ -547,13 +540,13 @@ namespace MattEland.Ani.Alfred.Tests.Common
             var b = t.ProvideInstanceOf();
 
             // Check that the items are the same instance
-            Assert.AreSame(instance, a);
-            Assert.AreSame(instance, b);
-            Assert.AreSame(a, b);
+            instance.ShouldBeSameAs(a);
+            instance.ShouldBeSameAs(b);
+            a.ShouldBeSameAs(b);
         }
 
         /// <summary>
-        ///     Test that using the non-generic <see cref="CommonProvider.ProvideInstanceOfType" /> provides
+        ///     Test that using the non-generic <see cref="CommonProvider.ProvideType" /> provides
         ///     instances as expected
         /// </summary>
         /// <remarks>
@@ -566,11 +559,11 @@ namespace MattEland.Ani.Alfred.Tests.Common
             var instance = CommonProvider.TryProvideInstance<IDisposable>();
 
             // Make sure we didn't get a result
-            Assert.IsNull(instance);
+            instance.ShouldBe(null);
         }
 
         /// <summary>
-        ///     Test that using the non-generic <see cref="CommonProvider.ProvideInstanceOfType" /> provides
+        ///     Test that using the non-generic <see cref="CommonProvider.ProvideType" /> provides
         ///     instances as expected
         /// </summary>
         /// <remarks>
@@ -587,8 +580,8 @@ namespace MattEland.Ani.Alfred.Tests.Common
             var instance = CommonProvider.ProvideType(t);
 
             // Make sure we got what we thought we did
-            Assert.IsNotNull(instance);
-            Assert.That(instance is ITestInterfaceBase);
+            instance.ShouldNotBe(null);
+            instance.ShouldBeAssignableTo(t);
         }
     }
 
