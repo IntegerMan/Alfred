@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
-// CommonProviderInstantiationTests.cs
+// CommonProviderTests.cs
 // 
 // Created on:      08/27/2015 at 2:49 PM
-// Last Modified:   08/28/2015 at 1:53 AM
+// Last Modified:   08/29/2015 at 1:02 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -25,17 +25,17 @@ namespace MattEland.Ani.Alfred.Tests.Common
 {
     /// <summary>
     ///     Tests the Dependency Injection / Inversion of Control container capabilities provided by
-    ///     MattEland.Common
+    ///     MattEland.Common.
     /// </summary>
+    /// <seealso cref="T:MattEland.Ani.Alfred.Tests.AlfredTestBase"/>
     [TestFixture]
     [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
     [SuppressMessage("ReSharper", "ExceptionNotDocumentedOptional")]
     [SuppressMessage("ReSharper", "EventExceptionNotDocumented")]
-    public class CommonProviderInstantiationTests : AlfredTestBase
+    public class CommonProviderTests : AlfredTestBase
     {
-        /// <summary>
-        ///     Sets up the test environment for test runs.
-        /// </summary>
+        /// <summary> Sets up the test environment for test runs. </summary>
+        /// <seealso cref="M:MattEland.Ani.Alfred.Tests.AlfredTestBase.SetUp()"/>
         [SetUp]
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public override void SetUp()
@@ -47,62 +47,71 @@ namespace MattEland.Ani.Alfred.Tests.Common
             CommonProvider.RegisterDefaultProvider(null);
         }
 
-        public interface ITestInterfaceBase
-        {
-            int BaseProperty { get; set; }
-        }
+        #region Test Classes
 
-        public interface ITestInterfaceDerived : ITestInterfaceBase
+        /// <summary> A testing class used by <see cref="CommonProviderTests" /> </summary>
+        /// <seealso cref="T:TestClassBase"/>
+        /// <seealso cref="T:ITestInterfaceDerived"/>
+        public class TestClass : TestClassBase, ITestInterfaceDerived
         {
-            object Data { get; }
-        }
+            /// <summary> The default constructor used. </summary>
+            internal const string DefaultConstructorUsed = "Default Constructor was Used";
 
-        /// <summary>
-        ///     An abstract class for testing <see cref="CommonProvider" />
-        /// </summary>
-        public abstract class TestClassBase : ITestInterfaceBase
-        {
-            /// <summary>
-            ///     Initializes a new instance of the <see cref="TestClassBase" /> class.
-            /// </summary>
-            /// <param name="value">The base property value.</param>
-            protected TestClassBase(int value)
+            /// <summary> Initializes a new instance of the <see cref="T:System.Object" /> class. </summary>
+            /// <remarks>
+            ///     This is public so that it can be instantiated by
+            ///     <see cref="CommonProvider.Provide{TRequested}" />
+            /// </remarks>
+            [UsedImplicitly]
+            public TestClass() : this(DefaultConstructorUsed)
             {
-                BaseProperty = value;
             }
 
-            /// <summary>
-            ///     Gets or sets the base property.
-            /// </summary>
-            /// <value>The base property.</value>
-            public int BaseProperty { get; set; }
+            /// <summary> Initializes a new instance of the <see cref="T:System.Object" /> class. </summary>
+            /// <param name="data"> The data. </param>
+            public TestClass([CanBeNull] object data) : base(data?.GetHashCode() ?? 42)
+            {
+                Data = data;
+            }
+
+            /// <summary> Gets the data. </summary>
+            /// <value> The data. </value>
+            /// <seealso cref="P:ITestInterfaceDerived.Data"/>
+            [CanBeNull]
+            public object Data { get; }
         }
 
-        /// <summary>
-        ///     A private class for testing <see cref="CommonProvider" />
-        /// </summary>
+        /// <summary> A private class for testing <see cref="CommonProvider" /> </summary>
+        /// <seealso cref="T:TestClassBase"/>
         private class PrivateTestClass : TestClassBase
         {
-
             /// <summary>
-            ///     Initializes a new instance of the <see cref="PrivateTestClass" /> class.
+            ///     Initializes a new instance of the
+            ///     <see cref="PrivateTestClass" />
+            ///     class.
             /// </summary>
             private PrivateTestClass() : this(42)
             {
             }
 
             /// <summary>
-            ///     Initializes a new instance of the <see cref="PrivateTestClass" /> class.
+            ///     Initializes a new instance of the
+            ///     <see cref="PrivateTestClass" />
+            ///     class.
             /// </summary>
-            /// <param name="value">The value to use to set the base property.</param>
+            /// <param name="value"> The value to use to set the base property. </param>
             private PrivateTestClass(int value) : base(value)
             {
             }
 
             /// <summary>
-            ///     Builds an instance of <see cref="PrivateTestClass" />.
+            ///     Builds an instance of
+            ///     <see cref="PrivateTestClass" />.
             /// </summary>
-            /// <returns>A new instance of <see cref="PrivateTestClass" /></returns>
+            /// <returns>
+            ///     A new instance of
+            ///     <see cref="PrivateTestClass" />
+            /// </returns>
             [NotNull]
             internal static PrivateTestClass CreateInstance()
             {
@@ -110,10 +119,14 @@ namespace MattEland.Ani.Alfred.Tests.Common
             }
 
             /// <summary>
-            ///     Builds an instance of <see cref="PrivateTestClass" />.
+            ///     Builds an instance of
+            ///     <see cref="PrivateTestClass" />.
             /// </summary>
-            /// <param name="args">The arguments.</param>
-            /// <returns>A new instance of <see cref="PrivateTestClass" /></returns>
+            /// <param name="args"> The arguments. </param>
+            /// <returns>
+            ///     A new instance of
+            ///     <see cref="PrivateTestClass" />
+            /// </returns>
             [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
             internal static PrivateTestClass CreateInstanceWithParams(params object[] args)
             {
@@ -127,44 +140,49 @@ namespace MattEland.Ani.Alfred.Tests.Common
             }
         }
 
-        /// <summary>
-        ///     A testing class used by <see cref="CommonProviderInstantiationTests" />
-        /// </summary>
-        public class TestClass : TestClassBase, ITestInterfaceDerived
+        /// <summary> An abstract class for testing <see cref="CommonProvider" /> </summary>
+        /// <seealso cref="T:ITestInterfaceBase"/>
+        public abstract class TestClassBase : ITestInterfaceBase
         {
-            internal const string DefaultConstructorUsed = "Default Constructor was Used";
-
             /// <summary>
-            ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
+            ///     Initializes a new instance of the
+            ///     <see cref="TestClassBase" /> class.
             /// </summary>
-            /// <remarks>
-            ///     This is public so that it can be instantiated by
-            ///     <see cref="CommonProvider.Provide{TRequested}" />
-            /// </remarks>
-            [UsedImplicitly]
-            public TestClass() : this(DefaultConstructorUsed)
+            /// <param name="value"> The base property value. </param>
+            protected TestClassBase(int value)
             {
+                BaseProperty = value;
             }
 
-            /// <summary>
-            ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
-            /// </summary>
-            public TestClass([CanBeNull] object data) : base(data?.GetHashCode() ?? 42)
-            {
-                Data = data;
-            }
+            /// <summary> Gets or sets the base property. </summary>
+            /// <seealso cref="P:MattEland.Ani.Alfred.Tests.Common.CommonProviderTests.ITestInterfaceBase.BaseProperty"/>
+            public int BaseProperty { get; set; }
+        }
 
-            /// <summary>
-            ///     Gets or sets the data.
-            /// </summary>
-            /// <value>The data.</value>
-            [CanBeNull]
-            public object Data { get; }
+        /// <summary> Interface for test interface derived. </summary>
+        /// <seealso cref="T:MattEland.Ani.Alfred.Tests.AlfredTestBase"/>
+        public interface ITestInterfaceDerived : ITestInterfaceBase
+        {
+            /// <summary> Gets the data. </summary>
+            /// <value> The data. </value>
+            object Data { get; }
         }
 
         /// <summary>
-        ///     Determines whether this instance [can define custom default provider].
+        ///     A test <see langword="interface"/> that <see cref="ITestInterfaceDerived"/> is derived
+        ///     from.
         /// </summary>
+        /// <seealso cref="T:MattEland.Ani.Alfred.Tests.AlfredTestBase"/>
+        public interface ITestInterfaceBase
+        {
+            /// <summary> Gets or sets the base property. </summary>
+            /// <value> The base property. </value>
+            int BaseProperty { get; set; }
+        }
+
+        #endregion
+
+        /// <summary> Determines whether this instance [can define custom default provider]. </summary>
         [Test]
         public void CanDefineCustomDefaultProvider()
         {
@@ -181,12 +199,9 @@ namespace MattEland.Ani.Alfred.Tests.Common
         }
 
         /// <summary>
-        ///     Tests that using the IoC container cannot register an interface to be instantiated, even if it
-        ///     does have inheritance.
+        ///     Tests that using the IoC container cannot register an interface to be instantiated, even
+        ///     if it does have inheritance.
         /// </summary>
-        /// <remarks>
-        ///     See ALF-98
-        /// </remarks>
         [Test]
         [ExpectedException(typeof(InvalidOperationException))]
         public void CannotRegisterAnInterface()
@@ -195,12 +210,10 @@ namespace MattEland.Ani.Alfred.Tests.Common
         }
 
         /// <summary>
-        ///     Tests that using the IoC container cannot register a concrete type that does not implement an
-        ///     interface.
+        ///     Tests that using the IoC container cannot register a concrete type that does not
+        ///     implement an
+        ///     <see langword="interface" />.
         /// </summary>
-        /// <remarks>
-        ///     See ALF-98
-        /// </remarks>
         [Test]
         [ExpectedException(typeof(InvalidOperationException))]
         public void CannotRegisterUnimplementedInterface()
@@ -209,26 +222,19 @@ namespace MattEland.Ani.Alfred.Tests.Common
         }
 
         /// <summary>
-        ///     Tests that using the IoC container cannot register a concrete type that is unrelated to the
-        ///     type it is being registered to handle
+        ///     Tests that using the IoC container cannot register a concrete type that is unrelated to
+        ///     the type it is being registered to handle.
         /// </summary>
-        /// <remarks>
-        ///     See ALF-98
-        /// </remarks>
-        [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
+        [Test, ExpectedException(typeof(InvalidOperationException))]
         public void CannotRegisterUnrelatedTypes()
         {
             CommonProvider.Register(typeof(StringBuilder), typeof(DateTime));
         }
 
         /// <summary>
-        ///     Tests containers request values from their parent before a fallback is used when a parent is
-        ///     present and no mapping was found.
+        ///     Tests containers request values from their parent before a fallback is used when a parent
+        ///     is present and no mapping was found.
         /// </summary>
-        /// <remarks>
-        ///     See ALF-98
-        /// </remarks>
         [Test]
         public void ContainersCanGetMappingsFromTheirParent()
         {
@@ -250,9 +256,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
         /// <summary>
         ///     Tests that using the IoC container to activate an abstract class throws an exception.
         /// </summary>
-        /// <remarks>
-        ///     See ALF-98
-        /// </remarks>
+        /// <remarks> See ALF-98. </remarks>
         [Test]
         [ExpectedException(typeof(NotSupportedException))]
         public void CreateBaseTypeUsingDefaultConstructorThrowsException()
@@ -264,9 +268,6 @@ namespace MattEland.Ani.Alfred.Tests.Common
         ///     Tests that the IoC container provides new instances of the requested type when a type is
         ///     registered for itself.
         /// </summary>
-        /// <remarks>
-        ///     See ALF-98
-        /// </remarks>
         [Test]
         public void CreateTypeMultipleTimesCreatesMultipleObjects()
         {
@@ -277,11 +278,9 @@ namespace MattEland.Ani.Alfred.Tests.Common
         }
 
         /// <summary>
-        ///     Tests that using the IoC container we can instantiate classes using parameterized constructors.
+        ///     Tests that using the IoC container we can instantiate classes using parameterized
+        ///     constructors.
         /// </summary>
-        /// <remarks>
-        ///     See ALF-98
-        /// </remarks>
         [Test]
         public void CreateTypeWithParameterizedConstructor()
         {
@@ -292,18 +291,16 @@ namespace MattEland.Ani.Alfred.Tests.Common
 
             result.ShouldNotBeNull("The desired type was not instantiated");
             var test = result as TestClass;
-            test.ShouldNotBeNull($"The result was not TestClass. Instead was {result.GetType().FullName}");
+            test.ShouldNotBeNull(
+                                 $"The result was not TestClass. Instead was {result.GetType().FullName}");
 
-            test.Data.ShouldBe(Data,
-                            "Test object was not created using the correct constructor");
+            test.Data.ShouldBe(Data, "Test object was not created using the correct constructor");
         }
 
         /// <summary>
         ///     Ensures the dependency container uses itself to get a default provider when lazy loading.
         /// </summary>
-        /// <remarks>
-        ///     See ALF-98
-        /// </remarks>
+        /// <remarks> See ALF-98. </remarks>
         [Test]
         public void EnsureDependencyContainerUsesItselfToGetDefaultProvider()
         {
@@ -321,12 +318,8 @@ namespace MattEland.Ani.Alfred.Tests.Common
             instanceProvider.ShouldBeSameAs(defaultProvider);
         }
 
-        /// <summary>
-        ///     Tests that multiple containers can exist side by side
-        /// </summary>
-        /// <remarks>
-        ///     See ALF-98
-        /// </remarks>
+        /// <summary> Tests that multiple containers can exist side by side. </summary>
+        /// <remarks> See ALF-98. </remarks>
         [Test]
         public void MultipleContainersCanExist()
         {
@@ -337,7 +330,8 @@ namespace MattEland.Ani.Alfred.Tests.Common
             // Register the same type for both containers with different implementations
             var t = typeof(TestClassBase);
             containerA.Register(t, typeof(TestClass));
-            containerB.Register(t, (Func<object[], object>)PrivateTestClass.CreateInstanceWithParams);
+            containerB.Register(t,
+                                (Func<object[], object>)PrivateTestClass.CreateInstanceWithParams);
 
             // Build our instances
             var instanceA = containerA.Provide<TestClassBase>(35);
@@ -358,9 +352,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
         ///     Tests that the IoC container allows interfaces to registered as the base type with an
         ///     implementing concrete class as the instantiated type.
         /// </summary>
-        /// <remarks>
-        ///     See ALF-98
-        /// </remarks>
+        /// <remarks> See ALF-98. </remarks>
         [Test]
         public void RegisterAndCreateForInterfaceBaseTypeWorks()
         {
@@ -379,9 +371,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
         ///     Tests that the IoC container provides new instances of the requested type when a type is
         ///     registered for itself.
         /// </summary>
-        /// <remarks>
-        ///     See ALF-98
-        /// </remarks>
+        /// <remarks> See ALF-98. </remarks>
         [Test]
         public void RegisterAndCreateInstantiatesUsingDefaultConstructor()
         {
@@ -394,16 +384,15 @@ namespace MattEland.Ani.Alfred.Tests.Common
 
             // Check to see that the container created the object using the default constructor
             result.ShouldNotBeNull();
-            result.Data.ShouldBe(TestClass.DefaultConstructorUsed, "Default constructor was not used");
+            result.Data.ShouldBe(TestClass.DefaultConstructorUsed,
+                                 "Default constructor was not used");
         }
 
         /// <summary>
         ///     Tests that the IoC container provides new instances of the requested type when a type is
         ///     registered for itself.
         /// </summary>
-        /// <remarks>
-        ///     See ALF-98
-        /// </remarks>
+        /// <remarks> See ALF-98. </remarks>
         [Test]
         public void RegisterBaseTypeAndCreateInstantiatesUsingDefaultConstructor()
         {
@@ -430,9 +419,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
         /// <summary>
         ///     Tests that using the IoC container to register an abstract class throws an exception.
         /// </summary>
-        /// <remarks>
-        ///     See ALF-98
-        /// </remarks>
+        /// <remarks> See ALF-98. </remarks>
         [Test]
         [ExpectedException(typeof(InvalidOperationException))]
         public void RegisterBaseTypeForBaseTypeThrowsInvalidOperationException()
@@ -441,12 +428,10 @@ namespace MattEland.Ani.Alfred.Tests.Common
         }
 
         /// <summary>
-        ///     Tests that registering an object as the provided instance causes that instance to be returned
-        ///     when the given type is requested.
+        ///     Tests that registering an object as the provided instance causes that instance to be
+        ///     returned when the given type is requested.
         /// </summary>
-        /// <remarks>
-        ///     See ALF-98
-        /// </remarks>
+        /// <remarks> See ALF-98. </remarks>
         [Test]
         public void RegisteringAnInstanceAsSingletonProvidesInstance()
         {
@@ -467,9 +452,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
         /// <summary>
         ///     Tests that using the IoC container we can instantiate classes using activator functions.
         /// </summary>
-        /// <remarks>
-        ///     See ALF-98
-        /// </remarks>
+        /// <remarks> See ALF-98. </remarks>
         [Test]
         public void RegisterTypeUsingActivationFunction()
         {
@@ -479,37 +462,33 @@ namespace MattEland.Ani.Alfred.Tests.Common
 
             var result = CommonProvider.Provide<PrivateTestClass>();
 
-            result.ShouldNotBe(null, "The desired type was not instantiated");
+            result.ShouldNotBeNull("The desired type was not instantiated");
         }
 
         /// <summary>
-        ///     Tests that using the IoC container we can instantiate classes using activator functions with
-        ///     parameters.
+        ///     Tests that using the IoC container we can instantiate classes using activator functions
+        ///     with parameters.
         /// </summary>
-        /// <remarks>
-        ///     See ALF-98
-        /// </remarks>
+        /// <remarks> See ALF-98. </remarks>
         [Test]
         public void RegisterTypeUsingParameterizedActivationFunction()
         {
             var activator =
                 new Func<object[], PrivateTestClass>(PrivateTestClass.CreateInstanceWithParams);
 
-            CommonProvider.Register(typeof(PrivateTestClass), activator);
+            CommonProvider.Register(typeof(ITestInterfaceBase), activator);
 
-            var result = CommonProvider.TryProvideInstance<PrivateTestClass>(1, 3);
+            var result = CommonProvider.TryProvideInstance<ITestInterfaceBase>(1, 3);
 
-            result.ShouldNotBe(null, "The desired type was not instantiated");
-            result.BaseProperty.ShouldBe(4, "Test object was not created using the correct constructor");
+            result.ShouldNotBeNull("The desired type was not instantiated");
+            result.BaseProperty.ShouldBe(4, "Test object did not use the correct constructor");
         }
 
         /// <summary>
         ///     Test that requesting an unknown type causes the instance provider to throw a
         ///     <see cref="NotSupportedException" />.
         /// </summary>
-        /// <remarks>
-        ///     See ALF-98
-        /// </remarks>
+        /// <remarks> See ALF-98. </remarks>
         [Test]
         [ExpectedException(typeof(NotSupportedException))]
         public void RequestingAnUnknownTypeCausesInstanceProviderToError()
@@ -522,12 +501,10 @@ namespace MattEland.Ani.Alfred.Tests.Common
         }
 
         /// <summary>
-        ///     Tests that registering an object as the provided instance causes that instance to be returned
-        ///     when the given type is requested.
+        ///     Tests that registering an <see langword="object"/> as the provided instance causes that
+        ///     instance to be returned when the given type is requested.
         /// </summary>
-        /// <remarks>
-        ///     See ALF-98
-        /// </remarks>
+        /// <remarks> See ALF-98. </remarks>
         [Test]
         public void RequestingMultipleInstancesAfterRegisteringProvidedInstanceReturnsSameInstance()
         {
@@ -549,11 +526,9 @@ namespace MattEland.Ani.Alfred.Tests.Common
 
         /// <summary>
         ///     Test that using the non-generic <see cref="CommonProvider.ProvideType" /> provides
-        ///     instances as expected
+        ///     instances as expected.
         /// </summary>
-        /// <remarks>
-        ///     See ALF-98
-        /// </remarks>
+        /// <remarks> See ALF-98. </remarks>
         [Test]
         public void RequestingTypeSafeReturnsNullWhenNoMapping()
         {
@@ -566,11 +541,9 @@ namespace MattEland.Ani.Alfred.Tests.Common
 
         /// <summary>
         ///     Test that using the non-generic <see cref="CommonProvider.ProvideType" /> provides
-        ///     instances as expected
+        ///     instances as expected.
         /// </summary>
-        /// <remarks>
-        ///     See ALF-98
-        /// </remarks>
+        /// <remarks> See ALF-98. </remarks>
         [Test]
         public void RequestingTypeUsingProvideInstanceOfTypeWorks()
         {

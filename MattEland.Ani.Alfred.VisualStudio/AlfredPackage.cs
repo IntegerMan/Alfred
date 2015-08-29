@@ -16,8 +16,6 @@ using MattEland.Ani.Alfred.VisualStudio.Properties;
 using MattEland.Common.Providers;
 
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.TextManager.Interop;
 
 namespace MattEland.Ani.Alfred.VisualStudio
 {
@@ -51,7 +49,7 @@ namespace MattEland.Ani.Alfred.VisualStudio
         private static ApplicationManager _app;
 
         /// <summary>
-        /// AlfredToolWindowPackage GUID string.
+        /// <see cref="AlfredPackage"/> GUID string.
         /// </summary>
         public const string PackageGuidString = "f2ff3af0-b1ad-4d94-ba2f-04a180fb9de4";
 
@@ -69,9 +67,9 @@ namespace MattEland.Ani.Alfred.VisualStudio
         }
 
         /// <summary>
-        /// Ensures the alfred instance exists, creating it if it does not.
+        ///     Ensures the Alfred instance exists, creating it if it does not.
         /// </summary>
-        /// <returns>The ApplicationManager.</returns>
+        /// <returns>The <see cref="ApplicationManager"/>.</returns>
         [NotNull]
         internal static ApplicationManager EnsureAlfredInstance()
         {
@@ -93,9 +91,11 @@ namespace MattEland.Ani.Alfred.VisualStudio
         }
 
         /// <summary>
-        /// Gets the alfred application manager instance.
+        ///     Gets the Alfred <see cref="ApplicationManager"/> instance.
         /// </summary>
-        /// <value>The alfred instance.</value>
+        /// <value>
+        /// The Alfred instance.
+        /// </value>
         [NotNull]
         public static ApplicationManager AlfredInstance
         {
@@ -109,7 +109,7 @@ namespace MattEland.Ani.Alfred.VisualStudio
 
         /// <summary>
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
-        /// where you can put all the initialization code that rely on services provided by VisualStudio.
+        /// where you can put all the initialization code that rely on services provided by Visual Studio.
         /// </summary>
         protected override void Initialize()
         {
