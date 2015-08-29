@@ -35,7 +35,7 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
         /// </summary>
         /// <param name="provider">The provider.</param>
         /// <exception cref="ArgumentNullException"><paramref name="provider" /> is <see langword="null" />.</exception>
-        public TestSubsystem([NotNull] IPlatformProvider provider) : base(provider)
+        public TestSubsystem([NotNull] IPlatformProvider provider) : base()
         {
             if (provider == null)
             {

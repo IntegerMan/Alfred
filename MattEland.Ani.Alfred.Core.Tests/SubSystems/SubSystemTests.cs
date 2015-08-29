@@ -24,7 +24,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
     /// </summary>
     [TestFixture]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-    public class SubsystemTests
+    public class SubsystemTests : AlfredTestBase
     {
         [NotNull]
         private AlfredApplication _alfred;
@@ -32,9 +32,14 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         [NotNull]
         private TestSubsystem _subsystem;
 
+        /// <summary>
+        /// Sets up the environment for each test.
+        /// </summary>
         [SetUp]
-        public void Setup()
+        public override void SetUp()
         {
+            base.SetUp();
+
             var bootstrapper = new AlfredBootstrapper();
             _alfred = bootstrapper.Create();
 

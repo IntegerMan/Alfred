@@ -23,7 +23,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
     ///     class
     /// </summary>
     [TestFixture]
-    public class ButtonWidgetTests
+    public class ButtonWidgetTests : AlfredTestBase
     {
         [NotNull]
         private readonly SimplePlatformProvider _platformProvider = new SimplePlatformProvider();

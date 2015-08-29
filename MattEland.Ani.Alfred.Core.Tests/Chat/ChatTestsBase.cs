@@ -35,7 +35,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     /// </summary>
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
-    public class ChatTestsBase
+    public class ChatTestsBase : AlfredTestBase
     {
         [NotNull]
         private TestAlfred _alfred;
@@ -242,8 +242,6 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         /// </summary>
         protected void InitializeChatSystem()
         {
-            CommonProvider.Container.RegisterDefaultAlfredMappings();
-
             AlfredTestTagHandler.WasInvoked = false;
 
             _alfred = new TestAlfred();

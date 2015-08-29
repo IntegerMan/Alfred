@@ -32,7 +32,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// <param name="console">The console.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
         public MindExplorerSubsystem([NotNull] IPlatformProvider provider,
-                                     [CanBeNull] IConsole console = null) : base(provider, console)
+                                     [CanBeNull] IConsole console = null) : base(console)
         {
             MindExplorerPage = new ExplorerPage(provider, "Mind Explorer", "MindMap");
         }

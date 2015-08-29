@@ -26,7 +26,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
     [SuppressMessage("ReSharper", "ObjectCreationAsStatement")]
-    public class ExplorerWidgetTests
+    public class ExplorerWidgetTests : AlfredTestBase
     {
         [NotNull]
         private SimplePlatformProvider _provider;
@@ -37,8 +37,10 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
         /// Sets up the environment for each test
         /// </summary>
         [SetUp]
-        public void SetUp()
+        public override void SetUp()
         {
+            base.SetUp();
+
             _provider = new SimplePlatformProvider();
         }
 

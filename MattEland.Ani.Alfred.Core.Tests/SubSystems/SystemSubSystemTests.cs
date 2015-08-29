@@ -28,7 +28,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
     /// </summary>
     [TestFixture]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-    public class SystemSubsystemTests
+    public class SystemSubsystemTests : AlfredTestBase
     {
         [NotNull]
         private SystemMonitoringSubsystem _subsystem;
@@ -41,11 +41,11 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         /// <summary>
         /// Sets up the test environment
         /// </summary>
-        /// <exception cref="UnauthorizedAccessException">Code that is executing without administrative privileges attempted to read a performance counter.</exception>
-        /// <exception cref="Win32Exception">A call to an underlying system API failed.</exception>
         [SetUp]
-        public void TestSetup()
+        public override void SetUp()
         {
+            base.SetUp();
+
             _metricProviderFactory = new ValueMetricProviderFactory();
             _subsystem = new SystemMonitoringSubsystem(new SimplePlatformProvider(), _metricProviderFactory);
 

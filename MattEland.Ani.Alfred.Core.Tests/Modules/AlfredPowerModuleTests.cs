@@ -31,14 +31,16 @@ namespace MattEland.Ani.Alfred.Tests.Modules
     /// </summary>
     [TestFixture]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-    public class AlfredPowerModuleTests
+    public class AlfredPowerModuleTests : AlfredTestBase
     {
         /// <summary>
         ///     Setups the tests.
         /// </summary>
         [SetUp]
-        public void SetupTests()
+        public void SetUp()
         {
+            base.SetUp();
+
             var bootstrapper = new AlfredBootstrapper();
             _alfred = bootstrapper.Create();
             _module = new AlfredPowerModule(_alfred.PlatformProvider);

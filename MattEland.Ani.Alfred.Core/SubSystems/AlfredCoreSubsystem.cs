@@ -57,7 +57,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// </summary>
         /// <param name="provider">The provider.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public AlfredCoreSubsystem([NotNull] IPlatformProvider provider) : base(provider)
+        public AlfredCoreSubsystem([NotNull] IPlatformProvider provider) : base()
         {
             _controlPage = new AlfredModuleListPage(provider, ControlPageName, "Core");
 

@@ -20,24 +20,27 @@ using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Ani.Alfred.Tests.Mocks;
+using MattEland.Common.Providers;
 
 using NUnit.Framework;
 
 namespace MattEland.Ani.Alfred.Tests
 {
     /// <summary>
-    ///     Tests AlfredApplication
+    ///     Tests <see cref="AlfredApplication"/>
     /// </summary>
     [TestFixture]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public sealed class AlfredProviderTests
     {
         /// <summary>
-        ///     Sets up the alfred provider's tests.
+        ///     Sets up the Alfred provider's tests.
         /// </summary>
         [SetUp]
         public void SetupAlfredProviderTests()
         {
+            CommonProvider.Container.RegisterDefaultAlfredMappings();
+
             var bootstrapper = new AlfredBootstrapper();
             _alfred = bootstrapper.Create();
             _alfred.Console = new SimpleConsole();
@@ -58,8 +61,8 @@ namespace MattEland.Ani.Alfred.Tests
         /// <summary>
         ///     Builds widget parameters.
         /// </summary>
-        /// <param name="name">The name.</param>
-        /// <returns>The WidgetCreationParameters.</returns>
+        /// <param name="name">The name of the widget.</param>
+        /// <returns>The <see cref="WidgetCreationParameters"/>.</returns>
         [NotNull]
         private WidgetCreationParameters BuildWidgetParams(string name = "WidgetTest")
         {

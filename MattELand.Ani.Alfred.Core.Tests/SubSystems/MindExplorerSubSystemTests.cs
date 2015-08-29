@@ -19,6 +19,7 @@ using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Ani.Alfred.PresentationShared.Commands;
 using MattEland.Common;
+using MattEland.Common.Providers;
 
 using NUnit.Framework;
 
@@ -32,15 +33,17 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
     /// </remarks>
     [TestFixture]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-    public class MindExplorerSubsystemTests
+    public class MindExplorerSubsystemTests : AlfredTestBase
     {
 
         /// <summary>
         ///     Sets up the environment for each test.
         /// </summary>
         [SetUp]
-        public void SetUp()
+        public override void SetUp()
         {
+            base.SetUp();
+
             var bootstrapper = new AlfredBootstrapper();
             _alfred = bootstrapper.Create();
 

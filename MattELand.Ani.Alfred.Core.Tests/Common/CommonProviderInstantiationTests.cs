@@ -31,15 +31,17 @@ namespace MattEland.Ani.Alfred.Tests.Common
     [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
     [SuppressMessage("ReSharper", "ExceptionNotDocumentedOptional")]
     [SuppressMessage("ReSharper", "EventExceptionNotDocumented")]
-    public class CommonProviderInstantiationTests
+    public class CommonProviderInstantiationTests : AlfredTestBase
     {
         /// <summary>
         ///     Sets up the test environment for test runs.
         /// </summary>
         [SetUp]
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-        public void SetUp()
+        public override void SetUp()
         {
+            base.SetUp();
+
             // These things live at the static level. Clear so tests don't hit each other
             CommonProvider.ResetMappings();
             CommonProvider.RegisterDefaultProvider(null);

@@ -26,7 +26,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
 {
     [TestFixture]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-    public sealed class TimeModuleTests
+    public sealed class TimeModuleTests : AlfredTestBase
     {
         [SetUp]
         public void OnStartup()

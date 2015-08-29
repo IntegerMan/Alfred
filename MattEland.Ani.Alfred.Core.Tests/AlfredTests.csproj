@@ -67,6 +67,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlfredTestBase.cs" />
     <Compile Include="AlfredTestExtensions.cs" />
     <Compile Include="Chat\AlfredTestTagHandler.cs" />
     <Compile Include="Chat\TagHandlerTests.cs" />

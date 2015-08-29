@@ -21,7 +21,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
     ///     Contains tests related to <see cref="TextWidget" />
     /// </summary>
     [TestFixture]
-    public sealed class TextWidgetTests
+    public sealed class TextWidgetTests : AlfredTestBase
     {
         private const string TestString = "This is a test";
 
@@ -45,7 +45,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
         ///     Builds widget parameters.
         /// </summary>
         /// <param name="name">The name.</param>
-        /// <returns>The WidgetCreationParameters.</returns>
+        /// <returns>The <see cref="WidgetCreationParameters"/>.</returns>
         [NotNull]
         private WidgetCreationParameters BuildWidgetParams(string name = "WidgetTest")
         {

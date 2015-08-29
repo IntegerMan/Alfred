@@ -25,7 +25,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
     /// </summary>
     [TestFixture]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-    public class ExplorerPageTests
+    public class ExplorerPageTests : AlfredTestBase
     {
         [NotNull]
         private ExplorerPage _page;
@@ -34,8 +34,10 @@ namespace MattEland.Ani.Alfred.Tests.Pages
         /// Sets up the environment for each test.
         /// </summary>
         [SetUp]
-        public void SetUp()
+        public override void SetUp()
         {
+            base.SetUp();
+
             _page = new ExplorerPage(new SimplePlatformProvider(), "Test Page", "TestExp");
         }
 

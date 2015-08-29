@@ -28,16 +28,17 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
     [TestFixture]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
-    public class ChatSubsystemTests
+    public class ChatSubsystemTests : AlfredTestBase
     {
 
         /// <summary>
         ///     Sets up the test environment for each test
         /// </summary>
         [SetUp]
-        public void SetUp()
+        public override void SetUp()
         {
-            var container = CommonProvider.Container.RegisterDefaultAlfredMappings();
+            base.SetUp();
+
             _chat = new ChatSubsystem(new SimplePlatformProvider(), null, "Alfredo");
         }
 

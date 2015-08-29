@@ -23,14 +23,14 @@ namespace MattEland.Ani.Alfred.Tests.Modules
     ///     Contains general test cases related to <see cref="AlfredModule" />.
     /// </summary>
     [TestFixture]
-    public class ModuleTests
+    public class ModuleTests : AlfredTestBase
     {
 
         /// <summary>
         ///     Builds widget creation parameters.
         /// </summary>
         /// <param name="name">The name.</param>
-        /// <returns>The WidgetCreationParameters.</returns>
+        /// <returns>The <see cref="WidgetCreationParameters"/>.</returns>
         [NotNull]
         private static WidgetCreationParameters BuildWidgetParams([NotNull] string name)
         {

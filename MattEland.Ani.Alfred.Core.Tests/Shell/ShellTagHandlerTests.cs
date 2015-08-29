@@ -35,8 +35,10 @@ namespace MattEland.Ani.Alfred.Tests.Shell
         /// Sets up the test environment for each test.
         /// </summary>
         [SetUp]
-        public void SetUp()
+        public override void SetUp()
         {
+            base.SetUp();
+
             InitializeChatSystem();
             var parameters = BuildTagHandlerParameters("<alfred submodule=\"core\" command=\"shutdown\" />");
             _handler = new ShellTagHandler(parameters);

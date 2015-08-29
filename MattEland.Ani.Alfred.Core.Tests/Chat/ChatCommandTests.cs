@@ -28,8 +28,10 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         ///     Sets up the testing environment prior to each test run.
         /// </summary>
         [SetUp]
-        public void SetUp()
+        public override void SetUp()
         {
+            base.SetUp();
+
             InitializeChatSystem();
         }
 

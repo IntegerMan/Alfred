@@ -13,11 +13,11 @@ using NUnit.Framework;
 namespace MattEland.Ani.Alfred.Tests.Controls
 {
     /// <summary>
-    /// An abstract class to help with user interface testing
+    /// An <c>abstract</c> class to help with user interface testing
     /// </summary>
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "IsExpressionAlwaysTrue")]
-    public abstract class UserInterfaceTestBase
+    public abstract class UserInterfaceTestBase : AlfredTestBase
     {
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace MattEland.Ani.Alfred.Tests.Controls
         }
 
         /// <summary>
-        /// Initializes the control.
+        /// Initializes the <paramref name="control"/>.
         /// </summary>
         /// <param name="control">The control.</param>
         protected void InitializeControl([NotNull] IUserInterfaceTestable control)
@@ -45,7 +45,7 @@ namespace MattEland.Ani.Alfred.Tests.Controls
         /// Asserts that a control of the given type is present.
         /// </summary>
         /// <param name="element">The element.</param>
-        /// <param name="controlType">Type of the control.</param>
+        /// <param name="controlType"><see cref="Type"/> of the control.</param>
         protected static void AssertHasControl([CanBeNull] FrameworkElement element,
                                                [NotNull] Type controlType)
         {

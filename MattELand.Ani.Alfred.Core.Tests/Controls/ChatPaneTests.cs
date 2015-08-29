@@ -12,7 +12,6 @@ using System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.PresentationShared.Controls;
 using MattEland.Ani.Alfred.Tests.Mocks;
 
@@ -34,8 +33,10 @@ namespace MattEland.Ani.Alfred.Tests.Controls
         ///     Sets up the test environment for each test.
         /// </summary>
         [SetUp]
-        public void SetUp()
+        public override void SetUp()
         {
+            base.SetUp();
+
             _chatPane = new ChatPane();
             _chatProvider = new TestChatProvider();
 
@@ -90,7 +91,7 @@ namespace MattEland.Ani.Alfred.Tests.Controls
         /// </remarks>
         [Test]
         [STAThread]
-        [ExpectedException(typeof (InvalidOperationException))]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void ChatPaneNotShouldSendTextToProviderWhenNoTextIsPresent()
         {
             _chatPane.SendChatMessage(_chatProvider, null);
@@ -107,7 +108,7 @@ namespace MattEland.Ani.Alfred.Tests.Controls
         /// </remarks>
         [Test]
         [STAThread]
-        [ExpectedException(typeof (InvalidOperationException))]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void ChatPaneNotShouldSendTextWhenNoProviderIsPresent()
         {
             _chatPane.SendChatMessage(null, TestText);

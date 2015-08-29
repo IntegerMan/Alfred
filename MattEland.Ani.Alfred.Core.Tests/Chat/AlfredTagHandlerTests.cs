@@ -36,8 +36,10 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         /// Sets up the test fixture for each test.
         /// </summary>
         [SetUp]
-        public void SetUp()
+        public override void SetUp()
         {
+            base.SetUp();
+
             InitializeChatSystem();
 
             CommonProvider.Container.RegisterDefaultAlfredMappings();

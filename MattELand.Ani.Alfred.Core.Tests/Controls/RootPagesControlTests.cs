@@ -32,8 +32,10 @@ namespace MattEland.Ani.Alfred.Tests.Controls
         /// Sets up the test environment for each test.
         /// </summary>
         [SetUp]
-        public void SetUp()
+        public override void SetUp()
         {
+            base.SetUp();
+
             _app = new ApplicationManager(enableSpeech: false);
             _control = new RootPagesControl(_app);
             _app.Alfred.Initialize();

@@ -31,8 +31,10 @@ namespace MattEland.Ani.Alfred.Tests.Controls
         /// Sets up the test environment for each test.
         /// </summary>
         [SetUp]
-        public void SetUp()
+        public override void SetUp()
         {
+            base.SetUp();
+
             _app = new ApplicationManager(enableSpeech: false);
             _control = new ExplorerControl(_app.RootNodes);
             _app.Alfred.Initialize();
@@ -42,7 +44,7 @@ namespace MattEland.Ani.Alfred.Tests.Controls
         }
 
         /// <summary>
-        /// Ensures that the control has a TreeView named TreeNodes
+        /// Ensures that the control has a <see cref="TreeView"/> named TreeNodes
         /// </summary>
         [Test, STAThread]
         public void ControlHasTreeView()
@@ -52,7 +54,7 @@ namespace MattEland.Ani.Alfred.Tests.Controls
 
 
         /// <summary>
-        /// Ensures that the control has a DataGrid named GridProperties
+        /// Ensures that the control has a <see cref="DataGrid"/> named GridProperties
         /// </summary>
         [Test, STAThread]
         public void ControlHasDataGrid()

@@ -45,7 +45,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <param name="provider">The provider.</param>
         /// <param name="factory"></param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public SystemMonitoringSubsystem([NotNull] IPlatformProvider provider, [NotNull] IMetricProviderFactory factory) : base(provider)
+        public SystemMonitoringSubsystem([NotNull] IPlatformProvider provider, [NotNull] IMetricProviderFactory factory) : base()
         {
             _cpuModule = new CpuMonitorModule(provider, factory);
             _memoryModule = new MemoryMonitorModule(provider, factory);

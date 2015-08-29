@@ -1,15 +1,14 @@
 ﻿// ---------------------------------------------------------
-// AlfredSubSystem.cs
+// AlfredSubsystem.cs
 // 
-// Created on:      08/07/2015 at 10:00 PM
-// Last Modified:   08/16/2015 at 2:21 PM
+// Created on:      08/22/2015 at 10:47 PM
+// Last Modified:   08/28/2015 at 11:43 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 using JetBrains.Annotations;
@@ -35,17 +34,10 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
-        /// <param name="provider">The provider.</param>
         /// <param name="console">The console.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        protected AlfredSubsystem([NotNull] IPlatformProvider provider,
-                                  [CanBeNull] IConsole console = null) : base(console)
+        protected AlfredSubsystem([CanBeNull] IConsole console = null) : base(console)
         {
-            if (provider == null)
-            {
-                throw new ArgumentNullException(nameof(provider));
-            }
-
+            var provider = Container.Provide<IPlatformProvider>();
             _pages = provider.CreateCollection<IAlfredPage>();
         }
 
@@ -70,23 +62,52 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         }
 
         /// <summary>
-        ///     Gets the root-level pages provided by this subsystem.
+        ///     Processes an Alfred Command. If the <paramref name="command" /> is handled,
+        ///     <paramref name="result" /> should be modified accordingly and the method should return true.
+        ///     Returning false will not stop the message from being propagated.
         /// </summary>
-        /// <value>The root-level pages.</value>
-        public IEnumerable<IAlfredPage> RootPages
+        /// <param name="command">The command.</param>
+        /// <param name="result">The result. If the command was handled, this should be updated.</param>
+        /// <returns><c>True</c> if the command was handled; otherwise false.</returns>
+        public virtual bool ProcessAlfredCommand(
+            ChatCommand command,
+            [CanBeNull] AlfredCommandResult result)
         {
-            get { return _pages.Where(page => page.IsRootLevel); }
+            /* If there's no result, there's no way any feedback could get back. 
+            This is just here to protect against bad input */
+
+            if (result == null) { return false; }
+
+            // Only route messages to sub-components if they don't have a destination
+            if (command.Subsystem.IsEmpty() || command.Subsystem.Matches(Id))
+            {
+                foreach (var page in Pages)
+                {
+                    if (page.ProcessAlfredCommand(command, result)) { return true; }
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
-        ///     Gets the identifier for the subsystem to be used in command routing.
+        ///     Gets the dependency injection <see cref="IObjectContainer"/>.
+        /// </summary>
+        /// <value>The dependency injection container.</value>
+        public IObjectContainer Container
+        {
+            get { return CommonProvider.Container; }
+        }
+
+        /// <summary>
+        ///     Gets the identifier for the <see cref="IAlfredSubsystem"/> to be used in command routing.
         /// </summary>
         /// <value>The identifier for the subsystem.</value>
         [NotNull]
         public abstract string Id { get; }
 
         /// <summary>
-        ///     Gets the pages associated with this subsystem
+        ///     Gets the pages associated with the <see cref="IAlfredSubsystem"/>
         /// </summary>
         /// <value>The pages.</value>
         [ItemNotNull]
@@ -96,10 +117,31 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         }
 
         /// <summary>
-        ///     Registers a page.
+        ///     Gets the root-level pages provided by the <see cref="IAlfredSubsystem"/>.
+        /// </summary>
+        /// <value>The root-level pages.</value>
+        public IEnumerable<IAlfredPage> RootPages
+        {
+            get { return _pages.Where(page => page.IsRootLevel); }
+        }
+
+        /// <summary>
+        ///     Gets the name of the broad categorization or type that the item is.
+        /// </summary>
+        /// <example>
+        ///     Some examples of ItemTypeName values might be "Folder", "Application", "User", etc.
+        /// </example>
+        /// <value>The item type's name.</value>
+        public override string ItemTypeName
+        {
+            get { return "Subsystem"; }
+        }
+
+        /// <summary>
+        ///     Registers a <paramref name="page" />.
         /// </summary>
         /// <param name="page">The page.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="page"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="page" /> is <see langword="null" />.</exception>
         /// <exception cref="InvalidOperationException">Cannot register page without an Alfred instance</exception>
         protected void Register([NotNull] IAlfredPage page)
         {
@@ -108,7 +150,8 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
 
             if (AlfredInstance == null)
             {
-                throw new InvalidOperationException("Cannot register page without an Alfred instance");
+                throw new InvalidOperationException(
+                    "Cannot register page without an Alfred instance");
             }
 
             AlfredInstance.Register(page);
@@ -123,57 +166,6 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
 
             _pages.Clear();
         }
-
-        /// <summary>
-        /// Processes an Alfred Command. If the command is handled, result should be modified accordingly and the method should return true. Returning false will not stop the message from being propogated.
-        /// </summary>
-        /// <param name="command">The command.</param>
-        /// <param name="result">The result. If the command was handled, this should be updated.</param>
-        /// <returns><c>True</c> if the command was handled; otherwise false.</returns>
-        public virtual bool ProcessAlfredCommand(ChatCommand command,
-                                                 [CanBeNull] AlfredCommandResult result)
-        {
-            /* If there's no result, there's no way any feedback could get back. 
-            This is just here to protect against bad input */
-
-            if (result == null) { return false; }
-
-            // Only route messages to sub-components if they don't have a destination
-            if (command.Subsystem.IsEmpty() || command.Subsystem.Matches(Id))
-            {
-                foreach (var page in Pages)
-                {
-                    if (page.ProcessAlfredCommand(command, result))
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the name of the broad categorization or type that this item is.
-        /// </summary>
-        /// <example>
-        /// Some examples of ItemTypeName values might be "Folder", "Application", "User", etc.
-        /// </example>
-        /// <value>The item type's name.</value>
-        public override string ItemTypeName
-        {
-            get { return "Subsystem"; }
-        }
-
-        /// <summary>
-        /// Gets the dependency injection container.
-        /// </summary>
-        /// <value>The dependency injection container.</value>
-        public IObjectContainer Container
-        {
-            get { return CommonProvider.Container; }
-        }
-
     }
 
 }
