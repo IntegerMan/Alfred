@@ -12,7 +12,6 @@ using System.Diagnostics;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Common.Providers;
@@ -30,10 +29,8 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
         /// <param name="provider">The provider.</param>
-        /// <param name="console">The console.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public MindExplorerSubsystem([NotNull] IObjectContainer container, [NotNull] IPlatformProvider provider,
-                                     [CanBeNull] IConsole console = null) : base(container, console)
+        public MindExplorerSubsystem([NotNull] IObjectContainer container, [NotNull] IPlatformProvider provider) : base(container)
         {
             MindExplorerPage = new ExplorerPage(container, provider, "Mind Explorer", "MindMap");
         }

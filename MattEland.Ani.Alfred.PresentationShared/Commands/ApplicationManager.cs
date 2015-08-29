@@ -338,11 +338,11 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             }
 
             // Initialize Chat
-            _chatSubsystem = new ChatSubsystem(Container, _alfred.Console, _alfred.Name);
+            _chatSubsystem = new ChatSubsystem(Container, _alfred.Name);
             _alfred.Register(_chatSubsystem);
 
             // Initialize Mind Explorer
-            _mindExplorerSubsystem = new MindExplorerSubsystem(Container, platformProvider, _alfred.Console);
+            _mindExplorerSubsystem = new MindExplorerSubsystem(Container, platformProvider);
             _alfred.Register(_mindExplorerSubsystem);
         }
 

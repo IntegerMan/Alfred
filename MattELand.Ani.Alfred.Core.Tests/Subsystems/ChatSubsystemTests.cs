@@ -38,7 +38,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         {
             base.SetUp();
 
-            _chat = new ChatSubsystem(Container, null, "Alfredo");
+            _chat = new ChatSubsystem(Container, "Alfredo");
         }
 
         [NotNull]

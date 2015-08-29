@@ -13,7 +13,6 @@ using System.Linq;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
 using MattEland.Common.Providers;
@@ -32,10 +31,10 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         private readonly ICollection<IAlfredPage> _pages;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
+        /// Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
-        /// <param name="console">The console.</param>
-        protected AlfredSubsystem([NotNull] IObjectContainer container, [CanBeNull] IConsole console = null) : base(container)
+        /// <param name="container">The container.</param>
+        protected AlfredSubsystem([NotNull] IObjectContainer container) : base(container)
         {
             var provider = container.Provide<IPlatformProvider>();
             _pages = provider.CreateCollection<IAlfredPage>();

@@ -39,11 +39,9 @@ namespace MattEland.Ani.Alfred.Chat
         /// Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
         /// <param name="container">The container.</param>
-        /// <param name="console">The console.</param>
         /// <param name="engineName">Name of the chat engine.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public ChatSubsystem([NotNull] IObjectContainer container, [CanBeNull] IConsole console,
-            [NotNull] string engineName) : base(container, console)
+        public ChatSubsystem([NotNull] IObjectContainer container, [NotNull] string engineName) : base(container)
         {
             // Instantiate composite objects
             ChatHandler = new AimlStatementHandler(container, engineName);
