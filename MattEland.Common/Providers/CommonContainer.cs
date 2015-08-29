@@ -31,7 +31,7 @@ namespace MattEland.Common.Providers
     ///     container.
     /// </remarks>
     [PublicAPI]
-    public class CommonContainer : IObjectProvider
+    public class CommonContainer : IContainer
     {
 
         /// <summary>
@@ -40,7 +40,11 @@ namespace MattEland.Common.Providers
         [CanBeNull]
         private IObjectProvider _fallbackProvider;
 
-        private CommonContainer _parent;
+        /// <summary>
+        /// The backing field for <see cref="Parent"/>
+        /// </summary>
+        [CanBeNull]
+        private IContainer _parent;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="CommonContainer" /> class.
@@ -53,7 +57,7 @@ namespace MattEland.Common.Providers
         ///     Initializes a new instance of the <see cref="CommonContainer" /> class.
         /// </summary>
         /// <param name="parent">The parent container.</param>
-        public CommonContainer([CanBeNull] CommonContainer parent)
+        public CommonContainer([CanBeNull] IContainer parent)
         {
             Mappings = new Dictionary<Type, IObjectProvider>();
             InstanceProvider = new InstanceProvider();
@@ -61,11 +65,13 @@ namespace MattEland.Common.Providers
             Parent = parent;
         }
 
-        /// <exception cref="InvalidOperationException"
-        ///            accessor="set">
-        ///     Cannot set a container to have itself as a parent
-        /// </exception>
-        public CommonContainer Parent
+        /// <summary>
+        /// Gets or sets the parent container.
+        /// </summary>
+        /// <value>The parent.</value>
+        /// <exception cref="System.InvalidOperationException"></exception>
+        /// <exception cref="InvalidOperationException">Cannot set a container to have itself as a parent</exception>
+        public IContainer Parent
         {
             get { return _parent; }
             set
@@ -400,7 +406,7 @@ namespace MattEland.Common.Providers
         /// <returns>The object provider.</returns>
         [NotNull]
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-        private IObjectProvider GetObjectProvider([NotNull] Type requestedType)
+        public IObjectProvider GetObjectProvider([NotNull] Type requestedType)
         {
             //- TODO: It might be nice to have an option to disable defaulting and throw an exception instead
 
