@@ -37,8 +37,8 @@ namespace MattEland.Ani.Alfred.Tests.Pages
 
             var bootstrapper = new AlfredBootstrapper();
             _alfred = bootstrapper.Create();
-            _subsystem = new TestSubsystem();
-            _page = new TestPage();
+            _subsystem = new TestSubsystem(Container);
+            _page = new TestPage(Container);
 
             _subsystem.AddAutoRegisterPage(_page);
             _alfred.Register(_subsystem);

@@ -48,7 +48,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
             _alfred = bootstrapper.Create();
 
             _provider = new SimplePlatformProvider();
-            _subsystem = new MindExplorerSubsystem(_provider);
+            _subsystem = new MindExplorerSubsystem(Container, _provider);
 
             _page = _subsystem.MindExplorerPage;
         }

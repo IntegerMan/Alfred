@@ -18,6 +18,7 @@ using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Common;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
@@ -40,18 +41,19 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         private readonly DiskMonitorModule _diskModule;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
+        /// Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
+        /// <param name="container">The container.</param>
         /// <param name="provider">The provider.</param>
-        /// <param name="factory"></param>
+        /// <param name="factory">The factory.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public SystemMonitoringSubsystem([NotNull] IPlatformProvider provider, [NotNull] IMetricProviderFactory factory) : base()
+        public SystemMonitoringSubsystem([NotNull] IObjectContainer container, [NotNull] IPlatformProvider provider, [NotNull] IMetricProviderFactory factory) : base(container)
         {
-            _cpuModule = new CpuMonitorModule(provider, factory);
-            _memoryModule = new MemoryMonitorModule(provider, factory);
-            _diskModule = new DiskMonitorModule(provider, factory);
+            _cpuModule = new CpuMonitorModule(container, provider, factory);
+            _memoryModule = new MemoryMonitorModule(container, provider, factory);
+            _diskModule = new DiskMonitorModule(container, provider, factory);
 
-            _page = new AlfredModuleListPage(provider, Resources.SystemMonitoringSystem_Name.NonNull(), "Sys");
+            _page = new AlfredModuleListPage(container, provider, Resources.SystemMonitoringSystem_Name.NonNull(), "Sys");
         }
 
         /// <summary>

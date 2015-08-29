@@ -14,6 +14,7 @@ using System.Linq;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Pages
 {
@@ -34,10 +35,10 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <exception cref="System.ArgumentNullException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentNullException"><paramref name="name" /> is <see langword="null" />.</exception>
-        public ExplorerPage([NotNull] IPlatformProvider provider,
+        public ExplorerPage([NotNull] IObjectContainer container, [NotNull] IPlatformProvider provider,
                             [NotNull] string name,
                             [NotNull] string id,
-                            [CanBeNull] string displayName = "Name") : base(name, id)
+                            [CanBeNull] string displayName = "Name") : base(container, name, id)
         {
             //- Validation
             if (provider == null) { throw new ArgumentNullException(nameof(provider)); }

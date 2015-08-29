@@ -31,22 +31,22 @@ namespace MattEland.Ani.Alfred.Tests
     /// </summary>
     [TestFixture]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-    public sealed class AlfredProviderTests
+    public sealed class AlfredProviderTests : AlfredTestBase
     {
         /// <summary>
         ///     Sets up the Alfred provider's tests.
         /// </summary>
         [SetUp]
-        public void SetupAlfredProviderTests()
+        public override void SetUp()
         {
-            CommonProvider.Container.RegisterDefaultAlfredMappings();
+            base.SetUp();
 
             var bootstrapper = new AlfredBootstrapper();
             _alfred = bootstrapper.Create();
             _alfred.Console = new SimpleConsole();
 
-            _subsystem = new TestSubsystem(_alfred.PlatformProvider);
-            _page = new AlfredModuleListPage(_alfred.PlatformProvider, "Test Page", "Test");
+            _subsystem = new TestSubsystem(Container, _alfred.PlatformProvider);
+            _page = new AlfredModuleListPage(Container, _alfred.PlatformProvider, "Test Page", "Test");
         }
 
         [NotNull]
@@ -72,7 +72,7 @@ namespace MattEland.Ani.Alfred.Tests
         [Test]
         public void AddingStandardModulesAddsModules()
         {
-            _alfred.Register(new AlfredCoreSubsystem(_alfred.PlatformProvider));
+            _alfred.Register(new AlfredCoreSubsystem(Container, _alfred.PlatformProvider));
 
             var numModules =
                 _alfred.Subsystems.SelectMany(subsystem => subsystem.Pages)
@@ -173,7 +173,7 @@ namespace MattEland.Ani.Alfred.Tests
         [Test]
         public void InitializingInitializesComponents()
         {
-            _alfred.Register(new AlfredCoreSubsystem(_alfred.PlatformProvider));
+            _alfred.Register(new AlfredCoreSubsystem(Container, _alfred.PlatformProvider));
 
             _alfred.Initialize();
 
@@ -205,14 +205,14 @@ namespace MattEland.Ani.Alfred.Tests
         public void ModulesCannotBeAddedWhileOnline()
         {
             _alfred.Initialize();
-            _alfred.Register(new AlfredCoreSubsystem(_alfred.PlatformProvider));
+            _alfred.Register(new AlfredCoreSubsystem(Container, _alfred.PlatformProvider));
         }
 
         [Test]
         [ExpectedException(typeof(InvalidOperationException))]
         public void ModulesCannotUpdateWhileOffline()
         {
-            _alfred.Register(new AlfredCoreSubsystem(_alfred.PlatformProvider));
+            _alfred.Register(new AlfredCoreSubsystem(Container, _alfred.PlatformProvider));
 
             _alfred.Update();
         }
@@ -221,7 +221,7 @@ namespace MattEland.Ani.Alfred.Tests
         [ExpectedException(typeof(InvalidOperationException))]
         public void RegisteringAWidgetMultipleTimesThrowsAnException()
         {
-            var testModule = new AlfredTestModule();
+            var testModule = new AlfredTestModule(Container);
 
             var textWidget = new TextWidget(BuildWidgetParams());
             testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
@@ -246,7 +246,7 @@ namespace MattEland.Ani.Alfred.Tests
         [Test]
         public void RegisteringWidgetAtInitializeAndShutdownLeavesOneCopyInListAtReinitialize()
         {
-            var testModule = new AlfredTestModule();
+            var testModule = new AlfredTestModule(Container);
 
             var textWidget = new TextWidget(BuildWidgetParams());
             testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
@@ -322,7 +322,7 @@ namespace MattEland.Ani.Alfred.Tests
         [Test]
         public void ShuttingDownShutsDownComponents()
         {
-            _alfred.Register(new AlfredCoreSubsystem(_alfred.PlatformProvider));
+            _alfred.Register(new AlfredCoreSubsystem(Container, _alfred.PlatformProvider));
 
             _alfred.Initialize();
             _alfred.Shutdown();

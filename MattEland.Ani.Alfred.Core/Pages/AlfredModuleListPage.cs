@@ -16,6 +16,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Pages
 {
@@ -35,9 +36,10 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <param name="name">The name.</param>
         /// <param name="id">The identifier.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public AlfredModuleListPage([NotNull] IPlatformProvider provider,
+        public AlfredModuleListPage([NotNull] IObjectContainer container,
+            [NotNull] IPlatformProvider provider,
                                     [NotNull] string name,
-                                    [NotNull] string id) : base(name, id)
+                                    [NotNull] string id) : base(container, name, id)
         {
             if (provider == null)
             {

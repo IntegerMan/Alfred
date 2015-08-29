@@ -35,9 +35,9 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
         /// <param name="console">The console.</param>
-        protected AlfredSubsystem([CanBeNull] IConsole console = null) : base(console)
+        protected AlfredSubsystem([NotNull] IObjectContainer container, [CanBeNull] IConsole console = null) : base(container)
         {
-            var provider = Container.Provide<IPlatformProvider>();
+            var provider = container.Provide<IPlatformProvider>();
             _pages = provider.CreateCollection<IAlfredPage>();
         }
 

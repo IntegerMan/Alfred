@@ -2,7 +2,7 @@
 // AlfredCoreSubsystem.cs
 // 
 // Created on:      08/22/2015 at 10:47 PM
-// Last Modified:   08/26/2015 at 12:56 PM
+// Last Modified:   08/29/2015 at 12:28 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -13,6 +13,7 @@ using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Common;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Subsystems
 {
@@ -48,24 +49,28 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
-        public AlfredCoreSubsystem() : this(new SimplePlatformProvider())
+        public AlfredCoreSubsystem([NotNull] IObjectContainer container)
+            : this(container, new SimplePlatformProvider())
         {
         }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
+        /// <param name="container">The container.</param>
         /// <param name="provider">The provider.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        public AlfredCoreSubsystem([NotNull] IPlatformProvider provider) : base()
+        /// <exception cref="System.ArgumentNullException" />
+        public AlfredCoreSubsystem(
+            [NotNull] IObjectContainer container,
+            [NotNull] IPlatformProvider provider) : base(container)
         {
-            _controlPage = new AlfredModuleListPage(provider, ControlPageName, "Core");
+            _controlPage = new AlfredModuleListPage(container, provider, ControlPageName, "Core");
 
             // Instantiate the modules
-            _powerModule = new AlfredPowerModule(provider);
-            _timeModule = new AlfredTimeModule(provider);
-            _systemsModule = new AlfredSubsystemListModule(provider);
-            _pagesModule = new AlfredPagesListModule(provider);
+            _powerModule = new AlfredPowerModule(container, provider);
+            _timeModule = new AlfredTimeModule(container, provider);
+            _systemsModule = new AlfredSubsystemListModule(container, provider);
+            _pagesModule = new AlfredPagesListModule(container, provider);
         }
 
         /// <summary>
@@ -123,7 +128,8 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
             // Don't include the event log page if there are no events
             if (AlfredInstance?.Console != null)
             {
-                _eventLogPage = new AlfredEventLogPage(AlfredInstance.PlatformProvider,
+                _eventLogPage = new AlfredEventLogPage(Container,
+                                                       AlfredInstance.PlatformProvider,
                                                        AlfredInstance.Console,
                                                        EventLogPageName);
                 Register(_eventLogPage);

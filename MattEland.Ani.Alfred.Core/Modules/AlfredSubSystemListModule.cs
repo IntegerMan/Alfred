@@ -18,6 +18,7 @@ using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Common;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Modules
 {
@@ -32,12 +33,13 @@ namespace MattEland.Ani.Alfred.Core.Modules
         private readonly ICollection<WidgetBase> _widgets;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredSubsystemListModule" /> class.
+        /// Initializes a new instance of the <see cref="AlfredSubsystemListModule" /> class.
         /// </summary>
+        /// <param name="container">The container.</param>
         /// <param name="platformProvider">The platform provider.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        internal AlfredSubsystemListModule([NotNull] IPlatformProvider platformProvider)
-            : base(platformProvider)
+        internal AlfredSubsystemListModule([NotNull] IObjectContainer container, [NotNull] IPlatformProvider platformProvider)
+            : base(container, platformProvider)
         {
             _widgets = platformProvider.CreateCollection<WidgetBase>();
         }

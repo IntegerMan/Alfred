@@ -13,6 +13,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Common;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
@@ -42,16 +43,16 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// </summary>
         /// <param name="platformProvider">The platform provider.</param>
         /// <param name="factory">The metric provider factory</param>
-        public DiskMonitorModule([NotNull] IPlatformProvider platformProvider,
-                                 [NotNull] IMetricProviderFactory factory) : base(platformProvider, factory)
+        internal DiskMonitorModule([NotNull] IObjectContainer container, [NotNull] IPlatformProvider platformProvider,
+                                 [NotNull] IMetricProviderFactory factory) : base(container, platformProvider, factory)
         {
             _diskReadCounter = MetricProvider.Build(DiskCategoryName, DiskReadCounterName, TotalInstanceName);
             _diskWriteCounter = MetricProvider.Build(DiskCategoryName, DiskWriteCounterName, TotalInstanceName);
 
-            _diskReadWidget = CreatePercentWidget(BuildWidgetParameters("progDiskTotalRead"));
+            _diskReadWidget = CreatePercentWidget(BuildWidgetParameters(@"progDiskTotalRead"));
             _diskReadWidget.Text = Resources.DiskReadLabel;
 
-            _diskWriteWidget = CreatePercentWidget(BuildWidgetParameters("progDiskTotalWrite"));
+            _diskWriteWidget = CreatePercentWidget(BuildWidgetParameters(@"progDiskTotalWrite"));
             _diskWriteWidget.Text = Resources.DiskWriteLabel;
 
         }
@@ -72,7 +73,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// Gets the disk read utilization percentage.
         /// </summary>
         /// <value>The read utilization.</value>
-        public float ReadUtilization
+        internal float ReadUtilization
         {
             get { return _diskReadCounter.NextValue(); }
         }
@@ -81,7 +82,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// Gets the write utilization percentage.
         /// </summary>
         /// <value>The write utilization.</value>
-        public float WriteUtilization
+        internal float WriteUtilization
         {
             get { return _diskWriteCounter.NextValue(); }
         }

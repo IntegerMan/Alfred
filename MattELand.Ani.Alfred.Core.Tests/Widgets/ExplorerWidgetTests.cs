@@ -53,7 +53,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
         [Test]
         public void ExplorerPageCanBeCreated()
         {
-            var page = new ExplorerPage(_provider, TestPageName, TestPageId);
+            var page = new ExplorerPage(Container, _provider, TestPageName, TestPageId);
             Assert.AreEqual(TestPageId, page.Id);
             Assert.AreEqual(TestPageName, page.Name);
         }
@@ -64,7 +64,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
         [Test, ExpectedException(typeof(ArgumentNullException))]
         public void ExplorerPageThrowsOnNoProvider()
         {
-            new ExplorerPage(null, TestPageName, TestPageId);
+            new ExplorerPage(Container, null, TestPageName, TestPageId);
         }
         /// <summary>
         /// Simple constructor test for <see cref="ExplorerPage"/> checking parameter validation on name
@@ -72,7 +72,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
         [Test, ExpectedException(typeof(ArgumentNullException))]
         public void ExplorerPageThrowsOnNoName()
         {
-            new ExplorerPage(_provider, null, TestPageId);
+            new ExplorerPage(Container, _provider, null, TestPageId);
         }
         /// <summary>
         /// Simple constructor test for <see cref="ExplorerPage"/> checking parameter validation on id
@@ -80,7 +80,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
         [Test, ExpectedException(typeof(ArgumentNullException))]
         public void ExplorerPageThrowsOnNoId()
         {
-            new ExplorerPage(_provider, TestPageName, null);
+            new ExplorerPage(Container, _provider, TestPageName, null);
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
         [Test]
         public void ExplorerPageIsVisible()
         {
-            var page = new ExplorerPage(_provider, TestPageName, TestPageId);
+            var page = new ExplorerPage(Container, _provider, TestPageName, TestPageId);
 
             Assert.That(page.IsVisible);
         }

@@ -14,6 +14,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Common;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Modules
 {
@@ -24,30 +25,28 @@ namespace MattEland.Ani.Alfred.Core.Modules
     {
 
         /// <summary>
-        ///     Initializes a new instance of the
-        ///     <see cref="AlfredPowerModule" />
-        ///     class.
+        /// Initializes a new instance of the
+        /// <see cref="AlfredPowerModule" />
+        /// class.
         /// </summary>
-        /// <exception cref="System.ArgumentNullException">
-        /// </exception>
-        /// <param name="platformProvider">
-        ///     The platform provider.
-        /// </param>
-        public AlfredPowerModule([NotNull] IPlatformProvider platformProvider)
-            : base(platformProvider)
+        /// <param name="container">The container.</param>
+        /// <param name="platformProvider">The platform provider.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        public AlfredPowerModule([NotNull] IObjectContainer container, [NotNull] IPlatformProvider platformProvider)
+            : base(container, platformProvider)
         {
             AlfredStatusWidget = new TextWidget(Resources.AlfredCoreModule_AlfredNotSet,
-                                                BuildWidgetParameters("lblStatus"));
+                                                BuildWidgetParameters(@"lblStatus"));
 
             var initializeCommand = platformProvider.CreateCommand(ExecuteInitializeCommand);
             InitializeButton = new ButtonWidget(Resources.InitializeButtonText,
                                                 initializeCommand,
-                                                BuildWidgetParameters("btnInitialize"));
+                                                BuildWidgetParameters(@"btnInitialize"));
 
             var shutdownCommand = platformProvider.CreateCommand(ExecuteShutdownCommand);
             ShutdownButton = new ButtonWidget(Resources.ShutdownButtonText,
                                               shutdownCommand,
-                                              BuildWidgetParameters("btnShutdown"));
+                                              BuildWidgetParameters(@"btnShutdown"));
         }
 
         /// <summary>
@@ -61,9 +60,9 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        ///     Gets the alfred status widget.
+        ///     Gets the Alfred status widget.
         /// </summary>
-        /// <value>The alfred status widget.</value>
+        /// <value>The Alfred status widget.</value>
         [NotNull]
         public TextWidget AlfredStatusWidget { get; }
 
@@ -149,7 +148,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <summary>
         ///     Called when the component is registered.
         /// </summary>
-        /// <param name="alfred">The alfred.</param>
+        /// <param name="alfred">The Alfred instance.</param>
         public override void OnRegistered(IAlfred alfred)
         {
             base.OnRegistered(alfred);
@@ -171,7 +170,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        ///     Updates the alfred provider status text.
+        ///     Updates the Alfred provider status text.
         /// </summary>
         private void UpdateAlfredProviderStatus()
         {

@@ -50,7 +50,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
             const string ButtonName = "btnBar";
 
             // Register our controls
-            var module = new AlfredTestModule();
+            var module = new AlfredTestModule(Container);
             module.WidgetsToRegisterOnInitialize.Add(new TextWidget(BuildWidgetParams(TextBlockName)));
             module.WidgetsToRegisterOnInitialize.Add(new ButtonWidget(BuildWidgetParams(ButtonName)));
 

@@ -14,6 +14,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Common;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
@@ -26,24 +27,24 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         private const string MemoryUtilizationBytesCounterName = "% Committed Bytes in Use";
 
         [NotNull]
-        private readonly MetricProviderBase _memUsedBytesCounter;
+        private readonly MetricProviderBase _usedBytesCounter;
 
         [NotNull]
-        private readonly AlfredProgressBarWidget _memWidget;
+        private readonly AlfredProgressBarWidget _widget;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="MemoryMonitorModule" /> class.
         /// </summary>
         /// <param name="platformProvider">The platform provider.</param>
         /// <param name="factory">The metric provider factory.</param>
-        public MemoryMonitorModule([NotNull] IPlatformProvider platformProvider,
+        internal MemoryMonitorModule([NotNull] IObjectContainer container, [NotNull] IPlatformProvider platformProvider,
                                    [NotNull] IMetricProviderFactory factory)
-            : base(platformProvider, factory)
+            : base(container, platformProvider, factory)
         {
-            _memUsedBytesCounter = MetricProvider.Build(MemoryCategoryName,
+            _usedBytesCounter = MetricProvider.Build(MemoryCategoryName,
                                                         MemoryUtilizationBytesCounterName);
 
-            _memWidget = new AlfredProgressBarWidget(BuildWidgetParameters("progMemoryUsed"))
+            _widget = new AlfredProgressBarWidget(BuildWidgetParameters(@"progMemoryUsed"))
             {
                 Minimum = 0,
                 Maximum = 100,
@@ -69,9 +70,9 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// Gets the percent of memory that is utilized.
         /// </summary>
         /// <value>The memory utilization percentage.</value>
-        public float MemoryUtilization
+        internal float MemoryUtilization
         {
-            get { return _memUsedBytesCounter.NextValue(); }
+            get { return _usedBytesCounter.NextValue(); }
         }
 
         /// <summary>
@@ -79,7 +80,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// </summary>
         public void Dispose()
         {
-            _memUsedBytesCounter.TryDispose();
+            _usedBytesCounter.TryDispose();
         }
 
         /// <summary>
@@ -87,16 +88,16 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// </summary>
         protected override void ShutdownProtected()
         {
-            _memWidget.Value = 0;
+            _widget.Value = 0;
         }
 
         /// <summary>
         ///     Handles module initialization events
         /// </summary>
-        /// <param name="alfred">The alfred instance.</param>
+        /// <param name="alfred">The Alfred instance.</param>
         protected override void InitializeProtected(IAlfred alfred)
         {
-            Register(_memWidget);
+            Register(_widget);
         }
 
         /// <summary>
@@ -104,9 +105,9 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// </summary>
         protected override void UpdateProtected()
         {
-            var usedMemory = GetNextCounterValueSafe(_memUsedBytesCounter);
+            var usedMemory = GetNextCounterValueSafe(_usedBytesCounter);
 
-            _memWidget.Value = usedMemory;
+            _widget.Value = usedMemory;
         }
     }
 }

@@ -60,11 +60,11 @@ namespace MattEland.Ani.Alfred.Chat
         ///     Initializes a new instance of the <see cref="T:System.Object" /> class using the current
         ///     directory for the settings path.
         /// </summary>
-        /// <param name="engineName">Name of the chat engine.</param>
         /// <param name="container">The container to use for inversion of control</param>
+        /// <param name="engineName">Name of the chat engine.</param>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
-        public AimlStatementHandler([NotNull] string engineName, [NotNull] IObjectContainer container)
+        public AimlStatementHandler([NotNull] IObjectContainer container, [NotNull] string engineName)
         {
             //- Validate
             if (engineName.IsEmpty())

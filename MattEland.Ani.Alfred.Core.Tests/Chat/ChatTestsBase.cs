@@ -41,8 +41,6 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         private TestAlfred _alfred;
 
         private IChatProvider _chat;
-        private ChatSubsystem _chatSubsystem;
-        private AlfredCoreSubsystem _coreSubsystem;
 
         [NotNull]
         private SystemMonitoringSubsystem _sysSubsystem;
@@ -51,56 +49,41 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         private TestSubsystem _testSubsystem;
 
         [NotNull]
-        private User _user;
-
-        [NotNull]
-        private ValueMetricProviderFactory _metricProviderFactory;
-
-        [NotNull]
-        private TestShell _shell;
-
-        [NotNull]
         public TestShell Shell
         {
             [DebuggerStepThrough]
-            get
-            { return _shell; }
+            get;
+            private set;
         }
 
         [NotNull]
         public ValueMetricProviderFactory MetricProviderFactory
         {
             [DebuggerStepThrough]
-            get
-            { return _metricProviderFactory; }
+            get;
+            private set;
         }
 
         [NotNull]
         public User User
         {
             [DebuggerStepThrough]
-            get
-            {
-                return _user;
-            }
+            get;
+            private set;
         }
 
         public AlfredCoreSubsystem CoreSubsystem
         {
             [DebuggerStepThrough]
-            get
-            {
-                return _coreSubsystem;
-            }
+            get;
+            private set;
         }
 
         public ChatSubsystem ChatSubsystem
         {
             [DebuggerStepThrough]
-            get
-            {
-                return _chatSubsystem;
-            }
+            get;
+            private set;
         }
 
         /// <summary>
@@ -248,32 +231,32 @@ namespace MattEland.Ani.Alfred.Tests.Chat
 
             // Add Subsystems to Alfred
 
-            _coreSubsystem = new AlfredCoreSubsystem(_alfred.PlatformProvider);
-            _alfred.Register(_coreSubsystem);
+            CoreSubsystem = new AlfredCoreSubsystem(CommonProvider.Container, _alfred.PlatformProvider);
+            _alfred.Register(CoreSubsystem);
 
-            _chatSubsystem = new ChatSubsystem(_alfred.PlatformProvider, _alfred.Console, "Alfredo");
-            _alfred.Register(_chatSubsystem);
+            ChatSubsystem = new ChatSubsystem(Container, _alfred.Console, "Alfredo");
+            _alfred.Register(ChatSubsystem);
 
-            _testSubsystem = new TestSubsystem(_alfred.PlatformProvider);
+            _testSubsystem = new TestSubsystem(Container, _alfred.PlatformProvider);
             _alfred.Register(_testSubsystem);
 
-            _metricProviderFactory = new ValueMetricProviderFactory();
-            _sysSubsystem = new SystemMonitoringSubsystem(_alfred.PlatformProvider, _metricProviderFactory);
+            MetricProviderFactory = new ValueMetricProviderFactory();
+            _sysSubsystem = new SystemMonitoringSubsystem(Container, _alfred.PlatformProvider, MetricProviderFactory);
             _alfred.Register(_sysSubsystem);
 
             // Store Chat Handler Details
-            var chatHandler = _chatSubsystem.ChatHandler;
+            var chatHandler = ChatSubsystem.ChatHandler;
             _chat = chatHandler;
 
             // Store Engine
             Assert.IsNotNull(chatHandler.ChatEngine, "Chat Engine was null");
             Engine = chatHandler.ChatEngine;
             Engine.LoadAimlFromString(Resources.AimlTestAssets.NonNull());
-            _user = new User("Test User");
+            User = new User("Test User");
 
             // Set up a shell handler to respond to events
-            _shell = new TestShell();
-            _alfred.Register(_shell);
+            Shell = new TestShell();
+            _alfred.Register(Shell);
 
             // Start Alfred - doesn't make sense to have a chat test that doesn't need Alfred online first.
             _alfred.Initialize();

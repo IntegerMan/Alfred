@@ -16,6 +16,7 @@ using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Common;
+using MattEland.Common.Providers;
 
 using Res = MattEland.Ani.Alfred.Chat.Resources;
 
@@ -35,20 +36,18 @@ namespace MattEland.Ani.Alfred.Chat
         private readonly AlfredCommandRouter _commandRouter = new AlfredCommandRouter();
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
+        /// Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
-        /// <param name="provider">The provider.</param>
+        /// <param name="container">The container.</param>
         /// <param name="console">The console.</param>
         /// <param name="engineName">Name of the chat engine.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public ChatSubsystem(
-            [NotNull] IPlatformProvider provider,
-            [CanBeNull] IConsole console,
-            [NotNull] string engineName) : base(console)
+        public ChatSubsystem([NotNull] IObjectContainer container, [CanBeNull] IConsole console,
+            [NotNull] string engineName) : base(container, console)
         {
             // Instantiate composite objects
-            ChatHandler = new AimlStatementHandler(engineName, Container);
-            _chatPage = new ChatPage(Res.ChatModuleName.NonNull(), ChatHandler);
+            ChatHandler = new AimlStatementHandler(container, engineName);
+            _chatPage = new ChatPage(container, Res.ChatModuleName.NonNull(), ChatHandler);
         }
 
         /// <summary>

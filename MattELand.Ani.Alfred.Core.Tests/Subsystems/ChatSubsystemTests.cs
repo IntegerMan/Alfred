@@ -14,7 +14,6 @@ using System.Linq;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat;
-using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.PresentationShared.Commands;
 using MattEland.Common.Providers;
 
@@ -39,7 +38,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         {
             base.SetUp();
 
-            _chat = new ChatSubsystem(new SimplePlatformProvider(), null, "Alfredo");
+            _chat = new ChatSubsystem(Container, null, "Alfredo");
         }
 
         [NotNull]

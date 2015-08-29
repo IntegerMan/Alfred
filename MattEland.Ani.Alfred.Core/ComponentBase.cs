@@ -2,7 +2,7 @@
 // ComponentBase.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   08/25/2015 at 5:44 PM
+// Last Modified:   08/29/2015 at 12:09 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -21,11 +21,12 @@ using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Common;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core
 {
     /// <summary>
-    ///     An abstract class containing most common shared functionality between Subsystems and Modules
+    ///     An <see langword="abstract"/> class containing most common shared functionality between Subsystems and Modules
     /// </summary>
     public abstract class ComponentBase : INotifyPropertyChanged, IPropertyProvider
     {
@@ -34,27 +35,33 @@ namespace MattEland.Ani.Alfred.Core
         [ItemNotNull]
         private IEnumerable<IAlfredComponent> _childrenOnShutdown;
 
-        /// <summary>
-        ///     The logging console
-        /// </summary>
+        private AlfredStatus _status;
+
         [CanBeNull]
         private IConsole _console;
 
-        private AlfredStatus _status;
-
         /// <summary>
-        ///     Initializes a new instance of the <see cref="ComponentBase" /> class.
+        /// Initializes a new instance of the <see cref="ComponentBase"/> class.
         /// </summary>
-        /// <param name="console">The console.</param>
-        protected ComponentBase([CanBeNull] IConsole console = null)
+        /// <param name="container">The container.</param>
+        /// <exception cref="System.ArgumentNullException"><paramref name="container" /> is <see langword="null" />.</exception>
+        protected ComponentBase([NotNull] IObjectContainer container)
         {
-            _console = console;
+            if (container == null) { throw new ArgumentNullException(nameof(container)); }
+            Container = container;
         }
 
         /// <summary>
-        ///     Gets the alfred instance associated with this component.
+        /// Gets the <see cref="IObjectContainer"/> used to provide types.
         /// </summary>
-        /// <value>The alfred instance.</value>
+        /// <value>The container.</value>
+        [NotNull]
+        public IObjectContainer Container { get; }
+
+        /// <summary>
+        ///     Gets the <see cref="IAlfred" /> instance associated with this component.
+        /// </summary>
+        /// <value>The Alfred instance.</value>
         [CanBeNull]
         public IAlfred AlfredInstance
         {
@@ -64,7 +71,7 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     Gets the name and version of the Module.
+        ///     Gets the name and version of the component.
         /// </summary>
         /// <value>The name and version.</value>
         [NotNull]
@@ -78,7 +85,7 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <value>The version.</value>
         [CanBeNull]
-        public virtual string Version
+        public string Version
         {
             get
             {
@@ -111,9 +118,8 @@ namespace MattEland.Ani.Alfred.Core
         public abstract bool IsVisible { get; }
 
         /// <summary>
-        ///     Gets the children of this component. Depending on the type of component this is, the children
-        ///     will
-        ///     vary in their own types.
+        ///     Gets the children of the component. Depending on the type of component this is, the children
+        ///     will vary in their own types.
         /// </summary>
         /// <value>The children.</value>
         [NotNull]
@@ -139,7 +145,19 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <value>The console.</value>
         [CanBeNull]
-        public IConsole Console { get; protected set; } = null;
+        public IConsole Console
+        {
+            get
+            {
+                // If we don't have a console, query the container for one.
+                if (_console == null)
+                {
+                    _console = Container.Provide<IConsole>();
+                }
+
+                return _console;
+            }
+        }
 
         /// <summary>
         ///     Occurs when a property changes.
@@ -358,13 +376,13 @@ namespace MattEland.Ani.Alfred.Core
         /// <summary>
         ///     Handles initialization events
         /// </summary>
-        /// <param name="alfred">The alfred instance.</param>
+        /// <param name="alfred">The Alfred instance.</param>
         protected virtual void InitializeProtected([NotNull] IAlfred alfred)
         {
         }
 
         /// <summary>
-        ///     Logs an event to the console if a console was provided
+        ///     Logs an event to the console if an <see cref="IConsole"/> is detected
         /// </summary>
         /// <param name="title">The title of the message.</param>
         /// <param name="message">The message body.</param>
@@ -376,17 +394,14 @@ namespace MattEland.Ani.Alfred.Core
             if (title == null) { throw new ArgumentNullException(nameof(title)); }
             if (message == null) { throw new ArgumentNullException(nameof(message)); }
 
-            // Grab the console as Alfred may not have had the console object set during this module's construction
-            if (_console == null) { _console = AlfredInstance?.Console; }
-
             // Send it on to the console, if we have one. It'll figure it out from there
-            _console?.Log(title, message, level);
+            Console?.Log(title, message, level);
         }
 
         /// <summary>
         ///     Called when the component is registered.
         /// </summary>
-        /// <param name="alfred">The alfred.</param>
+        /// <param name="alfred">The Alfred instance.</param>
         public virtual void OnRegistered([CanBeNull] IAlfred alfred)
         {
             // Hang on to the reference now so AlfredInstance doesn't lie and we can tell
@@ -425,7 +440,6 @@ namespace MattEland.Ani.Alfred.Core
         /// <param name="chatProvider">The chat provider.</param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="chatProvider" /> is <see langword="null" />
-        ///     .
         /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     If Register is called when Alfred is null (prior to
@@ -447,7 +461,7 @@ namespace MattEland.Ani.Alfred.Core
         ///     Builds widget creation parameters for creating a widget.
         /// </summary>
         /// <param name="name">The name of the widget.</param>
-        /// <returns>Usable WidgetCreationParameters.</returns>
+        /// <returns>Usable <see cref="WidgetCreationParameters"/>.</returns>
         [NotNull]
         protected WidgetCreationParameters BuildWidgetParameters([NotNull] string name)
         {

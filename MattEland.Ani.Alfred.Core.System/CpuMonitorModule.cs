@@ -18,6 +18,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Common;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
@@ -51,11 +52,12 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <summary>
         ///     Initializes a new instance of the <see cref="CpuMonitorModule" /> class.
         /// </summary>
+        /// <param name="container">The container.</param>
         /// <param name="platformProvider">The platform provider.</param>
         /// <param name="factory">The metric provider factory.</param>
-        public CpuMonitorModule(
+        internal CpuMonitorModule([NotNull] IObjectContainer container,
             [NotNull] IPlatformProvider platformProvider,
-            [NotNull] IMetricProviderFactory factory) : base(platformProvider, factory)
+            [NotNull] IMetricProviderFactory factory) : base(container, platformProvider, factory)
         {
         }
 

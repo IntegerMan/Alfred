@@ -43,7 +43,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
 
             var bootstrapper = new AlfredBootstrapper();
             _alfred = bootstrapper.Create();
-            _module = new AlfredPowerModule(_alfred.PlatformProvider);
+            _module = new AlfredPowerModule(Container, _alfred.PlatformProvider);
 
             RegisterTestModule(_alfred, _module);
         }
@@ -66,9 +66,9 @@ namespace MattEland.Ani.Alfred.Tests.Modules
                 throw new ArgumentNullException(nameof(module));
             }
 
-            var subsystem = new TestSubsystem();
+            var subsystem = new TestSubsystem(Container);
 
-            var page = new AlfredModuleListPage(alfred.PlatformProvider, "Test Page", "Test");
+            var page = new AlfredModuleListPage(Container, alfred.PlatformProvider, "Test Page", "Test");
             subsystem.AddAutoRegisterPage(page);
 
             alfred.Register(subsystem);
@@ -102,7 +102,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
             // Doing this again here to illustrate creation / configuration order more clearly
             var bootstrapper = new AlfredBootstrapper();
             _alfred = bootstrapper.Create();
-            _module = new AlfredPowerModule(_alfred.PlatformProvider);
+            _module = new AlfredPowerModule(Container, _alfred.PlatformProvider);
 
             RegisterTestModule(_alfred, _module);
 
@@ -131,7 +131,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         {
             var bootstrapper = new AlfredBootstrapper();
             _alfred = bootstrapper.Create();
-            _module = new AlfredPowerModule(_alfred.PlatformProvider);
+            _module = new AlfredPowerModule(Container, _alfred.PlatformProvider);
 
             var text = _module.AlfredStatusWidget.Text;
             Assert.IsNotNull(text, "Widget text was null");

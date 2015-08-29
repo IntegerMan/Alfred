@@ -27,13 +27,15 @@ namespace MattEland.Ani.Alfred.Core.Pages
         private readonly string _id;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredPage" /> class.
+        /// Initializes a new instance of the <see cref="AlfredPage" /> class.
         /// </summary>
+        /// <param name="container">The container.</param>
         /// <param name="name">The name.</param>
         /// <param name="id">The ID</param>
-        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null" />.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="id"/> is <see langword="null" />.</exception>
-        protected AlfredPage([NotNull] string name, [NotNull] string id)
+        /// <exception cref="ArgumentNullException"><paramref name="container" /> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="name" /> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="id" /> is <see langword="null" />.</exception>
+        protected AlfredPage([NotNull] IObjectContainer container, [NotNull] string name, [NotNull] string id) : base(container)
         {
             if (name == null)
             {

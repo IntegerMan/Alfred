@@ -30,11 +30,12 @@ namespace MattEland.Ani.Alfred.Core.Modules
         private readonly ICollection<WidgetBase> _widgets;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredModule" /> class.
+        /// Initializes a new instance of the <see cref="AlfredModule" /> class.
         /// </summary>
+        /// <param name="container">The container.</param>
         /// <param name="platformProvider">The platform provider.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        protected AlfredModule([NotNull] IPlatformProvider platformProvider)
+        /// <exception cref="System.ArgumentNullException">container, platformProvider</exception>
+        protected AlfredModule([NotNull] IObjectContainer container, [NotNull] IPlatformProvider platformProvider) : base(container)
         {
             if (platformProvider == null)
             {

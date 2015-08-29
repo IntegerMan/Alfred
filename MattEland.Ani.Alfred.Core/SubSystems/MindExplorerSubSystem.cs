@@ -15,12 +15,13 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Pages;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Subsystems
 {
     /// <summary>
-    ///     A SubSystem that pokes around at the internal state of each of Alfred's SubSystems and their
-    ///     sub-components. This SubSystem has a particular focus towards anything AI-related.
+    ///     A <see cref="AlfredSubsystem"/> that pokes around at the internal state of each of Alfred's SubSystems and their
+    ///     sub-components. This Subsystem has a particular focus towards anything AI-related.
     /// </summary>
     public class MindExplorerSubsystem : AlfredSubsystem
     {
@@ -31,16 +32,17 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// <param name="provider">The provider.</param>
         /// <param name="console">The console.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public MindExplorerSubsystem([NotNull] IPlatformProvider provider,
-                                     [CanBeNull] IConsole console = null) : base(console)
+        public MindExplorerSubsystem([NotNull] IObjectContainer container, [NotNull] IPlatformProvider provider,
+                                     [CanBeNull] IConsole console = null) : base(container, console)
         {
-            MindExplorerPage = new ExplorerPage(provider, "Mind Explorer", "MindMap");
+            MindExplorerPage = new ExplorerPage(container, provider, "Mind Explorer", "MindMap");
         }
 
         /// <summary>
         /// Handles initialization events
         /// </summary>
-        /// <param name="alfred">The alfred instance.</param>
+        /// <param name="alfred">The Alfred instance.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="alfred"/> is <see langword="null" />.</exception>
         protected override void InitializeProtected(IAlfred alfred)
         {
             if (alfred == null) { throw new ArgumentNullException(nameof(alfred)); }

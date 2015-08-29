@@ -16,6 +16,7 @@ using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Common;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Modules
 {
@@ -33,7 +34,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         /// <param name="platformProvider">The platform provider.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        internal AlfredPagesListModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
+        internal AlfredPagesListModule([NotNull] IObjectContainer container, [NotNull] IPlatformProvider platformProvider) : base(container, platformProvider)
         {
             _widgets = platformProvider.CreateCollection<WidgetBase>();
         }

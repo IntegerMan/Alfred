@@ -15,6 +15,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Pages
 {
@@ -43,10 +44,10 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <param name="name">The name.</param>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
-        public AlfredEventLogPage(
+        public AlfredEventLogPage([NotNull] IObjectContainer container,
             [NotNull] IPlatformProvider platform,
             [NotNull] IConsole console,
-            [NotNull] string name) : base(name, "Log")
+            [NotNull] string name) : base(container, name, "Log")
         {
             //- Validate
             if (platform == null) { throw new ArgumentNullException(nameof(platform)); }
@@ -118,7 +119,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
 
         /// <summary>
         ///     Adds new events to the providers collection. This is necessary because we're doing a cast to
-        ///     IPropertyProvider and can't rely on any observable collection to relay this information.
+        ///     <see cref="IPropertyProvider"/> and can't rely on any observable collection to relay this information.
         /// </summary>
         private void AddNewEventsToProviders()
         {
