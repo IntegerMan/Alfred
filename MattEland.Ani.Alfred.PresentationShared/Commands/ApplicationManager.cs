@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -81,6 +82,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             Container.RegisterAsProvidedInstance(typeof(IObjectContainer));
 
             // Register default mappings
+            Container.CollectionType = typeof(ObservableCollection<>);
             Container.Register(typeof(AlfredCommand), typeof(XamlClientCommand));
 
             // TODO: Grab things from the container!
