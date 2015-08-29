@@ -37,7 +37,7 @@ namespace MattEland.Ani.Alfred.Tests.Shell
         [SetUp]
         public void SetUp()
         {
-            InitChatSystem();
+            InitializeChatSystem();
             var parameters = BuildTagHandlerParameters("<alfred submodule=\"core\" command=\"shutdown\" />");
             _handler = new ShellTagHandler(parameters);
         }

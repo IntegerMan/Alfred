@@ -102,12 +102,32 @@ namespace MattEland.Common.Providers
             [NotNull] this object instance,
             [NotNull] Type type)
         {
+            // Default to the root container
+            instance.RegisterAsProvidedInstance(type, CommonProvider.Container);
+        }
+
+        /// <summary>
+        /// Registers the instance in the container as the instance that will be provided when
+        /// <see cref="CommonProvider.Provide{TRequested}" /> or
+        /// <see cref="CommonProvider.ProvideType" /> is called on the container for type <paramref name="type" />
+        /// .
+        /// </summary>
+        /// <param name="instance">The instance.</param>
+        /// <param name="type">The type that will be requested.</param>
+        /// <param name="container">The container.</param>
+        /// <exception cref="System.ArgumentNullException">type, instance, container</exception>
+        public static void RegisterAsProvidedInstance(
+            [NotNull] this object instance,
+            [NotNull] Type type,
+            [NotNull] IObjectContainer container)
+        {
             //- Validate
             if (instance == null) { throw new ArgumentNullException(nameof(instance)); }
             if (type == null) { throw new ArgumentNullException(nameof(type)); }
 
             // Register
-            CommonProvider.RegisterProvidedInstance(type, instance);
+            container.RegisterProvidedInstance(type, instance);
+
         }
     }
 }

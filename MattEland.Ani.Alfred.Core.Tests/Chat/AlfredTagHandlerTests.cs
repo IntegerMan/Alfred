@@ -16,6 +16,7 @@ using MattEland.Ani.Alfred.Chat;
 using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
+using MattEland.Common.Providers;
 
 using NUnit.Framework;
 
@@ -37,9 +38,11 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         [SetUp]
         public void SetUp()
         {
-            InitChatSystem();
+            InitializeChatSystem();
 
-            var parameters = BuildTagHandlerParameters("<alfred submodule=\"core\" command=\"shutdown\" />");
+            CommonProvider.Container.RegisterDefaultAlfredMappings();
+
+            var parameters = BuildTagHandlerParameters(@"<alfred submodule=""core"" command=""shutdown"" />");
             _handler = new AlfredTagHandler(parameters);
         }
 

@@ -15,6 +15,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Chat
 {
@@ -28,12 +29,13 @@ namespace MattEland.Ani.Alfred.Chat
         /// <summary>
         ///     Initializes a new instance of the <see cref="ChatHistoryProvider" /> class.
         /// </summary>
-        internal ChatHistoryProvider([NotNull] IPlatformProvider provider)
+        internal ChatHistoryProvider([NotNull] IObjectContainer container)
         {
             //- Validate
-            if (provider == null) { throw new ArgumentNullException(nameof(provider)); }
+            if (container == null) { throw new ArgumentNullException(nameof(container)); }
 
             // Create the collection. We need it to be in an observable collection for XAML systems
+            var provider = container.Provide<IPlatformProvider>();
             HistoryEntries = provider.CreateCollection<ChatHistoryEntry>();
         }
 

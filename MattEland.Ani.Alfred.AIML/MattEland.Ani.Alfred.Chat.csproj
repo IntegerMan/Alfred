@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AimlExplorerNode.cs" />
     <Compile Include="AimlStatementHandler.cs" />
     <Compile Include="ChatHandlersProvider.cs" />
     <Compile Include="ChatHistoryEntry.cs" />

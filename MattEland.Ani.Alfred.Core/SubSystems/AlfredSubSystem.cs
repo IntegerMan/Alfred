@@ -99,6 +99,8 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         ///     Registers a page.
         /// </summary>
         /// <param name="page">The page.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="page"/> is <see langword="null" />.</exception>
+        /// <exception cref="InvalidOperationException">Cannot register page without an Alfred instance</exception>
         protected void Register([NotNull] IAlfredPage page)
         {
             if (page == null) { throw new ArgumentNullException(nameof(page)); }
@@ -167,7 +169,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// Gets the dependency injection container.
         /// </summary>
         /// <value>The dependency injection container.</value>
-        public CommonContainer Container
+        public IObjectContainer Container
         {
             get { return CommonProvider.Container; }
         }

@@ -30,7 +30,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         [SetUp]
         public void SetUp()
         {
-            InitChatSystem();
+            InitializeChatSystem();
         }
 
         /// <summary>

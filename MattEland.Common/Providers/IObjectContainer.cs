@@ -17,13 +17,13 @@ namespace MattEland.Common.Providers
     ///     Represents an inversion of control container for dependency injection.
     /// </summary>
     [PublicAPI]
-    public interface IContainer : IObjectProvider
+    public interface IObjectContainer : IObjectProvider
     {
         /// <summary>
         ///     Gets or sets the parent.
         /// </summary>
         /// <value>The parent.</value>
-        IContainer Parent { get; set; }
+        IObjectContainer Parent { get; set; }
 
         /// <summary>
         ///     Gets the <see cref="IObjectProvider" /> to use when no provider is found.
@@ -46,6 +46,7 @@ namespace MattEland.Common.Providers
         ///     The type is not correctly configured to allow for
         ///     instantiation.
         /// </exception>
+        [NotNull]
         TRequested Provide<TRequested>(params object[] args);
 
         /// <summary>
@@ -129,7 +130,7 @@ namespace MattEland.Common.Providers
         /// <typeparam name="T">The type to return</typeparam>
         /// <param name="args">The arguments.</param>
         /// <returns>A new instance if things were successful; otherwise false.</returns>
-        T TryProvideInstance<T>([CanBeNull] params object[] args) where T : class;
+        T TryProvide<T>([CanBeNull] params object[] args) where T : class;
 
         /// <summary>
         ///     Determines whether the specified type has a mapping in this container or any of its parents.
@@ -147,9 +148,9 @@ namespace MattEland.Common.Providers
         ///     This will search not only this container's mappings but also will search its
         ///     <see cref="Parent" /> and any additional ancestors.
         /// </remarks>
-        /// <param name="requestedType">Type that was requested.</param>
+        /// <param name="type">Type that was requested.</param>
         /// <returns>The object provider.</returns>
         [NotNull]
-        IObjectProvider GetObjectProvider([NotNull] Type requestedType);
+        IObjectProvider GetObjectProvider([NotNull] Type type);
     }
 }

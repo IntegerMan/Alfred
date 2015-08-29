@@ -61,33 +61,26 @@ namespace MattEland.Ani.Alfred.Chat
         ///     directory for the settings path.
         /// </summary>
         /// <param name="engineName">Name of the chat engine.</param>
-        /// <param name="provider">The platform provider.</param>
-        /// <param name="console">The console.</param>
-        /// <param name="container"></param>
+        /// <param name="container">The container to use for inversion of control</param>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
-        public AimlStatementHandler(
-            [NotNull] string engineName,
-            [NotNull] IPlatformProvider provider,
-            [CanBeNull] IConsole console,
-            CommonContainer container)
+        public AimlStatementHandler([NotNull] string engineName, [NotNull] IObjectContainer container)
         {
             //- Validate
-            if (engineName == null || engineName.IsEmpty())
+            if (engineName.IsEmpty())
             {
                 throw new ArgumentNullException(nameof(engineName));
             }
-            if (provider == null) { throw new ArgumentNullException(nameof(provider)); }
 
             // Set up simple internal fields
-            _console = console;
-            _chatHistory = new ChatHistoryProvider(provider);
+            _console = container.TryProvide<IConsole>();
+            _chatHistory = new ChatHistoryProvider(container);
 
             // Set up the chat engine
-            ChatEngine = new ChatEngine(console);
+            ChatEngine = new ChatEngine(_console);
             _user = new User(Resources.ChatUserName.NonNull());
             _engineUser = new User(engineName);
-            _chatHandlerProvider = new ChatHandlersProvider(provider, ChatEngine);
+            _chatHandlerProvider = new ChatHandlersProvider(container, ChatEngine);
 
             InitializeChatEngine();
         }

@@ -23,6 +23,7 @@ using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Ani.Alfred.Tests.Mocks;
 using MattEland.Common;
+using MattEland.Common.Providers;
 
 using NUnit.Framework;
 
@@ -30,7 +31,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
 {
 
     /// <summary>
-    ///     An abstract class providing testing capabilities related to chats and commanding
+    ///     An <c>abstract</c> class providing testing capabilities related to chats and commanding
     /// </summary>
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
@@ -123,9 +124,9 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         }
 
         /// <summary>
-        ///     Gets the alfred framework.
+        ///     Gets the Alfred framework.
         /// </summary>
-        /// <value>The alfred framework.</value>
+        /// <value>The aAfred framework.</value>
         [NotNull]
         protected TestAlfred Alfred
         {
@@ -225,7 +226,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         /// <summary>
         ///     Gets a reply from the chat system on a specified inquiry.
         /// </summary>
-        /// <param name="text">The inquiry text.</param>
+        /// <param name="text">The chat message.</param>
         /// <returns>The reply</returns>
         [CanBeNull]
         protected string GetReplyTemplate([NotNull] string text)
@@ -239,13 +240,15 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         /// <summary>
         ///     Initializes the chat system.
         /// </summary>
-        protected void InitChatSystem()
+        protected void InitializeChatSystem()
         {
+            CommonProvider.Container.RegisterDefaultAlfredMappings();
+
             AlfredTestTagHandler.WasInvoked = false;
 
             _alfred = new TestAlfred();
 
-            // Add Subsystems to alfred
+            // Add Subsystems to Alfred
 
             _coreSubsystem = new AlfredCoreSubsystem(_alfred.PlatformProvider);
             _alfred.Register(_coreSubsystem);
@@ -279,6 +282,11 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             _alfred.Update();
         }
 
+        /// <summary>
+        /// Builds the tag handler parameters.
+        /// </summary>
+        /// <param name="xml">The XML.</param>
+        /// <returns>The <see cref="TagHandlerParameters"/>.</returns>
         [NotNull]
         protected TagHandlerParameters BuildTagHandlerParameters([NotNull] string xml)
         {
@@ -289,7 +297,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         /// <summary>
         /// Builds the tag handler parameters.
         /// </summary>
-        /// <param name="input">The input.</param>
+        /// <param name="input">The input text.</param>
         /// <param name="element">The element.</param>
         /// <returns>Parameters for these elements.</returns>
         [NotNull]

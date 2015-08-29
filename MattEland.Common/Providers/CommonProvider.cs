@@ -30,7 +30,7 @@ namespace MattEland.Common.Providers
         /// </summary>
         /// <value>The container.</value>
         [NotNull]
-        public static CommonContainer Container { get; } = new CommonContainer();
+        public static IObjectContainer Container { get; } = new CommonContainer();
 
         /// <summary>
         ///     Registers the preferred type as the type to instantiate when the base type is requested.
@@ -169,7 +169,7 @@ namespace MattEland.Common.Providers
         [CanBeNull]
         public static T TryProvideInstance<T>([CanBeNull] params object[] args) where T : class
         {
-            return Container.TryProvideInstance<T>(args);
+            return Container.TryProvide<T>(args);
         }
 
         /// <summary>

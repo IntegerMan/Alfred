@@ -8,7 +8,7 @@
     </ResourceDictionary.MergedDictionaries>
     
     <!-- Logging Templates -->
-    <DataTemplate DataType="{x:Type console:ConsoleEvent}">
+    <DataTemplate DataType="{x:Type console:ConsoleEventExplorerDecorator}">
         <Border BorderThickness="0,0,0,1"
                 BorderBrush="{DynamicResource AppBorderBrush}"
                 Margin="4,2">
@@ -59,6 +59,4 @@
         </Border>
     </DataTemplate>
 
-    <!-- Widget DataTemplates {Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}} -->
-    
 </ResourceDictionary>

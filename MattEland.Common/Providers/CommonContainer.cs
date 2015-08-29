@@ -2,7 +2,7 @@
 // CommonContainer.cs
 // 
 // Created on:      08/28/2015 at 12:53 AM
-// Last Modified:   08/28/2015 at 1:50 AM
+// Last Modified:   08/28/2015 at 11:33 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -31,7 +31,7 @@ namespace MattEland.Common.Providers
     ///     container.
     /// </remarks>
     [PublicAPI]
-    public class CommonContainer : IContainer
+    public class CommonContainer : IObjectContainer
     {
 
         /// <summary>
@@ -41,10 +41,10 @@ namespace MattEland.Common.Providers
         private IObjectProvider _fallbackProvider;
 
         /// <summary>
-        /// The backing field for <see cref="Parent"/>
+        ///     The backing field for <see cref="Parent" />
         /// </summary>
         [CanBeNull]
-        private IContainer _parent;
+        private IObjectContainer _parent;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="CommonContainer" /> class.
@@ -57,52 +57,12 @@ namespace MattEland.Common.Providers
         ///     Initializes a new instance of the <see cref="CommonContainer" /> class.
         /// </summary>
         /// <param name="parent">The parent container.</param>
-        public CommonContainer([CanBeNull] IContainer parent)
+        public CommonContainer([CanBeNull] IObjectContainer parent)
         {
             Mappings = new Dictionary<Type, IObjectProvider>();
             InstanceProvider = new InstanceProvider();
 
             Parent = parent;
-        }
-
-        /// <summary>
-        /// Gets or sets the parent container.
-        /// </summary>
-        /// <value>The parent.</value>
-        /// <exception cref="System.InvalidOperationException"></exception>
-        /// <exception cref="InvalidOperationException">Cannot set a container to have itself as a parent</exception>
-        public IContainer Parent
-        {
-            get { return _parent; }
-            set
-            {
-                // Exit early if null to avoid parent checks
-                if (value == null)
-                {
-                    _parent = null;
-                    return;
-                }
-
-                /* Check to see that we're not assigning this object as a parent or 
-                   assigning to a chain where an item would have this container as its
-                   parent (a circular relationship) */
-
-                var p = value;
-                while (p != null)
-                {
-                    if (p == this)
-                    {
-                        const string Message =
-                            "Cannot set a container to have itself as a parent or grandparent";
-                        throw new InvalidOperationException(Message);
-                    }
-
-                    // Move to next item in the chain
-                    p = p.Parent;
-                }
-
-                _parent = value;
-            }
         }
 
         /// <summary>
@@ -114,6 +74,14 @@ namespace MattEland.Common.Providers
         [NotNull]
         [ItemNotNull]
         private IDictionary<Type, IObjectProvider> Mappings { get; }
+
+        /// <summary>
+        ///     Gets the instance provider that is used as the provider when
+        ///     <see cref="RegisterProvidedInstance" /> is called.
+        /// </summary>
+        /// <value>The instance provider.</value>
+        [NotNull]
+        private InstanceProvider InstanceProvider { get; }
 
         /// <summary>
         ///     Gets the <see cref="IObjectProvider" /> to use when no provider is found.
@@ -154,22 +122,84 @@ namespace MattEland.Common.Providers
         }
 
         /// <summary>
-        ///     Gets the instance provider that is used as the provider when
-        ///     <see cref="RegisterProvidedInstance" /> is called.
+        ///     Gets the <see cref="IObjectProvider" /> for the requested <paramref name="type" />.
         /// </summary>
-        /// <value>The instance provider.</value>
+        /// <remarks>
+        ///     This will search not only this container's <see cref="Mappings" /> and
+        ///     its <see cref="Parent" /> container and any additional ancestor containers.
+        /// </remarks>
+        /// <param name="type">The <see cref="Type" /> that was requested.</param>
+        /// <returns>The object provider.</returns>
         [NotNull]
-        private InstanceProvider InstanceProvider { get; }
+        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
+        public IObjectProvider GetObjectProvider([NotNull] Type type)
+        {
+            //- TODO: It might be nice to have an option to disable defaulting and throw an exception instead
+
+            // Grab our registered mapping. If we don't have one, then use our default provider
+            if (Mappings.ContainsKey(type)) { return Mappings[type]; }
+
+            if (Parent != null && Parent.HasMapping(type))
+            {
+                return Parent.GetObjectProvider(type);
+            }
+
+            return FallbackProvider;
+        }
 
         /// <summary>
-        ///     Creates an instance of the requested type.
+        ///     Determines whether the specified <paramref name="type" /> has a mapping in this
+        ///     <see cref="IObjectContainer" /> or any of its <see cref="Parent" /> containers.
         /// </summary>
-        /// <param name="requestedType">The type that was requested.</param>
-        /// <param name="args">The arguments</param>
-        /// <returns>A new instance of the requested type</returns>
-        object IObjectProvider.CreateInstance(Type requestedType, params object[] args)
+        /// <param name="type">The type.</param>
+        /// <returns><c>true</c> if the specified type has mapping; otherwise, <c>false</c>.</returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException"><paramref name="type" /> is <see langword="null" />.</exception>
+        public bool HasMapping([NotNull] Type type)
         {
-            return ProvideType(requestedType, true, args);
+            if (type == null) { throw new ArgumentNullException(nameof(type)); }
+
+            return Mappings.ContainsKey(type);
+        }
+
+        /// <summary>
+        ///     Gets or sets the parent container.
+        /// </summary>
+        /// <value>The parent.</value>
+        /// <exception cref="System.InvalidOperationException"></exception>
+        /// <exception cref="InvalidOperationException">Cannot set a container to have itself as a parent</exception>
+        public IObjectContainer Parent
+        {
+            get { return _parent; }
+            set
+            {
+                // Exit early if null to avoid parent checks
+                if (value == null)
+                {
+                    _parent = null;
+                    return;
+                }
+
+                /* Check to see that we're not assigning this object as a parent or 
+                   assigning to a chain where an item would have this container as its
+                   parent (a circular relationship) */
+
+                var p = value;
+                while (p != null)
+                {
+                    if (p == this)
+                    {
+                        const string Message =
+                            "Cannot set a container to have itself as a parent or grandparent";
+                        throw new InvalidOperationException(Message);
+                    }
+
+                    // Move to next item in the chain
+                    p = p.Parent;
+                }
+
+                _parent = value;
+            }
         }
 
         /// <summary>
@@ -190,6 +220,56 @@ namespace MattEland.Common.Providers
             Debug.Assert(instance != null);
 
             return (TRequested)instance;
+        }
+
+        /// <summary>
+        ///     Provides an instance of the requested <paramref name="type" />.
+        /// </summary>
+        /// <paramref name="type">The <see cref="Type" /> that was requested to be provided.</paramref>
+        /// <returns>An instance of the requested type</returns>
+        /// <exception cref="NotSupportedException">
+        ///     The type is not correctly configured to allow for
+        ///     instantiation.
+        /// </exception>
+        /// <exception cref="ArgumentNullException"><paramref name="type" /> is <see langword="null" />.</exception>
+        [CanBeNull]
+        public object ProvideType([NotNull] Type type, bool errorOnNoInstance, params object[] args)
+        {
+            if (type == null) { throw new ArgumentNullException(nameof(type)); }
+
+            // Determine which type to create
+            var provider = GetObjectProvider(type);
+
+            // When using the Instance Provider, make sure the fallback is accurate
+            if (provider == InstanceProvider)
+            {
+                InstanceProvider.FallbackProvider = FallbackProvider;
+            }
+
+            try
+            {
+                /* Create and return an instance of the requested type using the type 
+                   determined earlier. This can throw many exceptions which will be
+                   wrapped into more user-friendly exceptions with easier error handling. */
+
+                var instance = provider.CreateInstance(type, args);
+
+                // Some callers want exceptions on not found; others don't
+                if (instance == null && errorOnNoInstance)
+                {
+                    ThrowNotProvidedException(type.FullName);
+                }
+
+                return instance;
+            }
+            catch (MissingMemberException ex)
+            {
+                // Try to throw the same type of exception with additional information.
+                string msg =
+                    $"Could not instantiate {type.FullName} due to missing member exception: '{ex.Message}'";
+
+                throw new NotSupportedException(msg, ex);
+            }
         }
 
         /// <summary>
@@ -264,14 +344,13 @@ namespace MattEland.Common.Providers
         }
 
         /// <summary>
-        ///     Registers the provided instance as the object to return when <paramref name="type" /> is
-        ///     requested.
+        ///     Registers the provided <paramref name="instance" /> as the <see langword="object" /> to
+        ///     return when <paramref name="type" /> is requested.
         /// </summary>
         /// <param name="type">The type that will be requested.</param>
         /// <param name="instance">The instance that will be returned.</param>
         /// <exception cref="ArgumentNullException">
-        ///     <paramref name="type" /> or <paramref name="instance" /> is
-        ///     <see langword="null" />.
+        ///     <paramref name="type" /> or <paramref name="instance" /> is <see langword="null" /> .
         /// </exception>
         public void RegisterProvidedInstance([NotNull] Type type, [NotNull] object instance)
         {
@@ -282,8 +361,11 @@ namespace MattEland.Common.Providers
             // Put this instance inside the instance provider
             InstanceProvider.Register(type, instance);
 
-            // Tell the system to read from the Instance Provider when getting values for this.
-            Mappings.Add(type, InstanceProvider);
+            /* Tell the system to read from the Instance Provider when getting values for this. 
+               The InstanceProvider provides all values registered this way using an internal dictionary.
+               This operation will handle both add to dictionary and update existing entry. */
+
+            Mappings[type] = InstanceProvider;
         }
 
         /// <summary>
@@ -302,57 +384,7 @@ namespace MattEland.Common.Providers
         }
 
         /// <summary>
-        ///     Provides an instance of the requested type.
-        /// </summary>
-        /// <paramref name="type">The type that was requested to be provided.</paramref>
-        /// <returns>An instance of the requested type</returns>
-        /// <exception cref="NotSupportedException">
-        ///     The type is not correctly configured to allow for
-        ///     instantiation.
-        /// </exception>
-        /// <exception cref="ArgumentNullException"><paramref name="type" /> is <see langword="null" />.</exception>
-        [CanBeNull]
-        public object ProvideType([NotNull] Type type, bool errorOnNoInstance, params object[] args)
-        {
-            if (type == null) { throw new ArgumentNullException(nameof(type)); }
-
-            // Determine which type to create
-            var provider = GetObjectProvider(type);
-
-            // When using the Instance Provider, make sure the fallback is accurate
-            if (provider == InstanceProvider)
-            {
-                InstanceProvider.FallbackProvider = FallbackProvider;
-            }
-
-            try
-            {
-                /* Create and return an instance of the requested type using the type 
-                   determined earlier. This can throw many exceptions which will be
-                   wrapped into more user-friendly exceptions with easier error handling. */
-
-                var instance = provider.CreateInstance(type, args);
-
-                // Some callers want exceptions on not found; others don't
-                if (instance == null && errorOnNoInstance)
-                {
-                    ThrowNotProvidedException(type.FullName);
-                }
-
-                return instance;
-            }
-            catch (MissingMemberException ex)
-            {
-                // Try to throw the same type of exception with additional information.
-                string msg =
-                    $"Could not instantiate {type.FullName} due to missing member exception: '{ex.Message}'";
-
-                throw new NotSupportedException(msg, ex);
-            }
-        }
-
-        /// <summary>
-        /// Tries to provide an instance of type <typeparamref name="T" /> and returns null if it cannot.
+        ///     Tries to provide an instance of type <typeparamref name="T" /> and returns null if it cannot.
         /// </summary>
         /// <typeparam name="T">The type to return</typeparam>
         /// <param name="args">The arguments.</param>
@@ -361,7 +393,7 @@ namespace MattEland.Common.Providers
         [SuppressMessage("ReSharper", "CatchAllClause")]
         [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
         [SuppressMessage("ReSharper", "ThrowingSystemException")]
-        public T TryProvideInstance<T>([CanBeNull] params object[] args) where T : class
+        public T TryProvide<T>([CanBeNull] params object[] args) where T : class
         {
             try
             {
@@ -385,6 +417,17 @@ namespace MattEland.Common.Providers
         }
 
         /// <summary>
+        ///     Creates an instance of the requested type.
+        /// </summary>
+        /// <param name="requestedType">The type that was requested.</param>
+        /// <param name="args">The arguments</param>
+        /// <returns>A new instance of the requested type</returns>
+        object IObjectProvider.CreateInstance(Type requestedType, params object[] args)
+        {
+            return ProvideType(requestedType, true, args);
+        }
+
+        /// <summary>
         ///     Throws the not provided <see cref="NotSupportedException" />.
         /// </summary>
         /// <param name="typeName">The name of the type that was requested</param>
@@ -396,46 +439,6 @@ namespace MattEland.Common.Providers
         {
             var message = $"The activator function for creating {typeName} returned a null value.";
             throw new NotSupportedException(message);
-        }
-
-        /// <summary>
-        ///     Gets the object provider for the requested type.
-        /// </summary>
-        /// <remarks>This will search not only this container's <see cref="Mappings"/> but also will search its <see cref="Parent"/> and any additional ancestors.</remarks>
-        /// <param name="requestedType">Type that was requested.</param>
-        /// <returns>The object provider.</returns>
-        [NotNull]
-        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-        public IObjectProvider GetObjectProvider([NotNull] Type requestedType)
-        {
-            //- TODO: It might be nice to have an option to disable defaulting and throw an exception instead
-
-            // Grab our registered mapping. If we don't have one, then use our default provider
-            if (Mappings.ContainsKey(requestedType))
-            {
-                return Mappings[requestedType];
-            }
-
-            if (Parent != null && Parent.HasMapping(requestedType))
-            {
-                return Parent.GetObjectProvider(requestedType);
-            }
-
-            return FallbackProvider;
-        }
-
-        /// <summary>
-        ///     Determines whether the specified type has a mapping in this container or any of its parents.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        /// <returns><c>true</c> if the specified type has mapping; otherwise, <c>false</c>.</returns>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        /// <exception cref="ArgumentNullException"><paramref name="type" /> is <see langword="null" />.</exception>
-        public bool HasMapping([NotNull] Type type)
-        {
-            if (type == null) { throw new ArgumentNullException(nameof(type)); }
-
-            return Mappings.ContainsKey(type);
         }
 
         /// <summary>

@@ -24,6 +24,7 @@ using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Ani.Alfred.Core.Speech;
 using MattEland.Ani.Alfred.Core.Subsystems;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.PresentationShared.Commands
 {
@@ -52,6 +53,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         private SystemMonitoringSubsystem _systemMonitoringSubsystem;
 
         private IUserInterfaceDirector _userInterfaceDirector;
+        private readonly IObjectContainer _container;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:System.Object" /> class with
@@ -116,9 +118,19 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
                 throw new ArgumentNullException(nameof(platformProvider));
             }
 
+            // Everything will need a container. Provide one.
+            _container = CommonProvider.Container;
+
+            // Use this container whenever a container is requested
+            _container.RegisterAsProvidedInstance(typeof(IObjectContainer));
+
+            // Add a single shared IPlatformProvider
+            platformProvider.RegisterAsProvidedInstance(typeof(IPlatformProvider));
+
             // Create Alfred. It won't be online and running yet, but create it.
             var bootstrapper = new AlfredBootstrapper(platformProvider);
             _alfred = bootstrapper.Create();
+            _alfred.RegisterAsProvidedInstance(typeof(IAlfred), _container);
 
             // Give Alfred a way to talk to the user and the client a way to log events that are separate from Alfred
             EnableSpeech = enableSpeech;
@@ -273,6 +285,9 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
 
             _console.Log("AppManager.InitConsole", "Initializing console.", LogLevel.Verbose);
             _alfred.Console = _console;
+
+            // This will be our console
+            _console.RegisterAsProvidedInstance(typeof(IConsole));
 
             return _console;
         }

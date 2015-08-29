@@ -61,7 +61,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// </summary>
         /// <value>The dependency injection container.</value>
         [NotNull]
-        CommonContainer Container { get; }
+        IObjectContainer Container { get; }
 
         /// <summary>
         ///     Called when a component is registered with an alfred instance.

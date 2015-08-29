@@ -28,6 +28,7 @@ namespace MattEland.Ani.Alfred.Core.Console
         ///     Initializes a new instance of the <see cref="ConsoleEventExplorerDecorator" /> class.
         /// </summary>
         /// <param name="consoleEvent">The console event.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="consoleEvent"/> is <see langword="null" />.</exception>
         public ConsoleEventExplorerDecorator([NotNull] IConsoleEvent consoleEvent)
         {
             if (consoleEvent == null) { throw new ArgumentNullException(nameof(consoleEvent)); }
@@ -97,7 +98,7 @@ namespace MattEland.Ani.Alfred.Core.Console
         }
 
         /// <summary>
-        ///     Gets the name of the broad categorization or type that this item is.
+        ///     Gets the name of the broad categorization or type for this instance.
         /// </summary>
         /// <example>
         ///     Some examples of ItemTypeName values might be "Folder", "Application", "User", etc.
@@ -122,7 +123,7 @@ namespace MattEland.Ani.Alfred.Core.Console
         }
 
         /// <summary>
-        ///     Gets a list of properties provided by this item.
+        ///     Gets a list of <see cref="IPropertyItem"/> objects provided by this node.
         /// </summary>
         /// <returns>The properties</returns>
         public IEnumerable<IPropertyItem> Properties
@@ -144,5 +145,11 @@ namespace MattEland.Ani.Alfred.Core.Console
         {
             get { yield break; }
         }
+
+        /// <summary>
+        /// Returns a <see cref="System.String" /> that represents this instance.
+        /// </summary>
+        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
+        public override string ToString() { return ConsoleEvent.ToString(); }
     }
 }
