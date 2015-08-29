@@ -49,7 +49,7 @@ namespace MattEland.Ani.Alfred.Tests
         public static void ShouldNotBeNull(
             [AssertionCondition(AssertionConditionType.IS_NOT_NULL)] [CanBeNull] this object source, string failureMessage = "Object should not be null but was")
         {
-            Assert.IsNotNull(source, failureMessage);
+            source.ShouldNotBe(null, failureMessage);
         }
 
         /// <summary>
