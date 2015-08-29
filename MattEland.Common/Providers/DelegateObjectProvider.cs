@@ -15,21 +15,20 @@ using JetBrains.Annotations;
 namespace MattEland.Common.Providers
 {
     /// <summary>
-    ///     An <see cref="IObjectProvider" /> capable of creating an object
+    ///     An <see cref="IObjectProvider" /> capable of creating an object.
     /// </summary>
     [PublicAPI]
     public class DelegateObjectProvider : IObjectProvider
     {
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="DelegateObjectProvider" /> class.
         /// </summary>
-        /// <param name="activationDelegate">The activation delegate.</param>
-        /// <param name="args">The arguments to pass to the delegate.</param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="activationDelegate" /> is
         ///     <see langword="null" />.
         /// </exception>
+        /// <param name="activationDelegate"> The activation delegate. </param>
+        /// <param name="args"> The arguments to pass to the delegate. </param>
         public DelegateObjectProvider(
             [NotNull] Delegate activationDelegate,
             [CanBeNull] params object[] args)
@@ -44,20 +43,27 @@ namespace MattEland.Common.Providers
         }
 
         /// <summary>
-        ///     Gets the activation delegate that will be invoked when a new instance is required.
+        ///     Gets the activation <see langword="delegate"/> that will be invoked when a new instance
+        ///     is required.
         /// </summary>
-        /// <value>The activation delegate.</value>
+        /// <value>
+        ///     The activation <see langword="delegate"/>.
+        /// </value>
         [NotNull]
         public Delegate ActivationDelegate { get; }
 
         /// <summary>
-        /// Creates an instance of the requested type.
+        ///     Creates an instance of the requested <paramref name="type"/>.
         /// </summary>
-        /// <param name="requestedType">The type that was requested.</param>
-        /// <param name="args">The arguments</param>
-        /// <returns>A new instance of the requested type</returns>
-        /// <exception cref="Exception">A delegate callback throws an exception.</exception>
-        public object CreateInstance(Type requestedType, params object[] args)
+        /// <exception cref="Exception">
+        ///     A delegate callback throws an exception.
+        /// </exception>
+        /// <param name="type"> The <see cref="Type"/> that was requested. </param>
+        /// <param name="args"> The arguments. </param>
+        /// <returns>
+        ///     The new instance.
+        /// </returns>
+        public object CreateInstance(Type type, params object[] args)
         {
             var hasArgs = args == null || !args.Any();
             return hasArgs

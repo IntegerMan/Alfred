@@ -61,6 +61,15 @@ namespace MattEland.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Value must be a generic type.
+        /// </summary>
+        internal static string CommonContainerCollectionTypeMustBeGeneric {
+            get {
+                return ResourceManager.GetString("CommonContainerCollectionTypeMustBeGeneric", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified item was already part of the collection.
         /// </summary>
         internal static string ErrorItemAlreadyInCollection {

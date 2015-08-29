@@ -69,28 +69,10 @@ namespace MattEland.Common.Providers
         {
             var type = typeof(TRequested);
 
-            var instance = ProvideType(type, true, args);
+            var instance = Container.ProvideType(type, args);
             Debug.Assert(instance != null);
 
             return (TRequested)instance;
-        }
-
-        /// <summary>
-        ///     Provides an instance of the requested type.
-        /// </summary>
-        /// <paramref name="type">The type that was requested to be provided.</paramref>
-        /// <returns>An instance of the requested type</returns>
-        /// <exception cref="NotSupportedException">
-        ///     The type is not correctly configured to allow for
-        ///     instantiation.
-        /// </exception>
-        /// <exception cref="ArgumentNullException"><paramref name="type" /> is <see langword="null" />.</exception>
-        [CanBeNull]
-        private static object ProvideType([NotNull] Type type, bool errorOnNoInstance, params object[] args)
-        {
-            if (type == null) { throw new ArgumentNullException(nameof(type)); }
-
-            return Container.ProvideType(type, errorOnNoInstance, args);
         }
 
         /// <summary>
@@ -107,7 +89,8 @@ namespace MattEland.Common.Providers
         public static object ProvideType([NotNull] Type type)
         {
             if (type == null) { throw new ArgumentNullException(nameof(type)); }
-            return ProvideType(type, true);
+
+            return Container.ProvideType(type);
         }
 
         /// <summary>
@@ -193,12 +176,49 @@ namespace MattEland.Common.Providers
         }
 
         /// <summary>
-        ///     Registers the provider as the default provider.
+        ///     Registers the <paramref name="provider"/> as the default provider.
         /// </summary>
         /// <param name="provider">The provider.</param>
         public static void RegisterDefaultProvider(IObjectProvider provider)
         {
             Container.FallbackProvider = provider;
+        }
+
+        /// <summary>
+        ///     Provides a collection of the specified type of <see langword="object" /> .
+        /// </summary>
+        /// <remarks>
+        ///     <para>
+        ///         This functions by calling <see ref="Provide"/> on the ICollection&lt;gt; generic type.
+        ///     </para>
+        ///     <para>
+        ///         It's highly advised to provide a new instance via <see ref="Provide" /> (as opposed
+        ///         to using <see ref="RegisterProvidedInstance"/>) on ICollection&lt;gt;
+        ///     </para>
+        /// </remarks>
+        /// <typeparam name="TCollectionItem"> The type of items the collection supports. </typeparam>
+        /// <returns>
+        ///     The new collection. This will not be <see langword="null" /> .
+        /// </returns>
+        [NotNull]
+        public static ICollection<TCollectionItem> ProvideCollection<TCollectionItem>()
+        {
+            return Container.ProvideCollection<TCollectionItem>();
+        }
+
+
+        /// <summary>
+        ///     Gets or sets the <see cref="Type" /> used when providing collections in
+        ///     <see ref="ProvideCollection" />.
+        /// </summary>
+        /// <value>
+        ///     The <see cref="Type" /> to use when providing collections.
+        /// </value>
+        [NotNull]
+        public static Type CollectionType
+        {
+            get { return Container.CollectionType; }
+            set { Container.CollectionType = value; }
         }
 
     }

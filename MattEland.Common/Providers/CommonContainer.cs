@@ -2,7 +2,7 @@
 // CommonContainer.cs
 // 
 // Created on:      08/28/2015 at 12:53 AM
-// Last Modified:   08/28/2015 at 11:33 PM
+// Last Modified:   08/29/2015 at 3:23 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -11,28 +11,33 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 using JetBrains.Annotations;
 
 namespace MattEland.Common.Providers
 {
     /// <summary>
-    ///     A dependency injection container used for registering and providing types and instances of
-    ///     types to reduce coupling and provide inversion of control. This class can be instantiated and
-    ///     used on its own or the default container can be used via the  methods on
+    ///     A dependency injection container used for registering and providing types and instances
+    ///     of types to reduce coupling and provide inversion of control. This class can be
+    ///     instantiated and used on its own or the default container can be used via the  methods on
     ///     <see cref="CommonProvider" />
     /// </summary>
     /// <remarks>
     ///     Dependency injection containers are discrete containers for <see cref="Type" /> to
-    ///     <see cref="IObjectProvider" /> mappings. You can instantiate multiple CommonContainers and each
-    ///     one can have different mappings that are entirely separate from each other.
-    /// 
-    ///     Containers can have a parent container which is deferred to if a mapping wasn't found in this
-    ///     container.
+    ///     <see cref="IObjectProvider" /> mappings. You can instantiate multiple CommonContainers
+    ///     and each one can have different mappings that are entirely separate from each other.
+    ///     Containers can have a parent container which is deferred to if a mapping wasn't found in
+    ///     this container.
     /// </remarks>
     [PublicAPI]
     public class CommonContainer : IObjectContainer
     {
+        /// <summary>
+        ///     The <see cref="Type" /> used when providing collections.
+        /// </summary>
+        [NotNull]
+        private Type _collectionType = typeof(List<>);
 
         /// <summary>
         ///     The backing field for <see cref="FallbackProvider" />.
@@ -47,30 +52,13 @@ namespace MattEland.Common.Providers
         private IObjectContainer _parent;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="CommonContainer" /> class.
-        /// </summary>
-        public CommonContainer() : this(null)
-        {
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="CommonContainer" /> class.
-        /// </summary>
-        /// <param name="parent">The parent container.</param>
-        public CommonContainer([CanBeNull] IObjectContainer parent)
-        {
-            Mappings = new Dictionary<Type, IObjectProvider>();
-            InstanceProvider = new InstanceProvider();
-
-            Parent = parent;
-        }
-
-        /// <summary>
         ///     Gets the mapping dictionary that provides a map from a requested <see cref="Type" /> to an
-        ///     <see cref="IObjectProvider" /> capable of providing an instance of that type. The key is the
-        ///     <see cref="Type" /> requested and the value is the <see cref="IObjectProvider" />.
+        ///     <see cref="IObjectProvider" /> capable of providing an instance of that type. The key is
+        ///     the <see cref="Type" /> requested and the value is the <see cref="IObjectProvider" />.
         /// </summary>
-        /// <value>The provider mappings dictionary.</value>
+        /// <value>
+        ///     The provider mappings dictionary.
+        /// </value>
         [NotNull]
         [ItemNotNull]
         private IDictionary<Type, IObjectProvider> Mappings { get; }
@@ -79,13 +67,39 @@ namespace MattEland.Common.Providers
         ///     Gets the instance provider that is used as the provider when
         ///     <see cref="RegisterProvidedInstance" /> is called.
         /// </summary>
-        /// <value>The instance provider.</value>
+        /// <value>
+        ///     The instance provider.
+        /// </value>
         [NotNull]
         private InstanceProvider InstanceProvider { get; }
 
         /// <summary>
-        ///     Gets the <see cref="IObjectProvider" /> to use when no provider is found.
+        ///     Gets or sets the <see cref="Type" /> used when providing collections in
+        ///     <see ref="ProvideCollection" />.
         /// </summary>
+        /// <exception cref="ArgumentException"> Exception must  </exception>
+        /// <value>
+        ///     The <see cref="Type" /> to use when providing collections.
+        /// </value>
+        [NotNull]
+        public Type CollectionType
+        {
+            get { return _collectionType; }
+            set
+            {
+                // Validate
+                if (value == null || !value.IsGenericType)
+                {
+                    throw new ArgumentException(
+                        Resources.CommonContainerCollectionTypeMustBeGeneric,
+                        nameof(value));
+                }
+
+                _collectionType = value;
+            }
+        }
+
+        /// <summary>Gets the <see cref="IObjectProvider" /> to use when no provider is found.</summary>
         /// <value>The default object provider.</value>
         public IObjectProvider FallbackProvider
         {
@@ -121,12 +135,10 @@ namespace MattEland.Common.Providers
             }
         }
 
-        /// <summary>
-        ///     Gets the <see cref="IObjectProvider" /> for the requested <paramref name="type" />.
-        /// </summary>
+        /// <summary>Gets the <see cref="IObjectProvider" /> for the requested <paramref name="type" />.</summary>
         /// <remarks>
-        ///     This will search not only this container's <see cref="Mappings" /> and
-        ///     its <see cref="Parent" /> container and any additional ancestor containers.
+        ///     This will search not only this container's <see cref="Mappings" /> and its
+        ///     <see cref="Parent" /> container and any additional ancestor containers.
         /// </remarks>
         /// <param name="type">The <see cref="Type" /> that was requested.</param>
         /// <returns>The object provider.</returns>
@@ -147,10 +159,8 @@ namespace MattEland.Common.Providers
             return FallbackProvider;
         }
 
-        /// <summary>
-        ///     Determines whether the specified <paramref name="type" /> has a mapping in this
-        ///     <see cref="IObjectContainer" /> or any of its <see cref="Parent" /> containers.
-        /// </summary>
+        /// <summary>Determines whether the specified <paramref name="type" /> has a mapping in this
+        ///     <see cref="IObjectContainer" /> or any of its <see cref="Parent" /> containers.</summary>
         /// <param name="type">The type.</param>
         /// <returns><c>true</c> if the specified type has mapping; otherwise, <c>false</c>.</returns>
         /// <exception cref="System.ArgumentNullException"></exception>
@@ -162,9 +172,7 @@ namespace MattEland.Common.Providers
             return Mappings.ContainsKey(type);
         }
 
-        /// <summary>
-        ///     Gets or sets the parent container.
-        /// </summary>
+        /// <summary>Gets or sets the parent container.</summary>
         /// <value>The parent.</value>
         /// <exception cref="System.InvalidOperationException"></exception>
         /// <exception cref="InvalidOperationException">Cannot set a container to have itself as a parent</exception>
@@ -202,9 +210,7 @@ namespace MattEland.Common.Providers
             }
         }
 
-        /// <summary>
-        ///     Provides an instance of the requested type.
-        /// </summary>
+        /// <summary>Provides an instance of the requested type.</summary>
         /// <typeparam name="TRequested">The type that was requested to be provided.</typeparam>
         /// <returns>An instance of the requested type</returns>
         /// <exception cref="NotSupportedException">
@@ -216,15 +222,33 @@ namespace MattEland.Common.Providers
         {
             var type = typeof(TRequested);
 
-            var instance = ProvideType(type, true, args);
+            var instance = ProvideTypePrivate(type, true, args);
             Debug.Assert(instance != null);
 
             return (TRequested)instance;
         }
 
-        /// <summary>
-        ///     Provides an instance of the requested <paramref name="type" />.
-        /// </summary>
+        /// <summary>Provides a collection of the specified type of <see langword="object" /> .</summary>
+        /// <remarks>
+        ///     <para>This functions by calling <see ref="Provide" /> on the ICollection&lt;gt; generic type.</para>
+        ///     <para>
+        ///         It's highly advised to provide a new instance via <see ref="Provide" /> (as opposed to
+        ///         using <see ref="RegisterProvidedInstance" />) on ICollection&lt;gt;
+        ///     </para>
+        /// </remarks>
+        /// <typeparam name="TCollectionItem"> The type of items the collection supports. </typeparam>
+        /// <returns>The new collection. This will not be <see langword="null" /> .</returns>
+        public ICollection<TCollectionItem> ProvideCollection<TCollectionItem>()
+        {
+            var tConcreteCollection = CollectionType.MakeGenericType(typeof(TCollectionItem));
+
+            var genericCollection = ProvideType(tConcreteCollection);
+            Debug.Assert(genericCollection != null);
+
+            return (ICollection<TCollectionItem>)genericCollection;
+        }
+
+        /// <summary>Provides an instance of the requested <paramref name="type" />.</summary>
         /// <paramref name="type">The <see cref="Type" /> that was requested to be provided.</paramref>
         /// <returns>An instance of the requested type</returns>
         /// <exception cref="NotSupportedException">
@@ -232,50 +256,17 @@ namespace MattEland.Common.Providers
         ///     instantiation.
         /// </exception>
         /// <exception cref="ArgumentNullException"><paramref name="type" /> is <see langword="null" />.</exception>
-        [CanBeNull]
-        public object ProvideType([NotNull] Type type, bool errorOnNoInstance, params object[] args)
+        [NotNull]
+        public object ProvideType([NotNull] Type type, params object[] args)
         {
-            if (type == null) { throw new ArgumentNullException(nameof(type)); }
+            var value = ProvideTypePrivate(type, true, args);
+            Debug.Assert(value != null);
 
-            // Determine which type to create
-            var provider = GetObjectProvider(type);
-
-            // When using the Instance Provider, make sure the fallback is accurate
-            if (provider == InstanceProvider)
-            {
-                InstanceProvider.FallbackProvider = FallbackProvider;
-            }
-
-            try
-            {
-                /* Create and return an instance of the requested type using the type 
-                   determined earlier. This can throw many exceptions which will be
-                   wrapped into more user-friendly exceptions with easier error handling. */
-
-                var instance = provider.CreateInstance(type, args);
-
-                // Some callers want exceptions on not found; others don't
-                if (instance == null && errorOnNoInstance)
-                {
-                    ThrowNotProvidedException(type.FullName);
-                }
-
-                return instance;
-            }
-            catch (MissingMemberException ex)
-            {
-                // Try to throw the same type of exception with additional information.
-                string msg =
-                    $"Could not instantiate {type.FullName} due to missing member exception: '{ex.Message}'";
-
-                throw new NotSupportedException(msg, ex);
-            }
+            return value;
         }
 
-        /// <summary>
-        ///     Registers a custom <see cref="IObjectProvider" /> as a source for future requests for
-        ///     <paramref name="type" /> in this container
-        /// </summary>
+        /// <summary>Registers a custom <see cref="IObjectProvider" /> as a source for future requests for
+        ///     <paramref name="type" /> in this container</summary>
         /// <param name="type">The type.</param>
         /// <param name="provider">The object provider.</param>
         /// <exception cref="ArgumentNullException">
@@ -291,14 +282,15 @@ namespace MattEland.Common.Providers
         }
 
         /// <summary>
-        ///     Registers an activator function responsible for instantiating the desired type.
+        ///     Registers an <paramref name="activator"/> function responsible for instantiating the
+        ///     desired type.
         /// </summary>
-        /// <param name="type">The type.</param>
-        /// <param name="activator">The activator function.</param>
-        /// <param name="arguments">The arguments to pass in to the activator function.</param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="type" /> or <paramref name="activator" /> is <see langword="null" />.
         /// </exception>
+        /// <param name="type"> The type. </param>
+        /// <param name="activator"> The activator function. </param>
+        /// <param name="arguments"> The arguments to pass in to the activator function. </param>
         public void Register(
             [NotNull] Type type,
             [NotNull] Delegate activator,
@@ -315,18 +307,18 @@ namespace MattEland.Common.Providers
         }
 
         /// <summary>
-        ///     Registers the preferred type as the type to instantiate when the base type is requested.
+        ///     Registers the preferred type as the type to instantiate when the
+        ///     <paramref name="baseType"/> is requested.
         /// </summary>
-        /// <param name="baseType">The type that will be requested.</param>
-        /// <param name="preferredType">
-        ///     The type that should be created when <see cref="baseType" /> is
-        ///     requested.
-        /// </param>
-        /// <param name="arguments">The arguments (if any) to pass to the class's constructor.</param>
         /// <exception cref="ArgumentNullException">
-        ///     <paramref name="baseType" /> or
-        ///     <paramref name="preferredType" /> is <see langword="null" />.
+        ///     <paramref name="baseType" /> or <paramref name="preferredType" /> is
+        ///     <see langword="null" /> .
         /// </exception>
+        /// <param name="baseType"> The type that will be requested. </param>
+        /// <param name="preferredType">
+        ///     The type that should be created when <see cref="baseType" /> is requested.
+        /// </param>
+        /// <param name="arguments"> The arguments (if any) to pass to the class's constructor. </param>
         public void Register(
             [NotNull] Type baseType,
             [NotNull] Type preferredType,
@@ -368,12 +360,8 @@ namespace MattEland.Common.Providers
             Mappings[type] = InstanceProvider;
         }
 
-        /// <summary>
-        ///     Resets all mappings for creating types to their default values.
-        /// </summary>
-        /// <remarks>
-        ///     This is useful for unit testing for cleaning up before invoking each time
-        /// </remarks>
+        /// <summary>Resets all mappings for creating types to their default values.</summary>
+        /// <remarks>This is useful for unit testing for cleaning up before invoking each time</remarks>
         public void ResetMappings()
         {
             // Clear out all usages
@@ -384,7 +372,8 @@ namespace MattEland.Common.Providers
         }
 
         /// <summary>
-        ///     Tries to provide an instance of type <typeparamref name="T" /> and returns null if it cannot.
+        ///     Tries to provide an instance of type <typeparamref name="T" /> and returns null if it
+        ///     cannot.
         /// </summary>
         /// <typeparam name="T">The type to return</typeparam>
         /// <param name="args">The arguments.</param>
@@ -397,7 +386,7 @@ namespace MattEland.Common.Providers
         {
             try
             {
-                var instance = ProvideType(typeof(T), false, args);
+                var instance = ProvideTypePrivate(typeof(T), false, args);
 
                 return instance as T;
             }
@@ -411,25 +400,95 @@ namespace MattEland.Common.Providers
                     return null;
                 }
 
-                // Rethrow anything else we caught in this block
+                // Throw anything else we caught in this block
                 throw;
             }
         }
 
-        /// <summary>
-        ///     Creates an instance of the requested type.
-        /// </summary>
+        /// <summary>Provides an instance of the requested <paramref name="type" />.</summary>
+        /// <paramref name="type">The <see cref="Type" /> that was requested to be provided.</paramref>
+        /// <returns>An instance of the requested type</returns>
+        /// <exception cref="NotSupportedException">
+        ///     The type is not correctly configured to allow for
+        ///     instantiation.
+        /// </exception>
+        /// <exception cref="ArgumentNullException"><paramref name="type" /> is <see langword="null" />.</exception>
+        [CanBeNull]
+        public object TryProvideType([NotNull] Type type, params object[] args)
+        {
+            return ProvideTypePrivate(type, false, args);
+        }
+
+        /// <summary>Creates an instance of the requested type.</summary>
         /// <param name="requestedType">The type that was requested.</param>
         /// <param name="args">The arguments</param>
         /// <returns>A new instance of the requested type</returns>
         object IObjectProvider.CreateInstance(Type requestedType, params object[] args)
         {
-            return ProvideType(requestedType, true, args);
+            return ProvideType(requestedType, args);
         }
 
-        /// <summary>
-        ///     Throws the not provided <see cref="NotSupportedException" />.
-        /// </summary>
+        /// <summary>Adds default mappings to the container.</summary>
+        public void AddDefaultMappings()
+        {
+        }
+
+        /// <summary>Provides an instance of the requested <paramref name="type" />.</summary>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="type" /> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="NotSupportedException">
+        ///     The type is not correctly configured to allow for
+        ///     instantiation.
+        /// </exception>
+        /// <param name="type"> The <see cref="Type" /> that was requested to be provided. </param>
+        /// <param name="errorOnNoInstance"> true to error on no instance. </param>
+        /// <param name="args"> The arguments. </param>
+        /// <returns>An instance of the requested type.</returns>
+        [CanBeNull]
+        public object ProvideTypePrivate(
+            [NotNull] Type type,
+            bool errorOnNoInstance,
+            params object[] args)
+        {
+            if (type == null) { throw new ArgumentNullException(nameof(type)); }
+
+            // Determine which type to create
+            var provider = GetObjectProvider(type);
+
+            // When using the Instance Provider, make sure the fallback is accurate
+            if (provider == InstanceProvider)
+            {
+                InstanceProvider.FallbackProvider = FallbackProvider;
+            }
+
+            try
+            {
+                /* Create and return an instance of the requested type using the type 
+                   determined earlier. This can throw many exceptions which will be
+                   wrapped into more user-friendly exceptions with easier error handling. */
+
+                var instance = provider.CreateInstance(type, args);
+
+                // Some callers want exceptions on not found; others don't
+                if (instance == null && errorOnNoInstance)
+                {
+                    ThrowNotProvidedException(type.FullName);
+                }
+
+                return instance;
+            }
+            catch (MissingMemberException ex)
+            {
+                // Try to throw the same type of exception with additional information.
+                string msg =
+                    $"Could not instantiate {type.FullName} due to missing member exception: '{ex.Message}'";
+
+                throw new NotSupportedException(msg, ex);
+            }
+        }
+
+        /// <summary>Throws the not provided <see cref="NotSupportedException" />.</summary>
         /// <param name="typeName">The name of the type that was requested</param>
         /// <exception cref="NotSupportedException">
         ///     Thrown if the operation was not supported given the current
@@ -441,9 +500,7 @@ namespace MattEland.Common.Providers
             throw new NotSupportedException(message);
         }
 
-        /// <summary>
-        ///     Validates that <see cref="preferredType" /> is something that can be created.
-        /// </summary>
+        /// <summary>Validates that <see cref="preferredType" /> is something that can be created.</summary>
         /// <param name="baseType">The type that will be requested.</param>
         /// <param name="preferredType">
         ///     The type that should be created when <see cref="baseType" /> is
@@ -469,5 +526,39 @@ namespace MattEland.Common.Providers
                     $"{preferredType.FullName} cannot be cast to {baseType.FullName}");
             }
         }
+
+        #region Constructors
+
+        /// <summary>Initializes a new instance of the <see cref="CommonContainer" /> class.</summary>
+        public CommonContainer() : this(true)
+        {
+        }
+
+        /// <summary>Initializes a new instance of the <see cref="CommonContainer" /> class.</summary>
+        /// <param name="addDefaultMappings"> Whether or not to add default mappings. </param>
+        public CommonContainer(bool addDefaultMappings) : this(addDefaultMappings, null)
+        {
+        }
+
+        /// <summary>Initializes a new instance of the <see cref="CommonContainer" /> class.</summary>
+        /// <param name="parent">The parent container.</param>
+        public CommonContainer([CanBeNull] IObjectContainer parent) : this(true, parent)
+        {
+        }
+
+        /// <summary>Initializes a new instance of the <see cref="CommonContainer" /> class.</summary>
+        /// <param name="addDefaultMappings"> Whether or not to add default mappings. </param>
+        /// <param name="parent">The parent container.</param>
+        public CommonContainer(bool addDefaultMappings, [CanBeNull] IObjectContainer parent)
+        {
+            Mappings = new Dictionary<Type, IObjectProvider>();
+            InstanceProvider = new InstanceProvider();
+
+            Parent = parent;
+
+            if (addDefaultMappings) { AddDefaultMappings(); }
+        }
+
+        #endregion
     }
 }

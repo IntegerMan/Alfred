@@ -558,6 +558,35 @@ namespace MattEland.Ani.Alfred.Tests.Common
             instance.ShouldNotBe(null);
             instance.ShouldBeAssignableTo(t);
         }
+
+        /// <summary>
+        ///     Tests that the container can provide empty collections of objects.
+        /// </summary>
+        /// <remarks> See ALF-98. </remarks>
+        [Test]
+        public void ProviderCanCreateCollections()
+        {
+            var collection = CommonProvider.ProvideCollection<TestClassBase>();
+
+            collection.ShouldNotBeNull();
+            collection.ShouldBeEmpty();
+        }
+
+        /// <summary>
+        ///     Tests that the container can provide empty collections of objects that use a preferred collection.
+        /// </summary>
+        /// <remarks> See ALF-98. </remarks>
+        [Test]
+        public void ProviderCanCreateCollectionsOfCustomType()
+        {
+            CommonProvider.CollectionType = typeof(HashSet<>);
+
+            var collection = CommonProvider.ProvideCollection<ITestInterfaceDerived>();
+
+            collection.ShouldNotBeNull();
+            collection.ShouldBeEmpty();
+            collection.ShouldBeOfType(typeof(HashSet<ITestInterfaceDerived>));
+        }
     }
 
 }

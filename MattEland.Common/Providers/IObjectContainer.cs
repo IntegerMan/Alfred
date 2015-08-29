@@ -8,6 +8,7 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 
 using JetBrains.Annotations;
 
@@ -38,14 +39,43 @@ namespace MattEland.Common.Providers
         }
 
         /// <summary>
+        ///     Gets or sets the <see cref="Type" /> used when providing collections in
+        ///     <see ref="ProvideCollection" />.
+        /// </summary>
+        /// <value>
+        ///     The <see cref="Type" /> to use when providing collections.
+        /// </value>
+        [NotNull]
+        Type CollectionType { get; set; }
+
+        /// <summary>
+        ///     Provides a collection of the specified type of <see langword="object" /> .
+        /// </summary>
+        /// <remarks>
+        ///     <para>
+        ///         This functions by calling <see ref="Provide"/> on the ICollection&lt;gt; generic type.
+        ///     </para>
+        ///     <para>
+        ///         It's highly advised to provide a new instance via <see ref="Provide" /> (as opposed
+        ///         to using <see ref="RegisterProvidedInstance"/>) on ICollection&lt;gt;
+        ///     </para>
+        /// </remarks>
+        /// <typeparam name="TCollectionItem"> The type of items the collection supports. </typeparam>
+        /// <returns>
+        ///     The new collection. This will not be <see langword="null" /> .
+        /// </returns>
+        [NotNull]
+        ICollection<TCollectionItem> ProvideCollection<TCollectionItem>();
+
+        /// <summary>
         ///     Provides an instance of the requested type.
         /// </summary>
         /// <typeparam name="TRequested">The type that was requested to be provided.</typeparam>
-        /// <returns>An instance of the requested type</returns>
+        /// <param name="args">The arguments.</param>
         /// <exception cref="NotSupportedException">
-        ///     The type is not correctly configured to allow for
-        ///     instantiation.
+        /// The type is not correctly configured to allow for instantiation.
         /// </exception>
+        /// <returns>An instance of the requested type.</returns>
         [NotNull]
         TRequested Provide<TRequested>(params object[] args);
 
@@ -113,16 +143,32 @@ namespace MattEland.Common.Providers
         void ResetMappings();
 
         /// <summary>
-        ///     Provides an instance of the requested type.
+        ///     Provides an instance of the requested <paramref name="type" /> .
         /// </summary>
-        /// <paramref name="type">The type that was requested to be provided.</paramref>
-        /// <returns>An instance of the requested type</returns>
+        /// <param name="type">The <see cref="Type" /> that was requested to be provided.</param>
+        /// <param name="args">The arguments to use when providing or creating the <paramref name="type"/>.</param>
         /// <exception cref="NotSupportedException">
-        ///     The type is not correctly configured to allow for
-        ///     instantiation.
+        /// The <paramref name="type"/> is not correctly configured to allow for instantiation.
         /// </exception>
-        /// <exception cref="ArgumentNullException"><paramref name="type" /> is <see langword="null" />.</exception>
-        object ProvideType([NotNull] Type type, bool errorOnNoInstance, params object[] args);
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="type" /> is <see langword="null" /> .
+        /// </exception>
+        /// <returns>An instance of the requested <paramref name="type"/></returns>
+        [NotNull]
+        object ProvideType([NotNull] Type type, params object[] args);
+
+        /// <summary>
+        ///     Attempts to provide an instance of the requested <paramref name="type"/>, returning
+        ///     <see langword="null"/> if the <paramref name="type"/> could not be provided.
+        /// </summary>
+        /// <param name="type">The <see cref="Type"/> that was requested to be provided.</param>
+        /// <param name="args">The arguments to use when providing or creating the type.</param>
+        /// <returns>
+        ///     An instance of the requested <paramref name="type"/> or <see langword="null"/> if
+        ///     the <paramref name="type"/> could not be provided.
+        /// </returns>
+        [CanBeNull]
+        object TryProvideType([NotNull] Type type, params object[] args);
 
         /// <summary>
         ///     Tries to provide an instance of type <typeparamref name="T" /> and returns null if it cannot.
