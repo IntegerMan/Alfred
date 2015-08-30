@@ -141,11 +141,13 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 
                 // Create a widget for the counter
                 // Store the counter as the widget's data context for easier updating later on
-                var id = string.Format(Locale, "progProcessor{0}", counter.Name);
-                var widget = new AlfredProgressBarWidget(BuildWidgetParameters(id));
-                widget.DataContext = counter;
-                widget.Minimum = 0;
-                widget.Maximum = 100;
+                var id = string.Format(Locale, @"progProcessor{0}", counter.Name);
+                var widget = new AlfredProgressBarWidget(BuildWidgetParameters(id))
+                {
+                    DataContext = counter,
+                    Minimum = 0,
+                    Maximum = 100
+                };
 
                 // Get the first value of the widget and have the label applied to the widget
                 var label = string.Format(CultureInfo.CurrentCulture, _cpuMonitorLabel, core);

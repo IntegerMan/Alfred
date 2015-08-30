@@ -101,13 +101,18 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         }
 
         /// <summary>
-        ///     Processes an Alfred Command. If the command is handled, result should be modified
-        ///     accordingly and the method should return true. Returning false will not stop the message from
-        ///     being propagated.
+        ///     Processes an Alfred Command. If the <paramref name="command"/> is handled,
+        ///     <paramref name="result"/> should be modified accordingly and the method should
+        ///     return true. Returning <see langword="false"/> will not stop the message from being
+        ///     propagated.
         /// </summary>
-        /// <param name="command">The command.</param>
-        /// <param name="result">The result. If the command was handled, this should be updated.</param>
-        /// <returns><c>True</c> if the command was handled; otherwise false.</returns>
+        /// <param name="command"> The command. </param>
+        /// <param name="result">
+        ///     The result. If the <paramref name="command"/> was handled, this should be updated.
+        /// </param>
+        /// <returns>
+        ///     <c>True</c> if the <paramref name="command"/> was handled; otherwise false.
+        /// </returns>
         public override bool ProcessAlfredCommand(
             ChatCommand command,
             [CanBeNull] AlfredCommandResult result)
