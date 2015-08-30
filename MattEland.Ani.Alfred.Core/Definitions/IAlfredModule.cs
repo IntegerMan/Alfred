@@ -8,6 +8,8 @@
 
 using System.Collections.Generic;
 
+using JetBrains.Annotations;
+
 using MattEland.Ani.Alfred.Core.Widgets;
 
 namespace MattEland.Ani.Alfred.Core.Definitions
@@ -21,6 +23,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         ///     Gets the user interface widgets for the module.
         /// </summary>
         /// <value>The user interface widgets.</value>
+        [NotNull, ItemNotNull]
         IEnumerable<WidgetBase> Widgets { get; }
     }
 }

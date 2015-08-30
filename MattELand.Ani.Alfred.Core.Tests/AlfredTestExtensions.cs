@@ -44,7 +44,11 @@ namespace MattEland.Ani.Alfred.Tests
             // Register mappings for promised types
             container.Register(typeof(IConsoleEvent), typeof(ConsoleEvent));
             container.Register(typeof(MetricProviderBase), typeof(ValueMetricProvider));
-            container.Register(typeof(IMetricProviderFactory), typeof(ValueMetricProviderFactory));
+
+            // We'll want to get at the same factory any time we request a factory for test purposes
+            var factory = new ValueMetricProviderFactory();
+            factory.RegisterAsProvidedInstance(typeof(IMetricProviderFactory), container);
+            factory.RegisterAsProvidedInstance(typeof(ValueMetricProviderFactory), container);
         }
 
         /// <summary>

@@ -48,7 +48,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
             base.SetUp();
 
             _metricProviderFactory = new ValueMetricProviderFactory();
-            _subsystem = new SystemMonitoringSubsystem(Container, _metricProviderFactory);
+            _subsystem = new SystemMonitoringSubsystem(Container);
 
             var bootstrapper = new AlfredBootstrapper();
             _alfred = bootstrapper.Create();

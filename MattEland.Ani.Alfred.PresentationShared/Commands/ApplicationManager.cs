@@ -107,6 +107,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         private void ConfigureContainer()
         {
             Container.CollectionType = typeof(ObservableCollection<>);
+
             Container.Register(typeof(AlfredCommand), typeof(XamlClientCommand));
             Container.Register(typeof(MetricProviderBase), typeof(CounterMetricProvider));
             Container.Register(typeof(IMetricProviderFactory), typeof(CounterMetricProviderFactory));
@@ -269,9 +270,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             // Initialize System Monitor - this can throw a few exceptions so may not be available.
             try
             {
-                var metricProviderFactory = Container.Provide<IMetricProviderFactory>();
-                _systemMonitoringSubsystem = new SystemMonitoringSubsystem(Container,
-                                                                           metricProviderFactory);
+                _systemMonitoringSubsystem = new SystemMonitoringSubsystem(Container);
                 _alfred.Register(_systemMonitoringSubsystem);
             }
             catch (Win32Exception ex)

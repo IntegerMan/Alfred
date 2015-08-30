@@ -48,17 +48,19 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         ///     Thrown when one or more required arguments are null.
         /// </exception>
         /// <param name="container"> The container. </param>
-        /// <param name="factory"> The factory. </param>
-        public SystemMonitoringSubsystem(
-            [NotNull] IObjectContainer container,
-            [NotNull] IMetricProviderFactory factory) : base(container)
+        public SystemMonitoringSubsystem([NotNull] IObjectContainer container) : base(container)
         {
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
 
+            // Grab a factory from the container. This can be counter-based or a test factory.
+            var factory = Container.Provide<IMetricProviderFactory>();
+
+            // Set up modules
             _cpuModule = new CpuMonitorModule(container, factory);
             _memoryModule = new MemoryMonitorModule(container, factory);
             _diskModule = new DiskMonitorModule(container, factory);
 
+            // Set up the containing page
             _page = new AlfredModuleListPage(container,
                                              Resources.SystemMonitoringSystem_Name.NonNull(),
                                              "Sys");

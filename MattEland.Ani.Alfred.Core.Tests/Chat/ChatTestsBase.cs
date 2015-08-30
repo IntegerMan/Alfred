@@ -109,7 +109,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         /// <summary>
         ///     Gets the Alfred framework.
         /// </summary>
-        /// <value>The aAfred framework.</value>
+        /// <value>The Alfred framework.</value>
         [NotNull]
         protected TestAlfred Alfred
         {
@@ -240,9 +240,10 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             _testSubsystem = new TestSubsystem(Container);
             _alfred.Register(_testSubsystem);
 
-            MetricProviderFactory = new ValueMetricProviderFactory();
-            _sysSubsystem = new SystemMonitoringSubsystem(Container, MetricProviderFactory);
+            _sysSubsystem = new SystemMonitoringSubsystem(Container);
             _alfred.Register(_sysSubsystem);
+
+            MetricProviderFactory = Container.Provide<ValueMetricProviderFactory>();
 
             // Store Chat Handler Details
             var chatHandler = ChatSubsystem.ChatHandler;

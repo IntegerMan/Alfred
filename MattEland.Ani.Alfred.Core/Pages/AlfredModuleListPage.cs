@@ -43,6 +43,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
                                     [NotNull] string name,
                                     [NotNull] string id) : base(container, name, id)
         {
+            //- Validate
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
 
             _modules = container.ProvideCollection<IAlfredModule>();
@@ -84,8 +85,8 @@ namespace MattEland.Ani.Alfred.Core.Pages
         {
             get
             {
-                return base.IsVisible &&
-                       Modules.Any(m => m.Widgets != null && m.Widgets.Any(w => w != null && w.IsVisible));
+                // Display if any module has a visible widget
+                return base.IsVisible && Modules.Any(m => m.Widgets.Any(w => w.IsVisible));
             }
         }
 
@@ -98,6 +99,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         public void Register([NotNull] IAlfredModule module)
         {
             _modules.AddSafe(module);
+
             module.OnRegistered(AlfredInstance);
         }
 
@@ -110,13 +112,18 @@ namespace MattEland.Ani.Alfred.Core.Pages
         }
 
         /// <summary>
-        ///     Processes an Alfred Command. If the command is handled, result should be modified accordingly
-        ///     and the method should return true. Returning false will not stop the message from being
-        ///     propogated.
+        ///     Processes an Alfred Command. If the <paramref name="command"/> is handled,
+        ///     <paramref name="result"/> should be modified accordingly and the method should
+        ///     return true. Returning <see langword="false"/> will not stop the message from being
+        ///     propagated.
         /// </summary>
-        /// <param name="command">The command.</param>
-        /// <param name="result">The result. If the command was handled, this should be updated.</param>
-        /// <returns><c>True</c> if the command was handled; otherwise false.</returns>
+        /// <param name="command"> The command. </param>
+        /// <param name="result">
+        ///     The result. If the <paramref name="command"/> was handled, this should be updated.
+        /// </param>
+        /// <returns>
+        ///     <c>True</c> if the <paramref name="command"/> was handled; otherwise false.
+        /// </returns>
         public override bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
         {
 

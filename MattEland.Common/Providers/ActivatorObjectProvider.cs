@@ -73,7 +73,7 @@ namespace MattEland.Common.Providers
             // Validate against interfaces
             if (typeToCreate.IsInterface)
             {
-                throw new NotSupportedException("Cannot create an interface");
+                throw new NotSupportedException($"Cannot create interface type: {typeToCreate.Name}");
             }
 
             // Validate against abstract classes
