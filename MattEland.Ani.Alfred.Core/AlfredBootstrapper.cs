@@ -36,44 +36,16 @@ namespace MattEland.Ani.Alfred.Core
         ///     Thrown when one or more required arguments are null.
         /// </exception>
         /// <param name="container"> The container. </param>
-        public AlfredBootstrapper([NotNull] IObjectContainer container)
-            : this(container, new AlfredStatusController(), null)
-        {
-            if (container == null) { throw new ArgumentNullException(nameof(container)); }
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredBootstrapper" /> class.
-        /// </summary>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown when one or more required arguments are null.
-        /// </exception>
-        /// <param name="container"> The container. </param>
-        /// <param name="statusController"> The status controller. </param>
         /// <param name="console"> The console. </param>
         public AlfredBootstrapper(
             [NotNull] IObjectContainer container,
-            [NotNull] IStatusController statusController,
-            [CanBeNull] IConsole console)
+            [CanBeNull] IConsole console = null)
         {
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
-            if (statusController == null)
-            {
-                throw new ArgumentNullException(nameof(statusController));
-            }
-            Console = console;
-            StatusController = statusController;
             Container = container;
+            Console = console;
         }
 
-        /// <summary>
-        ///     Gets or sets the status controller.
-        /// </summary>
-        /// <value>
-        ///     The status controller.
-        /// </value>
-        [NotNull]
-        public IStatusController StatusController { get; set; }
 
         /// <summary>
         ///     Gets or sets the container.
@@ -102,7 +74,7 @@ namespace MattEland.Ani.Alfred.Core
         [NotNull]
         public AlfredApplication Create()
         {
-            var alfred = new AlfredApplication(Container, StatusController) { Console = Console };
+            var alfred = new AlfredApplication(Container) { Console = Console };
 
             return alfred;
         }

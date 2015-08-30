@@ -11,6 +11,7 @@ using MattEland.Ani.Alfred.PresentationShared.Commands;
 using MattEland.Ani.Alfred.PresentationShared.Controls;
 
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 
 namespace MattEland.Ani.Alfred.Tests.Controls
 {
@@ -36,7 +37,7 @@ namespace MattEland.Ani.Alfred.Tests.Controls
         {
             base.SetUp();
 
-            _app = new ApplicationManager(Container);
+            _app = new ApplicationManager(Container, BuildOptions());
             _control = new RootPagesControl(_app);
             _app.Alfred.Initialize();
 

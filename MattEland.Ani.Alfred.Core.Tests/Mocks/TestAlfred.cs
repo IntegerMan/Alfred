@@ -15,7 +15,6 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Tests.Mocks
@@ -113,10 +112,10 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
         public void Register(IChatProvider chatProvider) { ChatProvider = chatProvider; }
 
         /// <summary>
-        ///     Registers a sub system with Alfred.
+        ///     Registers a subsystem with Alfred.
         /// </summary>
         /// <param name="subsystem">The subsystem.</param>
-        public void Register(AlfredSubsystem subsystem) { SubsystemsList.Add(subsystem); }
+        public void Register(IAlfredSubsystem subsystem) { SubsystemsList.Add(subsystem); }
 
         /// <summary>
         ///     Gets the root pages.

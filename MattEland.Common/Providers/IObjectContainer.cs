@@ -91,6 +91,19 @@ namespace MattEland.Common.Providers
         void Register([NotNull] Type type, [NotNull] IObjectProvider provider);
 
         /// <summary>
+        ///     Registers a mapping if no mapping for the specified <paramref name="type"/> already
+        ///     exists.
+        /// </summary>
+        /// <param name="type"> The type to register. </param>
+        /// <param name="preferredType">
+        ///     The preferred type if there is no mapping already present.
+        /// </param>
+        /// <returns>
+        ///     true if it succeeds, false if it was already registered.
+        /// </returns>
+        bool TryRegister([NotNull] Type type, [NotNull] Type preferredType);
+
+        /// <summary>
         ///     Registers an activator function responsible for instantiating the desired type.
         /// </summary>
         /// <param name="type">The type.</param>
@@ -188,11 +201,12 @@ namespace MattEland.Common.Providers
         bool HasMapping([NotNull] Type type);
 
         /// <summary>
-        ///     Gets the object provider for the requested type.
+        ///     Gets the <see cref="IObjectProvider"/> for the requested <paramref name="type"/>.
         /// </summary>
         /// <remarks>
         ///     This will search not only this container's mappings but also will search its
-        ///     <see cref="Parent" /> and any additional ancestors.
+        ///     <see cref="IObjectContainer.Parent" /> and any additional
+        ///     ancestors.
         /// </remarks>
         /// <param name="type">Type that was requested.</param>
         /// <returns>The object provider.</returns>

@@ -45,7 +45,13 @@ namespace MattEland.Ani.Alfred.WPF
             // Do not allow topmost window mode while debugging
             Topmost = false;
 #endif
-            _app = new ApplicationManager(CommonProvider.Container, this, enableSpeech: true);
+            var options = new ApplicationManagerOptions
+            {
+                IsSpeechEnabled = true,
+                ShowMindExplorerPage = true
+            };
+
+            _app = new ApplicationManager(CommonProvider.Container, options, this);
 
             // DataBindings rely on Alfred presently as there hasn't been a need for a page ViewModel yet
             DataContext = _app;

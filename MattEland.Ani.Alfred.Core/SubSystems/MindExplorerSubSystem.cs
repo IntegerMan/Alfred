@@ -28,10 +28,16 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        public MindExplorerSubsystem([NotNull] IObjectContainer container) : base(container)
+        /// <param name="container"> The container. </param>
+        /// <param name="includeExplorerPage">
+        ///     <see langword="true"/> to include the page in root pages, <see langword="false"/>
+        ///     otherwise.
+        /// </param>
+        public MindExplorerSubsystem([NotNull] IObjectContainer container, bool includeExplorerPage) : base(container)
         {
             MindExplorerPage = new ExplorerPage(container, "Mind Explorer", "MindMap");
+
+            if (!includeExplorerPage) { MindExplorerPage.IsRootLevel = false; }
         }
 
         /// <summary>

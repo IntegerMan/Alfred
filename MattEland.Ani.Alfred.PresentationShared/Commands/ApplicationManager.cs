@@ -41,6 +41,8 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         /// </summary>
         private const double UpdateFrequencyInSeconds = 0.25;
 
+        private const string LogHeader = "AppManager.Initialize";
+
         /// <summary>
         ///     The Alfred Provider that makes the application possible
         /// </summary>
@@ -63,16 +65,17 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         public IObjectContainer Container { get; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:System.Object" /> class with
-        /// the specified user interface director and platform provider.
+        ///     Initializes a new instance of the <see cref="T:System.Object" /> class with the specified
+        ///     user interface director and platform provider.
         /// </summary>
-        /// <param name="director">The user interface director</param>
-        /// <param name="container">The container.</param>
-        /// <param name="enableSpeech">if set to <c>true</c> enable speech.</param>
+        /// <param name="container"> The container. </param>
+        /// <param name="options"> Options for creating the application. </param>
+        /// <param name="director"> The user interface director. </param>
         public ApplicationManager([CanBeNull] IObjectContainer container,
-            [CanBeNull] IUserInterfaceDirector director = null,
-            bool enableSpeech = false)
+                                  [NotNull] ApplicationManagerOptions options,
+            [CanBeNull] IUserInterfaceDirector director = null)
         {
+            Options = options;
 
             // Everything will need a container. Provide one.
             Container = container ?? CommonProvider.Container;
@@ -84,12 +87,11 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             ConfigureContainer();
 
             // Create Alfred. It won't be online and running yet, but create it.
-            var bootstrapper = new AlfredBootstrapper(Container);
-            _alfred = bootstrapper.Create();
+            _alfred = Container.Provide<AlfredApplication>(Container);
             _alfred.RegisterAsProvidedInstance(typeof(IAlfred), Container);
 
             // Give Alfred a way to talk to the user and the client a way to log events that are separate from Alfred
-            _console = InitializeConsole(enableSpeech);
+            _console = InitializeConsole();
 
             // Set the director. This will, in turn, set the shell
             UserInterfaceDirector = director;
@@ -100,6 +102,9 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             InitializeUpdatePump();
         }
 
+        [NotNull]
+        public ApplicationManagerOptions Options { get; }
+
         /// <summary>
         ///     Sets up the mappings for types the container will need to provide.
         /// </summary>
@@ -107,9 +112,10 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         {
             Container.CollectionType = typeof(ObservableCollection<>);
 
-            Container.Register(typeof(AlfredCommand), typeof(XamlClientCommand));
-            Container.Register(typeof(MetricProviderBase), typeof(CounterMetricProvider));
-            Container.Register(typeof(IMetricProviderFactory), typeof(CounterMetricProviderFactory));
+            Container.TryRegister(typeof(AlfredCommand), typeof(XamlClientCommand));
+            Container.TryRegister(typeof(MetricProviderBase), typeof(CounterMetricProvider));
+            Container.TryRegister(typeof(IMetricProviderFactory), typeof(CounterMetricProviderFactory));
+            Container.TryRegister(typeof(IAlfred), typeof(AlfredApplication));
         }
 
         /// <summary>
@@ -217,17 +223,16 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         /// <summary>
         ///     Initializes the console for the application and returns the instantiated console.
         /// </summary>
-        /// <param name="enableSpeech"> if set to <c>true</c> enable speech. </param>
         /// <returns>
         ///     The instantiated console.
         /// </returns>
         [NotNull]
-        private IConsole InitializeConsole(bool enableSpeech)
+        private IConsole InitializeConsole()
         {
             // Give Alfred a way to talk to the application
             _console = new SimpleConsole(Container, new ExplorerEventFactory());
 
-            if (enableSpeech)
+            if (Options.IsSpeechEnabled)
             {
                 _console = new AlfredSpeechConsole(_console, _console.EventFactory)
                 {
@@ -249,16 +254,38 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         private void InitializeSubsystems()
         {
             // Log header
-            const string LogHeader = "AppManager.Initialize";
             _console?.Log(LogHeader, "Initializing subsystems", LogLevel.Verbose);
 
             // Init Core
             _alfredCoreSubsystem = new AlfredCoreSubsystem(Container);
             _alfred.Register(_alfredCoreSubsystem);
 
-            // Initialize System Monitor - this can throw a few exceptions so may not be available.
+            // Initialize System Monitor
+            InitializeSystemMonitoringSubsystem();
+
+            // Initialize Chat
+            _chatSubsystem = new ChatSubsystem(Container, _alfred.Name);
+            _alfred.Register(_chatSubsystem);
+
+            // Initialize Mind Explorer
+            _mindExplorerSubsystem = new MindExplorerSubsystem(Container, Options.ShowMindExplorerPage);
+            _alfred.Register(_mindExplorerSubsystem);
+
+            // Add any dynamic subsystems
+            foreach (var subsystem in Options.AdditionalSubsystems)
+            {
+                _alfred.Register(subsystem);
+            }
+        }
+
+        /// <summary>
+        ///     Initializes the system monitoring subsystem.
+        /// </summary>
+        private void InitializeSystemMonitoringSubsystem()
+        {
             try
             {
+                // This can throw a few exceptions so may not be available.
                 _systemMonitoringSubsystem = new SystemMonitoringSubsystem(Container);
                 _alfred.Register(_systemMonitoringSubsystem);
             }
@@ -278,14 +305,6 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
                                             ex.Message),
                               LogLevel.Error);
             }
-
-            // Initialize Chat
-            _chatSubsystem = new ChatSubsystem(Container, _alfred.Name);
-            _alfred.Register(_chatSubsystem);
-
-            // Initialize Mind Explorer
-            _mindExplorerSubsystem = new MindExplorerSubsystem(Container);
-            _alfred.Register(_mindExplorerSubsystem);
         }
 
         /// <summary>
@@ -315,7 +334,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         }
 
         /// <summary>
-        ///     Initializes the update pump that causes Alfred to update its modules.
+        ///     Initializes the update pump that causes <see cref="Alfred"/> to update its modules.
         /// </summary>
         private void InitializeUpdatePump()
         {
@@ -327,4 +346,5 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             timer.Start();
         }
     }
+
 }

@@ -63,26 +63,18 @@ namespace MattEland.Ani.Alfred.Core
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredApplication" /> class.
         /// </summary>
-        /// <remarks>
-        ///     Initialization should come from AlfredBootstrapper.
-        /// </remarks>
         /// <exception cref="ArgumentNullException">
         ///     Thrown when one or more required arguments are null.
         /// </exception>
         /// <param name="container"> The container. </param>
-        /// <param name="controller"> The controller. </param>
-        internal AlfredApplication(
-            [NotNull] IObjectContainer container,
-                                   [CanBeNull] IStatusController controller)
+        public AlfredApplication([NotNull] IObjectContainer container)
         {
             // Validate
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
             Container = container;
 
             // Set the controller
-            if (controller == null) { controller = new AlfredStatusController(this); }
-            _statusController = controller;
-            _statusController.Alfred = this;
+            _statusController = new AlfredStatusController(this);
 
             // Build out sub-collections
             _subsystems = Container.ProvideCollection<IAlfredSubsystem>();
@@ -222,7 +214,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <param name="subsystem">The subsystem.</param>
         /// <exception cref="InvalidOperationException">If a subsystem was registered when Alfred was offline.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="subsystem" /> is <see langword="null" />.</exception>
-        public void Register([NotNull] AlfredSubsystem subsystem)
+        public void Register([NotNull] IAlfredSubsystem subsystem)
         {
             if (subsystem == null) { throw new ArgumentNullException(nameof(subsystem)); }
             if (Status != AlfredStatus.Offline)

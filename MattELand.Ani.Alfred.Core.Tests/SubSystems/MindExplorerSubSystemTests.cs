@@ -47,7 +47,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
             var bootstrapper = new AlfredBootstrapper(Container);
             _alfred = bootstrapper.Create();
 
-            _subsystem = new MindExplorerSubsystem(Container);
+            _subsystem = new MindExplorerSubsystem(Container, true);
 
             _page = _subsystem.MindExplorerPage;
         }
@@ -143,7 +143,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         [Test]
         public void ApplicationContainsMindExplorer()
         {
-            var app = new ApplicationManager(Container);
+            var app = new ApplicationManager(Container, BuildOptions());
             Assert.That(app.Alfred.Subsystems.Any(s => s is MindExplorerSubsystem), "The Mind Explorer subsystem is not part of a typical Alfred application");
         }
 

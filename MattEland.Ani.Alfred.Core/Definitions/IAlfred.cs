@@ -113,7 +113,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         ///     Registers a sub system with Alfred.
         /// </summary>
         /// <param name="subsystem">The subsystem.</param>
-        void Register([NotNull] AlfredSubsystem subsystem);
+        void Register([NotNull] IAlfredSubsystem subsystem);
 
         /// <summary>
         ///     Tells modules to take a look at their content and update as needed.

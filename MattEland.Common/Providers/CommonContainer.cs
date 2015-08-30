@@ -266,6 +266,36 @@ namespace MattEland.Common.Providers
         }
 
         /// <summary>
+        ///     Registers a mapping if no mapping for the specified <paramref name="type"/> already
+        ///     exists.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when one or more required arguments are null.
+        /// </exception>
+        /// <param name="type"> The type to register. </param>
+        /// <param name="preferredType">
+        ///     The preferred type if there is no mapping already present.
+        /// </param>
+        /// <returns>
+        ///     true if it succeeds, false if it was already registered.
+        /// </returns>
+        public bool TryRegister([NotNull] Type type, [NotNull] Type preferredType)
+        {
+            //- Validate
+            if (type == null) { throw new ArgumentNullException(nameof(type)); }
+            if (preferredType == null) { throw new ArgumentNullException(nameof(preferredType)); }
+
+            // Only perform the registration if no mapping is already specified
+            if (!Mappings.ContainsKey(type))
+            {
+                Register(type, preferredType);
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         ///     Registers an <paramref name="activator" /> function responsible for instantiating the
         ///     desired type.
         /// </summary>

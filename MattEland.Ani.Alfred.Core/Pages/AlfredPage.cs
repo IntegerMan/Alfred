@@ -7,7 +7,6 @@
 // ---------------------------------------------------------
 
 using System;
-using System.Diagnostics;
 
 using JetBrains.Annotations;
 
@@ -21,10 +20,6 @@ namespace MattEland.Ani.Alfred.Core.Pages
     /// </summary>
     public abstract class AlfredPage : ComponentBase, IAlfredPage
     {
-        [NotNull]
-        private readonly string _name;
-
-        private readonly string _id;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AlfredPage" /> class.
@@ -37,6 +32,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <exception cref="ArgumentNullException"><paramref name="id" /> is <see langword="null" />.</exception>
         protected AlfredPage([NotNull] IObjectContainer container, [NotNull] string name, [NotNull] string id) : base(container)
         {
+            //- Validation
             if (name == null)
             {
                 throw new ArgumentNullException(nameof(name));
@@ -46,8 +42,10 @@ namespace MattEland.Ani.Alfred.Core.Pages
                 throw new ArgumentNullException(nameof(id));
             }
 
-            _name = name;
-            _id = id;
+            Name = name;
+            Id = id;
+
+            IsRootLevel = true;
         }
 
         /// <summary>
@@ -66,9 +64,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         [NotNull]
         public override string Name
         {
-            [DebuggerStepThrough]
-            get
-            { return _name; }
+            get;
         }
 
         /// <summary>
@@ -77,19 +73,14 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <value>The identifier.</value>
         public string Id
         {
-            [DebuggerStepThrough]
-            get
-            { return _id; }
+            get;
         }
 
         /// <summary>
         ///     Gets a value indicating whether this is a root level page that should show on the navigator.
         /// </summary>
         /// <value><c>true</c> if this page is root level; otherwise, <c>false</c>.</value>
-        public bool IsRootLevel
-        {
-            get { return true; }
-        }
+        public bool IsRootLevel { get; set; }
 
         /// <summary>
         /// Processes an Alfred Command. If the command is handled, result should be modified accordingly and the method should return true. Returning false will not stop the message from being propogated.

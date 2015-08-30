@@ -75,9 +75,18 @@ namespace MattEland.Ani.Alfred.VisualStudio
         {
             if (_app == null)
             {
-                _app = new ApplicationManager(CommonProvider.Container, null, enableSpeech: true);
+                var options = new ApplicationManagerOptions
+                {
+                    IsSpeechEnabled = true,
+                    ShowMindExplorerPage = false
+                };
+
+                // Build out the app manager
+                _app = new ApplicationManager(CommonProvider.Container, options);
+
                 _app.Console?.Log(Resources.AlfredPackageInstantiatingAlfredLogHeader, Resources.AlfredPackageInstantiatingAlfredLogMessage, LogLevel.Verbose);
 
+                // Auto Start
                 Debug.Assert(Settings.Default != null);
                 if (Settings.Default.AutoStartAlfred)
                 {

@@ -101,6 +101,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\ApplicationManager.cs" />
+    <Compile Include="Commands\ApplicationManagerOptions.cs" />
     <Compile Include="Commands\ShellCommandManager.cs" />
     <Compile Include="Commands\XamlClientCommand.cs" />
     <Compile Include="Controls\ChatPane.xaml.cs">

@@ -15,6 +15,7 @@ using System.Text;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Tests.Pages;
 using MattEland.Common.Providers;
 
 using NUnit.Framework;
@@ -586,6 +587,43 @@ namespace MattEland.Ani.Alfred.Tests.Common
             collection.ShouldNotBeNull();
             collection.ShouldBeEmpty();
             collection.ShouldBeOfType(typeof(HashSet<ITestInterfaceDerived>));
+        }
+
+        /// <summary>
+        ///     Container.TryRegister should succeed if a mapping does not exist.
+        /// </summary>
+        [Test]
+        public void TryRegisterIfNotMappedShouldRegister()
+        {
+            var type = typeof(AlfredTestBase);
+            var registerType = typeof(CommonProviderTests);
+
+            Container.HasMapping(type).ShouldBe(false);
+            var result = Container.TryRegister(type, registerType);
+            result.ShouldBe(true);
+            Container.HasMapping(type).ShouldBe(true);
+
+            var instance = Container.ProvideType(type);
+            instance.ShouldBeOfType(registerType);
+        }
+
+        /// <summary>
+        ///     Container.TryRegister should fail if a mapping already exists.
+        /// </summary>
+        [Test]
+        public void TryRegisterIfMappedShouldNotRegister()
+        {
+            var type = typeof(AlfredTestBase);
+            var registerType = typeof(CommonProviderTests);
+
+            Container.Register(type, typeof(EventLogPageTests));
+            Container.HasMapping(type).ShouldBe(true);
+            var result = Container.TryRegister(type, registerType);
+
+            result.ShouldBe(false);
+
+            var instance = Container.ProvideType(type);
+            instance.ShouldNotBeOfType(registerType);
         }
     }
 

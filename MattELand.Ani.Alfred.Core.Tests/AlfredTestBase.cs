@@ -10,6 +10,7 @@ using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.PresentationShared.Commands;
+using MattEland.Ani.Alfred.Tests.Mocks;
 using MattEland.Common;
 using MattEland.Common.Providers;
 
@@ -102,6 +103,14 @@ namespace MattEland.Ani.Alfred.Tests
         public Random Randomizer { get; set; }
 
         /// <summary>
+        ///     Gets or sets the test subsystem.
+        /// </summary>
+        /// <value>
+        ///     The test subsystem.
+        /// </value>
+        protected TestSubsystem TestSubsystem { get; set; }
+
+        /// <summary>
         ///     Creates and starts up the <see cref="IAlfred"/> instance.
         /// </summary>
         /// <returns>
@@ -110,8 +119,20 @@ namespace MattEland.Ani.Alfred.Tests
         [NotNull]
         protected AlfredApplication StartAlfred()
         {
+            // Create test subsystem
+            TestSubsystem = new TestSubsystem(Container);
+            TestSubsystem.RegisterAsProvidedInstance(Container);
+
+            // Allow individual tests to customize the Test Subsystem as needed
+            PrepareTestSubsystem(TestSubsystem);
+
+            // Build out options. Ensure the test subsystem is present
+            var options = BuildOptions();
+            options.IsSpeechEnabled = false;
+            options.AdditionalSubsystems.Add(TestSubsystem);
+
             // Build the Application
-            var app = new ApplicationManager(Container);
+            var app = new ApplicationManager(Container, options);
             var alfred = app.Alfred;
 
             // Register the application instance in the container
@@ -122,6 +143,15 @@ namespace MattEland.Ani.Alfred.Tests
             alfred.Initialize();
 
             return alfred;
+        }
+
+        /// <summary>
+        ///     Prepare the test subsystem prior to registration and startup.
+        /// </summary>
+        /// <param name="testSubsystem"> The test subsystem. </param>
+        protected virtual void PrepareTestSubsystem([NotNull] TestSubsystem testSubsystem)
+        {
+            // Do nothing. Individual tests can manipulate this as needed via overrides
         }
 
         /// <summary>
@@ -187,6 +217,31 @@ namespace MattEland.Ani.Alfred.Tests
             console.ShouldNotBeNull();
 
             return console;
+        }
+
+        /// <summary>
+        ///     Builds the options for creating an <see cref="ApplicationManager"/>.
+        /// </summary>
+        /// <returns>The <see cref="ApplicationManagerOptions" />.</returns>
+        [NotNull]
+        protected ApplicationManagerOptions BuildOptions()
+        {
+            var options = new ApplicationManagerOptions { IsSpeechEnabled = false };
+
+            return options;
+        }
+
+        /// <summary>
+        ///     Builds test page.
+        /// </summary>
+        /// <param name="isRoot"> <see langword="true"/> if this instance is root. </param>
+        /// <returns>
+        ///     A <see cref="TestPage"/>.
+        /// </returns>
+        [NotNull]
+        protected TestPage BuildTestPage(bool isRoot)
+        {
+            return new TestPage(Container) { IsRootLevel = isRoot };
         }
     }
 }

@@ -59,13 +59,12 @@
         <Border x:Name="Panel"       
                             BorderBrush="{DynamicResource AppBorderBrush}"
                             BorderThickness="1,1,0,1"
-                            Background="{DynamicResource MediumBackgroundBrush}"
-                            MinHeight="40">
+                            Background="{DynamicResource MediumBackgroundBrush}">
             <ContentPresenter x:Name="ContentSite"                                        
                                           VerticalAlignment="Center"                                        
                                           HorizontalAlignment="Center"                                        
                                           ContentSource="Header"                                        
-                                          Margin="10,2"/>
+                                          Margin="8,4"/>
         </Border>
         <ControlTemplate.Triggers>
             <Trigger Property="IsSelected" Value="True">

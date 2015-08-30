@@ -24,8 +24,15 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
     /// </summary>
     public sealed class TestSubsystem : AlfredSubsystem
     {
-        [NotNull, ItemNotNull]
-        private readonly ICollection<AlfredPage> _registerPages;
+        /// <summary>
+        ///     Gets the pages to register on initialization.
+        /// </summary>
+        /// <value>
+        ///     The pages to register on initialization.
+        /// </value>
+        [NotNull]
+        [ItemNotNull]
+        public ICollection<IAlfredPage> RegisterPages { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestSubsystem" /> class.
@@ -33,7 +40,7 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
         /// <param name="container">The container.</param>
         internal TestSubsystem([NotNull] IObjectContainer container) : base(container)
         {
-            _registerPages = container.ProvideCollection<AlfredPage>();
+            RegisterPages = container.ProvideCollection<IAlfredPage>();
         }
 
         /// <summary>
@@ -51,7 +58,7 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
         protected override void RegisterControls()
         {
             // Live up to our promise and auto-register some pages
-            foreach (var page in _registerPages)
+            foreach (var page in RegisterPages)
             {
                 Register(page);
             }
@@ -156,7 +163,7 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
                 throw new ArgumentNullException(nameof(page));
             }
 
-            _registerPages.Add(page);
+            RegisterPages.Add(page);
         }
 
         /// <summary>

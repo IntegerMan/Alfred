@@ -94,6 +94,7 @@
     <Compile Include="Pages\EventLogPageTests.cs" />
     <Compile Include="Pages\ExplorerPageTests.cs" />
     <Compile Include="Pages\PageTests.cs" />
+    <Compile Include="Pages\RootPagesTests.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

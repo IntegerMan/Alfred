@@ -104,7 +104,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         }
 
         [NotNull]
-        public TestSubsystem TestSubsystem
+        public new TestSubsystem TestSubsystem
         {
             [DebuggerStepThrough]
             get
@@ -220,7 +220,6 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             alfred.RegisterAsProvidedInstance(typeof(IAlfred), Container);
 
             // Add Subsystems to Alfred
-
             CoreSubsystem = new AlfredCoreSubsystem(CommonProvider.Container);
             alfred.Register(CoreSubsystem);
 
