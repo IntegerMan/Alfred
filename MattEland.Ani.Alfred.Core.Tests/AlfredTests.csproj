@@ -87,6 +87,7 @@
     <Compile Include="Mocks\TestChatProvider.cs" />
     <Compile Include="Mocks\TestPage.cs" />
     <Compile Include="Mocks\TestShell.cs" />
+    <Compile Include="Modules\AlfredPagesListModuleTests.cs" />
     <Compile Include="Modules\ModuleTests.cs" />
     <Compile Include="Pages\ExplorerPageTests.cs" />
     <Compile Include="Pages\PageTests.cs" />
