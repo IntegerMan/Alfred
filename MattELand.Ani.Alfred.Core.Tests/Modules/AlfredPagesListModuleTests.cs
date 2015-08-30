@@ -31,9 +31,11 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         ///     Tests that the pages list module should include all pages.
         /// </summary>
         /// <remarks>
-        ///     This is from an actual issue where the <see cref="AlfredPagesListModule"/> would not display all pages on its list - only those that had registered before the widget registered its controls.
-        /// 
-        ///     See issue ALF-97.
+        ///     This is from an actual issue where the <see cref="AlfredPagesListModule"/> would not
+        ///     display all pages on its list - only those that had registered before the widget
+        ///     registered its controls.
+        ///     
+        ///     See issue ALF-81.
         /// </remarks>
         [Test]
         public void PagesListModuleShouldListAllPages()
