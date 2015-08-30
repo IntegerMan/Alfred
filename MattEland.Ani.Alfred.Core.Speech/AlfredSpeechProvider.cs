@@ -51,7 +51,7 @@ namespace MattEland.Ani.Alfred.Core.Speech
                 LogInstalledVoices(console);
             }
 
-            // We want Alfred to sound lik an English butler so request the closest thing we can find
+            // We want Alfred to sound like an English butler so request the closest thing we can find
             var greatBritainCulture = new CultureInfo("en-GB");
             _speech.SelectVoiceByHints(VoiceGender.Male, VoiceAge.Senior, 0, greatBritainCulture);
 

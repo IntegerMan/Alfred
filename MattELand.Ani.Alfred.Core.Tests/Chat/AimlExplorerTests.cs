@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Windows;
 
 using JetBrains.Annotations;
 
@@ -34,6 +35,15 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public sealed class AimlExplorerTests : ExplorerTestsBase
     {
+        [NotNull]
+        private Random _random;
+
+        [TestFixtureSetUp]
+        public void SetUpFixture()
+        {
+            _random = new Random();
+        }
+
         /// <summary>
         ///     Ensures that the AIML knowledge node has user-acceptable root text.
         /// </summary>
@@ -74,19 +84,54 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         }
 
         /// <summary>
-        ///     Gets the <see cref="ChatEngine"/>.
+        ///     Tests that following a random path down the AIML graph, the explorer tree should mimic that path. 
+        ///     
+        ///     This test is repeated multiple times due to its random nature.
         /// </summary>
-        /// <value>
-        ///     The chat engine.
-        /// </value>
-        [NotNull]
-        public ChatEngine ChatEngine
+        /// <remarks>
+        ///     Test ALF-103 for sub-task ALF-60.
+        /// </remarks>
+        [Test, Repeat(100)]
+        public void AimlNodesShouldTraceToTheirEndPoints()
         {
-            get
-            {
-                Container.HasMapping(typeof(ChatEngine)).ShouldBe(true, "Could not find the chat engine");
+            var chatEngine = ChatEngine;
+            var chatRoot = chatEngine.RootNode;
 
-                return Container.Provide<ChatEngine>();
+            var explorerNode = AimlRoot;
+
+            Node lastNode = null;
+            var node = chatRoot;
+
+            // This will be manually exited when a child has reached the end
+            while (true)
+            {
+                // Protect against infinite loops
+                if (lastNode == node)
+                {
+                    Assert.Fail($"Infinite loop detected on node {node.Word}");
+                }
+                lastNode = node;
+
+                // If it doesn't have any children, get out of here
+                var children = node.Children.Keys.ToList();
+                var numChildren = children.Count;
+
+                // Exit if there aren't any children
+                if (numChildren <= 0)
+                {
+                    break;
+                }
+
+                // Navigate the AIML Node into a random child
+                var childName = children[_random.Next(numChildren)];
+                node = node.Children[childName];
+
+                // Navigate to the AIML Node
+                explorerNode = explorerNode.Nav(childName);
+
+                // Test on this entry
+                node.ShouldNotBeNull();
+                node.Word.ShouldBe(explorerNode.DisplayName);
             }
         }
 

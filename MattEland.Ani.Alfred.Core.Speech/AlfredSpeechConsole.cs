@@ -26,7 +26,7 @@ namespace MattEland.Ani.Alfred.Core.Speech
         [NotNull]
         private readonly IConsole _console;
 
-        [NotNull]
+        [CanBeNull]
         private readonly AlfredSpeechProvider _speech;
 
         [NotNull]
@@ -53,8 +53,17 @@ namespace MattEland.Ani.Alfred.Core.Speech
             // Tell it what log levels we care about
             _speechEnabledLogLevels = new HashSet<LogLevel> { LogLevel.ChatResponse, LogLevel.Warning, LogLevel.Error };
 
-            // Give the speech provider the existing console and not this console since it won't be online yet
-            _speech = new AlfredSpeechProvider(console);
+            try
+            {
+                // Give the speech provider the existing console and not this console since it won't be online yet
+                _speech = new AlfredSpeechProvider(console);
+            }
+            catch (InvalidOperationException ex)
+            {
+                // On failure creating the speech provider, just have speech be null and we'll just be a decorator
+                _speech = null;
+                console.Log("Init.Console", $"Speech could not be initialized: {ex.Message}", LogLevel.Error);
+            }
         }
 
         /// <summary>
@@ -87,7 +96,7 @@ namespace MattEland.Ani.Alfred.Core.Speech
         public bool EnableSpeech { get; set; } = true;
 
         /// <summary>
-        ///     Logs the specified message to the console.
+        ///     Logs the specified <paramref name="message"/> to the console.
         /// </summary>
         /// <param name="title">The title.</param>
         /// <param name="message">The message.</param>
@@ -108,7 +117,7 @@ namespace MattEland.Ani.Alfred.Core.Speech
             _console.Log(title, message, level);
 
             // If it's a significant message, tell the user via voice
-            if (EnableSpeech && _speechEnabledLogLevels.Contains(level))
+            if (EnableSpeech && SpeechEnabledLogLevels.Contains(level))
             {
                 // For more serious items, have Alfred say the status beforehand
                 if (level == LogLevel.Warning || level == LogLevel.Error)
@@ -116,7 +125,7 @@ namespace MattEland.Ani.Alfred.Core.Speech
                     message = string.Format(CultureInfo.CurrentCulture, "{0}: {1}", level, message);
                 }
 
-                _speech.Say(message.NonNull());
+                _speech?.Say(message.NonNull());
             }
         }
 
@@ -131,7 +140,7 @@ namespace MattEland.Ani.Alfred.Core.Speech
         /// </summary>
         public void Dispose()
         {
-            _speech.Dispose();
+            _speech?.Dispose();
         }
     }
 }

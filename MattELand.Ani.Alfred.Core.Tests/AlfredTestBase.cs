@@ -4,6 +4,7 @@ using System.Linq;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Chat.Aiml;
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.PresentationShared.Commands;
@@ -65,6 +66,23 @@ namespace MattEland.Ani.Alfred.Tests
                 alfred.ShouldNotBeNull("Could not find the Alfred instance");
 
                 return alfred;
+            }
+        }
+
+        /// <summary>
+        ///     Gets the <see cref="ChatEngine"/>.
+        /// </summary>
+        /// <value>
+        ///     The chat engine.
+        /// </value>
+        [NotNull]
+        public ChatEngine ChatEngine
+        {
+            get
+            {
+                Container.HasMapping(typeof(ChatEngine)).ShouldBe(true, "Could not find the chat engine");
+
+                return Container.Provide<ChatEngine>();
             }
         }
 
