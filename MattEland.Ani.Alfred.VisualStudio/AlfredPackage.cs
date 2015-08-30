@@ -75,7 +75,7 @@ namespace MattEland.Ani.Alfred.VisualStudio
         {
             if (_app == null)
             {
-                _app = new ApplicationManager(CommonProvider.Container);
+                _app = new ApplicationManager(CommonProvider.Container, null, enableSpeech: true);
                 _app.Console?.Log(Resources.AlfredPackageInstantiatingAlfredLogHeader, Resources.AlfredPackageInstantiatingAlfredLogMessage, LogLevel.Verbose);
 
                 Debug.Assert(Settings.Default != null);
