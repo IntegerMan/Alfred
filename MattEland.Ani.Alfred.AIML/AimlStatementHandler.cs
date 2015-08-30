@@ -76,8 +76,13 @@ namespace MattEland.Ani.Alfred.Chat
             _console = container.TryProvide<IConsole>();
             _chatHistory = new ChatHistoryProvider(container);
 
-            // Set up the chat engine
-            ChatEngine = new ChatEngine(_console);
+            // Create and set up the chat engine
+            ChatEngine = new ChatEngine(container);
+
+            // Register the engine so other places can find it
+            ChatEngine.RegisterAsProvidedInstance(container);
+
+            // Create basic chat helpers / ancillary classes
             _user = new User(Resources.ChatUserName.NonNull());
             _engineUser = new User(engineName);
             _chatHandlerProvider = new ChatHandlersProvider(container, ChatEngine);
@@ -144,15 +149,12 @@ namespace MattEland.Ani.Alfred.Chat
         /// <summary>
         ///     Handles a user statement.
         /// </summary>
-        /// <param name="userInput">The user input.</param>
-        /// <returns>The <see cref="UserStatementResponse" />.</returns>
+        /// <param name="userInput"> The user input. </param>
+        /// <returns>
+        ///     The <see cref="UserStatementResponse" />.
+        /// </returns>
         public UserStatementResponse HandleUserStatement([CanBeNull] string userInput)
         {
-            if (ChatEngine == null || _user == null || _engineUser == null)
-            {
-                throw new InvalidOperationException(Resources.AimlStatementHandlerChatOffline);
-            }
-
             //- Trim for housekeeping purposes since this will be displayed / stored.
             userInput = userInput.NonNull().Trim();
 

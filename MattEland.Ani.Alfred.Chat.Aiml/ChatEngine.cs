@@ -19,6 +19,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Common;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml
 {
@@ -40,11 +41,12 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <summary>
         ///     Initializes a new instance of the <see cref="ChatEngine" /> class.
         /// </summary>
-        /// <param name="logger">The logger.</param>
-        public ChatEngine([CanBeNull] IConsole logger = null)
+        /// <param name="container"> The container. </param>
+        public ChatEngine([NotNull] IObjectContainer container)
         {
-            // Get logging online ASAP
-            Logger = logger;
+            // Get basic functionality set ASAP
+            Container = container;
+            Logger = container.TryProvide<IConsole>();
 
             // Set simple properties
             MaxThatSize = 256;
@@ -68,6 +70,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             // Set the failure message's default value.
             FallbackResponse = Resources.ChatEngineDontUnderstandFallback.NonNull();
         }
+
+        /// <summary>
+        ///     Gets the container.
+        /// </summary>
+        /// <value>
+        ///     The container.
+        /// </value>
+        public IObjectContainer Container { get; }
 
         /// <summary>
         ///     Gets the librarian that manages settings.
