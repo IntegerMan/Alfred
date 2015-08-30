@@ -37,9 +37,6 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
     public class ChatTestsBase : AlfredTestBase
     {
-        [NotNull]
-        private TestAlfred _alfred;
-
         private IChatProvider _chat;
 
         [NotNull]
@@ -104,16 +101,6 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             {
                 return _chat;
             }
-        }
-
-        /// <summary>
-        ///     Gets the Alfred framework.
-        /// </summary>
-        /// <value>The Alfred framework.</value>
-        [NotNull]
-        protected TestAlfred Alfred
-        {
-            get { return _alfred; }
         }
 
         [NotNull]
@@ -194,7 +181,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         private UserStatementResponse GetResponse([NotNull] string text)
         {
 
-            var chatProvider = _alfred.ChatProvider;
+            var chatProvider = Alfred.ChatProvider;
             Assert.NotNull(chatProvider,
                            "Alfred's chat provider was null when instructed to handle chat message");
 
@@ -227,21 +214,24 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         {
             AlfredTestTagHandler.WasInvoked = false;
 
-            _alfred = new TestAlfred();
+            // Create Alfred and make it so the tests can find him via the Container
+            var alfred = new TestAlfred();
+            alfred.RegisterAsProvidedInstance(Container);
+            alfred.RegisterAsProvidedInstance(typeof(IAlfred), Container);
 
             // Add Subsystems to Alfred
 
             CoreSubsystem = new AlfredCoreSubsystem(CommonProvider.Container);
-            _alfred.Register(CoreSubsystem);
+            alfred.Register(CoreSubsystem);
 
             ChatSubsystem = new ChatSubsystem(Container, "Alfredo");
-            _alfred.Register(ChatSubsystem);
+            alfred.Register(ChatSubsystem);
 
             _testSubsystem = new TestSubsystem(Container);
-            _alfred.Register(_testSubsystem);
+            alfred.Register(_testSubsystem);
 
             _sysSubsystem = new SystemMonitoringSubsystem(Container);
-            _alfred.Register(_sysSubsystem);
+            alfred.Register(_sysSubsystem);
 
             MetricProviderFactory = Container.Provide<ValueMetricProviderFactory>();
 
@@ -257,11 +247,11 @@ namespace MattEland.Ani.Alfred.Tests.Chat
 
             // Set up a shell handler to respond to events
             Shell = new TestShell();
-            _alfred.Register(Shell);
+            alfred.Register(Shell);
 
             // Start Alfred - doesn't make sense to have a chat test that doesn't need Alfred online first.
-            _alfred.Initialize();
-            _alfred.Update();
+            alfred.Initialize();
+            alfred.Update();
         }
 
         /// <summary>

@@ -89,6 +89,24 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         }
 
         /// <summary>
+        /// Gets a list of properties provided by this item.
+        /// </summary>
+        /// <returns>The properties</returns>
+        public override IEnumerable<IPropertyItem> Properties
+        {
+            get
+            {
+                // Don't forget to return all other properties
+                foreach (var item in base.Properties)
+                {
+                    yield return item;
+                }
+
+                yield return new AlfredProperty("ID", Id);
+            }
+        }
+
+        /// <summary>
         ///     Gets the identifier for the <see cref="IAlfredSubsystem"/> to be used in command routing.
         /// </summary>
         /// <value>The identifier for the subsystem.</value>

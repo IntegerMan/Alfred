@@ -7,6 +7,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Chat.Aiml;
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common;
 using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Chat
@@ -48,7 +49,10 @@ namespace MattEland.Ani.Alfred.Chat
         /// <value>The name.</value>
         public string Name
         {
-            get { return _node.Word ?? "Root Node"; }
+            get
+            {
+                return _node.Word.HasText() ? _node.Word : "Root Node";
+            }
         }
 
         /// <summary>

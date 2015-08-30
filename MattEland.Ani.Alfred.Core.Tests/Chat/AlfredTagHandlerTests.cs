@@ -15,6 +15,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Chat;
 using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Tests.Mocks;
 using MattEland.Common;
 using MattEland.Common.Providers;
 
@@ -62,7 +63,9 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         {
             Say("TEST COMMAND INVOKE");
 
-            var command = Alfred.LastCommand;
+            var testAlfred = Container.Provide<TestAlfred>();
+
+            var command = testAlfred.LastCommand;
 
             var subsystem = "test";
             var expected = "invoketest";

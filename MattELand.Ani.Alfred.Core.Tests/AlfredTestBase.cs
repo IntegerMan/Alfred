@@ -1,13 +1,18 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.PresentationShared.Commands;
+using MattEland.Common;
 using MattEland.Common.Providers;
 
 using NUnit.Framework;
+
+using Shouldly;
 
 namespace MattEland.Ani.Alfred.Tests
 {
@@ -85,5 +90,45 @@ namespace MattEland.Ani.Alfred.Tests
 
             return alfred;
         }
+
+        /// <summary>
+        ///     Gets a subsystem.
+        /// </summary>
+        /// <param name="subsystemId"> The subsystem's Id. </param>
+        /// <returns>
+        ///     The subsystem.
+        /// </returns>
+        [NotNull]
+        protected IAlfredSubsystem GetSubsystem(string subsystemId)
+        {
+            var alfred = Container.Provide<IAlfred>();
+
+            var subsystem = alfred.Subsystems.FirstOrDefault(s => s.Id.Matches(subsystemId));
+            subsystem.ShouldNotBeNull($"The Subsystem with id '{subsystemId}' could not be found");
+
+            return subsystem;
+        }
+
+        /// <summary>
+        ///     Gets a subsystem and casts it to the specified type.
+        /// </summary>
+        /// <typeparam name="T"> The type the subsystem should be cast to. </typeparam>
+        /// <param name="subsystemId"> The subsystem's Id. </param>
+        /// <returns>
+        ///     The subsystem.
+        /// </returns>
+        [NotNull]
+        protected T GetSubsystem<T>(string subsystemId)
+        {
+            // Do the basic search for the subsystem
+            var subsystem = GetSubsystem(subsystemId);
+
+            // Cast and verify
+            var typedSubsystem = subsystem.ShouldBeOfType<T>();
+            typedSubsystem.ShouldNotBeNull();
+
+            return typedSubsystem;
+        }
+
     }
 }

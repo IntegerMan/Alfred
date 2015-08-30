@@ -90,5 +90,30 @@ namespace MattEland.Ani.Alfred.Tests
         {
             source.ShouldBe(null, failureMessage);
         }
+
+        /// <summary>
+        ///     Navigates into the property <paramref name="provider"/> with the
+        ///     <paramref name="name"/> provided and returns that IPropertyProvider.
+        /// </summary>
+        /// <param name="provider">The provider to act on.</param>
+        /// <param name="name">The name to find.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when one or more required arguments are null.
+        /// </exception>
+        /// <returns>The IPropertyProvider.</returns>
+        [NotNull]
+        public static IPropertyProvider Nav([NotNull] this IPropertyProvider provider, string name)
+        {
+            //- Validate
+            if (provider == null) { throw new ArgumentNullException(nameof(provider)); }
+
+            // Find the child we're looking for, allowing null so we can assert a failure message
+            var node = provider.PropertyProviders.FirstOrDefault(p => p.Name.Matches(name));
+
+            // Assert a detailed failure if we couldn't find the node
+            node.ShouldNotBeNull($"Could not find child of {provider.Name} with name {name}");
+
+            return node;
+        }
     }
 }

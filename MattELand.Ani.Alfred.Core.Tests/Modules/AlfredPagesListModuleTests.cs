@@ -69,21 +69,23 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         [NotNull]
         private IAlfredModule GetPagesListModule()
         {
-            var alfred = Container.Provide<IAlfred>();
+            // Grab the subsystem
+            var subsystem = GetSubsystem("Core");
 
-            var subsystem = alfred.Subsystems.First(s => s.Id.Matches("Core"));
-            subsystem.ShouldNotBeNull("Core Subsystem could not be found");
-
+            // Find the hosting page
             var page = subsystem.Pages.First(p => p.Id.Matches("Core"));
             page.ShouldNotBeNull("Core Page could not be found");
 
+            // Convert to the module list page
             var listPage = page.ShouldBeOfType<AlfredModuleListPage>();
             listPage.ShouldNotBeNull("Could not find module list");
 
+            // Find the module within the page
             var module = listPage.Modules.First(m => m is AlfredPagesListModule);
             module.ShouldNotBeNull("Could not find pages list module");
 
             return module;
         }
+
     }
 }

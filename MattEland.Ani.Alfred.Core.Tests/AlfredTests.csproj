@@ -69,7 +69,9 @@
   <ItemGroup>
     <Compile Include="AlfredTestBase.cs" />
     <Compile Include="AlfredTestExtensions.cs" />
+    <Compile Include="Chat\AimlExplorerTests.cs" />
     <Compile Include="Chat\AlfredTestTagHandler.cs" />
+    <Compile Include="Chat\ExplorerTestsBase.cs" />
     <Compile Include="Chat\TagHandlerTests.cs" />
     <Compile Include="Chat\TagHandlerFactoryTests.cs" />
     <Compile Include="Chat\RedirectTagHandlerTests.cs" />
