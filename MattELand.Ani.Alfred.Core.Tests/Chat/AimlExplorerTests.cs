@@ -35,14 +35,6 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public sealed class AimlExplorerTests : ExplorerTestsBase
     {
-        [NotNull]
-        private Random _random;
-
-        [TestFixtureSetUp]
-        public void SetUpFixture()
-        {
-            _random = new Random();
-        }
 
         /// <summary>
         ///     Ensures that the AIML knowledge node has user-acceptable root text.
@@ -123,7 +115,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
                 }
 
                 // Navigate the AIML Node into a random child
-                var childName = children[_random.Next(numChildren)];
+                var childName = children[Randomizer.Next(numChildren)];
                 node = node.Children[childName];
 
                 // Navigate to the AIML Node

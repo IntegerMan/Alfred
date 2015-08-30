@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
@@ -87,6 +88,19 @@ namespace MattEland.Ani.Alfred.Tests
         }
 
         /// <summary>
+        ///     Gets the random number generator.
+        /// </summary>
+        /// <remarks>
+        ///     The random number generator is re-used between tests and set up at test fixture setup to
+        ///     avoid the same number being generated repetitively.
+        /// </remarks>
+        /// <value>
+        ///     The randomizer.
+        /// </value>
+        [NotNull]
+        public Random Randomizer { get; set; }
+
+        /// <summary>
         ///     Creates and starts up the <see cref="IAlfred"/> instance.
         /// </summary>
         /// <returns>
@@ -148,5 +162,13 @@ namespace MattEland.Ani.Alfred.Tests
             return typedSubsystem;
         }
 
+        /// <summary>
+        ///     Sets up the test fixture.
+        /// </summary>
+        [TestFixtureSetUp]
+        public virtual void SetUpFixture()
+        {
+            Randomizer = new Random();
+        }
     }
 }
