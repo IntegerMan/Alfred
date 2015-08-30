@@ -2,6 +2,9 @@
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.PresentationShared.Commands;
 using MattEland.Common.Providers;
 
 using NUnit.Framework;
@@ -12,6 +15,7 @@ namespace MattEland.Ani.Alfred.Tests
     /// Represents common logic useful for helping initialize Alfred test classes
     /// </summary>
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
+    [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
     public abstract class AlfredTestBase
     {
         [NotNull]
@@ -36,9 +40,50 @@ namespace MattEland.Ani.Alfred.Tests
         {
             get
             {
-                // TODO: It might be a good idea to create a new container for tests
                 return _container;
             }
+        }
+
+        /// <summary>
+        ///     Gets the Alfred instance.
+        /// </summary>
+        /// <seealso cref="IAlfred"/>
+        /// <value>
+        ///     The Alfred instance.
+        /// </value>
+        [NotNull]
+        public IAlfred Alfred
+        {
+            get
+            {
+                var alfred = Container.Provide<IAlfred>();
+                alfred.ShouldNotBeNull("Could not find the Alfred instance");
+
+                return alfred;
+            }
+        }
+
+        /// <summary>
+        ///     Creates and starts up the <see cref="IAlfred"/> instance.
+        /// </summary>
+        /// <returns>
+        ///     The Alfred instance.
+        /// </returns>
+        [NotNull]
+        protected AlfredApplication StartAlfred()
+        {
+            // Build the Application
+            var app = new ApplicationManager(Container);
+            var alfred = app.Alfred;
+
+            // Register the application instance in the container
+            app.RegisterAsProvidedInstance(Container);
+
+            // Start up Alfred
+            alfred.ShouldNotBeNull();
+            alfred.Initialize();
+
+            return alfred;
         }
     }
 }

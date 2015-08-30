@@ -8,6 +8,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 
 using JetBrains.Annotations;
 
@@ -52,18 +54,15 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         protected override void UpdateProtected()
         {
-            foreach (var widget in _widgets)
+            var textWidgets = _widgets.Cast<TextWidget>();
+            foreach (var textWidget in textWidgets)
             {
-                var textWidget = widget as AlfredTextWidget;
-
-                if (textWidget == null)
-                {
-                    continue;
-                }
+                Debug.Assert(textWidget != null);
 
                 // Interpret the DataContext and update its text if it's a page.
                 // If no page context, it's assumed to be the no items label.
-                var page = widget.DataContext as AlfredPage;
+                var page = textWidget.DataContext as AlfredPage;
+
                 if (page != null)
                 {
                     UpdateWidgetText(textWidget, page);
@@ -133,6 +132,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
 
                 Register(widget);
             }
+
         }
 
         /// <summary>
@@ -144,15 +144,6 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </exception>
         private static void UpdateWidgetText([NotNull] AlfredTextWidget widget, [NotNull] IAlfredPage page)
         {
-            if (widget == null)
-            {
-                throw new ArgumentNullException(nameof(widget));
-            }
-            if (page == null)
-            {
-                throw new ArgumentNullException(nameof(page));
-            }
-
             widget.Text = page.Name;
         }
 

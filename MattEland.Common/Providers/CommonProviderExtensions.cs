@@ -24,10 +24,10 @@ namespace MattEland.Common.Providers
         /// <summary>
         ///     Registers a preferred type as the type to provide when the base type is requested.
         /// </summary>
-        /// <param name="baseType">Type that will be requested in the future.</param>
-        /// <param name="preferredType">Type to instantiate instead of the base type.</param>
-        /// <exception cref="System.ArgumentNullException">
-        ///     baseType or preferredType
+        /// <param name="baseType"><see cref="Type"/> that will be requested in the future.</param>
+        /// <param name="preferredType"><see cref="Type"/> to instantiate instead of the base type.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="baseType"/> or <paramref name="preferredType"/>
         /// </exception>
         public static void RegisterProvider(
             [NotNull] this Type baseType,
@@ -80,7 +80,6 @@ namespace MattEland.Common.Providers
         /// Provides the instance of the type using the <see cref="CommonProvider" />.
         /// </summary>
         /// <param name="type">The type.</param>
-        /// <param name="args">The arguments.</param>
         /// <returns>The provided instance.</returns>
         /// <exception cref="NotSupportedException">The type is not correctly configured to allow for
         /// instantiation.</exception>
@@ -92,12 +91,25 @@ namespace MattEland.Common.Providers
         /// <summary>
         ///     Registers the instance as the instance that will be provided when
         ///     <see cref="CommonProvider.Provide{TRequested}" /> or
-        ///     <see cref="CommonProvider.ProvideType" /> is called for type <paramref name="type" />
-        ///     .
+        ///     <see cref="CommonProvider.ProvideType" /> is called for the instance's type
         /// </summary>
         /// <param name="instance">The instance.</param>
-        /// <param name="type">The type that will be requested.</param>
         /// <exception cref="System.ArgumentNullException">type, instance</exception>
+        public static void RegisterAsProvidedInstance(
+            [NotNull] this object instance)
+        {
+            // Default to the root container
+            instance.RegisterAsProvidedInstance(instance.GetType(), CommonProvider.Container);
+        }
+
+        /// <summary>
+        ///     Registers the <paramref name="instance"/> as the <paramref name="instance"/> that will be
+        ///     provided when <see cref="CommonProvider.Provide{type}"/>
+        ///     or <see cref="CommonProvider.ProvideType" /> are called for
+        ///     <paramref name="type"/> <paramref name="type" />
+        /// </summary>
+        /// <param name="instance"> The instance. </param>
+        /// <param name="type"> The type that will be requested. </param>
         public static void RegisterAsProvidedInstance(
             [NotNull] this object instance,
             [NotNull] Type type)
@@ -107,15 +119,45 @@ namespace MattEland.Common.Providers
         }
 
         /// <summary>
-        /// Registers the instance in the container as the instance that will be provided when
-        /// <see cref="CommonProvider.Provide{TRequested}" /> or
-        /// <see cref="CommonProvider.ProvideType" /> is called on the container for type <paramref name="type" />
-        /// .
+        ///     Registers the instance in the <paramref name="container"/> as the instance that will be
+        ///     provided when <see cref="CommonProvider.Provide{TRequested}" /> or
+        ///     <see cref="CommonProvider.ProvideType" /> are called on the container for type of the
+        ///     instance.
         /// </summary>
-        /// <param name="instance">The instance.</param>
-        /// <param name="type">The type that will be requested.</param>
-        /// <param name="container">The container.</param>
-        /// <exception cref="System.ArgumentNullException">type, instance, container</exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when one or more required arguments are null.
+        /// </exception>
+        /// <param name="instance"> The instance. </param>
+        /// <param name="container"> The container. </param>
+        ///
+        /// ### <exception cref="System.ArgumentNullException"> type, instance, container. </exception>
+        public static void RegisterAsProvidedInstance(
+            [NotNull] this object instance,
+            [NotNull] IObjectContainer container)
+        {
+            //- Validate
+            if (instance == null) { throw new ArgumentNullException(nameof(instance)); }
+
+            // Register
+            container.RegisterProvidedInstance(instance.GetType(), instance);
+
+        }
+
+        /// <summary>
+        ///     Registers the instance in the <paramref name="container"/> as the instance that will be
+        ///     provided when
+        ///     <see cref="CommonProvider.Provide{TRequested}" /> or
+        ///     <see cref="CommonProvider.ProvideType" /> is called on the container for type
+        ///     <paramref name="type" />
+        /// </summary>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when one or more required arguments are null.
+        /// </exception>
+        /// <param name="instance"> The instance. </param>
+        /// <param name="type"> The type that will be requested. </param>
+        /// <param name="container"> The container. </param>
+        ///
+        /// ### <exception cref="System.ArgumentNullException"> type, instance, container. </exception>
         public static void RegisterAsProvidedInstance(
             [NotNull] this object instance,
             [NotNull] Type type,
