@@ -108,14 +108,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
                 {
                     foreach (var page in subsystem.Pages)
                     {
-                        var lblId = string.Format(Locale, @"lblPage{0}", page.Id);
-                        var widget = new TextWidget(BuildWidgetParameters(lblId)) { DataContext = page };
-
-                        UpdateWidgetText(widget, page);
-
-                        _widgets.Add(widget);
-
-                        Register(widget);
+                        AddPageWidget(page);
                     }
                 }
             }
@@ -123,16 +116,40 @@ namespace MattEland.Ani.Alfred.Core.Modules
             // We'll want to display a fallback for no pages
             if (_widgets.Count == 0)
             {
-                var noItemsDetected = Resources.NoPagesDetected.NonNull();
-
-                Log("Pages.Initialize", noItemsDetected, LogLevel.Warning);
-
-                var widget = new TextWidget(noItemsDetected, BuildWidgetParameters(@"lblNoItems"));
-                _widgets.Add(widget);
-
-                Register(widget);
+                AddNoItemsWidget();
             }
 
+        }
+
+        /// <summary>
+        ///     Adds a widget for an <see cref="IAlfredPage"/>.
+        /// </summary>
+        /// <param name="page"> The page. </param>
+        private void AddPageWidget([NotNull] IAlfredPage page)
+        {
+            var lblId = string.Format(Locale, @"lblPage{0}", page.Id);
+            var widget = new TextWidget(BuildWidgetParameters(lblId)) { DataContext = page };
+
+            UpdateWidgetText(widget, page);
+
+            _widgets.Add(widget);
+
+            Register(widget);
+        }
+
+        /// <summary>
+        ///     Adds a no items detected <see cref="TextWidget"/>.
+        /// </summary>
+        private void AddNoItemsWidget()
+        {
+            var noItemsDetected = Resources.NoPagesDetected.NonNull();
+
+            Log("Pages.Initialize", noItemsDetected, LogLevel.Warning);
+
+            var widget = new TextWidget(noItemsDetected, BuildWidgetParameters(@"lblNoItems"));
+            _widgets.Add(widget);
+
+            Register(widget);
         }
 
         /// <summary>
