@@ -2,7 +2,7 @@
 // ExplorerPageTests.cs
 // 
 // Created on:      08/23/2015 at 3:40 PM
-// Last Modified:   08/23/2015 at 3:40 PM
+// Last Modified:   08/30/2015 at 4:02 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -12,7 +12,6 @@ using System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Pages;
 
@@ -21,17 +20,14 @@ using NUnit.Framework;
 namespace MattEland.Ani.Alfred.Tests.Pages
 {
     /// <summary>
-    /// Contains tests related to <see cref="ExplorerPage"/>
+    /// Contains tests related to <see cref="ExplorerPage" />
     /// </summary>
     [TestFixture]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public class ExplorerPageTests : AlfredTestBase
     {
-        [NotNull]
-        private ExplorerPage _page;
-
         /// <summary>
-        /// Sets up the environment for each test.
+        ///     Sets up the environment for each test.
         /// </summary>
         [SetUp]
         public override void SetUp()
@@ -41,32 +37,24 @@ namespace MattEland.Ani.Alfred.Tests.Pages
             _page = new ExplorerPage(Container, "Test Page", "TestExp");
         }
 
+        [NotNull]
+        private ExplorerPage _page;
+
         /// <summary>
-        /// Tests that the page has a collection of items after initialization
+        ///     Gets a simple collection of <see cref="IPropertyProvider" /> objects.
         /// </summary>
-        [Test]
-        public void PageHasRootNodesByDefault()
+        /// <returns>
+        ///     The items.
+        /// </returns>
+        [NotNull]
+        [ItemNotNull]
+        private IEnumerable<IPropertyProvider> GetSimpleCollection()
         {
-            Assert.IsNotNull(_page.RootNodes);
-            Assert.IsNotNull(_page.Children);
+            return new List<IPropertyProvider> { new AlfredEventLogPage(Container, "Event Test") };
         }
 
         /// <summary>
-        /// Tests that the page's root nodes can be set
-        /// </summary>
-        [Test]
-        public void PageCanHaveNodes()
-        {
-            var children = GetSimpleCollection();
-
-            _page.RootNodes = children;
-
-            Assert.IsNotNull(_page.RootNodes);
-            Assert.AreEqual(children, _page.RootNodes, "Page's root nodes were not the new collection");
-        }
-
-        /// <summary>
-        /// Tests that the page's children contains all components in RootNodes
+        ///     Tests that the page's children contains all components in RootNodes.
         /// </summary>
         [Test]
         public void ChildrenContainRootNodes()
@@ -79,17 +67,29 @@ namespace MattEland.Ani.Alfred.Tests.Pages
         }
 
         /// <summary>
-        /// Gets a simple collection of IPropertyProvider objects.
+        ///     Tests that the page's root nodes can be set.
         /// </summary>
-        /// <returns>The items</returns>
-        [NotNull, ItemNotNull]
-        private IEnumerable<IPropertyProvider> GetSimpleCollection()
+        [Test]
+        public void PageCanHaveNodes()
         {
+            var children = GetSimpleCollection();
 
-            return new List<IPropertyProvider>
-                   {
-                       new AlfredEventLogPage(Container, new SimpleConsole(), "Event Test")
-                   };
+            _page.RootNodes = children;
+
+            Assert.IsNotNull(_page.RootNodes);
+            Assert.AreEqual(children,
+                            _page.RootNodes,
+                            "Page's root nodes were not the new collection");
+        }
+
+        /// <summary>
+        ///     Tests that the page has a collection of items after initialization.
+        /// </summary>
+        [Test]
+        public void PageHasRootNodesByDefault()
+        {
+            Assert.IsNotNull(_page.RootNodes);
+            Assert.IsNotNull(_page.Children);
         }
     }
 }

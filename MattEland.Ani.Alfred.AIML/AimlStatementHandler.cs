@@ -366,8 +366,7 @@ namespace MattEland.Ani.Alfred.Chat
             catch (XmlException ex)
             {
                 Console?.Log("Chat.Load",
-                             "XmlException while loading Aiml: " + ex.Message + " for AIML: "
-                             + markup,
+                             $"XmlException while loading Aiml: {ex.Message} for AIML: {markup}",
                              LogLevel.Warning);
 
                 return false;
@@ -379,8 +378,7 @@ namespace MattEland.Ani.Alfred.Chat
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed",
-            Justification =
-                "Using CallerMemberName to auto-default this value from any property caller")]
+            Justification = "Using CallerMemberName to auto-default this value from any property caller")]
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -388,7 +386,7 @@ namespace MattEland.Ani.Alfred.Chat
         }
 
         /// <summary>
-        ///     Gets the response template from the last request spawned in the AIML chat message result.
+        ///     Gets the response template from the last request spawned in the AIML chat message <paramref name="result"/>.
         /// </summary>
         /// <param name="result">The result of a chat message to the AIML interpreter.</param>
         /// <returns>The response template</returns>

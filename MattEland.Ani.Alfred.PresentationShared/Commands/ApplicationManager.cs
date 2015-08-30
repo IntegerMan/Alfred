@@ -25,6 +25,7 @@ using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Ani.Alfred.Core.Speech;
 using MattEland.Ani.Alfred.Core.Subsystems;
+using MattEland.Common;
 using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.PresentationShared.Commands
@@ -48,8 +49,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
 
         private AlfredCoreSubsystem _alfredCoreSubsystem;
         private ChatSubsystem _chatSubsystem;
-        private AlfredSpeechConsole _console;
-        private bool _enableSpeech;
+        private IConsole _console;
         private MindExplorerSubsystem _mindExplorerSubsystem;
         private SystemMonitoringSubsystem _systemMonitoringSubsystem;
 
@@ -89,8 +89,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             _alfred.RegisterAsProvidedInstance(typeof(IAlfred), Container);
 
             // Give Alfred a way to talk to the user and the client a way to log events that are separate from Alfred
-            EnableSpeech = enableSpeech;
-            _console = InitializeConsole();
+            _console = InitializeConsole(enableSpeech);
 
             // Set the director. This will, in turn, set the shell
             UserInterfaceDirector = director;
@@ -194,21 +193,6 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether speech synthesis is enabled.
-        /// </summary>
-        /// <value><c>true</c> if speech synthesis is enabled; otherwise, <c>false</c>.</value>
-        public bool EnableSpeech
-        {
-            get { return _enableSpeech; }
-            set
-            {
-                _enableSpeech = value;
-
-                if (_console != null) { _console.EnableSpeech = value; }
-            }
-        }
-
-        /// <summary>
         ///     Gets the root nodes.
         /// </summary>
         /// <value>The root nodes.</value>
@@ -227,28 +211,33 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         public void Dispose()
         {
             _systemMonitoringSubsystem?.Dispose();
-            _console?.Dispose();
+            _console.TryDispose();
         }
 
         /// <summary>
-        ///     Initializes the console for the application and returns the instantiated
-        ///     console.
+        ///     Initializes the console for the application and returns the instantiated console.
         /// </summary>
-        /// <returns>The instantiated console.</returns>
-        /// <exception cref="System.ArgumentNullException">platformProvider</exception>
+        /// <param name="enableSpeech"> if set to <c>true</c> enable speech. </param>
+        /// <returns>
+        ///     The instantiated console.
+        /// </returns>
         [NotNull]
-        private AlfredSpeechConsole InitializeConsole()
+        private IConsole InitializeConsole(bool enableSpeech)
         {
             // Give Alfred a way to talk to the application
-            var baseConsole = new SimpleConsole(Container, new ExplorerEventFactory());
+            _console = new SimpleConsole(Container, new ExplorerEventFactory());
 
-            // Give Alfred a voice
-            _console = new AlfredSpeechConsole(baseConsole, baseConsole.EventFactory) { EnableSpeech = EnableSpeech };
-
-            _console.Log("AppManager.InitConsole", "Initializing console.", LogLevel.Verbose);
-            _alfred.Console = _console;
+            if (enableSpeech)
+            {
+                _console = new AlfredSpeechConsole(_console, _console.EventFactory)
+                {
+                    EnableSpeech = true
+                };
+            }
 
             // This will be our console
+            _console.Log("AppManager.InitConsole", "Initializing console.", LogLevel.Verbose);
+            _alfred.Console = _console;
             _console.RegisterAsProvidedInstance(typeof(IConsole));
 
             return _console;

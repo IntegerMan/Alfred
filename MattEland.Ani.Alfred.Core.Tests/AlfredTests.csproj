@@ -91,6 +91,7 @@
     <Compile Include="Mocks\TestShell.cs" />
     <Compile Include="Modules\AlfredPagesListModuleTests.cs" />
     <Compile Include="Modules\ModuleTests.cs" />
+    <Compile Include="Pages\EventLogPageTests.cs" />
     <Compile Include="Pages\ExplorerPageTests.cs" />
     <Compile Include="Pages\PageTests.cs" />
     <Compile Include="Resources.Designer.cs">

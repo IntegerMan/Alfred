@@ -25,55 +25,35 @@ namespace MattEland.Ani.Alfred.Core.Pages
     /// </summary>
     public sealed class AlfredEventLogPage : AlfredPage
     {
+        /// <summary>
+        ///     The events that have already been received and logged.
+        /// </summary>
+        /// <remarks>
+        ///     TODO: It might make sense to purge events older than a day if this app perpetually runs.
+        /// </remarks>
+        /// <value>
+        ///     The received events.
+        /// </value>
         [NotNull]
-        private readonly IConsole _console;
-
-        [NotNull]
-        private readonly ICollection<IPropertyProvider> _providers;
+        private ICollection<IPropertyProvider> ReceivedEvents { get; }
 
         /// <summary>
         ///     The last time from a logged event that has been moved to the _providers collection.
         /// </summary>
-        private DateTime _lastTimeLogged = DateTime.MinValue;
-
-        ///  <summary>
-        ///      Initializes a new instance of the <see cref="AlfredEventLogPage" /> class.
-        ///  </summary>
-        ///  <exception cref="ArgumentNullException">
-        ///      Thrown when one or more required arguments are null.
-        ///  </exception>
-        ///  <param name="container"> The container. </param>
-        /// <param name="console"> The console. </param>
-        ///  <param name="name"> The name. </param>
-        /// 
-        ///  ### <exception cref="System.ArgumentNullException"> . </exception>
-        public AlfredEventLogPage([NotNull] IObjectContainer container,
-            [NotNull] IConsole console,
-            [NotNull] string name) : base(container, name, "Log")
-        {
-            //- Validate
-            if (console == null) { throw new ArgumentNullException(nameof(console)); }
-
-            _console = console;
-            _providers = container.ProvideCollection<IPropertyProvider>();
-        }
+        public DateTime LastTimeLogged { get; private set; } = DateTime.MinValue;
 
         /// <summary>
-        ///     Gets the console.
+        ///     Initializes a new instance of the <see cref="AlfredEventLogPage" /> class.
         /// </summary>
-        /// <value>The console.</value>
-        [NotNull]
-        [UsedImplicitly]
-        public new IConsole Console
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when one or more required arguments are null.
+        /// </exception>
+        /// <param name="container"> The container. </param>
+        /// <param name="name"> The name. </param>
+        public AlfredEventLogPage([NotNull] IObjectContainer container,
+            [NotNull] string name) : base(container, name, "Log")
         {
-            get
-            {
-                /* Use the base console by default, but fallback to this instance's
-                console if no Console is available yet from Alfred. This is useful 
-                for logging during initialization. */
-
-                return base.Console ?? _console;
-            }
+            ReceivedEvents = container.ProvideCollection<IPropertyProvider>();
         }
 
         /// <summary>
@@ -85,15 +65,20 @@ namespace MattEland.Ani.Alfred.Core.Pages
         [UsedImplicitly]
         public IEnumerable<IConsoleEvent> Events
         {
-            get { return _console.Events; }
+            get
+            {
+                // If we don't have a console, we'll have to just provide an empty collection
+                return Console?.Events ?? Container.ProvideCollection<IConsoleEvent>();
+            }
         }
 
         /// <summary>
-        ///     Gets the children of this component. Depending on the type of component this is, the children
-        ///     will
-        ///     vary in their own types.
+        ///     Gets the children of this component. Depending on the type of component this is, the
+        ///     children will vary in their own types.
         /// </summary>
-        /// <value>The children.</value>
+        /// <value>
+        ///     The children.
+        /// </value>
         public override IEnumerable<IAlfredComponent> Children
         {
             get { yield break; }
@@ -105,7 +90,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <value>The property providers.</value>
         public override IEnumerable<IPropertyProvider> PropertyProviders
         {
-            get { return _providers; }
+            get { return ReceivedEvents; }
         }
 
         /// <summary>
@@ -124,24 +109,32 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// </summary>
         private void AddNewEventsToProviders()
         {
-            // Find new events that are IPropertyProviders
-            var newEvents =
-                _console.Events.Where(e => e.Time > _lastTimeLogged && e is IPropertyProvider)
-                        .ToList();
+            // Find new (since last check) events that are IPropertyProviders
+            var consoleEvents = Events.Where(e => e.Time > LastTimeLogged && e is IPropertyProvider);
+            var newEvents = consoleEvents.ToList();
 
-            if (newEvents.Any())
+            // Nothing to do if nothing is new
+            if (!newEvents.Any()) { return; }
+
+            // Gets the events in order with casting
+            AddNewEvents(newEvents);
+        }
+
+        /// <summary>
+        ///     Adds the new events to <see ref="ReceivedEvents"/>.
+        /// </summary>
+        /// <param name="newEvents"> The new events. </param>
+        private void AddNewEvents([NotNull] IList<IConsoleEvent> newEvents)
+        {
+            var newProviders = newEvents.OrderBy(e => e.Time).Cast<IPropertyProvider>();
+
+            foreach (var provider in newProviders.Where(provider => provider != null))
             {
-                // Gets the events in order with casting
-                var newProviders = newEvents.OrderBy(e => e.Time).Cast<IPropertyProvider>();
-
-                foreach (var provider in newProviders.Where(provider => provider != null))
-                {
-                    _providers.Add(provider);
-                }
-
-                // Update our last logged time
-                _lastTimeLogged = newEvents.Max(e => e.Time);
+                ReceivedEvents.Add(provider);
             }
+
+            // Update our last logged time
+            LastTimeLogged = newEvents.Max(e => e.Time);
         }
     }
 }

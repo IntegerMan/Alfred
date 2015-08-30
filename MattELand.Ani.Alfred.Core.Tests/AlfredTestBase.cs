@@ -7,6 +7,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml;
 using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.PresentationShared.Commands;
 using MattEland.Common;
@@ -169,6 +170,23 @@ namespace MattEland.Ani.Alfred.Tests
         public virtual void SetUpFixture()
         {
             Randomizer = new Random();
+        }
+
+        /// <summary>
+        ///     Gets the <see cref="IConsole"/> and fails if the console is not available.
+        /// </summary>
+        /// <returns>
+        ///     The console.
+        /// </returns>
+        [NotNull]
+        [SuppressMessage("ReSharper", "UnusedParameter.Local")]
+        protected IConsole RequireConsole()
+        {
+            var console = Container.TryProvide<IConsole>();
+
+            console.ShouldNotBeNull();
+
+            return console;
         }
     }
 }

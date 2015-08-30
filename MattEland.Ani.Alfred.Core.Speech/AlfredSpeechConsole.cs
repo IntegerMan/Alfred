@@ -9,6 +9,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 using JetBrains.Annotations;
@@ -138,9 +139,10 @@ namespace MattEland.Ani.Alfred.Core.Speech
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_speech")]
         public void Dispose()
         {
-            _speech?.Dispose();
+            _speech.TryDispose();
         }
     }
 }

@@ -123,7 +123,6 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
             if (AlfredInstance?.Console != null)
             {
                 _eventLogPage = new AlfredEventLogPage(Container,
-                                                       AlfredInstance.Console,
                                                        EventLogPageName);
                 Register(_eventLogPage);
             }
