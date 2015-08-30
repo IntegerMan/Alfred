@@ -15,6 +15,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Common;
 using MattEland.Common.Providers;
 
@@ -40,7 +41,10 @@ namespace MattEland.Ani.Alfred.Tests
             var console = new SimpleConsole(container);
             console.RegisterAsProvidedInstance(typeof(IConsole), container);
 
+            // Register mappings for promised types
             container.Register(typeof(IConsoleEvent), typeof(ConsoleEvent));
+            container.Register(typeof(MetricProviderBase), typeof(ValueMetricProvider));
+            container.Register(typeof(IMetricProviderFactory), typeof(ValueMetricProviderFactory));
         }
 
         /// <summary>

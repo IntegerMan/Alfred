@@ -81,10 +81,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             Container.RegisterAsProvidedInstance(typeof(IObjectContainer));
 
             // Register default mappings
-            Container.CollectionType = typeof(ObservableCollection<>);
-            Container.Register(typeof(AlfredCommand), typeof(XamlClientCommand));
-
-            // TODO: Grab things from the container!
+            ConfigureContainer();
 
             // Create Alfred. It won't be online and running yet, but create it.
             var bootstrapper = new AlfredBootstrapper(Container);
@@ -102,6 +99,17 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
 
             // Create an update pump on a dispatcher timer that will automatically get Alfred to regularly update any modules it has
             InitializeUpdatePump();
+        }
+
+        /// <summary>
+        ///     Sets up the mappings for types the container will need to provide.
+        /// </summary>
+        private void ConfigureContainer()
+        {
+            Container.CollectionType = typeof(ObservableCollection<>);
+            Container.Register(typeof(AlfredCommand), typeof(XamlClientCommand));
+            Container.Register(typeof(MetricProviderBase), typeof(CounterMetricProvider));
+            Container.Register(typeof(IMetricProviderFactory), typeof(CounterMetricProviderFactory));
         }
 
         /// <summary>
@@ -261,7 +269,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             // Initialize System Monitor - this can throw a few exceptions so may not be available.
             try
             {
-                var metricProviderFactory = new CounterMetricProviderFactory();
+                var metricProviderFactory = Container.Provide<IMetricProviderFactory>();
                 _systemMonitoringSubsystem = new SystemMonitoringSubsystem(Container,
                                                                            metricProviderFactory);
                 _alfred.Register(_systemMonitoringSubsystem);
