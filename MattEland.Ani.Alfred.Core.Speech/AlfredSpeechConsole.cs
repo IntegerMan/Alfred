@@ -63,7 +63,7 @@ namespace MattEland.Ani.Alfred.Core.Speech
             {
                 // On failure creating the speech provider, just have speech be null and we'll just be a decorator
                 _speech = null;
-                console.Log("Init.Console", $"Speech could not be initialized: {ex.Message}", LogLevel.Error);
+                Log("Init.Console", $"Speech could not be initialized: {ex.Message}", LogLevel.Error);
             }
         }
 

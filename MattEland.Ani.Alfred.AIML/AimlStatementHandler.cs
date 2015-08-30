@@ -2,7 +2,7 @@
 // AimlStatementHandler.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   08/28/2015 at 10:27 PM
+// Last Modified:   08/30/2015 at 4:37 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -28,10 +28,10 @@ using MattEland.Common.Providers;
 namespace MattEland.Ani.Alfred.Chat
 {
     /// <summary>
-    ///     Handles user statements by parsing the statement through an open source AIML engine
+    ///     Handles user statements by parsing the statement through an open source AIML engine.
     /// </summary>
     /// <remarks>
-    ///     AIML stands for Artificial Intelligence Markup Language
+    ///     AIML stands for Artificial Intelligence Markup Language.
     /// </remarks>
     public sealed class AimlStatementHandler : IChatProvider, INotifyPropertyChanged
     {
@@ -42,9 +42,7 @@ namespace MattEland.Ani.Alfred.Chat
         [NotNull]
         private readonly ChatHistoryProvider _chatHistory;
 
-        /// <summary>
-        ///     The <see cref="User" /> that represents the chat engine.
-        /// </summary>
+        /// <summary>The <see cref="User" /> that represents the chat engine.</summary>
         [NotNull]
         private readonly User _engineUser;
 
@@ -60,17 +58,20 @@ namespace MattEland.Ani.Alfred.Chat
         ///     Initializes a new instance of the <see cref="T:System.Object" /> class using the current
         ///     directory for the settings path.
         /// </summary>
-        /// <param name="container">The container to use for inversion of control</param>
-        /// <param name="engineName">Name of the chat engine.</param>
-        /// <exception cref="System.ArgumentNullException">
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when one or more required arguments are null.
         /// </exception>
-        public AimlStatementHandler([NotNull] IObjectContainer container, [NotNull] string engineName)
+        /// <param name="container"> The container to use for inversion of control. </param>
+        /// <param name="engineName"> Name of the chat engine. </param>
+        ///
+        /// ### <exception cref="System.ArgumentNullException"> . </exception>
+        public AimlStatementHandler(
+            [NotNull] IObjectContainer container,
+            [NotNull] string engineName)
         {
             //- Validate
-            if (engineName.IsEmpty())
-            {
-                throw new ArgumentNullException(nameof(engineName));
-            }
+            if (engineName.IsEmpty()) { throw new ArgumentNullException(nameof(engineName)); }
+            if (container == null) { throw new ArgumentNullException(nameof(container)); }
 
             // Set up simple internal fields
             _console = container.TryProvide<IConsole>();
@@ -91,9 +92,11 @@ namespace MattEland.Ani.Alfred.Chat
         }
 
         /// <summary>
-        ///     Gets or sets the console.
+        ///     Gets the console.
         /// </summary>
-        /// <value>The console.</value>
+        /// <value>
+        ///     The console.
+        /// </value>
         [CanBeNull]
         internal IConsole Console
         {
@@ -116,15 +119,21 @@ namespace MattEland.Ani.Alfred.Chat
         /// <summary>
         ///     Gets the chat engine.
         /// </summary>
-        /// <remarks>This is present largely for testing</remarks>
-        /// <value>The chat engine.</value>
+        /// <remarks>
+        ///     This is present largely for testing.
+        /// </remarks>
+        /// <value>
+        ///     The chat engine.
+        /// </value>
         [NotNull]
         public ChatEngine ChatEngine { get; }
 
         /// <summary>
         ///     Gets the property providers representing broad chat categories.
         /// </summary>
-        /// <value>The property providers.</value>
+        /// <value>
+        ///     The property providers.
+        /// </value>
         [NotNull]
         [ItemNotNull]
         internal IEnumerable<IPropertyProvider> PropertyProviders
@@ -137,8 +146,8 @@ namespace MattEland.Ani.Alfred.Chat
         }
 
         /// <summary>
-        ///     Performs an initial greeting by sending hi to the conversation system
-        ///     and erasing it from the last input so the user sees Alfred greeting them.
+        ///     Performs an initial greeting by sending hi to the conversation system and erasing it from
+        ///     the last input so the user sees Alfred greeting them.
         /// </summary>
         public void DoInitialGreeting()
         {
@@ -164,7 +173,9 @@ namespace MattEland.Ani.Alfred.Chat
         /// <summary>
         ///     Gets the last input from the user.
         /// </summary>
-        /// <value>The last input.</value>
+        /// <value>
+        ///     The last input.
+        /// </value>
         [CanBeNull]
         public string LastInput
         {
@@ -178,7 +189,9 @@ namespace MattEland.Ani.Alfred.Chat
         /// <summary>
         ///     Gets the last response from the system.
         /// </summary>
-        /// <value>The last response.</value>
+        /// <value>
+        ///     The last response.
+        /// </value>
         [CanBeNull]
         public UserStatementResponse LastResponse
         {
@@ -197,18 +210,21 @@ namespace MattEland.Ani.Alfred.Chat
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
-        ///     The internal implementation of <see cref="AimlStatementHandler.HandleUserStatement" /> which
-        ///     handles input text by submitting it to the chat engine as if from the current user and then
-        ///     returning the result. This internal implementation also has the ability to not save this
-        ///     statement to the log. This can be useful for automated events needing to interact with the
+        ///     The internal implementation of <see cref="AimlStatementHandler.HandleUserStatement" />
+        ///     which handles input text by submitting it to the chat engine as if from the current user
+        ///     and then returning the result. This internal implementation also has the ability to not
+        ///     save this statement to the log. This can be useful for automated events needing to
+        ///     interact with the
         ///     <see cref="ChatEngine" /> as if they were from the user.
         /// </summary>
-        /// <param name="userInput">The user input.</param>
+        /// <param name="userInput"> The user input. </param>
         /// <param name="saveToLog">
         ///     Whether or not the events should be saved to the log and have a
         ///     <see cref="ChatHistoryEntry" /> created for them.
         /// </param>
-        /// <returns>The <see cref="UserStatementResponse" />.</returns>
+        /// <returns>
+        ///     The <see cref="UserStatementResponse" />.
+        /// </returns>
         [NotNull]
         private UserStatementResponse HandleUserStatementInternal(
             [NotNull] string userInput,
@@ -261,9 +277,7 @@ namespace MattEland.Ani.Alfred.Chat
             return response;
         }
 
-        /// <summary>
-        ///     Adds a new history entry.
-        /// </summary>
+        /// <summary>Adds a new history entry.</summary>
         /// <param name="user">The user.</param>
         /// <param name="message">The message.</param>
         private void AddHistoryEntry([NotNull] User user, [NotNull] string message)
@@ -276,8 +290,8 @@ namespace MattEland.Ani.Alfred.Chat
         }
 
         /// <summary>
-        ///     Updates the owner of the chat engine. Setting the owner allows Alfred Commands to reach Alfred
-        ///     from the chat engine.
+        ///     Updates the owner of the chat engine. Setting the owner allows Alfred Commands to reach
+        ///     Alfred from the chat engine.
         /// </summary>
         /// <param name="owner">The owner.</param>
         internal void UpdateOwner(IAlfredCommandRecipient owner)
@@ -285,9 +299,7 @@ namespace MattEland.Ani.Alfred.Chat
             ChatEngine.Owner = owner;
         }
 
-        /// <summary>
-        ///     Gets the chat result.
-        /// </summary>
+        /// <summary>Gets the chat result.</summary>
         /// <param name="userInput">The user input.</param>
         /// <returns>The result of the communication to the chat ChatEngine</returns>
         [CanBeNull]
@@ -304,8 +316,11 @@ namespace MattEland.Ani.Alfred.Chat
         }
 
         /// <summary>
-        ///     Sets up the chat engine
+        ///     Sets up the chat engine.
         /// </summary>
+        /// <exception cref="InvalidOperationException">
+        ///     Thrown when the requested operation is invalid.
+        /// </exception>
         private void InitializeChatEngine()
         {
             if (ChatEngine == null || _user == null)
@@ -323,11 +338,14 @@ namespace MattEland.Ani.Alfred.Chat
         }
 
         /// <summary>
-        ///     Adds Alfred application AIML resources to the chat engine from the internal resource files.
+        ///     Adds Alfred application AIML resources to the chat engine from the internal resource
+        ///     files.
         /// </summary>
         private void AddApplicationAimlResourcesToChatEngine()
         {
             // TODO: Each assembly should provide their own set of resources
+
+            // TODO: Find a nicer extension method way of doing this
 
             var loaded = 0;
 
@@ -351,11 +369,12 @@ namespace MattEland.Ani.Alfred.Chat
         }
 
         /// <summary>
-        ///     Tries to load raw AIML markup into the chat engine.
+        ///     Tries to load raw AIML <paramref name="markup"/> into the chat engine.
         /// </summary>
-        /// <param name="markup">The markup.</param>
-        /// <returns>True if the AIML was processed; otherwise false.</returns>
-        /// <exception cref="XmlException">There is a load or parse error in the XML.</exception>
+        /// <param name="markup"> The markup. </param>
+        /// <returns>
+        ///     True if the AIML was processed; otherwise false.
+        /// </returns>
         private bool TryLoadAimlFile([CanBeNull] string markup)
         {
             try
@@ -376,9 +395,10 @@ namespace MattEland.Ani.Alfred.Chat
         /// <summary>
         ///     Called when a property changes.
         /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
+        /// <param name="propertyName"> Name of the property. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed",
-            Justification = "Using CallerMemberName to auto-default this value from any property caller")]
+            Justification =
+                "Using CallerMemberName to auto-default this value from any property caller")]
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -386,11 +406,16 @@ namespace MattEland.Ani.Alfred.Chat
         }
 
         /// <summary>
-        ///     Gets the response template from the last request spawned in the AIML chat message <paramref name="result"/>.
+        ///     Gets the response template from the last request spawned in the AIML chat message
+        ///     <paramref name="result" />.
         /// </summary>
-        /// <param name="result">The result of a chat message to the AIML interpreter.</param>
-        /// <returns>The response template</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="result" /> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="result" /> is <see langword="null" />.
+        /// </exception>
+        /// <param name="result"> The result of a chat message to the AIML interpreter. </param>
+        /// <returns>
+        ///     The response template.
+        /// </returns>
         [CanBeNull]
         private static string GetResponseTemplate([NotNull] Result result)
         {
