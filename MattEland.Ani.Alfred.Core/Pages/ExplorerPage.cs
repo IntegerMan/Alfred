@@ -25,6 +25,11 @@ namespace MattEland.Ani.Alfred.Core.Pages
     public class ExplorerPage : AlfredPage
     {
         /// <summary>
+        ///     The root nodes.
+        /// </summary>
+        private readonly ICollection<IPropertyProvider> _rootNodes;
+
+        /// <summary>
         ///     Initializes a new instance of the <see cref="ExplorerPage" /> class.
         /// </summary>
         /// <exception cref="ArgumentNullException"> . </exception>
@@ -45,7 +50,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
             DisplayNameProperty = displayName ?? "Name";
 
             // Set the root nodes collection
-            RootNodes = container.ProvideCollection<IPropertyProvider>();
+            _rootNodes = container.ProvideCollection<IPropertyProvider>();
         }
 
         /// <summary>
@@ -78,7 +83,22 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <value>The root nodes.</value>
         [NotNull]
         [ItemNotNull]
-        public IEnumerable<IPropertyProvider> RootNodes { get; set; }
+        public IEnumerable<IPropertyProvider> RootNodes
+        {
+            get
+            {
+                return _rootNodes;
+            }
+        }
+
+        /// <summary>
+        ///     Adds a root node.
+        /// </summary>
+        /// <param name="node"> The node. </param>
+        public void AddRootNode(IPropertyProvider node)
+        {
+            _rootNodes.Add(node);
+        }
 
         /// <summary>
         /// Gets the property to use to represent the item in the explorer grid.
@@ -86,5 +106,13 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <value>The display property to use.</value>
         [NotNull]
         public string DisplayNameProperty { get; }
+
+        /// <summary>
+        ///     Clears the nodes.
+        /// </summary>
+        public void ClearNodes()
+        {
+            _rootNodes.Clear();
+        }
     }
 }

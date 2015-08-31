@@ -49,14 +49,9 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         {
             if (alfred == null) { throw new ArgumentNullException(nameof(alfred)); }
 
-            // Build out a new collection
-            var nodes = Container.ProvideCollection<IPropertyProvider>();
-
             // Add alfred to the collection as the root level will only contain Alfred.
-            nodes.Add(alfred);
-
-            // Set the page's root nodes property so the UI can display things.
-            MindExplorerPage.RootNodes = nodes;
+            MindExplorerPage.ClearNodes();
+            MindExplorerPage.AddRootNode(alfred);
         }
 
         /// <summary>

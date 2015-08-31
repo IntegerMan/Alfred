@@ -28,12 +28,14 @@
     </UserControl.Resources>
     
     <Grid>
-        <controls:ExplorerControl RootNodes="{Binding MindExplorerPage.RootNodes}"
-                                  Visibility="{Binding IsOnline, Converter={StaticResource ShowIfTrue}}"/>
-        
+        <!-- Explorer Tree -->
+        <Border Visibility="{Binding IsOnline, Converter={StaticResource ShowIfTrue}}">
+            <controls:ExplorerControl x:Name="Explorer" />
+        </Border>
+
         <!-- Offline Message -->
         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
-                   Visibility="{Binding IsOnline, Converter={StaticResource HideIfTrue}}">
+                   Visibility="{Binding IsOnline, Converter={StaticResource HideIfTrue}, FallbackValue=Collapsed}">
             Alfred is Currently Offline
         </TextBlock>
     </Grid>

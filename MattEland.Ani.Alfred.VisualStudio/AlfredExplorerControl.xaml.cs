@@ -4,9 +4,13 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
+using System.Linq;
 using System.Windows;
 
+using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Ani.Alfred.Core.Subsystems;
+using MattEland.Ani.Alfred.PresentationShared.Commands;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.VisualStudio
 {
@@ -23,12 +27,14 @@ namespace MattEland.Ani.Alfred.VisualStudio
         {
             InitializeComponent();
 
-            // Grab the Container
-            var container = AlfredPackage.AlfredInstance.Container;
+            // Get the subsystem and bind to it
+            var alfred = AlfredPackage.AlfredInstance.Alfred;
+            var mind = alfred.Subsystems.FirstOrDefault(s => s.Id.Matches("Mind")) as MindExplorerSubsystem;
+            var explorerPage = mind?.MindExplorerPage;
 
-            // Grab the subsystem and bind the page to it
-            var mindExplorer = container.Provide<MindExplorerSubsystem>();
-            DataContext = mindExplorer.MindExplorerPage;
+            // Set the page and its nodes into the data context
+            DataContext = explorerPage;
+            Explorer.RootNodes = explorerPage?.RootNodes;
         }
 
         /// <summary>

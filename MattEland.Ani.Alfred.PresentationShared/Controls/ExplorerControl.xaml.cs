@@ -43,7 +43,9 @@ namespace MattEland.Ani.Alfred.PresentationShared.Controls
         }
 
         /// <summary>
-        ///     The root nodes dependency property
+        ///     The root nodes dependency property.
+        ///     
+        ///     TODO: Look into this - the NotifyPropertyChanged didn't seem to go through.
         /// </summary>
         [NotNull]
         public static readonly DependencyProperty RootNodesProperty =

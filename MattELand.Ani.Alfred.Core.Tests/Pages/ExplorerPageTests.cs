@@ -9,6 +9,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 using JetBrains.Annotations;
 
@@ -16,6 +17,8 @@ using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Pages;
 
 using NUnit.Framework;
+
+using Shouldly;
 
 namespace MattEland.Ani.Alfred.Tests.Pages
 {
@@ -54,32 +57,19 @@ namespace MattEland.Ani.Alfred.Tests.Pages
         }
 
         /// <summary>
-        ///     Tests that the page's children contains all components in RootNodes.
-        /// </summary>
-        [Test]
-        public void ChildrenContainRootNodes()
-        {
-            var children = GetSimpleCollection();
-
-            _page.RootNodes = children;
-
-            Assert.AreEqual(_page.RootNodes, _page.Children);
-        }
-
-        /// <summary>
         ///     Tests that the page's root nodes can be set.
         /// </summary>
         [Test]
         public void PageCanHaveNodes()
         {
-            var children = GetSimpleCollection();
+            var children = GetSimpleCollection().ToList();
 
-            _page.RootNodes = children;
+            foreach (var child in children) { _page.AddRootNode(child); }
 
-            Assert.IsNotNull(_page.RootNodes);
-            Assert.AreEqual(children,
-                            _page.RootNodes,
-                            "Page's root nodes were not the new collection");
+            _page.RootNodes.ShouldNotBeNull();
+
+            foreach (var child in children) { _page.RootNodes.ShouldContain(child); }
+            children.Count().ShouldBe(_page.RootNodes.Count(), "Page's root nodes were not the new collection");
         }
 
         /// <summary>

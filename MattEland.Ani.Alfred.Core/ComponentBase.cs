@@ -116,6 +116,7 @@ namespace MattEland.Ani.Alfred.Core
                 {
                     _status = value;
                     OnPropertyChanged(nameof(Status));
+                    OnPropertyChanged(nameof(IsOnline));
                 }
             }
         }
