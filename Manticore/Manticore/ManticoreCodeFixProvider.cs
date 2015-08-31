@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Composition;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -85,26 +86,30 @@ namespace MattEland.Manticore
 
             // Register a code action that will invoke the fix.
             Func<CancellationToken, Task<Solution>> func;
-            func = c => MakeUppercaseAsync(document, declaration, c);
+            func = c => RemoveTestNameFromType(document, declaration, c);
 
             var action = CodeAction.Create(title, func, title);
             context.RegisterCodeFix(action, diagnostic);
         }
 
-        /// <summary>Make the type declaration uppercase in an asynchronous operation.</summary>
-        /// <param name="document">The document.</param>
-        /// <param name="typeDeclaration">The type declaration.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>A task representing the solution proposed.</returns>
+        /// <summary>
+        ///     Make the type declaration no longer end in "Text" in an asynchronous operation.
+        /// </summary>
+        /// <param name="document"> The document. </param>
+        /// <param name="typeDeclaration"> The type declaration. </param>
+        /// <param name="cancellationToken"> The cancellation token. </param>
+        /// <returns>
+        ///     A task representing the solution proposed.
+        /// </returns>
         [NotNull]
-        private async Task<Solution> MakeUppercaseAsync(
+        private async Task<Solution> RemoveTestNameFromType(
             [NotNull] Document document,
             [NotNull] TypeDeclarationSyntax typeDeclaration,
             CancellationToken cancellationToken)
         {
             // Compute new uppercase name.
             var identifierToken = typeDeclaration.Identifier;
-            var newName = identifierToken.Text.ToUpperInvariant();
+            var newName = identifierToken.Text.Replace("Test", string.Empty);
 
             // Get the symbol representing the type to be renamed.
             var semanticModel = await document.GetSemanticModelAsync(cancellationToken);
@@ -114,15 +119,15 @@ namespace MattEland.Manticore
             var project = document.Project;
             var originalSolution = project.Solution;
             var optionSet = originalSolution.Workspace.Options;
-            var newSolution =
-                await
-                Renamer.RenameSymbolAsync(project.Solution,
-                                          typeSymbol,
-                                          newName,
-                                          optionSet,
-                                          cancellationToken).ConfigureAwait(false);
+            var renameSymbolAsync = Renamer.RenameSymbolAsync(project.Solution,
+                                                               typeSymbol,
+                                                               newName,
+                                                               optionSet,
+                                                               cancellationToken);
 
-            // Return the new solution with the now-uppercase type name.
+            var newSolution = await renameSymbolAsync.ConfigureAwait(false);
+
+            // Return the new solution with the adjusted type name.
             return newSolution;
         }
     }
