@@ -7,6 +7,7 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -29,6 +30,16 @@ namespace MattEland.Ani.Alfred.Tests.Pages
     {
         [NotNull, ItemNotNull]
         private readonly ICollection<IAlfredPage> _testPages = new List<IAlfredPage>();
+
+        /// <summary>
+        /// Sets up the environment for each test.
+        /// </summary>
+        public override void SetUp()
+        {
+            base.SetUp();
+
+            _testPages.Clear();
+        }
 
         /// <summary>
         ///    Tests that Alfred's root pages collection should not include non-root pages.
@@ -62,6 +73,24 @@ namespace MattEland.Ani.Alfred.Tests.Pages
 
             Alfred.RootPages.ShouldNotContain(nonRootPage, "The non-root page was present in Alfred's root pages collection");
             Alfred.RootPages.ShouldNotContain(p => !p.IsRootLevel, "Alfred should not include non-root pages but did");
+        }
+
+        /// <summary>
+        ///     Non root pages are still updated when Alfred updates.
+        /// </summary>
+        [Test]
+        public void NonRootPagesAreStillUpdated()
+        {
+            var nonRootPage = BuildTestPage(false);
+            _testPages.Add(nonRootPage);
+
+            StartAlfred();
+
+            nonRootPage.LastUpdated.ShouldBe(DateTime.MinValue);
+
+            Alfred.Update();
+
+            nonRootPage.LastUpdated.ShouldBeGreaterThan(DateTime.MinValue);
         }
 
         /// <summary>
