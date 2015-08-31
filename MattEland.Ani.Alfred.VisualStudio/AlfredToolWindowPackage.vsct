@@ -56,6 +56,13 @@
           <ButtonText>Alfred Chat Window</ButtonText>
         </Strings>
       </Button>
+      <Button guid="guidAlfredPackageCmdSet" id="cmdidAlfredExplorerCommand" priority="0x0100" type="Button">
+        <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1" />
+        <Icon guid="guidImagesExplorer" id="bmpPic1" />
+        <Strings>
+          <ButtonText>Alfred Explorer</ButtonText>
+        </Strings>
+      </Button>
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
@@ -67,6 +74,7 @@
             must be the actual index (1-based) of the bitmap inside the bitmap strip. -->
       <Bitmap guid="guidImagesPages" href="Resources\AlfredToolWindowCommand.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough" />
       <Bitmap guid="guidImagesChat" href="Resources\AlfredChatWindowCommand.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough" />
+      <Bitmap guid="guidImagesExplorer" href="Resources\AlfredExplorerCommand.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough" />
     </Bitmaps>
   </Commands>
 
@@ -90,6 +98,19 @@
     </GuidSymbol>
   
     <GuidSymbol value="{c37bc0e1-0c6e-48b2-971c-4cf204504f84}" name="guidImagesChat">
+      <IDSymbol name="bmpPic1" value="1" />
+      <IDSymbol name="bmpPic2" value="2" />
+      <IDSymbol name="bmpPicSearch" value="3" />
+      <IDSymbol name="bmpPicX" value="4" />
+      <IDSymbol name="bmpPicArrows" value="5" />
+      <IDSymbol name="bmpPicStrikethrough" value="6" />
+    </GuidSymbol>
+  
+    <GuidSymbol value="{8d0c60a3-2cb9-474b-bf2a-800ea39a3eb7}" name="guidAlfredPackageCmdSet">
+      <IDSymbol value="256" name="cmdidAlfredExplorerCommand" />
+    </GuidSymbol>
+  
+    <GuidSymbol value="{c925e26e-1de2-4333-95be-ea3d7ea298cf}" name="guidImagesExplorer">
       <IDSymbol name="bmpPic1" value="1" />
       <IDSymbol name="bmpPic2" value="2" />
       <IDSymbol name="bmpPicSearch" value="3" />

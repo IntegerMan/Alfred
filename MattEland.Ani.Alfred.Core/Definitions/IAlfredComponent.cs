@@ -31,6 +31,14 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         AlfredStatus Status { get; }
 
         /// <summary>
+        ///     Gets a value indicating whether this instance is online.
+        /// </summary>
+        /// <value>
+        ///     <see langword="true"/> if this instance is online, <see langword="false"/> if not.
+        /// </value>
+        bool IsOnline { get; }
+
+        /// <summary>
         ///     Updates this instance.
         /// </summary>
         void Update();

@@ -2,7 +2,7 @@
 // ApplicationManager.cs
 // 
 // Created on:      08/20/2015 at 8:14 PM
-// Last Modified:   08/25/2015 at 11:09 AM
+// Last Modified:   08/31/2015 at 12:31 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -31,21 +31,18 @@ using MattEland.Common.Providers;
 namespace MattEland.Ani.Alfred.PresentationShared.Commands
 {
     /// <summary>
-    ///     The application manager takes care of the discrete bits of managing Alfred
-    ///     that shouldn't be the concern of the client or other user interface elements.
+    ///     The application manager takes care of the discrete bits of managing Alfred that shouldn't
+    ///     be the concern of the client or other user interface elements.
     /// </summary>
     public sealed class ApplicationManager : IDisposable
     {
-        /// <summary>
-        ///     The update frequency in seconds for Alfred's update pump
-        /// </summary>
-        private const double UpdateFrequencyInSeconds = 0.25;
 
         private const string LogHeader = "AppManager.Initialize";
 
-        /// <summary>
-        ///     The Alfred Provider that makes the application possible
-        /// </summary>
+        /// <summary>The update frequency in seconds for Alfred's update pump</summary>
+        private const double UpdateFrequencyInSeconds = 0.25;
+
+        /// <summary>The Alfred Provider that makes the application possible</summary>
         [NotNull]
         private readonly AlfredApplication _alfred;
 
@@ -58,21 +55,15 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         private IUserInterfaceDirector _userInterfaceDirector;
 
         /// <summary>
-        /// Gets the container.
-        /// </summary>
-        /// <value>The container.</value>
-        [NotNull]
-        public IObjectContainer Container { get; }
-
-        /// <summary>
         ///     Initializes a new instance of the <see cref="T:System.Object" /> class with the specified
         ///     user interface director and platform provider.
         /// </summary>
         /// <param name="container"> The container. </param>
         /// <param name="options"> Options for creating the application. </param>
         /// <param name="director"> The user interface director. </param>
-        public ApplicationManager([CanBeNull] IObjectContainer container,
-                                  [NotNull] ApplicationManagerOptions options,
+        public ApplicationManager(
+            [CanBeNull] IObjectContainer container,
+            [NotNull] ApplicationManagerOptions options,
             [CanBeNull] IUserInterfaceDirector director = null)
         {
             Options = options;
@@ -102,25 +93,21 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             InitializeUpdatePump();
         }
 
+        /// <summary>Gets the container.</summary>
+        /// <value>The container.</value>
+        [NotNull]
+        public IObjectContainer Container { get; }
+
+        /// <summary>
+        ///     Gets options for controlling application creation.
+        /// </summary>
+        /// <value>
+        ///     The options.
+        /// </value>
         [NotNull]
         public ApplicationManagerOptions Options { get; }
 
-        /// <summary>
-        ///     Sets up the mappings for types the container will need to provide.
-        /// </summary>
-        private void ConfigureContainer()
-        {
-            Container.CollectionType = typeof(ObservableCollection<>);
-
-            Container.TryRegister(typeof(AlfredCommand), typeof(XamlClientCommand));
-            Container.TryRegister(typeof(MetricProviderBase), typeof(CounterMetricProvider));
-            Container.TryRegister(typeof(IMetricProviderFactory), typeof(CounterMetricProviderFactory));
-            Container.TryRegister(typeof(IAlfred), typeof(AlfredApplication));
-        }
-
-        /// <summary>
-        ///     Gets the user interface director.
-        /// </summary>
+        /// <summary>Gets the user interface director.</summary>
         /// <value>The user interface director.</value>
         [CanBeNull]
         public IUserInterfaceDirector UserInterfaceDirector
@@ -147,9 +134,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             }
         }
 
-        /// <summary>
-        ///     Gets the shell command manager.
-        /// </summary>
+        /// <summary>Gets the shell command manager.</summary>
         /// <value>The shell manager.</value>
         [CanBeNull]
         public ShellCommandManager ShellManager
@@ -160,9 +145,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             private set;
         }
 
-        /// <summary>
-        ///     The Alfred Provider that makes the application possible
-        /// </summary>
+        /// <summary>The Alfred Provider that makes the application possible</summary>
         [NotNull]
         [UsedImplicitly]
         public AlfredApplication Alfred
@@ -174,9 +157,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             }
         }
 
-        /// <summary>
-        ///     Gets the console.
-        /// </summary>
+        /// <summary>Gets the console.</summary>
         /// <value>The console.</value>
         [CanBeNull]
         public IConsole Console
@@ -184,9 +165,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             get { return _console; }
         }
 
-        /// <summary>
-        ///     Gets the current culture's locale information.
-        /// </summary>
+        /// <summary>Gets the current culture's locale information.</summary>
         /// <value>The locale.</value>
         [NotNull]
         public CultureInfo Locale
@@ -198,34 +177,38 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             }
         }
 
-        /// <summary>
-        ///     Gets the root nodes.
-        /// </summary>
+        /// <summary>Gets the root nodes.</summary>
         /// <value>The root nodes.</value>
         public IEnumerable<IPropertyProvider> RootNodes
         {
             get { yield return _alfred; }
         }
 
-        /// <summary>
-        ///     Disposes of loose resources
-        /// </summary>
+        /// <summary>Disposes of loose resources</summary>
         [SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed",
             MessageId = "_console")]
         [SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed",
             MessageId = "_systemMonitoringSubsystem")]
         public void Dispose()
         {
-            _systemMonitoringSubsystem?.Dispose();
+            _systemMonitoringSubsystem.TryDispose();
             _console.TryDispose();
         }
 
-        /// <summary>
-        ///     Initializes the console for the application and returns the instantiated console.
-        /// </summary>
-        /// <returns>
-        ///     The instantiated console.
-        /// </returns>
+        /// <summary>Sets up the mappings for types the container will need to provide.</summary>
+        private void ConfigureContainer()
+        {
+            Container.CollectionType = typeof(ObservableCollection<>);
+
+            Container.TryRegister(typeof(AlfredCommand), typeof(XamlClientCommand));
+            Container.TryRegister(typeof(MetricProviderBase), typeof(CounterMetricProvider));
+            Container.TryRegister(typeof(IMetricProviderFactory),
+                                  typeof(CounterMetricProviderFactory));
+            Container.TryRegister(typeof(IAlfred), typeof(AlfredApplication));
+        }
+
+        /// <summary>Initializes the console for the application and returns the instantiated console.</summary>
+        /// <returns>The instantiated console.</returns>
         [NotNull]
         private IConsole InitializeConsole()
         {
@@ -234,10 +217,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
 
             if (Options.IsSpeechEnabled)
             {
-                _console = new AlfredSpeechConsole(_console, _console.EventFactory)
-                {
-                    EnableSpeech = true
-                };
+                _console = new AlfredSpeechConsole(_console, _console.EventFactory);
             }
 
             // This will be our console
@@ -248,9 +228,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             return _console;
         }
 
-        /// <summary>
-        ///     Initializes and register's Alfred's subsystems
-        /// </summary>
+        /// <summary>Initializes and register's Alfred's subsystems</summary>
         private void InitializeSubsystems()
         {
             // Log header
@@ -258,6 +236,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
 
             // Init Core
             _alfredCoreSubsystem = new AlfredCoreSubsystem(Container);
+            _alfredCoreSubsystem.RegisterAsProvidedInstance(Container);
             _alfred.Register(_alfredCoreSubsystem);
 
             // Initialize System Monitor
@@ -265,22 +244,20 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
 
             // Initialize Chat
             _chatSubsystem = new ChatSubsystem(Container, _alfred.Name);
+            _chatSubsystem.RegisterAsProvidedInstance(Container);
             _alfred.Register(_chatSubsystem);
 
             // Initialize Mind Explorer
-            _mindExplorerSubsystem = new MindExplorerSubsystem(Container, Options.ShowMindExplorerPage);
+            _mindExplorerSubsystem = new MindExplorerSubsystem(Container,
+                                                               Options.ShowMindExplorerPage);
+            _mindExplorerSubsystem.RegisterAsProvidedInstance(Container);
             _alfred.Register(_mindExplorerSubsystem);
 
             // Add any dynamic subsystems
-            foreach (var subsystem in Options.AdditionalSubsystems)
-            {
-                _alfred.Register(subsystem);
-            }
+            foreach (var subsystem in Options.AdditionalSubsystems) { _alfred.Register(subsystem); }
         }
 
-        /// <summary>
-        ///     Initializes the system monitoring subsystem.
-        /// </summary>
+        /// <summary>Initializes the system monitoring subsystem.</summary>
         private void InitializeSystemMonitoringSubsystem()
         {
             try
@@ -307,35 +284,27 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             }
         }
 
-        /// <summary>
-        ///     Updates the module
-        /// </summary>
+        /// <summary>Updates the module</summary>
         public void Update()
         {
             // If Alfred is online, ask it to update its modules
             if (_alfred.Status == AlfredStatus.Online) { _alfred.Update(); }
         }
 
-        /// <summary>
-        ///     Starts Alfred
-        /// </summary>
+        /// <summary>Starts Alfred</summary>
         public void Start()
         {
             _alfred.Initialize();
         }
 
-        /// <summary>
-        ///     Stops Alfred
-        /// </summary>
+        /// <summary>Stops Alfred</summary>
         public void Stop()
         {
             // Make sure we clean up Alfred
             if (_alfred.Status != AlfredStatus.Offline) { _alfred.Shutdown(); }
         }
 
-        /// <summary>
-        ///     Initializes the update pump that causes <see cref="Alfred"/> to update its modules.
-        /// </summary>
+        /// <summary>Initializes the update pump that causes <see cref="Alfred" /> to update its modules.</summary>
         private void InitializeUpdatePump()
         {
             var seconds = TimeSpan.FromSeconds(UpdateFrequencyInSeconds);

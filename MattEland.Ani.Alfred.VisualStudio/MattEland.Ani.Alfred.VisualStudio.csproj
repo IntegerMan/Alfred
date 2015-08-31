@@ -69,6 +69,11 @@
     <Compile Include="AlfredChatWindowControl.xaml.cs">
       <DependentUpon>AlfredChatWindowControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AlfredExplorer.cs" />
+    <Compile Include="AlfredExplorerCommand.cs" />
+    <Compile Include="AlfredExplorerControl.xaml.cs">
+      <DependentUpon>AlfredExplorerControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="AlfredToolWindow.cs" />
     <Compile Include="AlfredToolWindowCommand.cs" />
     <Compile Include="AlfredToolWindowControl.xaml.cs">
@@ -110,11 +115,16 @@
       <ResourceName>Menus.ctmenu</ResourceName>
     </VSCTCompile>
     <Content Include="Resources\AlfredChatWindowCommand.png" />
+    <Content Include="Resources\AlfredExplorerCommand.png" />
     <Content Include="Resources\AlfredToolWindowCommand.png" />
     <Content Include="Resources\AlfredToolWindowPackage.ico" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="AlfredChatWindowControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="AlfredExplorerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

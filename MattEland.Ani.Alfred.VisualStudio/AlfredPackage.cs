@@ -39,10 +39,11 @@ namespace MattEland.Ani.Alfred.VisualStudio
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    [ProvideToolWindow(typeof(AlfredToolWindow))]
     [Guid(PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
+    [ProvideToolWindow(typeof(AlfredToolWindow))]
     [ProvideToolWindow(typeof(AlfredChatWindow))]
+    [ProvideToolWindow(typeof(AlfredExplorer))]
     public sealed class AlfredPackage : Package
     {
         [CanBeNull]
@@ -130,6 +131,7 @@ namespace MattEland.Ani.Alfred.VisualStudio
             // Add tool window display commands
             AlfredToolWindowCommand.Initialize(this);
             AlfredChatWindowCommand.Initialize(this);
+            AlfredExplorerCommand.Initialize(this);
         }
 
         #endregion

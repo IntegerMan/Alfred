@@ -91,34 +91,18 @@ namespace MattEland.Ani.Alfred.Core.Speech
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether speech synthesis is enabled.
-        /// </summary>
-        /// <value><c>true</c> if speech synthesis is enabled; otherwise, <c>false</c>.</value>
-        public bool EnableSpeech { get; set; } = true;
-
-        /// <summary>
         ///     Logs the specified <paramref name="message"/> to the console.
         /// </summary>
         /// <param name="title">The title.</param>
         /// <param name="message">The message.</param>
         /// <param name="level">The logging level.</param>
-        public void Log(string title, string message, LogLevel level)
+        public void Log([CanBeNull] string title, [CanBeNull] string message, LogLevel level)
         {
-            if (title == null)
-            {
-                title = "Unknown";
-            }
-
-            if (message == null)
-            {
-                return;
-            }
-
             // Always log things to the base logger
             _console.Log(title, message, level);
 
             // If it's a significant message, tell the user via voice
-            if (EnableSpeech && SpeechEnabledLogLevels.Contains(level))
+            if (SpeechEnabledLogLevels.Contains(level))
             {
                 // For more serious items, have Alfred say the status beforehand
                 if (level == LogLevel.Warning || level == LogLevel.Error)

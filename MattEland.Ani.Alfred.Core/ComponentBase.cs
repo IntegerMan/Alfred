@@ -72,6 +72,14 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
+        ///     Gets a value indicating whether this instance is online.
+        /// </summary>
+        /// <value>
+        ///     <see langword="true"/> if this instance is online, <see langword="false"/> if not.
+        /// </value>
+        public bool IsOnline { get { return Status == AlfredStatus.Online; } }
+
+        /// <summary>
         ///     Gets the name and version of the component.
         /// </summary>
         /// <value>The name and version.</value>
