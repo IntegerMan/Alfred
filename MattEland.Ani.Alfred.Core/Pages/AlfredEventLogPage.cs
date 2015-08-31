@@ -53,6 +53,8 @@ namespace MattEland.Ani.Alfred.Core.Pages
         public AlfredEventLogPage([NotNull] IObjectContainer container,
             [NotNull] string name) : base(container, name, "Log")
         {
+            if (container == null) { throw new ArgumentNullException(nameof(container)); }
+
             ReceivedEvents = container.ProvideCollection<IPropertyProvider>();
         }
 

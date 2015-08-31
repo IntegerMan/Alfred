@@ -41,9 +41,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <summary>
         ///     Initializes a new instance of the <see cref="ChatEngine" /> class.
         /// </summary>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when one or more required arguments are null.
+        /// </exception>
         /// <param name="container"> The container. </param>
         public ChatEngine([NotNull] IObjectContainer container)
         {
+            if (container == null) { throw new ArgumentNullException(nameof(container)); }
+
             // Get basic functionality set ASAP
             Container = container;
             Logger = container.TryProvide<IConsole>();

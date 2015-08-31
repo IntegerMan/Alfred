@@ -246,6 +246,12 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Manticore\Manticore\Manticore.csproj">
+      <Project>{f63e7bc1-9e96-4feb-98ae-fb253a5e9635}</Project>
+      <Name>Manticore</Name>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+    </ProjectReference>
     <ProjectReference Include="..\MattEland.Ani.Alfred.AIML\MattEland.Ani.Alfred.Chat.csproj">
       <Project>{3a25074a-351a-471e-aaf8-171a0e66f83a}</Project>
       <Name>MattEland.Ani.Alfred.Chat</Name>

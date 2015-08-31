@@ -131,6 +131,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <summary>
         ///     Raises the <see cref="CanExecuteChanged"/> event.
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate", Justification = "Matching WPF schema")]
         public void RaiseCanExecuteChanged()
         {
             try
