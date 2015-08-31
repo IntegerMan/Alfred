@@ -6,6 +6,7 @@ using System;
 using TestHelper;
 
 using MattEland.Manticore;
+using MattEland.Manticore.Analyzers;
 
 namespace Manticore.Test
 {
@@ -72,7 +73,7 @@ namespace Manticore.Test
 
         protected override CodeFixProvider GetCSharpCodeFixProvider()
         {
-            return new ManticoreCodeFixProvider();
+            return new EndsInTestsCodeFixProvider();
         }
 
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()

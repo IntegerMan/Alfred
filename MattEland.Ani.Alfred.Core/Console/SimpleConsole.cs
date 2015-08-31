@@ -93,7 +93,15 @@ namespace MattEland.Ani.Alfred.Core.Console
         /// <param name="consoleEvent">The console event.</param>
         private void Log([NotNull] IConsoleEvent consoleEvent)
         {
-            _events.Add(consoleEvent);
+            try
+            {
+                _events.Add(consoleEvent);
+            }
+            catch (NotSupportedException)
+            {
+                /* TODO: I get this from dispatcher-based exceptions in VS logging. 
+                   I think I need a Thread-Safe Observable Collection */
+            }
         }
 
         /// <summary>

@@ -18,6 +18,8 @@ using System.Threading.Tasks;
 
 using JetBrains.Annotations;
 
+using MattEland.Manticore.Analyzers;
+
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
@@ -28,18 +30,26 @@ using Microsoft.CodeAnalysis.Rename;
 namespace MattEland.Manticore
 {
     /// <summary>
-    ///     The Manticore Code Fix Provider which allows the system to inspect the codebase
+    ///     Provides a codefix to remove the string "Tests" from a class name
     /// </summary>
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(ManticoreCodeFixProvider))]
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(EndsInTestsCodeFixProvider))]
     [Shared]
-    public class ManticoreCodeFixProvider : CodeFixProvider
+    public class EndsInTestsCodeFixProvider : CodeFixProvider
     {
-        private const string title = "Make uppercase";
+        /// <summary>
+        ///     The title of the code fix as it appears to the user.
+        /// </summary>
+        private const string Title = "Remove 'Tests' from end of symbol";
 
-        /// <summary>A list of diagnostic IDs that this provider can provider fixes for.</summary>
+        /// <summary>
+        ///     A list of diagnostic IDs that this provider can provider fixes for.
+        /// </summary>
+        /// <value>
+        ///     A list of identifiers of the fixable diagnostics.
+        /// </value>
         public override sealed ImmutableArray<string> FixableDiagnosticIds
         {
-            get { return ImmutableArray.Create(ManticoreAnalyzer.DiagnosticId); }
+            get { return ImmutableArray.Create(EndsInTestsAnalyzer.DiagnosticId); }
         }
 
         /// <summary>
@@ -59,21 +69,25 @@ namespace MattEland.Manticore
             return WellKnownFixAllProviders.BatchFixer;
         }
 
-        /// <summary>Computes one or more fixes for the specified <see cref="CodeFixContext" /> .</summary>
+        /// <summary>
+        ///     Computes one or more fixes for the specified <see cref="CodeFixContext" /> .
+        /// </summary>
         /// <param name="context">
-        ///     A <see cref="CodeFixContext" /> containing context information about the
-        ///     diagnostics to fix. The context must only contain diagnostics with an
+        ///     A <see cref="CodeFixContext" /> containing context information about the diagnostics to
+        ///     fix. The context must only contain diagnostics with an
         ///     <see cref="Diagnostic.Id" />
-        ///     included in the <see cref="CodeFixProvider.FixableDiagnosticIds" /> for the current provider.
+        ///     included in the <see cref="CodeFixProvider.FixableDiagnosticIds" /> for the current
+        ///     provider.
         /// </param>
-        /// <returns>A <see cref="Task" /> for the codefix.</returns>
+        /// <returns>
+        ///     A <see cref="Task" /> for the codefix.
+        /// </returns>
         public override sealed async Task RegisterCodeFixesAsync(CodeFixContext context)
         {
             var document = context.Document;
             var syntaxRoot = document.GetSyntaxRootAsync(context.CancellationToken);
             var root = await syntaxRoot.ConfigureAwait(false);
 
-            // TODO: Replace the following code with your own analysis, generating a CodeAction for each fix to suggest
             var diagnostic = context.Diagnostics.First();
             var diagnosticSpan = diagnostic.Location.SourceSpan;
 
@@ -88,7 +102,7 @@ namespace MattEland.Manticore
             Func<CancellationToken, Task<Solution>> func;
             func = c => RemoveTestNameFromType(document, declaration, c);
 
-            var action = CodeAction.Create(title, func, title);
+            var action = CodeAction.Create(Title, func, Title);
             context.RegisterCodeFix(action, diagnostic);
         }
 
@@ -107,9 +121,18 @@ namespace MattEland.Manticore
             [NotNull] TypeDeclarationSyntax typeDeclaration,
             CancellationToken cancellationToken)
         {
-            // Compute new uppercase name.
             var identifierToken = typeDeclaration.Identifier;
-            var newName = identifierToken.Text.Replace("Test", string.Empty);
+
+            // Remove "Test" or "Tests" from the end of the name string
+            string newName = identifierToken.Text;
+            if (newName.EndsWith("Tests", StringComparison.OrdinalIgnoreCase))
+            {
+                newName = newName.Substring(0, identifierToken.Text.Length - 5);
+            }
+            else if (newName.EndsWith("Test"))
+            {
+                newName = newName.Substring(0, identifierToken.Text.Length - 4);
+            }
 
             // Get the symbol representing the type to be renamed.
             var semanticModel = await document.GetSemanticModelAsync(cancellationToken);
