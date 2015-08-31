@@ -117,6 +117,7 @@
     <Compile Include="Converters\LogLevelToBrushConverter.cs" />
     <Compile Include="Commands\IUserInterfaceDirector.cs" />
     <Compile Include="Converters\VisibilityConverter.cs" />
+    <Compile Include="Helpers\SafeObservableCollection.cs" />
     <Compile Include="Helpers\SelectionHelper.cs" />
     <Compile Include="Helpers\SharedResourceDictionary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

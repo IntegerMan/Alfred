@@ -25,6 +25,7 @@ using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Ani.Alfred.Core.Speech;
 using MattEland.Ani.Alfred.Core.Subsystems;
+using MattEland.Ani.Alfred.PresentationShared.Helpers;
 using MattEland.Common;
 using MattEland.Common.Providers;
 
@@ -198,7 +199,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         /// <summary>Sets up the mappings for types the container will need to provide.</summary>
         private void ConfigureContainer()
         {
-            Container.CollectionType = typeof(ObservableCollection<>);
+            Container.CollectionType = typeof(SafeObservableCollection<>);
 
             Container.TryRegister(typeof(AlfredCommand), typeof(XamlClientCommand));
             Container.TryRegister(typeof(MetricProviderBase), typeof(CounterMetricProvider));
