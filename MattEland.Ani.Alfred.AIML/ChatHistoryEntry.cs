@@ -66,7 +66,7 @@ namespace MattEland.Ani.Alfred.Chat
         /// <value>The sub queries.</value>
         [NotNull]
         [ItemNotNull]
-        public ICollection<ChatSubQueryExplorerNode> SubQueries { get; set; }
+        public ICollection<ChatSubQueryExplorerNode> SubQueries { get; }
 
         /// <summary>Gets the chat result when this entry represents a message from the
         ///     <see cref="ChatEngine" /> .</summary>

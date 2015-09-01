@@ -218,6 +218,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <param name="chatResult">The result.</param>
         /// <param name="user">The user.</param>
         /// <returns>The textual result of evaluating the node</returns>
+        [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         [NotNull]
         private string ProcessNode(
             [NotNull] XmlElement element,

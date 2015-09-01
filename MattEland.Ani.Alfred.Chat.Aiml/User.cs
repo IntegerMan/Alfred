@@ -39,8 +39,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <summary>
         ///     Initializes a new instance of the <see cref="User" /> class.
         /// </summary>
-        /// <param name="name">The identifier.</param>
-        /// <exception cref="ArgumentOutOfRangeException">The name cannot be empty</exception>
+        /// <exception cref="ArgumentOutOfRangeException"> The name cannot be empty. </exception>
+        /// <param name="name"> The identifier. </param>
+        /// <param name="isSystemUser">
+        ///     <see langword="true"/> if this instance is system user, <see langword="false"/> if not.
+        /// </param>
         internal User([NotNull] string name, bool isSystemUser)
         {
             //- Validation
