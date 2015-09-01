@@ -20,10 +20,13 @@ using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Ani.Alfred.Core.Subsystems;
+using MattEland.Common;
 using MattEland.Common.Providers;
 using MattEland.Testing;
 
 using NUnit.Framework;
+
+using Shouldly;
 
 namespace MattEland.Ani.Alfred.Tests.Subsystems
 {
@@ -114,12 +117,15 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         [Test]
         public void EventLogPageIsNotPresentInAlfredAfterInitializationWhenNoConsoleIsProvided()
         {
+            // The IConsole comes from the Container now so clear out the container
+            Container.ResetMappings();
+
             _alfred.Register(_subsystem);
             _alfred.Initialize();
             _alfred.Update();
 
-            Assert.IsTrue(_alfred.RootPages.All(p => p.Name != AlfredCoreSubsystem.EventLogPageName),
-                          "Event Log Page was present when no console was provided");
+            const string FailMessage = "Event Log Page was present when no console was provided";
+            _alfred.RootPages.ShouldNotAllBeOfType<AlfredEventLogPage>(FailMessage);
         }
 
         [Test]
