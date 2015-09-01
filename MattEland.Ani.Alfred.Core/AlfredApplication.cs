@@ -139,7 +139,7 @@ namespace MattEland.Ani.Alfred.Core
         ///     Gets or sets the console provider. This can be <see langword="null"/>.
         /// </summary>
         /// <value>The console.</value>
-        [CanBeNull]
+        [CanBeNull, Obsolete("Get your own IConsole from an IObjectProvider")]
         public IConsole Console { get; set; }
 
         /// <summary>
