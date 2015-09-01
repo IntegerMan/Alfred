@@ -48,6 +48,7 @@
     <None Include="AlfredAppTestCertificate.snk" />
     <None Include="AlfredCore.cd" />
     <None Include="packages.config" />
+    <None Include="Widgets\Widgets.cd" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AlfredBootstrapper.cs" />

@@ -144,9 +144,12 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         ///     Gets a list of properties provided by this item.
         /// </summary>
         /// <returns>The properties</returns>
-        public IEnumerable<IPropertyItem> Properties
+        public virtual IEnumerable<IPropertyItem> Properties
         {
-            get { yield break; }
+            get
+            {
+                yield return new AlfredProperty("Visible", IsVisible);
+            }
         }
 
         /// <summary>

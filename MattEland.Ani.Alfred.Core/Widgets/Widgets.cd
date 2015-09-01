@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="MattEland.Ani.Alfred.Core.Widgets.WidgetBase">
+    <Position X="8.5" Y="1" Width="2" />
+    <Members>
+      <Field Name="_dataContext" Hidden="true" />
+      <Field Name="_isVisible" Hidden="true" />
+      <Method Name="Error" Hidden="true" />
+      <Method Name="Log" Hidden="true" />
+      <Method Name="OnPropertyChanged" Hidden="true" />
+      <Event Name="PropertyChanged" Hidden="true" />
+      <Method Name="WidgetBase" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Events" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="PropertyProviders" Type="MattEland.Ani.Alfred.Core.Definitions.IPropertyProvider">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-0.477" Y="0.336" Height="0.182" Width="1.427" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Properties" Type="MattEland.Ani.Alfred.Core.Definitions.IPropertyItem">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-0.501" Y="0.359" Height="0.182" Width="1.439" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>gACAEAAAAAAAEQAAIAACAAQAgAhAQIAAAAAAIAACAAA=</HashCode>
+      <FileName>Widgets\WidgetBase.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="PropertyProviders" />
+      <Property Name="Properties" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="MattEland.Ani.Alfred.Core.Widgets.AlfredProgressBarWidget">
+    <Position X="4" Y="6" Width="3" />
+    <Members>
+      <Field Name="_maximum" Hidden="true" />
+      <Field Name="_minimum" Hidden="true" />
+      <Field Name="_value" Hidden="true" />
+      <Field Name="_valueFormatString" Hidden="true" />
+      <Method Name="AlfredProgressBarWidget" Hidden="true" />
+      <Property Name="ItemTypeName" Hidden="true" />
+      <Property Name="Properties" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>gRAAAAKAAAAAAAAAAAACIAAAAAAAAAAAAAAoAAACEAA=</HashCode>
+      <FileName>Widgets\AlfredProgressBarWidget.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MattEland.Ani.Alfred.Core.Widgets.AlfredTextWidget">
+    <Position X="8.75" Y="4" Width="1.5" />
+    <Members>
+      <Field Name="_text" Hidden="true" />
+      <Method Name="AlfredTextWidget" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAACAACAAA=</HashCode>
+      <FileName>Widgets\AlfredTextWidget.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MattEland.Ani.Alfred.Core.Widgets.ButtonWidget">
+    <Position X="12.25" Y="6" Width="2.5" />
+    <Members>
+      <Field Name="_clickCommand" Hidden="true" />
+      <Method Name="ButtonWidget" Hidden="true" />
+      <Method Name="Click" Hidden="true" />
+      <Property Name="ItemTypeName" Hidden="true" />
+      <Method Name="OnClickCommandPropertyChanged" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAACAAAAAQAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>Widgets\ButtonWidget.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MattEland.Ani.Alfred.Core.Widgets.TextWidget" Collapsed="true">
+    <Position X="7.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Widgets\TextWidget.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MattEland.Ani.Alfred.Core.Widgets.WarningWidget" Collapsed="true">
+    <Position X="10" Y="6" Width="1.5" />
+    <Members>
+      <Property Name="ItemTypeName" Hidden="true" />
+      <Method Name="WarningWidget" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Widgets\WarningWidget.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="MattEland.Ani.Alfred.Core.Definitions.IPropertyProvider" Collapsed="true">
+    <Position X="5.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAAAAACAAQAAAAAAIAAAAAAAAACAAA=</HashCode>
+      <FileName>Definitions\IPropertyProvider.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="MattEland.Ani.Alfred.Core.Definitions.IPropertyItem" Collapsed="true">
+    <Position X="11.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAgAAAACAA=</HashCode>
+      <FileName>Definitions\IPropertyItem.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

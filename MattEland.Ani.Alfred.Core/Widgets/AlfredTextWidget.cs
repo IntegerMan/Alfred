@@ -7,7 +7,11 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System.Collections.Generic;
+
 using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Core.Definitions;
 
 namespace MattEland.Ani.Alfred.Core.Widgets
 {
@@ -26,6 +30,24 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         protected AlfredTextWidget([NotNull] WidgetCreationParameters parameters)
             : base(parameters)
         {
+        }
+
+        /// <summary>
+        ///     Gets a list of properties provided by this item.
+        /// </summary>
+        /// <returns>The properties</returns>
+        public override IEnumerable<IPropertyItem> Properties
+        {
+            get
+            {
+                // Return base properties
+                foreach (var prop in base.Properties)
+                {
+                    yield return prop;
+                }
+
+                yield return new AlfredProperty("Text", Text);
+            }
         }
 
         /// <summary>
