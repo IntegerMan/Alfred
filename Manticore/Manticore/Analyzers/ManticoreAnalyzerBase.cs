@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
@@ -45,7 +46,17 @@ namespace MattEland.Manticore.Analyzers
         {
             // Set up the provider
             Container = CommonProvider.Container;
-            Alfred = Container.Provide<IAlfred>();
+
+            if (Container.HasMapping(typeof(IAlfred)))
+            {
+                Alfred = Container.Provide<IAlfred>();
+            }
+            else
+            {
+                Alfred = new AlfredApplication(Container);
+                Alfred.RegisterAsProvidedInstance(typeof(IAlfred));
+            }
+
             Console = Alfred.Console;
         }
 
