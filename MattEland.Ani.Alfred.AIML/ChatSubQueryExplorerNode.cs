@@ -19,8 +19,7 @@ using MattEland.Ani.Alfred.Core.Definitions;
 namespace MattEland.Ani.Alfred.Chat
 {
     /// <summary>
-    ///     A <see cref="MattEland.Ani.Alfred.Chat.ChatSubQueryExplorerNode.SubQuery" /> explorer node
-    ///     for providing insight into chat input processing.
+    ///     A <see cref="SubQuery" /> explorer node for providing insight into chat input processing.
     /// </summary>
     public class ChatSubQueryExplorerNode : IPropertyProvider
     {
@@ -45,6 +44,7 @@ namespace MattEland.Ani.Alfred.Chat
 
         /// <summary>Gets the display name for use in the user interface.</summary>
         /// <value>The display name.</value>
+        [NotNull]
         public string DisplayName
         {
             get { return Name; }
@@ -55,6 +55,7 @@ namespace MattEland.Ani.Alfred.Chat
         /// <example>Some examples of
         ///     <see cref="MattEland.Ani.Alfred.Chat.ChatSubQueryExplorerNode.ItemTypeName" />
         ///     values might be "Folder", "Application", "User", etc.</example>
+        [NotNull]
         public string ItemTypeName
         {
             get { return "Chat SubQuery"; }
@@ -62,9 +63,22 @@ namespace MattEland.Ani.Alfred.Chat
 
         /// <summary>Gets the name of the item.</summary>
         /// <value>The name.</value>
+        [NotNull]
         public string Name
         {
-            get { return SubQuery.Template; }
+            get { return InputText; }
+        }
+
+        /// <summary>
+        ///     Gets the input text.
+        /// </summary>
+        /// <value>
+        ///     The input text.
+        /// </value>
+        [NotNull]
+        public string InputText
+        {
+            get { return SubQuery.InputText; }
         }
 
         /// <summary>Gets a list of properties provided by this item.</summary>
@@ -75,14 +89,16 @@ namespace MattEland.Ani.Alfred.Chat
             {
                 yield return new AlfredProperty("Response", Response);
                 yield return new AlfredProperty("Template", Template);
-                yield return new AlfredProperty("Input", Input);
-                yield return new AlfredProperty("Topic", Topic);
-                yield return new AlfredProperty("Subject", Subject);
+                yield return new AlfredProperty("Input Text", InputText);
+                yield return new AlfredProperty("Input *", Input);
+                yield return new AlfredProperty("Topic *", Topic);
+                yield return new AlfredProperty("Subject *", Subject);
             }
         }
 
         /// <summary>Gets the property providers.</summary>
         /// <value>The property providers.</value>
+        [NotNull, ItemNotNull]
         public IEnumerable<IPropertyProvider> PropertyProviders
         {
             get { yield break; }

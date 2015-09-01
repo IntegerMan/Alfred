@@ -24,7 +24,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// </summary>
         /// <value>The template.</value>
         [NotNull]
-        public string Template { get; set; } = string.Empty;
+        public string Template { get; internal set; } = string.Empty;
 
         /// <summary>
         /// Gets the that star collection.
@@ -60,5 +60,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// </value>
         [NotNull]
         public string Response { get; internal set; } = string.Empty;
+
+        /// <summary>
+        ///     Gets the input text for this subquery.
+        /// </summary>
+        /// <value>
+        ///     The input text.
+        /// </value>
+        [NotNull]
+        public string InputText { get; internal set; } = string.Empty;
     }
 }

@@ -127,7 +127,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <param name="request">The request.</param>
         /// <param name="sentence">The sentence.</param>
         /// <returns>The SubQuery.</returns>
-        private SubQuery EvaluateSubQuery([NotNull] Request request, string sentence)
+        private SubQuery EvaluateSubQuery([NotNull] Request request, [NotNull] string sentence)
         {
             // Build out a query based on the path
             var query = new SubQuery();
@@ -135,13 +135,21 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             // Search the node tree for the template most closely matched to this request
             var evaluator = _chatEngine.RootNode.Evaluator;
 
-            // TODO: It'd be nice to introduce a new class to encapsulate these args
-            var template = evaluator.Evaluate(sentence,
+            // Build out the template
+            query.Template = evaluator.Evaluate(sentence,
                                               query,
                                               request,
                                               MatchState.UserInput,
                                               new StringBuilder());
-            query.Template = template.NonNull();
+
+
+            // Set the input from the sentence, leaving off the path portion
+            var thatIndex = sentence.IndexOf("<that>", StringComparison.OrdinalIgnoreCase);
+            if (thatIndex > 0)
+            {
+                sentence = sentence.Substring(0, thatIndex - 1);
+            }
+            query.InputText = sentence;
 
             return query;
         }

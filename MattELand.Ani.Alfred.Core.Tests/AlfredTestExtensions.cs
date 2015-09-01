@@ -8,6 +8,7 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -197,6 +198,7 @@ namespace MattEland.Ani.Alfred.Tests
         public static T ShouldBe<T>([CanBeNull] this object actual,
                                     [CanBeNull] string failureMessage = null)
         {
+            // Validate Input
             actual.ShouldNotBeNull("The actual object was null prior to being cast.");
 
             var cast = actual.ShouldBeOfType<T>();
@@ -209,6 +211,33 @@ namespace MattEland.Ani.Alfred.Tests
             cast.ShouldNotBeNull(failureMessage.NonNull());
 
             return cast;
+        }
+
+        /// <summary>
+        ///     Enumerates the <paramref name="collection"/> and returns a strongly-typed collection.
+        /// </summary>
+        /// <typeparam name="T"> The type each item should be cast to. </typeparam>
+        /// <param name="collection"> The collection to act on. </param>
+        /// <param name="failureMessage"> The failure message. </param>
+        /// <returns>
+        ///     An enumerator that allows <see langword="foreach"/> to be used to process should all
+        ///     items <paramref name="collection"/> as a strongly-typed list.
+        /// </returns>
+        [NotNull]
+        public static IList<T> ShouldAllBe<T>([CanBeNull] this IEnumerable collection,
+                                    [CanBeNull] string failureMessage = null)
+        {
+            // Validate Input
+            collection.ShouldNotBeNull("The collection object was null prior to being cast.");
+
+            // Ensure we have an adequate failure message
+            if (failureMessage.IsEmpty())
+            {
+                failureMessage = $"An item in the collection was not of type {typeof(T).Name}";
+            }
+
+            // Cast all items and return them in a strongly-typed List<T>
+            return (from object item in collection select item.ShouldBe<T>(failureMessage)).ToList();
         }
 
     }
