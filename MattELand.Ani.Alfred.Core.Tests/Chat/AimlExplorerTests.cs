@@ -15,6 +15,7 @@ using System.Windows;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Chat;
 using MattEland.Ani.Alfred.Chat.Aiml;
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Ani.Alfred.Core.Definitions;
@@ -35,6 +36,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public sealed class AimlExplorerTests : ExplorerTestsBase
     {
+        private const string ChatComplexInput = "Hi Alfred. What is the date?";
 
         /// <summary>
         ///     Ensures that the AIML knowledge node has user-acceptable root text.
@@ -144,6 +146,133 @@ namespace MattEland.Ani.Alfred.Tests.Chat
                 knowledgeRoot.ShouldNotBeNull("Could not find AIML knowledge root");
 
                 return knowledgeRoot;
+            }
+        }
+
+        /// <summary>
+        ///     Checks the naming of the chat history node
+        /// </summary>
+        [Test]
+        public void ChatHistoryShouldHaveCorrectName()
+        {
+            var history = ChatHistoryNode;
+            history.DisplayName.ShouldBe("Chat History");
+        }
+
+        /// <summary>
+        ///     Tests that chat history starts with one entry.
+        /// </summary>
+        [Test]
+        public void ChatHistoryShouldStartWithOneEntry()
+        {
+            var history = ChatHistoryNode;
+            history.PropertyProviders.Count().ShouldBe(1); // from initial greeting
+            history.PropertyProviders.First().ShouldBe<ChatHistoryEntry>();
+        }
+
+        /// <summary>
+        ///     Verifies that the first node in chat history be from the system with proper settings
+        /// </summary>
+        [Test]
+        public void ChatHistoryInitialGreetingShouldBeFromAlfred()
+        {
+            var history = ChatHistoryNode;
+            var entry = history.PropertyProviders.First().ShouldBeOfType<ChatHistoryEntry>();
+
+            // Validate the entry
+            entry.ShouldNotBeNull();
+            entry.ShouldSatisfyAllConditions("First chat entry was not valid.",
+                () => entry.ChatResult.ShouldNotBeNull(),
+                () => entry.IsFromChatEngine.ShouldBeTrue(),
+                () => entry.User.Name.ShouldBe(Alfred.DisplayName),
+                () => entry.User.IsSystemUser.ShouldBeTrue(),
+                () => entry.User.ShouldBeSameAs(ChatEngine.SystemUser));
+        }
+
+        /// <summary>
+        ///     Chat inputs should not have any child nodes (these represent sub-queries).
+        /// </summary>
+        [Test]
+        public void ChatInputsShouldNotHaveChildren()
+        {
+            SendComplexInputToChatEngine();
+
+            var historyNode = ChatHistoryNode;
+            var chatNodes = historyNode.PropertyProviders;
+            var input = chatNodes.FirstOrDefault(n => n.DisplayName.EndsWith(ChatComplexInput));
+
+            var node = input.ShouldBe<ChatHistoryEntry>();
+
+            node.ShouldSatisfyAllConditions("Chat input was invalid",
+                () => node.User.ShouldNotBeNull(),
+                () => node.User.IsSystemUser.ShouldBeFalse(),
+                () => node.ChatResult.ShouldBeNull(),
+                () => node.IsFromChatEngine.ShouldBeFalse());
+        }
+
+        /// <summary>
+        ///     Sends a complex message to the chat engine and returns the reply.
+        /// </summary>
+        private UserStatementResponse SendComplexInputToChatEngine()
+        {
+            var chatProvider = Alfred.ChatProvider;
+            chatProvider.ShouldNotBeNull();
+            return chatProvider.HandleUserStatement(ChatComplexInput);
+        }
+
+        /// <summary>
+        ///     Chat inputs should not have any child nodes (these represent sub-queries).
+        /// </summary>
+        [Test, Ignore("Under development"]
+        public void ChatOutputsShouldHaveChildren()
+        {
+            SendComplexInputToChatEngine();
+
+            var historyNode = ChatHistoryNode;
+            var chatNodes = historyNode.PropertyProviders;
+            var responseNode = chatNodes.LastOrDefault();
+            responseNode.ShouldNotBeNull();
+            responseNode.PropertyProviders.Count().ShouldBe(3);
+        }
+
+        /// <summary>
+        ///     Chat inputs should not have any child nodes (these represent sub-queries).
+        /// </summary>
+        [Test]
+        public void ChatOutputShouldMatchReturnedResponse()
+        {
+            var reply = SendComplexInputToChatEngine();
+            reply.ShouldNotBeNull();
+
+            var historyNode = ChatHistoryNode;
+
+            var chatNodes = historyNode.PropertyProviders;
+            var responseNode = chatNodes.LastOrDefault();
+            responseNode.ShouldNotBeNull();
+
+            var node = responseNode.ShouldBe<ChatHistoryEntry>();
+            node.ShouldSatisfyAllConditions("Response node was not in the expected format",
+                () => node.ChatResult.ShouldNotBeNull(),
+                () => node.ChatResult.ShouldBeSameAs(reply.ResultData),
+                () => node.ChatResult.RawInput.ShouldBe(reply.UserInput),
+                () => node.Message.ShouldBe(reply.ResponseText),
+                () => node.DisplayName.ShouldContain(reply.ResponseText));
+        }
+
+        /// <summary>
+        ///     Gets the chat history node in the explorer.
+        /// </summary>
+        /// <value>
+        ///     The chat history node.
+        /// </value>
+        [NotNull]
+        private IPropertyProvider ChatHistoryNode
+        {
+            get
+            {
+                var historyNode = AlfredNode.Nav("Chat").Nav("Chat History");
+                historyNode.ShouldNotBeNull();
+                return historyNode;
             }
         }
     }

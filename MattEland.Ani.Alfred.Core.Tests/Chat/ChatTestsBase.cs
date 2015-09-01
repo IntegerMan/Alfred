@@ -276,7 +276,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         {
             var query = new SubQuery();
             var request = new Request(input, User, Engine);
-            var result = new Result(User, Engine, request);
+            var result = new ChatResult(User, Engine, request);
             return new TagHandlerParameters(Engine, User, query, request, result, element);
         }
 

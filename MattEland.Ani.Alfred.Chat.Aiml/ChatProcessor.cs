@@ -77,13 +77,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <param name="request">The request.</param>
         /// <returns>A result object containing the engine's reply.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="request" /> is <see langword="null" />.</exception>
-        internal Result ProcessChatRequest([NotNull] Request request)
+        internal ChatResult ProcessChatRequest([NotNull] Request request)
         {
             //- Validation
             if (request == null) { throw new ArgumentNullException(nameof(request)); }
 
             // Build a result for this request. This will link the two together.
-            var result = new Result(request.User, _chatEngine, request);
+            var result = new ChatResult(request.User, _chatEngine, request);
 
             // Split the input into different sentences and build a path for each sentence.
             foreach (var pattern in SplitSentenceHelper.Split(request.RawInput, _chatEngine))
@@ -150,18 +150,18 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// </summary>
         /// <param name="request">The request.</param>
         /// <param name="query">The query.</param>
-        /// <param name="result">The result.</param>
+        /// <param name="chatResult">The result.</param>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         [SuppressMessage("ReSharper", "CatchAllClause")]
         private void ProcessSubQuery(
             [NotNull] Request request,
             [NotNull] SubQuery query,
-            [NotNull] Result result)
+            [NotNull] ChatResult chatResult)
         {
             //- Validate
             if (request == null) { throw new ArgumentNullException(nameof(request)); }
             if (query == null) { throw new ArgumentNullException(nameof(query)); }
-            if (result == null) { throw new ArgumentNullException(nameof(result)); }
+            if (chatResult == null) { throw new ArgumentNullException(nameof(chatResult)); }
 
             try
             {
@@ -169,10 +169,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                 var element = AimlTagHandler.BuildElement(query.Template);
 
                 // Process the chat node with the given template and tag handlers. This will result in the chat output.
-                var nodeOutput = ProcessNode(element, query, request, result, request.User);
+                var nodeOutput = ProcessNode(element, query, request, chatResult, request.User);
 
                 // Check to see if the output had textual values, and, if so, add them to our output.
-                if (nodeOutput.HasText()) { result.OutputSentences.Add(nodeOutput); }
+                if (nodeOutput.HasText()) { chatResult.OutputSentences.Add(nodeOutput); }
             }
             catch (Exception ex)
             {
@@ -203,7 +203,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <param name="element">The node.</param>
         /// <param name="query">The query.</param>
         /// <param name="request">The request.</param>
-        /// <param name="result">The result.</param>
+        /// <param name="chatResult">The result.</param>
         /// <param name="user">The user.</param>
         /// <returns>The textual result of evaluating the node</returns>
         [NotNull]
@@ -211,14 +211,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             [NotNull] XmlElement element,
             [NotNull] SubQuery query,
             [NotNull] Request request,
-            [NotNull] Result result,
+            [NotNull] ChatResult chatResult,
             [NotNull] User user)
         {
             //- Validation
             if (element == null) { throw new ArgumentNullException(nameof(element)); }
             if (query == null) { throw new ArgumentNullException(nameof(query)); }
             if (request == null) { throw new ArgumentNullException(nameof(request)); }
-            if (result == null) { throw new ArgumentNullException(nameof(result)); }
+            if (chatResult == null) { throw new ArgumentNullException(nameof(chatResult)); }
             if (user == null) { throw new ArgumentNullException(nameof(user)); }
 
             // If we've already timed out, give up on this.
@@ -228,14 +228,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             // Farm out handling for template nodes
             if (element.Name.Matches("template"))
             {
-                return ProcessTemplateNode(element, query, request, result, user);
+                return ProcessTemplateNode(element, query, request, chatResult, user);
             }
 
             // We need a handler for this type of node. Grab it from the registered tag handlers
             var handler = _tagFactory.Build(element,
                                             query,
                                             request,
-                                            result,
+                                            chatResult,
                                             user,
                                             element.Name.ToLowerInvariant());
 
@@ -249,7 +249,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             // Farm out handling to recursive node handling function
             if (handler.IsRecursive)
             {
-                return ProcessRecursiveNode(element, query, request, result, user, handler);
+                return ProcessRecursiveNode(element, query, request, chatResult, user, handler);
             }
 
             // Execute the transformation and build a new node XML string from the result
@@ -262,7 +262,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                build out our output from their values. */
             return !evaluatedNode.HasChildNodes
                        ? evaluatedNode.InnerXml.NonNull()
-                       : ProcessChildNodes(evaluatedNode, user, request, query, result);
+                       : ProcessChildNodes(evaluatedNode, user, request, query, chatResult);
         }
 
         /// <summary>
@@ -272,7 +272,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <param name="user">The user.</param>
         /// <param name="request">The request.</param>
         /// <param name="query">The query.</param>
-        /// <param name="result">The result.</param>
+        /// <param name="chatResult">The result.</param>
         /// <returns>The result of processing each child.</returns>
         [NotNull]
         private string ProcessChildNodes(
@@ -280,13 +280,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             [NotNull] User user,
             [NotNull] Request request,
             [NotNull] SubQuery query,
-            [NotNull] Result result)
+            [NotNull] ChatResult chatResult)
         {
             var sbOutput = new StringBuilder();
 
             foreach (XmlNode childNode in node.ChildNodes)
             {
-                sbOutput.Append(ProcessChildNode(childNode, user, request, query, result));
+                sbOutput.Append(ProcessChildNode(childNode, user, request, query, chatResult));
             }
 
             return sbOutput.ToString();
@@ -299,13 +299,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <param name="user">The user.</param>
         /// <param name="request">The request.</param>
         /// <param name="query">The query.</param>
-        /// <param name="result">The result.</param>
+        /// <param name="chatResult">The result.</param>
         private string ProcessChildNode(
             [CanBeNull] XmlNode childNode,
             [NotNull] User user,
             [NotNull] Request request,
             [NotNull] SubQuery query,
-            [NotNull] Result result)
+            [NotNull] ChatResult chatResult)
         {
             // If it's XmlText, just return it
             var childText = childNode as XmlText;
@@ -315,7 +315,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             var childElement = childNode as XmlElement;
             if (childElement != null)
             {
-                return ProcessNode(childElement, query, request, result, user);
+                return ProcessNode(childElement, query, request, chatResult, user);
             }
 
             return string.Empty;
@@ -330,7 +330,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <param name="node">The node.</param>
         /// <param name="query">The query.</param>
         /// <param name="request">The request.</param>
-        /// <param name="result">The result.</param>
+        /// <param name="chatResult">The result.</param>
         /// <param name="user">The user.</param>
         /// <param name="handler">The handler.</param>
         /// <returns>System.String.</returns>
@@ -339,7 +339,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             [NotNull] XmlNode node,
             [NotNull] SubQuery query,
             [NotNull] Request request,
-            [NotNull] Result result,
+            [NotNull] ChatResult chatResult,
             [NotNull] User user,
             [NotNull] TextTransformerBase handler)
         {
@@ -347,7 +347,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             if (node == null) { throw new ArgumentNullException(nameof(node)); }
             if (query == null) { throw new ArgumentNullException(nameof(query)); }
             if (request == null) { throw new ArgumentNullException(nameof(request)); }
-            if (result == null) { throw new ArgumentNullException(nameof(result)); }
+            if (chatResult == null) { throw new ArgumentNullException(nameof(chatResult)); }
             if (user == null) { throw new ArgumentNullException(nameof(user)); }
             if (handler == null) { throw new ArgumentNullException(nameof(handler)); }
 
@@ -362,7 +362,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                         childElement.InnerXml = ProcessNode(childElement,
                                                             query,
                                                             request,
-                                                            result,
+                                                            chatResult,
                                                             user);
                     }
                 }
@@ -378,7 +378,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <param name="node">The node.</param>
         /// <param name="query">The query.</param>
         /// <param name="request">The request.</param>
-        /// <param name="result">The result.</param>
+        /// <param name="chatResult">The result.</param>
         /// <param name="user">The user.</param>
         /// <returns>The output text.</returns>
         [NotNull]
@@ -386,14 +386,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             [NotNull] XmlNode node,
             [NotNull] SubQuery query,
             [NotNull] Request request,
-            [NotNull] Result result,
+            [NotNull] ChatResult chatResult,
             [NotNull] User user)
         {
             //- Validation
             if (node == null) { throw new ArgumentNullException(nameof(node)); }
             if (query == null) { throw new ArgumentNullException(nameof(query)); }
             if (request == null) { throw new ArgumentNullException(nameof(request)); }
-            if (result == null) { throw new ArgumentNullException(nameof(result)); }
+            if (chatResult == null) { throw new ArgumentNullException(nameof(chatResult)); }
             if (user == null) { throw new ArgumentNullException(nameof(user)); }
 
             //- Early Exit for no children
@@ -403,7 +403,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             var sbOutput = new StringBuilder();
             foreach (XmlNode childNode in node.ChildNodes)
             {
-                var value = ProcessChildNode(childNode, user, request, query, result);
+                var value = ProcessChildNode(childNode, user, request, query, chatResult);
                 sbOutput.Append(value);
             }
 

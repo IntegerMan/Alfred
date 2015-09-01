@@ -6,6 +6,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Subsystems;
+using MattEland.Common;
 
 using NUnit.Framework;
 

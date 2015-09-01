@@ -89,6 +89,23 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         }
 
         /// <summary>
+        ///     Gets the identifier for the <see cref="IAlfredSubsystem"/> to be used in command routing.
+        /// </summary>
+        /// <value>The identifier for the subsystem.</value>
+        [NotNull]
+        public abstract string Id { get; }
+
+        /// <summary>
+        ///     Gets the pages associated with the <see cref="IAlfredSubsystem"/>
+        /// </summary>
+        /// <value>The pages.</value>
+        [ItemNotNull]
+        public IEnumerable<IAlfredPage> Pages
+        {
+            get { return _pages; }
+        }
+
+        /// <summary>
         /// Gets a list of properties provided by this item.
         /// </summary>
         /// <returns>The properties</returns>
@@ -104,23 +121,6 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
 
                 yield return new AlfredProperty("ID", Id);
             }
-        }
-
-        /// <summary>
-        ///     Gets the identifier for the <see cref="IAlfredSubsystem"/> to be used in command routing.
-        /// </summary>
-        /// <value>The identifier for the subsystem.</value>
-        [NotNull]
-        public abstract string Id { get; }
-
-        /// <summary>
-        ///     Gets the pages associated with the <see cref="IAlfredSubsystem"/>
-        /// </summary>
-        /// <value>The pages.</value>
-        [ItemNotNull]
-        public IEnumerable<IAlfredPage> Pages
-        {
-            get { return _pages; }
         }
 
         /// <summary>

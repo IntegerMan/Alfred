@@ -16,6 +16,7 @@ using System.Text;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Tests.Pages;
+using MattEland.Common;
 using MattEland.Common.Providers;
 
 using NUnit.Framework;

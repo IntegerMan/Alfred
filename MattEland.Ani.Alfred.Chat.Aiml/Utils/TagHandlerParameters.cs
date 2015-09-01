@@ -29,7 +29,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <param name="user">The user.</param>
         /// <param name="query">The query.</param>
         /// <param name="request">The request.</param>
-        /// <param name="result">The result.</param>
+        /// <param name="chatResult">The result.</param>
         /// <param name="element">The template node.</param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="query" />, <paramref name="request" />, <paramref name="user" />,
@@ -40,7 +40,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
                                     [NotNull] User user,
                                     [NotNull] SubQuery query,
                                     [NotNull] Request request,
-                                    Result result,
+                                    ChatResult chatResult,
                                     [NotNull] XmlElement element)
         {
             //- Validate
@@ -54,7 +54,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             User = user;
             Query = query;
             Request = request;
-            Result = result;
+            ChatResult = chatResult;
             Element = element;
         }
 
@@ -90,7 +90,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         ///     Gets the result.
         /// </summary>
         /// <value>The result.</value>
-        public Result Result { get; }
+        public ChatResult ChatResult { get; }
 
         /// <summary>
         ///     Gets the template node.

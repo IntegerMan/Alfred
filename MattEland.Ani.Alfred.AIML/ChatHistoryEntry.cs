@@ -24,29 +24,17 @@ namespace MattEland.Ani.Alfred.Chat
     /// </summary>
     public class ChatHistoryEntry : IPropertyProvider
     {
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="ChatHistoryEntry" /> class.
         /// </summary>
-        /// <param name="user">The <see cref="User" />.</param>
-        /// <param name="message">The message.</param>
-        /// <exception cref="System.ArgumentNullException">user, message</exception>
-        public ChatHistoryEntry([NotNull] User user, [NotNull] string message)
-            : this(user, message, DateTime.UtcNow)
-        {
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="ChatHistoryEntry" /> class.
-        /// </summary>
-        /// <param name="user">The <see cref="User" />.</param>
-        /// <param name="message">The message.</param>
-        /// <param name="dateTimeUtc">The date time the statement was made in UTC time.</param>
-        /// <exception cref="System.ArgumentNullException">user, message</exception>
-        public ChatHistoryEntry(
-            [NotNull] User user,
-            [NotNull] string message,
-            DateTime dateTimeUtc)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when one or more required arguments are null.
+        /// </exception>
+        /// <param name="user"> The <see cref="User" />. </param>
+        /// <param name="message"> The message. </param>
+        /// <param name="chatResult"> The result. </param>
+        internal ChatHistoryEntry([NotNull] User user, [NotNull] string message,
+                                [CanBeNull] ChatResult chatResult = null)
         {
             //- Validate
             if (user == null) { throw new ArgumentNullException(nameof(user)); }
@@ -58,8 +46,19 @@ namespace MattEland.Ani.Alfred.Chat
             //- Set Properties
             User = user;
             Message = message;
-            DateTimeUtc = dateTimeUtc;
+            ChatResult = chatResult;
+            DateTimeUtc = DateTime.UtcNow; //- We'll likely need this as a parameter someday.
         }
+
+        /// <summary>
+        ///     Gets the chat result when this entry represents a message from the
+        ///     <see cref="ChatEngine"/>.
+        /// </summary>
+        /// <value>
+        ///     The chat result.
+        /// </value>
+        [CanBeNull]
+        public ChatResult ChatResult { get; }
 
         /// <summary>
         ///     Gets the date time the statement was made in UTC time.
@@ -97,24 +96,36 @@ namespace MattEland.Ani.Alfred.Chat
         }
 
         /// <summary>
+        ///     Gets a value indicating whether this instance is from the chat engine.
+        /// </summary>
+        /// <value>
+        ///     <see langword="true"/> if this instance is from chat engine, <see langword="false"/> if
+        ///     it was user input.
+        /// </value>
+        public bool IsFromChatEngine
+        {
+            get { return ChatResult != null; }
+        }
+
+        /// <summary>
         ///     Gets the name of the item.
         /// </summary>
         /// <value>The name.</value>
         [NotNull]
         public string Name
         {
-            get { return string.Format(CultureInfo.InvariantCulture, "{0}: {1}", User.Id, Message); }
+            get { return string.Format(CultureInfo.InvariantCulture, "{0}: {1}", User.Name, Message); }
         }
 
         /// <summary>
         /// Gets a list of properties provided by this item.
         /// </summary>
         /// <returns>The properties</returns>
-        public IEnumerable<IPropertyItem> Properties
+        public virtual IEnumerable<IPropertyItem> Properties
         {
             get
             {
-                yield return new AlfredProperty("User", User.Id);
+                yield return new AlfredProperty("Source", User.Name);
                 yield return new AlfredProperty("Message", Message);
                 yield return new AlfredProperty("Time", DateTime);
             }
@@ -126,7 +137,15 @@ namespace MattEland.Ani.Alfred.Chat
         /// <value>The property providers.</value>
         public IEnumerable<IPropertyProvider> PropertyProviders
         {
-            get { yield break; }
+            get
+            {
+                if (ChatResult != null)
+                {
+                    // TODO: Add subquery nodes
+                }
+
+                yield break;
+            }
         }
 
         /// <summary>

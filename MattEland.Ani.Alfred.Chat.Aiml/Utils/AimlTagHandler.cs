@@ -39,7 +39,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             User = parameters.User;
             Query = parameters.Query;
             Request = parameters.Request;
-            Result = parameters.Result;
+            ChatResult = parameters.ChatResult;
 
             // Assign the template node and clear out the namespace values
             parameters.Element.Attributes.RemoveNamedItem("xmlns");
@@ -70,7 +70,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         ///     Gets the result of the operation.
         /// </summary>
         /// <value>The result.</value>
-        public Result Result { get; }
+        public ChatResult ChatResult { get; }
 
         /// <summary>
         ///     Gets whether the template node has child nodes.
@@ -141,7 +141,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         {
             if (element == null) { throw new ArgumentNullException(nameof(element)); }
 
-            return new TagHandlerParameters(ChatEngine, User, Query, Request, Result, element);
+            return new TagHandlerParameters(ChatEngine, User, Query, Request, ChatResult, element);
         }
 
         /// <summary>

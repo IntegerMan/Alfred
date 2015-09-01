@@ -45,13 +45,18 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         ///     Thrown when one or more required arguments are null.
         /// </exception>
         /// <param name="container"> The container. </param>
-        public ChatEngine([NotNull] IObjectContainer container)
+        /// <param name="name"> The name of the chat engine. </param>
+        public ChatEngine([NotNull] IObjectContainer container, [NotNull] string name)
         {
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
+            if (name == null) { throw new ArgumentNullException(nameof(name)); }
 
             // Get basic functionality set ASAP
             Container = container;
             Logger = container.TryProvide<IConsole>();
+
+            // Create a user to represent the system
+            SystemUser = new User(name, true);
 
             // Set simple properties
             MaxThatSize = 256;
@@ -169,6 +174,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         public string FallbackResponse { get; set; }
 
         /// <summary>
+        ///     Gets the system user.
+        /// </summary>
+        /// <value>
+        ///     The system user.
+        /// </value>
+        [NotNull]
+        public User SystemUser { get; }
+
+        /// <summary>
         ///     Logs the specified message to the logger.
         /// </summary>
         /// <param name="message">The message.</param>
@@ -186,7 +200,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <returns>A result object containing the engine's reply.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="user" /> is <see langword="null" />.</exception>
         /// <exception cref="ArgumentException">A chat message is required to interact with the system.</exception>
-        public Result Chat([NotNull] string input, [NotNull] User user)
+        public ChatResult Chat([NotNull] string input, [NotNull] User user)
         {
             //- Validate
             if (user == null) { throw new ArgumentNullException(nameof(user)); }
@@ -207,7 +221,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="request" /> is <see langword="null" />.
         /// </exception>
-        internal Result ProcessRedirectChatRequest([NotNull] Request request)
+        internal ChatResult ProcessRedirectChatRequest([NotNull] Request request)
         {
             if (request == null) { throw new ArgumentNullException(nameof(request)); }
 

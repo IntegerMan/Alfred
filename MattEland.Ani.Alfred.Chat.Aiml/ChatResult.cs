@@ -24,16 +24,16 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
     /// <summary>
     ///     Represents the result of an Aiml query
     /// </summary>
-    public class Result
+    public class ChatResult
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Result" /> class.
+        ///     Initializes a new instance of the <see cref="ChatResult" /> class.
         /// </summary>
         /// <param name="user">The user.</param>
         /// <param name="chatEngine">The chat engine.</param>
         /// <param name="request">The request.</param>
         /// <exception cref="ArgumentNullException">user, chatEngine, request</exception>
-        public Result([NotNull] User user, [NotNull] ChatEngine chatEngine, [NotNull] Request request)
+        public ChatResult([NotNull] User user, [NotNull] ChatEngine chatEngine, [NotNull] Request request)
         {
             //- Validation
             if (user == null)
@@ -55,7 +55,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
             // Ensure the request is linked to this
             Request = request;
-            Request.Result = this;
+            Request.ChatResult = this;
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                                             RawInput,
                                             Environment.NewLine,
                                             stringBuilder,
-                                            User.Id);
+                                            User.Name);
                 ChatEngine.Log(message, LogLevel.Warning);
 
                 return ChatEngine.FallbackResponse;

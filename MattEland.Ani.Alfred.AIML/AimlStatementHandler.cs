@@ -42,10 +42,6 @@ namespace MattEland.Ani.Alfred.Chat
         [NotNull]
         private readonly ChatHistoryProvider _chatHistory;
 
-        /// <summary>The <see cref="User" /> that represents the chat engine.</summary>
-        [NotNull]
-        private readonly User _engineUser;
-
         [NotNull]
         private readonly User _user;
 
@@ -78,14 +74,13 @@ namespace MattEland.Ani.Alfred.Chat
             _chatHistory = new ChatHistoryProvider(container);
 
             // Create and set up the chat engine
-            ChatEngine = new ChatEngine(container);
+            ChatEngine = new ChatEngine(container, engineName);
 
             // Register the engine so other places can find it
             ChatEngine.RegisterAsProvidedInstance(container);
 
             // Create basic chat helpers / ancillary classes
             _user = new User(Resources.ChatUserName.NonNull());
-            _engineUser = new User(engineName);
             _chatHandlerProvider = new ChatHandlersProvider(container, ChatEngine);
 
             InitializeChatEngine();
@@ -245,7 +240,8 @@ namespace MattEland.Ani.Alfred.Chat
                 return new UserStatementResponse(userInput,
                                                  Resources.DefaultFailureResponseText,
                                                  string.Empty,
-                                                 ChatCommand.Empty);
+                                                 ChatCommand.Empty,
+                                                 null);
             }
 
             // Get the template out of the response so we can see if there are any OOB instructions
@@ -257,7 +253,7 @@ namespace MattEland.Ani.Alfred.Chat
             {
                 Console?.Log(Resources.ChatOutputHeader, output, LogLevel.ChatResponse);
 
-                AddHistoryEntry(_engineUser, output);
+                AddHistoryEntry(ChatEngine.SystemUser, output, result);
             }
 
             //- Log the output to the diagnostic log. Sometimes - for redirect commands / etc. there's no response
@@ -271,7 +267,7 @@ namespace MattEland.Ani.Alfred.Chat
             }
 
             //- Update query properties and return the result
-            var response = new UserStatementResponse(userInput, output, template, ChatCommand.Empty);
+            var response = new UserStatementResponse(userInput, output, template, ChatCommand.Empty, result);
             LastResponse = response;
 
             return response;
@@ -280,10 +276,12 @@ namespace MattEland.Ani.Alfred.Chat
         /// <summary>Adds a new history entry.</summary>
         /// <param name="user">The user.</param>
         /// <param name="message">The message.</param>
-        private void AddHistoryEntry([NotNull] User user, [NotNull] string message)
+        /// <param name="chatResult">The chat result, when the message is from the system</param>
+        private void AddHistoryEntry([NotNull] User user, [NotNull] string message,
+                                     [CanBeNull] ChatResult chatResult = null)
         {
             // Build out an entry
-            var entry = new ChatHistoryEntry(user, message);
+            var entry = new ChatHistoryEntry(user, message, chatResult);
 
             // Add the entry to the collection
             _chatHistory.Add(entry);
@@ -303,7 +301,7 @@ namespace MattEland.Ani.Alfred.Chat
         /// <param name="userInput">The user input.</param>
         /// <returns>The result of the communication to the chat ChatEngine</returns>
         [CanBeNull]
-        private Result GetChatResult([NotNull] string userInput)
+        private ChatResult GetChatResult([NotNull] string userInput)
         {
             if (ChatEngine == null || _user == null)
             {
@@ -407,27 +405,27 @@ namespace MattEland.Ani.Alfred.Chat
 
         /// <summary>
         ///     Gets the response template from the last request spawned in the AIML chat message
-        ///     <paramref name="result" />.
+        ///     <paramref name="chatResult" />.
         /// </summary>
         /// <exception cref="ArgumentNullException">
-        ///     <paramref name="result" /> is <see langword="null" />.
+        ///     <paramref name="chatResult" /> is <see langword="null" />.
         /// </exception>
-        /// <param name="result"> The result of a chat message to the AIML interpreter. </param>
+        /// <param name="chatResult"> The result of a chat message to the AIML interpreter. </param>
         /// <returns>
         ///     The response template.
         /// </returns>
         [CanBeNull]
-        private static string GetResponseTemplate([NotNull] Result result)
+        private static string GetResponseTemplate([NotNull] ChatResult chatResult)
         {
-            if (result == null) { throw new ArgumentNullException(nameof(result)); }
+            if (chatResult == null) { throw new ArgumentNullException(nameof(chatResult)); }
 
             // We want the last template as the other templates have redirected to it
             var template = string.Empty;
-            var request = result.Request;
+            var request = chatResult.Request;
             while (request != null)
             {
                 // Grab the template used for this request
-                var query = request.Result?.SubQueries.FirstOrDefault();
+                var query = request.ChatResult?.SubQueries.FirstOrDefault();
                 if (query != null) { template = query.Template; }
 
                 // If it has an inner request, we'll use that for next iteration, otherwise we're done.

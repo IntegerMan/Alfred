@@ -138,7 +138,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// <param name="element">The node.</param>
         /// <param name="query">The query.</param>
         /// <param name="request">The request.</param>
-        /// <param name="result">The result.</param>
+        /// <param name="chatResult">The result.</param>
         /// <param name="user">The user.</param>
         /// <param name="tagName">Name of the tag.</param>
         /// <exception cref="ArgumentNullException">element, query, request, user</exception>
@@ -147,7 +147,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         public AimlTagHandler Build([NotNull] XmlElement element,
                                     [NotNull] SubQuery query,
                                     [NotNull] Request request,
-                                    [NotNull] Result result,
+                                    [NotNull] ChatResult chatResult,
                                     [NotNull] User user,
                                     [CanBeNull] string tagName)
         {
@@ -162,7 +162,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 
             //- All construction will require these parameters so build them now
             // TODO: Would this be better suited for outside of this method and passed in as parameters?
-            var parameters = new TagHandlerParameters(_engine, user, query, request, result, element);
+            var parameters = new TagHandlerParameters(_engine, user, query, request, chatResult, element);
 
             // Use dynamic invocation to create a TagHandler based on usage of the HandlesAimlTag attribute.
             return BuildTagHandlerDynamic(tagName.NonNull(), parameters);

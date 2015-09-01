@@ -36,8 +36,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// <returns>The processed output</returns>
         protected override string ProcessChange()
         {
-            var id = User.Id;
-            return id;
+            return User.Name;
         }
     }
 }

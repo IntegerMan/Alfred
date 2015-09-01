@@ -44,7 +44,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             // Build a message for the log and add the entry. No other action will be taken.
             var message = string.Format(Locale,
                                         Resources.GossipTagHandleLogMessage.NonNull(),
-                                        User.Id,
+                                        User.Name,
                                         Contents);
 
             Log(message, LogLevel.Info);

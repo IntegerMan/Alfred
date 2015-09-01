@@ -114,7 +114,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// </summary>
         /// <value>The result.</value>
         [CanBeNull]
-        public Result Result { get; set; }
+        public ChatResult ChatResult { get; set; }
 
         /// <summary>
         ///     Gets or sets when the request started.
@@ -196,7 +196,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             {
                 var message = string.Format(ChatEngine.Locale,
                                             Resources.RequestTimedOut.NonNull(),
-                                            User.Id,
+                                            User.Name,
                                             RawInput);
 
                 ChatEngine.Log(message, LogLevel.Warning);
