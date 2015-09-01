@@ -52,17 +52,35 @@ namespace MattEland.Ani.Alfred.Tests
         }
 
         /// <summary>
-        ///     Finds the provider with the specified <paramref name="name" />.
+        ///     Finds the provider with the specified <paramref name="name" /> .
         /// </summary>
-        /// <param name="providers">The providers.</param>
-        /// <param name="name">The name.</param>
-        /// <returns>The provider</returns>
+        /// <param name="providers"> The providers. </param>
+        /// <param name="name"> The name. </param>
+        /// <returns>
+        ///     The provider or <see langword="null"/> if not found.
+        /// </returns>
         [CanBeNull]
         public static IPropertyProvider Find(
             [NotNull] this IEnumerable<IPropertyProvider> providers,
             string name)
         {
             return providers.FirstOrDefault(p => p != null && p.DisplayName.Matches(name));
+        }
+
+        /// <summary>
+        ///     Finds the property with the specified <paramref name="name" />.
+        /// </summary>
+        /// <param name="properties"> The properties. </param>
+        /// <param name="name"> The name. </param>
+        /// <returns>
+        ///     The property or <see langword="null"/> if not found.
+        /// </returns>
+        [CanBeNull]
+        public static IPropertyItem Find(
+            [NotNull] this IEnumerable<IPropertyItem> properties,
+            string name)
+        {
+            return properties.FirstOrDefault(p => p != null && p.DisplayName.Matches(name));
         }
 
         /// <summary>

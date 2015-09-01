@@ -110,7 +110,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
             // Process each SubQuery to build out the result text
             foreach (var query in
-                result.SubQueries.Where(query => query != null && query.Template.HasText()))
+                result.SubQueries.Where(query => query.Template.HasText()))
             {
                 ProcessSubQuery(request, query, result);
             }
@@ -142,6 +142,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                                               MatchState.UserInput,
                                               new StringBuilder());
             query.Template = template.NonNull();
+
             return query;
         }
 
@@ -170,6 +171,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
                 // Process the chat node with the given template and tag handlers. This will result in the chat output.
                 var nodeOutput = ProcessNode(element, query, request, chatResult, request.User);
+
+                // Stick the response back into the query for analysis purposes
+                query.Response = nodeOutput;
 
                 // Check to see if the output had textual values, and, if so, add them to our output.
                 if (nodeOutput.HasText()) { chatResult.OutputSentences.Add(nodeOutput); }

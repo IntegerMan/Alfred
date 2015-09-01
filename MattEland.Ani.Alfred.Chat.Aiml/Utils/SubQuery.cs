@@ -46,5 +46,19 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <value>The input star collection.</value>
         [NotNull, ItemNotNull]
         public IList<string> InputStar { get; } = new List<string>();
+
+        /// <summary>
+        ///     Gets or sets the raw response to the query.
+        /// </summary>
+        /// <remarks>
+        ///     This is set after the chat engine evaluates the template associated with the query and
+        ///     can be retrieved later on in the user interface or via tests for diagnostic /
+        ///     troubleshooting purposes.
+        /// </remarks>
+        /// <value>
+        ///     The response.
+        /// </value>
+        [NotNull]
+        public string Response { get; internal set; } = string.Empty;
     }
 }

@@ -59,6 +59,7 @@
     <Compile Include="ChatHandlersProvider.cs" />
     <Compile Include="ChatHistoryEntry.cs" />
     <Compile Include="ChatHistoryProvider.cs" />
+    <Compile Include="ChatSubQueryExplorerNode.cs" />
     <Compile Include="ChatSubsystem.cs" />
     <Compile Include="AlfredCommandRouter.cs" />
     <Compile Include="AlfredTagHandler.cs" />

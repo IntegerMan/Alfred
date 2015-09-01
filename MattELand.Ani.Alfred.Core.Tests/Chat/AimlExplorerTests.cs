@@ -36,7 +36,12 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public sealed class AimlExplorerTests : ExplorerTestsBase
     {
-        private const string ChatComplexInput = "Hi Alfred. What is the date?";
+        /// <summary>
+        ///     A complex multi-sentence input designed to confuse Alfred.
+        /// </summary>
+        private const string ChatComplexInput = "Hi Alfred. What is the date? Time?";
+
+        private const string SimpleChatInput = "Hi";
 
         /// <summary>
         ///     Ensures that the AIML knowledge node has user-acceptable root text.
@@ -195,7 +200,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         [Test]
         public void ChatInputsShouldNotHaveChildren()
         {
-            SendComplexInputToChatEngine();
+            SendMessageToChatEngine(ChatComplexInput);
 
             var historyNode = ChatHistoryNode;
             var chatNodes = historyNode.PropertyProviders;
@@ -211,22 +216,27 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         }
 
         /// <summary>
-        ///     Sends a complex message to the chat engine and returns the reply.
+        ///     Sends a message to the chat engine and returns the reply.
         /// </summary>
-        private UserStatementResponse SendComplexInputToChatEngine()
+        /// <param name="input"> The input. </param>
+        /// <returns>
+        ///     A <see cref="UserStatementResponse"/>.
+        /// </returns>
+        [CanBeNull]
+        private UserStatementResponse SendMessageToChatEngine(string input)
         {
             var chatProvider = Alfred.ChatProvider;
             chatProvider.ShouldNotBeNull();
-            return chatProvider.HandleUserStatement(ChatComplexInput);
+            return chatProvider.HandleUserStatement(input);
         }
 
         /// <summary>
         ///     Chat inputs should not have any child nodes (these represent sub-queries).
         /// </summary>
-        [Test, Ignore("Under development")]
+        [Test]
         public void ChatOutputsShouldHaveChildren()
         {
-            SendComplexInputToChatEngine();
+            SendMessageToChatEngine(ChatComplexInput);
 
             var historyNode = ChatHistoryNode;
             var chatNodes = historyNode.PropertyProviders;
@@ -241,7 +251,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         [Test]
         public void ChatOutputShouldMatchReturnedResponse()
         {
-            var reply = SendComplexInputToChatEngine();
+            var reply = SendMessageToChatEngine(ChatComplexInput);
             reply.ShouldNotBeNull();
 
             var historyNode = ChatHistoryNode;
@@ -257,6 +267,53 @@ namespace MattEland.Ani.Alfred.Tests.Chat
                 () => node.ChatResult.RawInput.ShouldBe(reply.UserInput),
                 () => node.Message.ShouldBe(reply.ResponseText),
                 () => node.DisplayName.ShouldContain(reply.ResponseText));
+        }
+
+        /// <summary>
+        ///     Ensure that the <see cref="SubQuery"/> nodes in the UI have the same output and input
+        ///     text that you would expect on a simple input. This is an important test for traceability
+        ///     purposes.
+        /// </summary>
+        [Test]
+        public void ChatOutputToSimpleInputShouldHaveTraceableReply()
+        {
+            // Send a short message to the system
+            var reply = SendMessageToChatEngine(SimpleChatInput);
+
+            // Validate Reply's user text
+            reply.ShouldNotBeNull();
+            reply.UserInput.ShouldBe(SimpleChatInput);
+
+            // Drill into the last history entry (Alfred's reply)
+            var historyNode = ChatHistoryNode;
+            var chatNodes = historyNode.PropertyProviders;
+            var responseNode = chatNodes.Last().ShouldBe<ChatHistoryEntry>();
+
+            // Drill into the only SubQuery
+            var node = responseNode.PropertyProviders.SingleOrDefault().ShouldBe<ChatSubQueryExplorerNode>();
+
+            // Validate the node's properties
+            node.SubQuery.ShouldNotBeNull();
+            node.Response.ShouldBe(reply.ResponseText);
+
+            // Verify Properties Emitted
+            CheckPropertyValue(node.Properties, "Response", reply.ResponseText);
+        }
+
+        /// <summary>
+        ///     Checks that the property display name is the expected value.
+        /// </summary>
+        /// <param name="properties"> The properties. </param>
+        /// <param name="propertyName"> Name of the property. </param>
+        /// <param name="expectedValue"></param>
+        private static void CheckPropertyValue(
+            [NotNull] IEnumerable<IPropertyItem> properties,
+            [NotNull] string propertyName,
+            [CanBeNull] string expectedValue)
+        {
+            var input = properties.Find(propertyName);
+            input.ShouldNotBeNull();
+            input.DisplayValue.ShouldBe(expectedValue);
         }
 
         /// <summary>

@@ -59,8 +59,6 @@ namespace MattEland.Ani.Alfred.Chat
         /// </exception>
         /// <param name="container"> The container to use for inversion of control. </param>
         /// <param name="engineName"> Name of the chat engine. </param>
-        ///
-        /// ### <exception cref="System.ArgumentNullException"> . </exception>
         public AimlStatementHandler(
             [NotNull] IObjectContainer container,
             [NotNull] string engineName)
@@ -70,6 +68,7 @@ namespace MattEland.Ani.Alfred.Chat
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
 
             // Set up simple internal fields
+            Container = container;
             _console = container.TryProvide<IConsole>();
             _chatHistory = new ChatHistoryProvider(container);
 
@@ -85,6 +84,15 @@ namespace MattEland.Ani.Alfred.Chat
 
             InitializeChatEngine();
         }
+
+        /// <summary>
+        ///     Gets the container.
+        /// </summary>
+        /// <value>
+        ///     The container.
+        /// </value>
+        [NotNull]
+        public IObjectContainer Container { get; }
 
         /// <summary>
         ///     Gets the console.
@@ -281,7 +289,7 @@ namespace MattEland.Ani.Alfred.Chat
                                      [CanBeNull] ChatResult chatResult = null)
         {
             // Build out an entry
-            var entry = new ChatHistoryEntry(user, message, chatResult);
+            var entry = new ChatHistoryEntry(Container, user, message, chatResult);
 
             // Add the entry to the collection
             _chatHistory.Add(entry);

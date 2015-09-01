@@ -2,7 +2,7 @@
 // ChatHistoryEntry.cs
 // 
 // Created on:      08/25/2015 at 3:16 PM
-// Last Modified:   08/25/2015 at 3:16 PM
+// Last Modified:   09/01/2015 at 1:18 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -14,30 +14,31 @@ using System.Globalization;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml;
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Chat
 {
-    /// <summary>
-    ///     Represents a chat history entry
-    /// </summary>
+    /// <summary>Represents a chat history entry</summary>
     public class ChatHistoryEntry : IPropertyProvider
     {
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="ChatHistoryEntry" /> class.
-        /// </summary>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown when one or more required arguments are null.
-        /// </exception>
-        /// <param name="user"> The <see cref="User" />. </param>
-        /// <param name="message"> The message. </param>
-        /// <param name="chatResult"> The result. </param>
-        internal ChatHistoryEntry([NotNull] User user, [NotNull] string message,
-                                [CanBeNull] ChatResult chatResult = null)
+        /// <summary>Initializes a new instance of the <see cref="ChatHistoryEntry" /> class.</summary>
+        /// <param name="container">The container.</param>
+        /// <param name="user">The <see cref="MattEland.Ani.Alfred.Chat.ChatHistoryEntry.User" /> .</param>
+        /// <param name="message">The message.</param>
+        /// <param name="chatResult">The result.</param>
+        /// <exception cref="ArgumentNullException">Thrown when one or more required arguments are null.</exception>
+        internal ChatHistoryEntry(
+            [NotNull] IObjectContainer container,
+            [NotNull] User user,
+            [NotNull] string message,
+            [CanBeNull] ChatResult chatResult = null)
         {
             //- Validate
             if (user == null) { throw new ArgumentNullException(nameof(user)); }
+            if (container == null) { throw new ArgumentNullException(nameof(container)); }
             if (message == null || message.IsEmpty())
             {
                 throw new ArgumentNullException(nameof(message));
@@ -48,27 +49,36 @@ namespace MattEland.Ani.Alfred.Chat
             Message = message;
             ChatResult = chatResult;
             DateTimeUtc = DateTime.UtcNow; //- We'll likely need this as a parameter someday.
+
+            // Build out a collection of sub-queries
+            SubQueries = container.ProvideCollection<ChatSubQueryExplorerNode>();
+
+            if (chatResult?.SubQueries != null)
+            {
+                foreach (var subQuery in chatResult.SubQueries)
+                {
+                    SubQueries.Add(new ChatSubQueryExplorerNode(subQuery));
+                }
+            }
         }
 
-        /// <summary>
-        ///     Gets the chat result when this entry represents a message from the
-        ///     <see cref="ChatEngine"/>.
-        /// </summary>
-        /// <value>
-        ///     The chat result.
-        /// </value>
+        /// <summary>Gets the processing <see cref="SubQuery" /> objects related to this entry.</summary>
+        /// <value>The sub queries.</value>
+        [NotNull]
+        [ItemNotNull]
+        public ICollection<ChatSubQueryExplorerNode> SubQueries { get; set; }
+
+        /// <summary>Gets the chat result when this entry represents a message from the
+        ///     <see cref="ChatEngine" /> .</summary>
+        /// <value>The chat result.</value>
         [CanBeNull]
         public ChatResult ChatResult { get; }
 
-        /// <summary>
-        ///     Gets the date time the statement was made in UTC time.
-        /// </summary>
+        /// <summary>Gets the date time the statement was made in UTC time.</summary>
         /// <value>The date time in UTC time.</value>
         public DateTime DateTimeUtc { get; }
 
-        /// <summary>
-        ///     Gets the date time the statement was made in local time.
-        /// </summary>
+        /// <summary>Gets the date time the statement was made in local time.</summary>
         /// <value>The date time in local time.</value>
         public DateTime DateTime
         {
@@ -76,50 +86,58 @@ namespace MattEland.Ani.Alfred.Chat
         }
 
         /// <summary>
-        ///     Gets the <see cref="User" /> who made the statement.
+        ///     Gets the <see cref="MattEland.Ani.Alfred.Chat.ChatHistoryEntry.User" /> who made the
+        ///     statement.
         /// </summary>
         /// <value>The user.</value>
         [NotNull]
-        public User User
-        {
-            get;
-        }
+        public User User { get; }
 
-        /// <summary>
-        ///     Gets the message.
-        /// </summary>
+        /// <summary>Gets the message.</summary>
         /// <value>The message.</value>
         [NotNull]
-        public string Message
-        {
-            get;
-        }
+        public string Message { get; }
 
-        /// <summary>
-        ///     Gets a value indicating whether this instance is from the chat engine.
-        /// </summary>
+        /// <summary>Gets a value indicating whether this instance is from the chat engine.</summary>
         /// <value>
-        ///     <see langword="true"/> if this instance is from chat engine, <see langword="false"/> if
-        ///     it was user input.
+        ///     <see langword="true" /> if this instance is from chat engine, <see langword="false" />
+        ///     if it was user input.
         /// </value>
         public bool IsFromChatEngine
         {
             get { return ChatResult != null; }
         }
 
-        /// <summary>
-        ///     Gets the name of the item.
-        /// </summary>
+        /// <summary>Gets the display name for use in the user interface.</summary>
+        /// <value>The display name.</value>
+        public string DisplayName
+        {
+            get { return Name; }
+        }
+
+        /// <summary>Gets the name of the broad categorization or type that this item is.</summary>
+        /// <value>The item type's name.</value>
+        /// <example>
+        ///     Some examples of <see cref="ItemTypeName" /> values might be "Folder", "Application",
+        ///     "User", etc.
+        /// </example>
+        public string ItemTypeName
+        {
+            get { return "Chat Message"; }
+        }
+
+        /// <summary>Gets the name of the item.</summary>
         /// <value>The name.</value>
         [NotNull]
         public string Name
         {
-            get { return string.Format(CultureInfo.InvariantCulture, "{0}: {1}", User.Name, Message); }
+            get
+            {
+                return string.Format(CultureInfo.InvariantCulture, "{0}: {1}", User.Name, Message);
+            }
         }
 
-        /// <summary>
-        /// Gets a list of properties provided by this item.
-        /// </summary>
+        /// <summary>Gets a list of properties provided by this item.</summary>
         /// <returns>The properties</returns>
         public virtual IEnumerable<IPropertyItem> Properties
         {
@@ -131,42 +149,12 @@ namespace MattEland.Ani.Alfred.Chat
             }
         }
 
-        /// <summary>
-        /// Gets the property providers.
-        /// </summary>
+        /// <summary>Gets the property providers.</summary>
         /// <value>The property providers.</value>
         public IEnumerable<IPropertyProvider> PropertyProviders
         {
-            get
-            {
-                if (ChatResult != null)
-                {
-                    // TODO: Add subquery nodes
-                }
-
-                yield break;
-            }
-        }
-
-        /// <summary>
-        /// Gets the display name for use in the user interface.
-        /// </summary>
-        /// <value>The display name.</value>
-        public string DisplayName
-        {
-            get { return Name; }
-        }
-
-        /// <summary>
-        /// Gets the name of the broad categorization or type that this item is.
-        /// </summary>
-        /// <example>
-        /// Some examples of ItemTypeName values might be "Folder", "Application", "User", etc.
-        /// </example>
-        /// <value>The item type's name.</value>
-        public string ItemTypeName
-        {
-            get { return "Chat Message"; }
+            get { return SubQueries; }
         }
     }
+
 }

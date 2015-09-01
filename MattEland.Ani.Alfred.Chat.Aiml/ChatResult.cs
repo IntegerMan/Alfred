@@ -104,7 +104,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         ///     Gets the SubQueries.
         /// </summary>
         /// <value>The SubQueries.</value>
-        [NotNull]
+        [NotNull, ItemNotNull]
         public ICollection<SubQuery> SubQueries { get; } = new List<SubQuery>();
 
         /// <summary>
