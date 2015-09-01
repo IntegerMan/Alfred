@@ -223,7 +223,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         /// <summary>
         ///     Chat inputs should not have any child nodes (these represent sub-queries).
         /// </summary>
-        [Test, Ignore("Under development"]
+        [Test, Ignore("Under development")]
         public void ChatOutputsShouldHaveChildren()
         {
             SendComplexInputToChatEngine();
