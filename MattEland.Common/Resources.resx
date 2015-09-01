@@ -101,4 +101,10 @@
   <data name="ErrorItemAlreadyInCollection" xml:space="preserve">
     <value>The specified item was already part of the collection</value>
   </data>
+  <data name="ExceptionExtensionsLoadingLoaderExceptions" xml:space="preserve">
+    <value>Loader Exceptions: </value>
+  </data>
+  <data name="CommonContainerCollectionTypeMustBeGeneric" xml:space="preserve">
+    <value>Value must be a generic type</value>
+  </data>
 </root>

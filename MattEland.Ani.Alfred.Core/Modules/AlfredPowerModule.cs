@@ -1,11 +1,13 @@
 // ---------------------------------------------------------
 // AlfredPowerModule.cs
 // 
-// Created on:      08/02/2015 at 4:56 PM
-// Last Modified:   08/12/2015 at 3:52 PM
-// Original author: Matt Eland
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/24/2015 at 11:53 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Globalization;
 
 using JetBrains.Annotations;
@@ -13,6 +15,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Common;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Modules
 {
@@ -21,34 +24,30 @@ namespace MattEland.Ani.Alfred.Core.Modules
     /// </summary>
     public sealed class AlfredPowerModule : AlfredModule
     {
-        [NotNull]
-        private readonly ButtonWidget _initializeButton;
-
-        [NotNull]
-        private readonly ButtonWidget _shutdownButton;
-
-        [NotNull]
-        private readonly TextWidget _statusWidget;
-
         /// <summary>
         ///     Initializes a new instance of the
         ///     <see cref="AlfredPowerModule" />
         ///     class.
         /// </summary>
-        /// <exception cref="System.ArgumentNullException">
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when one or more required arguments are null.
         /// </exception>
-        /// <param name="platformProvider">
-        ///     The platform provider.
-        /// </param>
-        public AlfredPowerModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
+        /// <param name="container"> The container. </param>
+        public AlfredPowerModule([NotNull] IObjectContainer container)
+            : base(container)
         {
-            _statusWidget = new TextWidget(Resources.AlfredCoreModule_AlfredNotSet);
+            if (container == null) { throw new ArgumentNullException(nameof(container)); }
 
-            var initializeCommand = platformProvider.CreateCommand(ExecuteInitializeCommand);
-            _initializeButton = new ButtonWidget(Resources.InitializeButtonText, initializeCommand);
+            AlfredStatusWidget = new TextWidget(Resources.AlfredCoreModule_AlfredNotSet,
+                                                BuildWidgetParameters(@"lblStatus"));
 
-            var shutdownCommand = platformProvider.CreateCommand(ExecuteShutdownCommand);
-            _shutdownButton = new ButtonWidget(Resources.ShutdownButtonText, shutdownCommand);
+            InitializeButton = new ButtonWidget(Resources.InitializeButtonText,
+                                                CreateCommand(ExecuteInitializeCommand),
+                                                BuildWidgetParameters(@"btnInitialize"));
+
+            ShutdownButton = new ButtonWidget(Resources.ShutdownButtonText,
+                                              CreateCommand(ExecuteShutdownCommand),
+                                              BuildWidgetParameters(@"btnShutdown"));
         }
 
         /// <summary>
@@ -62,34 +61,25 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        ///     Gets the alfred status widget.
+        ///     Gets the Alfred status widget.
         /// </summary>
-        /// <value>The alfred status widget.</value>
+        /// <value>The Alfred status widget.</value>
         [NotNull]
-        public TextWidget AlfredStatusWidget
-        {
-            get { return _statusWidget; }
-        }
+        public TextWidget AlfredStatusWidget { get; }
 
         /// <summary>
         ///     Gets the initialize button.
         /// </summary>
         /// <value>The initialize button.</value>
         [NotNull]
-        public ButtonWidget InitializeButton
-        {
-            get { return _initializeButton; }
-        }
+        public ButtonWidget InitializeButton { get; }
 
         /// <summary>
         ///     Gets the shutdown button.
         /// </summary>
         /// <value>The shutdown button.</value>
         [NotNull]
-        public ButtonWidget ShutdownButton
-        {
-            get { return _shutdownButton; }
-        }
+        public ButtonWidget ShutdownButton { get; }
 
         /// <summary>
         ///     Handles the initialize command by initializing Alfred
@@ -122,7 +112,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         private void AddOnlineWidgets()
         {
             ClearChildCollections();
-            Register(_statusWidget);
+            Register(AlfredStatusWidget);
             Register(ShutdownButton);
         }
 
@@ -144,7 +134,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         private void AddOfflineWidgets()
         {
             ClearChildCollections();
-            Register(_statusWidget);
+            Register(AlfredStatusWidget);
             Register(InitializeButton);
         }
 
@@ -159,7 +149,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <summary>
         ///     Called when the component is registered.
         /// </summary>
-        /// <param name="alfred">The alfred.</param>
+        /// <param name="alfred">The Alfred instance.</param>
         public override void OnRegistered(IAlfred alfred)
         {
             base.OnRegistered(alfred);
@@ -181,48 +171,51 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        ///     Updates the alfred provider status text.
+        ///     Updates the Alfred provider status text.
         /// </summary>
         private void UpdateAlfredProviderStatus()
         {
             if (AlfredInstance == null)
             {
                 // Update Text Message to a Nobody's Home sort of thing
-                _statusWidget.Text = Resources.NoAlfredText;
+                AlfredStatusWidget.Text = Resources.NoAlfredText;
 
                 // Update Button Visibilities to hidden
-                if (_shutdownButton.ClickCommand != null)
+                if (ShutdownButton.ClickCommand != null)
                 {
-                    _shutdownButton.ClickCommand.IsEnabled = false;
+                    ShutdownButton.ClickCommand.IsEnabled = false;
                 }
-                if (_initializeButton.ClickCommand != null)
+                if (InitializeButton.ClickCommand != null)
                 {
-                    _initializeButton.ClickCommand.IsEnabled = false;
+                    InitializeButton.ClickCommand.IsEnabled = false;
                 }
             }
             else
             {
                 // Display the current status
                 var statusFormat = Resources.AlfredCoreModule_AlfredStatusText.NonNull();
-                _statusWidget.Text = string.Format(CultureInfo.CurrentCulture,
-                                                   statusFormat,
-                                                   AlfredInstance.Name,
-                                                   AlfredInstance.Status);
+                AlfredStatusWidget.Text = string.Format(CultureInfo.CurrentCulture,
+                                                        statusFormat,
+                                                        AlfredInstance.Name,
+                                                        AlfredInstance.Status);
 
                 // Show the shutdown button while online and initialize button while offline
-                if (_shutdownButton.ClickCommand != null)
+                var isOnline = AlfredInstance.Status == AlfredStatus.Online;
+                if (ShutdownButton.ClickCommand != null)
                 {
-                    _shutdownButton.ClickCommand.IsEnabled = AlfredInstance.Status == AlfredStatus.Online;
+                    ShutdownButton.ClickCommand.IsEnabled = isOnline;
                 }
-                if (_initializeButton.ClickCommand != null)
+                if (InitializeButton.ClickCommand != null)
                 {
-                    _initializeButton.ClickCommand.IsEnabled = AlfredInstance.Status == AlfredStatus.Offline;
+                    InitializeButton.ClickCommand.IsEnabled = !isOnline;
                 }
             }
         }
 
         /// <summary>
-        /// Processes an Alfred Command. If the command is handled, result should be modified accordingly and the method should return true. Returning false will not stop the message from being propogated.
+        ///     Processes an Alfred Command. If the command is handled, result should be modified accordingly
+        ///     and the method should return true. Returning false will not stop the message from being
+        ///     propagated.
         /// </summary>
         /// <param name="command">The command.</param>
         /// <param name="result">The result. If the command was handled, this should be updated.</param>
@@ -239,7 +232,8 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        ///     A notification method that is invoked when initialization for Alfred is complete so the UI can be fully enabled or
+        ///     A notification method that is invoked when initialization for Alfred is complete so the UI can
+        ///     be fully enabled or
         ///     adjusted
         /// </summary>
         public override void OnInitializationCompleted()
@@ -250,7 +244,8 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        ///     A notification method that is invoked when shutdown for Alfred is complete so the UI can be fully enabled or
+        ///     A notification method that is invoked when shutdown for Alfred is complete so the UI can be
+        ///     fully enabled or
         ///     adjusted
         /// </summary>
         public override void OnShutdownCompleted()

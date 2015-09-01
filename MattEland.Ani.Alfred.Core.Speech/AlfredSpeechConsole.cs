@@ -9,6 +9,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 using JetBrains.Annotations;
@@ -26,32 +27,44 @@ namespace MattEland.Ani.Alfred.Core.Speech
         [NotNull]
         private readonly IConsole _console;
 
-        [NotNull]
+        [CanBeNull]
         private readonly AlfredSpeechProvider _speech;
 
         [NotNull]
         private readonly HashSet<LogLevel> _speechEnabledLogLevels;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredSpeechConsole" /> class.
+        /// Initializes a new instance of the <see cref="AlfredSpeechConsole" /> class.
         /// </summary>
         /// <param name="console">The console that events should be logged to.</param>
-        /// <exception cref="System.ArgumentNullException">console</exception>
-        public AlfredSpeechConsole([CanBeNull] IConsole console)
+        /// <param name="factory">The event factory.</param>
+        public AlfredSpeechConsole([CanBeNull] IConsole console, [CanBeNull] ConsoleEventFactory factory)
         {
             // This class can decorate other consoles, but for an empty implementation it can rely on an internal collection
             if (console == null)
             {
                 console = new SimpleConsole();
             }
-
             _console = console;
+
+            // Set up the event factory
+            if (factory == null) { factory = new ConsoleEventFactory(); }
+            EventFactory = factory;
 
             // Tell it what log levels we care about
             _speechEnabledLogLevels = new HashSet<LogLevel> { LogLevel.ChatResponse, LogLevel.Warning, LogLevel.Error };
 
-            // Give the speech provider the existing console and not this console since it won't be online yet
-            _speech = new AlfredSpeechProvider(console);
+            try
+            {
+                // Give the speech provider the existing console and not this console since it won't be online yet
+                _speech = new AlfredSpeechProvider(console);
+            }
+            catch (InvalidOperationException ex)
+            {
+                // On failure creating the speech provider, just have speech be null and we'll just be a decorator
+                _speech = null;
+                Log("Init.Console", $"Speech could not be initialized: {ex.Message}", LogLevel.Error);
+            }
         }
 
         /// <summary>
@@ -78,28 +91,18 @@ namespace MattEland.Ani.Alfred.Core.Speech
         }
 
         /// <summary>
-        ///     Logs the specified message to the console.
+        ///     Logs the specified <paramref name="message"/> to the console.
         /// </summary>
         /// <param name="title">The title.</param>
         /// <param name="message">The message.</param>
         /// <param name="level">The logging level.</param>
-        public void Log(string title, string message, LogLevel level)
+        public void Log([CanBeNull] string title, [CanBeNull] string message, LogLevel level)
         {
-            if (title == null)
-            {
-                title = "Unknown";
-            }
-
-            if (message == null)
-            {
-                return;
-            }
-
             // Always log things to the base logger
             _console.Log(title, message, level);
 
             // If it's a significant message, tell the user via voice
-            if (_speechEnabledLogLevels.Contains(level))
+            if (SpeechEnabledLogLevels.Contains(level))
             {
                 // For more serious items, have Alfred say the status beforehand
                 if (level == LogLevel.Warning || level == LogLevel.Error)
@@ -107,16 +110,23 @@ namespace MattEland.Ani.Alfred.Core.Speech
                     message = string.Format(CultureInfo.CurrentCulture, "{0}: {1}", level, message);
                 }
 
-                _speech.Say(message.NonNull());
+                _speech?.Say(message.NonNull());
             }
         }
 
         /// <summary>
+        /// Gets the console event factory used for creating new events.
+        /// </summary>
+        /// <value>The console event factory.</value>
+        public ConsoleEventFactory EventFactory { get; }
+
+        /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_speech")]
         public void Dispose()
         {
-            _speech.Dispose();
+            _speech.TryDispose();
         }
     }
 }

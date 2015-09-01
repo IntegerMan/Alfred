@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>c:\dev\alfred\matteland.ani.alfred.core.system\valuemetricprovider.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+// ---------------------------------------------------------
+// ValueMetricProvider.cs
+// 
+// Created on:      08/18/2015 at 1:50 PM
+// Last Modified:   08/18/2015 at 1:50 PM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using System;
+using System.Diagnostics.CodeAnalysis;
+
+using JetBrains.Annotations;
+
+namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
+{
+    /// &lt;summary&gt;
+    ///     A value-based metric provider that provides a value from its Value property when NextValue is
+    ///     called.
+    /// &lt;/summary&gt;
+    /// &lt;remarks&gt;
+    ///     This class is intended primarily for testing purposes.
+    /// &lt;/remarks&gt;
+    public sealed class ValueMetricProvider : MetricProviderBase
+    {
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;ValueMetricProvider&quot; /&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;factory&quot;&gt;The factory.&lt;/param&gt;
+        /// &lt;param name=&quot;name&quot;&gt;The name of the metric.&lt;/param&gt;
+        /// &lt;param name=&quot;value&quot;&gt;The value to return&lt;/param&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;factory&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        [SuppressMessage(&quot;ReSharper&quot;, &quot;CodeAnnotationAnalyzer&quot;)]
+        public ValueMetricProvider([NotNull] ValueMetricProviderFactory factory,
+                                   [NotNull] string name, float? value = null) : base(name)
+        {
+            if (factory == null)
+            {
+                throw new ArgumentNullException(nameof(factory));
+            }
+
+            Factory = factory;
+            Value = value;
+        }
+
+        /// &lt;summary&gt;
+        /// Gets or sets the value provider factory.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The factory.&lt;/value&gt;
+        [NotNull]
+        public ValueMetricProviderFactory Factory { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the value that will be provided the next time NextValue() is called.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The value.&lt;/value&gt;
+        [UsedImplicitly]
+        public float? Value
+        {
+            get;
+            set;
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the next value from the metric provider
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;The next value&lt;/returns&gt;
+        public override float NextValue()
+        {
+            if (Value.HasValue)
+            {
+                return Value.Value;
+            }
+
+            return Factory.DefaultValue;
+        }
+    }
+}
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[40,13,40,14,0],[41,17,41,66,0],[73,13,73,14,0],[74,17,74,36,0],[37,82,37,92,1],[38,9,38,10,1],[39,13,39,33,1],[44,13,44,31,1],[45,13,45,27,1],[46,9,46,10,1],[53,53,53,57,1],[62,13,62,17,1],[63,13,63,17,1],[71,9,71,10,1],[72,13,72,32,1],[77,13,77,41,1],[78,9,78,10,1]]);
+    </script>
+  </body>
+</html>

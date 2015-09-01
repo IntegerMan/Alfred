@@ -19,14 +19,19 @@ using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Ani.Alfred.Tests.Mocks;
+using MattEland.Common;
+using MattEland.Common.Providers;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
+using Shouldly;
+
 namespace MattEland.Ani.Alfred.Tests.Modules
 {
-    [TestFixture]
+    [UnitTest]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-    public sealed class TimeModuleTests
+    public sealed class TimeModuleTests : AlfredTestBase
     {
         [SetUp]
         public void OnStartup()
@@ -34,10 +39,10 @@ namespace MattEland.Ani.Alfred.Tests.Modules
             var bootstrapper = new AlfredBootstrapper();
             _alfred = bootstrapper.Create();
 
-            _page = new AlfredModuleListPage(_alfred.PlatformProvider, "Time", "Time");
-            _module = new AlfredTimeModule(_alfred.PlatformProvider);
+            _page = new AlfredModuleListPage(Container, "Time", "Time");
+            _module = new AlfredTimeModule(Container);
             _page.Register(_module);
-            _subsystem = new TestSubsystem();
+            _subsystem = new TestSubsystem(Container);
             _subsystem.AddAutoRegisterPage(_page);
 
             _alfred.Register(_subsystem);
@@ -354,10 +359,14 @@ namespace MattEland.Ani.Alfred.Tests.Modules
             Assert.Greater(_module.Widgets.Count(), 0, "The time module did not have any Widgets");
         }
 
+        /// <summary>
+        ///     Tests that <see cref="AlfredTimeModule"/> logs a message every half hour.
+        /// </summary>
         [Test]
         public void TimeModuleLogsOnHalfHourChanges()
         {
-            var console = new SimpleConsole();
+            // Have Alfred use the global console
+            var console = Container.Provide<IConsole>();
             _alfred.Console = console;
             _alfred.Initialize();
 
@@ -365,16 +374,23 @@ namespace MattEland.Ani.Alfred.Tests.Modules
             _module.Update(new DateTime(1980, 9, 10, 9, 30, 0));
 
             // This will error if 0 or > 1 events are logged
+            console.ShouldBeSameAs(_alfred.Console);
+
             var consoleEvent = console.Events.Single(e => e.Title == AlfredTimeModule.HalfHourAlertEventTitle);
 
-            //  We want to ensure it's an informational purposes
-            Assert.AreEqual(LogLevel.ChatNotification, consoleEvent.Level);
+            //  We want to ensure it has the chat notification status
+            consoleEvent.ShouldNotBeNull();
+            consoleEvent.Level.ShouldBe(LogLevel.ChatNotification);
         }
 
+        /// <summary>
+        ///     Tests that <see cref="AlfredTimeModule"/> logs a message every hour.
+        /// </summary>
         [Test]
         public void TimeModuleLogsWhenTheHourChanges()
         {
-            var console = new SimpleConsole();
+            // Have Alfred use the global console
+            var console = Container.Provide<IConsole>();
             _alfred.Console = console;
             _alfred.Initialize();
 
@@ -384,8 +400,9 @@ namespace MattEland.Ani.Alfred.Tests.Modules
             // This will error if 0 or > 1 events are logged
             var consoleEvent = console.Events.Single(e => e.Title == AlfredTimeModule.HourAlertEventTitle);
 
-            //  We want to ensure it's an informational purposes
-            Assert.AreEqual(LogLevel.ChatNotification, consoleEvent.Level);
+            //  We want to ensure it has the chat notification status
+            consoleEvent.ShouldNotBeNull();
+            consoleEvent.Level.ShouldBe(LogLevel.ChatNotification);
         }
 
         [Test]

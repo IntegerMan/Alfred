@@ -7,8 +7,6 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
-
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
 
@@ -21,7 +19,7 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
     {
 
         /// <summary>
-        /// Processes a shell command by sending it on to the user interface layer.
+        /// Processes a shell <paramref name="command"/> by sending it on to the user interface layer.
         /// </summary>
         /// <param name="command">The command.</param>
         /// <returns>The redirect target or string.empty for no redirect.</returns>

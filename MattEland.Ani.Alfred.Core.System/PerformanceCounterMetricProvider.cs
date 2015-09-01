@@ -18,7 +18,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
     /// <summary>
     ///     A metric provider based on a performance counter.
     /// </summary>
-    public sealed class CounterMetricProvider : MetricProviderBase
+    public sealed class CounterMetricProvider : MetricProviderBase, IDisposable
     {
         [NotNull]
         private readonly PerformanceCounter _counter;
@@ -34,7 +34,10 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         ///     Code that is executing without administrative
         ///     privileges attempted to read a performance counter.
         /// </exception>
-        public CounterMetricProvider(string categoryName, string counterName, string instance = null)
+        public CounterMetricProvider([NotNull] string categoryName,
+                                     [NotNull] string counterName,
+                                     [CanBeNull] string instance = null)
+
             : base(instance ?? counterName)
         {
             _counter = new PerformanceCounter(categoryName, counterName, instance, true);
@@ -62,10 +65,8 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged
         ///     resources.
         /// </summary>
-        public override void Dispose()
+        public void Dispose()
         {
-            base.Dispose();
-
             _counter.Dispose();
         }
     }

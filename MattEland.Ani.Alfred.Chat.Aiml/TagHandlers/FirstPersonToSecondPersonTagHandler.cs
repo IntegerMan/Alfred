@@ -1,14 +1,11 @@
 ﻿// ---------------------------------------------------------
-// person.cs
+// FirstPersonToSecondPersonTagHandler.cs
 // 
-// Created on:      08/12/2015 at 10:50 PM
-// Last Modified:   08/12/2015 at 11:59 PM
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/24/2015 at 12:03 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
-
-using System;
-using System.Xml;
 
 using JetBrains.Annotations;
 
@@ -18,13 +15,15 @@ using MattEland.Common;
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// <summary>
-    /// A tag handler for the AIML "person" tag. This handles conversions from the first person to the second person.
+    ///     A tag handler for the AIML "person" tag. This handles conversions from the first person to the
+    ///     second person.
     /// </summary>
     [HandlesAimlTag("person")]
+    [UsedImplicitly]
     public class FirstPersonToSecondPersonTagHandler : AimlTagHandler
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AimlTagHandler" /> class.
+        ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
         public FirstPersonToSecondPersonTagHandler([NotNull] TagHandlerParameters parameters)
@@ -33,29 +32,25 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         }
 
         /// <summary>
-        /// Processes the input text and returns the processed value.
+        ///     Processes the input text and returns the processed value.
         /// </summary>
         /// <returns>The processed output</returns>
         protected override string ProcessChange()
         {
-            var node = TemplateNode;
-            if (!node.Name.Matches("person"))
-            {
-                return string.Empty;
-            }
+            if (!NodeName.Matches("person")) { return string.Empty; }
 
             // Substitute entries of "I am" with "You are" and the like
-            if (node.InnerText.HasText())
+            if (Contents.HasText())
             {
                 var substitutions = Librarian.FirstPersonToSecondPersonSubstitutions;
-                return TextSubstitutionHelper.Substitute(substitutions, node.InnerText);
+                return TextSubstitutionHelper.Substitute(substitutions, Contents);
             }
 
             // Evaluate everything else and set that as the inner text of this node and then process it
             var star = BuildStarTagHandler();
-            node.InnerText = star.Transform().NonNull();
+            Contents = star.Transform().NonNull();
 
-            if (node.InnerText.HasText())
+            if (Contents.HasText())
             {
                 // Recursively process the input with the remainder of the inner text
                 return ProcessChange();
@@ -63,6 +58,5 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 
             return string.Empty;
         }
-
     }
 }

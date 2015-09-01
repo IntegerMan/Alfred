@@ -1,13 +1,11 @@
 ﻿// ---------------------------------------------------------
 // VersionTagHandler.cs
 // 
-// Created on:      08/12/2015 at 11:01 PM
-// Last Modified:   08/15/2015 at 1:33 AM
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/24/2015 at 12:19 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
-
-using System;
 
 using JetBrains.Annotations;
 
@@ -20,16 +18,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     ///     An AIML tag handler for the AIML "version" tag. This outputs the version of the chat engine.
     /// </summary>
     [HandlesAimlTag("version")]
+    [UsedImplicitly]
     public class VersionTagHandler : AimlTagHandler
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
-        public VersionTagHandler([NotNull] TagHandlerParameters parameters)
-            : base(parameters)
-        {
-        }
+        public VersionTagHandler([NotNull] TagHandlerParameters parameters) : base(parameters) { }
 
         /// <summary>
         ///     Processes the input text and returns the processed value.
@@ -37,12 +33,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// <returns>The processed output</returns>
         protected override string ProcessChange()
         {
-            if (TemplateNode.Name.Matches("version"))
-            {
-                return GetType().GetAssemblyVersion()?.ToString();
-            }
+            var type = GetType();
+            var assemblyVersion = type.GetAssemblyVersion();
 
-            return string.Empty;
+            return assemblyVersion.AsNonNullString();
         }
     }
 }

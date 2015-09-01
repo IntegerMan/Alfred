@@ -8,7 +8,6 @@
 // ---------------------------------------------------------
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -19,6 +18,7 @@ namespace MattEland.Common
     /// <summary>
     ///     A set of extension methods related to collections
     /// </summary>
+    [PublicAPI]
     public static class CollectionExtensions
     {
         /// <summary>
@@ -61,11 +61,12 @@ namespace MattEland.Common
         /// <param name="singular">The singular return value.</param>
         /// <param name="plural">The plural return value.</param>
         /// <returns>The singular value if the item count is 1. Otherwise plural is returned.</returns>
+        [NotNull]
         public static string Pluralize<T>([NotNull] this IEnumerable<T> collection,
-                                       string singular,
-                                       string plural)
+                                          [CanBeNull] string singular,
+                                          [CanBeNull] string plural)
         {
-            var count = collection.Count<T>();
+            var count = collection.Count();
             return count.Pluralize(singular, plural);
         }
     }

@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
 // ChatEngine.cs
 // 
-// Created on:      08/12/2015 at 9:45 PM
-// Last Modified:   08/18/2015 at 12:21 AM
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/24/2015 at 12:58 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -19,6 +19,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Common;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml
 {
@@ -40,11 +41,22 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <summary>
         ///     Initializes a new instance of the <see cref="ChatEngine" /> class.
         /// </summary>
-        /// <param name="logger">The logger.</param>
-        public ChatEngine([CanBeNull] IConsole logger = null)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when one or more required arguments are null.
+        /// </exception>
+        /// <param name="container"> The container. </param>
+        /// <param name="name"> The name of the chat engine. </param>
+        public ChatEngine([NotNull] IObjectContainer container, [NotNull] string name)
         {
-            // Get logging online ASAP
-            Logger = logger;
+            if (container == null) { throw new ArgumentNullException(nameof(container)); }
+            if (name == null) { throw new ArgumentNullException(nameof(name)); }
+
+            // Get basic functionality set ASAP
+            Container = container;
+            Logger = container.TryProvide<IConsole>();
+
+            // Create a user to represent the system
+            SystemUser = new User(name, true);
 
             // Set simple properties
             MaxThatSize = 256;
@@ -64,7 +76,18 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
             // Populate smaller value dictionaries
             SentenceSplitters = new List<string> { ".", "!", "?", ";" };
+
+            // Set the failure message's default value.
+            FallbackResponse = Resources.ChatEngineDontUnderstandFallback.NonNull();
         }
+
+        /// <summary>
+        ///     Gets the container.
+        /// </summary>
+        /// <value>
+        ///     The container.
+        /// </value>
+        public IObjectContainer Container { get; }
 
         /// <summary>
         ///     Gets the librarian that manages settings.
@@ -87,7 +110,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// </summary>
         /// <value>The logger.</value>
         [CanBeNull]
-        public IConsole Logger { get; set; }
+        public IConsole Logger { get; }
 
         /// <summary>
         ///     Gets the locale of this instance.
@@ -103,20 +126,20 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         ///     Gets the time out limit for a request in milliseconds. Defaults to 2000 (2 seconds).
         /// </summary>
         /// <value>The time out.</value>
-        public double Timeout { get; set; }
+        public double Timeout { get; }
 
         /// <summary>
         ///     Gets or sets the maximum size that can be used to hold a path in the that value.
         /// </summary>
         /// <value>The maximum size of the that.</value>
-        public int MaxThatSize { get; set; }
+        public int MaxThatSize { get; }
 
         /// <summary>
         ///     Gets or sets the root node of the Aiml knowledge graph.
         /// </summary>
         /// <value>The root node.</value>
         [NotNull]
-        public Node RootNode { get; set; }
+        public Node RootNode { get; }
 
         /// <summary>
         ///     Gets the count of AIML nodes in memory.
@@ -124,15 +147,16 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <value>The count of AIML nodes.</value>
         public int NodeCount
         {
-            get { return RootNode.ChildrenCount; }
+            get { return RootNode.Children.Count; }
         }
 
         /// <summary>
-        ///     Gets a value indicating whether input in AIML files should be trusted.
+        ///     Gets a value indicating whether input in new AIML files should be trusted.
         ///     If false the input will go through the full normalization process.
         /// </summary>
-        /// <value>Whether or not AIML files are trusted.</value>
-        public bool TrustAiml { get; } = true;
+        /// <value>Whether or not AIML files encountered from now on are trusted.</value>
+        [UsedImplicitly]
+        public bool TrustAiml { get; set; } = true;
 
         /// <summary>
         ///     Gets or sets the owner of this chat engine. This can be used by tag handlers to get custom
@@ -143,11 +167,27 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         public object Owner { get; set; }
 
         /// <summary>
+        /// Gets or sets the response that is given to the user when the input is not understood.
+        /// </summary>
+        /// <value>The fallback response.</value>
+        [NotNull]
+        public string FallbackResponse { get; set; }
+
+        /// <summary>
+        ///     Gets the system user.
+        /// </summary>
+        /// <value>
+        ///     The system user.
+        /// </value>
+        [NotNull]
+        public User SystemUser { get; }
+
+        /// <summary>
         ///     Logs the specified message to the logger.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="level">The log level.</param>
-        internal void Log(string message, LogLevel level)
+        internal void Log([CanBeNull] string message, LogLevel level)
         {
             Logger?.Log("ChatEngine", message, level);
         }
@@ -160,13 +200,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <returns>A result object containing the engine's reply.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="user" /> is <see langword="null" />.</exception>
         /// <exception cref="ArgumentException">A chat message is required to interact with the system.</exception>
-        public Result Chat([NotNull] string input, [NotNull] User user)
+        public ChatResult Chat([NotNull] string input, [NotNull] User user)
         {
             //- Validate
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
+            if (user == null) { throw new ArgumentNullException(nameof(user)); }
             if (input.IsNullOrWhitespace())
             {
                 throw new ArgumentException(Resources.ChatErrorNoMessage, nameof(input));
@@ -184,12 +221,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="request" /> is <see langword="null" />.
         /// </exception>
-        internal Result ProcessRedirectChatRequest([NotNull] Request request)
+        internal ChatResult ProcessRedirectChatRequest([NotNull] Request request)
         {
-            if (request == null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            if (request == null) { throw new ArgumentNullException(nameof(request)); }
 
             return _chatProcessor.ProcessChatRequest(request);
         }
@@ -211,12 +245,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         ///     denied.
         /// </exception>
         /// <exception cref="IOException">There was an I/O related error reading files from the directory.</exception>
+        [UsedImplicitly]
         public void LoadAimlFromDirectory([NotNull] string directoryPath)
         {
-            if (directoryPath == null)
-            {
-                throw new ArgumentNullException(nameof(directoryPath));
-            }
+            if (directoryPath == null) { throw new ArgumentNullException(nameof(directoryPath)); }
 
             _aimlLoader.LoadAiml(directoryPath);
         }
@@ -226,13 +258,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// </summary>
         /// <param name="aimlFile">The aiml file.</param>
         /// <exception cref="ArgumentNullException"><paramref name="aimlFile" /> is <see langword="null" />.</exception>
-        public void LoadAimlFile([NotNull] XmlDocument aimlFile)
+        internal void LoadAimlFile([NotNull] XmlDocument aimlFile)
         {
             //- Validate
-            if (aimlFile == null)
-            {
-                throw new ArgumentNullException(nameof(aimlFile));
-            }
+            if (aimlFile == null) { throw new ArgumentNullException(nameof(aimlFile)); }
 
             // Load the file
             _aimlLoader.LoadAimlFromXml(aimlFile);
@@ -249,10 +278,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <exception cref="ArgumentNullException"><paramref name="aiml" /> is <see langword="null" />.</exception>
         public void LoadAimlFromString([NotNull] string aiml)
         {
-            if (aiml.IsEmpty())
-            {
-                throw new ArgumentNullException(nameof(aiml));
-            }
+            if (aiml.IsEmpty()) { throw new ArgumentNullException(nameof(aiml)); }
 
             var document = new XmlDocument();
             document.LoadXml(aiml);
@@ -279,6 +305,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <exception cref="SecurityException">The caller does not have the required permission.</exception>
         /// <exception cref="FileNotFoundException">Could not find a settings file at the given path</exception>
         /// <exception cref="XmlException">The settings file was not found.</exception>
+        [UsedImplicitly]
         public void LoadSettingsFromDirectory([NotNull] string settingsDirectoryPath)
         {
             //- Validate
@@ -324,20 +351,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         public void AddCategoryToGraph([NotNull] XmlNode node, [NotNull] string path)
         {
             //- Validate
-            if (path == null)
-            {
-                throw new ArgumentNullException(nameof(path));
-            }
-            if (node == null)
-            {
-                throw new ArgumentNullException(nameof(node));
-            }
+            if (path == null) { throw new ArgumentNullException(nameof(path)); }
+            if (node == null) { throw new ArgumentNullException(nameof(node)); }
 
             // You can't add nodes with an empty path
             if (string.IsNullOrEmpty(path))
             {
                 var message = string.Format(Locale,
-                                            Resources.ChatEngineAddCategoryErrorNoPath,
+                                            Resources.ChatEngineAddCategoryErrorNoPath.NonNull(),
                                             path,
                                             node.OuterXml);
                 Log(message, LogLevel.Warning);
@@ -345,7 +366,16 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             }
 
             // Add the node to the graph
-            RootNode.AddCategory(path, node.OuterXml);
+            RootNode.AddTemplate(path, node.OuterXml);
+        }
+
+        /// <summary>
+        ///     Logs the specified error message.
+        /// </summary>
+        /// <param name="message">The error message.</param>
+        public void Error([CanBeNull] string message)
+        {
+            Log(message, LogLevel.Error);
         }
     }
 

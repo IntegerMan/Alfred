@@ -7,7 +7,7 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
+using JetBrains.Annotations;
 
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
@@ -15,13 +15,13 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
     ///     An abstract class representing an object capable of providing metrics periodically via a
     ///     NextValue method.
     /// </summary>
-    public abstract class MetricProviderBase : IDisposable
+    public abstract class MetricProviderBase
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="MetricProviderBase" /> class.
         /// </summary>
         /// <param name="metricName">The name of the metric.</param>
-        protected MetricProviderBase(string metricName)
+        protected MetricProviderBase([NotNull] string metricName)
         {
             Name = metricName;
         }
@@ -30,15 +30,8 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         ///     Gets the name of the metric.
         /// </summary>
         /// <value>The name.</value>
+        [NotNull]
         public string Name { get; }
-
-        /// <summary>
-        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged
-        ///     resources.
-        /// </summary>
-        public virtual void Dispose()
-        {
-        }
 
         /// <summary>
         ///     Gets the next value from the metric provider

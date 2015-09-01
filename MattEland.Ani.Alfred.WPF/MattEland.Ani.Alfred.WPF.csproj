@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MattEland.Ani.Alfred.WPF</RootNamespace>
     <AssemblyName>MattEland.Ani.Alfred.WPF</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -29,6 +29,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -53,7 +54,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>AlfredAppTestCertificate.snk</AssemblyOriginatorKeyFile>
@@ -65,8 +66,8 @@
     <RunPostBuildEvent>Always</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="JetBrains.Annotations, Version=9.1.1.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\packages\JetBrains.Annotations.9.1.1\lib\net20\JetBrains.Annotations.dll</HintPath>
+    <Reference Include="JetBrains.Annotations, Version=9.2.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.9.2.0\lib\net20\JetBrains.Annotations.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -90,31 +91,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ApplicationManager.cs" />
-    <Compile Include="Controls\ChatPane.xaml.cs">
-      <DependentUpon>ChatPane.xaml</DependentUpon>
-    </Compile>
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Converters\LogLevelToBrushConverter.cs" />
-    <Compile Include="Platform\WinClientPlatformProvider.cs" />
-    <Compile Include="Platform\WinClientCommand.cs" />
-    <Compile Include="WpfShellCommandManager.cs" />
-    <Page Include="Controls\ChatPane.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dictionaries\Miscellaneous.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dictionaries\DarkStyles.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dictionaries\Styles.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -127,10 +104,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Dictionaries\Templates.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -151,30 +124,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="Alfred.pfx" />
     <None Include="AlfredAppTestCertificate.snk" />
     <None Include="AlfredWPF.cd" />
-    <None Include="DataFiles\Chat\Rosie\animal.aiml" />
-    <None Include="DataFiles\Chat\Rosie\bot_profile.aiml" />
-    <None Include="DataFiles\Chat\Rosie\client_profile.aiml" />
-    <None Include="DataFiles\Chat\Rosie\config.aiml" />
-    <None Include="DataFiles\Chat\Rosie\date.aiml" />
-    <None Include="DataFiles\Chat\Rosie\default.aiml" />
-    <None Include="DataFiles\Chat\Rosie\dialog.aiml" />
-    <None Include="DataFiles\Chat\Rosie\inappropriate.aiml" />
-    <None Include="DataFiles\Chat\Rosie\inquiry.aiml" />
-    <None Include="DataFiles\Chat\Rosie\insults.aiml" />
-    <None Include="DataFiles\Chat\Rosie\knowledge.aiml" />
-    <None Include="DataFiles\Chat\Rosie\personality.aiml" />
-    <None Include="DataFiles\Chat\Rosie\profanity.aiml" />
-    <None Include="DataFiles\Chat\Rosie\reductions1.aiml" />
-    <None Include="DataFiles\Chat\Rosie\reductions2.aiml" />
-    <None Include="DataFiles\Chat\Rosie\reductions_update.aiml" />
-    <None Include="DataFiles\Chat\Rosie\roman.aiml" />
-    <None Include="DataFiles\Chat\Rosie\that.aiml" />
-    <None Include="DataFiles\Chat\Rosie\train.aiml" />
-    <None Include="DataFiles\Chat\Rosie\udc.aiml" />
-    <None Include="DataFiles\Chat\Rosie\utilities.aiml" />
-    <None Include="DataFiles\Chat\Rosie\z_update.aiml" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -202,6 +154,10 @@
       <Project>{549f22e5-1f66-4420-89bf-9460603f9516}</Project>
       <Name>MattEland.Ani.Alfred.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MattEland.Ani.Alfred.PresentationShared\MattEland.Ani.Alfred.PresentationShared.csproj">
+      <Project>{b4e5baae-27a8-456e-b0ac-3117e1e6eddf}</Project>
+      <Name>MattEland.Ani.Alfred.PresentationShared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MattEland.Common\MattEland.Common.csproj">
       <Project>{514cb422-a6ef-4c75-b925-92ab599ba1be}</Project>
       <Name>MattEland.Common</Name>
@@ -222,6 +178,7 @@
   <ItemGroup>
     <Resource Include="alfred.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

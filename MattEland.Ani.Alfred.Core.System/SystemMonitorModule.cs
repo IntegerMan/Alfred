@@ -9,18 +9,16 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Globalization;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
-
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
     /// <summary>
-    ///     The SystemMonitorModule is an abstract class for modules commonly working with performance counters.
+    ///     The SystemMonitorModule is an <see langword="abstract"/> class for modules commonly working with performance counters.
     /// </summary>
     public abstract class SystemMonitorModule : AlfredModule
     {
@@ -30,33 +28,38 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         public const string TotalInstanceName = "_Total";
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SystemMonitorModule" /> class.
+        ///     Initializes a new instance of the <see cref="SystemMonitorModule" /> class.
         /// </summary>
-        /// <param name="platformProvider">The platform provider.</param>
-        /// <param name="metricProvider">The metric provider.</param>
-        protected SystemMonitorModule([NotNull] IPlatformProvider platformProvider,
-                                      [NotNull] IMetricProviderFactory metricProvider) : base(platformProvider)
+        /// <param name="container"> The container. </param>
+        /// <param name="metricProvider"> The metric provider. </param>
+        protected SystemMonitorModule([NotNull] IObjectContainer container,
+                                      [NotNull] IMetricProviderFactory metricProvider) : base(container)
         {
             // Use the provided metric provider
             _metricProvider = metricProvider;
         }
 
         /// <summary>
-        ///     Gets the next counter value safely, defaulting to 0 on any error.
+        /// Gets the next <paramref name="counter" /> value safely, defaulting to 0 on any error.
         /// </summary>
         /// <param name="counter">The counter.</param>
-        /// <returns>The value returned from the counter</returns>
+        /// <returns>
+        /// The value returned from the <paramref name="counter"/>
+        /// </returns>
         protected static float GetNextCounterValueSafe([CanBeNull] MetricProviderBase counter)
         {
             return GetNextCounterValueSafe(counter, 0);
         }
 
         /// <summary>
-        ///     Gets the next counter value safely, defaulting to the defaultValue on any error.
+        /// Gets the next <paramref name="counter" /> value safely, defaulting to the
+        /// <paramref name="defaultValue" /> on any error.
         /// </summary>
         /// <param name="counter">The counter.</param>
         /// <param name="defaultValue">The default value.</param>
-        /// <returns>The value returned from the counter</returns>
+        /// <returns>
+        /// The value returned from the <paramref name="counter"/>
+        /// </returns>
         protected static float GetNextCounterValueSafe([CanBeNull] MetricProviderBase counter, float defaultValue)
         {
             try
@@ -82,7 +85,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         }
 
         [NotNull]
-        private IMetricProviderFactory _metricProvider;
+        private readonly IMetricProviderFactory _metricProvider;
 
         /// <summary>
         /// Gets the metric provider.

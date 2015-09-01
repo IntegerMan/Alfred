@@ -15,6 +15,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Common;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Modules
 {
@@ -22,25 +23,19 @@ namespace MattEland.Ani.Alfred.Core.Modules
     /// <summary>
     ///     Represents a module within Alfred. Modules contain different bits of information to present to the user.
     /// </summary>
-    public abstract class AlfredModule : AlfredComponent, IAlfredModule
+    public abstract class AlfredModule : ComponentBase, IAlfredModule
     {
         [NotNull]
         [ItemNotNull]
-        private readonly ICollection<AlfredWidget> _widgets;
+        private readonly ICollection<WidgetBase> _widgets;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredModule" /> class.
         /// </summary>
-        /// <param name="platformProvider">The platform provider.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        protected AlfredModule([NotNull] IPlatformProvider platformProvider)
+        /// <param name="container"> The container. </param>
+        protected AlfredModule([NotNull] IObjectContainer container) : base(container)
         {
-            if (platformProvider == null)
-            {
-                throw new ArgumentNullException(nameof(platformProvider));
-            }
-
-            _widgets = platformProvider.CreateCollection<AlfredWidget>();
+            _widgets = container.ProvideCollection<WidgetBase>();
         }
 
         /// <summary>
@@ -66,8 +61,8 @@ namespace MattEland.Ani.Alfred.Core.Modules
         ///     Gets the user interface widgets for the module.
         /// </summary>
         /// <value>The user interface widgets.</value>
-        [NotNull]
-        public IEnumerable<AlfredWidget> Widgets
+        [NotNull, ItemNotNull]
+        public IEnumerable<WidgetBase> Widgets
         {
             get { return _widgets; }
         }
@@ -89,7 +84,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <param name="widget">
         ///     The widget.
         /// </param>
-        protected void Register([NotNull] AlfredWidget widget)
+        protected void Register([NotNull] WidgetBase widget)
         {
             _widgets.AddSafe(widget);
 
@@ -104,7 +99,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         ///     The widgets.
         /// </param>
         /// <exception cref="ArgumentNullException"><paramref name="widgets"/> is <see langword="null" />.</exception>
-        protected void Register([NotNull] IEnumerable<AlfredWidget> widgets)
+        protected void Register([NotNull] IEnumerable<WidgetBase> widgets)
         {
             if (widgets == null)
             {
@@ -127,6 +122,43 @@ namespace MattEland.Ani.Alfred.Core.Modules
         public virtual bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
         {
             return false;
+        }
+
+        /// <summary>
+        /// Gets the name of the broad categorization or type that this item is.
+        /// </summary>
+        /// <example>
+        /// Some examples of ItemTypeName values might be "Folder", "Application", "User", etc.
+        /// </example>
+        /// <value>The item type's name.</value>
+        public override string ItemTypeName
+        {
+            get { return "Module"; }
+        }
+
+        /// <summary>
+        /// Gets the property providers.
+        /// </summary>
+        /// <value>The property providers.</value>
+        [NotNull, ItemNotNull]
+        public override IEnumerable<IPropertyProvider> PropertyProviders
+        {
+            get { return Widgets; }
+        }
+
+        /// <summary>
+        ///     Creates an <see cref="AlfredCommand"/> with the specified <see cref="Action" />.
+        /// </summary>
+        /// <param name="action"> The <see cref="Action" /> to take when the command is executed. </param>
+        /// <returns>
+        ///     The new command.
+        /// </returns>
+        [NotNull]
+        protected AlfredCommand CreateCommand([CanBeNull] Action action)
+        {
+            var command = Container.Provide<AlfredCommand>(action);
+
+            return command;
         }
     }
 }

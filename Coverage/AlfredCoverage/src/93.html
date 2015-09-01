@@ -2,50 +2,45 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\utils\sanitizingtexttransformer.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\taghandlers\outputtaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// SanitizingTextTransformer.cs
+// OutputTagHandler.cs
 // 
-// Created on:      08/13/2015 at 10:31 PM
-// Last Modified:   08/16/2015 at 1:02 AM
+// Created on:      08/12/2015 at 10:57 PM
+// Last Modified:   08/15/2015 at 11:06 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System.Text.RegularExpressions;
-
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Common;
 
-namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
+namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// &lt;summary&gt;
-    ///     A text transformer to remove illegal characters.
+    ///     An AIML tag handler that handles the &quot;that&quot; tag and refers to the nTh last thing the bot said
+    ///     to the user.
     /// &lt;/summary&gt;
-    public class SanitizingTextTransformer : TextTransformer
+    [HandlesAimlTag(&quot;that&quot;)]
+    [UsedImplicitly]
+    public class OutputTagHandler : AimlTagHandler
     {
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;TextTransformer&quot; /&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;chatEngine&quot;&gt;The ChatEngine.&lt;/param&gt;
-        public SanitizingTextTransformer([NotNull] ChatEngine chatEngine)
-            : base(chatEngine)
+        /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
+        public OutputTagHandler([NotNull] TagHandlerParameters parameters)
+            : base(parameters)
         {
-            StripperRegexPattern = @&quot;[^0-9a-zA-Z_]&quot;;
         }
-
-        /// &lt;summary&gt;
-        ///     Gets or sets the illegal character stripper regex pattern.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The stripper regex pattern.&lt;/value&gt;
-        [NotNull]
-        public string StripperRegexPattern { get; set; }
 
         /// &lt;summary&gt;
         ///     Processes the input text and returns the processed value.
@@ -53,16 +48,63 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// &lt;returns&gt;The processed output&lt;/returns&gt;
         protected override string ProcessChange()
         {
-            // Removes illegal characters and replaces them with spaces
-            var regex = new Regex(StripperRegexPattern, RegexOptions.IgnorePatternWhitespace);
+            var element = TemplateElement;
+            if (element.Name.Matches(&quot;that&quot;))
+            {
+                // If we just said that, grab the first sentence of the first output.
+                if (element.Attributes.Count == 0)
+                {
+                    return User.GetOutputSentence();
+                }
 
-            return regex.Replace(InputString.NonNull(), &quot; &quot;);
+                if (element.HasAttribute(&quot;index&quot;))
+                {
+                    var indexText = element.GetAttribute(&quot;index&quot;);
+
+                    if (indexText.HasText())
+                    {
+                        //- Interpret what the user said
+                        var indiciesText = indexText.Split(&quot;,&quot;.ToCharArray());
+
+                        //- Grab the output index - the nth last interaction result with the chat engine
+                        int outputIndex = indiciesText[0].AsInt();
+
+                        //- Grab the sentence index referring to the sentence within the output - defaulting to 1 if not specified
+                        var sentenceIndex = 1;
+                        if (indiciesText.Length &gt;= 2)
+                        {
+                            sentenceIndex = indiciesText[1].AsInt();
+                        }
+
+                        // Return the thing the chat engine said at the specified point in time
+                        if (outputIndex &gt; 0 &amp; sentenceIndex &gt; 0)
+                        {
+                            return User.GetOutputSentence(outputIndex - 1, sentenceIndex - 1);
+                        }
+
+                        // If we got here we were invalid but did have some text. Log it.
+                        Log(
+                            string.Format(Locale,
+                                          &quot;An input tag with a badly formed index ({0}) was encountered processing the input: {1}&quot;,
+                                          indiciesText,
+                                          Request.RawInput),
+                            LogLevel.Error);
+
+                    }
+
+                }
+
+            }
+
+            return string.Empty;
+
         }
     }
+
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[28,15,28,31,1],[29,9,29,10,1],[30,13,30,53,1],[31,9,31,10,1],[38,46,38,50,1],[38,51,38,55,1],[45,9,45,10,1],[47,13,47,95,1],[49,13,49,62,1],[50,9,50,10,1]]);
+      highlightRanges([[31,15,31,31,0],[32,9,32,10,0],[33,9,33,10,0],[40,9,40,10,0],[41,13,41,43,0],[42,13,42,46,0],[43,13,43,14,0],[45,17,45,51,0],[46,17,46,18,0],[47,21,47,53,0],[50,17,50,51,0],[51,17,51,18,0],[52,21,52,67,0],[54,21,54,45,0],[55,21,55,22,0],[57,25,57,79,0],[60,25,60,67,0],[63,25,63,47,0],[64,25,64,54,0],[65,25,65,26,0],[66,29,66,69,0],[67,25,67,26,0],[70,25,70,65,0],[71,25,71,26,0],[72,29,72,95,0],[76,25,81,45,0],[83,21,83,22,0],[85,17,85,18,0],[87,13,87,14,0],[89,13,89,33,0],[91,9,91,10,0]]);
     </script>
   </body>
 </html>

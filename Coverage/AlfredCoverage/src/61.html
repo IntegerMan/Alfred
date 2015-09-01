@@ -2,58 +2,369 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\handlesaimltagattribute.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\chatengine.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// HandlesAimlTagAttribute.cs
+// ChatEngine.cs
 // 
-// Created on:      08/14/2015 at 1:01 AM
-// Last Modified:   08/14/2015 at 1:01 AM
+// Created on:      08/12/2015 at 9:45 PM
+// Last Modified:   08/18/2015 at 12:21 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Diagnostics;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Security;
+using System.Xml;
 
 using JetBrains.Annotations;
 
-namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Common;
+
+namespace MattEland.Ani.Alfred.Chat.Aiml
 {
     /// &lt;summary&gt;
-    /// An attribute describing a class that can handle an AIML tag
+    ///     ChatEngine represents an AIML (Artificial Intelligence Markup Language) chat bot and provides
+    ///     an access point to initialize the library and process chat requests.
     /// &lt;/summary&gt;
-    [AttributeUsage(AttributeTargets.Class), UsedImplicitly]
-    public sealed class HandlesAimlTagAttribute : Attribute
+    /// &lt;remarks&gt;
+    ///     NOTE: This class is now a partial class. Check the other partial classes for more details
+    /// &lt;/remarks&gt;
+    public class ChatEngine
     {
+        [NotNull]
+        private readonly AimlLoader _aimlLoader;
+
+        [NotNull]
+        private readonly ChatProcessor _chatProcessor;
 
         /// &lt;summary&gt;
-        /// Initializes a new instance of the &lt;see cref=&quot;HandlesAimlTagAttribute&quot;/&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;ChatEngine&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;name&quot;&gt;The name of the tag this class handles.&lt;/param&gt;
-        public HandlesAimlTagAttribute(string name)
+        /// &lt;param name=&quot;logger&quot;&gt;The logger.&lt;/param&gt;
+        public ChatEngine([CanBeNull] IConsole logger = null)
         {
-            Name = name;
+            // Get logging online ASAP
+            Logger = logger;
+
+            // Set simple properties
+            MaxThatSize = 256;
+
+            // Timeout should not occur during debugging as it makes debugging chat difficult
+#if DEBUG
+            Timeout = -1;
+#else
+            Timeout = 2000;
+#endif
+            RootNode = new Node();
+
+            // Build helper components
+            _chatProcessor = new ChatProcessor(this);
+            _aimlLoader = new AimlLoader(this);
+            Librarian = new ChatEngineLibrarian(this);
+
+            // Populate smaller value dictionaries
+            SentenceSplitters = new List&lt;string&gt; { &quot;.&quot;, &quot;!&quot;, &quot;?&quot;, &quot;;&quot; };
         }
 
         /// &lt;summary&gt;
-        /// Gets or sets the name of the tag this class handles.
+        ///     Gets the librarian that manages settings.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The name.&lt;/value&gt;
-        public string Name
+        /// &lt;value&gt;The librarian.&lt;/value&gt;
+        [NotNull]
+        public ChatEngineLibrarian Librarian { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets a list of sentence splitters. Sentence splitters are punctuation characters such as . or !
+        ///     that define breaks between sentences.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The sentence splitters.&lt;/value&gt;
+        [NotNull]
+        [ItemNotNull]
+        public ICollection&lt;string&gt; SentenceSplitters { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets the logger.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The logger.&lt;/value&gt;
+        [CanBeNull]
+        public IConsole Logger { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets the locale of this instance.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The locale.&lt;/value&gt;
+        [NotNull]
+        public CultureInfo Locale
         {
-            [DebuggerStepThrough]
-            get;
+            get { return CultureInfo.CurrentCulture; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the time out limit for a request in milliseconds. Defaults to 2000 (2 seconds).
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The time out.&lt;/value&gt;
+        public double Timeout { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the maximum size that can be used to hold a path in the that value.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The maximum size of the that.&lt;/value&gt;
+        public int MaxThatSize { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the root node of the Aiml knowledge graph.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The root node.&lt;/value&gt;
+        [NotNull]
+        public Node RootNode { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets the count of AIML nodes in memory.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The count of AIML nodes.&lt;/value&gt;
+        public int NodeCount
+        {
+            get { return RootNode.ChildrenCount; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets a value indicating whether input in AIML files should be trusted.
+        ///     If false the input will go through the full normalization process.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;Whether or not AIML files are trusted.&lt;/value&gt;
+        public bool TrustAiml { get; } = true;
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the owner of this chat engine. This can be used by tag handlers to get custom
+        ///     information back out of the chat engine to other systems.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The owner.&lt;/value&gt;
+        [CanBeNull]
+        public object Owner { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Logs the specified message to the logger.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;message&quot;&gt;The message.&lt;/param&gt;
+        /// &lt;param name=&quot;level&quot;&gt;The log level.&lt;/param&gt;
+        internal void Log([CanBeNull] string message, LogLevel level)
+        {
+            Logger?.Log(&quot;ChatEngine&quot;, message, level);
+        }
+
+        /// &lt;summary&gt;
+        ///     Accepts a chat message from the user and returns the chat engine&#39;s reply.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The input chat message.&lt;/param&gt;
+        /// &lt;param name=&quot;user&quot;&gt;The user.&lt;/param&gt;
+        /// &lt;returns&gt;A result object containing the engine&#39;s reply.&lt;/returns&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;user&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;ArgumentException&quot;&gt;A chat message is required to interact with the system.&lt;/exception&gt;
+        public Result Chat([NotNull] string input, [NotNull] User user)
+        {
+            //- Validate
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            if (input.IsNullOrWhitespace())
+            {
+                throw new ArgumentException(Resources.ChatErrorNoMessage, nameof(input));
+            }
+
+            // Build a request that we can work with internally.
+            return _chatProcessor.ProcessChatRequest(new Request(input, user, this));
+        }
+
+        /// &lt;summary&gt;
+        ///     Handles a redirect chat request from srai aiml elements.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;request&quot;&gt;The request.&lt;/param&gt;
+        /// &lt;returns&gt;The result of the request.&lt;/returns&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;
+        ///     &lt;paramref name=&quot;request&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.
+        /// &lt;/exception&gt;
+        internal Result ProcessRedirectChatRequest([NotNull] Request request)
+        {
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+
+            return _chatProcessor.ProcessChatRequest(request);
+        }
+
+        /// &lt;summary&gt;
+        ///     Loads all .aiml files from a directory.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;directoryPath&quot;&gt;The directory path.&lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;
+        ///     &lt;paramref name=&quot;directoryPath&quot; /&gt; is
+        ///     &lt;see langword=&quot;null&quot; /&gt;.
+        /// &lt;/exception&gt;
+        /// &lt;exception cref=&quot;DirectoryNotFoundException&quot;&gt;
+        ///     The specified path is invalid (for example, it is on
+        ///     an unmapped drive).
+        /// &lt;/exception&gt;
+        /// &lt;exception cref=&quot;UnauthorizedAccessException&quot;&gt;
+        ///     Access to &lt;paramref name=&quot;directoryPath&quot; /&gt; is
+        ///     denied.
+        /// &lt;/exception&gt;
+        /// &lt;exception cref=&quot;IOException&quot;&gt;There was an I/O related error reading files from the directory.&lt;/exception&gt;
+        [UsedImplicitly]
+        public void LoadAimlFromDirectory([NotNull] string directoryPath)
+        {
+            if (directoryPath == null)
+            {
+                throw new ArgumentNullException(nameof(directoryPath));
+            }
+
+            _aimlLoader.LoadAiml(directoryPath);
+        }
+
+        /// &lt;summary&gt;
+        ///     Loads a specific aiml file.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;aimlFile&quot;&gt;The aiml file.&lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;aimlFile&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public void LoadAimlFile([NotNull] XmlDocument aimlFile)
+        {
+            //- Validate
+            if (aimlFile == null)
+            {
+                throw new ArgumentNullException(nameof(aimlFile));
+            }
+
+            // Load the file
+            _aimlLoader.LoadAimlFromXml(aimlFile);
+        }
+
+        /// &lt;summary&gt;
+        ///     Loads AIML assets from a string containing the contents of an AIML file.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;aiml&quot;&gt;The aiml.&lt;/param&gt;
+        /// &lt;exception cref=&quot;XmlException&quot;&gt;
+        ///     There is a load or parse error in the XML. In this case, a
+        ///     &lt;see cref=&quot;T:System.IO.FileNotFoundException&quot; /&gt; is raised.
+        /// &lt;/exception&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;aiml&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public void LoadAimlFromString([NotNull] string aiml)
+        {
+            if (aiml.IsEmpty())
+            {
+                throw new ArgumentNullException(nameof(aiml));
+            }
+
+            var document = new XmlDocument();
+            document.LoadXml(aiml);
+
+            LoadAimlFile(document);
+        }
+
+        /// &lt;summary&gt;
+        ///     Loads settings from the specified settings directory path.
+        ///     There is assumed to be a settings.xml file in this directory.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;settingsDirectoryPath&quot;&gt;The settings directory path.&lt;/param&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        /// &lt;exception cref=&quot;IOException&quot;&gt;&lt;paramref name=&quot;settingsDirectoryPath&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;DirectoryNotFoundException&quot;&gt;
+        ///     The specified path is invalid (for example, it is on
+        ///     an unmapped drive).
+        /// &lt;/exception&gt;
+        /// &lt;exception cref=&quot;UnauthorizedAccessException&quot;&gt;
+        ///     Access to &lt;paramref name=&quot;settingsDirectoryPath&quot; /&gt;
+        ///     is denied.
+        /// &lt;/exception&gt;
+        /// &lt;exception cref=&quot;SecurityException&quot;&gt;The caller does not have the required permission.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;FileNotFoundException&quot;&gt;Could not find a settings file at the given path&lt;/exception&gt;
+        /// &lt;exception cref=&quot;XmlException&quot;&gt;The settings file was not found.&lt;/exception&gt;
+        [UsedImplicitly]
+        public void LoadSettingsFromDirectory([NotNull] string settingsDirectoryPath)
+        {
+            //- Validate
+            if (settingsDirectoryPath == null)
+            {
+                throw new ArgumentNullException(nameof(settingsDirectoryPath));
+            }
+
+            // Invoke
+            Librarian.LoadSettingsFromConfigDirectory(settingsDirectoryPath);
+        }
+
+        /// &lt;summary&gt;
+        ///     Loads various settings from XML files. Input parameters are all optional and should be the
+        ///     actual XML and not a file path.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;globalXml&quot;&gt;The global XML.&lt;/param&gt;
+        /// &lt;param name=&quot;firstPersonXml&quot;&gt;The first person XML.&lt;/param&gt;
+        /// &lt;param name=&quot;secondPersonXml&quot;&gt;The second person XML.&lt;/param&gt;
+        /// &lt;param name=&quot;genderXml&quot;&gt;The gender XML.&lt;/param&gt;
+        /// &lt;param name=&quot;substitutionsXml&quot;&gt;The substitutions XML.&lt;/param&gt;
+        public void LoadSettingsFromXml([CanBeNull] string globalXml = null,
+                                        [CanBeNull] string firstPersonXml = null,
+                                        [CanBeNull] string secondPersonXml = null,
+                                        [CanBeNull] string genderXml = null,
+                                        [CanBeNull] string substitutionsXml = null)
+        {
+            Librarian.LoadSettingsFromXml(globalXml,
+                                          firstPersonXml,
+                                          secondPersonXml,
+                                          genderXml,
+                                          substitutionsXml);
+        }
+
+        /// &lt;summary&gt;
+        ///     Adds the category to the graph.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;node&quot;&gt;The template node.&lt;/param&gt;
+        /// &lt;param name=&quot;path&quot;&gt;The path.&lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;
+        ///     &lt;paramref name=&quot;path&quot; /&gt;, or &lt;paramref name=&quot;node&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.
+        /// &lt;/exception&gt;
+        public void AddCategoryToGraph([NotNull] XmlNode node, [NotNull] string path)
+        {
+            //- Validate
+            if (path == null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+            if (node == null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+
+            // You can&#39;t add nodes with an empty path
+            if (string.IsNullOrEmpty(path))
+            {
+                var message = string.Format(Locale,
+                                            Resources.ChatEngineAddCategoryErrorNoPath,
+                                            path,
+                                            node.OuterXml);
+                Log(message, LogLevel.Warning);
+                return;
+            }
+
+            // Add the node to the graph
+            RootNode.AddCategory(path, node.OuterXml);
         }
     }
+
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[28,9,28,52,1],[29,9,29,10,1],[30,13,30,25,1],[31,9,31,10,1],[39,13,40,17,1]]);
+      highlightRanges([[167,13,167,14,0],[168,17,168,63,0],[171,13,171,14,0],[172,17,172,90,0],[190,13,190,14,0],[191,17,191,66,0],[216,9,216,10,0],[217,13,217,39,0],[218,13,218,14,0],[219,17,219,72,0],[222,13,222,49,0],[223,9,223,10,0],[234,13,234,14,0],[235,17,235,67,0],[254,13,254,14,0],[255,17,255,63,0],[285,9,285,10,0],[287,13,287,47,0],[288,13,288,14,0],[289,17,289,80,0],[293,13,293,78,0],[294,9,294,10,0],[330,13,330,14,0],[331,17,331,63,0],[334,13,334,14,0],[335,17,335,63,0],[340,13,340,14,0],[341,17,344,60,0],[345,17,345,48,0],[346,17,346,24,0],[135,42,135,46,1],[44,9,44,62,1],[45,9,45,10,1],[47,13,47,29,1],[50,13,50,31,1],[54,13,54,26,1],[58,13,58,35,1],[61,13,61,54,1],[62,13,62,48,1],[63,13,63,55,1],[66,13,66,73,1],[67,9,67,10,1],[74,48,74,52,1],[83,56,83,60,1],[90,34,90,38,1],[99,17,99,18,1],[99,19,99,53,1],[99,54,99,55,1],[106,33,106,37,1],[112,34,112,38,1],[119,32,119,36,1],[127,17,127,18,1],[127,19,127,49,1],[127,50,127,51,1],[135,33,135,37,1],[143,31,143,35,1],[143,36,143,40,1],[151,9,151,10,1],[152,13,152,55,1],[153,9,153,10,1],[164,9,164,10,1],[166,13,166,30,1],[170,13,170,44,1],[176,13,176,86,1],[177,9,177,10,1],[188,9,188,10,1],[189,13,189,33,1],[194,13,194,63,1],[195,9,195,10,1],[231,9,231,10,1],[233,13,233,34,1],[239,13,239,51,1],[240,9,240,10,1],[252,9,252,10,1],[253,13,253,32,1],[258,13,258,46,1],[259,13,259,36,1],[261,13,261,36,1],[262,9,262,10,1],[310,9,310,10,1],[311,13,315,61,1],[316,9,316,10,1],[327,9,327,10,1],[329,13,329,30,1],[333,13,333,30,1],[339,13,339,44,1],[350,13,350,55,1],[351,9,351,10,1]]);
     </script>
   </body>
 </html>

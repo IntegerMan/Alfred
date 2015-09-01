@@ -18,6 +18,7 @@ using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Ani.Alfred.Tests.Mocks;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -29,19 +30,21 @@ namespace MattEland.Ani.Alfred.Tests.Modules
     ///         cref="AlfredPowerModule" />
     ///     module.
     /// </summary>
-    [TestFixture]
+    [UnitTest]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-    public class AlfredPowerModuleTests
+    public class AlfredPowerModuleTests : AlfredTestBase
     {
         /// <summary>
         ///     Setups the tests.
         /// </summary>
         [SetUp]
-        public void SetupTests()
+        public override void SetUp()
         {
+            base.SetUp();
+
             var bootstrapper = new AlfredBootstrapper();
             _alfred = bootstrapper.Create();
-            _module = new AlfredPowerModule(_alfred.PlatformProvider);
+            _module = new AlfredPowerModule(Container);
 
             RegisterTestModule(_alfred, _module);
         }
@@ -64,9 +67,9 @@ namespace MattEland.Ani.Alfred.Tests.Modules
                 throw new ArgumentNullException(nameof(module));
             }
 
-            var subsystem = new TestSubsystem();
+            var subsystem = new TestSubsystem(Container);
 
-            var page = new AlfredModuleListPage(alfred.PlatformProvider, "Test Page", "Test");
+            var page = new AlfredModuleListPage(Container, "Test Page", "Test");
             subsystem.AddAutoRegisterPage(page);
 
             alfred.Register(subsystem);
@@ -100,7 +103,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
             // Doing this again here to illustrate creation / configuration order more clearly
             var bootstrapper = new AlfredBootstrapper();
             _alfred = bootstrapper.Create();
-            _module = new AlfredPowerModule(_alfred.PlatformProvider);
+            _module = new AlfredPowerModule(Container);
 
             RegisterTestModule(_alfred, _module);
 
@@ -127,9 +130,9 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         [Test]
         public void CoreModuleHasNoProviderText()
         {
-            var bootstrapper = new AlfredBootstrapper();
+            var bootstrapper = new AlfredBootstrapper(Container);
             _alfred = bootstrapper.Create();
-            _module = new AlfredPowerModule(_alfred.PlatformProvider);
+            _module = new AlfredPowerModule(Container);
 
             var text = _module.AlfredStatusWidget.Text;
             Assert.IsNotNull(text, "Widget text was null");

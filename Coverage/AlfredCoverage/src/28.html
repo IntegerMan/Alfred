@@ -2,155 +2,197 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.common\stringextensions.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core.tests\chat\conversationtests.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// StringExtensions.cs
+// ConversationTests.cs
 // 
-// Created on:      08/12/2015 at 2:12 PM
-// Last Modified:   08/14/2015 at 11:26 PM
+// Created on:      08/10/2015 at 2:42 PM
+// Last Modified:   08/16/2015 at 4:47 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
 
-namespace MattEland.Common
+using MattEland.Ani.Alfred.Chat;
+using MattEland.Common;
+
+using NUnit.Framework;
+
+namespace MattEland.Ani.Alfred.Tests.Chat
 {
     /// &lt;summary&gt;
-    ///     Contains extension methods dealing with string operations.
+    /// Tests for conversational inquiries on the Alfred chat system.
     /// &lt;/summary&gt;
-    public static class StringExtensions
+    [TestFixture]
+    [SuppressMessage(&quot;ReSharper&quot;, &quot;NotNullMemberIsNotInitialized&quot;)]
+    [SuppressMessage(&quot;ReSharper&quot;, &quot;AssignNullToNotNullAttribute&quot;)]
+    [SuppressMessage(&quot;ReSharper&quot;, &quot;UnusedParameter.Local&quot;)]
+    public class ConversationTests : ChatTestsBase
     {
         /// &lt;summary&gt;
-        ///     Determines if the input string is has text (is not null and has text beyond whitespace).
+        ///     Sets up the testing environment prior to each test run.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the string has text; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
-        [UsedImplicitly]
-        public static bool HasText([CanBeNull] this string input)
+        [SetUp]
+        public void SetUp()
         {
-            return !input.IsNullOrWhitespace();
+            InitChatSystem();
         }
 
         /// &lt;summary&gt;
-        ///     Determines if the input string is null or an empty string.
+        /// Tests that the chat engine has nodes associated with it
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the string is null or empty; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
-        [UsedImplicitly]
-        public static bool IsEmpty([CanBeNull] this string input)
+        [Test]
+        public void ChatEngineHasNodes()
         {
-            return string.IsNullOrEmpty(input);
+            Assert.Greater(Engine.NodeCount, 0, &quot;Chat engine did not have any nodes&quot;);
+        }
+
+        [Test]
+        public void GenderSubstitutionsHasEntries()
+        {
+            Assert.Greater(Engine.Librarian.GenderSubstitutions.Count, 0, &quot;Settings were not present&quot;);
+        }
+
+        [Test]
+        public void GlobalSettingsHaveEntries()
+        {
+            Assert.Greater(Engine.Librarian.GlobalSettings.Count, 0, &quot;Settings were not present&quot;);
+        }
+
+        [Test]
+        public void FirstPersonSubstitutionsHasEntries()
+        {
+            Assert.Greater(Engine.Librarian.FirstPersonToSecondPersonSubstitutions.Count, 0, &quot;Settings were not present&quot;);
+        }
+
+        [Test]
+        public void SecondPersonSubstitutionsHasEntries()
+        {
+            Assert.Greater(Engine.Librarian.SecondPersonToFirstPersonSubstitutions.Count, 0, &quot;Settings were not present&quot;);
+        }
+
+        [Test]
+        public void SubstitutionsHasEntries()
+        {
+            Assert.Greater(Engine.Librarian.Substitutions.Count, 0, &quot;Settings were not present&quot;);
+        }
+
+        [Test]
+        public void StartupResultsInGreeting()
+        {
+            // In reality, this should be _chat.DoInitialGreeting, but it&#39;s easier to test the template this way
+            var reply = GetReplyTemplate(&quot;EVT_STARTUP&quot;);
+
+            Assert.IsNotNull(reply);
+            Assert.That(reply.Contains(&quot;tmp_hi&quot;), &quot;Startup did not give proper template. Actual template was: &quot; + reply);
+        }
+
+        [Test]
+        public void StartupLeavesLastInputClear()
+        {
+            var chat = new AimlStatementHandler();
+            chat.DoInitialGreeting();
+
+            Assert.That(!chat.LastInput.HasText(), $&quot;Startup did not clear last input. Actual was: {chat.LastInput}&quot;);
+        }
+
+        [TestCase(&quot;Shutdown&quot;, &quot;tmp_bye&quot;)]
+        [TestCase(&quot;Status&quot;, &quot;tmp_status&quot;)]
+        public void ChatCoreTests(string input, string templateId)
+        {
+            AssertMessageGetsReplyTemplate(input, templateId);
+        }
+
+        [TestCase(&quot;Thanks&quot;, &quot;tmp_thanks&quot;)]
+        [TestCase(&quot;Goodbye&quot;, &quot;tmp_bye&quot;)]
+        [TestCase(&quot;Hello&quot;, &quot;tmp_hi&quot;)]
+        [TestCase(&quot;Help&quot;, &quot;tmp_help&quot;)]
+        [TestCase(&quot;Help Commands&quot;, &quot;tmp_help_commands&quot;)]
+        [TestCase(&quot;Help Questions&quot;, &quot;tmp_help_questions&quot;)]
+        [TestCase(&quot;Help Other&quot;, &quot;tmp_help_other&quot;)]
+        [TestCase(&quot;Navigate Log&quot;, &quot;tmp_nav_success&quot;)]
+        [TestCase(&quot;Navigate Home&quot;, &quot;tmp_nav_success&quot;)]
+        [TestCase(&quot;Navigate Test Fail&quot;, &quot;tmp_nav_failed&quot;)]
+        [TestCase(&quot;Navigate Unknown&quot;, &quot;tmp_nav_unknown&quot;)]
+        [TestCase(&quot;ASDfasd&quot;, &quot;tmp_fallback&quot;, Description = &quot;Gibberish should hit fallback case&quot;)]
+        public void ChatTemplateTests(string input, string templateId)
+        {
+            AssertMessageGetsReplyTemplate(input, templateId);
+        }
+
+        [TestCase(&quot;Bye&quot;, &quot;tmp_bye&quot;)]
+        [TestCase(&quot;Hi&quot;, &quot;tmp_hi&quot;)]
+        [TestCase(&quot;Hey&quot;, &quot;tmp_hi&quot;)]
+        [TestCase(&quot;Thank You&quot;, &quot;tmp_thanks&quot;)]
+        public void ChatRedirectTests([NotNull] string input, [NotNull] string redirectTemplateId)
+        {
+            var template = GetReplyTemplate(input);
+            Assert.IsNotNull(template);
+
+            Assert.IsTrue(template.ToLowerInvariant().Contains(redirectTemplateId),
+                          $&quot;The template {template} did not redirect to the template with an Id tag of {redirectTemplateId}&quot;);
         }
 
         /// &lt;summary&gt;
-        ///     Determines if the input string is null, an empty string, or whitespace.
+        ///     Asserts that asking chat for the date gives the correct date.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the string is null or whitespace; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
-        [UsedImplicitly]
-        public static bool IsNullOrWhitespace([CanBeNull] this string input)
+        /// &lt;remarks&gt;
+        ///     Test for ALF-4
+        /// &lt;/remarks&gt;
+        [Test]
+        public void AskingForCurrentDayContainsCurrentDay()
         {
-            return string.IsNullOrWhiteSpace(input);
+            var now = DateTime.Now;
+            var reply = GetReply(&quot;Which day is it?&quot;);
+
+            var expected = now.ToString(&quot;D&quot;);
+            Assert.That(reply.Contains(expected),
+                        $&quot;Asked for current day at {now} and got a reply of &#39;{reply}&#39; which did not contain {expected}&quot;);
         }
 
         /// &lt;summary&gt;
-        ///     Ensures that the passed in string is not null and returns either the input string or
-        ///     string.empty.
+        ///     Asserts that asking chat for the time gives the correct time.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
-        /// &lt;returns&gt;A sanitized string&lt;/returns&gt;
-        [NotNull]
-        public static string NonNull([CanBeNull] this string input)
+        /// &lt;remarks&gt;
+        ///     Test for ALF-3
+        /// &lt;/remarks&gt;
+        [Test]
+        public void AskingForCurrentTimeContainsCurrentTime()
         {
-            return input ?? string.Empty;
+            var now = DateTime.Now;
+            var reply = GetReply(&quot;What time is it?&quot;);
+
+            var expected = now.ToString(&quot;t&quot;);
+            Assert.That(reply.Contains(expected),
+                        $&quot;Asked for current time at {now} and got a reply of &#39;{reply}&#39; which did not contain {expected}&quot;);
         }
-
         /// &lt;summary&gt;
-        ///     Ensures that the passed in string is not null and returns either the input string or
-        ///     replacement.
+        ///     Asserts that when working through redirects, the engine can get the deepest redirect template.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
-        /// &lt;param name=&quot;replacement&quot;&gt;The replacement string when input is null.&lt;/param&gt;
-        /// &lt;returns&gt;A sanitized string&lt;/returns&gt;
-        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;replacement&quot; /&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
-        [NotNull]
-        public static string IfNull([CanBeNull] this string input, [NotNull] string replacement)
+        /// &lt;remarks&gt;
+        ///     Test for ALF-10
+        /// &lt;/remarks&gt;
+        [Test]
+        public void AskingForCurrentTimeRevealsRedirectedTemplate()
         {
-            if (replacement == null)
-            {
-                throw new ArgumentNullException(nameof(replacement));
-            }
+            var reply = GetReplyTemplate(&quot;What time is it?&quot;);
 
-            return input ?? replacement;
-        }
-
-        /// &lt;summary&gt;
-        ///     Extension method to compare two strings and return true if they&#39;re equal according to the
-        ///     comparison type used. By default strings are compared ordinally ignoring casing.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
-        /// &lt;param name=&quot;other&quot;&gt;The other string.&lt;/param&gt;
-        /// &lt;param name=&quot;comparison&quot;&gt;The comparison type. Defaults to ordinal ignoring case.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the strings are equal, &lt;c&gt;false&lt;/c&gt; otherwise.&lt;/returns&gt;
-        public static bool Matches([CanBeNull] this string input,
-                                   [CanBeNull] string other,
-                                   StringComparison comparison = StringComparison.OrdinalIgnoreCase)
-        {
-            return string.Compare(input, other, comparison) == 0;
-        }
-
-        /// &lt;summary&gt;
-        /// Converts the input string to an integer, falling back to the fallback value on parse error.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
-        /// &lt;param name=&quot;fallbackValue&quot;&gt;The fallback value. Defaults to 0.&lt;/param&gt;
-        /// &lt;returns&gt;The parsed value or the fallback value in case of parse error.&lt;/returns&gt;
-        public static int AsInt(this string input, int fallbackValue = 0)
-        {
-            int output;
-
-            // Safely cast the input as an integer. Failure will not throw an exception
-            if (!int.TryParse(input?.Trim(), out output))
-            {
-                // In case of failure, use our fallback value
-                output = fallbackValue;
-            }
-
-            return output;
-        }
-
-        /// &lt;summary&gt;
-        /// Converts the input string to a double, falling back to the fallback value on parse error.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;input&quot;&gt;The input string.&lt;/param&gt;
-        /// &lt;param name=&quot;fallbackValue&quot;&gt;The fallback value. Defaults to 0.&lt;/param&gt;
-        /// &lt;returns&gt;The parsed value or the fallback value in case of parse error.&lt;/returns&gt;
-        public static double AsDouble(this string input, double fallbackValue = 0)
-        {
-            double output;
-
-            // Safely cast the input as an integer. Failure will not throw an exception
-            if (!double.TryParse(input?.Trim(), out output))
-            {
-                // In case of failure, use our fallback value
-                output = fallbackValue;
-            }
-
-            return output;
+            Assert.That(reply.Contains(&quot;&lt;date&quot;), $&quot;The reply template of {reply} did not contain a date tag. Redirects are likely broken.&quot;);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[76,9,76,10,0],[77,13,77,37,0],[78,13,78,14,0],[79,17,79,70,0],[82,13,82,41,0],[83,9,83,10,0],[107,9,107,10,0],[111,13,111,58,0],[112,13,112,14,0],[114,17,114,40,0],[115,13,115,14,0],[117,13,117,27,0],[118,9,118,10,0],[127,9,127,10,0],[131,13,131,61,0],[132,13,132,14,0],[134,17,134,40,0],[135,13,135,14,0],[137,13,137,27,0],[138,9,138,10,0],[28,9,28,10,1],[29,13,29,48,1],[30,9,30,10,1],[39,9,39,10,1],[40,13,40,48,1],[41,9,41,10,1],[50,9,50,10,1],[51,13,51,53,1],[52,9,52,10,1],[62,9,62,10,1],[63,13,63,42,1],[64,9,64,10,1],[96,9,96,10,1],[97,13,97,66,1],[98,9,98,10,1]]);
+      highlightRanges([[36,9,36,10,1],[37,13,37,30,1],[38,9,38,10,1],[45,9,45,10,1],[46,13,46,87,1],[47,9,47,10,1],[51,9,51,10,1],[52,13,52,104,1],[53,9,53,10,1],[57,9,57,10,1],[58,13,58,99,1],[59,9,59,10,1],[63,9,63,10,1],[64,13,64,123,1],[65,9,65,10,1],[69,9,69,10,1],[70,13,70,123,1],[71,9,71,10,1],[75,9,75,10,1],[76,13,76,98,1],[77,9,77,10,1],[81,9,81,10,1],[83,13,83,57,1],[85,13,85,37,1],[86,13,86,122,1],[87,9,87,10,1],[91,9,91,10,1],[92,13,92,51,1],[93,13,93,38,1],[95,13,95,119,1],[96,9,96,10,1],[101,9,101,10,1],[102,13,102,63,1],[103,9,103,10,1],[118,9,118,10,1],[119,13,119,63,1],[120,9,120,10,1],[127,9,127,10,1],[128,13,128,52,1],[129,13,129,40,1],[131,13,132,127,1],[133,9,133,10,1],[143,9,143,10,1],[144,13,144,36,1],[145,13,145,54,1],[147,13,147,46,1],[148,13,149,122,1],[150,9,150,10,1],[160,9,160,10,1],[161,13,161,36,1],[162,13,162,54,1],[164,13,164,46,1],[165,13,166,123,1],[167,9,167,10,1],[176,9,176,10,1],[177,13,177,62,1],[179,13,179,141,1],[180,9,180,10,1]]);
     </script>
   </body>
 </html>

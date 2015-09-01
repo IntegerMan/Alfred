@@ -24,7 +24,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
     public class AlfredCommand
     {
         /// <summary>
-        ///     The Action invoked when the Execute method is called.
+        ///     The <see cref="Action" /> invoked when the <see ref="Execute"/> method is called.
         /// </summary>
         [CanBeNull]
         private Action _executeAction;
@@ -57,9 +57,11 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         }
 
         /// <summary>
-        ///     Gets or sets the Action that is invoked when a command executes.
+        ///     Gets or sets the <see cref="Action" /> that is invoked when a command's <see ref="Execute"/> method is called.
         /// </summary>
-        /// <value>The executed Action.</value>
+        /// <value>
+        /// The executed <see cref="Action"/>.
+        /// </value>
         [CanBeNull]
         public Action ExecuteAction
         {
@@ -68,9 +70,10 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether this command is enabled.
+        ///     Gets or sets a value indicating whether the command is enabled.
         /// </summary>
         /// <value><c>true</c> if this command is enabled; otherwise, <c>false</c>.</value>
+        [UsedImplicitly]
         public bool IsEnabled
         {
             get { return _isEnabled; }
@@ -87,12 +90,15 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <summary>
         ///     Defines the method that determines whether the command can execute in its current state.
         /// </summary>
-        /// <returns>
-        ///     true if this command can be executed; otherwise, false.
-        /// </returns>
         /// <param name="parameter">
-        ///     Data used by the command.  If the command does not require data to be passed, this object can be set to null.
+        ///     Data used by the command. If the command does not require data to be passed, this
+        ///     <see langword="object"/>
+        ///     can be set to null.
         /// </param>
+        /// <returns>
+        ///     <see langword="true"/> if this command can be executed; otherwise,
+        ///     <see langword="false" />.
+        /// </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "parameter",
             Justification = "This matches the XAML ICommand interface which makes for ease of porting")]
         public bool CanExecute([CanBeNull] object parameter)
@@ -104,8 +110,12 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         ///     Defines the method to be called when the command is invoked.
         /// </summary>
         /// <param name="parameter">
-        ///     Data used by the command.  If the command does not require data to be passed, this object can be set to null.
+        /// Data used by the command. If the command does not require data to be passed, this <see langword="object"/>
+        /// can be set to null.
         /// </param>
+        /// <exception cref="Exception">
+        /// A <see langword="delegate"/> callback throws an exception.
+        /// </exception>
         public virtual void Execute([CanBeNull] object parameter)
         {
             // TODO: I could support async invokes here. I'd want to add a parameter for that, but it's possible.
@@ -114,16 +124,24 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         }
 
         /// <summary>
-        ///     Occurs when the result of CanExecute changes and should be re-evaluated.
+        ///     Occurs when the result of <see ref="CanExecute"/> changes and should be re-evaluated.
         /// </summary>
         public event EventHandler CanExecuteChanged;
 
         /// <summary>
-        ///     Raises the CanExecuteChanged event.
+        ///     Raises the <see cref="CanExecuteChanged"/> event.
         /// </summary>
-        private void RaiseCanExecuteChanged()
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate", Justification = "Matching WPF schema")]
+        public void RaiseCanExecuteChanged()
         {
-            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+            try
+            {
+                CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+            }
+            catch
+            {
+                // TODO: Log this
+            }
         }
     }
 }

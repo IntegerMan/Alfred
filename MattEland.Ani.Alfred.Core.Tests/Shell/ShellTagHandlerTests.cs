@@ -7,14 +7,15 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat;
 using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
-using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Tests.Chat;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -23,7 +24,9 @@ namespace MattEland.Ani.Alfred.Tests.Shell
     /// <summary>
     /// Tests related to <see cref="IAlfredShell"/> and its utilization.
     /// </summary>
-    [TestFixture]
+    [UnitTest]
+    [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
+    [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
     public sealed class ShellTagHandlerTests : ChatTestsBase
     {
         [NotNull]
@@ -33,9 +36,11 @@ namespace MattEland.Ani.Alfred.Tests.Shell
         /// Sets up the test environment for each test.
         /// </summary>
         [SetUp]
-        public void SetUp()
+        public override void SetUp()
         {
-            InitChatSystem();
+            base.SetUp();
+
+            InitializeChatSystem();
             var parameters = BuildTagHandlerParameters("<alfred submodule=\"core\" command=\"shutdown\" />");
             _handler = new ShellTagHandler(parameters);
         }

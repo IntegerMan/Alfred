@@ -2,144 +2,147 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\definitions\alfredcommand.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core\modules\alfredmodule.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlfredCommand.cs
+// AlfredModule.cs
 // 
-// Created on:      08/03/2015 at 1:40 PM
-// Last Modified:   08/05/2015 at 3:06 PM
+// Created on:      08/11/2015 at 9:44 PM
+// Last Modified:   08/12/2015 at 3:43 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
+using System.Linq;
 
 using JetBrains.Annotations;
 
-namespace MattEland.Ani.Alfred.Core.Definitions
+using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Core.Widgets;
+using MattEland.Common;
+
+namespace MattEland.Ani.Alfred.Core.Modules
 {
+
     /// &lt;summary&gt;
-    ///     Represents a command that can be executed on the user interface layer
+    ///     Represents a module within Alfred. Modules contain different bits of information to present to the user.
     /// &lt;/summary&gt;
-    /// &lt;remarks&gt;
-    ///     It would be fantastic if this could support System.Windows.Input.ICommand,
-    ///     but portable doesn&#39;t reference that assembly so clients will have to provide
-    ///     their own version to support MVVM bindings, etc.
-    /// &lt;/remarks&gt;
-    public class AlfredCommand
+    public abstract class AlfredModule : AlfredComponent, IAlfredModule
     {
-        /// &lt;summary&gt;
-        ///     The Action invoked when the Execute method is called.
-        /// &lt;/summary&gt;
-        [CanBeNull]
-        private Action _executeAction;
+        [NotNull]
+        [ItemNotNull]
+        private readonly ICollection&lt;AlfredWidget&gt; _widgets;
 
         /// &lt;summary&gt;
-        ///     Whether or not the command is enabled
+        ///     Initializes a new instance of the &lt;see cref=&quot;AlfredModule&quot; /&gt; class.
         /// &lt;/summary&gt;
-        private bool _isEnabled = true;
-
-        /// &lt;summary&gt;
-        ///     Initializes a new instance of the
-        ///     &lt;see cref=&quot;AlfredCommand&quot; /&gt;
-        ///     class.
-        /// &lt;/summary&gt;
-        public AlfredCommand() : this(null)
+        /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        protected AlfredModule([NotNull] IPlatformProvider platformProvider)
         {
-        }
-
-        /// &lt;summary&gt;
-        ///     Initializes a new instance of the
-        ///     &lt;see cref=&quot;AlfredCommand&quot; /&gt;
-        ///     class.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;executeAction&quot;&gt;
-        ///     The execute action.
-        /// &lt;/param&gt;
-        public AlfredCommand([CanBeNull] Action executeAction)
-        {
-            ExecuteAction = executeAction;
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets or sets the Action that is invoked when a command executes.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The executed Action.&lt;/value&gt;
-        [CanBeNull]
-        public Action ExecuteAction
-        {
-            get { return _executeAction; }
-            set { _executeAction = value; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets or sets a value indicating whether this command is enabled.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;&lt;c&gt;true&lt;/c&gt; if this command is enabled; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/value&gt;
-        public bool IsEnabled
-        {
-            get { return _isEnabled; }
-            set
+            if (platformProvider == null)
             {
-                if (value != _isEnabled)
-                {
-                    _isEnabled = value;
-                    RaiseCanExecuteChanged();
-                }
+                throw new ArgumentNullException(nameof(platformProvider));
+            }
+
+            _widgets = platformProvider.CreateCollection&lt;AlfredWidget&gt;();
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets whether or not the module is visible to the user interface.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;Whether or not the module is visible.&lt;/value&gt;
+        public override bool IsVisible
+        {
+            get { return _widgets.Any(w =&gt; w.IsVisible); }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the children of this component. Depending on the type of component this is, the children will
+        ///     vary in their own types.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The children.&lt;/value&gt;
+        public override IEnumerable&lt;IAlfredComponent&gt; Children
+        {
+            get { yield break; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the user interface widgets for the module.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The user interface widgets.&lt;/value&gt;
+        [NotNull]
+        public IEnumerable&lt;AlfredWidget&gt; Widgets
+        {
+            get { return _widgets; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Clears all child collections
+        /// &lt;/summary&gt;
+        protected override void ClearChildCollections()
+        {
+            base.ClearChildCollections();
+
+            _widgets.Clear();
+            OnPropertyChanged(nameof(Widgets));
+        }
+
+        /// &lt;summary&gt;
+        ///     Registers a widget for the module.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;widget&quot;&gt;
+        ///     The widget.
+        /// &lt;/param&gt;
+        protected void Register([NotNull] AlfredWidget widget)
+        {
+            _widgets.AddSafe(widget);
+
+            OnPropertyChanged(nameof(IsVisible));
+            OnPropertyChanged(nameof(Widgets));
+        }
+
+        /// &lt;summary&gt;
+        ///     Registers multiple widgets at once.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;widgets&quot;&gt;
+        ///     The widgets.
+        /// &lt;/param&gt;
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;widgets&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        protected void Register([NotNull] IEnumerable&lt;AlfredWidget&gt; widgets)
+        {
+            if (widgets == null)
+            {
+                throw new ArgumentNullException(nameof(widgets));
+            }
+
+            foreach (var widget in widgets)
+            {
+                // ReSharper disable once AssignNullToNotNullAttribute - for testing purposes we&#39;ll allow this
+                Register(widget);
             }
         }
 
         /// &lt;summary&gt;
-        ///     Defines the method that determines whether the command can execute in its current state.
+        /// Processes an Alfred Command. If the command is handled, result should be modified accordingly and the method should return true. Returning false will not stop the message from being propogated.
         /// &lt;/summary&gt;
-        /// &lt;returns&gt;
-        ///     true if this command can be executed; otherwise, false.
-        /// &lt;/returns&gt;
-        /// &lt;param name=&quot;parameter&quot;&gt;
-        ///     Data used by the command.  If the command does not require data to be passed, this object can be set to null.
-        /// &lt;/param&gt;
-        [SuppressMessage(&quot;Microsoft.Usage&quot;, &quot;CA1801:ReviewUnusedParameters&quot;, MessageId = &quot;parameter&quot;,
-            Justification = &quot;This matches the XAML ICommand interface which makes for ease of porting&quot;)]
-        public bool CanExecute([CanBeNull] object parameter)
+        /// &lt;param name=&quot;command&quot;&gt;The command.&lt;/param&gt;
+        /// &lt;param name=&quot;result&quot;&gt;The result. If the command was handled, this should be updated.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;True&lt;/c&gt; if the command was handled; otherwise false.&lt;/returns&gt;
+        public virtual bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
         {
-            return IsEnabled;
-        }
-
-        /// &lt;summary&gt;
-        ///     Defines the method to be called when the command is invoked.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;parameter&quot;&gt;
-        ///     Data used by the command.  If the command does not require data to be passed, this object can be set to null.
-        /// &lt;/param&gt;
-        public virtual void Execute([CanBeNull] object parameter)
-        {
-            // TODO: I could support async invokes here. I&#39;d want to add a parameter for that, but it&#39;s possible.
-
-            ExecuteAction?.Invoke();
-        }
-
-        /// &lt;summary&gt;
-        ///     Occurs when the result of CanExecute changes and should be re-evaluated.
-        /// &lt;/summary&gt;
-        public event EventHandler CanExecuteChanged;
-
-        /// &lt;summary&gt;
-        ///     Raises the CanExecuteChanged event.
-        /// &lt;/summary&gt;
-        private void RaiseCanExecuteChanged()
-        {
-            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+            return false;
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[42,34,42,44,1],[43,9,43,10,1],[44,9,44,10,1],[35,9,35,40,1],[54,9,54,63,1],[55,9,55,10,1],[56,13,56,43,1],[57,9,57,10,1],[66,17,66,18,1],[66,19,66,41,1],[66,42,66,43,1],[67,17,67,18,1],[67,19,67,42,1],[67,43,67,44,1],[76,17,76,18,1],[76,19,76,37,1],[76,38,76,39,1],[78,13,78,14,1],[79,17,79,41,1],[80,17,80,18,1],[81,21,81,40,1],[82,21,82,46,1],[83,17,83,18,1],[84,13,84,14,1],[99,9,99,10,1],[100,13,100,30,1],[101,9,101,10,1],[110,9,110,10,1],[113,13,113,37,1],[114,9,114,10,1],[125,9,125,10,1],[126,13,126,62,1],[127,9,127,10,1]]);
+      highlightRanges([[39,13,39,14,0],[40,17,40,75,0],[52,17,52,18,0],[52,19,52,44,0],[52,55,52,57,0],[52,58,52,59,0],[110,13,110,14,0],[111,17,111,66,0],[128,9,128,10,0],[129,13,129,26,0],[130,9,130,10,0],[52,44,52,55,0],[36,9,36,77,1],[37,9,37,10,1],[38,13,38,42,1],[43,13,43,74,1],[44,9,44,10,1],[72,17,72,18,1],[72,19,72,35,1],[72,36,72,37,1],[79,9,79,10,1],[80,13,80,42,1],[82,13,82,30,1],[83,13,83,48,1],[84,9,84,10,1],[93,9,93,10,1],[94,13,94,38,1],[96,13,96,50,1],[97,13,97,48,1],[98,9,98,10,1],[108,9,108,10,1],[109,13,109,33,1],[114,13,114,20,1],[114,36,114,43,1],[114,22,114,32,1],[115,13,115,14,1],[117,17,117,34,1],[118,13,118,14,1],[114,33,114,35,1],[119,9,119,10,1],[62,17,62,18,1],[62,19,62,31,1]]);
     </script>
   </body>
 </html>

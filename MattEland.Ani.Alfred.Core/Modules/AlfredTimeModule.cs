@@ -15,6 +15,7 @@ using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Common;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Modules
 {
@@ -40,18 +41,23 @@ namespace MattEland.Ani.Alfred.Core.Modules
         ///     <see cref="AlfredModule" />
         ///     class.
         /// </summary>
-        /// <param name="platformProvider">
-        ///     The platform provider.
-        /// </param>
-        public AlfredTimeModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when one or more required arguments are null.
+        /// </exception>
+        /// <param name="container"> The container. </param>
+        public AlfredTimeModule([NotNull] IObjectContainer container) : base(container)
         {
-            CurrentDateWidget = new TextWidget();
-            CurrentTimeWidget = new TextWidget();
-            AlertWidget = new WarningWidget
+            if (container == null) { throw new ArgumentNullException(nameof(container)); }
+
+            CurrentDateWidget = new TextWidget(BuildWidgetParameters(@"lblCurrentDate"));
+            CurrentTimeWidget = new TextWidget(BuildWidgetParameters(@"lblCurrentTime"));
+
+            AlertWidget = new WarningWidget(BuildWidgetParameters(@"warnAlert"))
             {
                 IsVisible = false,
                 Text = Resources.AlfredTimeModule_AlfredTimeModule_BedtimeNagMessage
             };
+
             AlertHour = 21;
             AlertMinute = 30;
             AlertDurationInHours = 4;

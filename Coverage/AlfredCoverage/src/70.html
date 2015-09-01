@@ -2,17 +2,17 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\gossiptaghandler.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\taghandlers\bottaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// GossipTagHandler.cs
+// BotTagHandler.cs
 // 
-// Created on:      08/12/2015 at 10:46 PM
-// Last Modified:   08/12/2015 at 11:59 PM
+// Created on:      08/12/2015 at 10:40 PM
+// Last Modified:   08/14/2015 at 10:45 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -20,49 +20,53 @@
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
-using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// &lt;summary&gt;
-    /// A tag handler for the AIML &quot;gossip&quot; tag. 
-    /// 
-    /// This implementation simply logs the contents of the gossip tag to the logger.
+    /// An AIML Tag handler that handles the &quot;bot&quot; tag. This allows the system to interact with system variables.
     /// &lt;/summary&gt;
-    [HandlesAimlTag(&quot;gossip&quot;)]
-    public class GossipTagHandler : AimlTagHandler
+    [HandlesAimlTag(&quot;bot&quot;)]
+    public class BotTagHandler : AimlTagHandler
     {
         /// &lt;summary&gt;
         /// Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
-        public GossipTagHandler([NotNull] TagHandlerParameters parameters)
+        public BotTagHandler([NotNull] TagHandlerParameters parameters)
             : base(parameters)
         {
         }
 
         /// &lt;summary&gt;
-        /// Processes the input text and returns the processed value.
+        ///     Processes the input text and returns the processed value.
         /// &lt;/summary&gt;
         /// &lt;returns&gt;The processed output&lt;/returns&gt;
         protected override string ProcessChange()
         {
-            var node = TemplateNode;
+            var element = TemplateElement;
 
-            //- Ensure we have something to care about
-            if (node.Name.Matches(&quot;gossip&quot;) &amp;&amp; node.InnerText.HasText())
+            // Ensure we have an element to work with
+            if (element.Name.Matches(&quot;ChatEngine&quot;) &amp;&amp;
+                element.HasAttribute(&quot;name&quot;))
             {
-                Log(string.Format(Locale, &quot;GOSSIP from user: {0}, &#39;{1}&#39;&quot;, User.Id, node.InnerText), LogLevel.Info);
+                // Grab the attribute and use its value to GetTagHandler a setting value
+                var nameAttribute = element.Attributes[&quot;name&quot;];
+                if (nameAttribute != null)
+                {
+                    return GetGlobalSetting(nameAttribute.Value);
+                }
             }
 
             return string.Empty;
         }
+
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[31,15,31,31,0],[32,9,32,10,0],[33,9,33,10,0],[40,9,40,10,0],[41,13,41,37,0],[44,13,44,73,0],[45,13,45,14,0],[46,17,46,116,0],[47,13,47,14,0],[49,13,49,33,0],[50,9,50,10,0]]);
+      highlightRanges([[28,15,28,31,0],[29,9,29,10,0],[30,9,30,10,0],[37,9,37,10,0],[38,13,38,43,0],[41,13,42,46,0],[43,13,43,14,0],[45,17,45,64,0],[46,17,46,43,0],[47,17,47,18,0],[48,21,48,66,0],[50,13,50,14,0],[52,13,52,33,0],[53,9,53,10,0]]);
     </script>
   </body>
 </html>

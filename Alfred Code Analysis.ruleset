@@ -3,6 +3,9 @@
   <IncludeAll Action="Warning" />
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
     <Rule Id="CA1026" Action="None" />
+    <Rule Id="CA1059" Action="None" />
+    <Rule Id="CA1303" Action="None" />
+    <Rule Id="CA1305" Action="None" />
     <Rule Id="CA2210" Action="Warning" />
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp" RuleNamespace="Microsoft.CodeAnalysis.CSharp">

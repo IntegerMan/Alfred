@@ -151,7 +151,7 @@
     <value>No end tag for OOB command: {0}</value>
   </data>
   <data name="ChatUserName" xml:space="preserve">
-    <value>Batman</value>
+    <value>User</value>
   </data>
   <data name="ChatProcessingHeader" xml:space="preserve">
     <value>Chat.Processing</value>
@@ -207,5 +207,23 @@
   </data>
   <data name="AimlSysStatus" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\AimlSysStatus.aiml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="AlfredCommandRouterProcessShellCommandMessage" xml:space="preserve">
+    <value>Shell Command '{0}' raised targeting '{1}' with data value of '{2}'.</value>
+  </data>
+  <data name="AlfredCommandRouterProcessShellCommandLogHeader" xml:space="preserve">
+    <value>CommandRouting</value>
+  </data>
+  <data name="AlfredCommandRouterProcessAlfredCommandLogMessage" xml:space="preserve">
+    <value>Command '{0}' raised for subsystem '{1}' with data value of '{2}'.</value>
+  </data>
+  <data name="AlfredCommandRouterProcessAlfredCommandLogHeader" xml:space="preserve">
+    <value>CommandRouting</value>
+  </data>
+  <data name="AlfredTagHandlerProcessChangeNoRecipient" xml:space="preserve">
+    <value>Attempted to execute command, but no valid recipient</value>
+  </data>
+  <data name="AimlStatementHandlerUsingTemplate" xml:space="preserve">
+    <value>Using Template: {0}</value>
   </data>
 </root>

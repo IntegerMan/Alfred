@@ -7,19 +7,17 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using System.Xml;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat;
-using MattEland.Ani.Alfred.Chat.Aiml;
 using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
-using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Tests.Mocks;
 using MattEland.Common;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -28,7 +26,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     /// <summary>
     /// A class to test tag handlers for Alfred commands.
     /// </summary>
-    [TestFixture]
+    [UnitTest]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public class AlfredTagHandlerTests : ChatTestsBase
     {
@@ -39,11 +37,13 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         /// Sets up the test fixture for each test.
         /// </summary>
         [SetUp]
-        public void SetUp()
+        public override void SetUp()
         {
-            InitChatSystem();
+            base.SetUp();
 
-            var parameters = BuildTagHandlerParameters("<alfred submodule=\"core\" command=\"shutdown\" />");
+            InitializeChatSystem();
+
+            var parameters = BuildTagHandlerParameters(@"<alfred submodule=""core"" command=""shutdown"" />");
             _handler = new AlfredTagHandler(parameters);
         }
 
@@ -63,7 +63,9 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         {
             Say("TEST COMMAND INVOKE");
 
-            var command = Alfred.LastCommand;
+            var testAlfred = Container.Provide<TestAlfred>();
+
+            var command = testAlfred.LastCommand;
 
             var subsystem = "test";
             var expected = "invoketest";

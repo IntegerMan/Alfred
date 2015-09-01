@@ -1,13 +1,15 @@
 // ---------------------------------------------------------
 // StringExtensions.cs
 // 
-// Created on:      08/12/2015 at 2:12 PM
-// Last Modified:   08/14/2015 at 11:26 PM
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/25/2015 at 4:29 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
+using System.Globalization;
+using System.Text;
 
 using JetBrains.Annotations;
 
@@ -16,6 +18,7 @@ namespace MattEland.Common
     /// <summary>
     ///     Contains extension methods dealing with string operations.
     /// </summary>
+    [PublicAPI]
     public static class StringExtensions
     {
         /// <summary>
@@ -23,7 +26,6 @@ namespace MattEland.Common
         /// </summary>
         /// <param name="input">The input string.</param>
         /// <returns><c>true</c> if the string has text; otherwise, <c>false</c>.</returns>
-        [UsedImplicitly]
         public static bool HasText([CanBeNull] this string input)
         {
             return !input.IsNullOrWhitespace();
@@ -34,7 +36,6 @@ namespace MattEland.Common
         /// </summary>
         /// <param name="input">The input string.</param>
         /// <returns><c>true</c> if the string is null or empty; otherwise, <c>false</c>.</returns>
-        [UsedImplicitly]
         public static bool IsEmpty([CanBeNull] this string input)
         {
             return string.IsNullOrEmpty(input);
@@ -45,7 +46,6 @@ namespace MattEland.Common
         /// </summary>
         /// <param name="input">The input string.</param>
         /// <returns><c>true</c> if the string is null or whitespace; otherwise, <c>false</c>.</returns>
-        [UsedImplicitly]
         public static bool IsNullOrWhitespace([CanBeNull] this string input)
         {
             return string.IsNullOrWhiteSpace(input);
@@ -74,10 +74,7 @@ namespace MattEland.Common
         [NotNull]
         public static string IfNull([CanBeNull] this string input, [NotNull] string replacement)
         {
-            if (replacement == null)
-            {
-                throw new ArgumentNullException(nameof(replacement));
-            }
+            if (replacement == null) { throw new ArgumentNullException(nameof(replacement)); }
 
             return input ?? replacement;
         }
@@ -90,20 +87,21 @@ namespace MattEland.Common
         /// <param name="other">The other string.</param>
         /// <param name="comparison">The comparison type. Defaults to ordinal ignoring case.</param>
         /// <returns><c>true</c> if the strings are equal, <c>false</c> otherwise.</returns>
-        public static bool Matches([CanBeNull] this string input,
-                                   [CanBeNull] string other,
-                                   StringComparison comparison = StringComparison.OrdinalIgnoreCase)
+        public static bool Matches(
+            [CanBeNull] this string input,
+            [CanBeNull] string other,
+            StringComparison comparison = StringComparison.OrdinalIgnoreCase)
         {
             return string.Compare(input, other, comparison) == 0;
         }
 
         /// <summary>
-        /// Converts the input string to an integer, falling back to the fallback value on parse error.
+        ///     Converts the input string to an integer, falling back to the fallback value on parse error.
         /// </summary>
         /// <param name="input">The input string.</param>
         /// <param name="fallbackValue">The fallback value. Defaults to 0.</param>
         /// <returns>The parsed value or the fallback value in case of parse error.</returns>
-        public static int AsInt(this string input, int fallbackValue = 0)
+        public static int AsInt([CanBeNull] this string input, int fallbackValue = 0)
         {
             int output;
 
@@ -118,12 +116,12 @@ namespace MattEland.Common
         }
 
         /// <summary>
-        /// Converts the input string to a double, falling back to the fallback value on parse error.
+        ///     Converts the input string to a double, falling back to the fallback value on parse error.
         /// </summary>
         /// <param name="input">The input string.</param>
         /// <param name="fallbackValue">The fallback value. Defaults to 0.</param>
         /// <returns>The parsed value or the fallback value in case of parse error.</returns>
-        public static double AsDouble(this string input, double fallbackValue = 0)
+        public static double AsDouble([CanBeNull] this string input, double fallbackValue = 0)
         {
             double output;
 
@@ -135,6 +133,71 @@ namespace MattEland.Common
             }
 
             return output;
+        }
+
+        /// <summary>
+        ///     Appends to a string builder either as a standard append or as an AppendLine, depending on
+        ///     useNewLine
+        /// </summary>
+        /// <param name="stringBuilder">The string builder.</param>
+        /// <param name="message">The message.</param>
+        /// <param name="useNewLine">Whether or not to include line breaks.</param>
+        public static void AppendConditional(
+            [CanBeNull] this StringBuilder stringBuilder,
+            [CanBeNull] string message,
+            bool useNewLine)
+        {
+            if (stringBuilder == null) { return; }
+
+            if (useNewLine)
+            {
+                stringBuilder.AppendLine(message);
+            }
+            else
+            {
+                stringBuilder.Append(message);
+            }
+        }
+
+        /// <summary>
+        ///     Formats the specified input using the given culture (or current culture) and optional format
+        ///     string.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <param name="culture">The culture.</param>
+        /// <param name="outputFormat">The format string to use.</param>
+        /// <returns>The formatted string</returns>
+        [NotNull]
+        public static string Format(
+            [CanBeNull] this IFormattable input,
+            [CanBeNull] IFormatProvider culture = null,
+            [CanBeNull] string outputFormat = null)
+        {
+            culture = culture ?? CultureInfo.CurrentCulture;
+
+            return input?.ToString(outputFormat, culture) ?? string.Empty;
+        }
+
+        /// <summary>
+        ///     Formats the given string using the user's culture
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <returns>System.String.</returns>
+        [NotNull]
+        public static string ForUser([CanBeNull] this IFormattable input)
+        {
+            return input.AsNonNullString();
+        }
+
+        /// <summary>
+        ///     Formats the given string using invariant culture.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <returns>The formatted string</returns>
+        [NotNull]
+        public static string Invariant([CanBeNull] this IFormattable input)
+        {
+            return input?.Format(CultureInfo.InvariantCulture) ?? string.Empty;
         }
     }
 }

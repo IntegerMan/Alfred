@@ -6,8 +6,9 @@
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 
 using JetBrains.Annotations;
 
@@ -16,6 +17,7 @@ using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Common;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Modules
 {
@@ -26,16 +28,15 @@ namespace MattEland.Ani.Alfred.Core.Modules
     {
         [NotNull]
         [ItemNotNull]
-        private readonly ICollection<AlfredWidget> _widgets;
+        private readonly ICollection<WidgetBase> _widgets;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredPagesListModule" /> class.
         /// </summary>
-        /// <param name="platformProvider">The platform provider.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        public AlfredPagesListModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
+        /// <param name="container"> The container. </param>
+        internal AlfredPagesListModule([NotNull] IObjectContainer container) : base(container)
         {
-            _widgets = platformProvider.CreateCollection<AlfredWidget>();
+            _widgets = container.ProvideCollection<WidgetBase>();
         }
 
         /// <summary>
@@ -52,18 +53,15 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         protected override void UpdateProtected()
         {
-            foreach (var widget in _widgets)
+            var textWidgets = _widgets.Cast<TextWidget>();
+            foreach (var textWidget in textWidgets)
             {
-                var textWidget = widget as AlfredTextWidget;
-
-                if (textWidget == null)
-                {
-                    continue;
-                }
+                Debug.Assert(textWidget != null);
 
                 // Interpret the DataContext and update its text if it's a page.
                 // If no page context, it's assumed to be the no items label.
-                var page = widget.DataContext as AlfredPage;
+                var page = textWidget.DataContext as AlfredPage;
+
                 if (page != null)
                 {
                     UpdateWidgetText(textWidget, page);
@@ -105,29 +103,52 @@ namespace MattEland.Ani.Alfred.Core.Modules
             // Read the pages from Alfred
             if (AlfredInstance != null)
             {
-                foreach (var page in AlfredInstance.RootPages)
+                foreach (var subsystem in AlfredInstance.Subsystems)
                 {
-                    var widget = new TextWidget { DataContext = page };
-                    UpdateWidgetText(widget, page);
-
-                    _widgets.Add(widget);
-
-                    Register(widget);
+                    foreach (var page in subsystem.Pages)
+                    {
+                        AddPageWidget(page);
+                    }
                 }
             }
 
             // We'll want to display a fallback for no pages
             if (_widgets.Count == 0)
             {
-                var noItemsDetected = Resources.NoPagesDetected.NonNull();
-
-                Log("Pages.Initialize", noItemsDetected, LogLevel.Warning);
-
-                var widget = new TextWidget(noItemsDetected);
-                _widgets.Add(widget);
-
-                Register(widget);
+                AddNoItemsWidget();
             }
+
+        }
+
+        /// <summary>
+        ///     Adds a widget for an <see cref="IAlfredPage"/>.
+        /// </summary>
+        /// <param name="page"> The page. </param>
+        private void AddPageWidget([NotNull] IAlfredPage page)
+        {
+            var lblId = string.Format(Locale, @"lblPage{0}", page.Id);
+            var widget = new TextWidget(BuildWidgetParameters(lblId)) { DataContext = page };
+
+            UpdateWidgetText(widget, page);
+
+            _widgets.Add(widget);
+
+            Register(widget);
+        }
+
+        /// <summary>
+        ///     Adds a no items detected <see cref="TextWidget"/>.
+        /// </summary>
+        private void AddNoItemsWidget()
+        {
+            var noItemsDetected = Resources.NoPagesDetected.NonNull();
+
+            Log("Pages.Initialize", noItemsDetected, LogLevel.Warning);
+
+            var widget = new TextWidget(noItemsDetected, BuildWidgetParameters(@"lblNoItems"));
+            _widgets.Add(widget);
+
+            Register(widget);
         }
 
         /// <summary>
@@ -139,15 +160,6 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </exception>
         private static void UpdateWidgetText([NotNull] AlfredTextWidget widget, [NotNull] IAlfredPage page)
         {
-            if (widget == null)
-            {
-                throw new ArgumentNullException(nameof(widget));
-            }
-            if (page == null)
-            {
-                throw new ArgumentNullException(nameof(page));
-            }
-
             widget.Text = page.Name;
         }
 

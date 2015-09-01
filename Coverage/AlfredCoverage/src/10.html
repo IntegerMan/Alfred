@@ -2,129 +2,169 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\subsystems\subsystemtests.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core.tests\subsystems\alfredcoresubsystemtests.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// SubSystemTests.cs
+// AlfredCoreSubSystemTests.cs
 // 
-// Created on:      08/09/2015 at 12:12 AM
-// Last Modified:   08/09/2015 at 12:12 AM
+// Created on:      08/08/2015 at 6:17 PM
+// Last Modified:   08/08/2015 at 7:02 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
-using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Tests.Mocks;
+using MattEland.Ani.Alfred.Core.Modules;
+using MattEland.Ani.Alfred.Core.Pages;
+using MattEland.Ani.Alfred.Core.SubSystems;
 
 using NUnit.Framework;
 
-namespace MattEland.Ani.Alfred.Tests.SubSystems
+namespace MattEland.Ani.Alfred.Tests.Subsystems
 {
-    /// &lt;summary&gt;
-    /// Tests oriented around testing the subsystem update pumps and related functions
-    /// &lt;/summary&gt;
     [TestFixture]
     [SuppressMessage(&quot;ReSharper&quot;, &quot;NotNullMemberIsNotInitialized&quot;)]
-    public class SubSystemTests
+    public class AlfredCoreSubsystemTests
     {
+        [SetUp]
+        public void SetUp()
+        {
+            _subsystem = new AlfredCoreSubsystem();
+
+            var bootstrapper = new AlfredBootstrapper();
+            _alfred = bootstrapper.Create();
+        }
+
+        [NotNull]
+        private AlfredCoreSubsystem _subsystem;
+
         [NotNull]
         private AlfredApplication _alfred;
 
+        [Test]
+        public void AlfredContainsAPageAfterRegistration()
+        {
+            var pages = _alfred.RootPages.Count();
+
+            _alfred.Register(_subsystem);
+            _alfred.Initialize();
+
+            Assert.Greater(_alfred.RootPages.Count(), pages);
+        }
+
+        [Test]
+        public void ControlPageIsPresentInAlfredAfterInitialization()
+        {
+            _alfred.Register(_subsystem);
+            _alfred.Initialize();
+            _alfred.Update();
+
+            Assert.IsTrue(_alfred.RootPages.Any(p =&gt; p.Name == AlfredCoreSubsystem.ControlPageName),
+                          &quot;Control Page was not found&quot;);
+        }
+
+        [Test]
+        public void EventLogPageIsPresentInAlfredAfterInitializationWhenConsoleIsProvided()
+        {
+            var console = new SimpleConsole();
+            _alfred.Console = console;
+
+            _alfred.Register(_subsystem);
+            _alfred.Initialize();
+            _alfred.Update();
+
+            Assert.IsTrue(_alfred.RootPages.Any(p =&gt; p.Name == AlfredCoreSubsystem.EventLogPageName),
+                          &quot;Event Log Page was not found&quot;);
+        }
+
+        [Test]
+        public void EventLogPageIsNotPresentInAlfredAfterInitializationWhenNoConsoleIsProvided()
+        {
+            _alfred.Register(_subsystem);
+            _alfred.Initialize();
+            _alfred.Update();
+
+            Assert.IsTrue(_alfred.RootPages.All(p =&gt; p.Name != AlfredCoreSubsystem.EventLogPageName),
+                          &quot;Event Log Page was present when no console was provided&quot;);
+        }
+
+        [Test]
+        public void SubsystemCanBeRegisteredInAlfred()
+        {
+            _alfred.Register(_subsystem);
+
+            Assert.AreEqual(1, _alfred.Subsystems.Count(), &quot;Subsystem was not registered&quot;);
+            Assert.Contains(_subsystem,
+                            _alfred.Subsystems as ICollection,
+                            &quot;The subsystem was not found in the collection&quot;);
+        }
+
+        [Test]
+        public void SubSystemContainsAPageAfterRegistration()
+        {
+            Assert.AreEqual(0, _subsystem.Pages.Count());
+
+            _alfred.Register(_subsystem);
+            _alfred.Initialize();
+
+            Assert.GreaterOrEqual(_subsystem.Pages.Count(), 1);
+        }
+
+        [Test]
+        public void ControlPageContainsCorrectModules()
+        {
+            _alfred.Register(_subsystem);
+            _alfred.Initialize();
+            _alfred.Update();
+
+            // Grab the Page
+            var pageName = AlfredCoreSubsystem.ControlPageName;
+            var page = FindPage&lt;AlfredModuleListPage&gt;(pageName);
+
+            // Ensure our expected modules are there
+            AssertExpectedModules(page.Modules);
+        }
+
+        private static void AssertExpectedModules([NotNull] IEnumerable&lt;IAlfredModule&gt; modules)
+        {
+            modules = modules.ToList();
+            Assert.IsTrue(modules.Any(m =&gt; m is AlfredTimeModule), &quot;Time Module not found&quot;);
+            Assert.IsTrue(modules.Any(m =&gt; m is AlfredPowerModule), &quot;Power Module not found&quot;);
+            Assert.IsTrue(modules.Any(m =&gt; m is AlfredSubsystemListModule), &quot;Subsystem List Module not found&quot;);
+            Assert.IsTrue(modules.Any(m =&gt; m is AlfredPagesListModule), &quot;Pages List Module not found&quot;);
+        }
+
+        /// &lt;summary&gt;
+        /// Finds the page with the specified name and casts it to the expected type.
+        /// &lt;/summary&gt;
+        /// &lt;typeparam name=&quot;T&quot;&gt;The type&lt;/typeparam&gt;
+        /// &lt;param name=&quot;pageName&quot;&gt;Name of the page.&lt;/param&gt;
+        /// &lt;returns&gt;The page&lt;/returns&gt;
         [NotNull]
-        private TestSubsystem _subsystem;
-
-        [SetUp]
-        public void Setup()
+        private T FindPage&lt;T&gt;(string pageName) where T : AlfredPage
         {
-            var bootstrapper = new AlfredBootstrapper();
-            _alfred = bootstrapper.Create();
+            var page = (T)_alfred.RootPages.First(p =&gt; p.Name == pageName);
+            Assert.NotNull(page);
 
-            _subsystem = new TestSubsystem();
+            return page;
         }
-
-
-        [Test]
-        public void InitializeCausesRegisteredSubSystemsToInitialize()
-        {
-            var testSubsystem = new TestSubsystem();
-
-            _alfred.Register(testSubsystem);
-
-            _alfred.Initialize();
-
-            Assert.IsTrue(testSubsystem.LastInitialized &gt; DateTime.MinValue, &quot;Subsystem was not initialized&quot;);
-            Assert.IsTrue(testSubsystem.LastInitializationCompleted &gt; DateTime.MinValue,
-                          &quot;Subsystem was not notified initialized completed&quot;);
-        }
-
-        [Test]
-        public void InitializeCausesSubSystemsToGoOnline()
-        {
-            var testSubsystem = new TestSubsystem();
-
-            _alfred.Register(testSubsystem);
-
-            _alfred.Initialize();
-
-            Assert.AreEqual(AlfredStatus.Online, testSubsystem.Status);
-        }
-
-        [Test]
-        public void UpdateCausesRegisteredSubSystemsToUpdate()
-        {
-            var testSubsystem = new TestSubsystem();
-
-            _alfred.Register(testSubsystem);
-
-            _alfred.Initialize();
-            _alfred.Update();
-
-            Assert.IsTrue(testSubsystem.LastUpdated &gt; DateTime.MinValue, &quot;Subsystem was not updated&quot;);
-        }
-
-        [Test]
-        public void ShutdownCausesRegisteredSubSystemsToShutdown()
-        {
-            var testSubsystem = new TestSubsystem();
-
-            _alfred.Register(testSubsystem);
-
-            _alfred.Initialize();
-            _alfred.Update();
-            _alfred.Shutdown();
-
-            Assert.IsTrue(testSubsystem.LastShutdown &gt; DateTime.MinValue, &quot;Subsystem was not shut down&quot;);
-            Assert.IsTrue(testSubsystem.LastShutdownCompleted &gt; DateTime.MinValue, &quot;Subsystem was not notified of shut down completion&quot;);
-        }
-
-        [Test]
-        public void ShutdownCausesRegisteredSubSystemsToGoOffline()
-        {
-            var testSubsystem = new TestSubsystem();
-
-            _alfred.Register(testSubsystem);
-
-            _alfred.Initialize();
-            _alfred.Update();
-            _alfred.Shutdown();
-
-            Assert.AreEqual(AlfredStatus.Offline, testSubsystem.Status);
-        }
-
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[37,9,37,10,1],[38,13,38,57,1],[39,13,39,45,1],[41,13,41,46,1],[42,9,42,10,1],[47,9,47,10,1],[48,13,48,53,1],[50,13,50,45,1],[52,13,52,34,1],[54,13,54,111,1],[55,13,56,79,1],[57,9,57,10,1],[61,9,61,10,1],[62,13,62,53,1],[64,13,64,45,1],[66,13,66,34,1],[68,13,68,72,1],[69,9,69,10,1],[73,9,73,10,1],[74,13,74,53,1],[76,13,76,45,1],[78,13,78,34,1],[79,13,79,30,1],[81,13,81,103,1],[82,9,82,10,1],[86,9,86,10,1],[87,13,87,53,1],[89,13,89,45,1],[91,13,91,34,1],[92,13,92,30,1],[93,13,93,32,1],[95,13,95,106,1],[96,13,96,138,1],[97,9,97,10,1],[101,9,101,10,1],[102,13,102,53,1],[104,13,104,45,1],[106,13,106,34,1],[107,13,107,30,1],[108,13,108,32,1],[110,13,110,73,1],[111,9,111,10,1]]);
+      highlightRanges([[33,9,33,10,1],[34,13,34,52,1],[36,13,36,57,1],[37,13,37,45,1],[38,9,38,10,1],[48,9,48,10,1],[49,13,49,51,1],[51,13,51,42,1],[52,13,52,34,1],[54,13,54,62,1],[55,9,55,10,1],[59,9,59,10,1],[60,13,60,42,1],[61,13,61,34,1],[62,13,62,30,1],[64,13,64,54,1],[64,99,65,57,1],[66,9,66,10,1],[70,9,70,10,1],[71,13,71,47,1],[72,13,72,39,1],[74,13,74,42,1],[75,13,75,34,1],[76,13,76,30,1],[78,13,78,54,1],[78,100,79,59,1],[80,9,80,10,1],[84,9,84,10,1],[85,13,85,42,1],[86,13,86,34,1],[87,13,87,30,1],[89,13,89,54,1],[89,100,90,86,1],[91,9,91,10,1],[95,9,95,10,1],[96,13,96,42,1],[98,13,98,92,1],[99,13,101,78,1],[102,9,102,10,1],[106,9,106,10,1],[107,13,107,58,1],[109,13,109,42,1],[110,13,110,34,1],[112,13,112,64,1],[113,9,113,10,1],[117,9,117,10,1],[118,13,118,42,1],[119,13,119,34,1],[120,13,120,30,1],[123,13,123,64,1],[124,13,124,65,1],[127,13,127,49,1],[128,9,128,10,1],[131,9,131,10,1],[132,13,132,40,1],[133,13,133,44,1],[133,65,133,93,1],[134,13,134,44,1],[134,66,134,95,1],[135,13,135,44,1],[135,74,135,112,1],[136,13,136,44,1],[136,70,136,104,1],[137,9,137,10,1],[147,9,147,10,1],[148,13,148,56,1],[148,74,148,76,1],[149,13,149,34,1],[151,13,151,25,1],[152,9,152,10,1],[64,54,64,99,1],[78,54,78,100,1],[89,54,89,100,1],[133,44,133,65,1],[134,44,134,66,1],[135,44,135,74,1],[136,44,136,70,1],[148,56,148,74,1]]);
     </script>
   </body>
 </html>

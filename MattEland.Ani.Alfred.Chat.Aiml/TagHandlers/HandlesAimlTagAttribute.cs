@@ -25,7 +25,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// Initializes a new instance of the <see cref="HandlesAimlTagAttribute"/> class.
         /// </summary>
         /// <param name="name">The name of the tag this class handles.</param>
-        public HandlesAimlTagAttribute(string name)
+        public HandlesAimlTagAttribute([NotNull] string name)
         {
             Name = name;
         }
@@ -34,6 +34,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// Gets or sets the name of the tag this class handles.
         /// </summary>
         /// <value>The name.</value>
+        [NotNull]
         public string Name
         {
             [DebuggerStepThrough]

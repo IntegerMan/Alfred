@@ -18,6 +18,7 @@ namespace MattEland.Common
     /// <summary>
     /// A collection of extension methods related to integer operations.
     /// </summary>
+    [PublicAPI]
     public static class IntegerExtensions
     {
 

@@ -7,16 +7,13 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using JetBrains.Annotations;
-
 using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
-using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Common;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -25,16 +22,18 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     /// <summary>
     ///     Tests for AimlTagHandlers of concern.
     /// </summary>
-    [TestFixture]
+    [UnitTest]
     public class TagHandlerTests : ChatTestsBase
     {
         /// <summary>
         ///     Sets up the testing environment prior to each test run.
         /// </summary>
         [SetUp]
-        public void SetUp()
+        public override void SetUp()
         {
-            InitChatSystem();
+            base.SetUp();
+
+            InitializeChatSystem();
         }
 
         /// <summary>

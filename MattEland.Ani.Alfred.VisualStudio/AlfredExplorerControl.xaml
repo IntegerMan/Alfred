@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="MattEland.Ani.Alfred.VisualStudio.AlfredExplorerControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:controls="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Controls;assembly=MattEland.Ani.Alfred.PresentationShared"
+             xmlns:pages="clr-namespace:MattEland.Ani.Alfred.Core.Pages;assembly=MattEland.Ani.Alfred.Core"
+             xmlns:helpers="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Helpers;assembly=MattEland.Ani.Alfred.PresentationShared"
+             xmlns:subsystems="clr-namespace:MattEland.Ani.Alfred.Core.Subsystems;assembly=MattEland.Ani.Alfred.Core"
+             Loaded="OnControlLoaded"
+             Background="{DynamicResource VsBrush.Window}"
+             Foreground="{DynamicResource VsBrush.WindowText}"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300" d:DataContext="{d:DesignInstance subsystems:MindExplorerSubsystem}">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/VsStyles.xaml" />
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Miscellaneous.xaml" />
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Logging.xaml" />
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Templates.xaml" />
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Widgets.xaml" />
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/TabPages.xaml" />
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
+    <Grid>
+        <!-- Explorer Tree -->
+        <Border Visibility="{Binding IsOnline, Converter={StaticResource ShowIfTrue}}">
+            <controls:ExplorerControl x:Name="Explorer" />
+        </Border>
+
+        <!-- Offline Message -->
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                   Visibility="{Binding IsOnline, Converter={StaticResource HideIfTrue}, FallbackValue=Collapsed}">
+            Alfred is Currently Offline
+        </TextBlock>
+    </Grid>
+    
+</UserControl>

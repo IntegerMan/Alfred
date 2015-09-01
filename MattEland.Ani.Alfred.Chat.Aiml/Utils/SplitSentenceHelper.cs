@@ -27,6 +27,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <param name="inputString">The input string.</param>
         /// <param name="chatEngine">The chat engine.</param>
         /// <returns>Sentences</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="inputString"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="chatEngine"/> is <see langword="null" />.</exception>
         [NotNull]
         [ItemNotNull]
         internal static IEnumerable<string> Split([NotNull] string inputString, [NotNull] ChatEngine chatEngine)

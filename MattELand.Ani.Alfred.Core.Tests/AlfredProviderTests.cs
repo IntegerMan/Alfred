@@ -1,9 +1,10 @@
 ﻿// ---------------------------------------------------------
 // AlfredProviderTests.cs
 // 
-// Created on:      07/25/2015 at 11:43 PM
-// Last Modified:   08/10/2015 at 10:34 PM
-// Original author: Matt Eland
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/24/2015 at 11:51 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
@@ -15,34 +16,38 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Pages;
+using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Ani.Alfred.Tests.Mocks;
+using MattEland.Common.Providers;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
 namespace MattEland.Ani.Alfred.Tests
 {
     /// <summary>
-    ///     Tests AlfredApplication
+    ///     Tests <see cref="AlfredApplication"/>
     /// </summary>
-    [TestFixture]
+    [UnitTest]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-    public sealed class AlfredProviderTests
+    public sealed class AlfredProviderTests : AlfredTestBase
     {
         /// <summary>
-        ///     Sets up the alfred provider's tests.
+        ///     Sets up the Alfred provider's tests.
         /// </summary>
         [SetUp]
-        public void SetupAlfredProviderTests()
+        public override void SetUp()
         {
+            base.SetUp();
+
             var bootstrapper = new AlfredBootstrapper();
             _alfred = bootstrapper.Create();
             _alfred.Console = new SimpleConsole();
 
-            _subsystem = new TestSubsystem(_alfred.PlatformProvider);
-            _page = new AlfredModuleListPage(_alfred.PlatformProvider, "Test Page", "Test");
+            _subsystem = new TestSubsystem(Container);
+            _page = new AlfredModuleListPage(Container, "Test Page", "Test");
         }
 
         [NotNull]
@@ -54,10 +59,21 @@ namespace MattEland.Ani.Alfred.Tests
         [NotNull]
         private AlfredModuleListPage _page;
 
+        /// <summary>
+        ///     Builds widget parameters.
+        /// </summary>
+        /// <param name="name">The name of the widget.</param>
+        /// <returns>The <see cref="WidgetCreationParameters"/>.</returns>
+        [NotNull]
+        private WidgetCreationParameters BuildWidgetParams(string name = "WidgetTest")
+        {
+            return new WidgetCreationParameters(name);
+        }
+
         [Test]
         public void AddingStandardModulesAddsModules()
         {
-            _alfred.Register(new AlfredCoreSubsystem(_alfred.PlatformProvider));
+            _alfred.Register(new AlfredCoreSubsystem(Container));
 
             var numModules =
                 _alfred.Subsystems.SelectMany(subsystem => subsystem.Pages)
@@ -86,7 +102,9 @@ namespace MattEland.Ani.Alfred.Tests
         [Test]
         public void AlfredStartsWithNoSubSystems()
         {
-            Assert.AreEqual(0, _alfred.Subsystems.Count(), "Alfred started with subsystems when none were expected.");
+            Assert.AreEqual(0,
+                            _alfred.Subsystems.Count(),
+                            "Alfred started with subsystems when none were expected.");
         }
 
         [Test]
@@ -127,7 +145,9 @@ namespace MattEland.Ani.Alfred.Tests
 
             _alfred.Initialize();
 
-            Assert.Greater(console.Events.Count(), numEvents, "Initializing Alfred did not create any log entries.");
+            Assert.Greater(console.Events.Count(),
+                           numEvents,
+                           "Initializing Alfred did not create any log entries.");
         }
 
         [Test]
@@ -139,8 +159,8 @@ namespace MattEland.Ani.Alfred.Tests
             {
                 _alfred.Initialize();
 
-                Assert.Fail("Expected an InvalidOperationException since Alfred was already initialized.");
-
+                Assert.Fail(
+                            "Expected an InvalidOperationException since Alfred was already initialized.");
             }
             catch (InvalidOperationException)
             {
@@ -154,7 +174,7 @@ namespace MattEland.Ani.Alfred.Tests
         [Test]
         public void InitializingInitializesComponents()
         {
-            _alfred.Register(new AlfredCoreSubsystem(_alfred.PlatformProvider));
+            _alfred.Register(new AlfredCoreSubsystem(Container));
 
             _alfred.Initialize();
 
@@ -176,7 +196,9 @@ namespace MattEland.Ani.Alfred.Tests
 
             console.Log("Alfred Test Framework", "Testing logging to Alfred", LogLevel.Verbose);
 
-            Assert.AreEqual(numEvents + 1, console.Events.Count(), "Event count did not increase after logging.");
+            Assert.AreEqual(numEvents + 1,
+                            console.Events.Count(),
+                            "Event count did not increase after logging.");
         }
 
         [Test]
@@ -184,14 +206,14 @@ namespace MattEland.Ani.Alfred.Tests
         public void ModulesCannotBeAddedWhileOnline()
         {
             _alfred.Initialize();
-            _alfred.Register(new AlfredCoreSubsystem(_alfred.PlatformProvider));
+            _alfred.Register(new AlfredCoreSubsystem(Container));
         }
 
         [Test]
         [ExpectedException(typeof(InvalidOperationException))]
         public void ModulesCannotUpdateWhileOffline()
         {
-            _alfred.Register(new AlfredCoreSubsystem(_alfred.PlatformProvider));
+            _alfred.Register(new AlfredCoreSubsystem(Container));
 
             _alfred.Update();
         }
@@ -200,9 +222,9 @@ namespace MattEland.Ani.Alfred.Tests
         [ExpectedException(typeof(InvalidOperationException))]
         public void RegisteringAWidgetMultipleTimesThrowsAnException()
         {
-            var testModule = new AlfredTestModule();
+            var testModule = new AlfredTestModule(Container);
 
-            var textWidget = new TextWidget();
+            var textWidget = new TextWidget(BuildWidgetParams());
             testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
             testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
 
@@ -225,9 +247,9 @@ namespace MattEland.Ani.Alfred.Tests
         [Test]
         public void RegisteringWidgetAtInitializeAndShutdownLeavesOneCopyInListAtReinitialize()
         {
-            var testModule = new AlfredTestModule();
+            var testModule = new AlfredTestModule(Container);
 
-            var textWidget = new TextWidget();
+            var textWidget = new TextWidget(BuildWidgetParams());
             testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
             testModule.WidgetsToRegisterOnShutdown.Add(textWidget);
 
@@ -245,7 +267,6 @@ namespace MattEland.Ani.Alfred.Tests
             Assert.AreEqual(1,
                             testModule.Widgets.Count(),
                             "Widgets were not properly cleared from list after re-initialize");
-
         }
 
         [Test]
@@ -275,7 +296,9 @@ namespace MattEland.Ani.Alfred.Tests
 
             _alfred.Shutdown();
 
-            Assert.Greater(console.Events.Count(), numEvents, "Shutting Alfred down did not create any log entries.");
+            Assert.Greater(console.Events.Count(),
+                           numEvents,
+                           "Shutting Alfred down did not create any log entries.");
         }
 
         [Test]
@@ -285,8 +308,8 @@ namespace MattEland.Ani.Alfred.Tests
             {
                 _alfred.Shutdown();
 
-                Assert.Fail("Expected an InvalidOperationException since Alfred was already offline.");
-
+                Assert.Fail(
+                            "Expected an InvalidOperationException since Alfred was already offline.");
             }
             catch (InvalidOperationException)
             {
@@ -300,7 +323,7 @@ namespace MattEland.Ani.Alfred.Tests
         [Test]
         public void ShuttingDownShutsDownComponents()
         {
-            _alfred.Register(new AlfredCoreSubsystem(_alfred.PlatformProvider));
+            _alfred.Register(new AlfredCoreSubsystem(Container));
 
             _alfred.Initialize();
             _alfred.Shutdown();

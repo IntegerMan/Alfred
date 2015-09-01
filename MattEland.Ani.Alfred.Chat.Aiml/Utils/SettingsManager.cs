@@ -9,7 +9,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Security;
@@ -51,53 +50,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         public int Count
         {
             get { return _orderedKeys.Count; }
-        }
-
-        /// <summary>
-        ///     Gets an XML representation of this dictionary.
-        /// </summary>
-        /// <value>An XML representation of this dictionary</value>
-        /// <remarks>TODO: This would be nice to either remove or make use XElement / XDocument</remarks>
-        [NotNull]
-        public XmlDocument ToXml
-        {
-            get
-            {
-                // Create a document to put everything into
-                var xmlDocument = new XmlDocument();
-
-                //- Add a header to the document
-                var xmlDeclaration = xmlDocument.CreateXmlDeclaration("1.0", "UTF-8", "");
-                xmlDocument.AppendChild(xmlDeclaration);
-
-                // Add a base node for holding entries
-                var root = xmlDocument.CreateNode(XmlNodeType.Element, "root", "");
-                xmlDocument.AppendChild(root);
-
-                // Loop through each child and add it to the dictionary
-                foreach (var index in _orderedKeys)
-                {
-                    // Build a node for the child
-                    var childNode = xmlDocument.CreateNode(XmlNodeType.Element, "item", "");
-                    Debug.Assert(childNode.Attributes != null);
-
-                    // Give it a name
-                    var nameAttribute = xmlDocument.CreateAttribute("name");
-                    nameAttribute.Value = index;
-                    childNode.Attributes.Append(nameAttribute);
-
-                    // Give it a value
-                    var valueAttribute = xmlDocument.CreateAttribute("value");
-                    valueAttribute.Value = _settingsHash[index];
-                    childNode.Attributes.Append(valueAttribute);
-
-                    // Add it to the document
-                    root.AppendChild(childNode);
-                }
-
-                // Send back the document
-                return xmlDocument;
-            }
         }
 
         /// <summary>
@@ -303,6 +255,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <param name="name">The name of the key.</param>
         /// <returns>The value in the dictionary</returns>
         /// <exception cref="System.ArgumentNullException"></exception>
+        [NotNull]
         public string GetValue([NotNull] string name)
         {
             if (name == null)
@@ -312,7 +265,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 
             name = name.ToUpperInvariant();
 
-            return Contains(name) ? _settingsHash[name] : string.Empty;
+            return Contains(name) ? _settingsHash[name].NonNull() : string.Empty;
         }
 
         /// <summary>

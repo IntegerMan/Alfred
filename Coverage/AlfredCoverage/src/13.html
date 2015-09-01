@@ -2,216 +2,115 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\mocks\testalfred.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core.tests\subsystems\systemsubsystemtests.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// TestAlfred.cs
+// SystemSubSystemTests.cs
 // 
-// Created on:      08/17/2015 at 11:48 PM
-// Last Modified:   08/17/2015 at 11:54 PM
-// 
-// Last Modified by: Matt Eland
+// Created on:      08/07/2015 at 10:01 PM
+// Last Modified:   08/07/2015 at 10:01 PM
+// Original author: Matt Eland
 // ---------------------------------------------------------
 
-using System.Collections.Generic;
+using System;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core;
-using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
+using MattEland.Ani.Alfred.Core.Pages;
 
-namespace MattEland.Ani.Alfred.Tests.Mocks
+using NUnit.Framework;
+
+namespace MattEland.Ani.Alfred.Tests.Subsystems
 {
     /// &lt;summary&gt;
-    /// A mock implementation of Alfred for testing purposes
+    /// A series of tests related to the System Monitoring SubSystem
     /// &lt;/summary&gt;
-    public class TestAlfred : IAlfred
+    [TestFixture]
+    [SuppressMessage(&quot;ReSharper&quot;, &quot;NotNullMemberIsNotInitialized&quot;)]
+    public class SystemSubsystemTests
     {
         [NotNull]
-        private readonly IConsole _console = new SimpleConsole();
+        private SystemMonitoringSubsystem _subsystem;
 
         [NotNull]
-        private readonly IPlatformProvider _platformProvider = new SimplePlatformProvider();
-        private IChatProvider _chatProvider;
-        private IShellCommandRecipient _shellCommandHandler;
+        private AlfredApplication _alfred;
 
-        [NotNull]
-        public IList&lt;IAlfredSubsystem&gt; SubsystemsList { get; } = new List&lt;IAlfredSubsystem&gt;();
+        private ValueMetricProviderFactory _metricProviderFactory;
 
         /// &lt;summary&gt;
-        ///     Gets the console provider. This can be null.
+        /// Sets up the test environment
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The console.&lt;/value&gt;
-        public IConsole Console
+        /// &lt;exception cref=&quot;UnauthorizedAccessException&quot;&gt;Code that is executing without administrative privileges attempted to read a performance counter.&lt;/exception&gt;
+        /// &lt;exception cref=&quot;Win32Exception&quot;&gt;A call to an underlying system API failed.&lt;/exception&gt;
+        [SetUp]
+        public void TestSetup()
         {
-            get { return _console; }
+            _metricProviderFactory = new ValueMetricProviderFactory();
+            _subsystem = new SystemMonitoringSubsystem(new SimplePlatformProvider(), _metricProviderFactory);
+
+            var bootstrapper = new AlfredBootstrapper();
+            _alfred = bootstrapper.Create();
         }
 
-        /// &lt;summary&gt;
-        ///     Gets or sets the status.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The status.&lt;/value&gt;
-        public AlfredStatus Status { get; set; }
-
-        /// &lt;summary&gt;
-        ///     Gets the sub systems associated wih Alfred.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The sub systems.&lt;/value&gt;
-        public IEnumerable&lt;IAlfredSubsystem&gt; Subsystems
+        [Test]
+        public void SystemMonitoringSubsystemCanBeRegisteredInAlfred()
         {
-            get { return SubsystemsList; }
+            _alfred.Register(_subsystem);
+
+            Assert.AreEqual(1, _alfred.Subsystems.Count(), &quot;Subsystem was not registered&quot;);
+            Assert.Contains(_subsystem, _alfred.Subsystems as ICollection, &quot;The subsystem was not found in the collection&quot;);
         }
 
-        /// &lt;summary&gt;
-        ///     Gets the root pages.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The root pages.&lt;/value&gt;
-        public IEnumerable&lt;IAlfredPage&gt; RootPages
+        [Test]
+        public void SystemMonitoringSubsystemContainsModules()
         {
-            get { return Subsystems.SelectMany(subsystem =&gt; subsystem.Pages); }
+            _alfred.Register(_subsystem);
+
+            var page = _subsystem.Pages.First() as AlfredModuleListPage;
+            Assert.NotNull(page);
+
+            Assert.IsTrue(page.Modules.Any(m =&gt; m is CpuMonitorModule), &quot;CPU Monitor not found&quot;);
+            Assert.IsTrue(page.Modules.Any(m =&gt; m is MemoryMonitorModule), &quot;Memory Monitor not found&quot;);
+            Assert.IsTrue(page.Modules.Any(m =&gt; m is DiskMonitorModule), &quot;Disk Monitor not found&quot;);
         }
 
-        /// &lt;summary&gt;
-        ///     Gets the name.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The name.&lt;/value&gt;
-        public string Name
+        [Test]
+        public void SubSystemContainsAPageAfterRegistration()
         {
-            get { return &quot;Test Alfred&quot;; }
+            Assert.AreEqual(0, _subsystem.Pages.Count());
+
+            _alfred.Register(_subsystem);
+            _alfred.Initialize();
+
+            Assert.AreEqual(1, _subsystem.Pages.Count());
         }
 
-        /// &lt;summary&gt;
-        ///     Initializes this instance.
-        /// &lt;/summary&gt;
-        public void Initialize()
+        [Test]
+        public void AlfredContainsAPageAfterRegistration()
         {
-            Status = AlfredStatus.Initializing;
+            var pages = _alfred.RootPages.Count();
 
-            foreach (var subsystem in Subsystems)
-            {
-                subsystem.Initialize(this);
-            }
+            _alfred.Register(_subsystem);
+            _alfred.Initialize();
 
-            Status = AlfredStatus.Online;
-        }
-
-        /// &lt;summary&gt;
-        ///     Shutdowns this instance.
-        /// &lt;/summary&gt;
-        public void Shutdown()
-        {
-            Status = AlfredStatus.Terminating;
-
-            foreach (var subsystem in Subsystems)
-            {
-                subsystem.Shutdown();
-            }
-
-            Status = AlfredStatus.Offline;
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets a value indicating whether this instance is online.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;&lt;c&gt;true&lt;/c&gt; if this instance is online; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/value&gt;
-        public bool IsOnline
-        {
-            get { return Status == AlfredStatus.Online; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the chat provider.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The chat provider.&lt;/value&gt;
-        public IChatProvider ChatProvider
-        {
-            get { return _chatProvider; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the platform provider.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The platform provider.&lt;/value&gt;
-        public IPlatformProvider PlatformProvider
-        {
-            get { return _platformProvider; }
-        }
-
-        /// &lt;summary&gt;
-        /// Gets the shell command handler that can pass shell commands on to the user interface.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The shell command handler.&lt;/value&gt;
-        public IShellCommandRecipient ShellCommandHandler
-        {
-            get { return _shellCommandHandler; }
-        }
-
-        /// &lt;summary&gt;
-        /// Registers the shell command recipient that will allow the shell to get commands from the Alfred layer.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;shell&quot;&gt;The command recipient.&lt;/param&gt;
-        public void Register(IShellCommandRecipient shell)
-        {
-            _shellCommandHandler = shell;
-        }
-
-        /// &lt;summary&gt;
-        ///     Registers the user statement handler as the framework&#39;s user statement handler.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;chatProvider&quot;&gt;The user statement handler.&lt;/param&gt;
-        public void Register(IChatProvider chatProvider)
-        {
-            _chatProvider = chatProvider;
-        }
-
-        /// &lt;summary&gt;
-        ///     Registers a sub system with Alfred.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;subsystem&quot;&gt;The subsystem.&lt;/param&gt;
-        public void Register(AlfredSubsystem subsystem)
-        {
-            SubsystemsList.Add(subsystem);
-        }
-
-        /// &lt;summary&gt;
-        ///     Tells modules to take a look at their content and update as needed.
-        /// &lt;/summary&gt;
-        public void Update()
-        {
-            foreach (var subsystem in Subsystems)
-            {
-                subsystem.Update();
-            }
-        }
-
-        /// &lt;summary&gt;
-        /// Handles a chat command.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;command&quot;&gt;The command.&lt;/param&gt;
-        public void HandleChatCommand(ChatCommand command)
-        {
-            LastCommand = command;
-        }
-
-        /// &lt;summary&gt;
-        /// Gets or sets the last command received.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The last command.&lt;/value&gt;
-        public ChatCommand LastCommand
-        {
-            get; set;
+            Assert.AreEqual(pages + _subsystem.RootPages.Count(), _alfred.RootPages.Count());
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[169,9,169,10,0],[170,13,170,35,0],[171,9,171,10,0],[34,57,34,61,1],[42,17,42,18,1],[42,19,42,35,1],[42,36,42,37,1],[49,38,49,42,1],[49,43,49,47,1],[57,17,57,18,1],[57,19,57,41,1],[57,42,57,43,1],[66,17,66,18,1],[66,19,66,61,1],[66,76,66,78,1],[66,79,66,80,1],[75,17,75,18,1],[75,19,75,40,1],[75,41,75,42,1],[82,9,82,10,1],[83,13,83,48,1],[85,13,85,20,1],[85,39,85,49,1],[85,22,85,35,1],[86,13,86,14,1],[87,17,87,44,1],[88,13,88,14,1],[85,36,85,38,1],[90,13,90,42,1],[91,9,91,10,1],[97,9,97,10,1],[98,13,98,47,1],[100,13,100,20,1],[100,39,100,49,1],[100,22,100,35,1],[101,13,101,14,1],[102,17,102,38,1],[103,13,103,14,1],[100,36,100,38,1],[105,13,105,43,1],[106,9,106,10,1],[114,17,114,18,1],[114,19,114,56,1],[114,57,114,58,1],[123,17,123,18,1],[123,19,123,40,1],[123,41,123,42,1],[132,17,132,18,1],[132,19,132,44,1],[132,45,132,46,1],[140,9,140,10,1],[141,13,141,42,1],[142,9,142,10,1],[149,9,149,10,1],[150,13,150,43,1],[151,9,151,10,1],[157,9,157,10,1],[158,13,158,20,1],[158,39,158,49,1],[158,22,158,35,1],[159,13,159,14,1],[160,17,160,36,1],[161,13,161,14,1],[158,36,158,38,1],[162,9,162,10,1],[179,13,179,17,1],[179,18,179,22,1],[27,9,27,66,1],[30,9,30,93,1],[34,66,34,94,1],[66,61,66,76,1]]);
+      highlightRanges([[48,9,48,10,1],[49,13,49,71,1],[50,13,50,110,1],[52,13,52,57,1],[53,13,53,45,1],[54,9,54,10,1],[58,9,58,10,1],[59,13,59,42,1],[61,13,61,92,1],[62,13,62,125,1],[63,9,63,10,1],[67,9,67,10,1],[68,13,68,42,1],[70,13,70,73,1],[71,13,71,34,1],[73,13,73,49,1],[73,70,73,98,1],[74,13,74,49,1],[74,73,74,104,1],[75,13,75,49,1],[75,71,75,100,1],[76,9,76,10,1],[80,9,80,10,1],[81,13,81,58,1],[83,13,83,42,1],[84,13,84,34,1],[86,13,86,58,1],[87,9,87,10,1],[91,9,91,10,1],[92,13,92,51,1],[94,13,94,42,1],[95,13,95,34,1],[97,13,97,94,1],[98,9,98,10,1],[73,49,73,70,1],[74,49,74,73,1],[75,49,75,71,1]]);
     </script>
   </body>
 </html>

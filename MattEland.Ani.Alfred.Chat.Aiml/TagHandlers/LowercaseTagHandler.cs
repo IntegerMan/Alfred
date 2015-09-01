@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
 // LowercaseTagHandler.cs
 // 
-// Created on:      08/12/2015 at 10:49 PM
-// Last Modified:   08/15/2015 at 12:38 AM
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/24/2015 at 12:07 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -19,16 +19,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     ///     lower case.
     /// </summary>
     [HandlesAimlTag("lowercase")]
+    [UsedImplicitly]
     public class LowercaseTagHandler : AimlTagHandler
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
-        public LowercaseTagHandler([NotNull] TagHandlerParameters parameters)
-            : base(parameters)
-        {
-        }
+        public LowercaseTagHandler([NotNull] TagHandlerParameters parameters) : base(parameters) { }
 
         /// <summary>
         ///     Processes the input text and returns the processed value.
@@ -36,10 +34,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// <returns>The processed output</returns>
         protected override string ProcessChange()
         {
-            if (TemplateNode.Name.Matches("lowercase"))
+            if (NodeName.Matches("lowercase"))
             {
                 // This is a very simple operation using the user's locale
-                return TemplateNode.InnerText.ToLower(Locale);
+                return Contents.ToLower(Locale);
             }
 
             return string.Empty;

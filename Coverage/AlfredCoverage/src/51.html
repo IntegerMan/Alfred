@@ -2,148 +2,251 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\definitions\userstatementresponse.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core\modules\alfredtimemodule.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// UserStatementResponse.cs
+// AlfredTimeModule.cs
 // 
-// Created on:      08/10/2015 at 5:01 PM
-// Last Modified:   08/11/2015 at 1:41 PM
+// Created on:      07/26/2015 at 1:46 PM
+// Last Modified:   08/10/2015 at 10:52 PM
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 
 using JetBrains.Annotations;
 
-namespace MattEland.Ani.Alfred.Core.Definitions
+using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Core.Widgets;
+using MattEland.Common;
+
+namespace MattEland.Ani.Alfred.Core.Modules
 {
     /// &lt;summary&gt;
-    ///     A response to a user statement
+    ///     A module that keeps track of time and date information and presents it to the user.
     /// &lt;/summary&gt;
-    public struct UserStatementResponse : IEquatable&lt;UserStatementResponse&gt;
+    public sealed class AlfredTimeModule : AlfredModule
     {
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;T:UserStatementResponse&quot; /&gt; class.
+        ///     The hour changed event&#39;s title message used for logging purposes.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;userInput&quot;&gt;The user input.&lt;/param&gt;
-        /// &lt;param name=&quot;responseText&quot;&gt;The response text.&lt;/param&gt;
-        /// &lt;param name=&quot;template&quot;&gt;The template.&lt;/param&gt;
-        /// &lt;param name=&quot;command&quot;&gt;The Command.&lt;/param&gt;
-        public UserStatementResponse([CanBeNull] string userInput,
-                                     [CanBeNull] string responseText,
-                                     string template,
-                                     ChatCommand command)
+        public const string HourAlertEventTitle = &quot;Time.HourAlert&quot;;
+
+        /// &lt;summary&gt;
+        ///     The half hour alert event title log message
+        /// &lt;/summary&gt;
+        public const string HalfHourAlertEventTitle = &quot;Time.HalfHourAlert&quot;;
+
+        private DateTime _time;
+
+        /// &lt;summary&gt;
+        ///     Initializes a new instance of the
+        ///     &lt;see cref=&quot;AlfredModule&quot; /&gt;
+        ///     class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;platformProvider&quot;&gt;
+        ///     The platform provider.
+        /// &lt;/param&gt;
+        public AlfredTimeModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
         {
-            UserInput = userInput ?? string.Empty;
-            ResponseText = responseText ?? string.Empty;
-            Template = template;
-            Command = command;
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the original user input text.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The user input.&lt;/value&gt;
-        [NotNull]
-        public string UserInput { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets the response text.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The response text.&lt;/value&gt;
-        [NotNull]
-        public string ResponseText { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets the AIML template used to generate a response.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The template.&lt;/value&gt;
-        [CanBeNull]
-        public string Template { get; }
-
-        /// &lt;summary&gt;
-        ///     Gets the system Command to execute.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The Command.&lt;/value&gt;
-        public ChatCommand Command { get; }
-
-        /// &lt;summary&gt;
-        ///     Determines if this instance is equivalent to the other instance
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;other&quot;&gt;The other instance.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the instances are equivalent, &lt;c&gt;false&lt;/c&gt; otherwise.&lt;/returns&gt;
-        public bool Equals(UserStatementResponse other)
-        {
-            return string.Equals(UserInput, other.UserInput) &amp;&amp; string.Equals(ResponseText, other.ResponseText) &amp;&amp;
-                   string.Equals(Template, other.Template) &amp;&amp; Command == other.Command;
-        }
-
-        /// &lt;summary&gt;
-        ///     Determines whether the specified &lt;see cref=&quot;System.Object&quot; /&gt; is equal to this instance.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;obj&quot;&gt;The object to compare with the current instance.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the specified &lt;see cref=&quot;System.Object&quot; /&gt; is equal to this instance; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
+            CurrentDateWidget = new TextWidget();
+            CurrentTimeWidget = new TextWidget();
+            AlertWidget = new WarningWidget
             {
-                return false;
-            }
-            return obj is UserStatementResponse &amp;&amp; Equals((UserStatementResponse)obj);
+                IsVisible = false,
+                Text = Resources.AlfredTimeModule_AlfredTimeModule_BedtimeNagMessage
+            };
+            AlertHour = 21;
+            AlertMinute = 30;
+            AlertDurationInHours = 4;
+            IsAlertEnabled = true;
+
+            CurrentTime = DateTime.MinValue;
         }
 
         /// &lt;summary&gt;
-        ///     Returns a hash code for this instance.
+        ///     Gets the name of the module.
         /// &lt;/summary&gt;
-        /// &lt;returns&gt;A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.&lt;/returns&gt;
-        [SuppressMessage(&quot;ReSharper&quot;, &quot;ConstantNullCoalescingCondition&quot;)]
-        public override int GetHashCode()
+        /// &lt;value&gt;The name of the module.&lt;/value&gt;
+        public override string Name
         {
-            unchecked
+            get { return Resources.AlfredTimeModule_Name.NonNull(); }
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the current time user interface widget.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The current time user interface widget.&lt;/value&gt;
+        [NotNull]
+        public TextWidget CurrentTimeWidget { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets the current date user interface widget.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The current date user interface widget.&lt;/value&gt;
+        [NotNull]
+        public TextWidget CurrentDateWidget { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets the bedtime alert widget.
+        ///     This widget alerts users to go to bed after a certain time
+        ///     and will be hidden until the user needs to go to bed.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The bedtime alert widget.&lt;/value&gt;
+        [NotNull]
+        public WarningWidget AlertWidget { get; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the bedtime hour.  Defaults to 9 PM
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The bedtime hour.&lt;/value&gt;
+        public int AlertHour { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the bedtime minute. Defaults to 30 minutes past the hour.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The bedtime minute.&lt;/value&gt;
+        public int AlertMinute { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the alert duration in hours.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The alert duration in hours.&lt;/value&gt;
+        public int AlertDurationInHours { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets whether the alert is enabled.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The alert is enabled.&lt;/value&gt;
+        public bool IsAlertEnabled { get; set; }
+
+        /// &lt;summary&gt;
+        ///     Gets or sets the last time recorded
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The current time.&lt;/value&gt;
+        private DateTime CurrentTime
+        {
+            get { return _time; }
+            set { _time = value; }
+        }
+
+        /// &lt;summary&gt;
+        ///     Handles module initialization events
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;alfred&quot;&gt;&lt;/param&gt;
+        protected override void InitializeProtected(IAlfred alfred)
+        {
+            Register(CurrentDateWidget);
+            Register(CurrentTimeWidget);
+            Register(AlertWidget);
+
+            // Ensure it has some initial values so it doesn&#39;t &quot;blink&quot; or lag on start
+            ClearLastTimeRun();
+            Update(DateTime.Now);
+        }
+
+        /// &lt;summary&gt;
+        ///     Handles updating the module
+        /// &lt;/summary&gt;
+        protected override void UpdateProtected()
+        {
+            // Call a new method with the current time. This helps this module be testable
+            Update(DateTime.Now);
+        }
+
+        /// &lt;summary&gt;
+        ///     Updates the module given the specified time.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;time&quot;&gt;
+        ///     The time. Date portions of this will be ignored.
+        /// &lt;/param&gt;
+        public void Update(DateTime time)
+        {
+            // Always update the date
+            CurrentDateWidget.Text = time.ToString(&quot;D&quot;, CultureInfo.CurrentCulture); // Thursday April 10, 2008
+
+            // Always update the time
+            var timeFormat = Resources.AlfredTimeModule_Update_CurrentTimeDisplayString.NonNull();
+            var timeText = string.Format(CultureInfo.CurrentCulture, timeFormat, time);
+            CurrentTimeWidget.Text = timeText;
+
+            // Update the visibility of the alert widget based on time of day
+            UpdateBedtimeAlertVisibility(time);
+
+            // Check to see if it&#39;s now a new hour and, if so, log it to the console
+            if (CurrentTime &gt; DateTime.MinValue)
             {
-                // ?? Guards against GetHashCode getting called unexpectedly - maybe in constructor? Saw errors with
-                // unknown stack when this was not present
-                var hashCode = (UserInput ?? string.Empty).GetHashCode();
-                hashCode = (hashCode * 397) ^ (ResponseText ?? string.Empty).GetHashCode();
-                hashCode = (hashCode * 397) ^ (Template ?? string.Empty).GetHashCode();
-                hashCode = (hashCode * 397) ^ Command.GetHashCode();
+                if (time.Minute == 0 &amp;&amp; CurrentTime.Hour != time.Hour)
+                {
+                    // Let the user know it&#39;s now X
+                    Log(HourAlertEventTitle, timeText, LogLevel.ChatNotification);
+                }
+                else if (time.Minute == 30 &amp;&amp; CurrentTime.Minute != 30)
+                {
+                    // Let the user know it&#39;s now half after X
+                    Log(HalfHourAlertEventTitle, timeText, LogLevel.ChatNotification);
+                }
+            }
 
-                return hashCode;
+            // Store the last time we processed so it can be referenced next iteration
+            CurrentTime = time;
+        }
+
+        /// &lt;summary&gt;
+        ///     Updates the bedtime alert visibility based on the given time.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;time&quot;&gt;
+        ///     The time.
+        /// &lt;/param&gt;
+        private void UpdateBedtimeAlertVisibility(DateTime time)
+        {
+            if (!IsAlertEnabled)
+            {
+                // Easy call; if it&#39;s disabled, don&#39;t show it
+                AlertWidget.IsVisible = false;
+            }
+            else
+            {
+                // Farm off the more complicated math to a dedicated class
+                AlertWidget.IsVisible = AlertVisibilityCalculator.CalculateAlertVisibility(time.Hour,
+                                                                                           time.Minute,
+                                                                                           AlertHour,
+                                                                                           AlertMinute,
+                                                                                           AlertDurationInHours);
             }
         }
 
         /// &lt;summary&gt;
-        ///     Implements the == operator.
+        ///     Handles module shutdown events
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;left&quot;&gt;The left.&lt;/param&gt;
-        /// &lt;param name=&quot;right&quot;&gt;The right.&lt;/param&gt;
-        /// &lt;returns&gt;The result of the operator.&lt;/returns&gt;
-        public static bool operator ==(UserStatementResponse left, UserStatementResponse right)
+        protected override void ShutdownProtected()
         {
-            return left.Equals(right);
+            CurrentTimeWidget.Text = null;
+            ClearLastTimeRun();
         }
 
         /// &lt;summary&gt;
-        ///     Implements the != operator.
+        ///     Clears the last time the module was run.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;left&quot;&gt;The left.&lt;/param&gt;
-        /// &lt;param name=&quot;right&quot;&gt;The right.&lt;/param&gt;
-        /// &lt;returns&gt;The result of the operator.&lt;/returns&gt;
-        public static bool operator !=(UserStatementResponse left, UserStatementResponse right)
+        /// &lt;remarks&gt;
+        ///     This is intended for use in time-sensitive unit testing
+        ///     scenarios and is not intended for any normal usage
+        /// &lt;/remarks&gt;
+        public void ClearLastTimeRun()
         {
-            return !left.Equals(right);
+            CurrentTime = DateTime.MinValue;
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[64,38,64,42,0],[85,13,85,14,0],[86,17,86,30,0],[97,9,97,10,0],[99,13,99,14,0],[102,17,102,74,0],[103,17,103,92,0],[104,17,104,88,0],[105,17,105,69,0],[107,17,107,33,0],[109,9,109,10,0],[118,9,118,10,0],[119,13,119,39,0],[120,9,120,10,0],[129,9,129,10,0],[130,13,130,40,0],[131,9,131,10,0],[32,9,32,10,1],[33,13,33,51,1],[34,13,34,57,1],[35,13,35,33,1],[36,13,36,31,1],[37,9,37,10,1],[44,35,44,39,1],[51,38,51,42,1],[58,34,58,38,1],[72,9,72,10,1],[73,13,74,88,1],[75,9,75,10,1],[83,9,83,10,1],[84,13,84,44,1],[88,13,88,87,1],[89,9,89,10,1]]);
+      highlightRanges([[46,81,46,103,1],[47,9,47,10,1],[48,13,48,50,1],[49,13,49,50,1],[50,13,54,15,1],[55,13,55,28,1],[56,13,56,30,1],[57,13,57,38,1],[58,13,58,35,1],[60,13,60,45,1],[61,9,61,10,1],[69,17,69,18,1],[69,19,69,68,1],[69,69,69,70,1],[77,47,77,51,1],[84,47,84,51,1],[93,44,93,48,1],[99,32,99,36,1],[99,37,99,41,1],[105,34,105,38,1],[105,39,105,43,1],[111,43,111,47,1],[111,48,111,52,1],[117,38,117,42,1],[117,43,117,47,1],[125,17,125,18,1],[125,19,125,32,1],[125,33,125,34,1],[126,17,126,18,1],[126,19,126,33,1],[126,34,126,35,1],[134,9,134,10,1],[135,13,135,41,1],[136,13,136,41,1],[137,13,137,35,1],[140,13,140,32,1],[141,13,141,34,1],[142,9,142,10,1],[148,9,148,10,1],[150,13,150,34,1],[151,9,151,10,1],[160,9,160,10,1],[162,13,162,85,1],[165,13,165,99,1],[166,13,166,88,1],[167,13,167,47,1],[170,13,170,48,1],[173,13,173,49,1],[174,13,174,14,1],[175,17,175,71,1],[176,17,176,18,1],[178,21,178,83,1],[179,17,179,18,1],[180,22,180,72,1],[181,17,181,18,1],[183,21,183,87,1],[184,17,184,18,1],[185,13,185,14,1],[188,13,188,32,1],[189,9,189,10,1],[198,9,198,10,1],[199,13,199,33,1],[200,13,200,14,1],[202,17,202,47,1],[203,13,203,14,1],[205,13,205,14,1],[207,17,211,114,1],[212,13,212,14,1],[213,9,213,10,1],[219,9,219,10,1],[220,13,220,43,1],[221,13,221,32,1],[222,9,222,10,1],[232,9,232,10,1],[233,13,233,45,1],[234,9,234,10,1]]);
     </script>
   </body>
 </html>

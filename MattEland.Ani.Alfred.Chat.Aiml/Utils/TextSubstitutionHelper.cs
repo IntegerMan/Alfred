@@ -59,12 +59,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        ///     Substitutes whole word instances of settingName in input with settingValue.
+        ///     Substitutes whole word instances of <paramref name="settingName"/> in
+        ///     <paramref name="input"/> with <paramref name="settingValue"/>.
         /// </summary>
-        /// <param name="input">The input.</param>
-        /// <param name="settingName">Name of the setting.</param>
-        /// <param name="settingValue">The setting value.</param>
-        /// <returns>A string with words substituted</returns>
+        /// <param name="input"> The input. </param>
+        /// <param name="settingName"> Name of the setting. </param>
+        /// <param name="settingValue"> The setting value. </param>
+        /// <returns>
+        ///     A string with words substituted.
+        /// </returns>
         [NotNull]
         public static string Substitute([CanBeNull] string input,
                                         [CanBeNull] string settingName,
@@ -99,6 +102,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             var pattern =
                 string.Format(locale, "{0}{1}{0}", WordBoundary, sanitizedName)
                       .NonNull();
+
+            /* TODO: This line has a big performance impact. If performance becomes an issue, a 
+            better way of doing this should be developed */
 
             var substitute = Regex.Replace(input, pattern, replacement, RegexOptions.IgnoreCase);
 

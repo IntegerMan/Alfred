@@ -2,93 +2,65 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\chat\alfredtaghandlertests.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core.tests\chat\alfredtesttaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlfredTagHandlerTests.cs
+// AlfredTestTagHandler.cs
 // 
-// Created on:      08/17/2015 at 10:55 PM
-// Last Modified:   08/17/2015 at 10:55 PM
+// Created on:      08/17/2015 at 11:36 PM
+// Last Modified:   08/17/2015 at 11:36 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
-using System.Xml;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Chat;
-using MattEland.Ani.Alfred.Chat.Aiml;
 using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
-using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Common;
-
-using NUnit.Framework;
 
 namespace MattEland.Ani.Alfred.Tests.Chat
 {
     /// &lt;summary&gt;
-    /// A class to test tag handlers for Alfred commands.
+    /// A tag handler for testing. Not intended for actual product incorporation.
     /// &lt;/summary&gt;
-    [TestFixture]
-    [SuppressMessage(&quot;ReSharper&quot;, &quot;NotNullMemberIsNotInitialized&quot;)]
-    public class AlfredTagHandlerTests : ChatTestsBase
+    [HandlesAimlTag(&quot;alfredtest&quot;)]
+    public class AlfredTestTagHandler : AimlTagHandler
     {
-        [NotNull]
-        private AlfredTagHandler _handler;
 
         /// &lt;summary&gt;
-        /// Sets up the test fixture for each test.
+        ///     Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
-        [SetUp]
-        public void SetUp()
+        /// &lt;exception cref=&quot;ArgumentNullException&quot;&gt;&lt;paramref name=&quot;parameters&quot;/&gt; is &lt;see langword=&quot;null&quot; /&gt;.&lt;/exception&gt;
+        public AlfredTestTagHandler([NotNull] TagHandlerParameters parameters) : base(parameters)
         {
-            InitChatSystem();
-
-            var parameters = BuildTagHandlerParameters(&quot;&lt;alfred submodule=\&quot;core\&quot; command=\&quot;shutdown\&quot; /&gt;&quot;);
-            _handler = new AlfredTagHandler(parameters);
         }
 
-        [Test]
-        [SuppressMessage(&quot;ReSharper&quot;, &quot;ExceptionNotDocumented&quot;)]
-        public void AlfredTagHandlerHasHandlesAttribute()
+        /// &lt;summary&gt;
+        ///     Processes the input text and returns the processed value.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;The processed output&lt;/returns&gt;
+        protected override string ProcessChange()
         {
-            var type = _handler.GetType();
-            var attribute = type.GetCustomAttribute(typeof(HandlesAimlTagAttribute)) as HandlesAimlTagAttribute;
-
-            Assert.IsNotNull(attribute, &quot;Handler did not have the HandlesAimlTag attribute&quot;);
-            Assert.AreEqual(&quot;alfred&quot;, attribute.Name, &quot;Handler did not handle the expected type&quot;);
+            WasInvoked = true;
+            return string.Empty;
         }
 
-        [Test]
-        public void AlfredTagHandlerCausesCommandToBeInvoked()
-        {
-            Say(&quot;TEST COMMAND INVOKE&quot;);
-
-            var command = Alfred.LastCommand;
-
-            var subsystem = &quot;test&quot;;
-            var expected = &quot;invoketest&quot;;
-
-            Assert.IsNotNull(Engine.Owner, &quot;Chat Engine had no owner. Commands will not be routed without an owner.&quot;);
-            Assert.That(command != ChatCommand.Empty, &quot;Alfred&#39;s last command was an empty command. No command was invoked.&quot;);
-            Assert.That(command.Subsystem.Matches(subsystem), $&quot;Chat Command had subsystem of &#39;{command.Subsystem}&#39; instead of &#39;{subsystem}&#39;&quot;);
-            Assert.That(command.Name.Matches(expected), $&quot;Chat Command had command of &#39;{command.Name}&#39; instead of &#39;{expected}&#39;&quot;);
-        }
-
+        /// &lt;summary&gt;
+        /// Gets or sets a value indicating whether the class&#39;s transform / process change method was called.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;&lt;c&gt;true&lt;/c&gt; if it was invoked; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/value&gt;
+        public static bool WasInvoked { get; set; }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[43,9,43,10,1],[44,13,44,30,1],[46,13,46,110,1],[47,13,47,57,1],[48,9,48,10,1],[53,9,53,10,1],[55,13,55,43,1],[56,13,56,113,1],[58,13,58,94,1],[59,13,59,99,1],[60,9,60,10,1],[64,9,64,10,1],[65,13,65,40,1],[67,13,67,46,1],[69,13,69,36,1],[70,13,70,41,1],[72,13,72,119,1],[73,13,73,126,1],[74,13,74,144,1],[75,13,75,130,1],[76,9,76,10,1]]);
+      highlightRanges([[30,82,30,98,1],[31,9,31,10,1],[32,9,32,10,1],[39,9,39,10,1],[40,13,40,31,1],[41,13,41,33,1],[42,9,42,10,1],[48,41,48,45,1],[48,46,48,50,1]]);
     </script>
   </body>
 </html>

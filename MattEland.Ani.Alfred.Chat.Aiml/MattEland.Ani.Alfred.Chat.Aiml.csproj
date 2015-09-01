@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MattEland.Ani.Alfred.Chat.Aiml</RootNamespace>
     <AssemblyName>MattEland.Ani.Alfred.Chat.Aiml</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -33,6 +33,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>AlfredAppTestCertificate.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="JetBrains.Annotations, Version=9.2.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Annotations.9.2.0\lib\net20\JetBrains.Annotations.dll</HintPath>
@@ -52,6 +58,7 @@
     <Compile Include="ChatEngineLibrarian.cs" />
     <Compile Include="ChatProcessor.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Utils\NodeEvaluator.cs" />
     <Compile Include="Utils\TextSubstitutionHelper.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -64,7 +71,7 @@
     <Compile Include="Utils\SanitizingTextTransformer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Request.cs" />
-    <Compile Include="Result.cs" />
+    <Compile Include="ChatResult.cs" />
     <Compile Include="TagHandlers\BotTagHandler.cs" />
     <Compile Include="TagHandlers\ThatStarTagHandler.cs" />
     <Compile Include="TagHandlers\ConditionTagHandler.cs" />
@@ -101,7 +108,7 @@
     <Compile Include="Utils\SettingsManager.cs" />
     <Compile Include="Utils\SubQuery.cs" />
     <Compile Include="Utils\TagHandlerParameters.cs" />
-    <Compile Include="Utils\TextTransformer.cs" />
+    <Compile Include="Utils\TextTransformerBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MattEland.Ani.Alfred.Core\MattEland.Ani.Alfred.Core.csproj">
@@ -114,6 +121,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Alfred.pfx" />
+    <None Include="AlfredAppTestCertificate.snk" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

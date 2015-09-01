@@ -1,14 +1,15 @@
 ﻿// ---------------------------------------------------------
 // AimlTagHandler.cs
 // 
-// Created on:      08/12/2015 at 10:25 PM
-// Last Modified:   08/14/2015 at 6:01 PM
+// Created on:      08/22/2015 at 11:36 PM
+// Last Modified:   08/24/2015 at 1:14 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Xml;
 
 using JetBrains.Annotations;
@@ -21,30 +22,28 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
     /// <summary>
     ///     An abstract class representing a TextTransformer that can also handle an AIML tag.
     /// </summary>
-    public abstract class AimlTagHandler : TextTransformer
+    public abstract class AimlTagHandler : TextTransformerBase
     {
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.
         /// </summary>
-        /// <exception cref="ArgumentNullException"><paramref name="parameters"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="parameters" /> is <see langword="null" />.</exception>
         protected AimlTagHandler([NotNull] TagHandlerParameters parameters)
-            : base(parameters.ChatEngine, parameters.TemplateNode.OuterXml)
+            : base(parameters.ChatEngine, parameters.Element.OuterXml)
         {
             //- Validation
-            if (parameters == null)
-            {
-                throw new ArgumentNullException(nameof(parameters));
-            }
+            if (parameters == null) { throw new ArgumentNullException(nameof(parameters)); }
 
             //- Assign fields
             User = parameters.User;
             Query = parameters.Query;
             Request = parameters.Request;
-            Result = parameters.Result;
+            ChatResult = parameters.ChatResult;
 
             // Assign the template node and clear out the namespace values
-            parameters.TemplateNode.Attributes?.RemoveNamedItem("xmlns");
-            TemplateNode = parameters.TemplateNode;
+            parameters.Element.Attributes.RemoveNamedItem("xmlns");
+            TemplateElement = parameters.Element;
         }
 
         /// <summary>
@@ -71,14 +70,48 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         ///     Gets the result of the operation.
         /// </summary>
         /// <value>The result.</value>
-        public Result Result { get; }
+        public ChatResult ChatResult { get; }
 
         /// <summary>
-        ///     Gets the template node.
+        ///     Gets whether the template node has child nodes.
         /// </summary>
-        /// <value>The template node.</value>
+        /// <value>Whether or not there are child nodes.</value>
+        protected bool HasChildNodes
+        {
+            get { return TemplateElement.HasChildNodes; }
+        }
+
+        /// <summary>
+        ///     Gets the child nodes.
+        /// </summary>
+        /// <value>The child nodes.</value>
         [NotNull]
-        public XmlNode TemplateNode { get; }
+        [ItemNotNull]
+        protected XmlNodeList ChildNodes
+        {
+            get { return TemplateElement.ChildNodes; }
+        }
+
+        /// <summary>
+        ///     Gets the inner text or XML of the node representing this handler.
+        /// </summary>
+        /// <value>The contents of the node.</value>
+        [NotNull]
+        public string Contents
+        {
+            get { return TemplateElement.InnerText; }
+            protected set { TemplateElement.InnerText = value; }
+        }
+
+        /// <summary>
+        ///     Gets the name of the node representing this handler.
+        /// </summary>
+        /// <value>The name of the node.</value>
+        [NotNull]
+        protected string NodeName
+        {
+            get { return TemplateElement.Name; }
+        }
 
         /// <summary>
         ///     Gets the user.
@@ -92,52 +125,45 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// </summary>
         /// <value>The template element.</value>
         [NotNull]
-        protected XmlElement TemplateElement
-        {
-            get { return (XmlElement)TemplateNode; }
-        }
-
-        /// <summary>
-        ///     Gets an XML node from an XML string.
-        /// </summary>
-        /// <param name="xml">The outer XML.</param>
-        /// <returns>An XmlNode from the document</returns>
-        /// <exception cref="ArgumentNullException">xml</exception>
-        /// <exception cref="XmlException">
-        ///     There is a load or parse error in the XML. In this case, the
-        ///     document remains empty.
-        /// </exception>
-        public static XmlNode BuildNode([NotNull] string xml)
-        {
-            if (xml.IsEmpty())
-            {
-                throw new ArgumentNullException(nameof(xml));
-            }
-
-            // Build out a document from the XML
-            // TODO: Use XDocument and XElement
-            var xmlDocument = new XmlDocument();
-            xmlDocument.LoadXml(xml);
-
-            // Return the root element
-            return xmlDocument.FirstChild;
-        }
+        private XmlElement TemplateElement { get; }
 
         /// <summary>
         ///     Gets tag handler parameters for the given template node.
         /// </summary>
-        /// <param name="templateNode">The template node.</param>
+        /// <param name="element">The template element.</param>
         /// <returns>TagHandlerParameters.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="templateNode"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="element" /> is <see langword="null" />
+        ///     .
+        /// </exception>
         [NotNull]
-        protected TagHandlerParameters GetTagHandlerParametersForNode([NotNull] XmlNode templateNode)
+        private TagHandlerParameters GetTagHandlerParametersForNode([NotNull] XmlElement element)
         {
-            if (templateNode == null)
-            {
-                throw new ArgumentNullException(nameof(templateNode));
-            }
+            if (element == null) { throw new ArgumentNullException(nameof(element)); }
 
-            return new TagHandlerParameters(ChatEngine, User, Query, Request, Result, templateNode);
+            return new TagHandlerParameters(ChatEngine, User, Query, Request, ChatResult, element);
+        }
+
+        /// <summary>
+        ///     Gets an attribute from the template element returning string.Empty if the attribute is not
+        ///     found.
+        /// </summary>
+        /// <param name="attributeName">Name of the attribute.</param>
+        /// <returns>The value of the attribute or string.Empty</returns>
+        [NotNull]
+        protected string GetAttribute([CanBeNull] string attributeName)
+        {
+            return GetAttributeSafe(TemplateElement, attributeName);
+        }
+
+        /// <summary>
+        ///     Determines whether the specified attribute name is present on the template node.
+        /// </summary>
+        /// <param name="attributeName">Name of the attribute.</param>
+        /// <returns>Whether or not the attribute is present.</returns>
+        protected bool HasAttribute([CanBeNull] string attributeName)
+        {
+            return TemplateElement.HasAttribute(attributeName);
         }
 
         /// <summary>
@@ -145,17 +171,21 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// </summary>
         /// <returns>The star node.</returns>
         [NotNull]
-        protected static XmlNode BuildStarNode()
+        protected static XmlElement BuildStarElement()
         {
+            // TODO: Extract this out to a utility
+
             try
             {
-                var starNode = BuildNode("<star/>");
+                var starNode = BuildElement("<star/>");
                 Debug.Assert(starNode != null);
                 return starNode;
             }
             catch (XmlException ex)
             {
-                Debug.Fail("GetStarNode cannot return a null value but encountered an XmlException: " + ex.Message);
+                Debug.Fail(
+                           "GetStarElement cannot return a null value but encountered an XmlException: "
+                           + ex.Message);
 
                 // ReSharper disable once ExceptionNotDocumented
                 // ReSharper disable once HeuristicUnreachableCode
@@ -170,10 +200,76 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         [NotNull]
         protected StarTagHandler BuildStarTagHandler()
         {
-            var node = BuildStarNode();
-            var parameters = GetTagHandlerParametersForNode(node);
+            // TODO: Extract this out to a utility
+
+            var element = BuildStarElement();
+            var parameters = GetTagHandlerParametersForNode(element);
 
             return new StarTagHandler(parameters);
+        }
+
+        /// <summary>
+        ///     Executes a redirect to the specified target and returns the results
+        /// </summary>
+        /// <param name="redirectTarget">The redirect target.</param>
+        /// <returns>The result text from the redirection</returns>
+        [NotNull]
+        protected string DoRedirect(string redirectTarget)
+        {
+            // TODO: Extract this out to a utility
+
+            try
+            {
+                var xml = string.Format(CultureInfo.InvariantCulture,
+                                        "<srai>{0}</srai>",
+                                        redirectTarget);
+                var node = BuildElement(xml.NonNull());
+                var parameters = GetTagHandlerParametersForNode(node);
+
+                return new RedirectTagHandler(parameters).Transform();
+            }
+            catch (XmlException xmlEx)
+            {
+                Error(string.Format(Locale,
+                                    Resources.AimlTagHandlerDoRedirectBadXml.NonNull(),
+                                    xmlEx.Message,
+                                    redirectTarget));
+
+                return string.Empty;
+            }
+        }
+
+        /// <summary>
+        ///     Gets an <see cref="XmlElement" /> from an XML string.
+        /// </summary>
+        /// <param name="xml">The outer XML.</param>
+        /// <returns>An <see cref="XmlElement" /> from the xml</returns>
+        /// <exception cref="ArgumentNullException">xml</exception>
+        /// <exception cref="XmlException">
+        ///     There is a load or parse error in the XML. In this case, the
+        ///     document remains empty.
+        /// </exception>
+        [NotNull]
+        public static XmlElement BuildElement([NotNull] string xml)
+        {
+            //- Validate
+            if (xml.IsEmpty()) { throw new ArgumentNullException(nameof(xml)); }
+
+            // Build out a document from the XML
+            // TODO: Use XDocument and XElement
+            var xmlDocument = new XmlDocument();
+            xmlDocument.LoadXml(xml);
+
+            // Return the root element
+            var child = xmlDocument.FirstChild as XmlElement;
+            if (child != null) { return child; }
+
+            //- If the item isn't an XmlElement, we have trouble; throw an XmlException.
+            var message = string.Format(CultureInfo.CurrentCulture,
+                                        Resources.AimlTagHandlerBuildElementBadXml.NonNull(),
+                                        xml);
+
+            throw new XmlException(message);
         }
     }
 }

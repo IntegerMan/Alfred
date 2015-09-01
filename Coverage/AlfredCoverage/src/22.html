@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\chat\chatcommandtests.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core.tests\chat\taghandlertests.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
@@ -20,17 +20,19 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
+using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
+using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Common;
 
 using NUnit.Framework;
 
 namespace MattEland.Ani.Alfred.Tests.Chat
 {
     /// &lt;summary&gt;
-    ///     Tests for commands embedded in AIML that impact the functioning of the Alfred system.
+    ///     Tests for AimlTagHandlers of concern.
     /// &lt;/summary&gt;
     [TestFixture]
-    public class ChatCommandTests : ChatTestsBase
+    public class TagHandlerTests : ChatTestsBase
     {
         /// &lt;summary&gt;
         ///     Sets up the testing environment prior to each test run.
@@ -42,145 +44,102 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         }
 
         /// &lt;summary&gt;
-        ///     Builds a list of fake counter names with a total instance included as well.
+        ///     Tests that random tags with no children return empty results.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;count&quot;&gt;The count of fake items to build.&lt;/param&gt;
-        /// &lt;returns&gt;A list of fake counters&lt;/returns&gt;
-        private IEnumerable&lt;string&gt; BuildInstanceNamesWithTotal(int count)
+        /// &lt;remarks&gt;
+        ///     See ALF-29
+        /// &lt;/remarks&gt;
+        [Test]
+        public void RandomTagWithNoChildrenReturnsEmpty()
         {
-            for (var i = 1; i &lt;= count; i++)
-            {
-                yield return $&quot;Item {i}&quot;;
-            }
+            // Build a handler to test with
+            var handler = BuildTagHandler&lt;RandomTagHandler&gt;(&quot;random&quot;, &quot;&lt;random /&gt;&quot;);
 
-            yield return SystemMonitorModule.TotalInstanceName;
+            // Ensure that the results are what we expect
+            var result = handler.Transform();
+            Assert.That(result.IsEmpty(), $&quot;Tag Handler result of &#39;{result}&#39; was not empty as expected.&quot;);
         }
 
         /// &lt;summary&gt;
-        ///     Tests that the CPU Status command includes the expected CPU information.
+        ///     Tests that random tags with unexpected children return empty results.
         /// &lt;/summary&gt;
         /// &lt;remarks&gt;
-        ///     See ALF-5, ALF-27, and ALF-28
+        ///     See ALF-29
         /// &lt;/remarks&gt;
         [Test]
-        public void CpuStatusIsAccurate()
+        public void RandomTagWithWrongChildTypeReturnsEmpty()
         {
-            Alfred.Shutdown();
-            MetricProviderFactory.DefaultValue = 42.0f;
-            MetricProviderFactory.CategoryInstanceNames.Add(CpuMonitorModule.CpuCategoryName,
-                                                            BuildInstanceNamesWithTotal(72));
-            Alfred.Initialize();
+            // Build a handler to test with
+            var handler = BuildTagHandler&lt;RandomTagHandler&gt;(&quot;random&quot;, &quot;&lt;random&gt;&lt;b&gt;Dude&lt;/b&gt;&lt;b&gt;Bro&lt;/b&gt;&lt;/random&gt;&quot;);
 
-            var reply = GetReply(&quot;CPU STATUS&quot;);
-
-            string expected = $&quot;There are 72 CPU cores with an average of 42.0 % utilization.&quot;;
-            Assert.That(reply.Contains(expected),
-                        $&quot;Reply &#39;{reply}&#39; did not match expected value of {expected}.&quot;);
-        }
-
-        /// &lt;summary&gt;
-        ///     Tests that the Memory Status command includes the expected Memory information.
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        ///     See ALF-5, ALF-27, and ALF-28
-        /// &lt;/remarks&gt;
-        [Test]
-        public void MemoryStatusIsAccurate()
-        {
-            MetricProviderFactory.DefaultValue = 42.0f;
-
-            var reply = GetReply(&quot;MEMORY STATUS&quot;);
-
-            string expected = $&quot;The system is currently utilizing 42.0 % of all available memory.&quot;;
-            Assert.That(reply.Contains(expected),
-                        $&quot;Reply &#39;{reply}&#39; did not match expected value of {expected}.&quot;);
-        }
-
-        /// &lt;summary&gt;
-        ///     Tests that the Disk Status command includes the expected Disk information.
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        ///     See ALF-5, ALF-27, and ALF-28
-        /// &lt;/remarks&gt;
-        [Test]
-        public void DiskStatusIsAccurate()
-        {
-            MetricProviderFactory.DefaultValue = 42.0f;
-
-            var reply = GetReply(&quot;DISK STATUS&quot;);
-
-            string expected = $&quot;Disk read speed is currently utilized at 42.0 % and disk write utilization is at 42.0 %.&quot;;
-            Assert.That(reply.Contains(expected),
-                        $&quot;Reply &#39;{reply}&#39; did not match expected value of {expected}.&quot;);
-        }
-
-        /// &lt;summary&gt;
-        ///     Tests that the Alfred Status command includes the expected information.
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        ///     See ALF-5
-        /// &lt;/remarks&gt;
-        [Test]
-        public void AlfredStatusIsAccurate()
-        {
-            var reply = GetReply(&quot;ALFRED STATUS&quot;);
-            var count = Alfred.Subsystems.Count();
-
-            Assert.That(reply.Contains($&quot;The system is online with a total of {count} Subsystems Present.&quot;),
-                        $&quot;&#39;{reply}&#39; did not contain the expected system status text.&quot;);
-        }
-
-        /// &lt;summary&gt;
-        ///     Ensure that the shutdown command causes alfred to be offline.
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        ///     See ALF-21
-        /// &lt;/remarks&gt;
-        [Test]
-        public void ShutdownCausesAlfredToBeOffline()
-        {
-            Say(&quot;Shutdown&quot;);
-
-            Assert.IsFalse(Alfred.IsOnline, &quot;Alfred was not offline after shutdown was handled.&quot;);
-        }
-
-        /// &lt;summary&gt;
-        ///     Tests that the generic Status command includes the expected system information from various counters.
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        ///     See ALF-5, ALF-27, and ALF-28
-        /// &lt;/remarks&gt;
-        [Test]
-        public void StatusYieldsRelevantInformation()
-        {
-            var reply = GetReply(&quot;Status&quot;);
-
-            Assert.That(reply.Contains(&quot;system is online&quot;), $&quot;System online status was missing from &#39;{reply}&#39;&quot;);
-            Assert.That(reply.Contains(&quot;Disk read speed&quot;), $&quot;Disk status was missing from &#39;{reply}&#39;&quot;);
-            Assert.That(reply.Contains(&quot;available memory&quot;), $&quot;Memory status was missing from &#39;{reply}&#39;&quot;);
-            Assert.That(reply.Contains(&quot;CPU core&quot;), $&quot;CPU status was missing from &#39;{reply}&#39;&quot;);
+            // Ensure that the results are what we expect
+            var result = handler.Transform();
+            Assert.That(result.IsEmpty(), $&quot;Tag Handler result of &#39;{result}&#39; was not empty as expected.&quot;);
         }
 
         [Test]
-        public void TagHandlersAreInvokedWhenATestingTemplateIsInvoked()
+        public void TextSubstitutionHelperWithNullSettingsReturnsInput()
         {
-            Say(&quot;TEST TAG INVOKE&quot;);
+            var input = &quot;foo&quot;;
+            var output = TextSubstitutionHelper.Substitute(null, input);
 
-            Assert.IsTrue(AlfredTestTagHandler.WasInvoked);
+            Assert.AreEqual(input, output);
         }
 
         [Test]
-        public void TagHandlersAreNotInvokedOnOtherInput()
+        public void TextSubstitutionHelperWithNullInputReturnsEmpty()
         {
-            Say(&quot;I like turtles&quot;);
+            var output = TextSubstitutionHelper.Substitute(null, null);
 
-            Assert.IsFalse(AlfredTestTagHandler.WasInvoked);
+            Assert.IsNotNull(output);
+            Assert.That(output.IsEmpty());
         }
+
+        [Test]
+        public void TextSubstitutionHelperSubstitutesText()
+        {
+            var subs = new SettingsManager();
+            subs.Add(&quot;Foo&quot;, &quot;Bar&quot;);
+            var output = TextSubstitutionHelper.Substitute(subs, &quot;Foo&quot;);
+
+            Assert.AreEqual(&quot;Bar&quot;, output);
+        }
+
+        [Test]
+        public void TextSubstitutionHelperHandlesEmptyEntries()
+        {
+            var subs = new SettingsManager();
+            subs.Add(&quot;Foo&quot;, &quot;Bar&quot;);
+            subs.Add(&quot;Frodo&quot;, null);
+
+            var input = &quot;Baggins&quot;;
+            var output = TextSubstitutionHelper.Substitute(subs, input);
+
+            Assert.AreEqual(input, output);
+        }
+
+        [Test]
+        public void TextSubstitutionHelperHandlesNullInput()
+        {
+            var output = TextSubstitutionHelper.Substitute(null, &quot;Bubba&quot;, &quot;Gump&quot;);
+
+            Assert.IsNotNull(output);
+            Assert.That(output.IsEmpty());
+        }
+
+        [Test]
+        public void TextSubstitutionHelperHandlesReplacement()
+        {
+            var output = TextSubstitutionHelper.Substitute(&quot;Bubbark Shrimp ZeBubba Bubbazar Bubba Gump&quot;, &quot;Bubba&quot;, &quot;Gump&quot;);
+
+            Assert.AreEqual(&quot;Bubbark Shrimp ZeBubba Bubbazar Gump Gump&quot;, output);
+        }
+
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[30,9,30,10,1],[31,13,31,30,1],[32,9,32,10,1],[57,9,57,10,1],[58,13,58,31,1],[59,13,59,56,1],[60,13,61,94,1],[62,13,62,33,1],[64,13,64,48,1],[66,13,66,96,1],[67,13,68,89,1],[69,9,69,10,1],[79,9,79,10,1],[80,13,80,56,1],[82,13,82,51,1],[84,13,84,100,1],[85,13,86,89,1],[87,9,87,10,1],[97,9,97,10,1],[98,13,98,56,1],[100,13,100,49,1],[102,13,102,123,1],[103,13,104,89,1],[105,9,105,10,1],[115,9,115,10,1],[116,13,116,51,1],[117,13,117,51,1],[119,13,120,88,1],[121,9,121,10,1],[131,9,131,10,1],[132,13,132,29,1],[134,13,134,99,1],[135,9,135,10,1],[145,9,145,10,1],[146,13,146,44,1],[148,13,148,113,1],[149,13,149,103,1],[150,13,150,106,1],[151,13,151,95,1],[152,9,152,10,1],[156,9,156,10,1],[157,13,157,36,1],[159,13,159,60,1],[160,9,160,10,1],[164,9,164,10,1],[165,13,165,35,1],[167,13,167,61,1],[168,9,168,10,1],[40,9,40,10,1],[41,18,41,27,1],[42,13,42,14,1],[43,17,43,42,1],[44,13,44,14,1],[41,41,41,44,1],[41,29,41,39,1],[46,13,46,64,1],[47,9,47,10,1]]);
+      highlightRanges([[32,9,32,10,1],[33,13,33,30,1],[34,9,34,10,1],[44,9,44,10,1],[46,13,46,85,1],[49,13,49,46,1],[50,13,50,107,1],[51,9,51,10,1],[61,9,61,10,1],[63,13,63,113,1],[66,13,66,46,1],[67,13,67,107,1],[68,9,68,10,1],[72,9,72,10,1],[73,13,73,31,1],[74,13,74,73,1],[76,13,76,44,1],[77,9,77,10,1],[81,9,81,10,1],[82,13,82,72,1],[84,13,84,38,1],[85,13,85,43,1],[86,9,86,10,1],[90,9,90,10,1],[91,13,91,46,1],[92,13,92,36,1],[93,13,93,73,1],[95,13,95,44,1],[96,9,96,10,1],[100,9,100,10,1],[101,13,101,46,1],[102,13,102,36,1],[103,13,103,37,1],[105,13,105,35,1],[106,13,106,73,1],[108,13,108,44,1],[109,9,109,10,1],[113,9,113,10,1],[114,13,114,83,1],[116,13,116,38,1],[117,13,117,43,1],[118,9,118,10,1],[122,9,122,10,1],[123,13,123,123,1],[125,13,125,82,1],[126,9,126,10,1]]);
     </script>
   </body>
 </html>

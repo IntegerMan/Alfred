@@ -34,30 +34,44 @@
   <PropertyGroup>
     <RunPostBuildEvent>Always</RunPostBuildEvent>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>AlfredAppTestCertificate.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="JetBrains.Annotations, Version=9.1.1.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\packages\JetBrains.Annotations.9.1.1\lib\net20\JetBrains.Annotations.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    <Reference Include="JetBrains.Annotations, Version=9.2.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.9.2.0\lib\net20\JetBrains.Annotations.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="Shouldly, Version=2.5.0.0, Culture=neutral, PublicKeyToken=6042cbcb05cbc941, processorArchitecture=MSIL">
+      <HintPath>..\packages\Shouldly.2.5.0\lib\net40\Shouldly.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlfredTestBase.cs" />
+    <Compile Include="AlfredTestExtensions.cs" />
+    <Compile Include="Chat\AimlExplorerTests.cs" />
     <Compile Include="Chat\AlfredTestTagHandler.cs" />
+    <Compile Include="Chat\ExplorerTestsBase.cs" />
     <Compile Include="Chat\TagHandlerTests.cs" />
     <Compile Include="Chat\TagHandlerFactoryTests.cs" />
     <Compile Include="Chat\RedirectTagHandlerTests.cs" />
@@ -65,27 +79,41 @@
     <Compile Include="Chat\ChatCommandTests.cs" />
     <Compile Include="Chat\ChatTestsBase.cs" />
     <Compile Include="Chat\ConversationTests.cs" />
-    <Compile Include="CommonTests.cs" />
+    <Compile Include="Common\CommonExtensionTests.cs" />
+    <Compile Include="Common\CommonProviderTests.cs" />
+    <Compile Include="Controls\ChatPaneTests.cs" />
+    <Compile Include="Controls\ExplorerControlTests.cs" />
+    <Compile Include="Controls\RootPagesControlTests.cs" />
+    <Compile Include="Mocks\UserInterfaceTestBase.cs" />
     <Compile Include="Mocks\TestAlfred.cs" />
+    <Compile Include="Mocks\TestChatProvider.cs" />
     <Compile Include="Mocks\TestPage.cs" />
     <Compile Include="Mocks\TestShell.cs" />
+    <Compile Include="Modules\AlfredPagesListModuleTests.cs" />
+    <Compile Include="Modules\ModuleTests.cs" />
+    <Compile Include="Pages\EventLogPageTests.cs" />
+    <Compile Include="Pages\ExplorerPageTests.cs" />
     <Compile Include="Pages\PageTests.cs" />
+    <Compile Include="Pages\RootPagesTests.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Shell\ShellTagHandlerTests.cs" />
-    <Compile Include="SubSystems\AlfredCoreSubSystemTests.cs" />
+    <Compile Include="Subsystems\AlfredCoreSubsystemTests.cs" />
     <Compile Include="AlfredProviderTests.cs" />
     <Compile Include="Mocks\AlfredTestModule.cs" />
-    <Compile Include="SubSystems\SubSystemTests.cs" />
+    <Compile Include="Subsystems\ChatSubsystemTests.cs" />
+    <Compile Include="Subsystems\MindExplorerSubsystemTests.cs" />
+    <Compile Include="Subsystems\SubsystemTests.cs" />
     <Compile Include="Widgets\ButtonWidgetTests.cs" />
     <Compile Include="Modules\AlfredPowerModuleTests.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SubSystems\SystemSubSystemTests.cs" />
+    <Compile Include="Subsystems\SystemSubsystemTests.cs" />
     <Compile Include="Mocks\TestSubSystem.cs" />
+    <Compile Include="Widgets\ExplorerWidgetTests.cs" />
     <Compile Include="Widgets\TextWidgetTests.cs" />
     <Compile Include="Modules\TimeModuleTests.cs" />
     <Compile Include="Widgets\WarningWidgetTests.cs" />
@@ -111,12 +139,23 @@
       <Project>{549f22e5-1f66-4420-89bf-9460603f9516}</Project>
       <Name>MattEland.Ani.Alfred.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MattEland.Ani.Alfred.PresentationShared\MattEland.Ani.Alfred.PresentationShared.csproj">
+      <Project>{B4E5BAAE-27A8-456E-B0AC-3117E1E6EDDF}</Project>
+      <Name>MattEland.Ani.Alfred.PresentationShared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MattEland.Common\MattEland.Common.csproj">
       <Project>{514cb422-a6ef-4c75-b925-92ab599ba1be}</Project>
       <Name>MattEland.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MattEland.Testing\MattEland.Testing.csproj">
+      <Project>{913569FC-7B28-432F-A29A-8ACC7A1A5FBC}</Project>
+      <Name>MattEland.Testing</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Alfred.pfx" />
+    <None Include="AlfredAppTestCertificate.snk" />
+    <None Include="app.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

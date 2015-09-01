@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
 // AssemblyExtensions.cs
 // 
-// Created on:      08/14/2015 at 12:38 AM
-// Last Modified:   08/14/2015 at 12:59 AM
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/23/2015 at 11:32 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -18,13 +18,14 @@ using JetBrains.Annotations;
 
 namespace MattEland.Common
 {
+    [PublicAPI]
     public static class AssemblyHelper
     {
         /// <summary>
         ///     Gets the types in an assembly with an attribute applied to them.
         /// </summary>
-        /// <typeparam name="TAttribute">The attribute to search for.</typeparam>
         /// <param name="assembly">The assembly.</param>
+        /// <param name="attributeType">The type of the attribute</param>
         /// <param name="inherit">
         ///     true to search the type's inheritance chain to find the attributes; otherwise, false.
         /// </param>
@@ -32,65 +33,68 @@ namespace MattEland.Common
         /// <exception cref="System.ArgumentNullException"></exception>
         [NotNull]
         [ItemNotNull]
-        [UsedImplicitly]
-        public static IEnumerable<Type> GetTypesInAssemblyWithAttribute<TAttribute>([NotNull] this Assembly assembly,
-                                                                                    bool inherit)
-            where TAttribute : Attribute
+        public static IEnumerable<Type> GetTypesInAssemblyWithAttribute(
+            [NotNull] this Assembly assembly,
+            [NotNull] Type attributeType,
+            bool inherit)
         {
-            if (assembly == null)
-            {
-                throw new ArgumentNullException(nameof(assembly));
-            }
+            //- Validate
+            if (assembly == null) { throw new ArgumentNullException(nameof(assembly)); }
+            if (attributeType == null) { throw new ArgumentNullException(nameof(attributeType)); }
 
+            // Grab the types defined in the assembly
             var types = assembly.GetTypes();
-            return GetTypesWithAttributes<TAttribute>(types, inherit);
+
+            // Filter down to those with  attributes we want
+            return GetTypesWithAttributes(types, attributeType, inherit);
         }
 
         /// <summary>
         ///     Gets the types in a group of types that have an attribute applied to them.
         /// </summary>
-        /// <typeparam name="TAttribute">The attribute to search for.</typeparam>
         /// <param name="types">The set of types</param>
+        /// <param name="attributeType">The attribute type.</param>
         /// <param name="inherit">
         ///     true to search the type's inheritance chain to find the attributes; otherwise, false.
         /// </param>
         /// <returns>The types in the set of types that have the requested attribute</returns>
-        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="System.ArgumentNullException">types, attributeType</exception>
         [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         [NotNull]
         [ItemNotNull]
-        [UsedImplicitly]
-        public static IEnumerable<Type> GetTypesWithAttributes<TAttribute>([NotNull] IEnumerable<Type> types,
-                                                                           bool inherit) where TAttribute : Attribute
+        public static IEnumerable<Type> GetTypesWithAttributes([NotNull] IEnumerable<Type> types,
+                                                               [NotNull] Type attributeType,
+                                                               bool inherit)
         {
-            if (types == null)
-            {
-                throw new ArgumentNullException(nameof(types));
-            }
+            //- Validate
+            if (types == null) { throw new ArgumentNullException(nameof(types)); }
+            if (attributeType == null) { throw new ArgumentNullException(nameof(attributeType)); }
 
-            return types.Where(t => t.HasAttribute<TAttribute>(inherit));
+            return types.Where(t => t != null && t.HasAttribute(attributeType, inherit));
         }
 
         /// <summary>
         ///     Determines whether the specified member has a particular attribute applied to it.
         /// </summary>
-        /// <typeparam name="TAttribute">The type of the attribute.</typeparam>
         /// <param name="member">The member.</param>
+        /// <param name="attributeType">The attribute type</param>
         /// <param name="inherit">
         ///     true to search the type's inheritance chain to find the attributes; otherwise, false.
         /// </param>
-        /// <returns><c>true</c> if the specified inherit has the attribute; otherwise, <c>false</c>.</returns>
-        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <returns>
+        /// <c>true</c> if the specified inherit has the attribute; otherwise, <c>false</c>.
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">member, attributeType</exception>
         [UsedImplicitly]
-        public static bool HasAttribute<TAttribute>([NotNull] this MemberInfo member, bool inherit)
-            where TAttribute : Attribute
+        public static bool HasAttribute([NotNull] this MemberInfo member,
+                                        [NotNull] Type attributeType,
+                                        bool inherit)
         {
-            if (member == null)
-            {
-                throw new ArgumentNullException(nameof(member));
-            }
+            //- Validate
+            if (member == null) { throw new ArgumentNullException(nameof(member)); }
+            if (attributeType == null) { throw new ArgumentNullException(nameof(attributeType)); }
 
-            return member.IsDefined(typeof(TAttribute), inherit);
+            return member.IsDefined(attributeType, inherit);
         }
 
         /// <summary>
@@ -102,10 +106,7 @@ namespace MattEland.Common
         [CanBeNull]
         public static Version GetAssemblyVersion([NotNull] this object caller)
         {
-            if (caller == null)
-            {
-                throw new ArgumentNullException(nameof(caller));
-            }
+            if (caller == null) { throw new ArgumentNullException(nameof(caller)); }
 
             try
             {

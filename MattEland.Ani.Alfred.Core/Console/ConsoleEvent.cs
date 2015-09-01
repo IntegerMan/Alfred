@@ -1,12 +1,15 @@
 ﻿// ---------------------------------------------------------
 // ConsoleEvent.cs
 // 
-// Created on:      07/26/2015 at 2:23 PM
-// Last Modified:   08/07/2015 at 12:24 AM
-// Original author: Matt Eland
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/26/2015 at 1:04 AM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 
 using JetBrains.Annotations;
 
@@ -18,14 +21,6 @@ namespace MattEland.Ani.Alfred.Core.Console
     /// </summary>
     public struct ConsoleEvent : IEquatable<ConsoleEvent>, IConsoleEvent
     {
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="ConsoleEvent" /> class using the current utcTime.
-        /// </summary>
-        /// <param name="title">The title.</param>
-        /// <param name="message">The message.</param>
-        public ConsoleEvent(string title, string message) : this(title, message, LogLevel.Verbose, DateTime.UtcNow)
-        {
-        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ConsoleEvent" /> class.
@@ -33,7 +28,8 @@ namespace MattEland.Ani.Alfred.Core.Console
         /// <param name="title">The title.</param>
         /// <param name="message">The message.</param>
         /// <param name="level">The logging level.</param>
-        public ConsoleEvent(string title, string message, LogLevel level) : this(title, message, level, DateTime.UtcNow)
+        internal ConsoleEvent(string title, string message, LogLevel level)
+            : this(title, message, level, DateTime.UtcNow)
         {
         }
 
@@ -44,7 +40,7 @@ namespace MattEland.Ani.Alfred.Core.Console
         /// <param name="message">The message.</param>
         /// <param name="level">The logging level</param>
         /// <param name="utcTime">The utcTime in UTC.</param>
-        public ConsoleEvent(string title, string message, LogLevel level, DateTime utcTime)
+        private ConsoleEvent(string title, string message, LogLevel level, DateTime utcTime)
         {
             UtcTime = utcTime;
             Title = title;
@@ -94,30 +90,31 @@ namespace MattEland.Ani.Alfred.Core.Console
         /// <returns><c>true</c> if the events are equivalent, <c>false</c> otherwise.</returns>
         public bool Equals(ConsoleEvent other)
         {
-            return UtcTime.Equals(other.UtcTime) &&
-                   string.Equals(Title, other.Title) &&
-                   string.Equals(Message, other.Message) &&
-                   Level == other.Level;
+            return UtcTime.Equals(other.UtcTime) && string.Equals(Title, other.Title)
+                   && string.Equals(Message, other.Message) && Level == other.Level;
         }
 
         /// <summary>
         ///     Determines whether the specified <see cref="System.Object" /> is equal to this instance.
         /// </summary>
         /// <param name="obj">The object to compare with the current instance.</param>
-        /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
+        /// <returns>
+        ///     <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance;
+        ///     otherwise, <c>false</c>.
+        /// </returns>
         public override bool Equals([CanBeNull] object obj)
         {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
+            if (ReferenceEquals(null, obj)) { return false; }
             return obj is ConsoleEvent && Equals((ConsoleEvent)obj);
         }
 
         /// <summary>
         ///     Returns a hash code for this instance.
         /// </summary>
-        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
+        /// <returns>
+        ///     A hash code for this instance, suitable for use in hashing algorithms and data structures
+        ///     like a hash table.
+        /// </returns>
         public override int GetHashCode()
         {
             unchecked
@@ -153,6 +150,16 @@ namespace MattEland.Ani.Alfred.Core.Console
         }
 
         #endregion
+
+        /// <summary>
+        ///     Renders a string representation of this object.
+        /// </summary>
+        /// <returns>The string representation.</returns>
+        public override string ToString()
+        {
+            return string.Format(CultureInfo.InvariantCulture, "{0}: {1}", Title, Message);
+        }
+
     }
 
 }

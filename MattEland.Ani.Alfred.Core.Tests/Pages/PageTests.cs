@@ -14,6 +14,8 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Tests.Mocks;
+using MattEland.Common.Providers;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -22,17 +24,22 @@ namespace MattEland.Ani.Alfred.Tests.Pages
     /// <summary>
     ///     Tests oriented around testing the page update pumps and related functions
     /// </summary>
-    [TestFixture]
+    [UnitTest]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-    public class PageTests
+    public class PageTests : AlfredTestBase
     {
+        /// <summary>
+        /// Sets up the environment for each test.
+        /// </summary>
         [SetUp]
-        public void Setup()
+        public override void SetUp()
         {
+            base.SetUp();
+
             var bootstrapper = new AlfredBootstrapper();
             _alfred = bootstrapper.Create();
-            _subsystem = new TestSubsystem();
-            _page = new TestPage();
+            _subsystem = new TestSubsystem(Container);
+            _page = new TestPage(Container);
 
             _subsystem.AddAutoRegisterPage(_page);
             _alfred.Register(_subsystem);

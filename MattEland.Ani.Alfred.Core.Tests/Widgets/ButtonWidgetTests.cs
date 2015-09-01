@@ -12,6 +12,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -22,16 +23,13 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
     ///     <see cref="ButtonWidget" />
     ///     class
     /// </summary>
-    [TestFixture]
-    public class ButtonWidgetTests
+    [UnitTest]
+    public class ButtonWidgetTests : AlfredTestBase
     {
-        [NotNull]
-        private readonly SimplePlatformProvider _platformProvider = new SimplePlatformProvider();
-
         [Test]
         public void ButtonCommandDefaultsToNull()
         {
-            var button = new ButtonWidget();
+            var button = new ButtonWidget(BuildWidgetParams());
 
             Assert.IsNull(button.ClickCommand);
         }
@@ -44,23 +42,38 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
         public void ButtonCommandsDoNotExecuteWhenButtonIsNotClicked()
         {
             var executed = false;
-            Action executeAction = () => { executed = true; };
-            var command = _platformProvider.CreateCommand(executeAction);
+            var command = Container.Provide<AlfredCommand>();
+            command.ExecuteAction = () => { executed = true; };
 
-            var button = new ButtonWidget(command);
+            var button = new ButtonWidget("Click Me", command, BuildWidgetParams());
 
             Assert.IsNotNull(button.ClickCommand, "Button's ClickCommand was null");
             Assert.IsFalse(executed, "The button was invoked but the button was not set");
         }
 
+
+        /// <summary>
+        ///     Builds widget parameters.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>The WidgetCreationParameters.</returns>
+        [NotNull]
+        private WidgetCreationParameters BuildWidgetParams(string name = "WidgetTest")
+        {
+            return new WidgetCreationParameters(name);
+        }
+
+        /// <summary>
+        ///     Button commands execute when clicked.
+        /// </summary>
         [Test]
         public void ButtonCommandsExecuteWhenClicked()
         {
             var executed = false;
-            var command = _platformProvider.CreateCommand();
+            var command = Container.Provide<AlfredCommand>();
             command.ExecuteAction = () => { executed = true; };
 
-            var button = new ButtonWidget { ClickCommand = command };
+            var button = new ButtonWidget(BuildWidgetParams()) { ClickCommand = command };
             button.Click();
 
             Assert.IsTrue(executed, "The button was invoked but the executed flag was not set");
@@ -71,7 +84,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
         {
             const string TestText = "Test Text";
 
-            var button = new ButtonWidget(TestText);
+            var button = new ButtonWidget(TestText, null, BuildWidgetParams());
 
             Assert.AreEqual(TestText, button.Text, "Button Text was not set as expected");
         }
@@ -79,7 +92,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
         [Test]
         public void NewButtonsDefaultToNullText()
         {
-            var button = new ButtonWidget();
+            var button = new ButtonWidget(BuildWidgetParams());
 
             Assert.IsNull(button.Text, "Button's text was set to something other than null after instantiation.");
         }

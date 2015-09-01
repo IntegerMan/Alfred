@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
 // InputTagHandler.cs
 // 
-// Created on:      08/12/2015 at 10:47 PM
-// Last Modified:   08/15/2015 at 12:03 AM
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/24/2015 at 12:37 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -10,23 +10,23 @@
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
-using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// <summary>
-    /// A tag handler that handles the AIML 'input' tag by grabbing historical input from the user and rendering that text.
+    ///     A tag handler that handles the AIML 'input' tag by grabbing historical input from the user and
+    ///     rendering that text.
     /// </summary>
     [HandlesAimlTag("input")]
+    [UsedImplicitly]
     public class InputTagHandler : AimlTagHandler
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
-        public InputTagHandler([NotNull] TagHandlerParameters parameters)
-            : base(parameters)
+        public InputTagHandler([NotNull] TagHandlerParameters parameters) : base(parameters)
         {
         }
 
@@ -36,20 +36,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// <returns>The processed output</returns>
         protected override string ProcessChange()
         {
-            var element = TemplateElement;
-            if (element == null || !element.Name.Matches("input"))
-            {
-                return string.Empty;
-            }
-
             // If we don't have an input tag, just get the default one
-            if (!element.HasAttribute("index"))
-            {
-                return User.GetInputSentence();
-            }
+            if (!HasAttribute("index")) { return User.GetInputSentence(); }
 
             // Grab and validate the index
-            var indexText = element.GetAttribute("index");
+            var indexText = GetAttribute("index");
             if (indexText.HasText())
             {
                 // We can be either in a # format or a #,# format. Check to find out which
@@ -60,10 +51,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 
                 //- Sentence index is optional. This refers to the sentence in the input referred to by inputIndex.
                 var sentenceIndex = 1;
-                if (indexes.Length >= 2)
-                {
-                    sentenceIndex = indexes[1].AsInt();
-                }
+                if (indexes.Length >= 2) { sentenceIndex = indexes[1].AsInt(); }
 
                 // Grab the input X inputs ago and Y sentences into that input
                 if (inputIndex > 0 && sentenceIndex > 0)
@@ -82,14 +70,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         ///     Logs a bad index.
         /// </summary>
         /// <param name="indexText">The index text.</param>
-        private void LogBadIndex(string indexText)
+        private void LogBadIndex([NotNull] string indexText)
         {
             var message = string.Format(Locale,
-                                           Resources.InputErrorBadlyFormedIndex,
-                                           indexText,
-                                           Request.RawInput);
+                                        Resources.InputErrorBadlyFormedIndex.NonNull(),
+                                        indexText,
+                                        Request.RawInput);
 
-            Log(message, LogLevel.Error);
+            Error(message);
         }
     }
 }

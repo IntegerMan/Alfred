@@ -6,45 +6,27 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Widgets;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Tests.Mocks
 {
     /// <summary>
-    /// An AlfredModule used explicitly for testing purposes
+    ///     An <see cref="AlfredModule"/> used explicitly for testing purposes
     /// </summary>
     internal sealed class AlfredTestModule : AlfredModule
     {
-        [NotNull]
-        private readonly ICollection<AlfredWidget> _widgetsToAddOnInit = new List<AlfredWidget>();
-
-        [NotNull]
-        private readonly ICollection<AlfredWidget> _widgetsToAddOnShutdown = new List<AlfredWidget>();
 
         /// <summary>
-        ///     Initializes a new instance of the
-        ///     <see
-        ///         cref="AlfredTestModule" />
-        ///     class.
+        /// Initializes a new instance of the
+        /// <see cref="AlfredTestModule" />
+        /// class.
         /// </summary>
-        internal AlfredTestModule() : this(new SimplePlatformProvider())
+        /// <param name="container">The container.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        internal AlfredTestModule([NotNull] IObjectContainer container) : base(container)
         {
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the
-        ///     <see
-        ///         cref="AlfredTestModule" />
-        ///     class.
-        /// </summary>
-        /// <param
-        ///     name="platformProvider">
-        ///     The collection provider.
-        /// </param>
-        /// <exception
-        ///     cref="ArgumentNullException">
-        /// </exception>
-        private AlfredTestModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
-        {
+            WidgetsToRegisterOnShutdown = new List<WidgetBase>();
+            WidgetsToRegisterOnInitialize = new List<WidgetBase>();
         }
 
         /// <summary>
@@ -58,10 +40,14 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
         /// </summary>
         /// <value>The widgets to register on initialize.</value>
         [NotNull]
-        internal ICollection<AlfredWidget> WidgetsToRegisterOnInitialize { get { return _widgetsToAddOnInit; } }
+        internal ICollection<WidgetBase> WidgetsToRegisterOnInitialize { get; }
 
+        /// <summary>
+        /// Gets the widgets to register on shutdown.
+        /// </summary>
+        /// <value>The widgets to register on shutdown.</value>
         [NotNull]
-        internal ICollection<AlfredWidget> WidgetsToRegisterOnShutdown { get { return _widgetsToAddOnShutdown; } }
+        internal ICollection<WidgetBase> WidgetsToRegisterOnShutdown { get; }
 
         /// <summary>
         ///     Handles module initialization events

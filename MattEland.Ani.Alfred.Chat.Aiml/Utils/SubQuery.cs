@@ -18,48 +18,56 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
     /// </summary>
     public class SubQuery
     {
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="SubQuery" /> class.
-        /// </summary>
-        /// <param name="fullPath">The full path.</param>
-        public SubQuery([NotNull] string fullPath)
-        {
-            FullPath = fullPath;
-        }
-
-        /// <summary>
-        /// Gets the full path of the query.
-        /// </summary>
-        /// <value>The full path.</value>
-        [NotNull]
-        public string FullPath { get; }
 
         /// <summary>
         /// Gets or sets the template.
         /// </summary>
         /// <value>The template.</value>
         [NotNull]
-        public string Template { get; set; } = string.Empty;
+        public string Template { get; internal set; } = string.Empty;
 
         /// <summary>
         /// Gets the that star collection.
         /// </summary>
         /// <value>The that star collection.</value>
-        [NotNull]
+        [NotNull, ItemNotNull]
         public IList<string> ThatStar { get; } = new List<string>();
 
         /// <summary>
         /// Gets the topic star collection.
         /// </summary>
         /// <value>The topic star collection.</value>
-        [NotNull]
+        [NotNull, ItemNotNull]
         public IList<string> TopicStar { get; } = new List<string>();
 
         /// <summary>
         /// Gets the input star collection.
         /// </summary>
         /// <value>The input star collection.</value>
-        [NotNull]
+        [NotNull, ItemNotNull]
         public IList<string> InputStar { get; } = new List<string>();
+
+        /// <summary>
+        ///     Gets or sets the raw response to the query.
+        /// </summary>
+        /// <remarks>
+        ///     This is set after the chat engine evaluates the template associated with the query and
+        ///     can be retrieved later on in the user interface or via tests for diagnostic /
+        ///     troubleshooting purposes.
+        /// </remarks>
+        /// <value>
+        ///     The response.
+        /// </value>
+        [NotNull]
+        public string Response { get; internal set; } = string.Empty;
+
+        /// <summary>
+        ///     Gets the input text for this subquery.
+        /// </summary>
+        /// <value>
+        ///     The input text.
+        /// </value>
+        [NotNull]
+        public string InputText { get; internal set; } = string.Empty;
     }
 }

@@ -2,87 +2,188 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.common\collectionextensions.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core.tests\chat\chatcommandtests.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// CollectionExtensions.cs
+// ChatCommandTests.cs
 // 
-// Created on:      08/14/2015 at 12:55 AM
-// Last Modified:   08/14/2015 at 12:59 AM
+// Created on:      08/17/2015 at 9:56 PM
+// Last Modified:   08/18/2015 at 3:04 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 using JetBrains.Annotations;
 
-namespace MattEland.Common
+using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
+
+using NUnit.Framework;
+
+namespace MattEland.Ani.Alfred.Tests.Chat
 {
     /// &lt;summary&gt;
-    ///     A set of extension methods related to collections
+    ///     Tests for commands embedded in AIML that impact the functioning of the Alfred system.
     /// &lt;/summary&gt;
-    public static class CollectionExtensions
+    [TestFixture]
+    public class ChatCommandTests : ChatTestsBase
     {
         /// &lt;summary&gt;
-        ///     Adds an item to a collection safely. This is a convenience method that does null and duplicate checking
-        ///     based on the type of item / collection and will throw null reference or invalid operation exceptions if illegal
-        ///     circumstances are met.
+        ///     Sets up the testing environment prior to each test run.
         /// &lt;/summary&gt;
-        /// &lt;typeparam name=&quot;T&quot;&gt;The type of item&lt;/typeparam&gt;
-        /// &lt;param name=&quot;item&quot;&gt;The item.&lt;/param&gt;
-        /// &lt;param name=&quot;collection&quot;&gt;The collection.&lt;/param&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;
-        ///     item, collection
-        /// &lt;/exception&gt;
-        /// &lt;exception cref=&quot;System.InvalidOperationException&quot;&gt;The specified item was already part of the collection&lt;/exception&gt;
-        public static void AddSafe&lt;T&gt;([NotNull] this ICollection&lt;T&gt; collection, [NotNull] T item)
+        [SetUp]
+        public void SetUp()
         {
-            if (item == null)
-            {
-                throw new ArgumentNullException(nameof(item));
-            }
-            if (collection == null)
-            {
-                throw new ArgumentNullException(nameof(collection));
-            }
-
-            // This shouldn&#39;t happen, but I want to check to make sure
-            if (collection.Contains(item))
-            {
-                throw new InvalidOperationException(Resources.ErrorItemAlreadyInCollection);
-            }
-
-            collection.Add(item);
+            InitChatSystem();
         }
 
         /// &lt;summary&gt;
-        /// Returns the singular value if collection&#39;s count of items is 1. Otherwise plural is returned.
+        ///     Builds a list of fake counter names with a total instance included as well.
         /// &lt;/summary&gt;
-        /// &lt;typeparam name=&quot;T&quot;&gt;The type the generic collection is holding.&lt;/typeparam&gt;
-        /// &lt;param name=&quot;collection&quot;&gt;The collection.&lt;/param&gt;
-        /// &lt;param name=&quot;singular&quot;&gt;The singular return value.&lt;/param&gt;
-        /// &lt;param name=&quot;plural&quot;&gt;The plural return value.&lt;/param&gt;
-        /// &lt;returns&gt;The singular value if the item count is 1. Otherwise plural is returned.&lt;/returns&gt;
-        public static string Pluralize&lt;T&gt;([NotNull] this IEnumerable&lt;T&gt; collection,
-                                       string singular,
-                                       string plural)
+        /// &lt;param name=&quot;count&quot;&gt;The count of fake items to build.&lt;/param&gt;
+        /// &lt;returns&gt;A list of fake counters&lt;/returns&gt;
+        [NotNull, ItemNotNull]
+        private IEnumerable&lt;string&gt; BuildInstanceNamesWithTotal(int count)
         {
-            var count = collection.Count&lt;T&gt;();
-            return count.Pluralize(singular, plural);
+            for (var i = 1; i &lt;= count; i++)
+            {
+                yield return $&quot;Item {i}&quot;;
+            }
+
+            yield return SystemMonitorModule.TotalInstanceName;
+        }
+
+        /// &lt;summary&gt;
+        ///     Tests that the CPU Status command includes the expected CPU information.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     See ALF-5, ALF-27, and ALF-28
+        /// &lt;/remarks&gt;
+        [Test]
+        public void CpuStatusIsAccurate()
+        {
+            Alfred.Shutdown();
+            MetricProviderFactory.DefaultValue = 42.0f;
+            MetricProviderFactory.CategoryInstanceNames.Add(CpuMonitorModule.ProcessorCategoryName,
+                                                            BuildInstanceNamesWithTotal(72));
+            Alfred.Initialize();
+
+            var reply = GetReply(&quot;CPU STATUS&quot;);
+
+            var expected = &quot;There are 72 CPU cores with an average of 42.0 % utilization.&quot;;
+            Assert.That(reply.Contains(expected),
+                        $&quot;Reply &#39;{reply}&#39; did not match expected value of {expected}.&quot;);
+        }
+
+        /// &lt;summary&gt;
+        ///     Tests that the Memory Status command includes the expected Memory information.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     See ALF-5, ALF-27, and ALF-28
+        /// &lt;/remarks&gt;
+        [Test]
+        public void MemoryStatusIsAccurate()
+        {
+            MetricProviderFactory.DefaultValue = 42.0f;
+
+            var reply = GetReply(&quot;MEMORY STATUS&quot;);
+
+            var expected = &quot;The system is currently utilizing 42.0 % of all available memory.&quot;;
+            Assert.That(reply.Contains(expected),
+                        $&quot;Reply &#39;{reply}&#39; did not match expected value of {expected}.&quot;);
+        }
+
+        /// &lt;summary&gt;
+        ///     Tests that the Disk Status command includes the expected Disk information.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     See ALF-5, ALF-27, and ALF-28
+        /// &lt;/remarks&gt;
+        [Test]
+        public void DiskStatusIsAccurate()
+        {
+            MetricProviderFactory.DefaultValue = 42.0f;
+
+            var reply = GetReply(&quot;DISK STATUS&quot;);
+
+            var expected = &quot;Disk read speed is currently utilized at 42.0 % and disk write utilization is at 42.0 %.&quot;;
+            Assert.That(reply.Contains(expected),
+                        $&quot;Reply &#39;{reply}&#39; did not match expected value of {expected}.&quot;);
+        }
+
+        /// &lt;summary&gt;
+        ///     Tests that the Alfred Status command includes the expected information.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     See ALF-5
+        /// &lt;/remarks&gt;
+        [Test]
+        public void AlfredStatusIsAccurate()
+        {
+            var reply = GetReply(&quot;ALFRED STATUS&quot;);
+            var count = Alfred.Subsystems.Count();
+
+            Assert.That(reply.Contains($&quot;The system is online with a total of {count} Subsystems Present.&quot;),
+                        $&quot;&#39;{reply}&#39; did not contain the expected system status text.&quot;);
+        }
+
+        /// &lt;summary&gt;
+        ///     Ensure that the shutdown command causes alfred to be offline.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     See ALF-21
+        /// &lt;/remarks&gt;
+        [Test]
+        public void ShutdownCausesAlfredToBeOffline()
+        {
+            Say(&quot;Shutdown&quot;);
+
+            Assert.IsFalse(Alfred.IsOnline, &quot;Alfred was not offline after shutdown was handled.&quot;);
+        }
+
+        /// &lt;summary&gt;
+        ///     Tests that the generic Status command includes the expected system information from various counters.
+        /// &lt;/summary&gt;
+        /// &lt;remarks&gt;
+        ///     See ALF-5, ALF-27, and ALF-28
+        /// &lt;/remarks&gt;
+        [Test]
+        public void StatusYieldsRelevantInformation()
+        {
+            var reply = GetReply(&quot;Status&quot;);
+
+            Assert.That(reply.Contains(&quot;system is online&quot;), $&quot;System online status was missing from &#39;{reply}&#39;&quot;);
+            Assert.That(reply.Contains(&quot;Disk read speed&quot;), $&quot;Disk status was missing from &#39;{reply}&#39;&quot;);
+            Assert.That(reply.Contains(&quot;available memory&quot;), $&quot;Memory status was missing from &#39;{reply}&#39;&quot;);
+            Assert.That(reply.Contains(&quot;CPU core&quot;), $&quot;CPU status was missing from &#39;{reply}&#39;&quot;);
+        }
+
+        [Test]
+        public void TagHandlersAreInvokedWhenATestingTemplateIsInvoked()
+        {
+            Say(&quot;TEST TAG INVOKE&quot;);
+
+            Assert.IsTrue(AlfredTestTagHandler.WasInvoked);
+        }
+
+        [Test]
+        public void TagHandlersAreNotInvokedOnOtherInput()
+        {
+            Say(&quot;I like turtles&quot;);
+
+            Assert.IsFalse(AlfredTestTagHandler.WasInvoked);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[39,13,39,14,0],[40,17,40,63,0],[43,13,43,14,0],[44,17,44,69,0],[37,9,37,10,1],[38,13,38,30,1],[42,13,42,36,1],[48,13,48,43,1],[49,13,49,14,1],[50,17,50,93,1],[53,13,53,34,1],[54,9,54,10,1],[67,9,67,10,1],[68,13,68,47,1],[69,13,69,54,1],[70,9,70,10,1]]);
+      highlightRanges([[32,9,32,10,1],[33,13,33,30,1],[34,9,34,10,1],[60,9,60,10,1],[61,13,61,31,1],[62,13,62,56,1],[63,13,64,94,1],[65,13,65,33,1],[67,13,67,48,1],[69,13,69,92,1],[70,13,71,89,1],[72,9,72,10,1],[82,9,82,10,1],[83,13,83,56,1],[85,13,85,51,1],[87,13,87,96,1],[88,13,89,89,1],[90,9,90,10,1],[100,9,100,10,1],[101,13,101,56,1],[103,13,103,49,1],[105,13,105,119,1],[106,13,107,89,1],[108,9,108,10,1],[118,9,118,10,1],[119,13,119,51,1],[120,13,120,51,1],[122,13,123,88,1],[124,9,124,10,1],[134,9,134,10,1],[135,13,135,29,1],[137,13,137,99,1],[138,9,138,10,1],[148,9,148,10,1],[149,13,149,44,1],[151,13,151,113,1],[152,13,152,103,1],[153,13,153,106,1],[154,13,154,95,1],[155,9,155,10,1],[159,9,159,10,1],[160,13,160,36,1],[162,13,162,60,1],[163,9,163,10,1],[167,9,167,10,1],[168,13,168,35,1],[170,13,170,61,1],[171,9,171,10,1],[43,9,43,10,1],[44,18,44,27,1],[45,13,45,14,1],[46,17,46,42,1],[47,13,47,14,1],[44,41,44,44,1],[44,29,44,39,1],[49,13,49,64,1],[50,9,50,10,1]]);
     </script>
   </body>
 </html>

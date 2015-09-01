@@ -8,17 +8,20 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Core.Subsystems;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>
     ///     An interface promising Alfred Framework style capabilities
     /// </summary>
-    public interface IAlfred
+    public interface IAlfred : IPropertyProvider
     {
         /// <summary>
         ///     Gets the console provider. This can be null.
@@ -50,13 +53,6 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         IEnumerable<IAlfredPage> RootPages { get; }
 
         /// <summary>
-        ///     Gets the name.
-        /// </summary>
-        /// <value>The name.</value>
-        [NotNull]
-        string Name { get; }
-
-        /// <summary>
         ///     Initializes this instance.
         /// </summary>
         void Initialize();
@@ -79,11 +75,13 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         IChatProvider ChatProvider { get; }
 
         /// <summary>
-        /// Gets the platform provider.
+        ///     Gets the container.
         /// </summary>
-        /// <value>The platform provider.</value>
+        /// <value>
+        ///     The container.
+        /// </value>
         [NotNull]
-        IPlatformProvider PlatformProvider { get; }
+        IObjectContainer Container { get; }
 
         /// <summary>
         /// Gets the shell command handler that can pass shell commands on to the user interface.
@@ -91,6 +89,13 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <value>The shell command handler.</value>
         [CanBeNull]
         IShellCommandRecipient ShellCommandHandler { get; }
+
+        /// <summary>
+        /// Gets the locale.
+        /// </summary>
+        /// <value>The locale.</value>
+        [NotNull]
+        CultureInfo Locale { get; }
 
         /// <summary>
         /// Registers the shell command recipient that will allow the shell to get commands from the Alfred layer.
@@ -108,7 +113,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         ///     Registers a sub system with Alfred.
         /// </summary>
         /// <param name="subsystem">The subsystem.</param>
-        void Register([NotNull] AlfredSubsystem subsystem);
+        void Register([NotNull] IAlfredSubsystem subsystem);
 
         /// <summary>
         ///     Tells modules to take a look at their content and update as needed.
@@ -117,6 +122,12 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         ///     Thrown if Alfred is not Online
         /// </exception>
         void Update();
+
+        /// <summary>
+        /// Registers the page as a root page.
+        /// </summary>
+        /// <param name="page">The page.</param>
+        void Register([NotNull] IAlfredPage page);
     }
 
 }

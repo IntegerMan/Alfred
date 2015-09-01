@@ -2,129 +2,98 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.tests\chat\taghandlerfactorytests.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core.tests\mocks\alfredtestmodule.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
-// ---------------------------------------------------------
-// TagHandlerFactoryTests.cs
-// 
-// Created on:      08/18/2015 at 3:59 PM
-// Last Modified:   08/18/2015 at 5:07 PM
-// 
-// Last Modified by: Matt Eland
-// ---------------------------------------------------------
-
 using System;
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
 
-using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
+using JetBrains.Annotations;
 
-using NUnit.Framework;
+using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Core.Modules;
+using MattEland.Ani.Alfred.Core.Widgets;
 
-namespace MattEland.Ani.Alfred.Tests.Chat
+namespace MattEland.Ani.Alfred.Tests.Mocks
 {
     /// &lt;summary&gt;
-    ///     A class to test &lt;see cref=&quot;TagHandlerFactory&quot; /&gt;.
+    /// An AlfredModule used explicitly for testing purposes
     /// &lt;/summary&gt;
-    [TestFixture]
-    [SuppressMessage(&quot;ReSharper&quot;, &quot;NotNullMemberIsNotInitialized&quot;)]
-    public class TagHandlerFactoryTests : ChatTestsBase
+    internal sealed class AlfredTestModule : AlfredModule
     {
+        [NotNull]
+        private readonly ICollection&lt;AlfredWidget&gt; _widgetsToAddOnInit = new List&lt;AlfredWidget&gt;();
+
+        [NotNull]
+        private readonly ICollection&lt;AlfredWidget&gt; _widgetsToAddOnShutdown = new List&lt;AlfredWidget&gt;();
+
         /// &lt;summary&gt;
-        ///     Sets up the test fixture for each test.
+        ///     Initializes a new instance of the
+        ///     &lt;see
+        ///         cref=&quot;AlfredTestModule&quot; /&gt;
+        ///     class.
         /// &lt;/summary&gt;
-        [SetUp]
-        public void SetUp()
+        internal AlfredTestModule() : this(new SimplePlatformProvider())
         {
-            InitChatSystem();
         }
 
         /// &lt;summary&gt;
-        ///     When building dynamic and encountering a node that does have a mapping, return a new tag
-        ///     handler
+        ///     Initializes a new instance of the
+        ///     &lt;see
+        ///         cref=&quot;AlfredTestModule&quot; /&gt;
+        ///     class.
         /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        ///     See AlF-29
-        /// &lt;/remarks&gt;
-        [Test]
-        public void BuildDynamicWithKnownTagReturnsNewHandler()
+        /// &lt;param
+        ///     name=&quot;platformProvider&quot;&gt;
+        ///     The collection provider.
+        /// &lt;/param&gt;
+        /// &lt;exception
+        ///     cref=&quot;ArgumentNullException&quot;&gt;
+        /// &lt;/exception&gt;
+        private AlfredTestModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
         {
-            var factory = new TagHandlerFactory(Engine);
-            var result = factory.BuildTagHandlerDynamic(&quot;srai&quot;,
-                                                        BuildTagHandlerParameters(
-                                                                                  &quot;&lt;srai&gt;Testing Rocks&lt;/srai&gt;&quot;));
-
-            Assert.IsNotNull(result);
-
-            var handler = (RedirectTagHandler)result;
-            Assert.AreEqual(&quot;Testing Rocks&quot;, handler.TemplateNode.InnerText);
         }
 
         /// &lt;summary&gt;
-        ///     Parameter validation for parameters
+        /// Gets the name of the module.
         /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        ///     See ALF-29
-        /// &lt;/remarks&gt;
-        [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void BuildDynamicWithNullParamsThrowsException()
+        /// &lt;value&gt;The name of the module.&lt;/value&gt;
+        public override string Name { get { return &quot;Test&quot;; } }
+
+        /// &lt;summary&gt;
+        /// Gets the widgets to register on initialize.
+        /// &lt;/summary&gt;
+        /// &lt;value&gt;The widgets to register on initialize.&lt;/value&gt;
+        [NotNull]
+        internal ICollection&lt;AlfredWidget&gt; WidgetsToRegisterOnInitialize { get { return _widgetsToAddOnInit; } }
+
+        [NotNull]
+        internal ICollection&lt;AlfredWidget&gt; WidgetsToRegisterOnShutdown { get { return _widgetsToAddOnShutdown; } }
+
+        /// &lt;summary&gt;
+        ///     Handles module initialization events
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;alfred&quot;&gt;&lt;/param&gt;
+        protected override void InitializeProtected(IAlfred alfred)
         {
-            var factory = new TagHandlerFactory(Engine);
-            factory.BuildTagHandlerDynamic(&quot;Foo&quot;, null);
+            Register(WidgetsToRegisterOnInitialize);
         }
 
         /// &lt;summary&gt;
-        ///     Parameter validation for TagName
+        ///     Handles module shutdown events
         /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        ///     See ALF-29
-        /// &lt;/remarks&gt;
-        [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void BuildDynamicWithNullTagThrowsException()
+        protected override void ShutdownProtected()
         {
-            var factory = new TagHandlerFactory(Engine);
-            var parameters = BuildTagHandlerParameters(&quot;&lt;Foo /&gt;&quot;);
-            factory.BuildTagHandlerDynamic(null, parameters);
-        }
-
-        /// &lt;summary&gt;
-        ///     When building dynamic and encountering a node that doesn&#39;t have any mapping, return null
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        ///     See ALF-29
-        /// &lt;/remarks&gt;
-        [Test]
-        public void BuildDynamicWithUnknownTagReturnsNull()
-        {
-            var factory = new TagHandlerFactory(Engine);
-            var result = factory.BuildTagHandlerDynamic(&quot;Unknown&quot;,
-                                                        BuildTagHandlerParameters(&quot;&lt;unknown /&gt;&quot;));
-
-            Assert.IsNull(result);
-        }
-
-        /// &lt;summary&gt;
-        /// Tag handler factories must have a ChatEngine
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        /// See ALF-29
-        /// &lt;/remarks&gt;
-        [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void BuildFactoryWithNullEngineThrowsException()
-        {
-            var factory = new TagHandlerFactory(null);
+            Register(WidgetsToRegisterOnShutdown);
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[56,9,56,10,0],[70,9,70,10,0],[39,9,39,10,1],[40,13,40,30,1],[41,9,41,10,1],[52,9,52,10,1],[53,13,53,57,1],[54,13,54,67,1],[55,13,55,62,1],[67,9,67,10,1],[68,13,68,57,1],[69,13,69,57,1],[80,9,80,10,1],[81,13,81,57,1],[82,13,82,110,1],[84,13,84,35,1],[85,9,85,10,1],[95,9,95,10,1],[96,13,96,57,1],[97,13,97,122,1],[99,13,99,38,1],[101,13,101,54,1],[102,13,102,78,1],[103,9,103,10,1]]);
+      highlightRanges([[54,43,54,44,0],[54,45,54,59,0],[54,60,54,61,0],[29,39,29,73,1],[30,9,30,10,1],[31,9,31,10,1],[18,9,18,99,1],[21,9,21,103,1],[46,82,46,104,1],[47,9,47,10,1],[48,9,48,10,1],[61,80,61,81,1],[61,82,61,109,1],[61,110,61,111,1],[64,78,64,79,1],[64,80,64,111,1],[64,112,64,113,1],[71,9,71,10,1],[72,13,72,53,1],[73,9,73,10,1],[79,9,79,10,1],[80,13,80,51,1],[81,9,81,10,1]]);
     </script>
   </body>
 </html>

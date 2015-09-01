@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <NDepend AppName="Alfred" Platform="DotNet">
-  <OutputDir KeepXmlFiles="False">C:\Dev\Alfred\Alfred\NDependOut</OutputDir>
+  <OutputDir KeepXmlFiles="False">C:\Dev\Alfred\NDependOut</OutputDir>
   <Assemblies>
     <Name>MattEland.Ani.Alfred.Core</Name>
     <Name>MattEland.Ani.Alfred.WPF</Name>
@@ -9,6 +9,7 @@
     <Name>MattEland.Ani.Alfred.Chat</Name>
     <Name>MattEland.Ani.Alfred.Chat.Aiml</Name>
     <Name>MattEland.Common</Name>
+    <Name>MattEland.Ani.Alfred.PresentationShared</Name>
     <Name>MattEland.Ani.Alfred.Tests</Name>
   </Assemblies>
   <FrameworkAssemblies>
@@ -27,22 +28,24 @@
     <Dir>C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319</Dir>
     <Dir>C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319\WPF</Dir>
     <Dir>C:\Program Files (x86)\Windows Kits\8.0\References\CommonConfiguration\Neutral</Dir>
-    <Dir>C:\Dev\Alfred\Alfred\MattEland.Ani.Alfred.Core\bin\Debug</Dir>
-    <Dir>C:\Dev\Alfred\Alfred\MattELand.Ani.Alfred.Core.Tests\bin\Debug</Dir>
-    <Dir>C:\Dev\Alfred\Alfred\MattEland.Ani.Alfred.WPF\bin\Debug</Dir>
-    <Dir>C:\Dev\Alfred\Alfred\MattEland.Ani.Alfred.Win8\bin\Debug</Dir>
-    <Dir>c:\dev\Alfred\Alfred\MattEland.Ani.Alfred.Core.System\bin\Debug</Dir>
-    <Dir>c:\dev\Alfred\Alfred\MattEland.Ani.Alfred.Core.Speech\bin\Debug</Dir>
-    <Dir>c:\dev\Alfred\Alfred\MattEland.Ani.Alfred.AIML\bin\Debug</Dir>
-    <Dir>C:\Dev\Alfred\Alfred\MattEland.Ani.Alfred.Chat.Aiml\bin\Debug</Dir>
-    <Dir>C:\Dev\Alfred\Alfred\MattEland.Common\bin\Debug</Dir>
+    <Dir>C:\Dev\Alfred\MattEland.Ani.Alfred.Core\bin\Debug</Dir>
+    <Dir>C:\Dev\Alfred\MattELand.Ani.Alfred.Core.Tests\bin\Debug</Dir>
+    <Dir>C:\Dev\Alfred\MattEland.Ani.Alfred.WPF\bin\Debug</Dir>
+    <Dir>C:\Dev\Alfred\MattEland.Ani.Alfred.Win8\bin\Debug</Dir>
+    <Dir>c:\dev\Alfred\MattEland.Ani.Alfred.Core.System\bin\Debug</Dir>
+    <Dir>c:\dev\Alfred\MattEland.Ani.Alfred.Core.Speech\bin\Debug</Dir>
+    <Dir>c:\dev\Alfred\MattEland.Ani.Alfred.AIML\bin\Debug</Dir>
+    <Dir>C:\Dev\Alfred\MattEland.Ani.Alfred.Chat.Aiml\bin\Debug</Dir>
+    <Dir>C:\Dev\Alfred\MattEland.Common\bin\Debug</Dir>
+    <Dir>C:\Dev\Alfred\MattEland.Ani.Alfred.VisualStudio\bin\Debug</Dir>
+    <Dir>C:\Dev\Alfred\MattEland.Ani.Alfred.PresentationShared\bin\Debug</Dir>
   </Dirs>
   <MergeCodeGeneratedByCompiler>True</MergeCodeGeneratedByCompiler>
   <Report Kind="0" SectionsEnabled="65535" XslPath="" Flags="261376" />
-  <BuildComparisonSetting ProjectMode="CurrentProject" BuildMode="MostRecentAnalysisResultAvailable" ProjectFileToCompareWith="C:\Dev\Alfred\Alfred\Alfred.ndproj" BuildFileToCompareWith="C:\Dev\Alfred\Alfred\NDependOut\NDependAnalysisResult_Alfred_2015Aug10_23h08.ndar" NDaysAgo="1" FocusOnRecentRulesViolations="False" />
-  <BaselineInUISetting ProjectMode="CurrentProject" BuildMode="MostRecentAnalysisResultAvailable" ProjectFileToCompareWith="C:\Dev\Alfred\Alfred\Alfred.ndproj" BuildFileToCompareWith="C:\Dev\Alfred\Alfred\NDependOut\NDependAnalysisResult_Alfred_2015Aug10_23h08.ndar" NDaysAgo="1" FocusOnRecentRulesViolations="False" />
+  <BuildComparisonSetting ProjectMode="CurrentProject" BuildMode="MostRecentAnalysisResultAvailable" ProjectFileToCompareWith="C:\Dev\Alfred\Alfred.ndproj" BuildFileToCompareWith="C:\Dev\Alfred\NDependOut\NDependAnalysisResult_Alfred_2015Aug10_23h08.ndar" NDaysAgo="1" FocusOnRecentRulesViolations="False" />
+  <BaselineInUISetting ProjectMode="CurrentProject" BuildMode="MostRecentAnalysisResultAvailable" ProjectFileToCompareWith="C:\Dev\Alfred\Alfred.ndproj" BuildFileToCompareWith="C:\Dev\Alfred\NDependOut\NDependAnalysisResult_Alfred_2015Aug10_23h08.ndar" NDaysAgo="1" FocusOnRecentRulesViolations="False" />
   <CoverageFiles CoverageDir="" UncoverableAttribute="">
-    <CoverageFile MergeMode="Or">C:\Dev\Alfred\Alfred\AlfredCoverage.xml</CoverageFile>
+    <CoverageFile MergeMode="Or">C:\Dev\Alfred\AlfredCoverage.xml</CoverageFile>
   </CoverageFiles>
   <TrendMetrics UseCustomLog="False" LogRecurrence="3" LogLabel="2" UseCustomDir="False" CustomDir="">
     <Chart Name="Lines of Code" ShowInReport="True">
@@ -2316,6 +2319,18 @@ select t
 // To fix a violation of this rule, provide an implementation 
 // of *Equals()* and implement the equality and inequality operators.
 //</HowToFix>]]></Query>
+      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="True"><![CDATA[// <Name>Check that all namespaces begins with MattEland</Name>
+warnif count > 0 from n in Application.Namespaces where 
+  !n.NameLike (@"^MattEland") && !n.NameLike(@"^Xaml")
+select new { n, n.NbLinesOfCode } 
+
+//<Description>
+// All namespaces must start with "MattEland".
+//</Description>
+
+//<HowToFix>
+// Update all namespaces definitions in source code to satisfy this rule.
+//</HowToFix>]]></Query>
     </Group>
     <Group Name="Architecture and Layering" Active="True" ShownInReport="False">
       <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="True"><![CDATA[// <Name>Avoid namespaces mutually dependent</Name>
@@ -4380,8 +4395,8 @@ select new { tAttr, types , methods, fields }
 //</HowToFix>]]></Query>
     </Group>
     <Group Name="Visibility" Active="True" ShownInReport="False">
-      <Query Active="False" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Methods that could have a lower visibility</Name>
-warnif count > 0 from m in JustMyCode.Methods where 
+      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Methods that could have a lower visibility</Name>
+from m in JustMyCode.Methods where 
   m.Visibility != m.OptimalVisibility &&
   !m.ParentNamespace.NameLike(".Test") &&
   !m.FullNameLike("WPF") &&
@@ -4434,118 +4449,8 @@ select new {
 // *finer solution* by tagging each concerned method with 
 // *CannotDecreaseVisibilityAttribute*.
 //</HowToFix>]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Types that could have a lower visibility</Name>
-warnif count > 0 from t in JustMyCode.Types where 
+      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Types that could be declared as private, nested in a parent type</Name>
 
-  t.Visibility != t.OptimalVisibility &&
-
-  // If you don't want to link NDepend.API.dll, you can use your own attributes
-  // and adapt the source code of this rule.
-  !t.HasAttribute("NDepend.Attributes.CannotDecreaseVisibilityAttribute".AllowNoMatch()) &&
-  !t.HasAttribute("NDepend.Attributes.IsNotDeadCodeAttribute".AllowNoMatch()) &&
-
-  // XML serialized type must remain public.
-  !t.HasAttribute("System.Xml.Serialization.XmlRootAttribute".AllowNoMatch()) &&
-
-  // Static types that define only const fields cannot be seen as used in IL code.
-  // They don't have to be tagged with CannotDecreaseVisibilityAttribute.
-  !( t.IsStatic && 
-    !t.Methods.Any(m => !m.IsClassConstructor) && 
-    !t.Fields.Any(f => !f.IsLiteral && !(f.IsStatic && f.IsInitOnly))) &&
-
-  // A type used by an interface that has the same visibility
-  // cannot have its visibility decreased, else a compilation error occurs!
-  !t.TypesUsingMe.Any(tUser => 
-        tUser.IsInterface && 
-        tUser.Visibility == t.Visibility) &&
-
-  // Don't change the visibility of a type that contain an entry point method.
-  !t.Methods.Any(m =>m.IsEntryPoint)
-
-select new { 
-   t, 
-   t.Visibility , 
-   CouldBeDeclared = t.OptimalVisibility, 
-   t.TypesUsingMe
-}
-
-//<Description>
-// This rule warns about types that can be declared with a lower visibility
-// without provoking any compilation error.
-// For example *private* is a visibility lower than *internal* 
-// which is lower than *public*.
-//
-// **Narrowing visibility** is a good practice because doing so **promotes encapsulation**.
-// The scope from which types can be consumed is then reduced to a minimum. 
-//
-// Notice that types tagged with one of the attribute
-// *NDepend.Attributes.CannotDecreaseVisibilityAttribute* or
-// *NDepend.Attributes.IsNotDeadCodeAttribute*, found in *NDepend.API.dll*
-// are not matched. If you don't want to link *NDepend.API.dll* but still
-// wish to rely on this facility, you can declare these attributes in your code.
-//</Description>
-
-//<HowToFix>
-// Declare each matched type with the specified *optimal visibility*
-// in the *CouldBeDeclared* rule result column.
-//
-// By default, this rule matches *public types*. If you are publishing an API
-// many public types matched should remain public. In such situation,
-// you can opt for the *coarse solution* to this problem by adding in the 
-// rule source code *&& !m.IsPubliclyVisible* or you can prefer the 
-// *finer solution* by tagging each concerned type with 
-// *CannotDecreaseVisibilityAttribute*.
-//</HowToFix>]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Fields that could have a lower visibility</Name>
-warnif count > 0 from f in JustMyCode.Fields where 
-  f.Visibility != f.OptimalVisibility &&
- !f.NameLike("<>") &&
- !f.HasAttribute("NDepend.Attributes.CannotDecreaseVisibilityAttribute".AllowNoMatch()) &&
- !f.HasAttribute("NDepend.Attributes.IsNotDeadCodeAttribute".AllowNoMatch()) &&
-  // If you don't want to link NDepend.API.dll, you can use your own attributes
-  // and adapt the source code of this rule.
-  
-  // XML serialized fields must remain public.
- !f.HasAttribute("System.Xml.Serialization.XmlElementAttribute".AllowNoMatch()) && 
- !f.HasAttribute("System.Xml.Serialization.XmlAttributeAttribute".AllowNoMatch()) 
-  
-select new { 
-   f, 
-   f.Visibility , 
-   CouldBeDeclared = f.OptimalVisibility,
-   f.MethodsUsingMe
-}
-
-//<Description>
-// This rule warns about fields that can be declared with a lower visibility
-// without provoking any compilation error.
-// For example *private* is a visibility lower than *internal* 
-// which is lower than *public*.
-//
-// **Narrowing visibility** is a good practice because doing so **promotes encapsulation**.
-// The scope from which fields can be consumed is then reduced to a minimum. 
-//
-// Notice that fields tagged with one of the attribute
-// *NDepend.Attributes.CannotDecreaseVisibilityAttribute* or
-// *NDepend.Attributes.IsNotDeadCodeAttribute*, found in *NDepend.API.dll*
-// are not matched. If you don't want to link *NDepend.API.dll* but still
-// wish to rely on this facility, you can declare these attributes in your code.
-//</Description>
-
-//<HowToFix>
-// Declare each matched field with the specified *optimal visibility*
-// in the *CouldBeDeclared* rule result column.
-//
-// By default, this rule matches *public fields*. If you are publishing an API
-// some public fields matched should remain public. In such situation,
-// you can opt for the *coarse solution* to this problem by adding in the 
-// rule source code *&& !m.IsPubliclyVisible* or you can prefer the 
-// *finer solution* by tagging eah concerned field with 
-// *CannotDecreaseVisibilityAttribute*.
-//</HowToFix>]]></Query>
-      <Query Active="False" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Types that could be declared as private, nested in a parent type</Name>
-
-warnif count > 0 
 from t in Application.Types
 where !t.IsGeneratedByCompiler &&
       !t.IsNested &&
@@ -4626,6 +4531,7 @@ warnif count > 0 from f in Application.Fields where
  !f.IsLiteral && 
  !f.IsEnumValue &&
  !f.NameLike("<>") &&
+ !f.FullNameLike("Control") &&
  !f.FullNameLike("WPF")
 
 // A non-private field assigned from outside its class,
@@ -4853,6 +4759,115 @@ select new { m,m.Visibility }
 // Certainly you don't want the other class to click a button; you 
 // want your other class to do something that clicking a button  
 // also do. 
+//</HowToFix>]]></Query>
+      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Fields that could have a lower visibility</Name>
+from f in JustMyCode.Fields where 
+  f.Visibility != f.OptimalVisibility &&
+ !f.NameLike("<>") &&
+ !f.HasAttribute("NDepend.Attributes.CannotDecreaseVisibilityAttribute".AllowNoMatch()) &&
+ !f.HasAttribute("NDepend.Attributes.IsNotDeadCodeAttribute".AllowNoMatch()) &&
+  // If you don't want to link NDepend.API.dll, you can use your own attributes
+  // and adapt the source code of this rule.
+  
+  // XML serialized fields must remain public.
+ !f.HasAttribute("System.Xml.Serialization.XmlElementAttribute".AllowNoMatch()) && 
+ !f.HasAttribute("System.Xml.Serialization.XmlAttributeAttribute".AllowNoMatch()) 
+  
+select new { 
+   f, 
+   f.Visibility , 
+   CouldBeDeclared = f.OptimalVisibility,
+   f.MethodsUsingMe
+}
+
+//<Description>
+// This rule warns about fields that can be declared with a lower visibility
+// without provoking any compilation error.
+// For example *private* is a visibility lower than *internal* 
+// which is lower than *public*.
+//
+// **Narrowing visibility** is a good practice because doing so **promotes encapsulation**.
+// The scope from which fields can be consumed is then reduced to a minimum. 
+//
+// Notice that fields tagged with one of the attribute
+// *NDepend.Attributes.CannotDecreaseVisibilityAttribute* or
+// *NDepend.Attributes.IsNotDeadCodeAttribute*, found in *NDepend.API.dll*
+// are not matched. If you don't want to link *NDepend.API.dll* but still
+// wish to rely on this facility, you can declare these attributes in your code.
+//</Description>
+
+//<HowToFix>
+// Declare each matched field with the specified *optimal visibility*
+// in the *CouldBeDeclared* rule result column.
+//
+// By default, this rule matches *public fields*. If you are publishing an API
+// some public fields matched should remain public. In such situation,
+// you can opt for the *coarse solution* to this problem by adding in the 
+// rule source code *&& !m.IsPubliclyVisible* or you can prefer the 
+// *finer solution* by tagging eah concerned field with 
+// *CannotDecreaseVisibilityAttribute*.
+//</HowToFix>]]></Query>
+      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Types that could have a lower visibility</Name>
+from t in JustMyCode.Types where 
+
+  t.Visibility != t.OptimalVisibility &&
+
+  // If you don't want to link NDepend.API.dll, you can use your own attributes
+  // and adapt the source code of this rule.
+  !t.HasAttribute("NDepend.Attributes.CannotDecreaseVisibilityAttribute".AllowNoMatch()) &&
+  !t.HasAttribute("NDepend.Attributes.IsNotDeadCodeAttribute".AllowNoMatch()) &&
+
+  // XML serialized type must remain public.
+  !t.HasAttribute("System.Xml.Serialization.XmlRootAttribute".AllowNoMatch()) &&
+
+  // Static types that define only const fields cannot be seen as used in IL code.
+  // They don't have to be tagged with CannotDecreaseVisibilityAttribute.
+  !( t.IsStatic && !t.FullNameLike("Test") &&
+    !t.Methods.Any(m => !m.IsClassConstructor) && 
+    !t.Fields.Any(f => !f.IsLiteral && !(f.IsStatic && f.IsInitOnly))) &&
+
+  // A type used by an interface that has the same visibility
+  // cannot have its visibility decreased, else a compilation error occurs!
+  !t.TypesUsingMe.Any(tUser => 
+        tUser.IsInterface && 
+        tUser.Visibility == t.Visibility) &&
+
+  // Don't change the visibility of a type that contain an entry point method.
+  !t.Methods.Any(m =>m.IsEntryPoint)
+
+select new { 
+   t, 
+   t.Visibility , 
+   CouldBeDeclared = t.OptimalVisibility, 
+   t.TypesUsingMe
+}
+
+//<Description>
+// This rule warns about types that can be declared with a lower visibility
+// without provoking any compilation error.
+// For example *private* is a visibility lower than *internal* 
+// which is lower than *public*.
+//
+// **Narrowing visibility** is a good practice because doing so **promotes encapsulation**.
+// The scope from which types can be consumed is then reduced to a minimum. 
+//
+// Notice that types tagged with one of the attribute
+// *NDepend.Attributes.CannotDecreaseVisibilityAttribute* or
+// *NDepend.Attributes.IsNotDeadCodeAttribute*, found in *NDepend.API.dll*
+// are not matched. If you don't want to link *NDepend.API.dll* but still
+// wish to rely on this facility, you can declare these attributes in your code.
+//</Description>
+
+//<HowToFix>
+// Declare each matched type with the specified *optimal visibility*
+// in the *CouldBeDeclared* rule result column.
+//
+// By default, this rule matches *public types*. If you are publishing an API
+// many public types matched should remain public. In such situation,
+// you can opt for the *coarse solution* to this problem by adding in the 
+// rule source code *&& !m.IsPubliclyVisible* or you can prefer the 
+// *finer solution* by tagging each concerned type with 
+// *CannotDecreaseVisibilityAttribute*.
 //</HowToFix>]]></Query>
     </Group>
     <Group Name="Immutability" Active="True" ShownInReport="False">
@@ -5681,7 +5696,7 @@ select new {
 //<HowToFix>
 // To fix a violation of this rule, rename concerned types.
 //</HowToFix>]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Avoid prefixing type name with parent namespace name</Name>
+      <Query Active="False" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Avoid prefixing type name with parent namespace name</Name>
 warnif count > 0
 
 from n in Application.Namespaces
@@ -6975,7 +6990,7 @@ select t
 //</HowToFix>]]></Query>
       </Group>
       <Group Name="System.Globalization" Active="True" ShownInReport="False">
-        <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Float and Date Parsing must be culture aware</Name>
+        <Query Active="False" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Float and Date Parsing must be culture aware</Name>
 warnif count > 0 
 from m in ThirdParty.Types.WithFullNameIn( 
              "System.DateTime", 
@@ -8072,25 +8087,10 @@ select new { t, t.NbLinesOfCode }
 //<HowToFix>
 // This is a *sample rule* there is nothing to fix *as is*. 
 //</HowToFix>]]></Query>
-        <Query Active="False" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Check that all namespaces begins with CompanyName.ProductName</Name>
-warnif count > 0 from n in Application.Namespaces where 
-  !n.NameLike (@"^CompanyName.ProductName")
-select new { n, n.NbLinesOfCode } 
-
-//<Description>
-// A practice widely adopted is that, in a product source code,
-// all namespaces start with "CompanyName.ProductName".
-//
-// This rule must be adapted with your own **"CompanyName.ProductName"**.
-//</Description>
-
-//<HowToFix>
-// Update all namespaces definitions in source code to satisfy this rule.
-//</HowToFix>]]></Query>
       </Group>
     </Group>
   </Queries><WarnFilter>
-    <DontWarn>Invalid coverage file {C:\Dev\Alfred\Alfred\Coverage\AlfredCoverage.xml}</DontWarn>
-    <DontWarn>Coverage file extension must be in : .xml  .nccov  .coveragexml    {C:\Dev\Alfred\Alfred\Coverage\AlfredCoverage.html}</DontWarn>
-    <DontWarn>Invalid coverage file {C:\Dev\Alfred\Alfred\Coverage\TestResult.xml}</DontWarn>
+    <DontWarn>Invalid coverage file {C:\Dev\Alfred\Coverage\AlfredCoverage.xml}</DontWarn>
+    <DontWarn>Coverage file extension must be in : .xml  .nccov  .coveragexml    {C:\Dev\Alfred\Coverage\AlfredCoverage.html}</DontWarn>
+    <DontWarn>Invalid coverage file {C:\Dev\Alfred\Coverage\TestResult.xml}</DontWarn>
   </WarnFilter></NDepend>

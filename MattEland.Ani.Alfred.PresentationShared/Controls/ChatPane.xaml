@@ -1,0 +1,50 @@
+﻿<UserControl x:Class="MattEland.Ani.Alfred.PresentationShared.Controls.ChatPane"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:chat="clr-namespace:MattEland.Ani.Alfred.Chat;assembly=MattEland.Ani.Alfred.Chat"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" 
+             d:DesignWidth="300" 
+             d:DataContext="{d:DesignInstance chat:AimlStatementHandler}">
+    <StackPanel>
+
+        <!-- Alfred's response to prior statement -->
+        <StackPanel>
+
+            <TextBlock Foreground="{DynamicResource AppForegroundBrush}" 
+                       Text="Alfred:" />
+
+            <TextBlock Foreground="{DynamicResource AlfredBrush}" 
+                       Margin="0,4,0,0"
+                       TextWrapping="Wrap"
+                       ToolTip="{Binding Path=LastInput, StringFormat='In response to: {0}'}"
+                       Text="{Binding Path=LastResponse.ResponseText}"/>
+
+        </StackPanel>
+
+        <!-- User Input area -->
+        <StackPanel>
+            <TextBlock Margin="0,8,0,4"
+                       Text="Input:"
+                       Foreground="{DynamicResource AppForegroundBrush}" />
+
+            <DockPanel>
+                <Button x:Name="SubmitButton" 
+                        x:FieldModifier="public"
+                        Margin="8,0,0,0"
+                        Padding="8,0"
+                        IsDefault="True"
+                        Click="OnSubmitClicked"
+                        DockPanel.Dock="Right"
+                        Content="Submit" />
+                
+                <TextBox x:Name="InputText"
+                         x:FieldModifier="public"
+                         ToolTip="Enter your statement here and click Submit once you're ready." />
+
+            </DockPanel>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

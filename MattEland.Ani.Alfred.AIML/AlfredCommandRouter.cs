@@ -1,11 +1,13 @@
 ﻿// ---------------------------------------------------------
 // AlfredCommandRouter.cs
 // 
-// Created on:      08/18/2015 at 12:27 AM
-// Last Modified:   08/18/2015 at 1:25 AM
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/21/2015 at 5:46 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
+
+using System.Globalization;
 
 using JetBrains.Annotations;
 
@@ -49,9 +51,12 @@ namespace MattEland.Ani.Alfred.Chat
             var target = command.Subsystem;
 
             // Commands are very, very important and need to be logged.
-            alfred.Console?.Log("CommandRouting",
-                                "Command '" + command.Name + "' raised for subsystem '" + target +
-                                "' with data value of '" + command.Data + "'.",
+            alfred.Console?.Log(Resources.AlfredCommandRouterProcessAlfredCommandLogHeader,
+                                string.Format(CultureInfo.CurrentCulture,
+                                              Resources.AlfredCommandRouterProcessAlfredCommandLogMessage,
+                                              command.Name,
+                                              target,
+                                              command.Data),
                                 LogLevel.Info);
 
             // Send the command to each subsystem. These will in turn send it on to their pages and modules.
@@ -74,15 +79,20 @@ namespace MattEland.Ani.Alfred.Chat
         }
 
         /// <summary>
-        /// Processes a shell command by sending it on to the user interface layer.
+        ///     Processes a shell command by sending it on to the user interface layer.
         /// </summary>
         /// <param name="command">The command.</param>
+        [NotNull]
         public string ProcessShellCommand(ShellCommand command)
         {
             // Commands are very, very important and need to be logged.
-            Alfred?.Console?.Log("CommandRouting",
-                                "Shell Command '" + command.Name + "' raised targeting '" + command.Target +
-                                "' with data value of '" + command.Data + "'.", LogLevel.Info);
+            Alfred?.Console?.Log(Resources.AlfredCommandRouterProcessShellCommandLogHeader,
+                                 string.Format(CultureInfo.CurrentCulture,
+                                               Resources.AlfredCommandRouterProcessShellCommandMessage,
+                                               command.Name,
+                                               command.Target,
+                                               command.Data),
+                                 LogLevel.Info);
 
             var shell = Alfred?.ShellCommandHandler;
 

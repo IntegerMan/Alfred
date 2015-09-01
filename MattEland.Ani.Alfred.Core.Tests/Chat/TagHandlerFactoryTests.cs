@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
 // TagHandlerFactoryTests.cs
 // 
-// Created on:      08/18/2015 at 3:59 PM
-// Last Modified:   08/18/2015 at 5:07 PM
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/24/2015 at 12:20 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -11,6 +11,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 
 using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -19,7 +20,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     /// <summary>
     ///     A class to test <see cref="TagHandlerFactory" />.
     /// </summary>
-    [TestFixture]
+    [UnitTest]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public class TagHandlerFactoryTests : ChatTestsBase
     {
@@ -27,9 +28,11 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         ///     Sets up the test fixture for each test.
         /// </summary>
         [SetUp]
-        public void SetUp()
+        public override void SetUp()
         {
-            InitChatSystem();
+            base.SetUp();
+
+            InitializeChatSystem();
         }
 
         /// <summary>
@@ -43,14 +46,13 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         public void BuildDynamicWithKnownTagReturnsNewHandler()
         {
             var factory = new TagHandlerFactory(Engine);
-            var result = factory.BuildTagHandlerDynamic("srai",
-                                                        BuildTagHandlerParameters(
-                                                                                  "<srai>Testing Rocks</srai>"));
+            var parameters = BuildTagHandlerParameters("<srai>Testing Rocks</srai>");
+            var result = factory.BuildTagHandlerDynamic("srai", parameters);
 
             Assert.IsNotNull(result);
 
             var handler = (RedirectTagHandler)result;
-            Assert.AreEqual("Testing Rocks", handler.TemplateNode.InnerText);
+            Assert.AreEqual("Testing Rocks", handler.Contents);
         }
 
         /// <summary>
@@ -61,7 +63,8 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         /// </remarks>
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void BuildDynamicWithNullParamsThrowsException()
+        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
+        public void BuildDynamicWithNullParametersThrowsException()
         {
             var factory = new TagHandlerFactory(Engine);
             factory.BuildTagHandlerDynamic("Foo", null);
@@ -75,6 +78,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         /// </remarks>
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
+        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public void BuildDynamicWithNullTagThrowsException()
         {
             var factory = new TagHandlerFactory(Engine);
@@ -99,16 +103,18 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         }
 
         /// <summary>
-        /// Tag handler factories must have a ChatEngine
+        ///     Tag handler factories must have a ChatEngine
         /// </summary>
         /// <remarks>
-        /// See ALF-29
+        ///     See ALF-29
         /// </remarks>
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
+        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
+        [SuppressMessage("ReSharper", "ObjectCreationAsStatement")]
         public void BuildFactoryWithNullEngineThrowsException()
         {
-            var factory = new TagHandlerFactory(null);
+            new TagHandlerFactory(null);
         }
     }
 }

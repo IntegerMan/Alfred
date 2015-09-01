@@ -1,13 +1,15 @@
 ﻿// ---------------------------------------------------------
 // ValueMetricProviderFactory.cs
 // 
-// Created on:      08/18/2015 at 2:01 PM
-// Last Modified:   08/18/2015 at 2:57 PM
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/23/2015 at 11:42 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
 
@@ -22,25 +24,39 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
     public class ValueMetricProviderFactory : IMetricProviderFactory
     {
         /// <summary>
+        ///     Initializes a new instance of the <see cref="ValueMetricProviderFactory" /> class.
+        /// </summary>
+        public ValueMetricProviderFactory()
+        {
+            CategoryInstanceNameMappings = new Dictionary<string, IEnumerable<string>>();
+            Providers = new List<ValueMetricProvider>();
+        }
+
+        /// <summary>
         ///     Gets or sets the value to provide to ValueMetricProviders that don't have values of their own
         ///     set.
         /// </summary>
         /// <value>The value.</value>
         public float DefaultValue { get; set; }
 
+        /// <summary>
+        ///     Gets the value providers.
+        /// </summary>
+        /// <value>The value providers.</value>
         [NotNull]
         [ItemNotNull]
-        public ICollection<ValueMetricProvider> Providers { get; } = new List<ValueMetricProvider>()
-            ;
+        [UsedImplicitly]
+        public ICollection<ValueMetricProvider> Providers { get; }
 
         /// <summary>
         ///     Gets the category instance names dictionary. This dictionary allows test code to register
         ///     expected responses for when GetCategoryInstanceNames is called.
         /// </summary>
         /// <value>The category instance names.</value>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [NotNull]
-        public IDictionary<string, IEnumerable<string>> CategoryInstanceNames { get; } =
-            new Dictionary<string, IEnumerable<string>>();
+        [ItemNotNull]
+        public IDictionary<string, IEnumerable<string>> CategoryInstanceNameMappings { get; }
 
         /// <summary>
         ///     Builds a metric provider for the specified type.
@@ -49,9 +65,10 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <param name="counterName">Name of the counter.</param>
         /// <param name="instanceName">Name of the instance.</param>
         /// <returns>A metric provider</returns>
-        public MetricProviderBase Build(string categoryName,
-                                        string counterName,
-                                        string instanceName = null)
+        [NotNull]
+        public MetricProviderBase Build([NotNull] string categoryName,
+                                        [NotNull] string counterName,
+                                        [CanBeNull] string instanceName = null)
         {
             var provider = new ValueMetricProvider(this, instanceName ?? counterName);
 
@@ -66,11 +83,14 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// </summary>
         /// <param name="categoryName">Name of the category.</param>
         /// <returns>A collection of counter instance names</returns>
-        public IEnumerable<string> GetCategoryInstanceNames(string categoryName)
+        [NotNull]
+        public IEnumerable<string> GetCategoryInstanceNames([NotNull] string categoryName)
         {
-            if (CategoryInstanceNames.ContainsKey(categoryName))
+            if (CategoryInstanceNameMappings.ContainsKey(categoryName))
             {
-                return CategoryInstanceNames[categoryName];
+                var instanceNames = CategoryInstanceNameMappings[categoryName];
+                Debug.Assert(instanceNames != null);
+                return instanceNames;
             }
 
             // Fallback to an empty list

@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Pages;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Chat
 {
@@ -31,11 +30,12 @@ namespace MattEland.Ani.Alfred.Chat
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredPage" /> class.
+        /// Initializes a new instance of the <see cref="AlfredPage" /> class.
         /// </summary>
+        /// <param name="container">The container.</param>
         /// <param name="name">The name.</param>
         /// <param name="chatHandler">The input handler</param>
-        public ChatPage([NotNull] string name, [NotNull] IChatProvider chatHandler) : base(name, "Chat")
+        internal ChatPage([NotNull] IObjectContainer container, [NotNull] string name, [NotNull] IChatProvider chatHandler) : base(container, name, "Chat")
         {
             _chatHandler = chatHandler;
         }

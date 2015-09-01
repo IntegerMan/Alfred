@@ -7,8 +7,6 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System.Xml;
-
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
@@ -19,7 +17,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     /// <summary>
     /// An AIML Tag handler that handles the "bot" tag. This allows the system to interact with system variables.
     /// </summary>
-    [HandlesAimlTag("bot")]
+    [HandlesAimlTag("bot"), UsedImplicitly]
     public class BotTagHandler : AimlTagHandler
     {
         /// <summary>
@@ -37,22 +35,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// <returns>The processed output</returns>
         protected override string ProcessChange()
         {
-            var element = TemplateElement;
-
             // Ensure we have an element to work with
-            if (element != null &&
-                element.Name.Matches("ChatEngine") &&
-                element.HasAttribute("name"))
-            {
-                // Grab the attribute and use its value to GetTagHandler a setting value
-                var nameAttribute = element.Attributes["name"];
-                if (nameAttribute != null)
-                {
-                    return GetGlobalSetting(nameAttribute.Value);
-                }
-            }
+            if (!HasAttribute("name")) { return string.Empty; }
 
-            return string.Empty;
+            // Grab the attribute and use its value to GetTagHandler a setting value
+            var value = GetAttribute("name");
+
+            return value.HasText() ? GetGlobalSetting(value) : string.Empty;
         }
 
     }

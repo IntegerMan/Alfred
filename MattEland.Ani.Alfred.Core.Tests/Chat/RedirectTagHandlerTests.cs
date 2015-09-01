@@ -7,18 +7,11 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
-using System.Xml;
 
-using JetBrains.Annotations;
-
-using MattEland.Ani.Alfred.Chat;
-using MattEland.Ani.Alfred.Chat.Aiml;
 using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
-using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Common;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -27,7 +20,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     /// <summary>
     /// A class to test tag handlers for "srai" tags.
     /// </summary>
-    [TestFixture]
+    [UnitTest]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public class RedirectTagHandlerTests : ChatTestsBase
     {
@@ -35,10 +28,11 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         /// Sets up the test fixture for each test.
         /// </summary>
         [SetUp]
-        public void SetUp()
+        public override void SetUp()
         {
-            InitChatSystem();
+            base.SetUp();
 
+            InitializeChatSystem();
         }
 
         [Test]

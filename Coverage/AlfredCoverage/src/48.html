@@ -2,278 +2,99 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core\modules\alfredpowermodule.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core\modules\alertvisibilitycalculator.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlfredPowerModule.cs
+// AlertVisibilityCalculator.cs
 // 
-// Created on:      08/02/2015 at 4:56 PM
-// Last Modified:   08/12/2015 at 3:52 PM
+// Created on:      08/10/2015 at 10:44 PM
+// Last Modified:   08/11/2015 at 1:47 AM
 // Original author: Matt Eland
 // ---------------------------------------------------------
-
-using System.Globalization;
-
-using JetBrains.Annotations;
-
-using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Widgets;
-using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Core.Modules
 {
     /// &lt;summary&gt;
-    ///     A module intended for the control and monitoring of Alfred&#39;s status
+    ///     Used to calculate when alarms should be displayed
     /// &lt;/summary&gt;
-    public sealed class AlfredPowerModule : AlfredModule
+    internal static class AlertVisibilityCalculator
     {
-        [NotNull]
-        private readonly ButtonWidget _initializeButton;
-
-        [NotNull]
-        private readonly ButtonWidget _shutdownButton;
-
-        [NotNull]
-        private readonly TextWidget _statusWidget;
-
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the
-        ///     &lt;see cref=&quot;AlfredPowerModule&quot; /&gt;
-        ///     class.
+        ///     Calculates the alert visibility based on the inputed time.
         /// &lt;/summary&gt;
-        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;
-        /// &lt;/exception&gt;
-        /// &lt;param name=&quot;platformProvider&quot;&gt;
-        ///     The platform provider.
-        /// &lt;/param&gt;
-        public AlfredPowerModule([NotNull] IPlatformProvider platformProvider) : base(platformProvider)
+        /// &lt;param name=&quot;hour&quot;&gt;The current hour.&lt;/param&gt;
+        /// &lt;param name=&quot;minute&quot;&gt;The current minute.&lt;/param&gt;
+        /// &lt;param name=&quot;alertHour&quot;&gt;The alert hour.&lt;/param&gt;
+        /// &lt;param name=&quot;alertMinute&quot;&gt;The alert minute.&lt;/param&gt;
+        /// &lt;param name=&quot;alertDurationInHours&quot;&gt;The alert duration in hours.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the alert is visible, &lt;c&gt;false&lt;/c&gt; otherwise.&lt;/returns&gt;
+        internal static bool CalculateAlertVisibility(int hour,
+                                                      int minute,
+                                                      int alertHour,
+                                                      int alertMinute,
+                                                      int alertDurationInHours)
         {
-            _statusWidget = new TextWidget(Resources.AlfredCoreModule_AlfredNotSet);
-
-            var initializeCommand = platformProvider.CreateCommand(ExecuteInitializeCommand);
-            _initializeButton = new ButtonWidget(Resources.InitializeButtonText, initializeCommand);
-
-            var shutdownCommand = platformProvider.CreateCommand(ExecuteShutdownCommand);
-            _shutdownButton = new ButtonWidget(Resources.ShutdownButtonText, shutdownCommand);
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the name of the module.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The name of the module.&lt;/value&gt;
-        [NotNull]
-        public override string Name
-        {
-            get { return Resources.AlfredCoreModule_Name.NonNull(); }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the alfred status widget.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The alfred status widget.&lt;/value&gt;
-        [NotNull]
-        public TextWidget AlfredStatusWidget
-        {
-            get { return _statusWidget; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the initialize button.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The initialize button.&lt;/value&gt;
-        [NotNull]
-        public ButtonWidget InitializeButton
-        {
-            get { return _initializeButton; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Gets the shutdown button.
-        /// &lt;/summary&gt;
-        /// &lt;value&gt;The shutdown button.&lt;/value&gt;
-        [NotNull]
-        public ButtonWidget ShutdownButton
-        {
-            get { return _shutdownButton; }
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles the initialize command by initializing Alfred
-        /// &lt;/summary&gt;
-        internal void ExecuteInitializeCommand()
-        {
-            AlfredInstance?.Initialize();
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles the shutdown command by shutting down Alfred
-        /// &lt;/summary&gt;
-        internal void ExecuteShutdownCommand()
-        {
-            AlfredInstance?.Shutdown();
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles module initialization events
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;alfred&quot;&gt;&lt;/param&gt;
-        protected override void InitializeProtected(IAlfred alfred)
-        {
-            AddOnlineWidgets();
-        }
-
-        /// &lt;summary&gt;
-        ///     Adds the widgets used while in online mode.
-        /// &lt;/summary&gt;
-        private void AddOnlineWidgets()
-        {
-            ClearChildCollections();
-            Register(_statusWidget);
-            Register(ShutdownButton);
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles module shutdown events
-        /// &lt;/summary&gt;
-        protected override void ShutdownProtected()
-        {
-            // We&#39;re going to re-register the status widget since it&#39;s always present - even when the system is offline
-            AddOfflineWidgets();
-
-            // We need to do this so that buttons render properly
-            UpdateAlfredProviderStatus();
-        }
-
-        /// &lt;summary&gt;
-        ///     Adds the widgets used in offline mode.
-        /// &lt;/summary&gt;
-        private void AddOfflineWidgets()
-        {
-            ClearChildCollections();
-            Register(_statusWidget);
-            Register(InitializeButton);
-        }
-
-        /// &lt;summary&gt;
-        ///     Handles updating the module as needed
-        /// &lt;/summary&gt;
-        protected override void UpdateProtected()
-        {
-            UpdateAlfredProviderStatus();
-        }
-
-        /// &lt;summary&gt;
-        ///     Called when the component is registered.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;alfred&quot;&gt;The alfred.&lt;/param&gt;
-        public override void OnRegistered(IAlfred alfred)
-        {
-            base.OnRegistered(alfred);
-
-            UpdateAlfredProviderStatus();
-
-            if (AlfredInstance != null)
+            if (hour == alertHour)
             {
-                // Add the appropriate UI elements
-                if (AlfredInstance.Status == AlfredStatus.Online)
-                {
-                    AddOnlineWidgets();
-                }
-                else
-                {
-                    AddOfflineWidgets();
-                }
+                return minute &gt;= alertMinute;
             }
+
+            if (hour &gt; alertHour)
+            {
+                return CalculateVisibilityAfterAlarmHour(hour, minute, alertHour, alertMinute, alertDurationInHours);
+            }
+
+            // Next we&#39;ll check early morning carryover for late alerts (e.g. 4 hour alarm display at 10 PM)
+            // so make sure the end hour is representable on a 24 hour clock.
+            var alertEndHour = alertHour + alertDurationInHours;
+            while (alertEndHour &gt;= 24)
+            {
+                alertEndHour -= 24;
+            }
+
+            // Support scenarios of a 9 PM bedtime but it&#39;s 12:30 AM.
+            return hour &lt;= alertEndHour;
+
         }
 
         /// &lt;summary&gt;
-        ///     Updates the alfred provider status text.
+        ///     Calculates the alert visibility when the current hour is after the alarm hour.
         /// &lt;/summary&gt;
-        private void UpdateAlfredProviderStatus()
+        /// &lt;param name=&quot;hour&quot;&gt;The current hour.&lt;/param&gt;
+        /// &lt;param name=&quot;minute&quot;&gt;The current minute.&lt;/param&gt;
+        /// &lt;param name=&quot;alertHour&quot;&gt;The alert hour.&lt;/param&gt;
+        /// &lt;param name=&quot;alertMinute&quot;&gt;The alert minute.&lt;/param&gt;
+        /// &lt;param name=&quot;alertDurationInHours&quot;&gt;The alert duration in hours.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the alert should be visible, &lt;c&gt;false&lt;/c&gt; otherwise.&lt;/returns&gt;
+        /// &lt;remarks&gt;
+        ///     This is a method to help break down the complexity of CalculateAlertVisibility.
+        ///     Times come in this way to allow for testable scenarios.
+        /// &lt;/remarks&gt;
+        private static bool CalculateVisibilityAfterAlarmHour(int hour,
+                                                              int minute,
+                                                              int alertHour,
+                                                              int alertMinute,
+                                                              int alertDurationInHours)
         {
-            if (AlfredInstance == null)
-            {
-                // Update Text Message to a Nobody&#39;s Home sort of thing
-                _statusWidget.Text = Resources.NoAlfredText;
+            // Check for when we&#39;re on the hour the alert will expire
+            var alertEndHour = (alertHour + alertDurationInHours);
 
-                // Update Button Visibilities to hidden
-                if (_shutdownButton.ClickCommand != null)
-                {
-                    _shutdownButton.ClickCommand.IsEnabled = false;
-                }
-                if (_initializeButton.ClickCommand != null)
-                {
-                    _initializeButton.ClickCommand.IsEnabled = false;
-                }
-            }
-            else
+            if (hour == alertEndHour &amp;&amp; minute &lt; alertMinute)
             {
-                // Display the current status
-                var statusFormat = Resources.AlfredCoreModule_AlfredStatusText.NonNull();
-                _statusWidget.Text = string.Format(CultureInfo.CurrentCulture,
-                                                   statusFormat,
-                                                   AlfredInstance.Name,
-                                                   AlfredInstance.Status);
-
-                // Show the shutdown button while online and initialize button while offline
-                if (_shutdownButton.ClickCommand != null)
-                {
-                    _shutdownButton.ClickCommand.IsEnabled = AlfredInstance.Status == AlfredStatus.Online;
-                }
-                if (_initializeButton.ClickCommand != null)
-                {
-                    _initializeButton.ClickCommand.IsEnabled = AlfredInstance.Status == AlfredStatus.Offline;
-                }
-            }
-        }
-
-        /// &lt;summary&gt;
-        /// Processes an Alfred Command. If the command is handled, result should be modified accordingly and the method should return true. Returning false will not stop the message from being propogated.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;command&quot;&gt;The command.&lt;/param&gt;
-        /// &lt;param name=&quot;result&quot;&gt;The result. If the command was handled, this should be updated.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;True&lt;/c&gt; if the command was handled; otherwise false.&lt;/returns&gt;
-        public override bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
-        {
-            if (command.Name.Matches(&quot;Shutdown&quot;))
-            {
-                ExecuteShutdownCommand();
                 return true;
             }
 
-            return base.ProcessAlfredCommand(command, result);
-        }
-
-        /// &lt;summary&gt;
-        ///     A notification method that is invoked when initialization for Alfred is complete so the UI can be fully enabled or
-        ///     adjusted
-        /// &lt;/summary&gt;
-        public override void OnInitializationCompleted()
-        {
-            base.OnInitializationCompleted();
-
-            UpdateAlfredProviderStatus();
-        }
-
-        /// &lt;summary&gt;
-        ///     A notification method that is invoked when shutdown for Alfred is complete so the UI can be fully enabled or
-        ///     adjusted
-        /// &lt;/summary&gt;
-        public override void OnShutdownCompleted()
-        {
-            base.OnShutdownCompleted();
-
-            UpdateAlfredProviderStatus();
+            return hour &lt; alertEndHour;
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[61,17,61,18,0],[61,19,61,68,0],[61,69,61,70,0],[173,17,173,18,0],[174,21,174,40,0],[175,17,175,18,0],[189,13,189,14,0],[191,17,191,61,0],[194,17,194,58,0],[195,17,195,18,0],[196,21,196,68,0],[197,17,197,18,0],[198,17,198,60,0],[199,17,199,18,0],[200,21,200,70,0],[201,17,201,18,0],[202,13,202,14,0],[238,13,238,63,0],[43,82,43,104,1],[44,9,44,10,1],[45,13,45,85,1],[47,13,47,94,1],[48,13,48,101,1],[50,13,50,90,1],[51,13,51,95,1],[52,9,52,10,1],[71,17,71,18,1],[71,19,71,40,1],[71,41,71,42,1],[81,17,81,18,1],[81,19,81,44,1],[81,45,81,46,1],[91,17,91,18,1],[91,19,91,42,1],[91,43,91,44,1],[98,9,98,10,1],[99,13,99,42,1],[100,9,100,10,1],[106,9,106,10,1],[107,13,107,40,1],[108,9,108,10,1],[115,9,115,10,1],[116,13,116,32,1],[117,9,117,10,1],[123,9,123,10,1],[124,13,124,37,1],[125,13,125,37,1],[126,13,126,38,1],[127,9,127,10,1],[133,9,133,10,1],[135,13,135,33,1],[138,13,138,42,1],[139,9,139,10,1],[145,9,145,10,1],[146,13,146,37,1],[147,13,147,37,1],[148,13,148,40,1],[149,9,149,10,1],[155,9,155,10,1],[156,13,156,42,1],[157,9,157,10,1],[164,9,164,10,1],[165,13,165,39,1],[167,13,167,42,1],[169,13,169,40,1],[170,13,170,14,1],[172,17,172,66,1],[177,17,177,18,1],[178,21,178,41,1],[179,17,179,18,1],[180,13,180,14,1],[181,9,181,10,1],[187,9,187,10,1],[188,13,188,40,1],[204,13,204,14,1],[206,17,206,90,1],[207,17,210,75,1],[213,17,213,58,1],[214,17,214,18,1],[215,21,215,107,1],[216,17,216,18,1],[217,17,217,60,1],[218,17,218,18,1],[219,21,219,110,1],[220,17,220,18,1],[221,13,221,14,1],[222,9,222,10,1],[231,9,231,10,1],[232,13,232,50,1],[233,13,233,14,1],[234,17,234,42,1],[235,17,235,29,1],[239,9,239,10,1],[246,9,246,10,1],[247,13,247,46,1],[249,13,249,42,1],[250,9,250,10,1],[257,9,257,10,1],[258,13,258,40,1],[260,13,260,42,1],[261,9,261,10,1]]);
+      highlightRanges([[30,9,30,10,1],[31,13,31,35,1],[32,13,32,14,1],[33,17,33,46,1],[36,13,36,34,1],[37,13,37,14,1],[38,17,38,118,1],[43,13,43,65,1],[45,13,45,14,1],[46,17,46,36,1],[47,13,47,14,1],[44,13,44,39,1],[50,13,50,41,1],[52,9,52,10,1],[72,9,72,10,1],[74,13,74,67,1],[76,13,76,62,1],[77,13,77,14,1],[78,17,78,29,1],[81,13,81,40,1],[82,9,82,10,1]]);
     </script>
   </body>
 </html>

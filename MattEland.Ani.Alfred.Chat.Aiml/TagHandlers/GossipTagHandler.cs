@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
 // GossipTagHandler.cs
 // 
-// Created on:      08/12/2015 at 10:46 PM
-// Last Modified:   08/12/2015 at 11:59 PM
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/24/2015 at 12:06 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -16,35 +16,38 @@ using MattEland.Common;
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// <summary>
-    /// A tag handler for the AIML "gossip" tag. 
+    ///     A tag handler for the AIML "gossip" tag.
     /// 
-    /// This implementation simply logs the contents of the gossip tag to the logger.
+    ///     This implementation simply logs the contents of the gossip tag to the logger.
     /// </summary>
     [HandlesAimlTag("gossip")]
+    [UsedImplicitly]
     public class GossipTagHandler : AimlTagHandler
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AimlTagHandler" /> class.
+        ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
-        public GossipTagHandler([NotNull] TagHandlerParameters parameters)
-            : base(parameters)
+        public GossipTagHandler([NotNull] TagHandlerParameters parameters) : base(parameters)
         {
         }
 
         /// <summary>
-        /// Processes the input text and returns the processed value.
+        ///     Processes the input text and returns the processed value.
         /// </summary>
         /// <returns>The processed output</returns>
         protected override string ProcessChange()
         {
-            var node = TemplateNode;
-
             //- Ensure we have something to care about
-            if (node.Name.Matches("gossip") && node.InnerText.HasText())
-            {
-                Log(string.Format(Locale, "GOSSIP from user: {0}, '{1}'", User.Id, node.InnerText), LogLevel.Info);
-            }
+            if (!Contents.HasText()) { return string.Empty; }
+
+            // Build a message for the log and add the entry. No other action will be taken.
+            var message = string.Format(Locale,
+                                        Resources.GossipTagHandleLogMessage.NonNull(),
+                                        User.Name,
+                                        Contents);
+
+            Log(message, LogLevel.Info);
 
             return string.Empty;
         }

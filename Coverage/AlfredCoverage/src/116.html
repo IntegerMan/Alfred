@@ -2,88 +2,126 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.core.system\performancecountermetricprovider.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.core.system\memorymonitormodule.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// PerformanceCounterMetricProvider.cs
+// MemoryMonitorModule.cs
 // 
-// Created on:      08/18/2015 at 11:29 AM
-// Last Modified:   08/18/2015 at 3:12 PM
+// Created on:      08/04/2015 at 9:50 PM
+// Last Modified:   08/18/2015 at 2:06 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.ComponentModel;
-using System.Diagnostics;
 
 using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Core.Widgets;
 
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
     /// &lt;summary&gt;
-    ///     A metric provider based on a performance counter.
+    ///     A module that displays information on the system&#39;s memory utilization percentage
     /// &lt;/summary&gt;
-    public sealed class CounterMetricProvider : MetricProviderBase
+    public sealed class MemoryMonitorModule : SystemMonitorModule, IDisposable
     {
+        private const string MemoryCategoryName = &quot;Memory&quot;;
+        private const string MemoryUtilizationBytesCounterName = &quot;% Committed Bytes in Use&quot;;
+
         [NotNull]
-        private readonly PerformanceCounter _counter;
+        private readonly MetricProviderBase _memUsedBytesCounter;
+
+        [NotNull]
+        private readonly AlfredProgressBarWidget _memWidget;
 
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;CounterMetricProvider&quot; /&gt; class.
+        ///     Initializes a new instance of the &lt;see cref=&quot;MemoryMonitorModule&quot; /&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;categoryName&quot;&gt;Name of the category.&lt;/param&gt;
-        /// &lt;param name=&quot;counterName&quot;&gt;Name of the counter.&lt;/param&gt;
-        /// &lt;param name=&quot;instance&quot;&gt;The instance.&lt;/param&gt;
-        /// &lt;exception cref=&quot;Win32Exception&quot;&gt;An error occurred when accessing a system API.&lt;/exception&gt;
-        /// &lt;exception cref=&quot;UnauthorizedAccessException&quot;&gt;
-        ///     Code that is executing without administrative
-        ///     privileges attempted to read a performance counter.
-        /// &lt;/exception&gt;
-        public CounterMetricProvider(string categoryName, string counterName, string instance = null)
-            : base(instance ?? counterName)
+        /// &lt;param name=&quot;platformProvider&quot;&gt;The platform provider.&lt;/param&gt;
+        /// &lt;param name=&quot;factory&quot;&gt;The metric provider factory.&lt;/param&gt;
+        public MemoryMonitorModule([NotNull] IPlatformProvider platformProvider,
+                                   [NotNull] IMetricProviderFactory factory)
+            : base(platformProvider, factory)
         {
-            _counter = new PerformanceCounter(categoryName, counterName, instance, true);
+            _memUsedBytesCounter = MetricProvider.Build(MemoryCategoryName,
+                                                        MemoryUtilizationBytesCounterName);
 
-            /* Tell the performance counter to start getting values. These tend to always return 
-               0.0 as the first value and then provide accurate data after that */
-            _counter.NextValue();
+            _memWidget = new AlfredProgressBarWidget
+            {
+                Minimum = 0,
+                Maximum = 100,
+                Text = Resources.MemoryMonitorModule_LabelName,
+                ValueFormatString = &quot;{0:F2} %&quot;
+            };
+
         }
 
         /// &lt;summary&gt;
-        ///     Gets the next value from the metric provider
+        ///     Gets the name of the module.
         /// &lt;/summary&gt;
-        /// &lt;returns&gt;The next vaue&lt;/returns&gt;
-        /// &lt;exception cref=&quot;Win32Exception&quot;&gt;An error occurred when accessing a system API.&lt;/exception&gt;
-        /// &lt;exception cref=&quot;UnauthorizedAccessException&quot;&gt;
-        ///     Code that is executing without administrative
-        ///     privileges attempted to read a performance counter.
-        /// &lt;/exception&gt;
-        public override float NextValue()
+        /// &lt;value&gt;
+        ///     The name of the module.
+        /// &lt;/value&gt;
+        public override string Name
         {
-            return _counter.NextValue();
+            // ReSharper disable once AssignNullToNotNullAttribute
+            get { return Resources.MemoryMonitorModule_Name; }
         }
 
         /// &lt;summary&gt;
-        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged
-        ///     resources.
+        /// Gets the percent of memory that is utilized.
         /// &lt;/summary&gt;
-        public override void Dispose()
+        /// &lt;value&gt;The memory utilization percentage.&lt;/value&gt;
+        public float MemoryUtilization
         {
-            base.Dispose();
+            get { return _memUsedBytesCounter.NextValue(); }
+        }
 
-            _counter.Dispose();
+        /// &lt;summary&gt;
+        ///     Disposes this instance.
+        /// &lt;/summary&gt;
+        public void Dispose()
+        {
+            _memUsedBytesCounter.Dispose();
+        }
+
+        /// &lt;summary&gt;
+        ///     Handles module shutdown events
+        /// &lt;/summary&gt;
+        protected override void ShutdownProtected()
+        {
+            _memWidget.Value = 0;
+        }
+
+        /// &lt;summary&gt;
+        ///     Handles module initialization events
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;alfred&quot;&gt;The alfred instance.&lt;/param&gt;
+        protected override void InitializeProtected(IAlfred alfred)
+        {
+            Register(_memWidget);
+        }
+
+        /// &lt;summary&gt;
+        ///     Handles updating the module as needed
+        /// &lt;/summary&gt;
+        protected override void UpdateProtected()
+        {
+            var usedMemory = GetNextCounterValueSafe(_memUsedBytesCounter);
+
+            _memWidget.Value = usedMemory;
         }
     }
-
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[38,15,38,44,0],[39,9,39,10,0],[40,13,40,90,0],[44,13,44,34,0],[45,9,45,10,0],[57,9,57,10,0],[58,13,58,41,0],[59,9,59,10,0],[66,9,66,10,0],[67,13,67,28,0],[69,13,69,32,0],[70,9,70,10,0]]);
+      highlightRanges([[64,17,64,18,0],[64,19,64,61,0],[64,62,64,63,0],[80,9,80,10,0],[81,13,81,44,0],[82,9,82,10,0],[40,15,40,46,1],[41,9,41,10,1],[42,13,43,92,1],[45,13,51,15,1],[53,9,53,10,1],[73,17,73,18,1],[73,19,73,59,1],[73,60,73,61,1],[88,9,88,10,1],[89,13,89,34,1],[90,9,90,10,1],[97,9,97,10,1],[98,13,98,34,1],[99,9,99,10,1],[105,9,105,10,1],[106,13,106,76,1],[108,13,108,43,1],[109,9,109,10,1]]);
     </script>
   </body>
 </html>

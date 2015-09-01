@@ -18,7 +18,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     ///     A tag handler for the AIML "id" tag that outputs the user's identifier found in the User.Id
     ///     property.
     /// </summary>
-    [HandlesAimlTag("id")]
+    [HandlesAimlTag("id"), UsedImplicitly]
     public class UserIdTagHandler : AimlTagHandler
     {
         /// <summary>
@@ -36,9 +36,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// <returns>The processed output</returns>
         protected override string ProcessChange()
         {
-            // If it's the ID tag, use the user's ID, otherwise we don't care
-            return TemplateNode.Name.Matches("id") ? User.Id : string.Empty;
-
+            return User.Name;
         }
     }
 }

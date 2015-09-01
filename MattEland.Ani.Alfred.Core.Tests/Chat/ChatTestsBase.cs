@@ -20,8 +20,10 @@ using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
+using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Ani.Alfred.Tests.Mocks;
 using MattEland.Common;
+using MattEland.Common.Providers;
 
 using NUnit.Framework;
 
@@ -29,18 +31,13 @@ namespace MattEland.Ani.Alfred.Tests.Chat
 {
 
     /// <summary>
-    ///     An abstract class providing testing capabilities related to chats and commanding
+    ///     An <c>abstract</c> class providing testing capabilities related to chats and commanding
     /// </summary>
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
-    public class ChatTestsBase
+    public class ChatTestsBase : AlfredTestBase
     {
-        [NotNull]
-        private TestAlfred _alfred;
-
         private IChatProvider _chat;
-        private AlfredChatSubsystem _chatSubsystem;
-        private AlfredCoreSubsystem _coreSubsystem;
 
         [NotNull]
         private SystemMonitoringSubsystem _sysSubsystem;
@@ -49,56 +46,41 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         private TestSubsystem _testSubsystem;
 
         [NotNull]
-        private User _user;
-
-        [NotNull]
-        private ValueMetricProviderFactory _metricProviderFactory;
-
-        [NotNull]
-        private TestShell _shell;
-
-        [NotNull]
         public TestShell Shell
         {
             [DebuggerStepThrough]
-            get
-            { return _shell; }
+            get;
+            private set;
         }
 
         [NotNull]
         public ValueMetricProviderFactory MetricProviderFactory
         {
             [DebuggerStepThrough]
-            get
-            { return _metricProviderFactory; }
+            get;
+            private set;
         }
 
         [NotNull]
         public User User
         {
             [DebuggerStepThrough]
-            get
-            {
-                return _user;
-            }
+            get;
+            private set;
         }
 
         public AlfredCoreSubsystem CoreSubsystem
         {
             [DebuggerStepThrough]
-            get
-            {
-                return _coreSubsystem;
-            }
+            get;
+            private set;
         }
 
-        public AlfredChatSubsystem ChatSubsystem
+        public ChatSubsystem ChatSubsystem
         {
             [DebuggerStepThrough]
-            get
-            {
-                return _chatSubsystem;
-            }
+            get;
+            private set;
         }
 
         /// <summary>
@@ -121,18 +103,8 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             }
         }
 
-        /// <summary>
-        ///     Gets the alfred framework.
-        /// </summary>
-        /// <value>The alfred framework.</value>
         [NotNull]
-        protected TestAlfred Alfred
-        {
-            get { return _alfred; }
-        }
-
-        [NotNull]
-        public TestSubsystem TestSubsystem
+        public new TestSubsystem TestSubsystem
         {
             [DebuggerStepThrough]
             get
@@ -156,7 +128,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         /// </summary>
         /// <param name="input">The input.</param>
         /// <param name="templateId">The template identifier.</param>
-        protected void AssertMessageGetsReplyTemplate(string input, string templateId)
+        protected void AssertMessageGetsReplyTemplate([NotNull] string input, [NotNull] string templateId)
         {
             var template = GetReplyTemplate(input);
 
@@ -168,11 +140,12 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         /// </summary>
         /// <param name="template">The template.</param>
         /// <param name="id">The template identifier.</param>
-        private static void AssertTemplateId([NotNull] string template, [NotNull] string id)
+        [SuppressMessage("ReSharper", "UnusedParameter.Local")]
+        private static void AssertTemplateId([CanBeNull] string template, [NotNull] string id)
         {
             var idString = $"id=\"{id.ToLowerInvariant()}\"";
 
-            Assert.IsTrue(template.ToLowerInvariant().Contains(idString),
+            Assert.IsTrue(template != null && template.ToLowerInvariant().Contains(idString),
                           $"ID '{idString}' was not found. Template was: {template}");
         }
 
@@ -208,7 +181,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         private UserStatementResponse GetResponse([NotNull] string text)
         {
 
-            var chatProvider = _alfred.ChatProvider;
+            var chatProvider = Alfred.ChatProvider;
             Assert.NotNull(chatProvider,
                            "Alfred's chat provider was null when instructed to handle chat message");
 
@@ -223,10 +196,10 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         /// <summary>
         ///     Gets a reply from the chat system on a specified inquiry.
         /// </summary>
-        /// <param name="text">The inquiry text.</param>
+        /// <param name="text">The chat message.</param>
         /// <returns>The reply</returns>
         [CanBeNull]
-        protected string GetReplyTemplate([CanBeNull] string text)
+        protected string GetReplyTemplate([NotNull] string text)
         {
             var response = GetResponse(text);
 
@@ -237,60 +210,74 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         /// <summary>
         ///     Initializes the chat system.
         /// </summary>
-        protected void InitChatSystem()
+        protected void InitializeChatSystem()
         {
             AlfredTestTagHandler.WasInvoked = false;
 
-            _alfred = new TestAlfred();
+            // Create Alfred and make it so the tests can find him via the Container
+            var alfred = new TestAlfred();
+            alfred.RegisterAsProvidedInstance(Container);
+            alfred.RegisterAsProvidedInstance(typeof(IAlfred), Container);
 
-            // Add Subsystems to alfred
+            // Add Subsystems to Alfred
+            CoreSubsystem = new AlfredCoreSubsystem(CommonProvider.Container);
+            alfred.Register(CoreSubsystem);
 
-            _coreSubsystem = new AlfredCoreSubsystem(_alfred.PlatformProvider);
-            _alfred.Register(_coreSubsystem);
+            ChatSubsystem = new ChatSubsystem(Container, "Alfredo");
+            alfred.Register(ChatSubsystem);
 
-            _chatSubsystem = new AlfredChatSubsystem(_alfred.PlatformProvider, _alfred.Console);
-            _alfred.Register(_chatSubsystem);
+            _testSubsystem = new TestSubsystem(Container);
+            alfred.Register(_testSubsystem);
 
-            _testSubsystem = new TestSubsystem(_alfred.PlatformProvider);
-            _alfred.Register(_testSubsystem);
+            _sysSubsystem = new SystemMonitoringSubsystem(Container);
+            alfred.Register(_sysSubsystem);
 
-            _metricProviderFactory = new ValueMetricProviderFactory();
-            _sysSubsystem = new SystemMonitoringSubsystem(_alfred.PlatformProvider, _metricProviderFactory);
-            _alfred.Register(_sysSubsystem);
+            MetricProviderFactory = Container.Provide<ValueMetricProviderFactory>();
 
             // Store Chat Handler Details
-            var chatHandler = _chatSubsystem.ChatHandler;
+            var chatHandler = ChatSubsystem.ChatHandler;
             _chat = chatHandler;
 
             // Store Engine
             Assert.IsNotNull(chatHandler.ChatEngine, "Chat Engine was null");
             Engine = chatHandler.ChatEngine;
             Engine.LoadAimlFromString(Resources.AimlTestAssets.NonNull());
-            _user = new User("Test User", Engine);
+            User = new User("Test User");
 
             // Set up a shell handler to respond to events
-            _shell = new TestShell();
-            _alfred.Register(_shell);
+            Shell = new TestShell();
+            alfred.Register(Shell);
 
             // Start Alfred - doesn't make sense to have a chat test that doesn't need Alfred online first.
-            _alfred.Initialize();
-            _alfred.Update();
+            alfred.Initialize();
+            alfred.Update();
         }
 
+        /// <summary>
+        /// Builds the tag handler parameters.
+        /// </summary>
+        /// <param name="xml">The XML.</param>
+        /// <returns>The <see cref="TagHandlerParameters"/>.</returns>
         [NotNull]
-        protected TagHandlerParameters BuildTagHandlerParameters(string xml)
+        protected TagHandlerParameters BuildTagHandlerParameters([NotNull] string xml)
         {
-            var node = AimlTagHandler.BuildNode(xml);
-            return BuildTagHandlerParameters("Testing is fun", node);
+            var element = AimlTagHandler.BuildElement(xml);
+            return BuildTagHandlerParameters("Testing is fun", element);
         }
 
+        /// <summary>
+        /// Builds the tag handler parameters.
+        /// </summary>
+        /// <param name="input">The input text.</param>
+        /// <param name="element">The element.</param>
+        /// <returns>Parameters for these elements.</returns>
         [NotNull]
-        private TagHandlerParameters BuildTagHandlerParameters(string input, XmlNode node)
+        private TagHandlerParameters BuildTagHandlerParameters([NotNull] string input, [NotNull] XmlElement element)
         {
-            var query = new SubQuery(input);
+            var query = new SubQuery();
             var request = new Request(input, User, Engine);
-            var result = new Result(User, Engine, request);
-            return new TagHandlerParameters(Engine, User, query, request, result, node);
+            var result = new ChatResult(User, Engine, request);
+            return new TagHandlerParameters(Engine, User, query, request, result, element);
         }
 
         /// <summary>

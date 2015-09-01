@@ -12,10 +12,10 @@ using System.Linq;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common.Providers;
 
-namespace MattEland.Ani.Alfred.Core
+namespace MattEland.Ani.Alfred.Core.Console
 {
     /// <summary>
     ///     A simple console used for unit testing and designer window purposes
@@ -28,23 +28,40 @@ namespace MattEland.Ani.Alfred.Core
         /// <summary>
         ///     Initializes a new instance of the <see cref="SimpleConsole" /> class.
         /// </summary>
-        public SimpleConsole() : this(new SimplePlatformProvider())
+        public SimpleConsole() : this(CommonProvider.Container)
         {
         }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="SimpleConsole" /> class.
         /// </summary>
-        /// <param name="provider">The platform provider used to initialize the collection of events.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        public SimpleConsole([NotNull] IPlatformProvider provider)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when one or more required arguments are null.
+        /// </exception>
+        /// <param name="container"> The container. </param>
+        public SimpleConsole([NotNull] IObjectContainer container) : this(container, new ConsoleEventFactory())
         {
-            if (provider == null)
-            {
-                throw new ArgumentNullException(nameof(provider));
-            }
+        }
 
-            _events = provider.CreateCollection<IConsoleEvent>();
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="SimpleConsole" /> class.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when one or more required arguments are null.
+        /// </exception>
+        /// <param name="container"> The container. </param>
+        /// <param name="factory"> The console event factory. </param>
+        public SimpleConsole([NotNull] IObjectContainer container,
+                             [NotNull] ConsoleEventFactory factory)
+        {
+            if (container == null)
+            {
+                throw new ArgumentNullException(nameof(container));
+            }
+            if (factory == null) { throw new ArgumentNullException(nameof(factory)); }
+
+            _events = container.ProvideCollection<IConsoleEvent>();
+            EventFactory = factory;
         }
 
         /// <summary>
@@ -65,19 +82,26 @@ namespace MattEland.Ani.Alfred.Core
                 return;
             }
 
-            var evt = new ConsoleEvent(title, message, level);
+            var evt = EventFactory.CreateEvent(title, message, level);
 
             Log(evt);
         }
 
+        /// <summary>
+        /// Logs the specified console event.
+        /// </summary>
+        /// <param name="consoleEvent">The console event.</param>
         private void Log([NotNull] IConsoleEvent consoleEvent)
         {
-            if (consoleEvent == null)
+            try
             {
-                throw new ArgumentNullException(nameof(consoleEvent));
+                _events.Add(consoleEvent);
             }
-
-            _events.Add(consoleEvent);
+            catch (NotSupportedException)
+            {
+                /* TODO: I get this from dispatcher-based exceptions in VS logging. 
+                   I think I need a Thread-Safe Observable Collection */
+            }
         }
 
         /// <summary>
@@ -90,5 +114,13 @@ namespace MattEland.Ani.Alfred.Core
         {
             get { return _events; }
         }
+
+        /// <summary>
+        /// Gets the console event factory used for creating new events.
+        /// </summary>
+        /// <value>The console event factory.</value>
+        [NotNull]
+        public ConsoleEventFactory EventFactory { get; }
     }
+
 }

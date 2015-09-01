@@ -2,23 +2,20 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\redirecttaghandler.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\taghandlers\firstpersontosecondpersontaghandler.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// srai.cs
+// person.cs
 // 
-// Created on:      08/12/2015 at 10:55 PM
+// Created on:      08/12/2015 at 10:50 PM
 // Last Modified:   08/12/2015 at 11:59 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
-
-using System.Diagnostics;
-using System.Xml;
 
 using JetBrains.Annotations;
 
@@ -28,16 +25,16 @@ using MattEland.Common;
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// &lt;summary&gt;
-    /// A tag handler for the AIML &quot;srai&quot; tag governing recursive / redirect style searches.
+    /// A tag handler for the AIML &quot;person&quot; tag. This handles conversions from the first person to the second person.
     /// &lt;/summary&gt;
-    [HandlesAimlTag(&quot;srai&quot;)]
-    public class RedirectTagHandler : AimlTagHandler
+    [HandlesAimlTag(&quot;person&quot;)]
+    public class FirstPersonToSecondPersonTagHandler : AimlTagHandler
     {
         /// &lt;summary&gt;
         /// Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
-        public RedirectTagHandler([NotNull] TagHandlerParameters parameters)
+        public FirstPersonToSecondPersonTagHandler([NotNull] TagHandlerParameters parameters)
             : base(parameters)
         {
         }
@@ -48,28 +45,37 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// &lt;returns&gt;The processed output&lt;/returns&gt;
         protected override string ProcessChange()
         {
-            //- Basic validation
-            if (!TemplateNode.Name.Matches(&quot;srai&quot;) || TemplateNode.InnerText.IsEmpty())
+            var node = TemplateNode;
+            if (!node.Name.Matches(&quot;person&quot;))
             {
                 return string.Empty;
             }
 
-            // Spawn a new request as a child of this current request and execute it
-            var request = new Request(TemplateNode.InnerText, User, ChatEngine, Request);
-            var result = ChatEngine.ProcessRedirectChatRequest(request);
-            Debug.Assert(result != null);
+            // Substitute entries of &quot;I am&quot; with &quot;You are&quot; and the like
+            if (node.InnerText.HasText())
+            {
+                var substitutions = Librarian.FirstPersonToSecondPersonSubstitutions;
+                return TextSubstitutionHelper.Substitute(substitutions, node.InnerText);
+            }
 
-            // This could have taken awhile. Check it for timeout
-            request.CheckForTimedOut();
+            // Evaluate everything else and set that as the inner text of this node and then process it
+            var star = BuildStarTagHandler();
+            node.InnerText = star.Transform().NonNull();
 
-            // Return the result of the inner request
-            return result.Output;
+            if (node.InnerText.HasText())
+            {
+                // Recursively process the input with the remainder of the inner text
+                return ProcessChange();
+            }
+
+            return string.Empty;
         }
+
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[31,15,31,31,1],[32,9,32,10,1],[33,9,33,10,1],[40,9,40,10,1],[42,13,42,88,1],[43,13,43,14,1],[44,17,44,37,1],[48,13,48,90,1],[49,13,49,73,1],[50,13,50,42,1],[53,13,53,40,1],[56,13,56,34,1],[57,9,57,10,1]]);
+      highlightRanges([[28,15,28,31,0],[29,9,29,10,0],[30,9,30,10,0],[37,9,37,10,0],[38,13,38,37,0],[39,13,39,46,0],[40,13,40,14,0],[41,17,41,37,0],[45,13,45,42,0],[46,13,46,14,0],[47,17,47,86,0],[48,17,48,89,0],[52,13,52,46,0],[53,13,53,57,0],[55,13,55,42,0],[56,13,56,14,0],[58,17,58,40,0],[61,13,61,33,0],[62,9,62,10,0]]);
     </script>
   </body>
 </html>

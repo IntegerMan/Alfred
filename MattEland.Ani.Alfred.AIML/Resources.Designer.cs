@@ -284,6 +284,15 @@ namespace MattEland.Ani.Alfred.Chat {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Using Template: {0}.
+        /// </summary>
+        internal static string AimlStatementHandlerUsingTemplate {
+            get {
+                return ResourceManager.GetString("AimlStatementHandlerUsingTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
         ///
         ///&lt;!-- 
@@ -301,11 +310,12 @@ namespace MattEland.Ani.Alfred.Chat {
         ///      &lt;alfred subsystem=&quot;sys&quot; command=&quot;status&quot; /&gt;
         ///    &lt;/template&gt;
         ///  &lt;/category&gt;
-        ///  
         ///  &lt;category&gt;
-        ///    &lt;pattern&gt;MEMORY STATUS&lt;/pattern&gt;
-        ///    &lt;template id=&quot;tmp_status_mem&quot;&gt;
-        ///      &lt;alfred subsystem=&quot;sys&quot; [rest of string was truncated]&quot;;.
+        ///    &lt;pattern&gt;SYSTEM STATUS&lt;/pattern&gt;
+        ///    &lt;template&gt;
+        ///      &lt;srai&gt;STATUS&lt;/srai&gt;
+        ///    &lt;/template&gt;
+        ///  &lt;/categ [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string AimlSysStatus {
             get {
@@ -341,6 +351,51 @@ namespace MattEland.Ani.Alfred.Chat {
         internal static string AimlThanks {
             get {
                 return ResourceManager.GetString("AimlThanks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CommandRouting.
+        /// </summary>
+        internal static string AlfredCommandRouterProcessAlfredCommandLogHeader {
+            get {
+                return ResourceManager.GetString("AlfredCommandRouterProcessAlfredCommandLogHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Command &apos;{0}&apos; raised for subsystem &apos;{1}&apos; with data value of &apos;{2}&apos;..
+        /// </summary>
+        internal static string AlfredCommandRouterProcessAlfredCommandLogMessage {
+            get {
+                return ResourceManager.GetString("AlfredCommandRouterProcessAlfredCommandLogMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CommandRouting.
+        /// </summary>
+        internal static string AlfredCommandRouterProcessShellCommandLogHeader {
+            get {
+                return ResourceManager.GetString("AlfredCommandRouterProcessShellCommandLogHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shell Command &apos;{0}&apos; raised targeting &apos;{1}&apos; with data value of &apos;{2}&apos;..
+        /// </summary>
+        internal static string AlfredCommandRouterProcessShellCommandMessage {
+            get {
+                return ResourceManager.GetString("AlfredCommandRouterProcessShellCommandMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attempted to execute command, but no valid recipient.
+        /// </summary>
+        internal static string AlfredTagHandlerProcessChangeNoRecipient {
+            get {
+                return ResourceManager.GetString("AlfredTagHandlerProcessChangeNoRecipient", resourceCulture);
             }
         }
         
@@ -494,7 +549,7 @@ namespace MattEland.Ani.Alfred.Chat {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Batman.
+        ///   Looks up a localized string similar to User.
         /// </summary>
         internal static string ChatUserName {
             get {

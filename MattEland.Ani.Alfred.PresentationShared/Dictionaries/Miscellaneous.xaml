@@ -1,0 +1,19 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Converters">
+
+    <!-- Converters -->
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    
+    <converters:VisibilityConverter x:Key="ShowIfTrue" />
+    <converters:VisibilityConverter x:Key="HideIfTrue" Invert="True" />
+
+    <converters:LogLevelToBrushConverter x:Key="LogLevelToBrushConverter"
+                                  WarningBrush="{DynamicResource CautionForegroundBrush}"
+                                  InfoBrush="{DynamicResource AppForegroundBrush}"
+                                  UserInputBrush="{DynamicResource UserLogBrush}"
+                                  ChatResponseBrush="{DynamicResource AlfredBrush}"
+                                  VerboseBrush="{DynamicResource AppMutedForegroundBrush}"
+                                  ErrorBrush="{DynamicResource ErrorForegroundBrush}" />
+
+</ResourceDictionary>

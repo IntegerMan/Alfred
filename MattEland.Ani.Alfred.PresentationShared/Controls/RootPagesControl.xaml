@@ -1,0 +1,36 @@
+﻿<UserControl x:Class="MattEland.Ani.Alfred.PresentationShared.Controls.RootPagesControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:commands="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Commands"
+             Loaded="HandleControlLoaded"
+             d:DataContext="{d:DesignInstance commands:ApplicationManager}"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    
+    <TabControl x:Name="TabPages" 
+                x:FieldModifier="public"
+                Margin="8, 8, 8, 8"
+                ItemsSource="{Binding Alfred.RootPages}">
+
+        <TabControl.ItemTemplate>
+            <DataTemplate>
+                <!-- Tabs are pretty simple; just show the name -->
+                <TextBlock Text="{Binding Name}" />
+            </DataTemplate>
+        </TabControl.ItemTemplate>
+
+        <TabControl.ContentTemplate>
+            <DataTemplate>
+
+                <!-- Present the content inside of an auto-scrolling region. 
+                            Let the data template for the type of content handle the presentation -->
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="8" Content="{Binding}" />
+
+            </DataTemplate>
+        </TabControl.ContentTemplate>
+
+    </TabControl>
+    
+</UserControl>

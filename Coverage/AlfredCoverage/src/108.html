@@ -2,91 +2,148 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.aiml\alfredcommandrouter.cs</title>
+    <title>c:\dev\alfred\matteland.common\assemblyextensions.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// AlfredCommandRouter.cs
+// AssemblyExtensions.cs
 // 
-// Created on:      08/18/2015 at 12:27 AM
-// Last Modified:   08/18/2015 at 1:25 AM
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/22/2015 at 2:56 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core;
-using MattEland.Ani.Alfred.Core.Console;
-using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Common;
-
-namespace MattEland.Ani.Alfred.Chat
+namespace MattEland.Common
 {
-    /// &lt;summary&gt;
-    ///     This class takes commands in and handles them by routing them to various components in an
-    ///     Alfred application.
-    /// &lt;/summary&gt;
-    public class AlfredCommandRouter : IAlfredCommandRecipient
+    public static class AssemblyHelper
     {
         /// &lt;summary&gt;
-        ///     Gets or sets the alfred instance.
+        ///     Gets the types in an assembly with an attribute applied to them.
         /// &lt;/summary&gt;
-        /// &lt;value&gt;The alfred instance.&lt;/value&gt;
-        [CanBeNull]
-        public IAlfred Alfred { get; set; }
+        /// &lt;typeparam name=&quot;TAttribute&quot;&gt;The attribute to search for.&lt;/typeparam&gt;
+        /// &lt;param name=&quot;assembly&quot;&gt;The assembly.&lt;/param&gt;
+        /// &lt;param name=&quot;inherit&quot;&gt;
+        ///     true to search the type&#39;s inheritance chain to find the attributes; otherwise, false.
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;The types in the assembly with the requested attribute&lt;/returns&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        [NotNull]
+        [ItemNotNull]
+        [UsedImplicitly]
+        public static IEnumerable&lt;Type&gt; GetTypesInAssemblyWithAttribute&lt;TAttribute&gt;(
+            [NotNull] this Assembly assembly,
+            bool inherit)
+            where TAttribute : Attribute
+        {
+            if (assembly == null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            var types = assembly.GetTypes();
+            return GetTypesWithAttributes(types, typeof(TAttribute), inherit);
+        }
 
         /// &lt;summary&gt;
-        ///     Processes an Alfred Command. If the command is handled, result should be modified accordingly
-        ///     and the method should return true. Returning false will not stop the message from being
-        ///     propagated.
+        ///     Gets the types in a group of types that have an attribute applied to them.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;command&quot;&gt;The command.&lt;/param&gt;
-        /// &lt;param name=&quot;result&quot;&gt;The result. If the command was handled, this should be updated.&lt;/param&gt;
-        /// &lt;returns&gt;&lt;c&gt;True&lt;/c&gt; if the command was handled; otherwise false.&lt;/returns&gt;
-        public bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
+        /// &lt;param name=&quot;types&quot;&gt;The set of types&lt;/param&gt;
+        /// &lt;param name=&quot;attributeType&quot;&gt;The attribute type.&lt;/param&gt;
+        /// &lt;param name=&quot;inherit&quot;&gt;
+        ///     true to search the type&#39;s inheritance chain to find the attributes; otherwise, false.
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;The types in the set of types that have the requested attribute&lt;/returns&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;types, attributeType&lt;/exception&gt;
+        [SuppressMessage(&quot;ReSharper&quot;, &quot;PossibleNullReferenceException&quot;)]
+        [NotNull]
+        [ItemNotNull]
+        [UsedImplicitly]
+        public static IEnumerable&lt;Type&gt; GetTypesWithAttributes([NotNull] IEnumerable&lt;Type&gt; types,
+                                                               [NotNull] Type attributeType,
+                                                               bool inherit)
         {
-            var alfred = Alfred;
-            if (alfred == null)
+            if (types == null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(types));
+            }
+            if (attributeType == null)
+            {
+                throw new ArgumentNullException(nameof(attributeType));
             }
 
-            // Extract our target for loop readability
-            var target = command.Subsystem;
+            return types.Where(t =&gt; t != null &amp;&amp; t.HasAttribute(attributeType, inherit));
+        }
 
-            // Commands are very, very important and need to be logged.
-            alfred.Console?.Log(&quot;CommandRouting&quot;,
-                                &quot;Command &#39;&quot; + command.Name + &quot;&#39; raised for subsystem &#39;&quot; + target +
-                                &quot;&#39; with data value of &#39;&quot; + command.Data + &quot;&#39;.&quot;,
-                                LogLevel.Info);
-
-            // Send the command to each subsystem. These will in turn send it on to their pages and modules.
-            foreach (var subsystem in alfred.Subsystems)
+        /// &lt;summary&gt;
+        ///     Determines whether the specified member has a particular attribute applied to it.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;member&quot;&gt;The member.&lt;/param&gt;
+        /// &lt;param name=&quot;attributeType&quot;&gt;The attribute type&lt;/param&gt;
+        /// &lt;param name=&quot;inherit&quot;&gt;
+        ///     true to search the type&#39;s inheritance chain to find the attributes; otherwise, false.
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;&lt;c&gt;true&lt;/c&gt; if the specified inherit has the attribute; otherwise, &lt;c&gt;false&lt;/c&gt;.&lt;/returns&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;&lt;/exception&gt;
+        [UsedImplicitly]
+        public static bool HasAttribute([NotNull] this MemberInfo member,
+                                        [NotNull] Type attributeType,
+                                        bool inherit)
+        {
+            if (member == null)
             {
-                // If the command isn&#39;t for the subsystem, move on.
-                if (target.HasText() &amp;&amp; !target.Matches(subsystem.Id))
-                {
-                    continue;
-                }
-
-                // Send the command to the subsystem for routing. If it&#39;s handled, the subsystem will return true.
-                if (subsystem.ProcessAlfredCommand(command, result))
-                {
-                    return true;
-                }
+                throw new ArgumentNullException(nameof(member));
+            }
+            if (attributeType == null)
+            {
+                throw new ArgumentNullException(nameof(attributeType));
             }
 
-            return false;
+            return member.IsDefined(attributeType, inherit);
+        }
+
+        /// &lt;summary&gt;
+        ///     Gets the Version of this module&#39;s assembly based on the AssemblyVersionAttribute.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;caller&quot;&gt;The caller.&lt;/param&gt;
+        /// &lt;returns&gt;The Version of this module&#39;s assembly&lt;/returns&gt;
+        /// &lt;exception cref=&quot;System.ArgumentNullException&quot;&gt;caller&lt;/exception&gt;
+        [CanBeNull]
+        public static Version GetAssemblyVersion([NotNull] this object caller)
+        {
+            if (caller == null)
+            {
+                throw new ArgumentNullException(nameof(caller));
+            }
+
+            try
+            {
+                var assembly = caller.GetType().Assembly;
+                var assemblyName = new AssemblyName(assembly.FullName);
+                return assemblyName.Version;
+            }
+            catch (IOException)
+            {
+                return null;
+            }
         }
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[44,13,44,14,0],[45,17,45,30,0],[30,33,30,37,1],[30,38,30,42,1],[41,9,41,10,1],[42,13,42,33,1],[43,13,43,32,1],[49,13,49,44,1],[52,13,55,48,1],[58,13,58,20,1],[58,39,58,56,1],[58,22,58,35,1],[59,13,59,14,1],[61,17,61,71,1],[62,17,62,18,1],[63,21,63,30,1],[67,17,67,69,1],[68,17,68,18,1],[69,21,69,33,1],[71,13,71,14,1],[58,36,58,38,1],[73,13,73,26,1],[74,9,74,10,1]]);
+      highlightRanges([[42,13,42,14,0],[43,17,43,67,0],[69,13,69,14,0],[70,17,70,64,0],[73,13,73,14,0],[74,17,74,72,0],[96,13,96,14,0],[97,17,97,65,0],[100,13,100,14,0],[101,17,101,72,0],[117,13,117,14,0],[118,17,118,65,0],[127,13,127,32,0],[128,13,128,14,0],[129,17,129,29,0],[40,9,40,10,1],[41,13,41,34,1],[46,13,46,45,1],[47,13,47,79,1],[48,9,48,10,1],[67,9,67,10,1],[68,13,68,31,1],[72,13,72,39,1],[77,13,77,37,1],[77,88,77,90,1],[78,9,78,10,1],[94,9,94,10,1],[95,13,95,32,1],[99,13,99,39,1],[104,13,104,61,1],[105,9,105,10,1],[115,9,115,10,1],[116,13,116,32,1],[122,13,122,14,1],[123,17,123,58,1],[124,17,124,72,1],[125,17,125,45,1],[131,9,131,10,1],[77,37,77,88,1]]);
     </script>
   </body>
 </html>

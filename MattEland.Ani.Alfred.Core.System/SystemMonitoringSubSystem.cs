@@ -1,13 +1,13 @@
 ﻿// ---------------------------------------------------------
-// SystemMonitoringSubsystem.cs
+// SystemMonitoringSubSystem.cs
 // 
-// Created on:      08/07/2015 at 10:12 PM
-// Last Modified:   08/07/2015 at 10:36 PM
-// Original author: Matt Eland
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   08/29/2015 at 1:21 AM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
-using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -16,7 +16,9 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Pages;
+using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Common;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
@@ -26,38 +28,68 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
     /// </summary>
     public sealed class SystemMonitoringSubsystem : AlfredSubsystem, IDisposable
     {
-        [NotNull]
-        private readonly AlfredModuleListPage _page;
 
         [NotNull]
         private readonly CpuMonitorModule _cpuModule;
 
         [NotNull]
+        private readonly DiskMonitorModule _diskModule;
+
+        [NotNull]
         private readonly MemoryMonitorModule _memoryModule;
 
         [NotNull]
-        private readonly DiskMonitorModule _diskModule;
+        private readonly AlfredModuleListPage _page;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
-        /// <param name="provider">The provider.</param>
-        /// <param name="factory"></param>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        /// <exception cref="Win32Exception">A call to an underlying system API failed.</exception>
-        /// <exception cref="UnauthorizedAccessException">Code that is executing without administrative privileges attempted to read a performance counter.</exception>
-        public SystemMonitoringSubsystem([NotNull] IPlatformProvider provider, [NotNull] IMetricProviderFactory factory) : base(provider)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when one or more required arguments are null.
+        /// </exception>
+        /// <param name="container"> The container. </param>
+        public SystemMonitoringSubsystem([NotNull] IObjectContainer container) : base(container)
         {
-            _cpuModule = new CpuMonitorModule(provider, factory);
-            _memoryModule = new MemoryMonitorModule(provider, factory);
-            _diskModule = new DiskMonitorModule(provider, factory);
+            if (container == null) { throw new ArgumentNullException(nameof(container)); }
 
-            _page = new AlfredModuleListPage(provider, Resources.SystemMonitoringSystem_Name.NonNull(), "Sys");
+            // Grab a factory from the container. This can be counter-based or a test factory.
+            var factory = Container.Provide<IMetricProviderFactory>();
+
+            // Set up modules
+            _cpuModule = new CpuMonitorModule(container, factory);
+            _memoryModule = new MemoryMonitorModule(container, factory);
+            _diskModule = new DiskMonitorModule(container, factory);
+
+            // Set up the containing page
+            _page = new AlfredModuleListPage(container,
+                                             Resources.SystemMonitoringSystem_Name.NonNull(),
+                                             "Sys");
         }
 
-        /// <summary>
-        /// Registers the controls for this component.
-        /// </summary>
+        /// <summary>Gets the name of the subsystems.</summary>
+        /// <value>The name.</value>
+        [NotNull]
+        public override string Name
+        {
+            get { return Resources.SystemMonitoringSystem_Name.NonNull(); }
+        }
+
+        /// <summary>Gets the identifier for the subsystem to be used in command routing.</summary>
+        /// <value>The identifier for the subsystem.</value>
+        public override string Id
+        {
+            get { return "Sys"; }
+        }
+
+        /// <summary>Disposes of allocated resources</summary>
+        public void Dispose()
+        {
+            _cpuModule.Dispose();
+            _memoryModule.Dispose();
+            _diskModule.Dispose();
+        }
+
+        /// <summary>Registers the controls for this component.</summary>
         protected override void RegisterControls()
         {
             Register(_page);
@@ -69,34 +101,24 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         }
 
         /// <summary>
-        ///     Gets the name of the subsystems.
+        ///     Processes an Alfred Command. If the <paramref name="command"/> is handled,
+        ///     <paramref name="result"/> should be modified accordingly and the method should
+        ///     return true. Returning <see langword="false"/> will not stop the message from being
+        ///     propagated.
         /// </summary>
-        /// <value>The name.</value>
-        [NotNull]
-        public override string Name
+        /// <param name="command"> The command. </param>
+        /// <param name="result">
+        ///     The result. If the <paramref name="command"/> was handled, this should be updated.
+        /// </param>
+        /// <returns>
+        ///     <c>True</c> if the <paramref name="command"/> was handled; otherwise false.
+        /// </returns>
+        public override bool ProcessAlfredCommand(
+            ChatCommand command,
+            [CanBeNull] AlfredCommandResult result)
         {
-            get { return Resources.SystemMonitoringSystem_Name.NonNull(); }
-        }
+            if (result == null) { return false; }
 
-        /// <summary>
-        /// Disposes of allocated resources
-        /// </summary>
-        public void Dispose()
-        {
-            _cpuModule.Dispose();
-            _memoryModule.Dispose();
-            _diskModule.Dispose();
-        }
-
-
-        /// <summary>
-        /// Processes an Alfred Command. If the command is handled, result should be modified accordingly and the method should return true. Returning false will not stop the message from being propogated.
-        /// </summary>
-        /// <param name="command">The command.</param>
-        /// <param name="result">The result. If the command was handled, this should be updated.</param>
-        /// <returns><c>True</c> if the command was handled; otherwise false.</returns>
-        public override bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
-        {
             if (command.IsFor(this) && command.Name.Matches("Status"))
             {
                 result.Output = GetStatusText(command.Data);
@@ -108,7 +130,6 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 
         private string GetStatusText(string data)
         {
-
             var alfred = AlfredInstance;
             if (alfred == null)
             {
@@ -134,7 +155,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
                                 "There {3} {0} CPU {1} with an average of {2:F1} % utilization. ",
                                 _cpuModule.NumberOfCores,
                                 _cpuModule.NumberOfCores.Pluralize("core", "cores"),
-                                _cpuModule.AverageCpuUtilization,
+                                _cpuModule.AverageProcessorUtilization,
                                 _cpuModule.NumberOfCores.Pluralize("is", "are"));
             }
 
@@ -153,19 +174,9 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
                                 "Disk read speed is currently utilized at {0:F1} % and disk write utilization is at {1:F1} %. ",
                                 _diskModule.ReadUtilization,
                                 _diskModule.WriteUtilization);
-
             }
 
             return sb.ToString();
-        }
-
-        /// <summary>
-        ///     Gets the identifier for the subsystem to be used in command routing.
-        /// </summary>
-        /// <value>The identifier for the subsystem.</value>
-        public override string Id
-        {
-            get { return "Sys"; }
         }
     }
 }

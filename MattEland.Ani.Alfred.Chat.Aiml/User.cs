@@ -15,6 +15,7 @@ using System.Linq;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml
 {
@@ -25,29 +26,35 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
     {
         [NotNull]
         [ItemNotNull]
-        private readonly List<Result> _results = new List<Result>();
+        private readonly List<ChatResult> _results = new List<ChatResult>();
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="User" /> class.
         /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <param name="chatEngine">The chat engine.</param>
+        /// <param name="name">The identifier.</param>
         /// <exception cref="ArgumentOutOfRangeException">The id cannot be empty</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="chatEngine"/> is <see langword="null" />.</exception>
-        public User([NotNull] string id, [NotNull] ChatEngine chatEngine)
+        public User([NotNull] string name) : this(name, false)
+        { }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="User" /> class.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException"> The name cannot be empty. </exception>
+        /// <param name="name"> The identifier. </param>
+        /// <param name="isSystemUser">
+        ///     <see langword="true"/> if this instance is system user, <see langword="false"/> if not.
+        /// </param>
+        internal User([NotNull] string name, bool isSystemUser)
         {
             //- Validation
-            if (chatEngine == null)
+            if (string.IsNullOrWhiteSpace(name))
             {
-                throw new ArgumentNullException(nameof(chatEngine));
-            }
-            if (string.IsNullOrWhiteSpace(id))
-            {
-                throw new ArgumentOutOfRangeException(nameof(id), Resources.UserCtorNullId);
+                throw new ArgumentOutOfRangeException(nameof(name), Resources.UserCtorNullId);
             }
 
-            Id = id;
-            ChatEngine = chatEngine;
+            Name = name;
+            UniqueId = Guid.NewGuid();
+            IsSystemUser = isSystemUser;
 
             // Set up the variables collection
             UserVariables = new SettingsManager();
@@ -55,33 +62,40 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         }
 
         /// <summary>
-        ///     Gets the chat engine.
-        /// </summary>
-        /// <value>The chat engine.</value>
-        [NotNull]
-        public ChatEngine ChatEngine { get; }
-
-        /// <summary>
         ///     Gets the predicates. These are variables pertaining to the user.
         /// </summary>
         /// <value>The predicates.</value>
         [NotNull]
-        public SettingsManager UserVariables { get; }
+        internal SettingsManager UserVariables { get; }
 
         /// <summary>
         ///     Gets the user's identifier.
         /// </summary>
         /// <value>The user's identifier.</value>
         [NotNull]
-        public string Id { get; }
+        public Guid UniqueId { get; }
+
+        /// <summary>
+        ///     Gets or sets the name of the user.
+        /// </summary>
+        /// <value>
+        ///     The name of the user.
+        /// </value>
+        [NotNull]
+        public string Name { get; }
 
         /// <summary>
         ///     Gets the topic.
         /// </summary>
         /// <value>The topic.</value>
-        public string Topic
+        [NotNull]
+        internal string Topic
         {
-            get { return UserVariables.GetValue("topic"); }
+            get
+            {
+                // TODO: Docs need more on topics
+                return UserVariables.GetValue("topic").NonNull();
+            }
         }
 
         /// <summary>
@@ -89,7 +103,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// </summary>
         /// <value>The last result.</value>
         [CanBeNull]
-        public Result LastResult
+        private ChatResult LastChatResult
         {
             get { return _results.FirstOrDefault(); }
         }
@@ -99,10 +113,19 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// </summary>
         /// <returns>The last result's raw output</returns>
         [NotNull]
-        public string LastChatOutput
+        internal string LastChatOutput
         {
-            get { return LastResult?.RawOutput ?? "*"; }
+            get { return LastChatResult?.RawOutput ?? "*"; }
         }
+
+        /// <summary>
+        ///     Gets a value indicating whether this instance represents a chat engine's system
+        ///     <see cref="User"/>.
+        /// </summary>
+        /// <value>
+        ///     <see langword="true"/> if this instance is system user, <see langword="false"/> if not.
+        /// </value>
+        public bool IsSystemUser { get; }
 
         /// <summary>
         ///     Gets the output sentence from the specified result and sentence.
@@ -110,7 +133,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <param name="resultIndex">Index of the result. Defaults to 1.</param>
         /// <param name="sentenceIndex">Index of the sentence. Defaults to 1.</param>
         /// <returns>The output sentence</returns>
-        public string GetOutputSentence(int resultIndex = 1, int sentenceIndex = 1)
+        [NotNull]
+        internal string GetOutputSentence(int resultIndex = 1, int sentenceIndex = 1)
         {
             //- Ensure we're not grabbing out of range
             var isValidResult = resultIndex >= 0 & resultIndex < _results.Count;
@@ -126,7 +150,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             // Grab the output sentence at the specified index
             if (sentenceIndex >= 0 & sentenceIndex < result.OutputSentences.Count)
             {
-                return result.OutputSentences[sentenceIndex];
+                return result.OutputSentences[sentenceIndex].NonNull();
             }
 
             return string.Empty;
@@ -136,9 +160,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         ///     Gets the specified input sentence from the specified result.
         /// </summary>
         /// <param name="resultIndex">Index of the result. Defaults to 1.</param>
-        /// <param name="sentenceIndex">Index of the sentenceIndex. Defaults to 1.</param>
-        /// <returns>The specified sentenceIndex.</returns>
-        public string GetInputSentence(int resultIndex = 1, int sentenceIndex = 1)
+        /// <param name="sentenceIndex">Index of the sentence. Defaults to 1.</param>
+        /// <returns>The specified sentence.</returns>
+        [NotNull]
+        internal string GetInputSentence(int resultIndex = 1, int sentenceIndex = 1)
         {
             //- Ensure we're grabbing at an acceptable resultIndex
             var isValidResult = resultIndex >= 0 & resultIndex < _results.Count;
@@ -154,7 +179,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             // Grab the appropriate sentenceIndex
             if (sentenceIndex >= 0 & sentenceIndex < result.InputSentences.Count)
             {
-                return result.InputSentences[sentenceIndex];
+                return result.InputSentences[sentenceIndex].NonNull();
             }
 
             //- Invalid results yield nothing
@@ -164,16 +189,18 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <summary>
         ///     Adds a result to the user's results.
         /// </summary>
-        /// <param name="latestResult">The latest chat result.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="latestResult"/> is <see langword="null" />.</exception>
-        public void AddResult([NotNull] Result latestResult)
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="latestChatResult"/> is <see langword="null" />.
+        /// </exception>
+        /// <param name="latestChatResult"> The latest chat result. </param>
+        internal void AddResult([NotNull] ChatResult latestChatResult)
         {
-            if (latestResult == null)
+            if (latestChatResult == null)
             {
-                throw new ArgumentNullException(nameof(latestResult));
+                throw new ArgumentNullException(nameof(latestChatResult));
             }
 
-            _results.Insert(0, latestResult);
+            _results.Insert(0, latestChatResult);
         }
     }
 }

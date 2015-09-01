@@ -216,3 +216,5 @@ MattEland.Ani.Alfred.WPF/DataFiles/Chat/AimlBot/Atomic.aiml
 /MattEland.Ani.Alfred.WPF/DataFiles/Chat/AimlBot
 /MattEland.Ani.Alfred.WPF/DataFiles/Chat/Rosie
 /MattEland.Ani.Alfred.WPF/DataFiles
+*.ncrunchproject
+*.ncrunchsolution

@@ -2,85 +2,59 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>c:\dev\alfred\alfred\matteland.ani.alfred.chat.aiml\taghandlers\gendertaghandler.cs</title>
+    <title>c:\dev\alfred\matteland.ani.alfred.chat.aiml\taghandlers\handlesaimltagattribute.cs</title>
     <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
   </head>
   <body>
     <pre id="content" class="source-code">
 // ---------------------------------------------------------
-// GenderTagHandler.cs
+// HandlesAimlTagAttribute.cs
 // 
-// Created on:      08/12/2015 at 10:45 PM
-// Last Modified:   08/14/2015 at 6:14 PM
+// Created on:      08/14/2015 at 1:01 AM
+// Last Modified:   08/14/2015 at 1:01 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using JetBrains.Annotations;
+using System;
+using System.Diagnostics;
 
-using MattEland.Ani.Alfred.Chat.Aiml.Utils;
-using MattEland.Common;
+using JetBrains.Annotations;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// &lt;summary&gt;
-    ///     A tag handler for the AIML &quot;gender&quot; tag that subsitutes gender pronouns for their equivalent
-    ///     value in the chat engine&#39;s GenderSubstitutions
-    /// 
-    ///     See &quot;http://www.alicebot.org/TR/2005/WD-aiml/#section-gender&quot; for more on the gender tag.
+    /// An attribute describing a class that can handle an AIML tag
     /// &lt;/summary&gt;
-    [HandlesAimlTag(&quot;gender&quot;)]
-    public class GenderTagHandler : AimlTagHandler
+    [AttributeUsage(AttributeTargets.Class), UsedImplicitly]
+    public sealed class HandlesAimlTagAttribute : Attribute
     {
+
         /// &lt;summary&gt;
-        ///     Initializes a new instance of the &lt;see cref=&quot;AimlTagHandler&quot; /&gt; class.
+        /// Initializes a new instance of the &lt;see cref=&quot;HandlesAimlTagAttribute&quot;/&gt; class.
         /// &lt;/summary&gt;
-        /// &lt;param name=&quot;parameters&quot;&gt;The parameters.&lt;/param&gt;
-        public GenderTagHandler([NotNull] TagHandlerParameters parameters)
-            : base(parameters)
+        /// &lt;param name=&quot;name&quot;&gt;The name of the tag this class handles.&lt;/param&gt;
+        public HandlesAimlTagAttribute([NotNull] string name)
         {
+            Name = name;
         }
 
         /// &lt;summary&gt;
-        ///     Processes the input text and returns the processed value.
+        /// Gets or sets the name of the tag this class handles.
         /// &lt;/summary&gt;
-        /// &lt;returns&gt;The processed output&lt;/returns&gt;
-        protected override string ProcessChange()
+        /// &lt;value&gt;The name.&lt;/value&gt;
+        [NotNull]
+        public string Name
         {
-            /* Note: this tag handler uses recursion to recursively iterate through 
-            InnerText and find text that can be evaluated using substitution */
-
-            //- Ensure this is the correct tag
-            if (TemplateNode.Name.Matches(&quot;gender&quot;))
-            {
-                return string.Empty;
-            }
-
-            // If we have text inside the gender tag, just transform and return that
-            if (TemplateNode.InnerText.HasText())
-            {
-                /* Substitute occurrences of gender words with other values. This typically 
-                   inverts the gender on gender pronouns (&quot;he&quot; / &quot;she&quot; / etc.) */
-
-                var substitutions = Librarian.GenderSubstitutions;
-                return TextSubstitutionHelper.Substitute(substitutions,
-                                                              TemplateNode.InnerText);
-            }
-
-            // Apply an AIML &quot;star&quot; tag and store the results as our inner text
-            var star = BuildStarTagHandler();
-            TemplateNode.InnerText = star.Transform().NonNull();
-
-            //! If we still have text, we&#39;ll need to use recursion to evaluate our new value
-            return TemplateNode.InnerText.HasText() ? ProcessChange() : string.Empty;
+            [DebuggerStepThrough]
+            get;
         }
-
     }
 }
     </pre>
     <script type="text/javascript">
-      highlightRanges([[31,15,31,31,0],[32,9,32,10,0],[33,9,33,10,0],[40,9,40,10,0],[45,13,45,53,0],[46,13,46,14,0],[47,17,47,37,0],[51,13,51,50,0],[52,13,52,14,0],[56,17,56,67,0],[57,17,58,87,0],[62,13,62,46,0],[63,13,63,65,0],[66,13,66,86,0],[67,9,67,10,0]]);
+      highlightRanges([[28,9,28,62,1],[29,9,29,10,1],[30,13,30,25,1],[31,9,31,10,1],[40,13,41,17,1]]);
     </script>
   </body>
 </html>

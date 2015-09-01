@@ -14,17 +14,18 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Tests.Mocks;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
-namespace MattEland.Ani.Alfred.Tests.SubSystems
+namespace MattEland.Ani.Alfred.Tests.Subsystems
 {
     /// <summary>
     /// Tests oriented around testing the subsystem update pumps and related functions
     /// </summary>
-    [TestFixture]
+    [UnitTest]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-    public class SubSystemTests
+    public class SubsystemTests : AlfredTestBase
     {
         [NotNull]
         private AlfredApplication _alfred;
@@ -32,82 +33,82 @@ namespace MattEland.Ani.Alfred.Tests.SubSystems
         [NotNull]
         private TestSubsystem _subsystem;
 
+        /// <summary>
+        /// Sets up the environment for each test.
+        /// </summary>
         [SetUp]
-        public void Setup()
+        public override void SetUp()
         {
+            base.SetUp();
+
             var bootstrapper = new AlfredBootstrapper();
             _alfred = bootstrapper.Create();
 
-            _subsystem = new TestSubsystem();
+            _subsystem = new TestSubsystem(Container);
         }
 
 
         [Test]
         public void InitializeCausesRegisteredSubSystemsToInitialize()
         {
-            var testSubsystem = new TestSubsystem();
 
-            _alfred.Register(testSubsystem);
+            _alfred.Register(_subsystem);
 
             _alfred.Initialize();
 
-            Assert.IsTrue(testSubsystem.LastInitialized > DateTime.MinValue, "Subsystem was not initialized");
-            Assert.IsTrue(testSubsystem.LastInitializationCompleted > DateTime.MinValue,
+            Assert.IsTrue(_subsystem.LastInitialized > DateTime.MinValue, "Subsystem was not initialized");
+            Assert.IsTrue(_subsystem.LastInitializationCompleted > DateTime.MinValue,
                           "Subsystem was not notified initialized completed");
         }
 
         [Test]
         public void InitializeCausesSubSystemsToGoOnline()
         {
-            var testSubsystem = new TestSubsystem();
 
-            _alfred.Register(testSubsystem);
+            _alfred.Register(_subsystem);
 
             _alfred.Initialize();
 
-            Assert.AreEqual(AlfredStatus.Online, testSubsystem.Status);
+            Assert.AreEqual(AlfredStatus.Online, _subsystem.Status);
         }
 
         [Test]
         public void UpdateCausesRegisteredSubSystemsToUpdate()
         {
-            var testSubsystem = new TestSubsystem();
 
-            _alfred.Register(testSubsystem);
+            _alfred.Register(_subsystem);
 
             _alfred.Initialize();
             _alfred.Update();
 
-            Assert.IsTrue(testSubsystem.LastUpdated > DateTime.MinValue, "Subsystem was not updated");
+            Assert.IsTrue(_subsystem.LastUpdated > DateTime.MinValue, "Subsystem was not updated");
         }
 
         [Test]
         public void ShutdownCausesRegisteredSubSystemsToShutdown()
         {
-            var testSubsystem = new TestSubsystem();
 
-            _alfred.Register(testSubsystem);
+            _alfred.Register(_subsystem);
 
             _alfred.Initialize();
             _alfred.Update();
             _alfred.Shutdown();
 
-            Assert.IsTrue(testSubsystem.LastShutdown > DateTime.MinValue, "Subsystem was not shut down");
-            Assert.IsTrue(testSubsystem.LastShutdownCompleted > DateTime.MinValue, "Subsystem was not notified of shut down completion");
+            Assert.IsTrue(_subsystem.LastShutdown > DateTime.MinValue, "Subsystem was not shut down");
+            Assert.IsTrue(_subsystem.LastShutdownCompleted > DateTime.MinValue, "Subsystem was not notified of shut down completion");
         }
 
         [Test]
         public void ShutdownCausesRegisteredSubSystemsToGoOffline()
         {
-            var testSubsystem = new TestSubsystem();
 
-            _alfred.Register(testSubsystem);
+            _alfred.Register(_subsystem);
 
             _alfred.Initialize();
             _alfred.Update();
             _alfred.Shutdown();
 
-            Assert.AreEqual(AlfredStatus.Offline, testSubsystem.Status);
+            Assert.AreEqual(AlfredStatus.Offline, _subsystem.Status);
         }
 
     }

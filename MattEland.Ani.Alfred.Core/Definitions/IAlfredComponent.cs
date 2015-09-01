@@ -8,20 +8,15 @@
 
 using JetBrains.Annotations;
 
+using MattEland.Common.Providers;
+
 namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>
     ///     An abstract component of Alfred
     /// </summary>
-    public interface IAlfredComponent
+    public interface IAlfredComponent : IPropertyProvider
     {
-        /// <summary>
-        ///     Gets the name of the component.
-        /// </summary>
-        /// <value>The name.</value>
-        [NotNull]
-        string Name { get; }
-
         /// <summary>
         ///     Gets the name and version of the component.
         /// </summary>
@@ -34,6 +29,14 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// </summary>
         /// <value>The status.</value>
         AlfredStatus Status { get; }
+
+        /// <summary>
+        ///     Gets a value indicating whether this instance is online.
+        /// </summary>
+        /// <value>
+        ///     <see langword="true"/> if this instance is online, <see langword="false"/> if not.
+        /// </value>
+        bool IsOnline { get; }
 
         /// <summary>
         ///     Updates this instance.
@@ -60,6 +63,13 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         ///     Called when shutdown completes.
         /// </summary>
         void OnShutdownCompleted();
+
+        /// <summary>
+        /// Gets the dependency injection container.
+        /// </summary>
+        /// <value>The dependency injection container.</value>
+        [NotNull]
+        IObjectContainer Container { get; }
 
         /// <summary>
         ///     Called when a component is registered with an alfred instance.

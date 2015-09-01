@@ -32,7 +32,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         ///     Initializes a new instance of the <see cref="ChatEngineLibrarian" /> class.
         /// </summary>
         /// <exception cref="ArgumentNullException"><paramref name="chatEngine" /> is <see langword="null" />.</exception>
-        public ChatEngineLibrarian([NotNull] ChatEngine chatEngine)
+        internal ChatEngineLibrarian([NotNull] ChatEngine chatEngine)
         {
             //-Validate
             if (chatEngine == null)
@@ -108,7 +108,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         ///     The specified path is invalid (for example, it is on an unmapped
         ///     drive).
         /// </exception>
-        public void LoadSettingsFromConfigDirectory([NotNull] string pathToConfigFiles)
+        internal void LoadSettingsFromConfigDirectory([NotNull] string pathToConfigFiles)
         {
             // Validate
             if (pathToConfigFiles.IsEmpty())
@@ -154,7 +154,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <param name="genderXml">The gender XML.</param>
         /// <param name="substitutionsXml">The substitutions XML.</param>
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-        public void LoadSettingsFromXml([CanBeNull] string globalXml = null,
+        internal void LoadSettingsFromXml([CanBeNull] string globalXml = null,
                                         [CanBeNull] string firstPersonXml = null,
                                         [CanBeNull] string secondPersonXml = null,
                                         [CanBeNull] string genderXml = null,

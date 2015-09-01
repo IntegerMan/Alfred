@@ -331,6 +331,15 @@ namespace MattEland.Ani.Alfred.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tried to click the button when CanExecute on ClickCommand returned false..
+        /// </summary>
+        internal static string ButtonWidgetClickCantExecuteErrorMessage {
+            get {
+                return ResourceManager.GetString("ButtonWidgetClickCantExecuteErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {{Subsystem: {0}, Command: {1}, Data: {2}}}.
         /// </summary>
         internal static string ChatCommandToString {
@@ -345,6 +354,15 @@ namespace MattEland.Ani.Alfred.Core {
         internal static string ChatModuleName {
             get {
                 return ResourceManager.GetString("ChatModuleName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Encountered an exception raising a property changed event: {0}.
+        /// </summary>
+        internal static string ComponentBasePropertyChangedException {
+            get {
+                return ResourceManager.GetString("ComponentBasePropertyChangedException", resourceCulture);
             }
         }
         

@@ -15,20 +15,22 @@ using System.Linq;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core;
-using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Ani.Alfred.Core.Pages;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
-namespace MattEland.Ani.Alfred.Tests.SubSystems
+using Shouldly;
+
+namespace MattEland.Ani.Alfred.Tests.Subsystems
 {
     /// <summary>
     /// A series of tests related to the System Monitoring SubSystem
     /// </summary>
-    [TestFixture]
+    [UnitTest]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-    public class SystemSubSystemTests
+    public class SystemSubsystemTests : AlfredTestBase
     {
         [NotNull]
         private SystemMonitoringSubsystem _subsystem;
@@ -41,13 +43,13 @@ namespace MattEland.Ani.Alfred.Tests.SubSystems
         /// <summary>
         /// Sets up the test environment
         /// </summary>
-        /// <exception cref="UnauthorizedAccessException">Code that is executing without administrative privileges attempted to read a performance counter.</exception>
-        /// <exception cref="Win32Exception">A call to an underlying system API failed.</exception>
         [SetUp]
-        public void TestSetup()
+        public override void SetUp()
         {
+            base.SetUp();
+
             _metricProviderFactory = new ValueMetricProviderFactory();
-            _subsystem = new SystemMonitoringSubsystem(new SimplePlatformProvider(), _metricProviderFactory);
+            _subsystem = new SystemMonitoringSubsystem(Container);
 
             var bootstrapper = new AlfredBootstrapper();
             _alfred = bootstrapper.Create();
@@ -58,8 +60,8 @@ namespace MattEland.Ani.Alfred.Tests.SubSystems
         {
             _alfred.Register(_subsystem);
 
-            Assert.AreEqual(1, _alfred.Subsystems.Count(), "Subsystem was not registered");
-            Assert.Contains(_subsystem, _alfred.Subsystems as ICollection, "The subsystem was not found in the collection");
+            _alfred.Subsystems.Count().ShouldBe(1);
+            _alfred.Subsystems.ShouldContain(_subsystem);
         }
 
         [Test]
@@ -94,7 +96,7 @@ namespace MattEland.Ani.Alfred.Tests.SubSystems
             _alfred.Register(_subsystem);
             _alfred.Initialize();
 
-            Assert.AreEqual(pages + 1, _alfred.RootPages.Count());
+            Assert.AreEqual(pages + _subsystem.RootPages.Count(), _alfred.RootPages.Count());
         }
     }
 }

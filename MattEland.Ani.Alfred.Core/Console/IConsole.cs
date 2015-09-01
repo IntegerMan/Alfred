@@ -32,5 +32,12 @@ namespace MattEland.Ani.Alfred.Core.Console
         /// <param name="message">The message.</param>
         /// <param name="level">The logging level.</param>
         void Log([CanBeNull] string title, [CanBeNull] string message, LogLevel level);
+
+        /// <summary>
+        /// Gets the console event factory used for creating new events.
+        /// </summary>
+        /// <value>The console event factory.</value>
+        [NotNull]
+        ConsoleEventFactory EventFactory { get; }
     }
 }
