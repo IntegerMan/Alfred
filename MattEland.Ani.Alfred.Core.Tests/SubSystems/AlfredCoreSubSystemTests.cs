@@ -38,8 +38,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
 
             _subsystem = new AlfredCoreSubsystem(Container);
 
-            var bootstrapper = new AlfredBootstrapper(Container);
-            _alfred = bootstrapper.Create();
+            _alfred = new AlfredApplication(Container);
         }
 
         [NotNull]

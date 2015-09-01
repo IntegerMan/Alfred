@@ -51,7 +51,6 @@
     <None Include="Widgets\Widgets.cd" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AlfredBootstrapper.cs" />
     <Compile Include="AlfredCommandResult.cs" />
     <Compile Include="Console\AlfredLoggingExtensions.cs" />
     <Compile Include="ComponentBase.cs" />

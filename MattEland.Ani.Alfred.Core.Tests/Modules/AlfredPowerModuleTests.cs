@@ -42,8 +42,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         {
             base.SetUp();
 
-            var bootstrapper = new AlfredBootstrapper();
-            _alfred = bootstrapper.Create();
+            _alfred = new AlfredApplication(Container);
             _module = new AlfredPowerModule(Container);
 
             RegisterTestModule(_alfred, _module);
@@ -101,8 +100,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         public void AtInitialStateInitializeIsVisible()
         {
             // Doing this again here to illustrate creation / configuration order more clearly
-            var bootstrapper = new AlfredBootstrapper();
-            _alfred = bootstrapper.Create();
+            _alfred = new AlfredApplication(Container);
             _module = new AlfredPowerModule(Container);
 
             RegisterTestModule(_alfred, _module);
@@ -130,8 +128,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         [Test]
         public void CoreModuleHasNoProviderText()
         {
-            var bootstrapper = new AlfredBootstrapper(Container);
-            _alfred = bootstrapper.Create();
+            _alfred = new AlfredApplication(Container);
             _module = new AlfredPowerModule(Container);
 
             var text = _module.AlfredStatusWidget.Text;

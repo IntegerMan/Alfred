@@ -42,12 +42,12 @@ namespace MattEland.Ani.Alfred.Tests
         {
             base.SetUp();
 
-            var bootstrapper = new AlfredBootstrapper();
-            _alfred = bootstrapper.Create();
-            _alfred.Console = new SimpleConsole();
+            _alfred = new AlfredApplication(Container);
+            _alfred.Console = new SimpleConsole(Container);
 
             _subsystem = new TestSubsystem(Container);
             _page = new AlfredModuleListPage(Container, "Test Page", "Test");
+
         }
 
         [NotNull]

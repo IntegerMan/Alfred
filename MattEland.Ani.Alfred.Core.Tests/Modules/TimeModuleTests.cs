@@ -36,8 +36,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         [SetUp]
         public void OnStartup()
         {
-            var bootstrapper = new AlfredBootstrapper();
-            _alfred = bootstrapper.Create();
+            _alfred = new AlfredApplication(Container);
 
             _page = new AlfredModuleListPage(Container, "Time", "Time");
             _module = new AlfredTimeModule(Container);
