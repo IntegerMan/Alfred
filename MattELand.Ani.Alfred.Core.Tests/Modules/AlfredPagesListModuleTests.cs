@@ -17,6 +17,7 @@ using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Ani.Alfred.PresentationShared.Commands;
 using MattEland.Common;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -27,7 +28,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
     /// <summary>
     ///     Tests <see cref="AlfredPagesListModule"/>
     /// </summary>
-    [TestFixture]
+    [UnitTest]
     public class AlfredPagesListModuleTests : AlfredTestBase
     {
         /// <summary>

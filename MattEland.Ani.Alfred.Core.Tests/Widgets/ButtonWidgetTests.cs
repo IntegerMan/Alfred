@@ -12,6 +12,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -22,7 +23,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
     ///     <see cref="ButtonWidget" />
     ///     class
     /// </summary>
-    [TestFixture]
+    [UnitTest]
     public class ButtonWidgetTests : AlfredTestBase
     {
         [Test]

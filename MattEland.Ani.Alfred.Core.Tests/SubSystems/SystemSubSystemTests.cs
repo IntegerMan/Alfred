@@ -17,6 +17,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Ani.Alfred.Core.Pages;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -27,7 +28,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
     /// <summary>
     /// A series of tests related to the System Monitoring SubSystem
     /// </summary>
-    [TestFixture]
+    [UnitTest]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public class SystemSubsystemTests : AlfredTestBase
     {

@@ -18,6 +18,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Tests.Pages;
 using MattEland.Common;
 using MattEland.Common.Providers;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -30,7 +31,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
     ///     MattEland.Common.
     /// </summary>
     /// <seealso cref="T:MattEland.Ani.Alfred.Tests.AlfredTestBase"/>
-    [TestFixture]
+    [UnitTest]
     [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
     [SuppressMessage("ReSharper", "ExceptionNotDocumentedOptional")]
     [SuppressMessage("ReSharper", "EventExceptionNotDocumented")]

@@ -17,7 +17,7 @@ using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Tests.Mocks;
 using MattEland.Common;
-using MattEland.Common.Providers;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -26,7 +26,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     /// <summary>
     /// A class to test tag handlers for Alfred commands.
     /// </summary>
-    [TestFixture]
+    [UnitTest]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public class AlfredTagHandlerTests : ChatTestsBase
     {

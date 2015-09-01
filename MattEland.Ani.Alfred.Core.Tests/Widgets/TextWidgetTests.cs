@@ -12,6 +12,7 @@ using System.Linq;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Widgets;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -20,7 +21,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
     /// <summary>
     ///     Contains tests related to <see cref="TextWidget" />
     /// </summary>
-    [TestFixture]
+    [UnitTest]
     public sealed class TextWidgetTests : AlfredTestBase
     {
         private const string TestString = "This is a test";

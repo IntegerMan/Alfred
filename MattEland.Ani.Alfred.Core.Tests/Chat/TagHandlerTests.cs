@@ -13,6 +13,7 @@ using System.Linq;
 using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Common;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -21,7 +22,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     /// <summary>
     ///     Tests for AimlTagHandlers of concern.
     /// </summary>
-    [TestFixture]
+    [UnitTest]
     public class TagHandlerTests : ChatTestsBase
     {
         /// <summary>

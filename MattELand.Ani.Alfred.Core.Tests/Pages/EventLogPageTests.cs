@@ -13,6 +13,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Common;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -23,7 +24,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
     /// <summary>
     ///     <see cref="Contains" /> tests related to <see cref="AlfredEventLogPage" /> .
     /// </summary>
-    [TestFixture]
+    [UnitTest]
     public class EventLogPageTests : AlfredTestBase
     {
 

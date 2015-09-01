@@ -16,6 +16,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Chat;
 using MattEland.Ani.Alfred.PresentationShared.Commands;
 using MattEland.Common.Providers;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -24,7 +25,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
     /// <summary>
     ///     Tests for the <see cref="ChatSubsystem" />
     /// </summary>
-    [TestFixture]
+    [UnitTest]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     public class ChatSubsystemTests : AlfredTestBase

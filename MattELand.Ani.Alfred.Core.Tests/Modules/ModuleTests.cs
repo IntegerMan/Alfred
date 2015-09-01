@@ -14,6 +14,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Ani.Alfred.Tests.Mocks;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -22,7 +23,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
     /// <summary>
     ///     Contains general test cases related to <see cref="AlfredModule" />.
     /// </summary>
-    [TestFixture]
+    [UnitTest]
     public class ModuleTests : AlfredTestBase
     {
 

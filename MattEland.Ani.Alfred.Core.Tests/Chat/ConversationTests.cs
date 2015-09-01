@@ -17,6 +17,7 @@ using MattEland.Ani.Alfred.Chat.Aiml;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
 using MattEland.Common.Providers;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -27,7 +28,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     /// <summary>
     ///     Tests for conversational inquiries on the Alfred chat system.
     /// </summary>
-    [TestFixture]
+    [UnitTest]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
     [SuppressMessage("ReSharper", "UnusedParameter.Local")]

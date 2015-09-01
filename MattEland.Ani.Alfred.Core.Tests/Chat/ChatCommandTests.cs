@@ -13,6 +13,7 @@ using System.Linq;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -21,7 +22,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     /// <summary>
     ///     Tests for commands embedded in AIML that impact the functioning of the Alfred system.
     /// </summary>
-    [TestFixture]
+    [UnitTest]
     public class ChatCommandTests : ChatTestsBase
     {
         /// <summary>

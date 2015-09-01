@@ -16,6 +16,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Common;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -26,7 +27,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
     /// <summary>
     /// Contains tests related to <see cref="ExplorerPage" />
     /// </summary>
-    [TestFixture]
+    [UnitTest]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public class ExplorerPageTests : AlfredTestBase
     {

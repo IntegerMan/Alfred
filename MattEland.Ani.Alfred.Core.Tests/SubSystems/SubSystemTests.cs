@@ -14,6 +14,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Tests.Mocks;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -22,7 +23,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
     /// <summary>
     /// Tests oriented around testing the subsystem update pumps and related functions
     /// </summary>
-    [TestFixture]
+    [UnitTest]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public class SubsystemTests : AlfredTestBase
     {

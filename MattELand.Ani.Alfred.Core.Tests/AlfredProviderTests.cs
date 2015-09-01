@@ -21,6 +21,7 @@ using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Ani.Alfred.Tests.Mocks;
 using MattEland.Common.Providers;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -29,7 +30,7 @@ namespace MattEland.Ani.Alfred.Tests
     /// <summary>
     ///     Tests <see cref="AlfredApplication"/>
     /// </summary>
-    [TestFixture]
+    [UnitTest]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public sealed class AlfredProviderTests : AlfredTestBase
     {

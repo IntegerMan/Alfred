@@ -15,6 +15,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Chat;
 using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
 using MattEland.Ani.Alfred.Tests.Chat;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -23,7 +24,7 @@ namespace MattEland.Ani.Alfred.Tests.Shell
     /// <summary>
     /// Tests related to <see cref="IAlfredShell"/> and its utilization.
     /// </summary>
-    [TestFixture]
+    [UnitTest]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
     public sealed class ShellTagHandlerTests : ChatTestsBase

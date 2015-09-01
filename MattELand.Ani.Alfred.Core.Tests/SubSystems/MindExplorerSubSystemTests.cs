@@ -20,6 +20,7 @@ using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Ani.Alfred.PresentationShared.Commands;
 using MattEland.Common;
 using MattEland.Common.Providers;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -31,7 +32,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
     /// <remarks>
     ///     See ALF-15
     /// </remarks>
-    [TestFixture]
+    [UnitTest]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public class MindExplorerSubsystemTests : AlfredTestBase
     {

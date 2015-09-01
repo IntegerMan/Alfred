@@ -18,6 +18,7 @@ using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Ani.Alfred.Tests.Mocks;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -29,7 +30,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
     ///         cref="AlfredPowerModule" />
     ///     module.
     /// </summary>
-    [TestFixture]
+    [UnitTest]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public class AlfredPowerModuleTests : AlfredTestBase
     {

@@ -18,6 +18,7 @@ using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Common;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -29,7 +30,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     /// <summary>Tests around the AIML explorer features of being able to explore the AIML tree using the
     ///     <seealso cref="MindExplorerSubsystem" />
     /// </summary>
-    [TestFixture]
+    [UnitTest]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public sealed class AimlExplorerTests : ExplorerTestsBase
     {

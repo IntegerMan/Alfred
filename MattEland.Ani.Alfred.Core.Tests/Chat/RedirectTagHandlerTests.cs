@@ -11,6 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 
 using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
 using MattEland.Common;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -19,7 +20,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     /// <summary>
     /// A class to test tag handlers for "srai" tags.
     /// </summary>
-    [TestFixture]
+    [UnitTest]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public class RedirectTagHandlerTests : ChatTestsBase
     {

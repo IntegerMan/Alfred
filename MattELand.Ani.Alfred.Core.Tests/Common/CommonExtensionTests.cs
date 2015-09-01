@@ -8,6 +8,7 @@
 // ---------------------------------------------------------
 
 using MattEland.Common;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -16,7 +17,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
     /// <summary>
     /// Contains tests related to MattEland.Common extensions
     /// </summary>
-    [TestFixture]
+    [UnitTest]
     public class CommonExtensionTests : AlfredTestBase
     {
 

@@ -8,6 +8,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.PresentationShared.Commands;
 using MattEland.Ani.Alfred.PresentationShared.Controls;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -18,7 +19,7 @@ namespace MattEland.Ani.Alfred.Tests.Controls
     /// </summary>
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "IsExpressionAlwaysTrue")]
-    [TestFixture]
+    [UnitTest]
     public class ExplorerControlTests : UserInterfaceTestBase
     {
         [NotNull]
@@ -36,6 +37,7 @@ namespace MattEland.Ani.Alfred.Tests.Controls
             base.SetUp();
 
             _app = new ApplicationManager(Container, BuildOptions());
+            _app.RootNodes.ShouldNotBeNull();
             _control = new ExplorerControl(_app.RootNodes);
             _app.Alfred.Initialize();
 

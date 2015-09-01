@@ -84,7 +84,7 @@
     <Compile Include="Controls\ChatPaneTests.cs" />
     <Compile Include="Controls\ExplorerControlTests.cs" />
     <Compile Include="Controls\RootPagesControlTests.cs" />
-    <Compile Include="Controls\UserInterfaceTestBase.cs" />
+    <Compile Include="Mocks\UserInterfaceTestBase.cs" />
     <Compile Include="Mocks\TestAlfred.cs" />
     <Compile Include="Mocks\TestChatProvider.cs" />
     <Compile Include="Mocks\TestPage.cs" />
@@ -147,10 +147,15 @@
       <Project>{514cb422-a6ef-4c75-b925-92ab599ba1be}</Project>
       <Name>MattEland.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MattEland.Testing\MattEland.Testing.csproj">
+      <Project>{913569FC-7B28-432F-A29A-8ACC7A1A5FBC}</Project>
+      <Name>MattEland.Testing</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Alfred.pfx" />
     <None Include="AlfredAppTestCertificate.snk" />
+    <None Include="app.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

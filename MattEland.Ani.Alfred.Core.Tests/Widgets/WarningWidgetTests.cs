@@ -7,6 +7,7 @@
 // ---------------------------------------------------------
 
 using MattEland.Ani.Alfred.Core.Widgets;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -16,7 +17,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
     /// <summary>
     ///     Contains a suite of tests oriented around the <see cref="WarningWidget" /> class.
     /// </summary>
-    [TestFixture]
+    [UnitTest]
     public sealed class WarningWidgetTests : AlfredTestBase
     {
         [Test]

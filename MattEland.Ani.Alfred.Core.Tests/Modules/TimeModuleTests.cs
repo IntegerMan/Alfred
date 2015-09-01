@@ -21,6 +21,7 @@ using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Ani.Alfred.Tests.Mocks;
 using MattEland.Common;
 using MattEland.Common.Providers;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -28,7 +29,7 @@ using Shouldly;
 
 namespace MattEland.Ani.Alfred.Tests.Modules
 {
-    [TestFixture]
+    [UnitTest]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public sealed class TimeModuleTests : AlfredTestBase
     {

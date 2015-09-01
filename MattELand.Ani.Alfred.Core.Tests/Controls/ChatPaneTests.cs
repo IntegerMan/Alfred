@@ -12,8 +12,10 @@ using System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.PresentationShared.Controls;
 using MattEland.Ani.Alfred.Tests.Mocks;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -22,7 +24,7 @@ namespace MattEland.Ani.Alfred.Tests.Controls
     /// <summary>
     ///     Tests related to <see cref="ChatPane" />
     /// </summary>
-    [TestFixture]
+    [UnitTest]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "IsExpressionAlwaysTrue")]
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]

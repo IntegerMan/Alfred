@@ -14,6 +14,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Pages;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -22,7 +23,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
     /// <summary>
     /// Contains tests related to the <see cref="ExplorerPage"/>
     /// </summary>
-    [TestFixture]
+    [UnitTest]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
     [SuppressMessage("ReSharper", "ObjectCreationAsStatement")]

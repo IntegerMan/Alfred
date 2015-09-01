@@ -16,6 +16,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Tests.Mocks;
 using MattEland.Common;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -26,7 +27,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
     /// <summary>
     ///     Tests Alfred's root pages
     /// </summary>
-    [TestFixture]
+    [UnitTest]
     public class RootPagesTests : AlfredTestBase
     {
         [NotNull, ItemNotNull]
