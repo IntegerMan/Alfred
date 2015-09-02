@@ -117,22 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AlfredStatusController_InitializingComponent" xml:space="preserve">
-    <value>Initializing {0}</value>
-    <comment>Log message when initializing a module. {0} is the module's NameAndVersion</comment>
-  </data>
-  <data name="AlfredStatusController_Initialize_InitilizationCompleted" xml:space="preserve">
-    <value>Initialization Completed; notifying modules and subsystems.</value>
-    <comment>Log message after Alfred and modules are online before modules are notified.</comment>
-  </data>
-  <data name="AlfredStatusController_InitializeComponentInitialized" xml:space="preserve">
-    <value>{0} is now initialized.</value>
-    <comment>Log message for module initialized where {0} is module's NameAndVersion</comment>
-  </data>
-  <data name="AlfredStatusController_Initialize_AlfredOnline" xml:space="preserve">
-    <value>Alfred is now Online.</value>
-    <comment>Logged after alfred is completely initialized.</comment>
-  </data>
   <data name="AlfredStatusController_Initialize_LogHeader" xml:space="preserve">
     <value>Alfred.Initialize</value>
     <comment>This is the header for each log entry in the initialization process.</comment>
@@ -141,37 +125,9 @@
     <value>Instructed to initialize but system is already online</value>
     <comment>Error message for when the system is already online.</comment>
   </data>
-  <data name="AlfredStatusController_Initialize_Initializing" xml:space="preserve">
-    <value>Initializing subsystems and modules...</value>
-    <comment>Logged as Alfred starts initialization</comment>
-  </data>
   <data name="AlfredStatusController_Shutdown_LogHeader" xml:space="preserve">
     <value>Alfred.Shutdown</value>
     <comment>The log header message for the shutdown process</comment>
-  </data>
-  <data name="AlfredStatusController_Shutdown_ErrorAlreadyOffline" xml:space="preserve">
-    <value>Instructed to shut down but system is already offline</value>
-    <comment>Shutdown while offline</comment>
-  </data>
-  <data name="AlfredStatusController_Shutdown_ErrorAlreadyTerminating" xml:space="preserve">
-    <value>Instructed to shut down but system is already shutting down</value>
-    <comment>Told to shutdown but terminating already</comment>
-  </data>
-  <data name="AlfredStatusController_Shutdown_Shutting_down" xml:space="preserve">
-    <value>Shutting down...</value>
-    <comment>Log message for beginning the shut down process.</comment>
-  </data>
-  <data name="AlfredStatusController_ShuttingDownComponent" xml:space="preserve">
-    <value>Shutting down {0}</value>
-    <comment>Logged when shutting down a module where {0} is the module's NameAndVersion.</comment>
-  </data>
-  <data name="AlfredStatusController_ComponentOffline" xml:space="preserve">
-    <value>{0} is now offline.</value>
-    <comment>Logged when shutting down a module has completed where {0} is the module's NameAndVersion.</comment>
-  </data>
-  <data name="AlfredStatusController_Shutdown_Completed" xml:space="preserve">
-    <value>Shut down completed.</value>
-    <comment>Logged when shutting down a module completed.</comment>
   </data>
   <data name="AlfredTimeModule_AlfredTimeModule_BedtimeNagMessage" xml:space="preserve">
     <value>Shouldn't we be heading to bed soon?</value>

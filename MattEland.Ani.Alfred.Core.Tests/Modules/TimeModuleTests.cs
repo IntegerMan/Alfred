@@ -288,8 +288,8 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         [Test]
         public void TimeModuleDoesNotLogWhenTheHourDoesNotChange()
         {
-            var console = new SimpleConsole();
-            _alfred.Console = console;
+            var console = new DiagnosticConsole(Container);
+            console.RegisterAsProvidedInstance(typeof(IConsole), Container);
             _alfred.Initialize();
 
             // This is a bit of a testing hack - since initialize causes the module to update, it'll update based on the current time.
@@ -366,15 +366,13 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         {
             // Have Alfred use the global console
             var console = Container.Provide<IConsole>();
-            _alfred.Console = console;
+            console.RegisterAsProvidedInstance(typeof(IConsole), Container);
             _alfred.Initialize();
 
             _module.Update(new DateTime(1980, 9, 10, 9, 29, 0));
             _module.Update(new DateTime(1980, 9, 10, 9, 30, 0));
 
             // This will error if 0 or > 1 events are logged
-            console.ShouldBeSameAs(_alfred.Console);
-
             var consoleEvent = console.Events.Single(e => e.Title == AlfredTimeModule.HalfHourAlertEventTitle);
 
             //  We want to ensure it has the chat notification status
@@ -390,7 +388,8 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         {
             // Have Alfred use the global console
             var console = Container.Provide<IConsole>();
-            _alfred.Console = console;
+            console.RegisterAsProvidedInstance(typeof(IConsole), Container);
+
             _alfred.Initialize();
 
             _module.Update(new DateTime(1980, 9, 10, 8, 59, 0));

@@ -159,16 +159,30 @@ namespace MattEland.Common.Providers
         public static void RegisterAsProvidedInstance(
             [NotNull] this object instance,
             [NotNull] Type type,
-            [NotNull] IObjectContainer container)
+            [CanBeNull] IObjectContainer container)
         {
             //- Validate
             if (instance == null) { throw new ArgumentNullException(nameof(instance)); }
             if (type == null) { throw new ArgumentNullException(nameof(type)); }
+
+            var hasContainer = instance as IHasContainer;
+
             if (container == null)
             {
-                // TODO: ALF-116: Introduce an IHasContainer property and grab container from class when container is null
+                if (hasContainer != null)
+                {
+                    container = hasContainer.Container;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(container));
+                }
+            }
 
-                throw new ArgumentNullException(nameof(container));
+            // Safeguard against sticking items in a different container
+            if (hasContainer != null && hasContainer.Container != container)
+            {
+                throw new InvalidOperationException("The instance already has a container different from this container");
             }
 
             // Register

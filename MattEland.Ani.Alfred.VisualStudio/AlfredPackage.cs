@@ -76,7 +76,7 @@ namespace MattEland.Ani.Alfred.VisualStudio
         {
             if (_app == null)
             {
-                var options = new ApplicationManagerOptions
+                var options = new ApplicationManagerOptions()
                 {
                     IsSpeechEnabled = true,
                     ShowMindExplorerPage = false

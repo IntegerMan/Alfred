@@ -109,8 +109,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
             _alfred.Initialize();
             _alfred.Update();
 
-            Assert.IsTrue(
-                          _alfred.RootPages.Any(p => p.Name == AlfredCoreSubsystem.ControlPageName),
+            Assert.IsTrue(_alfred.RootPages.Any(p => p.Name == AlfredCoreSubsystem.ControlPageName),
                           "Control Page was not found");
         }
 
@@ -131,7 +130,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         [Test]
         public void EventLogPageIsPresentInAlfredAfterInitializationWhenConsoleIsProvided()
         {
-            var console = new SimpleConsole(Container);
+            var console = new DiagnosticConsole(Container);
             console.RegisterAsProvidedInstance(typeof(IConsole), Container);
 
             _alfred.Register(_subsystem);

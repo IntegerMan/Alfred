@@ -8,11 +8,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Console
@@ -20,17 +19,10 @@ namespace MattEland.Ani.Alfred.Core.Console
     /// <summary>
     ///     A simple console used for unit testing and designer window purposes
     /// </summary>
-    public sealed class SimpleConsole : IConsole
+    public class SimpleConsole : IConsole
     {
         [NotNull]
         private readonly ICollection<IConsoleEvent> _events;
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="SimpleConsole" /> class.
-        /// </summary>
-        public SimpleConsole() : this(CommonProvider.Container)
-        {
-        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="SimpleConsole" /> class.
@@ -61,8 +53,25 @@ namespace MattEland.Ani.Alfred.Core.Console
             if (factory == null) { throw new ArgumentNullException(nameof(factory)); }
 
             _events = container.ProvideCollection<IConsoleEvent>();
+
+            // This shouldn't happen, but I saw some weird mojo during 
+            if (_events.Count > 0)
+            {
+                throw new InvalidOperationException("The events collection did not start empty.");
+            }
+
             EventFactory = factory;
+            Container = container;
         }
+
+        /// <summary>
+        ///     Gets the container.
+        /// </summary>
+        /// <value>
+        ///     The container.
+        /// </value>
+        [NotNull]
+        public IObjectContainer Container { get; }
 
         /// <summary>
         ///     Logs the specified message to the console.
@@ -91,18 +100,18 @@ namespace MattEland.Ani.Alfred.Core.Console
         /// Logs the specified console event.
         /// </summary>
         /// <param name="consoleEvent">The console event.</param>
-        private void Log([NotNull] IConsoleEvent consoleEvent)
+        protected virtual void Log([NotNull] IConsoleEvent consoleEvent)
         {
-            try
-            {
-                _events.Add(consoleEvent);
-            }
-            catch (NotSupportedException)
-            {
-                /* TODO: I get this from dispatcher-based exceptions in VS logging. 
-                   I think I need a Thread-Safe Observable Collection */
-            }
+            _events.Add(consoleEvent);
         }
+
+        /// <summary>
+        ///     Gets the number of events in the collection.
+        /// </summary>
+        /// <value>
+        ///     The total number of events.
+        /// </value>
+        public int EventCount { get { return _events.Count; } }
 
         /// <summary>
         ///     Gets the console events.

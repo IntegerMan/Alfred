@@ -36,6 +36,7 @@ namespace MattEland.Ani.Alfred.Tests.Controls
         {
             base.SetUp();
 
+            Container.ShouldNotBeNull();
             _app = new ApplicationManager(Container, BuildOptions());
             _app.RootNodes.ShouldNotBeNull();
             _control = new ExplorerControl(_app.RootNodes);

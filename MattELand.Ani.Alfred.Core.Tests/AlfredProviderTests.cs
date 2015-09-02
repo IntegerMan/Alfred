@@ -25,6 +25,8 @@ using MattEland.Testing;
 
 using NUnit.Framework;
 
+using Shouldly;
+
 namespace MattEland.Ani.Alfred.Tests
 {
     /// <summary>
@@ -42,16 +44,12 @@ namespace MattEland.Ani.Alfred.Tests
         {
             base.SetUp();
 
-            _alfred = new AlfredApplication(Container);
-            _alfred.Console = new SimpleConsole(Container);
-
+            var alfred = new AlfredApplication(Container);
+            alfred.RegisterAsProvidedInstance(typeof(IAlfred), Container);
             _subsystem = new TestSubsystem(Container);
             _page = new AlfredModuleListPage(Container, "Test Page", "Test");
 
         }
-
-        [NotNull]
-        private AlfredApplication _alfred;
 
         [NotNull]
         private TestSubsystem _subsystem;
@@ -70,51 +68,51 @@ namespace MattEland.Ani.Alfred.Tests
             return new WidgetCreationParameters(name);
         }
 
+        /// <summary>
+        ///     Tests that adding standard modules adds modules.
+        /// </summary>
         [Test]
+        [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         public void AddingStandardModulesAddsModules()
         {
-            _alfred.Register(new AlfredCoreSubsystem(Container));
+            Alfred.Register(new AlfredCoreSubsystem(Container));
 
             var numModules =
-                _alfred.Subsystems.SelectMany(subsystem => subsystem.Pages)
+                Alfred.Subsystems.SelectMany(subsystem => subsystem.Pages)
                        .OfType<AlfredModuleListPage>()
                        .Sum(modulePage => modulePage.Modules.Count());
 
-            Assert.Greater(numModules,
-                           0,
-                           "Alfred did not have any modules after calling add standard modules.");
+            numModules.ShouldBeGreaterThan(0, "Alfred did not have any modules after calling add standard modules.");
         }
 
+        /// <summary>
+        ///     Tests that after initialization Alfred is online.
+        /// </summary>
         [Test]
         public void AfterInitializationAlfredIsOnline()
         {
-            _alfred.Initialize();
+            Alfred.Initialize();
 
-            Assert.AreEqual(_alfred.Status, AlfredStatus.Online);
+            Alfred.Status.ShouldBe(AlfredStatus.Online);
         }
 
+        /// <summary>
+        ///    Test that Alfred starts offline.
+        /// </summary>
         [Test]
         public void AlfredStartsOffline()
         {
-            Assert.AreEqual(_alfred.Status, AlfredStatus.Offline);
+            Alfred.Status.ShouldBe(AlfredStatus.Offline);
         }
 
+        /// <summary>
+        ///     Alfred should start with no sub systems.
+        /// </summary>
         [Test]
         public void AlfredStartsWithNoSubSystems()
         {
-            Assert.AreEqual(0,
-                            _alfred.Subsystems.Count(),
+            Alfred.Subsystems.Count().ShouldBe(0,
                             "Alfred started with subsystems when none were expected.");
-        }
-
-        [Test]
-        public void InitializationWithoutConsoleWorks()
-        {
-            _alfred.Console = null;
-
-            _alfred.Initialize();
-
-            // Nothing to assert here - I'm looking for errors encountered
         }
 
         /// <summary>
@@ -123,101 +121,91 @@ namespace MattEland.Ani.Alfred.Tests
         [Test]
         public void InitializeAlfred()
         {
-            Assert.NotNull(_alfred, "Alfred was not initialized");
+            Assert.NotNull(Alfred, "Alfred was not initialized");
         }
 
+        /// <summary>
+        ///     Tests that initialization followed by shutdown results in shutdown.
+        /// </summary>
         [Test]
         public void InitializeAndShutdownResultsInShutdown()
         {
-            _alfred.Initialize();
-            _alfred.Shutdown();
+            Alfred.Initialize();
+            Alfred.Shutdown();
 
-            Assert.AreEqual(_alfred.Status, AlfredStatus.Offline);
+            Alfred.Status.ShouldBe(AlfredStatus.Offline);
         }
 
-        [Test]
-        public void InitializeCreatesEventsInLog()
-        {
-            var console = _alfred.Console;
-            Assert.NotNull(console, "Console was not present");
-
-            var numEvents = console.Events.Count();
-
-            _alfred.Initialize();
-
-            Assert.Greater(console.Events.Count(),
-                           numEvents,
-                           "Initializing Alfred did not create any log entries.");
-        }
-
-        [Test]
+        /// <summary>
+        ///     Tests that initializing while online causes issues
+        /// </summary>
+        [Test, ExpectedException(typeof(InvalidOperationException))]
         public void InitializeWhileOnlineErrors()
         {
-            _alfred.Initialize();
-
-            try
-            {
-                _alfred.Initialize();
-
-                Assert.Fail(
-                            "Expected an InvalidOperationException since Alfred was already initialized.");
-            }
-            catch (InvalidOperationException)
-            {
-                // No action
-            }
-
-            // Assert that we're still online.
-            Assert.AreEqual(_alfred.Status, AlfredStatus.Online);
+            Alfred.Initialize();
+            Alfred.Initialize();
         }
 
+        /// <summary>
+        ///     Tests that initializing Alfred causes components to initialize
+        /// </summary>
         [Test]
         public void InitializingInitializesComponents()
         {
-            _alfred.Register(new AlfredCoreSubsystem(Container));
+            Alfred.Register(new AlfredCoreSubsystem(Container));
 
-            _alfred.Initialize();
+            Alfred.Initialize();
 
-            foreach (var item in _alfred.Subsystems)
+            foreach (var item in Alfred.Subsystems)
             {
-                Assert.AreEqual(AlfredStatus.Online,
-                                item.Status,
+                item.Status.ShouldBe(AlfredStatus.Online,
                                 $"{item.NameAndVersion} was not initialized during initialization.");
             }
         }
 
+        /// <summary>
+        ///     Tests that logging causes events to be logged
+        /// </summary>
         [Test]
         public void LogToConsole()
         {
-            var console = _alfred.Console;
-            Assert.NotNull(console, "Console was not present");
+            var console = Container.Provide<IConsole>();
+            console.ShouldNotBeNull("Console was not present");
 
             var numEvents = console.Events.Count();
 
             console.Log("Alfred Test Framework", "Testing logging to Alfred", LogLevel.Verbose);
 
-            Assert.AreEqual(numEvents + 1,
-                            console.Events.Count(),
-                            "Event count did not increase after logging.");
+            console.Events.Count().ShouldBe(numEvents + 1,
+                "Event count did not increase after logging.");
         }
 
+        /// <summary>
+        ///     Ensures Modules cannot be added while online.
+        /// </summary>
         [Test]
         [ExpectedException(typeof(InvalidOperationException))]
         public void ModulesCannotBeAddedWhileOnline()
         {
-            _alfred.Initialize();
-            _alfred.Register(new AlfredCoreSubsystem(Container));
+            Alfred.Initialize();
+            Alfred.Register(new AlfredCoreSubsystem(Container));
         }
 
+        /// <summary>
+        ///     Ensures Modules cannot update while offline.
+        /// </summary>
         [Test]
         [ExpectedException(typeof(InvalidOperationException))]
         public void ModulesCannotUpdateWhileOffline()
         {
-            _alfred.Register(new AlfredCoreSubsystem(Container));
+            Alfred.Register(new AlfredCoreSubsystem(Container));
 
-            _alfred.Update();
+            Alfred.Update();
         }
 
+        /// <summary>
+        ///     Ensures that registering a widget multiple times throws an exception.
+        /// </summary>
         [Test]
         [ExpectedException(typeof(InvalidOperationException))]
         public void RegisteringAWidgetMultipleTimesThrowsAnException()
@@ -228,22 +216,28 @@ namespace MattEland.Ani.Alfred.Tests
             testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
             testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
 
-            _alfred.Register(_subsystem);
+            Alfred.Register(_subsystem);
             _subsystem.AddAutoRegisterPage(_page);
             _page.Register(testModule);
 
-            _alfred.Initialize();
+            Alfred.Initialize();
         }
 
+        /// <summary>
+        ///     Registering null subsystem generates null reference exceptions.
+        /// </summary>
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public void RegisteringNullSubsystemGeneratesNullRef()
         {
             AlfredSubsystem system = null;
-            _alfred.Register(system);
+            Alfred.Register(system);
         }
 
+        /// <summary>
+        ///     Ensures registering widget at initialize and shutdown leaves one copy in list at reinitialize.
+        /// </summary>
         [Test]
         public void RegisteringWidgetAtInitializeAndShutdownLeavesOneCopyInListAtReinitialize()
         {
@@ -253,15 +247,15 @@ namespace MattEland.Ani.Alfred.Tests
             testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
             testModule.WidgetsToRegisterOnShutdown.Add(textWidget);
 
-            _alfred.Register(_subsystem);
+            Alfred.Register(_subsystem);
             _subsystem.AddAutoRegisterPage(_page);
             _page.Register(testModule);
 
-            _alfred.Initialize();
-            _alfred.Update();
-            _alfred.Shutdown();
-            _alfred.Initialize();
-            _alfred.Update();
+            Alfred.Initialize();
+            Alfred.Update();
+            Alfred.Shutdown();
+            Alfred.Initialize();
+            Alfred.Update();
 
             Assert.IsNotNull(testModule.Widgets, "testModule.Widgets was null");
             Assert.AreEqual(1,
@@ -269,47 +263,64 @@ namespace MattEland.Ani.Alfred.Tests
                             "Widgets were not properly cleared from list after re-initialize");
         }
 
-        [Test]
-        public void RemoveAlfredConsole()
-        {
-            _alfred.Console = null;
-
-            Assert.IsNull(_alfred.Console, "Could not remove Alfred's console");
-        }
-
-        [Test]
-        public void SetConsole()
-        {
-            Assert.IsNotNull(_alfred.Console, "Alfred's console was null after creation");
-        }
-
+        /// <summary>
+        ///     Ensures shutdown creates events in log.
+        /// </summary>
         [Test]
         public void ShutdownCreatesEventsInLog()
         {
+            var container = Container;
+            var al = Alfred;
+            var console = Container.Provide<IConsole>();
+
             // We need to be online to shut down or else we'll get errors
-            _alfred.Initialize();
+            al.Initialize();
+            al.Container.ShouldBeSameAs(container);
 
-            var console = _alfred.Console;
-            Assert.NotNull(console, "Console was not present");
+            var numEvents = console.EventCount;
 
-            var numEvents = console.Events.Count();
+            al.Shutdown();
 
-            _alfred.Shutdown();
-
-            Assert.Greater(console.Events.Count(),
-                           numEvents,
-                           "Shutting Alfred down did not create any log entries.");
+            if (console.EventCount <= numEvents)
+            {
+                var message = $"Shutting Alfred down did not create any log entries ({console.EventCount}) on container {container.Name} with collection of type {console.Events.GetType()}";
+                Assert.Fail(message);
+            }
         }
 
+        /// <summary>
+        ///     Tests that starting Alfred creates log entries
+        /// </summary>
+        [Test]
+        public void InitializeCreatesEventsInLog()
+        {
+            var container = Container;
+            var al = Alfred;
+            var console = Container.Provide<IConsole>();
+
+            var numEvents = console.EventCount;
+
+            al.Initialize();
+            al.Container.ShouldBeSameAs(container);
+
+            if (console.EventCount <= numEvents)
+            {
+                var message = $"Initializing Alfred did not create any log entries ({console.EventCount}) on container {container.Name} with collection of type {console.Events.GetType()}";
+                Assert.Fail(message);
+            }
+        }
+
+        /// <summary>
+        ///     Ensures shutdown while offline errors.
+        /// </summary>
         [Test]
         public void ShutdownWhileOfflineErrors()
         {
             try
             {
-                _alfred.Shutdown();
+                Alfred.Shutdown();
 
-                Assert.Fail(
-                            "Expected an InvalidOperationException since Alfred was already offline.");
+                Assert.Fail("Expected an InvalidOperationException since Alfred was already offline.");
             }
             catch (InvalidOperationException)
             {
@@ -317,18 +328,21 @@ namespace MattEland.Ani.Alfred.Tests
             }
 
             // Assert that we're now offline.
-            Assert.AreEqual(_alfred.Status, AlfredStatus.Offline);
+            Assert.AreEqual(Alfred.Status, AlfredStatus.Offline);
         }
 
+        /// <summary>
+        ///     Shutting down shuts down components.
+        /// </summary>
         [Test]
         public void ShuttingDownShutsDownComponents()
         {
-            _alfred.Register(new AlfredCoreSubsystem(Container));
+            Alfred.Register(new AlfredCoreSubsystem(Container));
 
-            _alfred.Initialize();
-            _alfred.Shutdown();
+            Alfred.Initialize();
+            Alfred.Shutdown();
 
-            foreach (var item in _alfred.Subsystems)
+            foreach (var item in Alfred.Subsystems)
             {
                 Assert.AreEqual(AlfredStatus.Offline,
                                 item.Status,
@@ -336,11 +350,14 @@ namespace MattEland.Ani.Alfred.Tests
             }
         }
 
+        /// <summary>
+        ///     Updates the with no modules while offline still generates errors.
+        /// </summary>
         [Test]
         [ExpectedException(typeof(InvalidOperationException))]
         public void UpdateWithNoModulesWhileOfflineStillGeneratesError()
         {
-            _alfred.Update();
+            Alfred.Update();
         }
     }
 

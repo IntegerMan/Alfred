@@ -73,7 +73,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             Container = container ?? CommonProvider.Container;
 
             // Use this container whenever a container is requested
-            Container.RegisterAsProvidedInstance(typeof(IObjectContainer));
+            Container.RegisterAsProvidedInstance(typeof(IObjectContainer), Container);
 
             // Register default mappings
             ConfigureContainer();
@@ -128,7 +128,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
                     if (value != null)
                     {
                         // Hook up our shell manager now that we have a way of communicating with Alfred
-                        ShellManager = new ShellCommandManager(value, _alfred);
+                        ShellManager = new ShellCommandManager(Container, value, _alfred);
                         _alfred.Register(ShellManager);
                     }
                 }
@@ -218,13 +218,12 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
 
             if (Options.IsSpeechEnabled)
             {
-                _console = new AlfredSpeechConsole(_console, _console.EventFactory);
+                _console = new AlfredSpeechConsole(Container, _console, _console.EventFactory);
             }
 
-            // This will be our console
+            // This will be our console. Stick it back in as a semi-singleton
             _console.Log("AppManager.InitConsole", "Initializing console.", LogLevel.Verbose);
-            _alfred.Console = _console;
-            _console.RegisterAsProvidedInstance(typeof(IConsole));
+            _console.RegisterAsProvidedInstance(typeof(IConsole), Container);
 
             return _console;
         }

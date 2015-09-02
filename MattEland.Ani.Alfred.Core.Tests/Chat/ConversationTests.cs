@@ -35,8 +35,6 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     public class ConversationTests : ChatTestsBase
     {
-        private readonly IObjectContainer _container = CommonProvider.Container;
-
         /// <summary>
         ///     Sets up the testing environment prior to each test run.
         /// </summary>
@@ -193,7 +191,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         [Test]
         public void StartupLeavesLastInputClear()
         {
-            var chat = new AimlStatementHandler(_container, "Alfredo");
+            var chat = new AimlStatementHandler(Container, "Alfredo");
             chat.DoInitialGreeting();
 
             chat.LastInput.ShouldBeNullOrEmpty("Startup did not clear last input.");

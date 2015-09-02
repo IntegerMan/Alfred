@@ -49,6 +49,14 @@ namespace MattEland.Common.Providers
         Type CollectionType { get; set; }
 
         /// <summary>
+        ///     Gets or sets the name of the Container.
+        /// </summary>
+        /// <value>
+        ///     The name.
+        /// </value>
+        string Name { get; set; }
+
+        /// <summary>
         ///     Provides a collection of the specified type of <see langword="object" /> .
         /// </summary>
         /// <remarks>
@@ -189,6 +197,7 @@ namespace MattEland.Common.Providers
         /// <typeparam name="T">The type to return</typeparam>
         /// <param name="args">The arguments.</param>
         /// <returns>A new instance if things were successful; otherwise false.</returns>
+        [CanBeNull]
         T TryProvide<T>([CanBeNull] params object[] args) where T : class;
 
         /// <summary>
@@ -213,4 +222,5 @@ namespace MattEland.Common.Providers
         [NotNull]
         IObjectProvider GetObjectProvider([NotNull] Type type);
     }
+
 }

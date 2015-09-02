@@ -19,7 +19,6 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Common;
 using MattEland.Common.Providers;
 
@@ -74,11 +73,11 @@ namespace MattEland.Ani.Alfred.Core
             Container = container;
 
             // Set the controller
-            _statusController = new AlfredStatusController(this);
+            _statusController = new AlfredStatusController(this, container);
 
             // Build out sub-collections
-            _subsystems = Container.ProvideCollection<IAlfredSubsystem>();
-            _rootPages = Container.ProvideCollection<IAlfredPage>();
+            _subsystems = container.ProvideCollection<IAlfredSubsystem>();
+            _rootPages = container.ProvideCollection<IAlfredPage>();
         }
 
         /// <summary>
@@ -134,13 +133,6 @@ namespace MattEland.Ani.Alfred.Core
                 OnPropertyChanged(nameof(ChatProvider));
             }
         }
-
-        /// <summary>
-        ///     Gets or sets the console provider. This can be <see langword="null"/>.
-        /// </summary>
-        /// <value>The console.</value>
-        [CanBeNull, Obsolete("Get your own IConsole from an IObjectProvider")]
-        public IConsole Console { get; set; }
 
         /// <summary>
         ///     Tells Alfred it's okay to start itself up and begin operating.

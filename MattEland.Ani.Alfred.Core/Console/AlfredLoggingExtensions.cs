@@ -8,6 +8,7 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 
 using JetBrains.Annotations;
 
@@ -35,13 +36,16 @@ namespace MattEland.Ani.Alfred.Core.Console
         /// <param name="title"> The title. </param>
         /// <param name="level"> The level. </param>
         /// <param name="container"> The container. </param>
-        public static void Log([CanBeNull] this string message, [CanBeNull] string title, LogLevel level, [CanBeNull] IObjectContainer container = null)
+        public static void Log([CanBeNull] this string message, [CanBeNull] string title, LogLevel level, [CanBeNull] IObjectContainer container)
         {
             // If we don't have a console, we'll have to use the container to find one
             if (Console == null)
             {
-                container = container ?? CommonProvider.Container;
-                Console = container.Provide<IConsole>();
+                if (container == null)
+                {
+                    container = CommonProvider.Container;
+                }
+                Console = container.TryProvide<IConsole>();
             }
 
             // Use the other extension method to log it
@@ -68,6 +72,10 @@ namespace MattEland.Ani.Alfred.Core.Console
 
                 // Perform the logging
                 console.Log(title, message, level);
+            }
+            else
+            {
+                Debug.WriteLine($"Could not log message: {title}: {message}");
             }
         }
     }

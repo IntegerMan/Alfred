@@ -56,7 +56,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
             module.WidgetsToRegisterOnInitialize.Add(new ButtonWidget(BuildWidgetParams(ButtonName)));
 
             // Don't do this normally, but this will be enough to populate the collection to evaluate
-            module.Initialize(new TestAlfred());
+            module.Initialize(new TestAlfred(Container));
 
             // Grab the values for assertion
             var providers = module.PropertyProviders.ToList();

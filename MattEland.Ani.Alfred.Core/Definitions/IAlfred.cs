@@ -21,15 +21,8 @@ namespace MattEland.Ani.Alfred.Core.Definitions
     /// <summary>
     ///     An interface promising Alfred Framework style capabilities
     /// </summary>
-    public interface IAlfred : IPropertyProvider
+    public interface IAlfred : IPropertyProvider, IHasContainer
     {
-        /// <summary>
-        ///     Gets the console provider. This can be null.
-        /// </summary>
-        /// <value>The console.</value>
-        [CanBeNull]
-        IConsole Console { get; }
-
         /// <summary>
         ///     Gets or sets the status.
         /// </summary>
@@ -73,15 +66,6 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// </summary>
         /// <value>The chat provider.</value>
         IChatProvider ChatProvider { get; }
-
-        /// <summary>
-        ///     Gets the container.
-        /// </summary>
-        /// <value>
-        ///     The container.
-        /// </value>
-        [NotNull]
-        IObjectContainer Container { get; }
 
         /// <summary>
         /// Gets the shell command handler that can pass shell commands on to the user interface.

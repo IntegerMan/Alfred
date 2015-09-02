@@ -40,7 +40,7 @@ namespace MattEland.Ani.Alfred.Tests
         {
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
 
-            var console = new SimpleConsole(container);
+            var console = new DiagnosticConsole(container);
             console.RegisterAsProvidedInstance(typeof(IConsole), container);
 
             // Register mappings for promised types

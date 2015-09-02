@@ -26,6 +26,14 @@ namespace MattEland.Ani.Alfred.Tests
     [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
     public abstract class AlfredTestBase : UnitTestBase
     {
+        /// <summary>
+        ///     Sets up the test fixture.
+        /// </summary>
+        [TestFixtureSetUp]
+        public override void SetUpFixture()
+        {
+            base.SetUpFixture();
+        }
 
         /// <summary>
         /// Sets up the environment for each test.
@@ -34,6 +42,7 @@ namespace MattEland.Ani.Alfred.Tests
         public override void SetUp()
         {
             base.SetUp();
+
             Container.RegisterDefaultAlfredMappings();
         }
 

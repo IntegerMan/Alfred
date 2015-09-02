@@ -97,6 +97,7 @@
     <Compile Include="Providers\CommonProvider.cs" />
     <Compile Include="Providers\CommonProviderExtensions.cs" />
     <Compile Include="Providers\DelegateObjectProvider.cs" />
+    <Compile Include="Providers\IHasContainer.cs" />
     <Compile Include="Providers\IObjectContainer.cs" />
     <Compile Include="Providers\InstanceProvider.cs" />
     <Compile Include="Providers\IObjectProvider.cs" />

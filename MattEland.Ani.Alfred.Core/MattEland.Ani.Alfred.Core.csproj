@@ -56,6 +56,7 @@
     <Compile Include="ComponentBase.cs" />
     <Compile Include="Console\ConsoleEventExplorerDecorator.cs" />
     <Compile Include="Console\ConsoleEventFactory.cs" />
+    <Compile Include="Console\DiagnosticConsole.cs" />
     <Compile Include="Console\ExplorerEventFactory.cs" />
     <Compile Include="Definitions\AlfredProperty.cs" />
     <Compile Include="Definitions\ChatCommand.cs" />
