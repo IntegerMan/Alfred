@@ -367,7 +367,6 @@ namespace MattEland.Ani.Alfred.Core
                 yield return new AlfredProperty("Subsystems", Subsystems.Count());
                 yield return new AlfredProperty("Root Pages", RootPages.Count());
                 yield return new AlfredProperty("Version", Version);
-                yield return new AlfredProperty("Console", Console);
                 yield return new AlfredProperty("Container", Container);
             }
         }
