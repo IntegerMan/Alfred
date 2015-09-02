@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <NDepend AppName="Alfred" Platform="DotNet">
   <OutputDir KeepXmlFiles="False">C:\Dev\Alfred\NDependOut</OutputDir>
   <Assemblies>
@@ -90,7 +90,8 @@
   <SourceFileRebasing FromPath="" ToPath="" />
   <PathVariables />
   <RuleFiles />
-  <ProjectRules AreActive="True" /><Queries>
+  <ProjectRules AreActive="True" />
+  <Queries>
     <Group Name="Code Quality" Active="True" ShownInReport="False">
       <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="True"><![CDATA[// <Name>Types too big - critical</Name>
 warnif count > 0 from t in JustMyCode.Types where 
@@ -147,7 +148,7 @@ select new { t, t.NbLinesOfCode, t.NbILInstructions,
 warnif count > 0 from m in JustMyCode.Methods where 
   m.CyclomaticComplexity > 30 ||
   m.ILCyclomaticComplexity > 60 ||
-  m.ILNestingDepth > 6
+  m.ILNestingDepth > 15
   orderby m.CyclomaticComplexity descending,
           m.ILCyclomaticComplexity descending,
           m.ILNestingDepth descending
@@ -8089,8 +8090,10 @@ select new { t, t.NbLinesOfCode }
 //</HowToFix>]]></Query>
       </Group>
     </Group>
-  </Queries><WarnFilter>
+  </Queries>
+  <WarnFilter>
     <DontWarn>Invalid coverage file {C:\Dev\Alfred\Coverage\AlfredCoverage.xml}</DontWarn>
     <DontWarn>Coverage file extension must be in : .xml  .nccov  .coveragexml    {C:\Dev\Alfred\Coverage\AlfredCoverage.html}</DontWarn>
     <DontWarn>Invalid coverage file {C:\Dev\Alfred\Coverage\TestResult.xml}</DontWarn>
-  </WarnFilter></NDepend>
+  </WarnFilter>
+</NDepend>
