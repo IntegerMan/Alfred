@@ -131,8 +131,8 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         [Test]
         public void EventLogPageIsPresentInAlfredAfterInitializationWhenConsoleIsProvided()
         {
-            var console = new SimpleConsole();
-            _alfred.Console = console;
+            var console = new SimpleConsole(Container);
+            console.RegisterAsProvidedInstance(typeof(IConsole), Container);
 
             _alfred.Register(_subsystem);
             _alfred.Initialize();
