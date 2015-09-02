@@ -1,0 +1,54 @@
+﻿// ---------------------------------------------------------
+// ISearchResult.cs
+// 
+// Created on:      09/02/2015 at 6:02 PM
+// Last Modified:   09/02/2015 at 6:03 PM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using System;
+
+namespace MattEland.Ani.Alfred.Core.Definitions
+{
+    /// <summary>
+    ///     Interface for a search result.
+    /// </summary>
+    public interface ISearchResult
+    {
+        /// <summary>
+        ///     Gets the title or heading to use when displaying the search result.
+        /// </summary>
+        /// <value>
+        /// The title of the search result.
+        /// </value>
+        string Title { get; }
+
+        /// <summary>
+        ///     Gets the textual description of the search result.
+        /// </summary>
+        /// <value>
+        /// The description of the search result.
+        /// </value>
+        string DescriptionText { get; }
+
+        /// <summary>
+        ///     Gets a textual display of the location. Location can vary by the type of search and
+        ///     could be a physical street address, web URL, file or network path, or even a page
+        ///     number or other reference code.
+        /// </summary>
+        /// <value>
+        /// The location text.
+        /// </value>
+        string LocationText { get; }
+
+        /// <summary>
+        ///     Gets an action that will provide more details on the search result. What this does
+        ///     varies by the type of search result.
+        /// </summary>
+        /// <value>
+        /// The get more details action.
+        /// </value>
+        Action<ISearchResult> MoreDetailsAction { get; }
+    }
+}

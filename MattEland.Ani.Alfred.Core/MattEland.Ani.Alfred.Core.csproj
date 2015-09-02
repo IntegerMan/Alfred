@@ -69,6 +69,9 @@
     <Compile Include="Definitions\IHasIdentifier.cs" />
     <Compile Include="Definitions\IPropertyItem.cs" />
     <Compile Include="Definitions\IPropertyProvider.cs" />
+    <Compile Include="Definitions\ISearchOperation.cs" />
+    <Compile Include="Definitions\ISearchProvider.cs" />
+    <Compile Include="Definitions\ISearchResult.cs" />
     <Compile Include="Definitions\IShellCommandRecipient.cs" />
     <Compile Include="Definitions\IStatusController.cs" />
     <Compile Include="Definitions\IChatProvider.cs" />
