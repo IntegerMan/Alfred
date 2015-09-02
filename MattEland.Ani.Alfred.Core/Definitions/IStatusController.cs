@@ -8,18 +8,15 @@
 
 using System;
 
+using MattEland.Common.Providers;
+
 namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>
     ///     The Status Controller provides a way to control Alfred's status
     /// </summary>
-    public interface IStatusController
+    public interface IStatusController : IHasContainer
     {
-        /// <summary>
-        ///     Gets or sets the alfred framework.
-        /// </summary>
-        /// <value>The alfred framework.</value>
-        IAlfred Alfred { get; set; }
 
         /// <summary>
         ///     Tells Alfred it's okay to start itself up and begin operating.

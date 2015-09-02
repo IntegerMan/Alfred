@@ -6,9 +6,6 @@
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
-using System;
-using System.Collections;
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
@@ -51,8 +48,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
             _metricProviderFactory = new ValueMetricProviderFactory();
             _subsystem = new SystemMonitoringSubsystem(Container);
 
-            var bootstrapper = new AlfredBootstrapper();
-            _alfred = bootstrapper.Create();
+            _alfred = new AlfredApplication(Container);
         }
 
         [Test]

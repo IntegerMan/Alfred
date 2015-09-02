@@ -20,10 +20,13 @@ using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Ani.Alfred.Core.Subsystems;
+using MattEland.Common;
 using MattEland.Common.Providers;
 using MattEland.Testing;
 
 using NUnit.Framework;
+
+using Shouldly;
 
 namespace MattEland.Ani.Alfred.Tests.Subsystems
 {
@@ -38,8 +41,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
 
             _subsystem = new AlfredCoreSubsystem(Container);
 
-            var bootstrapper = new AlfredBootstrapper(Container);
-            _alfred = bootstrapper.Create();
+            _alfred = new AlfredApplication(Container);
         }
 
         [NotNull]
@@ -107,27 +109,29 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
             _alfred.Initialize();
             _alfred.Update();
 
-            Assert.IsTrue(
-                          _alfred.RootPages.Any(p => p.Name == AlfredCoreSubsystem.ControlPageName),
+            Assert.IsTrue(_alfred.RootPages.Any(p => p.Name == AlfredCoreSubsystem.ControlPageName),
                           "Control Page was not found");
         }
 
         [Test]
         public void EventLogPageIsNotPresentInAlfredAfterInitializationWhenNoConsoleIsProvided()
         {
+            // The IConsole comes from the Container now so clear out the container
+            Container.ResetMappings();
+
             _alfred.Register(_subsystem);
             _alfred.Initialize();
             _alfred.Update();
 
-            Assert.IsTrue(_alfred.RootPages.All(p => p.Name != AlfredCoreSubsystem.EventLogPageName),
-                          "Event Log Page was present when no console was provided");
+            const string FailMessage = "Event Log Page was present when no console was provided";
+            _alfred.RootPages.ShouldNotAllBeOfType<AlfredEventLogPage>(FailMessage);
         }
 
         [Test]
         public void EventLogPageIsPresentInAlfredAfterInitializationWhenConsoleIsProvided()
         {
-            var console = new SimpleConsole();
-            _alfred.Console = console;
+            var console = new DiagnosticConsole(Container);
+            console.RegisterAsProvidedInstance(typeof(IConsole), Container);
 
             _alfred.Register(_subsystem);
             _alfred.Initialize();

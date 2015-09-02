@@ -215,12 +215,12 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             AlfredTestTagHandler.WasInvoked = false;
 
             // Create Alfred and make it so the tests can find him via the Container
-            var alfred = new TestAlfred();
+            var alfred = new TestAlfred(Container);
             alfred.RegisterAsProvidedInstance(Container);
             alfred.RegisterAsProvidedInstance(typeof(IAlfred), Container);
 
             // Add Subsystems to Alfred
-            CoreSubsystem = new AlfredCoreSubsystem(CommonProvider.Container);
+            CoreSubsystem = new AlfredCoreSubsystem(Container);
             alfred.Register(CoreSubsystem);
 
             ChatSubsystem = new ChatSubsystem(Container, "Alfredo");

@@ -355,42 +355,6 @@ namespace MattEland.Ani.Alfred.Chat {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to CommandRouting.
-        /// </summary>
-        internal static string AlfredCommandRouterProcessAlfredCommandLogHeader {
-            get {
-                return ResourceManager.GetString("AlfredCommandRouterProcessAlfredCommandLogHeader", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Command &apos;{0}&apos; raised for subsystem &apos;{1}&apos; with data value of &apos;{2}&apos;..
-        /// </summary>
-        internal static string AlfredCommandRouterProcessAlfredCommandLogMessage {
-            get {
-                return ResourceManager.GetString("AlfredCommandRouterProcessAlfredCommandLogMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to CommandRouting.
-        /// </summary>
-        internal static string AlfredCommandRouterProcessShellCommandLogHeader {
-            get {
-                return ResourceManager.GetString("AlfredCommandRouterProcessShellCommandLogHeader", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Shell Command &apos;{0}&apos; raised targeting &apos;{1}&apos; with data value of &apos;{2}&apos;..
-        /// </summary>
-        internal static string AlfredCommandRouterProcessShellCommandMessage {
-            get {
-                return ResourceManager.GetString("AlfredCommandRouterProcessShellCommandMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Attempted to execute command, but no valid recipient.
         /// </summary>
         internal static string AlfredTagHandlerProcessChangeNoRecipient {

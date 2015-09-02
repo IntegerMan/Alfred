@@ -14,6 +14,7 @@ using System.Linq;
 
 using JetBrains.Annotations;
 
+using MattEland.Common;
 using MattEland.Common.Providers;
 
 using NUnit.Framework;
@@ -23,9 +24,8 @@ namespace MattEland.Testing
     /// <summary>A <see langword="base" /> class for all unit tests</summary>
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
-    public abstract class UnitTestBase
+    public abstract class UnitTestBase : IHasContainer
     {
-        [NotNull]
         private IObjectContainer _container;
 
         /// <summary>Gets the random number generator.</summary>
@@ -40,9 +40,42 @@ namespace MattEland.Testing
         /// <summary>Gets the <see cref="IObjectContainer" /> used by the test.</summary>
         /// <value>The container.</value>
         [NotNull]
-        protected IObjectContainer Container
+        public IObjectContainer Container
         {
-            get { return _container; }
+            get
+            {
+                if (_container == null)
+                {
+                    _container = new CommonContainer();
+                }
+
+                // Ensure the name is accurate
+                _container.Name = CurrentTestName;
+
+                return _container;
+
+            }
+        }
+
+        /// <summary>
+        ///     Gets the current test's name.
+        /// </summary>
+        /// <value>
+        ///     The name of the current test's name.
+        /// </value>
+        [NotNull]
+        public string CurrentTestName
+        {
+            get
+            {
+                var currentContext = TestContext.CurrentContext;
+
+                // Sanity check in an uncertain land
+                currentContext.ShouldNotBeNull();
+                currentContext.Test.ShouldNotBeNull();
+
+                return $"Con_{currentContext.Test.Name.NonNull()}";
+            }
         }
 
         /// <summary>Sets up the test fixture.</summary>
@@ -51,6 +84,6 @@ namespace MattEland.Testing
 
         /// <summary>Sets up the environment for each test.</summary>
         [SetUp]
-        public virtual void SetUp() { _container = new CommonContainer(); }
+        public virtual void SetUp() { }
     }
 }

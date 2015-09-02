@@ -144,8 +144,8 @@ namespace MattEland.Common.Providers
         }
 
         /// <summary>
-        ///     Registers the instance in the <paramref name="container"/> as the instance that will be
-        ///     provided when
+        ///     Registers the <paramref name="instance"/> in the <paramref name="container"/> as the
+        ///     instance that will be provided when
         ///     <see cref="CommonProvider.Provide{TRequested}" /> or
         ///     <see cref="CommonProvider.ProvideType" /> is called on the container for type
         ///     <paramref name="type" />
@@ -156,20 +156,37 @@ namespace MattEland.Common.Providers
         /// <param name="instance"> The instance. </param>
         /// <param name="type"> The type that will be requested. </param>
         /// <param name="container"> The container. </param>
-        ///
-        /// ### <exception cref="System.ArgumentNullException"> type, instance, container. </exception>
         public static void RegisterAsProvidedInstance(
             [NotNull] this object instance,
             [NotNull] Type type,
-            [NotNull] IObjectContainer container)
+            [CanBeNull] IObjectContainer container)
         {
             //- Validate
             if (instance == null) { throw new ArgumentNullException(nameof(instance)); }
             if (type == null) { throw new ArgumentNullException(nameof(type)); }
 
+            var hasContainer = instance as IHasContainer;
+
+            if (container == null)
+            {
+                if (hasContainer != null)
+                {
+                    container = hasContainer.Container;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(container));
+                }
+            }
+
+            // Safeguard against sticking items in a different container
+            if (hasContainer != null && hasContainer.Container != container)
+            {
+                throw new InvalidOperationException("The instance already has a container different from this container");
+            }
+
             // Register
             container.RegisterProvidedInstance(type, instance);
-
         }
     }
 }

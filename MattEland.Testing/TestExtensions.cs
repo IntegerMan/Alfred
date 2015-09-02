@@ -7,6 +7,7 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,7 +59,7 @@ namespace MattEland.Testing
         [CanBeNull]
         public static object ShouldBeNull(
             [AssertionCondition(AssertionConditionType.IS_NULL)] [CanBeNull] this object source,
-            string failureMessage = "Object should be null but was not")
+            [CanBeNull] string failureMessage = "Object should be null but was not")
         {
             source.ShouldBe(null, failureMessage);
 
@@ -156,6 +157,41 @@ namespace MattEland.Testing
 
             // Cast all items and return them in a strongly-typed List<T>
             return (from object item in collection select item.ShouldBe<T>(failureMessage)).ToList();
+        }
+
+        /// <summary>
+        ///     An IEnumerable extension method that asserts that every item in the
+        ///     <paramref name="collection"/> should not be of the generic type.
+        /// </summary>
+        /// <typeparam name="T">Generic type parameter.</typeparam>
+        /// <param name="collection">The collection to act on.</param>
+        /// <param name="failureMessage">The failure message to display if the test fails.</param>
+        /// <returns>
+        ///     The collection.
+        /// </returns>
+        public static IEnumerable ShouldNotAllBeOfType<T>(
+            [CanBeNull] this IEnumerable collection,
+            string failureMessage = null) where T : class
+        {
+            // Validate Input
+            collection.ShouldNotBeNull("The collection object was null prior to being cast.");
+
+            // Ensure a decent message
+            if (failureMessage.IsEmpty())
+            {
+                failureMessage = $"An item of type {typeof(T).Name} was present in the collection.";
+            }
+
+            // Check All items in the collection
+            var items = collection as IList<object> ?? collection.Cast<object>().ToList();
+            foreach (var item in items)
+            {
+                var cast = item as T;
+
+                cast.ShouldBeNull(failureMessage);
+            }
+
+            return items;
         }
     }
 }

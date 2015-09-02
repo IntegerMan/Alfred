@@ -26,7 +26,7 @@ namespace MattEland.Manticore.Analyzers
         /// <summary>
         ///     The diagnostic identifier.
         /// </summary>
-        internal const string DiagnosticId = "MANT-1000";
+        public const string DiagnosticId = "MANT-1000";
 
         /// <summary>
         ///     Gets the rule identifier.

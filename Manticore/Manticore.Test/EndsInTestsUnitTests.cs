@@ -10,22 +10,30 @@ using MattEland.Manticore.Analyzers;
 
 namespace Manticore.Test
 {
+    /// <summary>
+    ///     Unit tests around the <see cref="EndsInTestsAnalyzer"/> and
+    ///     <see cref="EndsInTestsCodeFixProvider"/>
+    /// </summary>
     [TestClass]
-    public class UnitTest : CodeFixVerifier
+    public class EndsInTestsUnitTests : CodeFixVerifier
     {
-
-        //No diagnostics expected to show up
+        /// <summary>
+        ///     No diagnostics expected to show up on an empty string.
+        /// </summary>
         [TestMethod]
-        public void TestMethod1()
+        public void AnalyzerDoesNotFireOnEmptyString()
         {
             var test = @"";
 
             VerifyCSharpDiagnostic(test);
         }
 
-        //Diagnostic and CodeFix both triggered and checked for
+        /// <summary>
+        ///     Checks that the remove "Tests" from class name analyzer and code fix fire and yield the
+        ///     expected results.
+        /// </summary>
         [TestMethod]
-        public void TestMethod2()
+        public void TestRemoveTestsFromClassNameCodeFix()
         {
             var test = @"
     using System;
@@ -37,14 +45,14 @@ namespace Manticore.Test
 
     namespace ConsoleApplication1
     {
-        class TypeName
+        class DoSomethingTests
         {   
         }
     }";
             var expected = new DiagnosticResult
             {
-                Id = "Manticore",
-                Message = String.Format("Type name '{0}' contains lowercase letters", "TypeName"),
+                Id = EndsInTestsAnalyzer.DiagnosticId,
+                Message = "The class 'DoSomethingTests' ends in 'Tests' but is not in a Test assembly.",
                 Severity = DiagnosticSeverity.Warning,
                 Locations =
                     new[] {
@@ -64,7 +72,7 @@ namespace Manticore.Test
 
     namespace ConsoleApplication1
     {
-        class TYPENAME
+        class DoSomething
         {   
         }
     }";
@@ -78,7 +86,7 @@ namespace Manticore.Test
 
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
         {
-            return new ManticoreAnalyzer();
+            return new EndsInTestsAnalyzer();
         }
     }
 }

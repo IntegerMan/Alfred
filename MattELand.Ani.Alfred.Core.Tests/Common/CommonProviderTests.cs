@@ -16,7 +16,6 @@ using System.Text;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Tests.Pages;
-using MattEland.Common;
 using MattEland.Common.Providers;
 using MattEland.Testing;
 
@@ -136,7 +135,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
                 var sum = 0;
 
                 // Add items to the sum
-                if (args != null) { sum += args.Cast<int>().Sum(); }
+                sum += args.Cast<int>().Sum();
 
                 // Pass in the value to the object so we can validate it
                 return new PrivateTestClass(sum);
@@ -597,15 +596,17 @@ namespace MattEland.Ani.Alfred.Tests.Common
         [Test]
         public void TryRegisterIfNotMappedShouldRegister()
         {
-            var type = typeof(AlfredTestBase);
+            var container = new CommonContainer();
+
+            var type = typeof(UnitTestBase);
             var registerType = typeof(CommonProviderTests);
 
-            Container.HasMapping(type).ShouldBe(false);
-            var result = Container.TryRegister(type, registerType);
+            container.HasMapping(type).ShouldBe(false);
+            var result = container.TryRegister(type, registerType);
             result.ShouldBe(true);
-            Container.HasMapping(type).ShouldBe(true);
+            container.HasMapping(type).ShouldBe(true);
 
-            var instance = Container.ProvideType(type);
+            var instance = container.ProvideType(type);
             instance.ShouldBeOfType(registerType);
         }
 

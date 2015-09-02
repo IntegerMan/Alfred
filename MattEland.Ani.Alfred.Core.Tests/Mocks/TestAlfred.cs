@@ -28,6 +28,15 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
         [NotNull]
         private readonly ICollection<IAlfredPage> _rootPages = new List<IAlfredPage>();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestAlfred"/> class.
+        /// </summary>
+        /// <param name="container">The container.</param>
+        public TestAlfred(IObjectContainer container)
+        {
+            Container = container;
+        }
+
         [NotNull]
         public IList<IAlfredSubsystem> SubsystemsList { get; } = new List<IAlfredSubsystem>();
 
@@ -49,17 +58,7 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
         /// <value>
         ///     The container.
         /// </value>
-        public IObjectContainer Container
-        {
-            get { return CommonProvider.Container; }
-        }
-
-        /// <summary>
-        ///     Gets the console provider. This can be null.
-        /// </summary>
-        /// <value>The console.</value>
-        [NotNull]
-        public IConsole Console { get; } = new SimpleConsole();
+        public IObjectContainer Container { get; }
 
         /// <summary>
         ///     Initializes this instance.

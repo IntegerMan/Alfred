@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
 // ShellCommandManager.cs
 // 
-// Created on:      08/18/2015 at 11:11 PM
-// Last Modified:   08/18/2015 at 11:11 PM
+// Created on:      09/01/2015 at 3:46 PM
+// Last Modified:   09/01/2015 at 10:56 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -14,49 +14,77 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.PresentationShared.Commands
 {
     /// <summary>
-    /// The command manager for the WPF/XAML application
+    ///     The command manager for the WPF/XAML application.
     /// </summary>
     public class ShellCommandManager : IShellCommandRecipient
     {
+        /// <summary>
+        ///     Gets the Alfred instance.
+        /// </summary>
+        /// <value>
+        ///     The Alfred instance.
+        /// </value>
         [NotNull]
-        private readonly IUserInterfaceDirector _uiDirector;
-
-        [NotNull]
-        private readonly AlfredApplication _alfred;
+        private AlfredApplication Alfred { get; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:System.Object" /> class.
+        ///     Gets the user interface director.
         /// </summary>
-        /// <param name="director">The user interface director.</param>
-        /// <param name="alfred">The alfred instance.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="director" /> is <see langword="null" />.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="alfred" /> is <see langword="null" />.</exception>
-        public ShellCommandManager([NotNull] IUserInterfaceDirector director, [NotNull] AlfredApplication alfred)
-        {
-            if (director == null)
-            {
-                throw new ArgumentNullException(nameof(director));
-            }
-            if (alfred == null)
-            {
-                throw new ArgumentNullException(nameof(alfred));
-            }
+        /// <value>
+        ///     The user interface director.
+        /// </value>
+        [NotNull]
+        private IUserInterfaceDirector UIDirector { get; }
 
-            _uiDirector = director;
-            _alfred = alfred;
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="object" /> class.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="director" /> is <see langword="null" /> .
+        /// </exception>
+        /// <param name="container"> The container. </param>
+        /// <param name="director"> The user <see langword="interface" /> director. </param>
+        /// <param name="alfred"> The alfred instance. </param>
+        internal ShellCommandManager(
+            [NotNull] IObjectContainer container,
+            [NotNull] IUserInterfaceDirector director,
+            [NotNull] AlfredApplication alfred)
+        {
+            //- Validate
+            if (container == null) { throw new ArgumentNullException(nameof(container)); }
+            if (director == null) { throw new ArgumentNullException(nameof(director)); }
+            if (alfred == null) { throw new ArgumentNullException(nameof(alfred)); }
+
+            Container = container;
+            UIDirector = director;
+            Alfred = alfred;
         }
 
         /// <summary>
-        /// Processes a shell command by sending it on to the user interface layer.
+        ///     Gets the container.
         /// </summary>
-        /// <param name="command">The command.</param>
+        /// <value>
+        ///     The container.
+        /// </value>
+        public IObjectContainer Container { get; }
+
+        /// <summary>
+        ///     Processes a shell <paramref name="command" /> by sending it on to the user
+        ///     <see langword="interface" /> layer.
+        /// </summary>
+        /// <param name="command"> The command. </param>
+        /// <returns>
+        ///     A string.
+        /// </returns>
         public string ProcessShellCommand(ShellCommand command)
         {
-            _alfred.Console?.Log("ShellCommand", "Received shell command: " + command, LogLevel.Info);
+            var message = "Received shell command: " + command;
+            message.Log("ShellCommand", LogLevel.Info, Container);
 
             switch (command.Name.ToUpperInvariant())
             {
@@ -68,16 +96,18 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         }
 
         /// <summary>
-        /// Handles a shell navigation command.
+        ///     Handles a shell navigation command.
         /// </summary>
-        /// <param name="command">The command.</param>
-        /// <returns>Whether or not the event was handled</returns>
+        /// <param name="command"> The command. </param>
+        /// <returns>
+        ///     Whether or not the event was handled.
+        /// </returns>
         private bool HandleNavigationCommand(ShellCommand command)
         {
             switch (command.Target.ToUpperInvariant())
             {
                 case "PAGES":
-                    return _uiDirector.HandlePageNavigationCommand(command);
+                    return UIDirector.HandlePageNavigationCommand(command);
             }
 
             return false;

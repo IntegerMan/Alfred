@@ -11,6 +11,7 @@ using System;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Common;
@@ -120,7 +121,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
             _controlPage.Register(_pagesModule);
 
             // Don't include the event log page if there are no events
-            if (AlfredInstance?.Console != null)
+            if (Container.HasMapping(typeof(IConsole)))
             {
                 _eventLogPage = new AlfredEventLogPage(Container,
                                                        EventLogPageName);

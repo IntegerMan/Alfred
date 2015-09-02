@@ -33,7 +33,7 @@ namespace MattEland.Ani.Alfred.Chat
         private readonly ChatPage _chatPage;
 
         [NotNull]
-        private readonly AlfredCommandRouter _commandRouter = new AlfredCommandRouter();
+        private readonly AlfredCommandRouter _commandRouter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
@@ -43,8 +43,8 @@ namespace MattEland.Ani.Alfred.Chat
         /// <exception cref="System.ArgumentNullException"></exception>
         public ChatSubsystem([NotNull] IObjectContainer container, [NotNull] string engineName) : base(container)
         {
-            // Instantiate composite objects
             ChatHandler = new AimlStatementHandler(container, engineName);
+            _commandRouter = new AlfredCommandRouter(container);
             _chatPage = new ChatPage(container, Res.ChatModuleName.NonNull(), ChatHandler);
         }
 
@@ -136,7 +136,7 @@ namespace MattEland.Ani.Alfred.Chat
             base.RegisterControls();
 
             // We don't have console until we're registered, so update it here
-            ChatHandler.Console = AlfredInstance?.Console;
+            ChatHandler.Console = Container.TryProvide<IConsole>();
 
             // Register with the rest of the system
             if (RegisterPage) { Register(_chatPage); }

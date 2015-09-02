@@ -10,12 +10,14 @@ using System.Collections.Generic;
 
 using JetBrains.Annotations;
 
+using MattEland.Common.Providers;
+
 namespace MattEland.Ani.Alfred.Core.Console
 {
     /// <summary>
     ///     An interface describing the display console Alfred can interact with
     /// </summary>
-    public interface IConsole
+    public interface IConsole : IHasContainer
     {
         /// <summary>
         ///     Gets the console events.
@@ -39,5 +41,13 @@ namespace MattEland.Ani.Alfred.Core.Console
         /// <value>The console event factory.</value>
         [NotNull]
         ConsoleEventFactory EventFactory { get; }
+
+        /// <summary>
+        ///     Gets the number of events in the collection.
+        /// </summary>
+        /// <value>
+        ///     The total number of events.
+        /// </value>
+        int EventCount { get; }
     }
 }
