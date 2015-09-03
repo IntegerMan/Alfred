@@ -159,7 +159,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
                     "Cannot register page without an Alfred instance");
             }
 
-            AlfredInstance.Register(page);
+            RegistrationProvider.Register(page);
         }
 
         /// <summary>

@@ -145,7 +145,7 @@ namespace MattEland.Ani.Alfred.Core
         {
             get
             {
-                if (AlfredInstance != null) { return AlfredInstance.Locale; }
+                // TODO: Get from Container
                 return CultureInfo.CurrentCulture;
             }
         }
@@ -459,12 +459,27 @@ namespace MattEland.Ani.Alfred.Core
         {
             if (chatProvider == null) { throw new ArgumentNullException(nameof(chatProvider)); }
 
-            if (AlfredInstance == null)
+            var registrator = RegistrationProvider;
+            if (registrator == null)
             {
                 throw new InvalidOperationException(Resources.NoAlfredInstance);
             }
 
-            AlfredInstance.Register(chatProvider);
+            registrator.Register(chatProvider);
+        }
+
+        /// <summary>
+        ///     Gets the registration provider.
+        /// </summary>
+        /// <value>
+        ///     The registration provider.
+        /// </value>
+        public IProvidesRegistration RegistrationProvider
+        {
+            get
+            {
+                return AlfredInstance?.RegistrationProvider;
+            }
         }
 
         /// <summary>

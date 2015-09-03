@@ -2,7 +2,7 @@
 // AlfredEventingTests.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   08/24/2015 at 11:51 PM
+// Last Modified:   09/03/2015 at 12:18 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -30,13 +30,20 @@ using Shouldly;
 namespace MattEland.Ani.Alfred.Tests
 {
     /// <summary>
-    ///     Tests <see cref="AlfredApplication"/> and its ability to relay status transitons to other
-    ///     components and handle the component registration process.
+    ///     Tests <see cref="AlfredApplication" /> and its ability to relay status transitons to
+    ///     other components and handle the component registration process.
     /// </summary>
     [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public sealed class AlfredEventingTests : AlfredTestBase
     {
+
+        [NotNull]
+        private AlfredModuleListPage _page;
+
+        [NotNull]
+        private TestSubsystem _subsystem;
+
         /// <summary>
         ///     Sets up the Alfred provider's tests.
         /// </summary>
@@ -49,20 +56,13 @@ namespace MattEland.Ani.Alfred.Tests
             alfred.RegisterAsProvidedInstance(typeof(IAlfred), Container);
             _subsystem = new TestSubsystem(Container);
             _page = new AlfredModuleListPage(Container, "Test Page", "Test");
-
         }
-
-        [NotNull]
-        private TestSubsystem _subsystem;
-
-        [NotNull]
-        private AlfredModuleListPage _page;
 
         /// <summary>
         ///     Builds widget parameters.
         /// </summary>
         /// <param name="name">The name of the widget.</param>
-        /// <returns>The <see cref="WidgetCreationParameters"/>.</returns>
+        /// <returns>The <see cref="WidgetCreationParameters" /> .</returns>
         [NotNull]
         private WidgetCreationParameters BuildWidgetParams(string name = "WidgetTest")
         {
@@ -76,14 +76,15 @@ namespace MattEland.Ani.Alfred.Tests
         [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         public void AddingStandardModulesAddsModules()
         {
-            Alfred.Register(new AlfredCoreSubsystem(Container));
+            Alfred.RegistrationProvider.Register(new AlfredCoreSubsystem(Container));
 
             var numModules =
                 Alfred.Subsystems.SelectMany(subsystem => subsystem.Pages)
-                       .OfType<AlfredModuleListPage>()
-                       .Sum(modulePage => modulePage.Modules.Count());
+                      .OfType<AlfredModuleListPage>()
+                      .Sum(modulePage => modulePage.Modules.Count());
 
-            numModules.ShouldBeGreaterThan(0, "Alfred did not have any modules after calling add standard modules.");
+            const string FailMessage = "Alfred did not have any modules after calling add standard modules.";
+            numModules.ShouldBeGreaterThan(0, FailMessage);
         }
 
         /// <summary>
@@ -92,8 +93,8 @@ namespace MattEland.Ani.Alfred.Tests
         [Test]
         public void AlfredStartsWithNoSubSystems()
         {
-            Alfred.Subsystems.Count().ShouldBe(0,
-                            "Alfred started with subsystems when none were expected.");
+            Alfred.Subsystems.Count()
+                  .ShouldBe(0, "Alfred started with subsystems when none were expected.");
         }
 
         /// <summary>
@@ -102,14 +103,14 @@ namespace MattEland.Ani.Alfred.Tests
         [Test]
         public void InitializingInitializesComponents()
         {
-            Alfred.Register(new AlfredCoreSubsystem(Container));
+            Alfred.RegistrationProvider.Register(new AlfredCoreSubsystem(Container));
 
             Alfred.Initialize();
 
             foreach (var item in Alfred.Subsystems)
             {
                 item.Status.ShouldBe(AlfredStatus.Online,
-                                $"{item.NameAndVersion} was not initialized during initialization.");
+                                     $"{item.NameAndVersion} was not initialized during initialization.");
             }
         }
 
@@ -126,8 +127,8 @@ namespace MattEland.Ani.Alfred.Tests
 
             console.Log("Alfred Test Framework", "Testing logging to Alfred", LogLevel.Verbose);
 
-            console.Events.Count().ShouldBe(numEvents + 1,
-                "Event count did not increase after logging.");
+            console.Events.Count()
+                   .ShouldBe(numEvents + 1, "Event count did not increase after logging.");
         }
 
         /// <summary>
@@ -138,7 +139,10 @@ namespace MattEland.Ani.Alfred.Tests
         public void ModulesCannotBeAddedWhileOnline()
         {
             Alfred.Initialize();
-            Alfred.Register(new AlfredCoreSubsystem(Container));
+
+            var subsystem = new AlfredCoreSubsystem(Container);
+
+            Alfred.RegistrationProvider.Register(subsystem);
         }
 
         /// <summary>
@@ -148,7 +152,7 @@ namespace MattEland.Ani.Alfred.Tests
         [ExpectedException(typeof(InvalidOperationException))]
         public void ModulesCannotUpdateWhileOffline()
         {
-            Alfred.Register(new AlfredCoreSubsystem(Container));
+            Alfred.RegistrationProvider.Register(new AlfredCoreSubsystem(Container));
 
             Alfred.Update();
         }
@@ -166,7 +170,7 @@ namespace MattEland.Ani.Alfred.Tests
             testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
             testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
 
-            Alfred.Register(_subsystem);
+            Alfred.RegistrationProvider.Register(_subsystem);
             _subsystem.AddAutoRegisterPage(_page);
             _page.Register(testModule);
 
@@ -174,7 +178,8 @@ namespace MattEland.Ani.Alfred.Tests
         }
 
         /// <summary>
-        ///     Registering null subsystem generates null reference exceptions.
+        ///     Registering <see langword="null" /> subsystem generates a
+        ///     <see cref="NullReferenceException" />
         /// </summary>
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -182,11 +187,12 @@ namespace MattEland.Ani.Alfred.Tests
         public void RegisteringNullSubsystemGeneratesNullRef()
         {
             AlfredSubsystem system = null;
-            Alfred.Register(system);
+            Alfred.RegistrationProvider.Register(system);
         }
 
         /// <summary>
-        ///     Ensures registering widget at initialize and shutdown leaves one copy in list at reinitialize.
+        ///     Ensures registering widget at initialize and shutdown leaves one copy in list at
+        ///     reinitialize.
         /// </summary>
         [Test]
         public void RegisteringWidgetAtInitializeAndShutdownLeavesOneCopyInListAtReinitialize()
@@ -197,7 +203,7 @@ namespace MattEland.Ani.Alfred.Tests
             testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
             testModule.WidgetsToRegisterOnShutdown.Add(textWidget);
 
-            Alfred.Register(_subsystem);
+            Alfred.RegistrationProvider.Register(_subsystem);
             _subsystem.AddAutoRegisterPage(_page);
             _page.Register(testModule);
 
@@ -219,7 +225,7 @@ namespace MattEland.Ani.Alfred.Tests
         [Test]
         public void ShuttingDownShutsDownComponents()
         {
-            Alfred.Register(new AlfredCoreSubsystem(Container));
+            Alfred.RegistrationProvider.Register(new AlfredCoreSubsystem(Container));
 
             Alfred.Initialize();
             Alfred.Shutdown();

@@ -89,7 +89,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         {
             get
             {
-                return AlfredInstance != null && (base.IsVisible && AlfredInstance.IsOnline);
+                return AlfredInstance != null && (base.IsVisible && IsOnline);
             }
         }
 

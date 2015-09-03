@@ -71,8 +71,10 @@
     <Compile Include="Console\IConsoleEvent.cs" />
     <Compile Include="Definitions\ICommandResult.cs" />
     <Compile Include="Definitions\IHasIdentifier.cs" />
+    <Compile Include="Definitions\IHasStatus.cs" />
     <Compile Include="Definitions\IPropertyItem.cs" />
     <Compile Include="Definitions\IPropertyProvider.cs" />
+    <Compile Include="Definitions\IProvidesRegistration.cs" />
     <Compile Include="Definitions\IShellCommandRecipient.cs" />
     <Compile Include="Definitions\IStatusController.cs" />
     <Compile Include="Definitions\IChatProvider.cs" />
