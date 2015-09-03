@@ -116,14 +116,12 @@ namespace MattEland.Common.Providers
         /// </summary>
         /// <param name="type">The type.</param>
         /// <param name="activator">The activator function.</param>
-        /// <param name="arguments">The arguments to pass in to the activator function.</param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="type" /> or <paramref name="activator" /> is <see langword="null" />.
         /// </exception>
         void Register(
             [NotNull] Type type,
-            [NotNull] Delegate activator,
-            [CanBeNull] params object[] arguments);
+            [NotNull] Delegate activator);
 
         /// <summary>
         ///     Registers the preferred type as the type to instantiate when the base type is requested.
@@ -133,15 +131,13 @@ namespace MattEland.Common.Providers
         ///     The type that should be created when <see cref="baseType" /> is
         ///     requested.
         /// </param>
-        /// <param name="arguments">The arguments (if any) to pass to the class's constructor.</param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="baseType" /> or
         ///     <paramref name="preferredType" /> is <see langword="null" />.
         /// </exception>
         void Register(
             [NotNull] Type baseType,
-            [NotNull] Type preferredType,
-            [CanBeNull] params object[] arguments);
+            [NotNull] Type preferredType);
 
         /// <summary>
         ///     Registers the provided instance as the object to return when <paramref name="type" /> is

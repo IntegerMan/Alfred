@@ -26,6 +26,6 @@ namespace MattEland.Common.Providers
         /// <param name="args">The arguments</param>
         /// <returns>A new instance of the requested type</returns>
         [CanBeNull]
-        object CreateInstance([NotNull] Type requestedType, params object[] args);
+        object CreateInstance([NotNull] Type requestedType, [CanBeNull] params object[] args);
     }
 }
