@@ -17,12 +17,14 @@ using System.Linq;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
 using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core
 {
+
     /// <summary>
     ///     Coordinates providing personal assistance to a user interface and receiving settings and
     ///     queries back from the user interface.
@@ -30,7 +32,7 @@ namespace MattEland.Ani.Alfred.Core
     /// <remarks>
     /// TODO: Implement <see cref="IDisposable"/> on Alfred and write tests around it
     /// </remarks>
-    public sealed class AlfredApplication : INotifyPropertyChanged, IAlfred
+    public sealed class AlfredApplication : NotifyChangedBase, IAlfred
     {
 
         /// <summary>
@@ -317,18 +319,25 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     Occurs when a property changes.
+        ///     Handles a callback <see cref="Exception" /> .
         /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        ///     Called when a property changes.
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CanBeNull] string propertyName)
+        /// <param name="exception">The exception.</param>
+        /// <param name="operationName">
+        /// <see cref="Name"/> of the operation that was being performed.
+        /// </param>
+        /// <returns>
+        ///     <see langword="true"/> if it the <paramref name="exception"/> was handled and should
+        ///     not be thrown again, otherwise false.
+        /// </returns>
+        public override bool HandleCallbackException(Exception exception, string operationName)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            // Log to the console
+            var message = exception.BuildDetailsMessage(culture: Locale);
+            message = $"{operationName} encountered an error: {message}";
+            message.Log(operationName, LogLevel.Error, Container);
+
+            // It's been logged. Don't throw it again
+            return true;
         }
     }
 
