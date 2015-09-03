@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------
-// AlfredProviderTests.cs
+// AlfredEventingTests.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
 // Last Modified:   08/24/2015 at 11:51 PM
@@ -30,11 +30,12 @@ using Shouldly;
 namespace MattEland.Ani.Alfred.Tests
 {
     /// <summary>
-    ///     Tests <see cref="AlfredApplication"/>
+    ///     Tests <see cref="AlfredApplication"/> and its ability to relay status transitons to other
+    ///     components and handle the component registration process.
     /// </summary>
-    [UnitTest]
+    [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-    public sealed class AlfredProviderTests : AlfredTestBase
+    public sealed class AlfredEventingTests : AlfredTestBase
     {
         /// <summary>
         ///     Sets up the Alfred provider's tests.
@@ -86,26 +87,6 @@ namespace MattEland.Ani.Alfred.Tests
         }
 
         /// <summary>
-        ///     Tests that after initialization Alfred is online.
-        /// </summary>
-        [Test]
-        public void AfterInitializationAlfredIsOnline()
-        {
-            Alfred.Initialize();
-
-            Alfred.Status.ShouldBe(AlfredStatus.Online);
-        }
-
-        /// <summary>
-        ///    Test that Alfred starts offline.
-        /// </summary>
-        [Test]
-        public void AlfredStartsOffline()
-        {
-            Alfred.Status.ShouldBe(AlfredStatus.Offline);
-        }
-
-        /// <summary>
         ///     Alfred should start with no sub systems.
         /// </summary>
         [Test]
@@ -113,37 +94,6 @@ namespace MattEland.Ani.Alfred.Tests
         {
             Alfred.Subsystems.Count().ShouldBe(0,
                             "Alfred started with subsystems when none were expected.");
-        }
-
-        /// <summary>
-        ///     Tests initialization of Alfred
-        /// </summary>
-        [Test]
-        public void InitializeAlfred()
-        {
-            Assert.NotNull(Alfred, "Alfred was not initialized");
-        }
-
-        /// <summary>
-        ///     Tests that initialization followed by shutdown results in shutdown.
-        /// </summary>
-        [Test]
-        public void InitializeAndShutdownResultsInShutdown()
-        {
-            Alfred.Initialize();
-            Alfred.Shutdown();
-
-            Alfred.Status.ShouldBe(AlfredStatus.Offline);
-        }
-
-        /// <summary>
-        ///     Tests that initializing while online causes issues
-        /// </summary>
-        [Test, ExpectedException(typeof(InvalidOperationException))]
-        public void InitializeWhileOnlineErrors()
-        {
-            Alfred.Initialize();
-            Alfred.Initialize();
         }
 
         /// <summary>
@@ -261,74 +211,6 @@ namespace MattEland.Ani.Alfred.Tests
             Assert.AreEqual(1,
                             testModule.Widgets.Count(),
                             "Widgets were not properly cleared from list after re-initialize");
-        }
-
-        /// <summary>
-        ///     Ensures shutdown creates events in log.
-        /// </summary>
-        [Test]
-        public void ShutdownCreatesEventsInLog()
-        {
-            var container = Container;
-            var al = Alfred;
-            var console = Container.Provide<IConsole>();
-
-            // We need to be online to shut down or else we'll get errors
-            al.Initialize();
-            al.Container.ShouldBeSameAs(container);
-
-            var numEvents = console.EventCount;
-
-            al.Shutdown();
-
-            if (console.EventCount <= numEvents)
-            {
-                var message = $"Shutting Alfred down did not create any log entries ({console.EventCount}) on container {container.Name} with collection of type {console.Events.GetType()}";
-                Assert.Fail(message);
-            }
-        }
-
-        /// <summary>
-        ///     Tests that starting Alfred creates log entries
-        /// </summary>
-        [Test]
-        public void InitializeCreatesEventsInLog()
-        {
-            var container = Container;
-            var al = Alfred;
-            var console = Container.Provide<IConsole>();
-
-            var numEvents = console.EventCount;
-
-            al.Initialize();
-            al.Container.ShouldBeSameAs(container);
-
-            if (console.EventCount <= numEvents)
-            {
-                var message = $"Initializing Alfred did not create any log entries ({console.EventCount}) on container {container.Name} with collection of type {console.Events.GetType()}";
-                Assert.Fail(message);
-            }
-        }
-
-        /// <summary>
-        ///     Ensures shutdown while offline errors.
-        /// </summary>
-        [Test]
-        public void ShutdownWhileOfflineErrors()
-        {
-            try
-            {
-                Alfred.Shutdown();
-
-                Assert.Fail("Expected an InvalidOperationException since Alfred was already offline.");
-            }
-            catch (InvalidOperationException)
-            {
-                // No action
-            }
-
-            // Assert that we're now offline.
-            Assert.AreEqual(Alfred.Status, AlfredStatus.Offline);
         }
 
         /// <summary>

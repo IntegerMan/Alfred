@@ -24,7 +24,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
     /// <summary>
     ///     <see cref="Contains" /> tests related to <see cref="AlfredEventLogPage" /> .
     /// </summary>
-    [UnitTest]
+    [UnitTestProvider]
     public class EventLogPageTests : AlfredTestBase
     {
 

@@ -49,5 +49,10 @@ namespace MattEland.Ani.Alfred.Core.Console
         ///     The total number of events.
         /// </value>
         int EventCount { get; }
+
+        /// <summary>
+        ///     Clears all events from the log
+        /// </summary>
+        void Clear();
     }
 }

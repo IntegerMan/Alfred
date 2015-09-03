@@ -17,7 +17,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
     /// <summary>
     ///     Contains a suite of tests oriented around the <see cref="WarningWidget" /> class.
     /// </summary>
-    [UnitTest]
+    [UnitTestProvider]
     public sealed class WarningWidgetTests : AlfredTestBase
     {
         [Test]

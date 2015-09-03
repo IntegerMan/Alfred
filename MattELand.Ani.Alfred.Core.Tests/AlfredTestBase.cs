@@ -214,5 +214,20 @@ namespace MattEland.Ani.Alfred.Tests
         {
             return new TestPage(Container) { IsRootLevel = isRoot };
         }
+
+        /// <summary>
+        ///     Gets the <see cref="IConsole"/> instance.
+        /// </summary>
+        /// <returns>
+        ///     The console.
+        /// </returns>
+        protected IConsole GetConsole()
+        {
+            var console = Container.TryProvide<IConsole>();
+
+            console.ShouldNotBeNull($"Could not find a console in container {Container}");
+
+            return console;
+        }
     }
 }

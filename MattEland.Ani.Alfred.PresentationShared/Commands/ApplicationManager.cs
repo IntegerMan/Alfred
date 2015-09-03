@@ -201,7 +201,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         {
             Container.CollectionType = typeof(SafeObservableCollection<>);
 
-            Container.TryRegister(typeof(AlfredCommand), typeof(XamlClientCommand));
+            Container.TryRegister(typeof(IAlfredCommand), typeof(XamlClientCommand));
             Container.TryRegister(typeof(MetricProviderBase), typeof(CounterMetricProvider));
             Container.TryRegister(typeof(IMetricProviderFactory),
                                   typeof(CounterMetricProviderFactory));

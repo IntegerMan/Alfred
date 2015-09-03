@@ -11,12 +11,14 @@ using System.Windows.Input;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.PresentationShared.Commands
 {
     /// <summary>
-    ///     A WPF/XAML compliant implementation of AlfredCommand.
+    ///     A WPF/XAML compliant implementation of <see cref="IAlfredCommand"/>.
     /// </summary>
     public sealed class XamlClientCommand : AlfredCommand, ICommand
     {
@@ -24,7 +26,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         ///     Initializes a new instance of the <see cref="XamlClientCommand" /> class.
         /// </summary>
         [UsedImplicitly]
-        public XamlClientCommand() : this(null)
+        public XamlClientCommand() : this(null, CommonProvider.Container)
         {
         }
 
@@ -32,7 +34,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         ///     Initializes a new instance of the <see cref="XamlClientCommand" /> class.
         /// </summary>
         /// <param name="executeAction">The execute action.</param>
-        public XamlClientCommand(Action executeAction) : base(executeAction)
+        public XamlClientCommand(Action executeAction, IObjectContainer container) : base(executeAction, container)
         {
         }
     }

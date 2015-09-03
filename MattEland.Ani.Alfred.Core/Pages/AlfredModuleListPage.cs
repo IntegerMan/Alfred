@@ -124,7 +124,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <returns>
         ///     <c>True</c> if the <paramref name="command"/> was handled; otherwise false.
         /// </returns>
-        public override bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
+        public override bool ProcessAlfredCommand(ChatCommand command, ICommandResult result)
         {
 
             foreach (var module in Modules)

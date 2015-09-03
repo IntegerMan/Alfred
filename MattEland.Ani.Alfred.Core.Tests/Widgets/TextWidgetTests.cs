@@ -21,7 +21,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
     /// <summary>
     ///     Contains tests related to <see cref="TextWidget" />
     /// </summary>
-    [UnitTest]
+    [UnitTestProvider]
     public sealed class TextWidgetTests : AlfredTestBase
     {
         private const string TestString = "This is a test";

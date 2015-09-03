@@ -10,6 +10,7 @@ using System;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Testing;
@@ -23,7 +24,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
     ///     <see cref="ButtonWidget" />
     ///     class
     /// </summary>
-    [UnitTest]
+    [UnitTestProvider]
     public class ButtonWidgetTests : AlfredTestBase
     {
         [Test]
@@ -42,7 +43,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
         public void ButtonCommandsDoNotExecuteWhenButtonIsNotClicked()
         {
             var executed = false;
-            var command = Container.Provide<AlfredCommand>();
+            var command = Container.Provide<IAlfredCommand>();
             command.ExecuteAction = () => { executed = true; };
 
             var button = new ButtonWidget("Click Me", command, BuildWidgetParams());
@@ -70,7 +71,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
         public void ButtonCommandsExecuteWhenClicked()
         {
             var executed = false;
-            var command = Container.Provide<AlfredCommand>();
+            var command = Container.Provide<IAlfredCommand>();
             command.ExecuteAction = () => { executed = true; };
 
             var button = new ButtonWidget(BuildWidgetParams()) { ClickCommand = command };

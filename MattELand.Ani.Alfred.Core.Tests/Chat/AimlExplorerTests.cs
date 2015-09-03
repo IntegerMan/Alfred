@@ -30,7 +30,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     /// <summary>Tests around the AIML explorer features of being able to explore the AIML tree using the
     ///     <seealso cref="MindExplorerSubsystem" />
     /// </summary>
-    [UnitTest]
+    [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public sealed class AimlExplorerTests : ExplorerTestsBase
     {

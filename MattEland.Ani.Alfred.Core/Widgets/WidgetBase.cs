@@ -28,7 +28,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
     ///     Widgets do not contain user interface elements but tell the
     ///     client what user interface elements to create.
     /// </summary>
-    public abstract class WidgetBase : INotifyPropertyChanged, IPropertyProvider
+    public abstract class WidgetBase : IWidget
     {
 
         [CanBeNull]

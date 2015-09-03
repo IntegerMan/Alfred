@@ -24,6 +24,6 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// </summary>
         /// <value>The user interface widgets.</value>
         [NotNull, ItemNotNull]
-        IEnumerable<WidgetBase> Widgets { get; }
+        IEnumerable<IWidget> Widgets { get; }
     }
 }
