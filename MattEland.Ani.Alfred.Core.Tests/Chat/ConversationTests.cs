@@ -28,7 +28,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     /// <summary>
     ///     Tests for conversational inquiries on the Alfred chat system.
     /// </summary>
-    [UnitTest]
+    [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
     [SuppressMessage("ReSharper", "UnusedParameter.Local")]

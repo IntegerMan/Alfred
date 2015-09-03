@@ -25,7 +25,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
     /// <summary>
     /// A series of tests related to the System Monitoring SubSystem
     /// </summary>
-    [UnitTest]
+    [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public class SystemSubsystemTests : AlfredTestBase
     {

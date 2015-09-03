@@ -32,7 +32,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
     /// <remarks>
     ///     See ALF-15
     /// </remarks>
-    [UnitTest]
+    [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public class MindExplorerSubsystemTests : AlfredTestBase
     {

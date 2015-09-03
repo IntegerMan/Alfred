@@ -179,8 +179,6 @@ namespace MattEland.Ani.Alfred.Chat
             }
         }
 
-
-
         /// <summary>Builds a string out of the items in <paramref name="input" />
         /// </summary>
         /// <param name="input">The input.</param>

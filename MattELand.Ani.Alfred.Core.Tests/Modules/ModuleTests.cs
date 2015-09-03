@@ -23,7 +23,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
     /// <summary>
     ///     Contains general test cases related to <see cref="AlfredModule" />.
     /// </summary>
-    [UnitTest]
+    [UnitTestProvider]
     public class ModuleTests : AlfredTestBase
     {
 

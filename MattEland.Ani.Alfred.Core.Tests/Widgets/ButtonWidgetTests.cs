@@ -24,7 +24,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
     ///     <see cref="ButtonWidget" />
     ///     class
     /// </summary>
-    [UnitTest]
+    [UnitTestProvider]
     public class ButtonWidgetTests : AlfredTestBase
     {
         [Test]

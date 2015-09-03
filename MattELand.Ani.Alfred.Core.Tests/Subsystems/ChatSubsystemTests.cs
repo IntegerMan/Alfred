@@ -25,7 +25,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
     /// <summary>
     ///     Tests for the <see cref="ChatSubsystem" />
     /// </summary>
-    [UnitTest]
+    [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     public class ChatSubsystemTests : AlfredTestBase

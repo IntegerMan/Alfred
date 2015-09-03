@@ -30,7 +30,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
     ///         cref="AlfredPowerModule" />
     ///     module.
     /// </summary>
-    [UnitTest]
+    [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public class AlfredPowerModuleTests : AlfredTestBase
     {

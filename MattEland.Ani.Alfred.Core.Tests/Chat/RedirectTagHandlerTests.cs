@@ -20,7 +20,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     /// <summary>
     /// A class to test tag handlers for "srai" tags.
     /// </summary>
-    [UnitTest]
+    [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public class RedirectTagHandlerTests : ChatTestsBase
     {

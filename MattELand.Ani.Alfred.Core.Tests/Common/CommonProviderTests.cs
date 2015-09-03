@@ -30,7 +30,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
     ///     MattEland.Common.
     /// </summary>
     /// <seealso cref="T:MattEland.Ani.Alfred.Tests.AlfredTestBase"/>
-    [UnitTest]
+    [UnitTestProvider]
     [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
     [SuppressMessage("ReSharper", "ExceptionNotDocumentedOptional")]
     [SuppressMessage("ReSharper", "EventExceptionNotDocumented")]
