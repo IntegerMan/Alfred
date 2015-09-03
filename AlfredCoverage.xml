@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Root CoveredStatements="5654" TotalStatements="8347" CoveragePercent="68" ReportType="NDependXML" DotCoverVersion="3.1.1">
+<Root CoveredStatements="5655" TotalStatements="8350" CoveragePercent="68" ReportType="NDependXML" DotCoverVersion="3.1.1">
   <Assembly Name="MattEland.Ani.Alfred.Chat" CoveredStatements="444" TotalStatements="634" CoveragePercent="70">
     <Namespace Name="MattEland.Ani.Alfred.Chat" CoveredStatements="444" TotalStatements="634" CoveragePercent="70">
       <Type Name="AimlExplorerNode" CoveredStatements="30" TotalStatements="41" CoveragePercent="73">
@@ -890,7 +890,7 @@
       </Type>
       <Type Name="AlfredModule" CoveredStatements="36" TotalStatements="48" CoveragePercent="75">
         <Type Name="&lt;&gt;c" CoveredStatements="0" TotalStatements="1" CoveragePercent="0">
-          <Method Name="&lt;get_IsVisible&gt;b__3_0(WidgetBase)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="47" />
+          <Method Name="&lt;get_IsVisible&gt;b__3_0(IWidget)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="47" />
         </Type>
         <Type Name="&lt;get_Children&gt;d__5" CoveredStatements="2" TotalStatements="2" CoveragePercent="100">
           <Method Name="MoveNext()" CoveredStatements="2" TotalStatements="2" CoveragePercent="100" FirstStatementLine="57" />
@@ -903,8 +903,8 @@
         <Method Name="get_PropertyProviders()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="146" />
         <Method Name="get_Widgets()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="67" />
         <Method Name="ProcessAlfredCommand(ChatCommand,ICommandResult)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="123" />
-        <Method Name="Register(IEnumerable&lt;WidgetBase&gt;)" CoveredStatements="10" TotalStatements="12" CoveragePercent="83" FirstStatementLine="103" />
-        <Method Name="Register(WidgetBase)" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="88" />
+        <Method Name="Register(IEnumerable&lt;IWidget&gt;)" CoveredStatements="10" TotalStatements="12" CoveragePercent="83" FirstStatementLine="103" />
+        <Method Name="Register(IWidget)" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="88" />
       </Type>
       <Type Name="AlfredPagesListModule" CoveredStatements="65" TotalStatements="74" CoveragePercent="88">
         <Method Name=".ctor(IObjectContainer)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="37" />
@@ -994,7 +994,7 @@
       <Type Name="AlfredModuleListPage" CoveredStatements="34" TotalStatements="43" CoveragePercent="79">
         <Type Name="&lt;&gt;c" CoveredStatements="0" TotalStatements="2" CoveragePercent="0">
           <Method Name="&lt;get_IsVisible&gt;b__7_0(IAlfredModule)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="89" />
-          <Method Name="&lt;get_IsVisible&gt;b__7_1(WidgetBase)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="89" />
+          <Method Name="&lt;get_IsVisible&gt;b__7_1(IWidget)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="89" />
         </Type>
         <Type Name="&lt;get_Children&gt;d__5" CoveredStatements="9" TotalStatements="9" CoveragePercent="100">
           <Method Name="MoveNext()" CoveredStatements="9" TotalStatements="9" CoveragePercent="100" FirstStatementLine="72" />
@@ -1096,9 +1096,9 @@
         <Method Name="set_ClickCommand(IAlfredCommand)" CoveredStatements="12" TotalStatements="15" CoveragePercent="80" FirstStatementLine="63" />
       </Type>
       <Type Name="TextWidget" CoveredStatements="7" TotalStatements="10" CoveragePercent="70">
-        <Method Name=".ctor(String,WidgetCreationParameters)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="35" />
+        <Method Name=".ctor(String,WidgetCreationParameters)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="34" />
         <Method Name=".ctor(WidgetCreationParameters)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="24" />
-        <Method Name="get_ItemTypeName()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="49" />
+        <Method Name="get_ItemTypeName()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="51" />
       </Type>
       <Type Name="WarningWidget" CoveredStatements="7" TotalStatements="10" CoveragePercent="70">
         <Method Name=".ctor(String,WidgetCreationParameters)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="35" />
@@ -1400,7 +1400,7 @@
       </Type>
     </Namespace>
   </Assembly>
-  <Assembly Name="MattEland.Ani.Alfred.Tests" CoveredStatements="1982" TotalStatements="2072" CoveragePercent="96">
+  <Assembly Name="MattEland.Ani.Alfred.Tests" CoveredStatements="1983" TotalStatements="2075" CoveragePercent="96">
     <Namespace Name="MattEland.Ani.Alfred.Tests" CoveredStatements="227" TotalStatements="256" CoveragePercent="89">
       <Type Name="AlfredProviderTests" CoveredStatements="131" TotalStatements="147" CoveragePercent="89">
         <Type Name="&lt;&gt;c" CoveredStatements="2" TotalStatements="2" CoveragePercent="100">
@@ -1705,14 +1705,14 @@
         <Method Name="set_Control(IUserInterfaceTestable)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="31" />
       </Type>
     </Namespace>
-    <Namespace Name="MattEland.Ani.Alfred.Tests.Mocks" CoveredStatements="201" TotalStatements="226" CoveragePercent="89">
-      <Type Name="AlfredTestModule" CoveredStatements="13" TotalStatements="16" CoveragePercent="81">
-        <Method Name=".ctor(IObjectContainer)" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="26" />
-        <Method Name="get_Name()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="36" />
-        <Method Name="get_WidgetsToRegisterOnInitialize()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="43" />
-        <Method Name="get_WidgetsToRegisterOnShutdown()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="50" />
-        <Method Name="InitializeProtected(IAlfred)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="57" />
-        <Method Name="ShutdownProtected()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="65" />
+    <Namespace Name="MattEland.Ani.Alfred.Tests.Mocks" CoveredStatements="202" TotalStatements="229" CoveragePercent="88">
+      <Type Name="AlfredTestModule" CoveredStatements="14" TotalStatements="19" CoveragePercent="74">
+        <Method Name=".ctor(IObjectContainer)" CoveredStatements="6" TotalStatements="8" CoveragePercent="75" FirstStatementLine="27" />
+        <Method Name="get_Name()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="39" />
+        <Method Name="get_WidgetsToRegisterOnInitialize()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="46" />
+        <Method Name="get_WidgetsToRegisterOnShutdown()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="53" />
+        <Method Name="InitializeProtected(IAlfred)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="60" />
+        <Method Name="ShutdownProtected()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="68" />
       </Type>
       <Type Name="TestAlfred" CoveredStatements="71" TotalStatements="87" CoveragePercent="82">
         <Type Name="&lt;get_Properties&gt;d__46" CoveredStatements="0" TotalStatements="2" CoveragePercent="0">

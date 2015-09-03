@@ -92,6 +92,29 @@
   <RuleFiles />
   <ProjectRules AreActive="True" />
   <Queries>
+    <Group Name="Custom rules for Alfred" Active="True" ShownInReport="False">
+      <Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="True"><![CDATA[// <Name>Definitions should not access Core</Name>
+warnif count > 0 from n in Namespaces where 
+n.IsUsing ("NAMESPACE:MattEland.Ani.Alfred.Core") &&
+(n.Name == @"MattEland.Ani.Alfred.Core.Definitions")
+select new { n, n.NbLinesOfCode }
+// the namespace MattEland.Ani.Alfred.Core.Definitions
+// shouldn't use directly 
+// the namespace MattEland.Ani.Alfred.Core
+// to preserve unidirectional dependence
+]]></Query>
+      <Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="True"><![CDATA[// <Name>Definitions should not access Widgets</Name>
+warnif count > 0 from n in Namespaces where 
+n.IsUsing ("NAMESPACE:MattEland.Ani.Alfred.Core.Widgets") &&
+(n.Name == @"MattEland.Ani.Alfred.Core.Definitions")
+select new { n, n.NbLinesOfCode }
+// the namespace MattEland.Ani.Alfred.Core.Definitions
+// shouldn't use directly 
+// the namespace MattEland.Ani.Alfred.Core.Widgets
+// to preserve unidirectional dependence
+
+]]></Query>
+    </Group>
     <Group Name="Code Quality" Active="True" ShownInReport="False">
       <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="True"><![CDATA[// <Name>Types too big - critical</Name>
 warnif count > 0 from t in JustMyCode.Types where 
@@ -438,7 +461,7 @@ select new { m, overloads }
 // since a method named *Visit()* must be provided for each sub type.
 // In such situation there is no need for fix.
 //</HowToFix>]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Types with too many methods</Name>
+      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="True"><![CDATA[// <Name>Types with too many methods</Name>
 warnif count > 0 from t in JustMyCode.Types 
 
   // Optimization: Fast discard of non-relevant types 
