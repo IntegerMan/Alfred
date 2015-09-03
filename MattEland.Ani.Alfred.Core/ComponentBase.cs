@@ -34,9 +34,6 @@ namespace MattEland.Ani.Alfred.Core
         [ItemNotNull]
         private IEnumerable<IAlfredComponent> _childrenOnShutdown;
 
-        [CanBeNull]
-        private IConsole _console;
-
         private AlfredStatus _status;
 
         /// <summary>

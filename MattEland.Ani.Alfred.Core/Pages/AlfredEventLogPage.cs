@@ -149,14 +149,15 @@ namespace MattEland.Ani.Alfred.Core.Pages
         }
 
         /// <summary>
-        ///     Adds the new events to <see cref="" /> .
+        ///     Adds the newly-detected events to log page.
         /// </summary>
         /// <param name="newEvents">The new events.</param>
         private void AddNewEvents([NotNull] IList<IConsoleEvent> newEvents)
         {
             var newProviders = newEvents.OrderBy(e => e.Time).Cast<IPropertyProvider>();
 
-            foreach (var provider in newProviders.Where(provider => provider != null)) {
+            foreach (var provider in newProviders.Where(provider => provider != null))
+            {
                 ReceivedEvents.Add(provider);
             }
 
