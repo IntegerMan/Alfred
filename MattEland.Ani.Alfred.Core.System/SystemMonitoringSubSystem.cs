@@ -113,9 +113,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <returns>
         ///     <c>True</c> if the <paramref name="command"/> was handled; otherwise false.
         /// </returns>
-        public override bool ProcessAlfredCommand(
-            ChatCommand command,
-            [CanBeNull] AlfredCommandResult result)
+        public override bool ProcessAlfredCommand(ChatCommand command, [CanBeNull] ICommandResult result)
         {
             if (result == null) { return false; }
 

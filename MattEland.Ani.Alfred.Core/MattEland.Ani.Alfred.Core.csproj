@@ -51,6 +51,7 @@
     <None Include="Widgets\Widgets.cd" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlfredCommand.cs" />
     <Compile Include="AlfredCommandResult.cs" />
     <Compile Include="Console\AlfredLoggingExtensions.cs" />
     <Compile Include="ComponentBase.cs" />
@@ -61,11 +62,13 @@
     <Compile Include="Definitions\AlfredProperty.cs" />
     <Compile Include="Definitions\ChatCommand.cs" />
     <Compile Include="Definitions\IAlfred.cs" />
+    <Compile Include="Definitions\IAlfredCommand.cs" />
     <Compile Include="Definitions\IAlfredCommandRecipient.cs" />
     <Compile Include="Definitions\IAlfredModule.cs" />
     <Compile Include="Definitions\IAlfredPage.cs" />
     <Compile Include="Definitions\IAlfredSubsystem.cs" />
     <Compile Include="Console\IConsoleEvent.cs" />
+    <Compile Include="Definitions\ICommandResult.cs" />
     <Compile Include="Definitions\IHasIdentifier.cs" />
     <Compile Include="Definitions\IPropertyItem.cs" />
     <Compile Include="Definitions\IPropertyProvider.cs" />
@@ -104,7 +107,6 @@
     <Compile Include="Widgets\AlfredTextWidget.cs" />
     <Compile Include="Widgets\WidgetBase.cs" />
     <Compile Include="Widgets\ButtonWidget.cs" />
-    <Compile Include="Definitions\AlfredCommand.cs" />
     <Compile Include="Widgets\TextWidget.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Console\SimpleConsole.cs" />

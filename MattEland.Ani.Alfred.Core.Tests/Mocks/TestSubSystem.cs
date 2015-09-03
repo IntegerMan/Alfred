@@ -183,12 +183,13 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
         /// </summary>
         /// <param name="command">The command.</param>
         /// <param name="result">
-        /// The result. If the <paramref name="command"/> was handled, this should be updated.
+        ///     The result. If the <paramref name="command"/> was handled, this should be updated.
         /// </param>
         /// <returns>
         ///     <c>True</c> if the <paramref name="command"/> was handled; otherwise false.
         /// </returns>
-        public override bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
+        public override bool ProcessAlfredCommand(ChatCommand command,
+                                                  [CanBeNull] ICommandResult result)
         {
             var al = AlfredInstance as TestAlfred;
             if (al != null)

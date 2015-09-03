@@ -119,7 +119,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <param name="command">The command.</param>
         /// <param name="result">The result. If the command was handled, this should be updated.</param>
         /// <returns><c>True</c> if the command was handled; otherwise false.</returns>
-        public virtual bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
+        public virtual bool ProcessAlfredCommand(ChatCommand command, ICommandResult result)
         {
             return false;
         }
@@ -154,9 +154,9 @@ namespace MattEland.Ani.Alfred.Core.Modules
         ///     The new command.
         /// </returns>
         [NotNull]
-        protected AlfredCommand CreateCommand([CanBeNull] Action action)
+        protected IAlfredCommand CreateCommand([CanBeNull] Action action)
         {
-            var command = Container.Provide<AlfredCommand>(action);
+            var command = Container.Provide<IAlfredCommand>(action, Container);
 
             return command;
         }
