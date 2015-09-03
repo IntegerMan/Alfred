@@ -2,7 +2,7 @@
 // AlfredApplication.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   09/03/2015 at 12:29 PM
+// Last Modified:   09/03/2015 at 12:36 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -80,7 +80,7 @@ namespace MattEland.Ani.Alfred.Core
             // Set the controller
             _statusController = new AlfredStatusController(this, container, _subsystems);
 
-            RegistrationProvider = new AlfredRegistrationProvider(this, _subsystems, _rootPages);
+            RegistrationProvider = new ComponentRegistrationProvider(this, _subsystems, _rootPages);
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace MattEland.Ani.Alfred.Core
             {
                 return _chatProvider;
             }
-            private set
+            internal set
             {
                 if (Equals(value, _chatProvider)) { return; }
 
@@ -166,7 +166,7 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <value>The shell command handler.</value>
         [CanBeNull]
-        public IShellCommandRecipient ShellCommandHandler { get; private set; }
+        public IShellCommandRecipient ShellCommandHandler { get; internal set; }
 
         /// <summary>
         ///     Gets the registration provider that manages registering other components for Alfred.
@@ -391,128 +391,6 @@ namespace MattEland.Ani.Alfred.Core
         private void OnPropertyChanged([CanBeNull] string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        /// <summary>
-        ///     The Alfred registration provider handles registration capabilities for Alfred.
-        /// </summary>
-        private class AlfredRegistrationProvider : IProvidesRegistration
-        {
-            [NotNull]
-            private readonly AlfredApplication _alfred;
-
-            [NotNull]
-            [ItemNotNull]
-            private readonly ICollection<IAlfredPage> _rootPages;
-
-            [NotNull]
-            [ItemNotNull]
-            private readonly ICollection<IAlfredSubsystem> _subsystems;
-
-            /// <summary>
-            ///     Initializes a new instance of the <see cref="AlfredRegistrationProvider"/> class.
-            /// </summary>
-            /// <param name="alfred"> The alfred instance. </param>
-            /// <param name="subsystems"> The subsystems instance. </param>
-            /// <param name="rootPages"> The root pages instance. </param>
-            internal AlfredRegistrationProvider(
-                [NotNull] AlfredApplication alfred,
-                [NotNull] ICollection<IAlfredSubsystem> subsystems,
-                [NotNull] ICollection<IAlfredPage> rootPages)
-            {
-                _alfred = alfred;
-                _subsystems = subsystems;
-                _rootPages = rootPages;
-            }
-
-            /// <summary>
-            ///     Registers the <paramref name="page"/> as a root page.
-            /// </summary>
-            /// <exception cref="ArgumentNullException">
-            ///     Thrown when one or more required arguments are null.
-            /// </exception>
-            /// <param name="page"> The page. </param>
-            public void Register([NotNull] IAlfredPage page)
-            {
-                if (page == null) { throw new ArgumentNullException(nameof(page)); }
-
-                if (page.IsRootLevel) { _rootPages.Add(page); }
-
-                page.OnRegistered(_alfred);
-            }
-
-            /// <summary>
-            ///     Registers the <paramref name="shell"/> command recipient that will allow the
-            ///     <paramref name="shell"/> to get commands from the Alfred layer.
-            /// </summary>
-            /// <remarks>
-            ///     TODO: We're not really doing much with shell yet. That might need to be tweaked later.
-            /// </remarks>
-            /// <exception cref="ArgumentNullException">
-            ///     Thrown when one or more required arguments are null.
-            /// </exception>
-            /// <param name="shell"> The command recipient. </param>
-            /// <exception cref="InvalidOperationException">
-            ///     Thrown when Alfred is online.
-            /// </exception>
-            public void Register([NotNull] IShellCommandRecipient shell)
-            {
-                if (shell == null) { throw new ArgumentNullException(nameof(shell)); }
-
-                AssertNotOnline();
-
-                _alfred.ShellCommandHandler = shell;
-            }
-
-            /// <summary>
-            ///     Registers the user statement handler as the framework's user statement handler.
-            /// </summary>
-            /// <exception cref="ArgumentNullException">
-            ///     Thrown when one or more required arguments are null.
-            /// </exception>
-            /// <param name="chatProvider"> The user statement handler. </param>
-            public void Register([NotNull] IChatProvider chatProvider)
-            {
-                if (chatProvider == null) { throw new ArgumentNullException(nameof(chatProvider)); }
-
-                _alfred.ChatProvider = chatProvider;
-            }
-
-            /// <summary>
-            ///     Registers a sub system with Alfred.
-            /// </summary>
-            /// <exception cref="ArgumentNullException">
-            ///     Thrown when one or more required arguments are null.
-            /// </exception>
-            /// <param name="subsystem"> The subsystem. </param>
-            /// <exception cref="InvalidOperationException">
-            ///     Thrown when Alfred is online.
-            /// </exception>
-            public void Register(IAlfredSubsystem subsystem)
-            {
-                if (subsystem == null) { throw new ArgumentNullException(nameof(subsystem)); }
-
-                AssertNotOnline();
-
-                _subsystems.AddSafe(subsystem);
-                subsystem.OnRegistered(_alfred);
-            }
-
-            /// <summary>
-            ///     Checks if Alfred is offline and throws an <see cref="InvalidOperationException"/> if he
-            ///     isn't.
-            /// </summary>
-            /// <exception cref="InvalidOperationException">
-            ///     Thrown when Alfred is online.
-            /// </exception>
-            private void AssertNotOnline()
-            {
-                if (_alfred.Status != AlfredStatus.Offline)
-                {
-                    throw new InvalidOperationException(
-                        "Alfred must be offline to register components");
-                }
-            }
         }
     }
 
