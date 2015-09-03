@@ -183,7 +183,7 @@ namespace MattEland.Ani.Alfred.Chat
         /// </summary>
         /// <param name="input">The input.</param>
         /// <returns>A string.</returns>
-        private string BuildStarString([NotNull] IEnumerable<string> input)
+        private static string BuildStarString([NotNull] IEnumerable<string> input)
         {
             var sb = new StringBuilder();
 
