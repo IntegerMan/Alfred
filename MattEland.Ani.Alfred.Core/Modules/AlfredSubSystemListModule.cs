@@ -30,7 +30,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
 
         [NotNull]
         [ItemNotNull]
-        private readonly ICollection<WidgetBase> _widgets;
+        private readonly ICollection<IWidget> _widgets;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubsystemListModule" /> class.
@@ -44,7 +44,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         {
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
 
-            _widgets = container.ProvideCollection<WidgetBase>();
+            _widgets = container.ProvideCollection<IWidget>();
         }
 
         /// <summary>

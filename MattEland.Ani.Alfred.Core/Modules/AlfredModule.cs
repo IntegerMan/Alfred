@@ -27,7 +27,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
     {
         [NotNull]
         [ItemNotNull]
-        private readonly ICollection<WidgetBase> _widgets;
+        private readonly ICollection<IWidget> _widgets;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredModule" /> class.
@@ -35,7 +35,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <param name="container"> The container. </param>
         protected AlfredModule([NotNull] IObjectContainer container) : base(container)
         {
-            _widgets = container.ProvideCollection<WidgetBase>();
+            _widgets = container.ProvideCollection<IWidget>();
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         /// <value>The user interface widgets.</value>
         [NotNull, ItemNotNull]
-        public IEnumerable<WidgetBase> Widgets
+        public IEnumerable<IWidget> Widgets
         {
             get { return _widgets; }
         }
@@ -84,7 +84,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <param name="widget">
         ///     The widget.
         /// </param>
-        protected void Register([NotNull] WidgetBase widget)
+        protected void Register([NotNull] IWidget widget)
         {
             _widgets.AddSafe(widget);
 
@@ -99,7 +99,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         ///     The widgets.
         /// </param>
         /// <exception cref="ArgumentNullException"><paramref name="widgets"/> is <see langword="null" />.</exception>
-        protected void Register([NotNull] IEnumerable<WidgetBase> widgets)
+        protected void Register([NotNull] IEnumerable<IWidget> widgets)
         {
             if (widgets == null)
             {

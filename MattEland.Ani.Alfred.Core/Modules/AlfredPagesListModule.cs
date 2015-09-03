@@ -28,7 +28,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
     {
         [NotNull]
         [ItemNotNull]
-        private readonly ICollection<WidgetBase> _widgets;
+        private readonly ICollection<IWidget> _widgets;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredPagesListModule" /> class.
@@ -36,7 +36,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <param name="container"> The container. </param>
         internal AlfredPagesListModule([NotNull] IObjectContainer container) : base(container)
         {
-            _widgets = container.ProvideCollection<WidgetBase>();
+            _widgets = container.ProvideCollection<IWidget>();
         }
 
         /// <summary>
