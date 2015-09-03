@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel;
 
+using MattEland.Common.Providers;
+
 namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>
@@ -8,7 +10,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
     ///     build, arrange, and configure the concrete client-specific user interface component(s)
     ///     for any given widget.
     /// </summary>
-    public interface IWidget : INotifyPropertyChanged, IPropertyProvider
+    public interface IWidget : INotifyPropertyChanged, IPropertyProvider, IHasContainer
     {
         /// <summary>
         ///     Gets or sets whether or not the widget is visible. This defaults to <c>true</c>.

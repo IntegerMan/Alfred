@@ -2,7 +2,7 @@
 // AlfredEventLogPage.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   08/26/2015 at 1:09 PM
+// Last Modified:   09/03/2015 at 5:41 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -20,19 +20,56 @@ using MattEland.Common.Providers;
 namespace MattEland.Ani.Alfred.Core.Pages
 {
     /// <summary>
-    ///     An event logging page. This will need a special client-side implementation to list out the
-    ///     details
+    ///     An event logging page. This will need a special client-side implementation to list out
+    ///     the details
     /// </summary>
     public sealed class AlfredEventLogPage : AlfredPage
     {
+        [CanBeNull]
+        private IConsole _console;
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="AlfredEventLogPage" /> class.
+        /// </summary>
+        /// <param name="container">The container.</param>
+        /// <param name="name">The name.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when one or more required arguments are null.
+        /// </exception>
+        public AlfredEventLogPage([NotNull] IObjectContainer container, [NotNull] string name)
+            : base(container, name, "Log")
+        {
+            if (container == null) { throw new ArgumentNullException(nameof(container)); }
+
+            ReceivedEvents = container.ProvideCollection<IPropertyProvider>();
+        }
+
+        /// <summary>
+        ///     Gets the console.
+        /// </summary>
+        /// <value>
+        /// The console.
+        /// </value>
+        [CanBeNull]
+        private IConsole Console
+        {
+            get
+            {
+                if (_console == null) { _console = Container.TryProvide<IConsole>(); }
+
+                return _console;
+            }
+        }
+
         /// <summary>
         ///     The events that have already been received and logged.
         /// </summary>
         /// <remarks>
-        ///     TODO: It might make sense to purge events older than a day if this app perpetually runs.
+        ///     TODO: It might make sense to purge events older than a day if this app perpetually
+        ///     runs.
         /// </remarks>
         /// <value>
-        ///     The received events.
+        /// The received events.
         /// </value>
         [NotNull]
         private ICollection<IPropertyProvider> ReceivedEvents { get; }
@@ -43,25 +80,11 @@ namespace MattEland.Ani.Alfred.Core.Pages
         public DateTime LastTimeLogged { get; private set; } = DateTime.MinValue;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredEventLogPage" /> class.
-        /// </summary>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown when one or more required arguments are null.
-        /// </exception>
-        /// <param name="container"> The container. </param>
-        /// <param name="name"> The name. </param>
-        public AlfredEventLogPage([NotNull] IObjectContainer container,
-            [NotNull] string name) : base(container, name, "Log")
-        {
-            if (container == null) { throw new ArgumentNullException(nameof(container)); }
-
-            ReceivedEvents = container.ProvideCollection<IPropertyProvider>();
-        }
-
-        /// <summary>
         ///     Gets the console events.
         /// </summary>
-        /// <value>The events.</value>
+        /// <value>
+        /// The events.
+        /// </value>
         [NotNull]
         [ItemNotNull]
         [UsedImplicitly]
@@ -79,7 +102,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         ///     children will vary in their own types.
         /// </summary>
         /// <value>
-        ///     The children.
+        /// The children.
         /// </value>
         public override IEnumerable<IAlfredComponent> Children
         {
@@ -89,7 +112,9 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <summary>
         ///     Gets the property providers nested inside of this property provider.
         /// </summary>
-        /// <value>The property providers.</value>
+        /// <value>
+        /// The property providers.
+        /// </value>
         public override IEnumerable<IPropertyProvider> PropertyProviders
         {
             get { return ReceivedEvents; }
@@ -106,8 +131,9 @@ namespace MattEland.Ani.Alfred.Core.Pages
         }
 
         /// <summary>
-        ///     Adds new events to the providers collection. This is necessary because we're doing a cast to
-        ///     <see cref="IPropertyProvider"/> and can't rely on any observable collection to relay this information.
+        ///     Adds new events to the providers collection. This is necessary because we're doing a
+        ///     cast to <see cref="IPropertyProvider" /> and can't rely on any observable collection
+        ///     to relay this information.
         /// </summary>
         private void AddNewEventsToProviders()
         {
@@ -123,15 +149,14 @@ namespace MattEland.Ani.Alfred.Core.Pages
         }
 
         /// <summary>
-        ///     Adds the new events to <see ref="ReceivedEvents"/>.
+        ///     Adds the new events to <see cref="" /> .
         /// </summary>
-        /// <param name="newEvents"> The new events. </param>
+        /// <param name="newEvents">The new events.</param>
         private void AddNewEvents([NotNull] IList<IConsoleEvent> newEvents)
         {
             var newProviders = newEvents.OrderBy(e => e.Time).Cast<IPropertyProvider>();
 
-            foreach (var provider in newProviders.Where(provider => provider != null))
-            {
+            foreach (var provider in newProviders.Where(provider => provider != null)) {
                 ReceivedEvents.Add(provider);
             }
 

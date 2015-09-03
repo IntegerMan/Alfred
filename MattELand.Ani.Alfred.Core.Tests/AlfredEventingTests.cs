@@ -66,7 +66,7 @@ namespace MattEland.Ani.Alfred.Tests
         [NotNull]
         private WidgetCreationParameters BuildWidgetParams(string name = "WidgetTest")
         {
-            return new WidgetCreationParameters(name);
+            return new WidgetCreationParameters(name, Container);
         }
 
         /// <summary>

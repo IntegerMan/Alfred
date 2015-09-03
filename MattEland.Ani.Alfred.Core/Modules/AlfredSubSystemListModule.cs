@@ -2,14 +2,13 @@
 // AlfredSubSystemListModule.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   08/25/2015 at 5:41 PM
+// Last Modified:   09/03/2015 at 5:39 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 using JetBrains.Annotations;
@@ -35,12 +34,11 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubsystemListModule" /> class.
         /// </summary>
+        /// <param name="container">The container.</param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when one or more required arguments are null.
+        /// Thrown when one or more required arguments are null.
         /// </exception>
-        /// <param name="container"> The container. </param>
-        internal AlfredSubsystemListModule([NotNull] IObjectContainer container)
-            : base(container)
+        internal AlfredSubsystemListModule([NotNull] IObjectContainer container) : base(container)
         {
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
 
@@ -50,7 +48,9 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <summary>
         ///     Gets the name of the module.
         /// </summary>
-        /// <value>The name of the module.</value>
+        /// <value>
+        /// The name of the module.
+        /// </value>
         public override string Name
         {
             get { return "Subsystems"; }
@@ -116,7 +116,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
                 var noSubsystemsDetected =
                     Resources.AlfredSubSystemListModule_NoSubsystemsDetected.NonNull();
 
-                Log("Subsystems.Initialize", noSubsystemsDetected, LogLevel.Warning);
+                noSubsystemsDetected.Log("Subsystems.Initialize", LogLevel.Warning, Container);
 
                 var widget = new TextWidget(noSubsystemsDetected,
                                             BuildWidgetParameters(@"lblNoSubsystems"));
@@ -134,8 +134,9 @@ namespace MattEland.Ani.Alfred.Core.Modules
         [NotNull]
         private TextWidget BuildSubsystemWidget([NotNull] IAlfredSubsystem subsystem)
         {
-            var id = string.Format(Locale, @"lblSubsystem{0}", subsystem.Id);
-            var widget = new TextWidget(BuildWidgetParameters(id)) { DataContext = subsystem };
+            var widget = new TextWidget(BuildWidgetParameters($"lblSubsystem{subsystem.Id}"));
+            widget.DataContext = subsystem;
+
             UpdateWidgetText(widget, subsystem);
 
             return widget;

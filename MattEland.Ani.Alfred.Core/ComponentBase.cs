@@ -1,17 +1,15 @@
 ﻿// ---------------------------------------------------------
 // ComponentBase.cs
 // 
-// Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   08/29/2015 at 12:09 AM
+// Created on:      09/02/2015 at 6:20 PM
+// Last Modified:   09/03/2015 at 5:22 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 
@@ -26,19 +24,20 @@ using MattEland.Common.Providers;
 namespace MattEland.Ani.Alfred.Core
 {
     /// <summary>
-    ///     An <see langword="abstract"/> class containing most common shared functionality between Subsystems and Modules
+    ///     An <see langword="abstract"/> class containing most common shared functionality between
+    ///     Subsystems and Modules
     /// </summary>
-    public abstract class ComponentBase : INotifyPropertyChanged, IPropertyProvider
+    public abstract class ComponentBase : NotifyChangedBase, IPropertyProvider
     {
 
         [CanBeNull]
         [ItemNotNull]
         private IEnumerable<IAlfredComponent> _childrenOnShutdown;
 
-        private AlfredStatus _status;
-
         [CanBeNull]
         private IConsole _console;
+
+        private AlfredStatus _status;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ComponentBase"/> class.
@@ -53,13 +52,6 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        /// Gets the <see cref="IObjectContainer"/> used to provide types.
-        /// </summary>
-        /// <value>The container.</value>
-        [NotNull]
-        public IObjectContainer Container { get; }
-
-        /// <summary>
         ///     Gets the <see cref="IAlfred" /> instance associated with this component.
         /// </summary>
         /// <value>The Alfred instance.</value>
@@ -72,12 +64,22 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
+        /// Gets the <see cref="IObjectContainer"/> used to provide types.
+        /// </summary>
+        /// <value>The container.</value>
+        [NotNull]
+        public IObjectContainer Container { get; }
+
+        /// <summary>
         ///     Gets a value indicating whether this instance is online.
         /// </summary>
         /// <value>
         ///     <see langword="true"/> if this instance is online, <see langword="false"/> if not.
         /// </value>
-        public bool IsOnline { get { return Status == AlfredStatus.Online; } }
+        public bool IsOnline
+        {
+            get { return Status == AlfredStatus.Online; }
+        }
 
         /// <summary>
         ///     Gets the name and version of the component.
@@ -137,44 +139,6 @@ namespace MattEland.Ani.Alfred.Core
         public abstract IEnumerable<IAlfredComponent> Children { get; }
 
         /// <summary>
-        ///     Gets the locale.
-        /// </summary>
-        /// <value>The locale.</value>
-        [NotNull]
-        protected static CultureInfo Locale
-        {
-            get
-            {
-                // TODO: Get from Container
-                return CultureInfo.CurrentCulture;
-            }
-        }
-
-        /// <summary>
-        ///     Gets or sets the logging console.
-        /// </summary>
-        /// <value>The console.</value>
-        [CanBeNull]
-        public IConsole Console
-        {
-            get
-            {
-                // If we don't have a console, query the container for one.
-                if (_console == null)
-                {
-                    _console = Container.TryProvide<IConsole>();
-                }
-
-                return _console;
-            }
-        }
-
-        /// <summary>
-        ///     Occurs when a property changes.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
         ///     Gets the display name for use in the user interface.
         /// </summary>
         /// <value>The display name.</value>
@@ -227,6 +191,67 @@ namespace MattEland.Ani.Alfred.Core
             get { return Children; }
         }
 
+        #region Registration
+
+        /// <summary>
+        ///     Gets the registration provider.
+        /// </summary>
+        /// <value>
+        ///     The registration provider.
+        /// </value>
+        public IRegistrationProvider RegistrationProvider
+        {
+            get { return AlfredInstance?.RegistrationProvider; }
+        }
+
+        /// <summary>
+        ///     Allows components to define controls
+        /// </summary>
+        protected virtual void RegisterControls()
+        {
+        }
+
+        /// <summary>
+        ///     Registers the chat provider as the framework's chat provider.
+        /// </summary>
+        /// <param name="chatProvider">The chat provider.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="chatProvider" /> is <see langword="null" />
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        ///     If Register is called when Alfred is null (prior to
+        ///     initialization)
+        /// </exception>
+        protected void Register([NotNull] IChatProvider chatProvider)
+        {
+            if (chatProvider == null) { throw new ArgumentNullException(nameof(chatProvider)); }
+
+            var registrator = RegistrationProvider;
+            if (registrator == null)
+            {
+                throw new InvalidOperationException(Resources.NoAlfredInstance);
+            }
+
+            registrator.Register(chatProvider);
+        }
+
+        /// <summary>
+        ///     Called when the component is registered.
+        /// </summary>
+        /// <param name="alfred">The Alfred instance.</param>
+        public virtual void OnRegistered([CanBeNull] IAlfred alfred)
+        {
+            // Hang on to the reference now so AlfredInstance doesn't lie and we can tell
+            // our children who Alfred is before the whole update process happens
+            AlfredInstance = alfred;
+
+            RegisterControls();
+        }
+
+        #endregion
+
+        #region Lifecycle
+
         /// <summary>
         ///     Initializes the component.
         /// </summary>
@@ -265,9 +290,48 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     Allows components to define controls
+        ///     Handles initialization events
         /// </summary>
-        protected virtual void RegisterControls()
+        /// <param name="alfred">The Alfred instance.</param>
+        protected virtual void InitializeProtected([NotNull] IAlfred alfred)
+        {
+        }
+
+        /// <summary>
+        ///     A notification method that is invoked when initialization for Alfred is complete so the UI can
+        ///     be fully enabled or
+        ///     adjusted
+        /// </summary>
+        public virtual void OnInitializationCompleted()
+        {
+            // Pass on the message to the children
+            foreach (var child in Children) { child.OnInitializationCompleted(); }
+        }
+
+        /// <summary>
+        ///     Handles updating the component as needed
+        /// </summary>
+        /// <exception cref="InvalidOperationException">If this was called when Alfred was offline.</exception>
+        public void Update()
+        {
+            if (Status == AlfredStatus.Offline)
+            {
+                var message = string.Format(CultureInfo.CurrentCulture,
+                                            Resources.AlfredItemOfflineButToldToUpdate.NonNull(),
+                                            NameAndVersion);
+                throw new InvalidOperationException(message);
+            }
+
+            UpdateProtected();
+
+            // Pass on the message to the children
+            foreach (var child in Children) { child.Update(); }
+        }
+
+        /// <summary>
+        ///     Updates the component
+        /// </summary>
+        protected virtual void UpdateProtected()
         {
         }
 
@@ -305,48 +369,10 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     Clears all child collections
+        ///     Handles shutdown events
         /// </summary>
-        protected virtual void ClearChildCollections()
+        protected virtual void ShutdownProtected()
         {
-        }
-
-        /// <summary>
-        ///     Handles updating the component as needed
-        /// </summary>
-        /// <exception cref="InvalidOperationException">If this was called when Alfred was offline.</exception>
-        public void Update()
-        {
-            if (Status == AlfredStatus.Offline)
-            {
-                var message = string.Format(CultureInfo.CurrentCulture,
-                                            Resources.AlfredItemOfflineButToldToUpdate.NonNull(),
-                                            NameAndVersion);
-                throw new InvalidOperationException(message);
-            }
-
-            UpdateProtected();
-
-            // Pass on the message to the children
-            foreach (var child in Children) { child.Update(); }
-        }
-
-        /// <summary>
-        ///     Updates the component
-        /// </summary>
-        protected virtual void UpdateProtected()
-        {
-        }
-
-        /// <summary>
-        ///     A notification method that is invoked when initialization for Alfred is complete so the UI can
-        ///     be fully enabled or
-        ///     adjusted
-        /// </summary>
-        public virtual void OnInitializationCompleted()
-        {
-            // Pass on the message to the children
-            foreach (var child in Children) { child.OnInitializationCompleted(); }
         }
 
         /// <summary>
@@ -376,110 +402,13 @@ namespace MattEland.Ani.Alfred.Core
             }
         }
 
-        /// <summary>
-        ///     Handles shutdown events
-        /// </summary>
-        protected virtual void ShutdownProtected()
-        {
-        }
+        #endregion
 
         /// <summary>
-        ///     Handles initialization events
+        ///     Clears all child collections
         /// </summary>
-        /// <param name="alfred">The Alfred instance.</param>
-        protected virtual void InitializeProtected([NotNull] IAlfred alfred)
+        protected virtual void ClearChildCollections()
         {
-        }
-
-        /// <summary>
-        ///     Logs an event to the console if an <see cref="IConsole"/> is detected
-        /// </summary>
-        /// <param name="title">The title of the message.</param>
-        /// <param name="message">The message body.</param>
-        /// <param name="level">The logging level.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="message" /> is <see langword="null" />.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="title" /> is <see langword="null" />.</exception>
-        protected void Log([NotNull] string title, [NotNull] string message, LogLevel level)
-        {
-            if (title == null) { throw new ArgumentNullException(nameof(title)); }
-            if (message == null) { throw new ArgumentNullException(nameof(message)); }
-
-            // Send it on to the console, if we have one. It'll figure it out from there
-            Console?.Log(title, message, level);
-        }
-
-        /// <summary>
-        ///     Called when the component is registered.
-        /// </summary>
-        /// <param name="alfred">The Alfred instance.</param>
-        public virtual void OnRegistered([CanBeNull] IAlfred alfred)
-        {
-            // Hang on to the reference now so AlfredInstance doesn't lie and we can tell
-            // our children who Alfred is before the whole update process happens
-            AlfredInstance = alfred;
-
-            RegisterControls();
-        }
-
-        /// <summary>
-        ///     Called when a property changes.
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        [NotifyPropertyChangedInvocator]
-        [SuppressMessage("ReSharper", "CatchAllClause")]
-        protected void OnPropertyChanged([CanBeNull] string propertyName)
-        {
-            try
-            {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
-            catch (Exception ex)
-            {
-                Log("Component.PropertyChanged",
-                    string.Format(Locale,
-                                  Resources.ComponentBasePropertyChangedException.NonNull(),
-                                  ex.BuildDetailsMessage()),
-                    LogLevel.Error);
-            }
-        }
-
-        /// <summary>
-        ///     Registers the chat provider as the framework's chat provider.
-        /// </summary>
-        /// <param name="chatProvider">The chat provider.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="chatProvider" /> is <see langword="null" />
-        /// </exception>
-        /// <exception cref="InvalidOperationException">
-        ///     If Register is called when Alfred is null (prior to
-        ///     initialization)
-        /// </exception>
-        protected void Register([NotNull] IChatProvider chatProvider)
-        {
-            if (chatProvider == null) { throw new ArgumentNullException(nameof(chatProvider)); }
-
-            var registrator = RegistrationProvider;
-            if (registrator == null)
-            {
-                throw new InvalidOperationException(Resources.NoAlfredInstance);
-            }
-
-            registrator.Register(chatProvider);
-        }
-
-        /// <summary>
-        ///     Gets the registration provider.
-        /// </summary>
-        /// <value>
-        ///     The registration provider.
-        /// </value>
-        public IRegistrationProvider RegistrationProvider
-        {
-            get
-            {
-                return AlfredInstance?.RegistrationProvider;
-            }
         }
 
         /// <summary>
@@ -490,8 +419,31 @@ namespace MattEland.Ani.Alfred.Core
         [NotNull]
         protected WidgetCreationParameters BuildWidgetParameters([NotNull] string name)
         {
-            return new WidgetCreationParameters(name, Console, Locale);
+            return new WidgetCreationParameters(name, Container);
         }
+
+        /// <summary>
+        ///     Handles a callback <see cref="Exception" /> .
+        /// </summary>
+        /// <param name="exception">The exception.</param>
+        /// <param name="operationName">
+        /// <see cref="Name"/> of the operation that was being performed.
+        /// </param>
+        /// <returns>
+        ///     <see langword="true"/> if it the <paramref name="exception"/> was handled and should
+        ///     not be thrown again, otherwise false.
+        /// </returns>
+        public override bool HandleCallbackException(Exception exception, string operationName)
+        {
+            // Log to the console
+            var message = exception.BuildDetailsMessage();
+            message = $"{GetType().Name}.{operationName} encountered an error: {message}";
+            message.Log(operationName, LogLevel.Error, Container);
+
+            // It's been logged. Don't throw it again
+            return true;
+        }
+
     }
 
 }
