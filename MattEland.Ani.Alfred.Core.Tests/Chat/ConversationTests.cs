@@ -2,7 +2,7 @@
 // ConversationTests.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   08/25/2015 at 1:21 AM
+// Last Modified:   09/03/2015 at 1:07 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -15,8 +15,6 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Chat;
 using MattEland.Ani.Alfred.Chat.Aiml;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Common;
-using MattEland.Common.Providers;
 using MattEland.Testing;
 
 using NUnit.Framework;
@@ -118,7 +116,8 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         }
 
         /// <summary>
-        ///     Asserts that when working through redirects, the engine can get the deepest redirect template.
+        ///     Asserts that when working through redirects, the engine can get the deepest redirect
+        ///     template.
         /// </summary>
         /// <remarks>
         ///     Test for ALF-10
@@ -167,10 +166,11 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         ///     Tests that an input of "Hi" doesn't result in the default chat response.
         /// </summary>
         /// <remarks>
-        ///     This is really a test that given a valid template, the <see cref="ChatEngine" /> is able to
-        ///     parse it and return a value from it.
-        /// 
-        ///     See test ALF-66 for issue ALF-65
+        ///     <para>
+        ///         This is really a test that given a valid template, the <see cref="ChatEngine" /> is
+        ///         able to parse it and return a value from it.
+        ///     </para>
+        ///     <para>See test ALF-66 for issue ALF-65</para>
         /// </remarks>
         [Test]
         public void HiShouldNotResultInFallback()
@@ -180,19 +180,21 @@ namespace MattEland.Ani.Alfred.Tests.Chat
                          $"The response to 'Hi' contained the fallback response. The reply was '{reply}'");
         }
 
+        /// <summary>
+        ///     Tests that the Chat Second person substitutions has entries after load.
+        /// </summary>
         [Test]
         public void SecondPersonSubstitutionsHasEntries()
         {
-            Assert.Greater(Engine.Librarian.SecondPersonToFirstPersonSubstitutions.Count,
-                           0,
-                           "Settings were not present");
+            var numSubstitutions = Engine.Librarian.SecondPersonToFirstPersonSubstitutions.Count;
+            numSubstitutions.ShouldBeGreaterThan(0, "Settings were not present");
         }
 
         [Test]
         public void StartupLeavesLastInputClear()
         {
             var chat = new AimlStatementHandler(Container, "Alfredo");
-            chat.DoInitialGreeting();
+            chat.HandleFrameworkEvent(FrameworkEvents.Initialize);
 
             chat.LastInput.ShouldBeNullOrEmpty("Startup did not clear last input.");
         }

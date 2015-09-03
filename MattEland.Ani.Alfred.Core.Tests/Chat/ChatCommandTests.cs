@@ -172,5 +172,6 @@ namespace MattEland.Ani.Alfred.Tests.Chat
 
             Assert.IsFalse(AlfredTestTagHandler.WasInvoked);
         }
+
     }
 }

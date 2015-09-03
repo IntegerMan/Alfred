@@ -61,6 +61,7 @@
     <Compile Include="Console\ExplorerEventFactory.cs" />
     <Compile Include="Definitions\AlfredProperty.cs" />
     <Compile Include="Definitions\ChatCommand.cs" />
+    <Compile Include="Definitions\FrameworkEvents.cs" />
     <Compile Include="Definitions\IAlfred.cs" />
     <Compile Include="Definitions\IAlfredCommand.cs" />
     <Compile Include="Definitions\IAlfredCommandRecipient.cs" />

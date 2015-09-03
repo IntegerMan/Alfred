@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 
+using MattEland.Ani.Alfred.Chat;
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
@@ -132,6 +134,33 @@ namespace MattEland.Ani.Alfred.Tests
         {
             Alfred.Initialize();
             Alfred.Initialize();
+        }
+
+        /// <summary>
+        ///     Tests that Shutdown causes Alfred to say goodbye.
+        /// </summary>
+        [Test]
+        public void ShutdownCausesAlfredToSayGoodbye()
+        {
+            // Alfred will need a chat subsystem for this test
+            var chatSubsystem = new ChatSubsystem(Container, "Test Monkey");
+            Alfred.Register(chatSubsystem);
+            Alfred.Subsystems.ShouldContain(chatSubsystem);
+
+            // Turn Alfred on so we can move to a point where we can deactivate him
+            Alfred.Initialize();
+            Alfred.ChatProvider.ShouldNotBeNull();
+
+            // Ensure no prior chat events pollute our test later
+            var console = GetConsole();
+            console.Clear();
+            console.EventCount.ShouldBe(0);
+
+            // Shutdown and get Alfred's reaction
+            Alfred.Shutdown();
+            var numChatMessagesInLog = console.Events.Count(e => e.Level == LogLevel.ChatResponse);
+
+            numChatMessagesInLog.ShouldBeGreaterThan(0, "No chat messages were present in the log. Alfred didn't say goodbye.");
         }
 
     }

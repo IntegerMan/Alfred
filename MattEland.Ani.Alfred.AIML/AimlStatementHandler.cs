@@ -149,16 +149,6 @@ namespace MattEland.Ani.Alfred.Chat
         }
 
         /// <summary>
-        ///     Performs an initial greeting by sending hi to the conversation system and erasing it from
-        ///     the last input so the user sees Alfred greeting them.
-        /// </summary>
-        public void DoInitialGreeting()
-        {
-            // Send a "hi" into the system
-            HandleUserStatementInternal(Resources.InitialGreetingText.NonNull(), false);
-        }
-
-        /// <summary>
         ///     Handles a user statement.
         /// </summary>
         /// <param name="userInput"> The user input. </param>
@@ -300,7 +290,7 @@ namespace MattEland.Ani.Alfred.Chat
         ///     Alfred from the chat engine.
         /// </summary>
         /// <param name="owner">The owner.</param>
-        internal void UpdateOwner(IAlfredCommandRecipient owner)
+        internal void UpdateOwner([CanBeNull] IAlfredCommandRecipient owner)
         {
             ChatEngine.Owner = owner;
         }
@@ -441,6 +431,28 @@ namespace MattEland.Ani.Alfred.Chat
             }
 
             return template;
+        }
+
+        /// <summary>
+        ///     Handles events from the framework.
+        /// </summary>
+        /// <param name="frameworkEvent"> The event. </param>
+        public void HandleFrameworkEvent(FrameworkEvents frameworkEvent)
+        {
+            switch (frameworkEvent)
+            {
+                case FrameworkEvents.Initialize:
+
+                    // Send a "hi" into the system, but hide it from the event log.
+                    HandleUserStatementInternal("Hi", false);
+                    break;
+
+                case FrameworkEvents.Shutdown:
+
+                    // Send a "Bye" into the system, but hide it from the event log.
+                    HandleUserStatementInternal("Bye", false);
+                    break;
+            }
         }
     }
 
