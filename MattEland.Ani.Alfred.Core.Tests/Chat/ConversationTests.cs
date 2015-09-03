@@ -44,7 +44,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             InitializeChatSystem();
         }
 
-        [TestCase("Shutdown", "tmp_bye")]
+        [TestCase("Shutdown", "tmp_shutdown")]
         [TestCase("Status", "tmp_status")]
         public void ChatCoreTests(string input, string templateId)
         {
