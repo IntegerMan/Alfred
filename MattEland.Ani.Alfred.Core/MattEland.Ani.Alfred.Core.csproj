@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="AlfredCommand.cs" />
     <Compile Include="AlfredCommandResult.cs" />
+    <Compile Include="AlfredRegistrationExtensions.cs" />
     <Compile Include="ComponentRegistrationProvider.cs" />
     <Compile Include="Console\AlfredLoggingExtensions.cs" />
     <Compile Include="ComponentBase.cs" />
@@ -62,7 +63,7 @@
     <Compile Include="Console\ExplorerEventFactory.cs" />
     <Compile Include="Definitions\AlfredProperty.cs" />
     <Compile Include="Definitions\ChatCommand.cs" />
-    <Compile Include="Definitions\FrameworkEvents.cs" />
+    <Compile Include="Definitions\FrameworkEvent.cs" />
     <Compile Include="Definitions\IAlfred.cs" />
     <Compile Include="Definitions\IAlfredCommand.cs" />
     <Compile Include="Definitions\IAlfredCommandRecipient.cs" />
@@ -75,7 +76,7 @@
     <Compile Include="Definitions\IHasStatus.cs" />
     <Compile Include="Definitions\IPropertyItem.cs" />
     <Compile Include="Definitions\IPropertyProvider.cs" />
-    <Compile Include="Definitions\IProvidesRegistration.cs" />
+    <Compile Include="Definitions\IRegistrationProvider.cs" />
     <Compile Include="Definitions\IShellCommandRecipient.cs" />
     <Compile Include="Definitions\IStatusController.cs" />
     <Compile Include="Definitions\IChatProvider.cs" />

@@ -22,7 +22,7 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
     /// <summary>
     ///     A mock implementation of Alfred for testing purposes
     /// </summary>
-    public class TestAlfred : IAlfred, IProvidesRegistration, IHasStatus, IHasContainer
+    public class TestAlfred : IAlfred, IRegistrationProvider, IHasStatus, IHasContainer
     {
 
         [NotNull]
@@ -137,7 +137,7 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
         /// <value>
         ///     The registration provider.
         /// </value>
-        public IProvidesRegistration RegistrationProvider { get { return this; } }
+        public IRegistrationProvider RegistrationProvider { get { return this; } }
 
         /// <summary>
         ///     Shutdowns this instance.

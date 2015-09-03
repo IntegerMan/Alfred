@@ -1421,7 +1421,7 @@ select t
 // Declare all methods as *static* and transform the class or structure
 // into a *static* class.
 //</HowToFix>]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Non-static classes should be instantiated or turned to static</Name>
+      <Query Active="False" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Non-static classes should be instantiated or turned to static</Name>
 warnif count > 0
 from t in JustMyCode.Types
 where  t.IsClass &&
@@ -2168,7 +2168,7 @@ select m
 //</HowToFix>]]></Query>
       <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Instances size shouldn't be too big</Name>
 warnif count > 0 from t in JustMyCode.Types where 
-  t.SizeOfInst > 64 && !t.NameLike("Window") && !t.NameLike("App") && !t.NameLike("Page")&& !t.NameLike("Pane")&& !t.NameLike("Control")
+  t.SizeOfInst > 64 && !t.NameLike("Window") && !t.NameLike("App") && !t.NameLike("Page")&& !t.NameLike("Pane")&& !t.NameLike("Control")&& !t.NameLike("Resource")&& !t.NameLike("Test")
 
 
   orderby t.SizeOfInst descending

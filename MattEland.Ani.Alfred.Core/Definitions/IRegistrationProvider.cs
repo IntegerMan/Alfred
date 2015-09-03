@@ -5,7 +5,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
     /// <summary>
     ///     Interface defining a component that provides registration for other components.
     /// </summary>
-    public interface IProvidesRegistration
+    public interface IRegistrationProvider
     {
         /// <summary>
         ///     Registers the <paramref name="page"/> as a root page.

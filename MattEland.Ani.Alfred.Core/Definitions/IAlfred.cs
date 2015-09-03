@@ -65,7 +65,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         ///     The registration provider.
         /// </value>
         [NotNull]
-        IProvidesRegistration RegistrationProvider { get; }
+        IRegistrationProvider RegistrationProvider { get; }
 
     }
 

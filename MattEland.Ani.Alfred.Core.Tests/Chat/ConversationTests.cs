@@ -194,7 +194,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         public void StartupLeavesLastInputClear()
         {
             var chat = new AimlStatementHandler(Container, "Alfredo");
-            chat.HandleFrameworkEvent(FrameworkEvents.Initialize);
+            chat.HandleFrameworkEvent(FrameworkEvent.Initialize);
 
             chat.LastInput.ShouldBeNullOrEmpty("Startup did not clear last input.");
         }

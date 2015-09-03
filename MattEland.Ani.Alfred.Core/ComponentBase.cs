@@ -141,7 +141,7 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <value>The locale.</value>
         [NotNull]
-        public CultureInfo Locale
+        protected static CultureInfo Locale
         {
             get
             {
@@ -474,7 +474,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <value>
         ///     The registration provider.
         /// </value>
-        public IProvidesRegistration RegistrationProvider
+        public IRegistrationProvider RegistrationProvider
         {
             get
             {

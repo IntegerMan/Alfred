@@ -44,7 +44,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
             _subsystem = new TestSubsystem(Container);
             _subsystem.AddAutoRegisterPage(_page);
 
-            _alfred.Register(_subsystem);
+            _alfred.RegistrationProvider.Register(_subsystem);
         }
 
         [NotNull]

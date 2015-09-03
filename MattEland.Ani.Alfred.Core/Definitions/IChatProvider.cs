@@ -48,6 +48,6 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         ///     Handles events from the framework.
         /// </summary>
         /// <param name="frameworkEvent">The event.</param>
-        void HandleFrameworkEvent(FrameworkEvents frameworkEvent);
+        void HandleFrameworkEvent(FrameworkEvent frameworkEvent);
     }
 }

@@ -2,7 +2,7 @@
 // AlfredApplication.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   09/03/2015 at 12:36 PM
+// Last Modified:   09/03/2015 at 1:24 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -174,7 +174,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <value>
         ///     The registration provider.
         /// </value>
-        public IProvidesRegistration RegistrationProvider { get; }
+        public IRegistrationProvider RegistrationProvider { get; }
 
         /// <summary>
         ///     Gets the status.
@@ -283,68 +283,6 @@ namespace MattEland.Ani.Alfred.Core
 
             // This logic is a bit lengthy, so we'll have the status controller take care of it
             _statusController.Initialize();
-        }
-
-        /// <summary>
-        ///     Registers the page as a root page.
-        /// </summary>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown when one or more required arguments are null.
-        /// </exception>
-        /// <param name="page"> The page. </param>
-        public void Register(IAlfredPage page)
-        {
-            if (page == null) { throw new ArgumentNullException(nameof(page)); }
-
-            if (page.IsRootLevel) { _rootPages.Add(page); }
-
-            page.OnRegistered(this);
-        }
-
-        /// <summary>
-        ///     Registers the shell command recipient that will allow the shell to get commands from the Alfred
-        ///     layer.
-        /// </summary>
-        /// <param name="shell">The command recipient.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="shell" /> is <see langword="null" />.</exception>
-        public void Register(IShellCommandRecipient shell)
-        {
-            if (shell == null) { throw new ArgumentNullException(nameof(shell)); }
-            ShellCommandHandler = shell;
-        }
-
-        /// <summary>
-        ///     Registers the chat provider as the framework's chat provider.
-        /// </summary>
-        /// <param name="chatProvider">The chat provider.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="chatProvider" /> is <see langword="null" />
-        ///     .
-        /// </exception>
-        public void Register([NotNull] IChatProvider chatProvider)
-        {
-            if (chatProvider == null) { throw new ArgumentNullException(nameof(chatProvider)); }
-
-            ChatProvider = chatProvider;
-        }
-
-        /// <summary>
-        ///     Registers a sub system with Alfred.
-        /// </summary>
-        /// <param name="subsystem">The subsystem.</param>
-        /// <exception cref="InvalidOperationException">If a subsystem was registered when Alfred was offline.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="subsystem" /> is <see langword="null" />.</exception>
-        public void Register([NotNull] IAlfredSubsystem subsystem)
-        {
-            if (subsystem == null) { throw new ArgumentNullException(nameof(subsystem)); }
-            if (Status != AlfredStatus.Offline)
-            {
-                throw new InvalidOperationException(
-                    Resources.AlfredProvider_AssertMustBeOffline_ErrorNotOffline);
-            }
-
-            _subsystems.AddSafe(subsystem);
-            subsystem.OnRegistered(this);
         }
 
         /// <summary>

@@ -437,17 +437,17 @@ namespace MattEland.Ani.Alfred.Chat
         ///     Handles events from the framework.
         /// </summary>
         /// <param name="frameworkEvent"> The event. </param>
-        public void HandleFrameworkEvent(FrameworkEvents frameworkEvent)
+        public void HandleFrameworkEvent(FrameworkEvent frameworkEvent)
         {
             switch (frameworkEvent)
             {
-                case FrameworkEvents.Initialize:
+                case FrameworkEvent.Initialize:
 
                     // Send a "hi" into the system, but hide it from the event log.
                     HandleUserStatementInternal("Hi", false);
                     break;
 
-                case FrameworkEvents.Shutdown:
+                case FrameworkEvent.Shutdown:
 
                     // Send a "Bye" into the system, but hide it from the event log.
                     HandleUserStatementInternal("Bye", false);

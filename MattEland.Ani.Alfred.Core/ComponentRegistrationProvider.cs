@@ -20,7 +20,7 @@ namespace MattEland.Ani.Alfred.Core
     /// <summary>
     ///     This registration provider handles component registration capabilities for Alfred.
     /// </summary>
-    internal class ComponentRegistrationProvider : IProvidesRegistration
+    internal class ComponentRegistrationProvider : IRegistrationProvider
     {
         [NotNull]
         private readonly AlfredApplication _alfred;
