@@ -962,7 +962,7 @@ select new { m,
 // Unit Tests can help: write tests for each method before extracting it 
 // to ensure you don't break functionality.
 //</HowToFix>]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Avoid making large methods even larger</Name>
+      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="True"><![CDATA[// <Name>Avoid making large methods even larger</Name>
 
 warnif count > 0 
 from m in JustMyCode.Methods where
@@ -1011,7 +1011,7 @@ select new { m,
 // But long methods with no branch conditions, that typically initialize some data,
 // are not necessarily a problem to maintain, and might not need refactoring.
 //</HowToFix>]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Avoid adding methods to a type that already had many methods</Name>
+      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="True"><![CDATA[// <Name>Avoid adding methods to a type that already had many methods</Name>
 
 warnif count > 0 
 
@@ -1102,7 +1102,7 @@ select new {
 // If being immutable is an important property for a matched type,
 // then the code must be refactored to preserve immutability.
 //</HowToFix>]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Avoid adding instance fields to a type that already had many instance fields</Name>
+      <Query Active="True" DisplayList="True" DisplayStat="False" DisplaySelectionView="False" IsCriticalRule="True"><![CDATA[// <Name>Avoid adding instance fields to a type that already had many instance fields</Name>
 
 warnif count > 0 
 
