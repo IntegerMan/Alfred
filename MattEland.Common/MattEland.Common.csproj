@@ -90,7 +90,9 @@
     <Compile Include="CollectionExtensions.cs" />
     <Compile Include="ExceptionExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="IExceptionCallbackHandler.cs" />
     <Compile Include="IntegerExtensions.cs" />
+    <Compile Include="NotifyChangedBase.cs" />
     <Compile Include="ObjectExtensions.cs" />
     <Compile Include="Providers\ActivatorObjectProvider.cs" />
     <Compile Include="Providers\CommonContainer.cs" />

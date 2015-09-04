@@ -42,18 +42,17 @@ namespace MattEland.Common.Providers
         }
 
         /// <summary>
-        ///     Registers a delegate to invoke to provide an instance when the base type is requested.
+        ///     Registers a <see langword="delegate"/> to invoke to provide an instance when the base
+        ///     type is requested.
         /// </summary>
-        /// <param name="baseType">Type that will be requested in the future.</param>
-        /// <param name="activationDelegate">The activation delegate to invoke.</param>
-        /// <param name="arguments">The arguments to pass to the delegate.</param>
-        /// <exception cref="System.ArgumentNullException">
-        ///     baseType or activationDelegate
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="baseType"/> or <paramref name="activationDelegate"/>
         /// </exception>
+        /// <param name="baseType"> Type that will be requested in the future. </param>
+        /// <param name="activationDelegate"> The activation <see langword="delegate"/> to invoke. </param>
         public static void RegisterProvider(
             [NotNull] this Type baseType,
-            [NotNull] Delegate activationDelegate,
-            [CanBeNull] params object[] arguments)
+            [NotNull] Delegate activationDelegate)
         {
             //- Validate
             if (baseType == null) { throw new ArgumentNullException(nameof(baseType)); }
@@ -63,7 +62,7 @@ namespace MattEland.Common.Providers
             }
 
             // Register with the common provider
-            CommonProvider.Register(baseType, activationDelegate, arguments);
+            CommonProvider.Register(baseType, activationDelegate);
         }
 
         /// <summary>
@@ -95,9 +94,10 @@ namespace MattEland.Common.Providers
         /// </summary>
         /// <param name="instance">The instance.</param>
         /// <exception cref="System.ArgumentNullException">type, instance</exception>
-        public static void RegisterAsProvidedInstance(
-            [NotNull] this object instance)
+        public static void RegisterAsProvidedInstance([NotNull] this object instance)
         {
+            if (instance == null) { throw new ArgumentNullException(nameof(instance)); }
+
             // Default to the root container
             instance.RegisterAsProvidedInstance(instance.GetType(), CommonProvider.Container);
         }
@@ -129,14 +129,13 @@ namespace MattEland.Common.Providers
         /// </exception>
         /// <param name="instance"> The instance. </param>
         /// <param name="container"> The container. </param>
-        ///
-        /// ### <exception cref="System.ArgumentNullException"> type, instance, container. </exception>
         public static void RegisterAsProvidedInstance(
             [NotNull] this object instance,
             [NotNull] IObjectContainer container)
         {
             //- Validate
             if (instance == null) { throw new ArgumentNullException(nameof(instance)); }
+            if (container == null) { throw new ArgumentNullException(nameof(container)); }
 
             // Register
             container.RegisterProvidedInstance(instance.GetType(), instance);

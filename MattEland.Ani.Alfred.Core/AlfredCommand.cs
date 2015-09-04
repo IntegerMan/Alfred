@@ -11,7 +11,12 @@ using System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
 
-namespace MattEland.Ani.Alfred.Core.Definitions
+using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common;
+using MattEland.Common.Providers;
+
+namespace MattEland.Ani.Alfred.Core
 {
     /// <summary>
     ///     Represents a command that can be executed on the user interface layer
@@ -21,7 +26,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
     ///     but portable doesn't reference that assembly so clients will have to provide
     ///     their own version to support MVVM bindings, etc.
     /// </remarks>
-    public class AlfredCommand
+    public class AlfredCommand : IAlfredCommand, IHasContainer
     {
         /// <summary>
         ///     The <see cref="Action" /> invoked when the <see ref="Execute"/> method is called.
@@ -39,7 +44,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         ///     <see cref="AlfredCommand" />
         ///     class.
         /// </summary>
-        public AlfredCommand() : this(null)
+        public AlfredCommand() : this(null, CommonProvider.Container)
         {
         }
 
@@ -48,13 +53,22 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         ///     <see cref="AlfredCommand" />
         ///     class.
         /// </summary>
-        /// <param name="executeAction">
-        ///     The execute action.
-        /// </param>
-        public AlfredCommand([CanBeNull] Action executeAction)
+        /// <param name="executeAction"> The execute action. </param>
+        /// <param name="container"> The container. </param>
+        public AlfredCommand([CanBeNull] Action executeAction, [CanBeNull] IObjectContainer container)
         {
             ExecuteAction = executeAction;
+            Container = container;
         }
+
+        /// <summary>
+        ///     Gets the container.
+        /// </summary>
+        /// <value>
+        ///     The container.
+        /// </value>
+        [CanBeNull]
+        public IObjectContainer Container { get; set; }
 
         /// <summary>
         ///     Gets or sets the <see cref="Action" /> that is invoked when a command's <see ref="Execute"/> method is called.
@@ -132,15 +146,21 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         ///     Raises the <see cref="CanExecuteChanged"/> event.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate", Justification = "Matching WPF schema")]
+        [SuppressMessage("ReSharper", "CatchAllClause")]
         public void RaiseCanExecuteChanged()
         {
             try
             {
                 CanExecuteChanged?.Invoke(this, EventArgs.Empty);
             }
-            catch
+            catch (Exception ex)
             {
-                // TODO: Log this
+                // Build Exception Details
+                var message = ex.BuildDetailsMessage();
+                message = $"Problem raising CanExecuteChanged: {message}";
+
+                // Log it
+                message.Log("Command.CanExecuteChanged", LogLevel.Error, Container);
             }
         }
     }

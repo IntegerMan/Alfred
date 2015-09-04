@@ -8,20 +8,18 @@
 // ---------------------------------------------------------
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Common;
 using MattEland.Common.Providers;
 using MattEland.Testing;
-
-using Shouldly;
 
 namespace MattEland.Ani.Alfred.Tests
 {
@@ -45,6 +43,7 @@ namespace MattEland.Ani.Alfred.Tests
 
             // Register mappings for promised types
             container.Register(typeof(IConsoleEvent), typeof(ConsoleEvent));
+            container.Register(typeof(IAlfredCommand), typeof(AlfredCommand));
             container.Register(typeof(MetricProviderBase), typeof(ValueMetricProvider));
 
             // We'll want to get at the same factory any time we request a factory for test purposes

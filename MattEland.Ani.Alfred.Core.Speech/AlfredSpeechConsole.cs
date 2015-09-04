@@ -2,7 +2,7 @@
 // AlfredSpeechConsole.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   09/02/2015 at 12:02 AM
+// Last Modified:   09/03/2015 at 12:49 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -21,7 +21,9 @@ using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Speech
 {
-    /// <summary>A speech-enabled console implementation that notifies the user of significant events</summary>
+    /// <summary>
+    ///     A speech-enabled console implementation that notifies the user of significant events
+    /// </summary>
     public sealed class AlfredSpeechConsole : IConsole, IDisposable
     {
         [NotNull]
@@ -33,11 +35,15 @@ namespace MattEland.Ani.Alfred.Core.Speech
         [NotNull]
         private readonly HashSet<LogLevel> _speechEnabledLogLevels;
 
-        /// <summary>Initializes a new instance of the <see cref="AlfredSpeechConsole" /> class.</summary>
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="AlfredSpeechConsole" /> class.
+        /// </summary>
         /// <param name="container">The container.</param>
         /// <param name="console">The console that events should be logged to.</param>
         /// <param name="factory">The event factory.</param>
-        /// <exception cref="ArgumentNullException">Thrown when one or more required arguments are null.</exception>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when one or more required arguments are null.
+        /// </exception>
         public AlfredSpeechConsole(
             [NotNull] IObjectContainer container,
             [CanBeNull] IConsole console,
@@ -75,8 +81,12 @@ namespace MattEland.Ani.Alfred.Core.Speech
             }
         }
 
-        /// <summary>Gets the log levels that warrant the user's attention.</summary>
-        /// <value>The log levels that warrant user attention.</value>
+        /// <summary>
+        ///     Gets the log levels that warrant the user's attention.
+        /// </summary>
+        /// <value>
+        /// The log levels that warrant user attention.
+        /// </value>
         [NotNull]
         public HashSet<LogLevel> SpeechEnabledLogLevels
         {
@@ -87,12 +97,39 @@ namespace MattEland.Ani.Alfred.Core.Speech
             }
         }
 
-        /// <summary>Gets the console event factory used for creating new events.</summary>
-        /// <value>The console event factory.</value>
+        /// <summary>
+        ///     Clears all events from the log
+        /// </summary>
+        public void Clear()
+        {
+            _console.Clear();
+        }
+
+        /// <summary>
+        ///     Gets the number of events in the collection.
+        /// </summary>
+        /// <value>
+        /// The total number of events.
+        /// </value>
+        public int EventCount
+        {
+            get { return _console.EventCount; }
+        }
+
+        /// <summary>
+        ///     Gets the console event factory used for creating new events.
+        /// </summary>
+        /// <value>
+        /// The console event factory.
+        /// </value>
         public ConsoleEventFactory EventFactory { get; }
 
-        /// <summary>Gets the console events.</summary>
-        /// <value>The console events.</value>
+        /// <summary>
+        ///     Gets the console events.
+        /// </summary>
+        /// <value>
+        /// The console events.
+        /// </value>
         public IEnumerable<IConsoleEvent> Events
         {
             [DebuggerStepThrough]
@@ -102,7 +139,9 @@ namespace MattEland.Ani.Alfred.Core.Speech
             }
         }
 
-        /// <summary>Logs the specified <paramref name="message" /> to the console.</summary>
+        /// <summary>
+        ///     Logs the specified <paramref name="message" /> to the console.
+        /// </summary>
         /// <param name="title">The title.</param>
         /// <param name="message">The message.</param>
         /// <param name="level">The logging level.</param>
@@ -115,19 +154,13 @@ namespace MattEland.Ani.Alfred.Core.Speech
             if (SpeechEnabledLogLevels.Contains(level))
             {
                 // For more serious items, have Alfred say the status beforehand
-                if (level == LogLevel.Warning || level == LogLevel.Error) {
+                if (level == LogLevel.Warning || level == LogLevel.Error)
+                {
                     message = string.Format(CultureInfo.CurrentCulture, "{0}: {1}", level, message);
                 }
 
                 _speech?.Say(message.NonNull());
             }
-        }
-
-        /// <summary>Gets the number of events in the collection.</summary>
-        /// <value>The total number of events.</value>
-        public int EventCount
-        {
-            get { return _console.EventCount; }
         }
 
         /// <summary>
@@ -141,8 +174,12 @@ namespace MattEland.Ani.Alfred.Core.Speech
             _speech.TryDispose();
         }
 
-        /// <summary>Gets the container.</summary>
-        /// <value>The container.</value>
+        /// <summary>
+        ///     Gets the container.
+        /// </summary>
+        /// <value>
+        /// The container.
+        /// </value>
         [NotNull]
         public IObjectContainer Container { get; }
     }

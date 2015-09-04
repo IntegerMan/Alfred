@@ -141,8 +141,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 
                 // Create a widget for the counter
                 // Store the counter as the widget's data context for easier updating later on
-                var id = string.Format(Locale, @"progProcessor{0}", counter.Name);
-                var widget = new AlfredProgressBarWidget(BuildWidgetParameters(id))
+                var widget = new AlfredProgressBarWidget(BuildWidgetParameters($"progProcessor{counter.Name}"))
                 {
                     DataContext = counter,
                     Minimum = 0,

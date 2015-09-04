@@ -67,9 +67,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// <param name="command">The command.</param>
         /// <param name="result">The result. If the command was handled, this should be updated.</param>
         /// <returns><c>True</c> if the command was handled; otherwise false.</returns>
-        public virtual bool ProcessAlfredCommand(
-            ChatCommand command,
-            [CanBeNull] AlfredCommandResult result)
+        public virtual bool ProcessAlfredCommand(ChatCommand command, [CanBeNull] ICommandResult result)
         {
             /* If there's no result, there's no way any feedback could get back. 
             This is just here to protect against bad input */
@@ -161,7 +159,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
                     "Cannot register page without an Alfred instance");
             }
 
-            AlfredInstance.Register(page);
+            RegistrationProvider.Register(page);
         }
 
         /// <summary>

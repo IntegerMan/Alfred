@@ -2,7 +2,7 @@
 // TextWidget.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   08/24/2015 at 11:27 PM
+// Last Modified:   09/02/2015 at 11:54 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -18,7 +18,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
     {
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlfredTextWidget" /> class.
+        ///     Initializes a new instance of the <see cref="AlfredTextWidget" /> class.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
         public TextWidget([NotNull] WidgetCreationParameters parameters) : this(null, parameters)
@@ -26,13 +26,12 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlfredTextWidget" /> class.
+        ///     Initializes a new instance of the <see cref="AlfredTextWidget" /> class.
         /// </summary>
         /// <param name="text">The text of the control.</param>
         /// <param name="parameters">The parameters.</param>
-        public TextWidget(
-            [CanBeNull] string text,
-            [NotNull] WidgetCreationParameters parameters) : base(parameters)
+        public TextWidget([CanBeNull] string text, [NotNull] WidgetCreationParameters parameters)
+            : base(parameters)
         {
             Text = text;
         }
@@ -40,10 +39,13 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         /// <summary>
         ///     Gets the name of the broad categorization or type that this item is.
         /// </summary>
+        /// <value>
+        /// The item type's name.
+        /// </value>
         /// <example>
-        ///     Some examples of ItemTypeName values might be "Folder", "Application", "User", etc.
+        ///     Some examples of <see cref="ItemTypeName"/> values might be "Folder", "Application",
+        ///     "User", etc.
         /// </example>
-        /// <value>The item type's name.</value>
         public override string ItemTypeName
         {
             get { return "Text"; }

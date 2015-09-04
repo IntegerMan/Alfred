@@ -23,7 +23,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
     /// <summary>
     /// Tests oriented around testing the subsystem update pumps and related functions
     /// </summary>
-    [UnitTest]
+    [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public class SubsystemTests : AlfredTestBase
     {
@@ -51,7 +51,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         public void InitializeCausesRegisteredSubSystemsToInitialize()
         {
 
-            _alfred.Register(_subsystem);
+            _alfred.RegistrationProvider.Register(_subsystem);
 
             _alfred.Initialize();
 
@@ -64,7 +64,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         public void InitializeCausesSubSystemsToGoOnline()
         {
 
-            _alfred.Register(_subsystem);
+            _alfred.RegistrationProvider.Register(_subsystem);
 
             _alfred.Initialize();
 
@@ -75,7 +75,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         public void UpdateCausesRegisteredSubSystemsToUpdate()
         {
 
-            _alfred.Register(_subsystem);
+            _alfred.RegistrationProvider.Register(_subsystem);
 
             _alfred.Initialize();
             _alfred.Update();
@@ -87,7 +87,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         public void ShutdownCausesRegisteredSubSystemsToShutdown()
         {
 
-            _alfred.Register(_subsystem);
+            _alfred.RegistrationProvider.Register(_subsystem);
 
             _alfred.Initialize();
             _alfred.Update();
@@ -101,7 +101,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         public void ShutdownCausesRegisteredSubSystemsToGoOffline()
         {
 
-            _alfred.Register(_subsystem);
+            _alfred.RegistrationProvider.Register(_subsystem);
 
             _alfred.Initialize();
             _alfred.Update();

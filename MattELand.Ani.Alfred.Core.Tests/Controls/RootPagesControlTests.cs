@@ -19,7 +19,7 @@ namespace MattEland.Ani.Alfred.Tests.Controls
     /// <summary>
     /// Tests related to <see cref="RootPagesControl"/>
     /// </summary>
-    [UnitTest]
+    [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "IsExpressionAlwaysTrue")]
     public class RootPagesControlTests : UserInterfaceTestBase

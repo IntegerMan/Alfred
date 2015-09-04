@@ -22,7 +22,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     /// <summary>
     ///     Tests for AimlTagHandlers of concern.
     /// </summary>
-    [UnitTest]
+    [UnitTestProvider]
     public class TagHandlerTests : ChatTestsBase
     {
         /// <summary>

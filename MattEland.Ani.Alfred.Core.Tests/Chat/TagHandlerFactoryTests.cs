@@ -20,7 +20,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     /// <summary>
     ///     A class to test <see cref="TagHandlerFactory" />.
     /// </summary>
-    [UnitTest]
+    [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public class TagHandlerFactoryTests : ChatTestsBase
     {

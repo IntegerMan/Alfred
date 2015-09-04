@@ -32,7 +32,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
     /// <remarks>
     ///     See ALF-15
     /// </remarks>
-    [UnitTest]
+    [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public class MindExplorerSubsystemTests : AlfredTestBase
     {
@@ -82,7 +82,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         [Test]
         public void MindExplorerCanBeRegistered()
         {
-            _alfred.Register(_subsystem);
+            _alfred.RegistrationProvider.Register(_subsystem);
 
             Assert.Contains(_subsystem, (ICollection)_alfred.Subsystems);
         }
@@ -98,7 +98,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         {
             var alfredPages = _alfred.RootPages.Count();
 
-            _alfred.Register(_subsystem);
+            _alfred.RegistrationProvider.Register(_subsystem);
 
             Assert.AreEqual(1,
                             _subsystem.RootPages.Count(),

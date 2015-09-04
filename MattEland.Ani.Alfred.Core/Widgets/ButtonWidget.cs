@@ -26,7 +26,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         ///     The command that is executed when the button is clicked.
         /// </summary>
         [CanBeNull]
-        private AlfredCommand _clickCommand;
+        private IAlfredCommand _clickCommand;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AlfredTextWidget" /> class.
@@ -44,7 +44,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         /// <param name="parameters">The parameters.</param>
         public ButtonWidget(
             [CanBeNull] string text,
-            [CanBeNull] AlfredCommand clickCommand,
+            [CanBeNull] IAlfredCommand clickCommand,
             [NotNull] WidgetCreationParameters parameters) : base(parameters)
         {
             ClickCommand = clickCommand;
@@ -56,7 +56,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         /// </summary>
         /// <value>The click command.</value>
         [CanBeNull]
-        public AlfredCommand ClickCommand
+        public IAlfredCommand ClickCommand
         {
             get { return _clickCommand; }
             set
@@ -131,7 +131,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
                 }
                 catch (Exception exception)
                 {
-                    Error("Button.Click", exception.BuildDetailsMessage());
+                    HandleCallbackException(exception, "Click");
                 }
             }
         }
