@@ -1,15 +1,14 @@
 ﻿// ---------------------------------------------------------
 // ApplicationManager.cs
 // 
-// Created on:      08/20/2015 at 8:14 PM
-// Last Modified:   08/31/2015 at 12:31 AM
+// Created on:      09/02/2015 at 6:20 PM
+// Last Modified:   09/03/2015 at 12:56 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -32,8 +31,8 @@ using MattEland.Common.Providers;
 namespace MattEland.Ani.Alfred.PresentationShared.Commands
 {
     /// <summary>
-    ///     The application manager takes care of the discrete bits of managing Alfred that shouldn't
-    ///     be the concern of the client or other user interface elements.
+    ///     The application manager takes care of the discrete bits of managing Alfred that
+    ///     shouldn't be the concern of the client or other user interface elements.
     /// </summary>
     public sealed class ApplicationManager : IDisposable
     {
@@ -129,10 +128,16 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
                     {
                         // Hook up our shell manager now that we have a way of communicating with Alfred
                         ShellManager = new ShellCommandManager(Container, value, _alfred);
-                        _alfred.Register(ShellManager);
+                        RegistrationProvider.Register(ShellManager);
                     }
                 }
             }
+        }
+
+        [NotNull]
+        private IRegistrationProvider RegistrationProvider
+        {
+            get { return _alfred.RegistrationProvider; }
         }
 
         /// <summary>Gets the shell command manager.</summary>
@@ -237,7 +242,8 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             // Init Core
             _alfredCoreSubsystem = new AlfredCoreSubsystem(Container);
             _alfredCoreSubsystem.RegisterAsProvidedInstance(Container);
-            _alfred.Register(_alfredCoreSubsystem);
+            var registry = RegistrationProvider;
+            registry.Register(_alfredCoreSubsystem);
 
             // Initialize System Monitor
             InitializeSystemMonitoringSubsystem();
@@ -245,26 +251,31 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             // Initialize Chat
             _chatSubsystem = new ChatSubsystem(Container, _alfred.Name);
             _chatSubsystem.RegisterAsProvidedInstance(Container);
-            _alfred.Register(_chatSubsystem);
+            registry.Register(_chatSubsystem);
 
             // Initialize Mind Explorer
             _mindExplorerSubsystem = new MindExplorerSubsystem(Container,
                                                                Options.ShowMindExplorerPage);
             _mindExplorerSubsystem.RegisterAsProvidedInstance(Container);
-            _alfred.Register(_mindExplorerSubsystem);
+            registry.Register(_mindExplorerSubsystem);
 
             // Add any dynamic subsystems
-            foreach (var subsystem in Options.AdditionalSubsystems) { _alfred.Register(subsystem); }
+            foreach (var subsystem in Options.AdditionalSubsystems)
+            {
+                registry.Register(subsystem);
+            }
         }
 
-        /// <summary>Initializes the system monitoring subsystem.</summary>
+        /// <summary>
+        ///     Initializes the system monitoring subsystem.
+        /// </summary>
         private void InitializeSystemMonitoringSubsystem()
         {
             try
             {
                 // This can throw a few exceptions so may not be available.
                 _systemMonitoringSubsystem = new SystemMonitoringSubsystem(Container);
-                _alfred.Register(_systemMonitoringSubsystem);
+                RegistrationProvider.Register(_systemMonitoringSubsystem);
             }
             catch (Win32Exception ex)
             {

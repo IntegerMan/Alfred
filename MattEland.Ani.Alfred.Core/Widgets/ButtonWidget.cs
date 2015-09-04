@@ -131,7 +131,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
                 }
                 catch (Exception exception)
                 {
-                    Error("Button.Click", exception.BuildDetailsMessage());
+                    HandleCallbackException(exception, "Click");
                 }
             }
         }

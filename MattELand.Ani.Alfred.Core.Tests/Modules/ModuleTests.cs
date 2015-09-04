@@ -33,9 +33,9 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         /// <param name="name">The name.</param>
         /// <returns>The <see cref="WidgetCreationParameters"/>.</returns>
         [NotNull]
-        private static WidgetCreationParameters BuildWidgetParams([NotNull] string name)
+        private WidgetCreationParameters BuildWidgetParams([NotNull] string name)
         {
-            return new WidgetCreationParameters(name);
+            return new WidgetCreationParameters(name, Container);
         }
 
         /// <summary>

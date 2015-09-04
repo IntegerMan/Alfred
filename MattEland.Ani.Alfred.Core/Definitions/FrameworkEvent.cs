@@ -3,7 +3,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
     /// <summary>
     ///     A collection of events related to the Alfred application framework
     /// </summary>
-    public enum FrameworkEvents
+    public enum FrameworkEvent
     {
         /// <summary>
         ///     Represents the system initialization event

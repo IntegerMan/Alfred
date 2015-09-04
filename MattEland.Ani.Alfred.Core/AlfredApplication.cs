@@ -2,7 +2,7 @@
 // AlfredApplication.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   08/24/2015 at 5:58 PM
+// Last Modified:   09/03/2015 at 1:24 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -24,12 +24,15 @@ using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core
 {
+
     /// <summary>
     ///     Coordinates providing personal assistance to a user interface and receiving settings and
-    ///     queries back from the user
-    ///     interface.
+    ///     queries back from the user interface.
     /// </summary>
-    public sealed class AlfredApplication : INotifyPropertyChanged, IAlfred
+    /// <remarks>
+    /// TODO: Implement <see cref="IDisposable"/> on Alfred and write tests around it
+    /// </remarks>
+    public sealed class AlfredApplication : NotifyChangedBase, IAlfred
     {
 
         /// <summary>
@@ -72,21 +75,15 @@ namespace MattEland.Ani.Alfred.Core
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
             Container = container;
 
-            // Set the controller
-            _statusController = new AlfredStatusController(this, container);
-
             // Build out sub-collections
             _subsystems = container.ProvideCollection<IAlfredSubsystem>();
             _rootPages = container.ProvideCollection<IAlfredPage>();
-        }
 
-        /// <summary>
-        ///     Gets the container.
-        /// </summary>
-        /// <value>
-        ///     The container.
-        /// </value>
-        public IObjectContainer Container { get; }
+            // Set the controller
+            _statusController = new AlfredStatusController(this, container, _subsystems);
+
+            RegistrationProvider = new ComponentRegistrationProvider(this, _subsystems, _rootPages);
+        }
 
         /// <summary>
         ///     Gets the name and version of Alfred.
@@ -125,27 +122,13 @@ namespace MattEland.Ani.Alfred.Core
             {
                 return _chatProvider;
             }
-            private set
+            internal set
             {
                 if (Equals(value, _chatProvider)) { return; }
 
                 _chatProvider = value;
                 OnPropertyChanged(nameof(ChatProvider));
             }
-        }
-
-        /// <summary>
-        ///     Tells Alfred it's okay to start itself up and begin operating.
-        /// </summary>
-        /// <exception cref="InvalidOperationException">
-        ///     Thrown if Alfred is already Online
-        /// </exception>
-        public void Initialize()
-        {
-            _rootPages.Clear();
-
-            // This logic is a bit lengthy, so we'll have the status controller take care of it
-            _statusController.Initialize();
         }
 
         /// <summary>
@@ -158,66 +141,11 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     Registers the page as a root page.
+        /// Gets the locale.
         /// </summary>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown when one or more required arguments are null.
-        /// </exception>
-        /// <param name="page"> The page. </param>
-        public void Register(IAlfredPage page)
-        {
-            if (page == null) { throw new ArgumentNullException(nameof(page)); }
-
-            if (page.IsRootLevel) { _rootPages.Add(page); }
-
-            page.OnRegistered(this);
-        }
-
-        /// <summary>
-        ///     Registers the shell command recipient that will allow the shell to get commands from the Alfred
-        ///     layer.
-        /// </summary>
-        /// <param name="shell">The command recipient.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="shell" /> is <see langword="null" />.</exception>
-        public void Register(IShellCommandRecipient shell)
-        {
-            if (shell == null) { throw new ArgumentNullException(nameof(shell)); }
-            ShellCommandHandler = shell;
-        }
-
-        /// <summary>
-        ///     Registers the chat provider as the framework's chat provider.
-        /// </summary>
-        /// <param name="chatProvider">The chat provider.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="chatProvider" /> is <see langword="null" />
-        ///     .
-        /// </exception>
-        public void Register([NotNull] IChatProvider chatProvider)
-        {
-            if (chatProvider == null) { throw new ArgumentNullException(nameof(chatProvider)); }
-
-            ChatProvider = chatProvider;
-        }
-
-        /// <summary>
-        ///     Registers a sub system with Alfred.
-        /// </summary>
-        /// <param name="subsystem">The subsystem.</param>
-        /// <exception cref="InvalidOperationException">If a subsystem was registered when Alfred was offline.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="subsystem" /> is <see langword="null" />.</exception>
-        public void Register([NotNull] IAlfredSubsystem subsystem)
-        {
-            if (subsystem == null) { throw new ArgumentNullException(nameof(subsystem)); }
-            if (Status != AlfredStatus.Offline)
-            {
-                throw new InvalidOperationException(
-                    Resources.AlfredProvider_AssertMustBeOffline_ErrorNotOffline);
-            }
-
-            _subsystems.AddSafe(subsystem);
-            subsystem.OnRegistered(this);
-        }
+        /// <value>The locale.</value>
+        [NotNull]
+        public CultureInfo Locale { get; set; } = CultureInfo.CurrentCulture;
 
         /// <summary>
         ///     Gets the user interface pages registered to the Alfred Framework at root level.
@@ -240,19 +168,15 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <value>The shell command handler.</value>
         [CanBeNull]
-        public IShellCommandRecipient ShellCommandHandler { get; private set; }
+        public IShellCommandRecipient ShellCommandHandler { get; internal set; }
 
         /// <summary>
-        ///     Tells Alfred to go ahead and shut down.
+        ///     Gets the registration provider that manages registering other components for Alfred.
         /// </summary>
-        /// <exception cref="InvalidOperationException">
-        ///     Thrown if Alfred is already Offline
-        /// </exception>
-        public void Shutdown()
-        {
-            // This process is a little lengthy so we'll have the status controller handle it
-            _statusController.Shutdown();
-        }
+        /// <value>
+        ///     The registration provider.
+        /// </value>
+        public IRegistrationProvider RegistrationProvider { get; }
 
         /// <summary>
         ///     Gets the status.
@@ -284,28 +208,12 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     Tells modules to take a look at their content and update as needed.
+        ///     Gets the container.
         /// </summary>
-        /// <exception cref="InvalidOperationException">
-        ///     Thrown if Alfred is not Online
-        /// </exception>
-        public void Update()
-        {
-            // Error check
-            if (Status != AlfredStatus.Online)
-            {
-                throw new InvalidOperationException(
-                    Resources.AlfredProvider_Update_ErrorMustBeOnline);
-            }
-
-            // Update every system
-            foreach (var item in Subsystems) { item.Update(); }
-        }
-
-        /// <summary>
-        ///     Occurs when a property changes.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
+        /// <value>
+        ///     The container.
+        /// </value>
+        public IObjectContainer Container { get; }
 
         /// <summary>
         ///     Gets the display name for use in the user interface.
@@ -327,13 +235,6 @@ namespace MattEland.Ani.Alfred.Core
         {
             get { return "App Framework"; }
         }
-
-        /// <summary>
-        /// Gets the locale.
-        /// </summary>
-        /// <value>The locale.</value>
-        [NotNull]
-        public CultureInfo Locale { get; set; } = CultureInfo.CurrentCulture;
 
         /// <summary>
         ///     Gets the name of the framework.
@@ -369,20 +270,74 @@ namespace MattEland.Ani.Alfred.Core
         /// <value>The property providers.</value>
         public IEnumerable<IPropertyProvider> PropertyProviders
         {
-            get
-            {
-                return Subsystems;
-            }
+            get { return Subsystems; }
         }
 
         /// <summary>
-        ///     Called when a property changes.
+        ///     Tells Alfred it's okay to start itself up and begin operating.
         /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CanBeNull] string propertyName)
+        /// <exception cref="InvalidOperationException">
+        ///     Thrown if Alfred is already Online
+        /// </exception>
+        public void Initialize()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            _rootPages.Clear();
+
+            // This logic is a bit lengthy, so we'll have the status controller take care of it
+            _statusController.Initialize();
+        }
+
+        /// <summary>
+        ///     Tells Alfred to go ahead and shut down.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">
+        ///     Thrown if Alfred is already Offline
+        /// </exception>
+        public void Shutdown()
+        {
+            // This process is a little lengthy so we'll have the status controller handle it
+            _statusController.Shutdown();
+        }
+
+        /// <summary>
+        ///     Tells modules to take a look at their content and update as needed.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">
+        ///     Thrown if Alfred is not Online
+        /// </exception>
+        public void Update()
+        {
+            // Error check
+            if (Status != AlfredStatus.Online)
+            {
+                throw new InvalidOperationException(
+                    Resources.AlfredProvider_Update_ErrorMustBeOnline);
+            }
+
+            // Update every system
+            foreach (var item in Subsystems) { item.Update(); }
+        }
+
+        /// <summary>
+        ///     Handles a callback <see cref="Exception" /> .
+        /// </summary>
+        /// <param name="exception">The exception.</param>
+        /// <param name="operationName">
+        /// <see cref="Name"/> of the operation that was being performed.
+        /// </param>
+        /// <returns>
+        ///     <see langword="true"/> if it the <paramref name="exception"/> was handled and should
+        ///     not be thrown again, otherwise false.
+        /// </returns>
+        public override bool HandleCallbackException(Exception exception, string operationName)
+        {
+            // Log to the console
+            var message = exception.BuildDetailsMessage(culture: Locale);
+            message = $"{operationName} encountered an error: {message}";
+            message.Log(operationName, LogLevel.Error, Container);
+
+            // It's been logged. Don't throw it again
+            return true;
         }
     }
 

@@ -27,6 +27,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <summary>
         ///     The root nodes.
         /// </summary>
+        [NotNull]
         private readonly ICollection<IPropertyProvider> _rootNodes;
 
         /// <summary>

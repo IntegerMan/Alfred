@@ -295,15 +295,6 @@ namespace MattEland.Ani.Alfred.Core.Definitions {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No Pages Detected.
-        /// </summary>
-        internal static string NoPagesDetected {
-            get {
-                return ResourceManager.GetString("NoPagesDetected", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Shut Down.
         /// </summary>
         internal static string ShutdownButtonText {

@@ -144,7 +144,7 @@ namespace MattEland.Ani.Alfred.Tests
         {
             // Alfred will need a chat subsystem for this test
             var chatSubsystem = new ChatSubsystem(Container, "Test Monkey");
-            Alfred.Register(chatSubsystem);
+            Alfred.RegistrationProvider.Register(chatSubsystem);
             Alfred.Subsystems.ShouldContain(chatSubsystem);
 
             // Turn Alfred on so we can move to a point where we can deactivate him

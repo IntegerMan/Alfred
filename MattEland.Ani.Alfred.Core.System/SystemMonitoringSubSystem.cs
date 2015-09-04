@@ -2,7 +2,7 @@
 // SystemMonitoringSubSystem.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   08/29/2015 at 1:21 AM
+// Last Modified:   09/03/2015 at 1:57 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -23,8 +23,8 @@ using MattEland.Common.Providers;
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
     /// <summary>
-    ///     This is a subsystem for the Alfred Framework that allows for monitoring system performance
-    ///     and surfacing alerts on critical events.
+    ///     This is a subsystem for the Alfred Framework that allows for monitoring system
+    ///     performance and surfacing alerts on critical events.
     /// </summary>
     public sealed class SystemMonitoringSubsystem : AlfredSubsystem, IDisposable
     {
@@ -44,10 +44,10 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
+        /// <param name="container">The container.</param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when one or more required arguments are null.
+        /// Thrown when one or more required arguments are null.
         /// </exception>
-        /// <param name="container"> The container. </param>
         public SystemMonitoringSubsystem([NotNull] IObjectContainer container) : base(container)
         {
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
@@ -66,22 +66,32 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
                                              "Sys");
         }
 
-        /// <summary>Gets the name of the subsystems.</summary>
-        /// <value>The name.</value>
+        /// <summary>
+        ///     Gets the name of the subsystems.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
         [NotNull]
         public override string Name
         {
             get { return Resources.SystemMonitoringSystem_Name.NonNull(); }
         }
 
-        /// <summary>Gets the identifier for the subsystem to be used in command routing.</summary>
-        /// <value>The identifier for the subsystem.</value>
+        /// <summary>
+        ///     Gets the identifier for the subsystem to be used in command routing.
+        /// </summary>
+        /// <value>
+        /// The identifier for the subsystem.
+        /// </value>
         public override string Id
         {
             get { return "Sys"; }
         }
 
-        /// <summary>Disposes of allocated resources</summary>
+        /// <summary>
+        ///     Disposes of allocated resources
+        /// </summary>
         public void Dispose()
         {
             _cpuModule.Dispose();
@@ -89,7 +99,9 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             _diskModule.Dispose();
         }
 
-        /// <summary>Registers the controls for this component.</summary>
+        /// <summary>
+        ///     Registers the controls for this component.
+        /// </summary>
         protected override void RegisterControls()
         {
             Register(_page);
@@ -101,19 +113,21 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         }
 
         /// <summary>
-        ///     Processes an Alfred Command. If the <paramref name="command"/> is handled,
-        ///     <paramref name="result"/> should be modified accordingly and the method should
-        ///     return true. Returning <see langword="false"/> will not stop the message from being
+        ///     Processes an Alfred Command. If the <paramref name="command" /> is handled,
+        ///     <paramref name="result" /> should be modified accordingly and the method should
+        ///     return true. Returning <see langword="false" /> will not stop the message from being
         ///     propagated.
         /// </summary>
-        /// <param name="command"> The command. </param>
+        /// <param name="command">The command.</param>
         /// <param name="result">
-        ///     The result. If the <paramref name="command"/> was handled, this should be updated.
+        /// The result. If the <paramref name="command" /> was handled, this should be updated.
         /// </param>
         /// <returns>
-        ///     <c>True</c> if the <paramref name="command"/> was handled; otherwise false.
+        ///     <c>True</c> if the <paramref name="command" /> was handled; otherwise false.
         /// </returns>
-        public override bool ProcessAlfredCommand(ChatCommand command, [CanBeNull] ICommandResult result)
+        public override bool ProcessAlfredCommand(
+            ChatCommand command,
+            [CanBeNull] ICommandResult result)
         {
             if (result == null) { return false; }
 
@@ -126,7 +140,12 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             return base.ProcessAlfredCommand(command, result);
         }
 
-        private string GetStatusText(string data)
+        /// <summary>
+        ///     Gets the status text for the given <paramref name="data"/> parameter.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <returns>The status text.</returns>
+        private string GetStatusText([CanBeNull] string data)
         {
             var alfred = AlfredInstance;
             if (alfred == null)
@@ -141,7 +160,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             {
                 sb.AppendFormat(CultureInfo.CurrentCulture,
                                 "The system is {0} with a total of {1} {2} Present. ",
-                                alfred.Status.ToString().ToLowerInvariant(),
+                                Status.ToString().ToLowerInvariant(),
                                 alfred.Subsystems.Count(),
                                 alfred.Subsystems.Pluralize("Subsystem", "Subsystems"));
             }

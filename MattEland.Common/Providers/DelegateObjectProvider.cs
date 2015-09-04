@@ -28,10 +28,7 @@ namespace MattEland.Common.Providers
         ///     <see langword="null" />.
         /// </exception>
         /// <param name="activationDelegate"> The activation delegate. </param>
-        /// <param name="args"> The arguments to pass to the delegate. </param>
-        public DelegateObjectProvider(
-            [NotNull] Delegate activationDelegate,
-            [CanBeNull] params object[] args)
+        public DelegateObjectProvider([NotNull] Delegate activationDelegate)
         {
             //- Validate
             if (activationDelegate == null)
@@ -53,19 +50,19 @@ namespace MattEland.Common.Providers
         public Delegate ActivationDelegate { get; }
 
         /// <summary>
-        ///     Creates an instance of the requested <paramref name="type"/>.
+        ///     Creates an instance of the requested <paramref name="requestedType"/>.
         /// </summary>
         /// <exception cref="Exception">
         ///     A delegate callback throws an exception.
         /// </exception>
-        /// <param name="type"> The <see cref="Type"/> that was requested. </param>
+        /// <param name="requestedType"> The <see cref="Type"/> that was requested. </param>
         /// <param name="args"> The arguments. </param>
         /// <returns>
         ///     The new instance.
         /// </returns>
-        public object CreateInstance(Type type, params object[] args)
+        public object CreateInstance(Type requestedType, params object[] args)
         {
-            var hasArgs = args == null || !args.Any();
+            var hasArgs = !args.Any();
             return hasArgs
                        ? ActivationDelegate.DynamicInvoke()
                        : ActivationDelegate.DynamicInvoke(new object[] { args });

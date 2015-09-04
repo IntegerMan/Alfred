@@ -21,7 +21,7 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
         ///     Handles events from the framework.
         /// </summary>
         /// <param name="frameworkEvent">The event.</param>
-        public void HandleFrameworkEvent(FrameworkEvents frameworkEvent) { }
+        public void HandleFrameworkEvent(FrameworkEvent frameworkEvent) { }
 
         /// <summary>
         ///     Handles a user statement.

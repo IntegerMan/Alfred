@@ -153,17 +153,15 @@ namespace MattEland.Common.Providers
         /// </exception>
         /// <param name="type"> The type. </param>
         /// <param name="activator"> The activator function. </param>
-        /// <param name="arguments"> The arguments to pass in to the activator function. </param>
         public static void Register(
             [NotNull] Type type,
-            [NotNull] Delegate activator,
-            [CanBeNull] params object[] arguments)
+            [NotNull] Delegate activator)
         {
             //- Validate
             if (type == null) { throw new ArgumentNullException(nameof(type)); }
             if (activator == null) { throw new ArgumentNullException(nameof(activator)); }
 
-            Container.Register(type, activator, arguments);
+            Container.Register(type, activator);
         }
 
         /// <summary>
