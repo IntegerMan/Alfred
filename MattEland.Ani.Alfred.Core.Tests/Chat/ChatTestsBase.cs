@@ -46,14 +46,6 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         private TestSubsystem _testSubsystem;
 
         [NotNull]
-        public TestShell Shell
-        {
-            [DebuggerStepThrough]
-            get;
-            private set;
-        }
-
-        [NotNull]
         public ValueMetricProviderFactory MetricProviderFactory
         {
             [DebuggerStepThrough]
@@ -210,7 +202,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         /// <summary>
         ///     Initializes the chat system.
         /// </summary>
-        protected void InitializeChatSystem()
+        protected void InitializeChatSystem(IShellCommandRecipient shell = null)
         {
             AlfredTestTagHandler.WasInvoked = false;
 
@@ -244,9 +236,10 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             Engine.LoadAimlFromString(Resources.AimlTestAssets.NonNull());
             User = new User("Test User");
 
-            // Set up a shell handler to respond to events
-            Shell = new TestShell();
-            alfred.Register(Shell);
+            if (shell != null)
+            {
+                alfred.Register(shell);
+            }
 
             // Start Alfred - doesn't make sense to have a chat test that doesn't need Alfred online first.
             alfred.Initialize();

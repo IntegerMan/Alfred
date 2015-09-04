@@ -2,7 +2,7 @@
 // StringExtensions.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   08/25/2015 at 4:29 PM
+// Last Modified:   09/04/2015 at 11:23 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -22,38 +22,47 @@ namespace MattEland.Common
     public static class StringExtensions
     {
         /// <summary>
-        ///     Determines if the input string is has text (is not null and has text beyond whitespace).
+        ///     Determines if the <paramref name="input"/> string is has text (is not
+        ///     <see langword="null"/> and has text beyond whitespace).
         /// </summary>
         /// <param name="input">The input string.</param>
-        /// <returns><c>true</c> if the string has text; otherwise, <c>false</c>.</returns>
+        /// <returns><c>true</c> if the string has text; otherwise, <c>false</c> .</returns>
         public static bool HasText([CanBeNull] this string input)
         {
             return !input.IsNullOrWhitespace();
         }
 
         /// <summary>
-        ///     Determines if the input string is null or an empty string.
+        ///     Determines if the <paramref name="input"/> string is <see langword="null"/> or an
+        ///     empty string.
         /// </summary>
         /// <param name="input">The input string.</param>
-        /// <returns><c>true</c> if the string is null or empty; otherwise, <c>false</c>.</returns>
+        /// <returns>
+        ///     <c>true</c> if the string is <see langword="null"/> or empty; otherwise, 
+        /// <c>false</c> .
+        /// </returns>
         public static bool IsEmpty([CanBeNull] this string input)
         {
             return string.IsNullOrEmpty(input);
         }
 
         /// <summary>
-        ///     Determines if the input string is null, an empty string, or whitespace.
+        ///     Determines if the <paramref name="input"/> string is null, an empty string, or
+        ///     whitespace.
         /// </summary>
         /// <param name="input">The input string.</param>
-        /// <returns><c>true</c> if the string is null or whitespace; otherwise, <c>false</c>.</returns>
+        /// <returns>
+        ///     <c>true</c> if the string is <see langword="null"/> or whitespace; otherwise, 
+        /// <c>false</c> .
+        /// </returns>
         public static bool IsNullOrWhitespace([CanBeNull] this string input)
         {
             return string.IsNullOrWhiteSpace(input);
         }
 
         /// <summary>
-        ///     Ensures that the passed in string is not null and returns either the input string or
-        ///     string.empty.
+        ///     Ensures that the passed in string is not <see langword="null"/> and returns either
+        ///     the <paramref name="input"/> string or string.empty.
         /// </summary>
         /// <param name="input">The input string.</param>
         /// <returns>A sanitized string</returns>
@@ -64,13 +73,17 @@ namespace MattEland.Common
         }
 
         /// <summary>
-        ///     Ensures that the passed in string is not null and returns either the input string or
-        ///     replacement.
+        ///     Ensures that the passed in string is not <see langword="null"/> and returns either
+        ///     the <paramref name="input"/> string or replacement.
         /// </summary>
         /// <param name="input">The input string.</param>
-        /// <param name="replacement">The replacement string when input is null.</param>
+        /// <param name="replacement">
+        /// The replacement string when <paramref name="input"/> is null.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="replacement" /> is <see langword="null" /> .
+        /// </exception>
         /// <returns>A sanitized string</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="replacement" /> is <see langword="null" />.</exception>
         [NotNull]
         public static string IfNull([CanBeNull] this string input, [NotNull] string replacement)
         {
@@ -80,23 +93,36 @@ namespace MattEland.Common
         }
 
         /// <summary>
-        ///     Extension method to compare two strings and return true if they're equal according to the
-        ///     comparison type used. By default strings are compared ordinally ignoring casing.
+        ///     Extension method to compare two strings and return <see langword="true"/> if they're
+        ///     equal.
         /// </summary>
         /// <param name="input">The input string.</param>
         /// <param name="other">The other string.</param>
-        /// <param name="comparison">The comparison type. Defaults to ordinal ignoring case.</param>
+        /// <returns><c>true</c> if the strings are equal, <c>false</c> otherwise.</returns>
+        public static bool Matches([CanBeNull] this string input, [CanBeNull] string other)
+        {
+            return Matches(input, other, StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        ///     Extension method to compare two strings and return <see langword="true"/> if they're
+        ///     equal according to the <paramref name="comparison"/> type used.
+        /// </summary>
+        /// <param name="input">The input string.</param>
+        /// <param name="other">The other string.</param>
+        /// <param name="comparison">The comparison type.</param>
         /// <returns><c>true</c> if the strings are equal, <c>false</c> otherwise.</returns>
         public static bool Matches(
             [CanBeNull] this string input,
             [CanBeNull] string other,
-            StringComparison comparison = StringComparison.OrdinalIgnoreCase)
+            StringComparison comparison)
         {
             return string.Compare(input, other, comparison) == 0;
         }
 
         /// <summary>
-        ///     Converts the input string to an integer, falling back to the fallback value on parse error.
+        ///     Converts the <paramref name="input"/> string to an integer, falling back to the
+        ///     fallback value on parse error.
         /// </summary>
         /// <param name="input">The input string.</param>
         /// <param name="fallbackValue">The fallback value. Defaults to 0.</param>
@@ -116,7 +142,8 @@ namespace MattEland.Common
         }
 
         /// <summary>
-        ///     Converts the input string to a double, falling back to the fallback value on parse error.
+        ///     Converts the <paramref name="input"/> string to a double, falling back to the
+        ///     fallback value on parse error.
         /// </summary>
         /// <param name="input">The input string.</param>
         /// <param name="fallbackValue">The fallback value. Defaults to 0.</param>
@@ -136,8 +163,8 @@ namespace MattEland.Common
         }
 
         /// <summary>
-        ///     Appends to a string builder either as a standard append or as an AppendLine, depending on
-        ///     useNewLine
+        ///     Appends to a string builder either as a standard append or as an AppendLine,
+        ///     depending on <paramref name="useNewLine"/>
         /// </summary>
         /// <param name="stringBuilder">The string builder.</param>
         /// <param name="message">The message.</param>
@@ -160,8 +187,8 @@ namespace MattEland.Common
         }
 
         /// <summary>
-        ///     Formats the specified input using the given culture (or current culture) and optional format
-        ///     string.
+        ///     Formats the specified <paramref name="input"/> using the given
+        ///     <paramref name="culture"/> (or current culture) and optional format string.
         /// </summary>
         /// <param name="input">The input.</param>
         /// <param name="culture">The culture.</param>
