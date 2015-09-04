@@ -29,10 +29,7 @@ namespace MattEland.Ani.Alfred.Core
     ///     Coordinates providing personal assistance to a user interface and receiving settings and
     ///     queries back from the user interface.
     /// </summary>
-    /// <remarks>
-    /// TODO: Implement <see cref="IDisposable"/> on Alfred and write tests around it
-    /// </remarks>
-    public sealed class AlfredApplication : NotifyChangedBase, IAlfred
+    public sealed class AlfredApplication : NotifyChangedBase, IAlfred, IDisposable
     {
 
         /// <summary>
@@ -338,6 +335,20 @@ namespace MattEland.Ani.Alfred.Core
 
             // It's been logged. Don't throw it again
             return true;
+        }
+
+        /// <summary>
+        ///     Performs application-defined tasks associated with freeing, releasing, or resetting
+        ///     unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            // Tear down subsystems as needed
+            foreach (var subsystem in Subsystems) { subsystem.TryDispose(); }
+
+            // Tear down composite objects
+            ChatProvider.TryDispose();
+            ShellCommandHandler.TryDispose();
         }
     }
 
