@@ -12,29 +12,26 @@ using System.Globalization;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Widgets
 {
     /// <summary>
     ///     Contains common parameters needed to create any <see cref="WidgetBase" />
     /// </summary>
-    public class WidgetCreationParameters
+    public class WidgetCreationParameters : IHasContainer
     {
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="WidgetCreationParameters" /> class.
         /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="console">The console.</param>
-        /// <param name="locale">The locale.</param>
+        /// <param name="name"> The name. </param>
+        /// <param name="container"> The container. </param>
         public WidgetCreationParameters(
             [NotNull] string name,
-            [CanBeNull] IConsole console = null,
-            [CanBeNull] CultureInfo locale = null)
+            [NotNull] IObjectContainer container)
         {
             Name = name;
-            Console = console;
-            Locale = locale ?? CultureInfo.CurrentCulture;
+            Container = container;
         }
 
         /// <summary>
@@ -45,17 +42,12 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         public string Name { get; }
 
         /// <summary>
-        ///     Gets the logging console.
+        ///     Gets the container.
         /// </summary>
-        /// <value>The console.</value>
-        [CanBeNull, UsedImplicitly]
-        public IConsole Console { get; }
-
-        /// <summary>
-        ///     Gets the locale.
-        /// </summary>
-        /// <value>The locale.</value>
-        [NotNull, UsedImplicitly]
-        public CultureInfo Locale { get; }
+        /// <value>
+        ///     The container.
+        /// </value>
+        [NotNull]
+        public IObjectContainer Container { get; }
     }
 }

@@ -15,18 +15,21 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
     /// </summary>
     internal sealed class AlfredTestModule : AlfredModule
     {
-
         /// <summary>
-        /// Initializes a new instance of the
-        /// <see cref="AlfredTestModule" />
-        /// class.
+        ///     Initializes a new instance of the
+        ///     <see cref="AlfredTestModule" />
+        ///     class.
         /// </summary>
-        /// <param name="container">The container.</param>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when one or more required arguments are null.
+        /// </exception>
+        /// <param name="container"> The container. </param>
         internal AlfredTestModule([NotNull] IObjectContainer container) : base(container)
         {
-            WidgetsToRegisterOnShutdown = new List<WidgetBase>();
-            WidgetsToRegisterOnInitialize = new List<WidgetBase>();
+            if (container == null) { throw new ArgumentNullException(nameof(container)); }
+
+            WidgetsToRegisterOnShutdown = new List<IWidget>();
+            WidgetsToRegisterOnInitialize = new List<IWidget>();
         }
 
         /// <summary>
@@ -40,14 +43,14 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
         /// </summary>
         /// <value>The widgets to register on initialize.</value>
         [NotNull]
-        internal ICollection<WidgetBase> WidgetsToRegisterOnInitialize { get; }
+        internal ICollection<IWidget> WidgetsToRegisterOnInitialize { get; }
 
         /// <summary>
         /// Gets the widgets to register on shutdown.
         /// </summary>
         /// <value>The widgets to register on shutdown.</value>
         [NotNull]
-        internal ICollection<WidgetBase> WidgetsToRegisterOnShutdown { get; }
+        internal ICollection<IWidget> WidgetsToRegisterOnShutdown { get; }
 
         /// <summary>
         ///     Handles module initialization events

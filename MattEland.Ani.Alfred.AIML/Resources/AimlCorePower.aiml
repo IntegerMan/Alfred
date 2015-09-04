@@ -26,9 +26,8 @@ This provides handling for the Goodbye, Shutdown and Status verbs
   <!-- Shutdown -->
   <category>
     <pattern>SHUTDOWN</pattern>
-    <!-- Turn off then have Alfred say goodbye so you get a farewell -->
+    <!-- Turn off -->
     <template id="tmp_shutdown">
-      <srai>Goodbye</srai>
       <alfred subsystem="core" command="shutdown" />
     </template>
   </category>

@@ -22,7 +22,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     /// <summary>
     ///     Tests for commands embedded in AIML that impact the functioning of the Alfred system.
     /// </summary>
-    [UnitTest]
+    [UnitTestProvider]
     public class ChatCommandTests : ChatTestsBase
     {
         /// <summary>
@@ -172,5 +172,6 @@ namespace MattEland.Ani.Alfred.Tests.Chat
 
             Assert.IsFalse(AlfredTestTagHandler.WasInvoked);
         }
+
     }
 }

@@ -9,15 +9,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Widgets
 {
@@ -28,7 +26,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
     ///     Widgets do not contain user interface elements but tell the
     ///     client what user interface elements to create.
     /// </summary>
-    public abstract class WidgetBase : INotifyPropertyChanged, IPropertyProvider
+    public abstract class WidgetBase : NotifyChangedBase, IWidget
     {
 
         [CanBeNull]
@@ -48,29 +46,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
             if (parameters == null) { throw new ArgumentNullException(nameof(parameters)); }
 
             Name = parameters.Name;
-            Console = parameters.Console;
-            Locale = parameters.Locale;
-        }
-
-        /// <summary>
-        ///     Gets the logging console.
-        /// </summary>
-        /// <value>The console.</value>
-        [CanBeNull]
-        public IConsole Console
-        {
-            [DebuggerStepThrough]
-            get;
-        }
-
-        /// <summary>
-        ///     Gets the locale.
-        /// </summary>
-        /// <value>The locale.</value>
-        public CultureInfo Locale
-        {
-            [DebuggerStepThrough]
-            get;
+            Container = parameters.Container;
         }
 
         /// <summary>
@@ -109,11 +85,6 @@ namespace MattEland.Ani.Alfred.Core.Widgets
                 OnPropertyChanged(nameof(DataContext));
             }
         }
-
-        /// <summary>
-        ///     Occurs when a property changes.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         ///     Gets the display name for use in the user interface.
@@ -162,51 +133,33 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         }
 
         /// <summary>
-        ///     Called when a property changes.
+        ///     Handles a callback <see cref="Exception" /> .
         /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        [NotifyPropertyChangedInvocator]
-        [SuppressMessage("ReSharper", "CatchAllClause")]
-        protected void OnPropertyChanged([CanBeNull] string propertyName)
+        /// <param name="exception">The exception.</param>
+        /// <param name="operationName">
+        /// <see cref="Name"/> of the operation that was being performed.
+        /// </param>
+        /// <returns>
+        ///     <see langword="true"/> if it the <paramref name="exception"/> was handled and should
+        ///     not be thrown again, otherwise false.
+        /// </returns>
+        public override bool HandleCallbackException(Exception exception, string operationName)
         {
-            try
-            {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
-            catch (Exception ex)
-            {
-                var message = string.Format(Locale,
-                                            "Error encountered changing property '{0}' :{1}",
-                                            propertyName,
-                                            ex.GetBaseException());
+            // Log to the console
+            var message = exception.BuildDetailsMessage();
+            message = $"{operationName} encountered an error: {message}";
+            message.Log(operationName, LogLevel.Error, Container);
 
-                Error("Widget.PropertyChanged", message);
-            }
+            // It's been logged. Don't throw it again
+            return true;
         }
 
         /// <summary>
-        ///     Handles a widget error by logging it to the console.
+        ///     Gets the container.
         /// </summary>
-        /// <param name="header">The error header.</param>
-        /// <param name="message">The error message.</param>
-        protected void Error([NotNull] string header, [NotNull] string message)
-        {
-            Console?.Log(header, message, LogLevel.Error);
-        }
-
-        /// <summary>
-        ///     Logs a message to the console if a console is configured.
-        /// </summary>
-        /// <param name="header">The header.</param>
-        /// <param name="message">The message.</param>
-        /// <param name="level">The log level. Defaults to Verbose.</param>
-        protected void Log(
-            [NotNull] string header,
-            [NotNull] string message,
-            LogLevel level = LogLevel.Verbose)
-        {
-            Console?.Log(header, message, level);
-        }
+        /// <value>
+        ///     The container.
+        /// </value>
+        public IObjectContainer Container { get; }
     }
 }

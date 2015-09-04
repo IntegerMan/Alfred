@@ -124,6 +124,8 @@ namespace MattEland.Ani.Alfred.Chat
         /// </summary>
         protected override void ShutdownProtected()
         {
+            ChatHandler.HandleFrameworkEvent(FrameworkEvent.Shutdown);
+
             // Clear out the owner just in case
             ChatHandler.UpdateOwner(null);
         }
@@ -155,7 +157,7 @@ namespace MattEland.Ani.Alfred.Chat
             var chatProvider = AlfredInstance?.ChatProvider;
 
             // Say hi so Alfred greets the user
-            chatProvider?.DoInitialGreeting();
+            chatProvider?.HandleFrameworkEvent(FrameworkEvent.Initialize);
         }
     }
 

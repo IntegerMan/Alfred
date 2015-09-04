@@ -88,7 +88,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <param name="command">The command.</param>
         /// <param name="result">The result. If the command was handled, this should be updated.</param>
         /// <returns><c>True</c> if the command was handled; otherwise false.</returns>
-        public virtual bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
+        public virtual bool ProcessAlfredCommand(ChatCommand command, ICommandResult result)
         {
             return false;
         }

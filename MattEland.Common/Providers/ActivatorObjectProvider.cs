@@ -51,6 +51,9 @@ namespace MattEland.Common.Providers
         /// <summary>
         ///     Creates an instance of the requested type.
         /// </summary>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when one or more required arguments are <see langword="null"/>.
+        /// </exception>
         /// <exception cref="NotSupportedException">
         ///     Thrown when the requested operation is not supported.
         /// </exception>
@@ -64,6 +67,8 @@ namespace MattEland.Common.Providers
         /// </returns>
         public object CreateInstance(Type requestedType, params object[] args)
         {
+            if (requestedType == null) { throw new ArgumentNullException(nameof(requestedType)); }
+
             /* If we were set up to create using a specific type, use that type instead of 
             the requested type. This allows us to set up this class to create instances of
             subclasses or those that implement interfaces*/

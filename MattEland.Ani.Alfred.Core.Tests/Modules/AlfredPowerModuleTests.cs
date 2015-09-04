@@ -30,7 +30,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
     ///         cref="AlfredPowerModule" />
     ///     module.
     /// </summary>
-    [UnitTest]
+    [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public class AlfredPowerModuleTests : AlfredTestBase
     {
@@ -55,17 +55,8 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         /// <param name="module">The module.</param>
         /// <exception cref="System.ArgumentNullException">alfred, module
         /// </exception>
-        private void RegisterTestModule([NotNull] AlfredApplication alfred, [NotNull] AlfredModule module)
+        private void RegisterTestModule([NotNull] AlfredApplication alfred, [NotNull] IAlfredModule module)
         {
-            if (alfred == null)
-            {
-                throw new ArgumentNullException(nameof(alfred));
-            }
-            if (module == null)
-            {
-                throw new ArgumentNullException(nameof(module));
-            }
-
             var subsystem = new TestSubsystem(Container);
 
             var page = new AlfredModuleListPage(Container, "Test Page", "Test");

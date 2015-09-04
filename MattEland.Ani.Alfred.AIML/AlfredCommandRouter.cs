@@ -59,7 +59,7 @@ namespace MattEland.Ani.Alfred.Chat
         /// <returns>
         ///     <c>True</c> if the <paramref name="command" /> was handled; otherwise <c>false</c> .
         /// </returns>
-        public bool ProcessAlfredCommand(ChatCommand command, AlfredCommandResult result)
+        public bool ProcessAlfredCommand(ChatCommand command, ICommandResult result)
         {
             var alfred = Alfred;
             if (alfred == null) { return false; }

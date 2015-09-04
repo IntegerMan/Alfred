@@ -29,7 +29,7 @@ using Shouldly;
 
 namespace MattEland.Ani.Alfred.Tests.Modules
 {
-    [UnitTest]
+    [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public sealed class TimeModuleTests : AlfredTestBase
     {
@@ -44,7 +44,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
             _subsystem = new TestSubsystem(Container);
             _subsystem.AddAutoRegisterPage(_page);
 
-            _alfred.Register(_subsystem);
+            _alfred.RegistrationProvider.Register(_subsystem);
         }
 
         [NotNull]

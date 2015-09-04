@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MattEland.Ani.Alfred.Core {
+namespace MattEland.Ani.Alfred.Core.Definitions {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace MattEland.Ani.Alfred.Core {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MattEland.Ani.Alfred.Core.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MattEland.Ani.Alfred.Core.Definitions.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -291,15 +291,6 @@ namespace MattEland.Ani.Alfred.Core {
         internal static string NoAlfredText {
             get {
                 return ResourceManager.GetString("NoAlfredText", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to No Pages Detected.
-        /// </summary>
-        internal static string NoPagesDetected {
-            get {
-                return ResourceManager.GetString("NoPagesDetected", resourceCulture);
             }
         }
         

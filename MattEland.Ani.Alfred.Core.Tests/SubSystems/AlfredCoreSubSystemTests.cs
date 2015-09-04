@@ -30,7 +30,7 @@ using Shouldly;
 
 namespace MattEland.Ani.Alfred.Tests.Subsystems
 {
-    [UnitTest]
+    [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public class AlfredCoreSubsystemTests : AlfredTestBase
     {

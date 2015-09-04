@@ -24,7 +24,7 @@ namespace MattEland.Ani.Alfred.Tests.Shell
     /// <summary>
     /// Tests related to <see cref="IAlfredShell"/> and its utilization.
     /// </summary>
-    [UnitTest]
+    [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
     public sealed class ShellTagHandlerTests : ChatTestsBase

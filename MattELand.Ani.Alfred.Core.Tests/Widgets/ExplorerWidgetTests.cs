@@ -23,7 +23,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
     /// <summary>
     /// Contains tests related to the <see cref="ExplorerPage"/>
     /// </summary>
-    [UnitTest]
+    [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
     [SuppressMessage("ReSharper", "ObjectCreationAsStatement")]

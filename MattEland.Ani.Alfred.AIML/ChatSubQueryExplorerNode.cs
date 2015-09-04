@@ -1,8 +1,8 @@
 // ---------------------------------------------------------
 // ChatSubQueryExplorerNode.cs
 // 
-// Created on:      09/01/2015 at 1:32 AM
-// Last Modified:   09/01/2015 at 1:33 AM
+// Created on:      09/02/2015 at 6:20 PM
+// Last Modified:   09/03/2015 at 12:38 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -19,16 +19,18 @@ using MattEland.Ani.Alfred.Core.Definitions;
 namespace MattEland.Ani.Alfred.Chat
 {
     /// <summary>
-    ///     A <see cref="SubQuery" /> explorer node for providing insight into chat input processing.
+    ///     A <see cref="MattEland.Ani.Alfred.Chat.ChatSubQueryExplorerNode.SubQuery" /> explorer
+    ///     node for providing insight into chat input processing.
     /// </summary>
     public class ChatSubQueryExplorerNode : IPropertyProvider
     {
 
-        /// <summary>Initializes a new instance of the <see cref="ChatSubQueryExplorerNode" /> class.</summary>
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="ChatSubQueryExplorerNode" /> class.
+        /// </summary>
         /// <param name="subQuery">The sub query.</param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when one or more required arguments are
-        ///     <see langword="null" /> .
+        /// Thrown when one or more required arguments are <see langword="null" /> .
         /// </exception>
         internal ChatSubQueryExplorerNode([NotNull] SubQuery subQuery)
         {
@@ -37,32 +39,52 @@ namespace MattEland.Ani.Alfred.Chat
             SubQuery = subQuery;
         }
 
-        /// <summary>Gets the sub query.</summary>
-        /// <value>The sub query.</value>
+        /// <summary>
+        ///     Gets the sub query.
+        /// </summary>
+        /// <value>
+        /// The sub query.
+        /// </value>
         [NotNull]
         public SubQuery SubQuery { get; }
 
-        /// <summary>Gets the display name for use in the user interface.</summary>
-        /// <value>The display name.</value>
+        /// <summary>
+        ///     Gets the display name for use in the user interface.
+        /// </summary>
+        /// <value>
+        /// The display name.
+        /// </value>
         [NotNull]
         public string DisplayName
         {
             get { return Name; }
         }
 
-        /// <summary>Gets the name of the broad categorization or type that this item is.</summary>
-        /// <value>The item type's name.</value>
-        /// <example>Some examples of
-        ///     <see cref="MattEland.Ani.Alfred.Chat.ChatSubQueryExplorerNode.ItemTypeName" />
-        ///     values might be "Folder", "Application", "User", etc.</example>
+        /// <summary>
+        ///     Gets the name of the broad categorization or type that this item is.
+        /// </summary>
+        /// <value>
+        /// The item type's name.
+        /// </value>
+        /// <example>
+        ///     <para>
+        ///         Some examples of
+        ///         <see cref="MattEland.Ani.Alfred.Chat.ChatSubQueryExplorerNode.ItemTypeName" />
+        ///     </para>
+        ///     <para>values might be "Folder", "Application", "User", etc.</para>
+        /// </example>
         [NotNull]
         public string ItemTypeName
         {
             get { return "Chat SubQuery"; }
         }
 
-        /// <summary>Gets the name of the item.</summary>
-        /// <value>The name.</value>
+        /// <summary>
+        ///     Gets the name of the item.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
         [NotNull]
         public string Name
         {
@@ -73,7 +95,7 @@ namespace MattEland.Ani.Alfred.Chat
         ///     Gets the input text.
         /// </summary>
         /// <value>
-        ///     The input text.
+        /// The input text.
         /// </value>
         [NotNull]
         public string InputText
@@ -81,7 +103,9 @@ namespace MattEland.Ani.Alfred.Chat
             get { return SubQuery.InputText; }
         }
 
-        /// <summary>Gets a list of properties provided by this item.</summary>
+        /// <summary>
+        ///     Gets a list of properties provided by this item.
+        /// </summary>
         /// <returns>The properties</returns>
         public IEnumerable<IPropertyItem> Properties
         {
@@ -96,9 +120,14 @@ namespace MattEland.Ani.Alfred.Chat
             }
         }
 
-        /// <summary>Gets the property providers.</summary>
-        /// <value>The property providers.</value>
-        [NotNull, ItemNotNull]
+        /// <summary>
+        ///     Gets the property providers.
+        /// </summary>
+        /// <value>
+        /// The property providers.
+        /// </value>
+        [NotNull]
+        [ItemNotNull]
         public IEnumerable<IPropertyProvider> PropertyProviders
         {
             get { yield break; }
@@ -108,84 +137,68 @@ namespace MattEland.Ani.Alfred.Chat
         ///     Gets the input.
         /// </summary>
         /// <value>
-        ///     The input.
+        /// The input.
         /// </value>
         [NotNull]
         public string Input
         {
-            get
-            {
-                return BuildStarString(SubQuery.InputStar);
-            }
+            get { return BuildStarString(SubQuery.InputStar); }
         }
 
         /// <summary>
         ///     Gets the input.
         /// </summary>
         /// <value>
-        ///     The input.
+        /// The input.
         /// </value>
         [NotNull]
         public string Topic
         {
-            get
-            {
-                return BuildStarString(SubQuery.TopicStar);
-            }
+            get { return BuildStarString(SubQuery.TopicStar); }
         }
 
         /// <summary>
         ///     Gets the subject of conversation or, in AIML terms, the "That".
         /// </summary>
         /// <value>
-        ///     The subject.
+        /// The subject.
         /// </value>
         [NotNull]
         public string Subject
         {
-            get
-            {
-                return BuildStarString(SubQuery.ThatStar);
-            }
+            get { return BuildStarString(SubQuery.ThatStar); }
         }
 
         /// <summary>
         ///     Gets the response.
         /// </summary>
         /// <value>
-        ///     The response.
+        /// The response.
         /// </value>
         [NotNull]
         public string Response
         {
-            get
-            {
-                return SubQuery.Response;
-            }
+            get { return SubQuery.Response; }
         }
 
         /// <summary>
         ///     Gets the template.
         /// </summary>
         /// <value>
-        ///     The template.
+        /// The template.
         /// </value>
         [NotNull]
         public string Template
         {
-            get
-            {
-                return SubQuery.Template;
-            }
+            get { return SubQuery.Template; }
         }
 
-
-
-        /// <summary>Builds a string out of the items in <paramref name="input" />
+        /// <summary>
+        ///     Builds a string out of the items in <paramref name="input" />
         /// </summary>
         /// <param name="input">The input.</param>
         /// <returns>A string.</returns>
-        private string BuildStarString([NotNull] IEnumerable<string> input)
+        private static string BuildStarString([NotNull] IEnumerable<string> input)
         {
             var sb = new StringBuilder();
 

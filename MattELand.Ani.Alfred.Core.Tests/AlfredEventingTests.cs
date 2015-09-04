@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
-// AlfredProviderTests.cs
+// AlfredEventingTests.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   08/24/2015 at 11:51 PM
+// Last Modified:   09/03/2015 at 12:18 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -30,12 +30,20 @@ using Shouldly;
 namespace MattEland.Ani.Alfred.Tests
 {
     /// <summary>
-    ///     Tests <see cref="AlfredApplication"/>
+    ///     Tests <see cref="AlfredApplication" /> and its ability to relay status transitons to
+    ///     other components and handle the component registration process.
     /// </summary>
-    [UnitTest]
+    [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-    public sealed class AlfredProviderTests : AlfredTestBase
+    public sealed class AlfredEventingTests : AlfredTestBase
     {
+
+        [NotNull]
+        private AlfredModuleListPage _page;
+
+        [NotNull]
+        private TestSubsystem _subsystem;
+
         /// <summary>
         ///     Sets up the Alfred provider's tests.
         /// </summary>
@@ -48,24 +56,17 @@ namespace MattEland.Ani.Alfred.Tests
             alfred.RegisterAsProvidedInstance(typeof(IAlfred), Container);
             _subsystem = new TestSubsystem(Container);
             _page = new AlfredModuleListPage(Container, "Test Page", "Test");
-
         }
-
-        [NotNull]
-        private TestSubsystem _subsystem;
-
-        [NotNull]
-        private AlfredModuleListPage _page;
 
         /// <summary>
         ///     Builds widget parameters.
         /// </summary>
         /// <param name="name">The name of the widget.</param>
-        /// <returns>The <see cref="WidgetCreationParameters"/>.</returns>
+        /// <returns>The <see cref="WidgetCreationParameters" /> .</returns>
         [NotNull]
         private WidgetCreationParameters BuildWidgetParams(string name = "WidgetTest")
         {
-            return new WidgetCreationParameters(name);
+            return new WidgetCreationParameters(name, Container);
         }
 
         /// <summary>
@@ -75,34 +76,15 @@ namespace MattEland.Ani.Alfred.Tests
         [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         public void AddingStandardModulesAddsModules()
         {
-            Alfred.Register(new AlfredCoreSubsystem(Container));
+            Alfred.RegistrationProvider.Register(new AlfredCoreSubsystem(Container));
 
             var numModules =
                 Alfred.Subsystems.SelectMany(subsystem => subsystem.Pages)
-                       .OfType<AlfredModuleListPage>()
-                       .Sum(modulePage => modulePage.Modules.Count());
+                      .OfType<AlfredModuleListPage>()
+                      .Sum(modulePage => modulePage.Modules.Count());
 
-            numModules.ShouldBeGreaterThan(0, "Alfred did not have any modules after calling add standard modules.");
-        }
-
-        /// <summary>
-        ///     Tests that after initialization Alfred is online.
-        /// </summary>
-        [Test]
-        public void AfterInitializationAlfredIsOnline()
-        {
-            Alfred.Initialize();
-
-            Alfred.Status.ShouldBe(AlfredStatus.Online);
-        }
-
-        /// <summary>
-        ///    Test that Alfred starts offline.
-        /// </summary>
-        [Test]
-        public void AlfredStartsOffline()
-        {
-            Alfred.Status.ShouldBe(AlfredStatus.Offline);
+            const string FailMessage = "Alfred did not have any modules after calling add standard modules.";
+            numModules.ShouldBeGreaterThan(0, FailMessage);
         }
 
         /// <summary>
@@ -111,39 +93,8 @@ namespace MattEland.Ani.Alfred.Tests
         [Test]
         public void AlfredStartsWithNoSubSystems()
         {
-            Alfred.Subsystems.Count().ShouldBe(0,
-                            "Alfred started with subsystems when none were expected.");
-        }
-
-        /// <summary>
-        ///     Tests initialization of Alfred
-        /// </summary>
-        [Test]
-        public void InitializeAlfred()
-        {
-            Assert.NotNull(Alfred, "Alfred was not initialized");
-        }
-
-        /// <summary>
-        ///     Tests that initialization followed by shutdown results in shutdown.
-        /// </summary>
-        [Test]
-        public void InitializeAndShutdownResultsInShutdown()
-        {
-            Alfred.Initialize();
-            Alfred.Shutdown();
-
-            Alfred.Status.ShouldBe(AlfredStatus.Offline);
-        }
-
-        /// <summary>
-        ///     Tests that initializing while online causes issues
-        /// </summary>
-        [Test, ExpectedException(typeof(InvalidOperationException))]
-        public void InitializeWhileOnlineErrors()
-        {
-            Alfred.Initialize();
-            Alfred.Initialize();
+            Alfred.Subsystems.Count()
+                  .ShouldBe(0, "Alfred started with subsystems when none were expected.");
         }
 
         /// <summary>
@@ -152,14 +103,14 @@ namespace MattEland.Ani.Alfred.Tests
         [Test]
         public void InitializingInitializesComponents()
         {
-            Alfred.Register(new AlfredCoreSubsystem(Container));
+            Alfred.RegistrationProvider.Register(new AlfredCoreSubsystem(Container));
 
             Alfred.Initialize();
 
             foreach (var item in Alfred.Subsystems)
             {
                 item.Status.ShouldBe(AlfredStatus.Online,
-                                $"{item.NameAndVersion} was not initialized during initialization.");
+                                     $"{item.NameAndVersion} was not initialized during initialization.");
             }
         }
 
@@ -176,8 +127,8 @@ namespace MattEland.Ani.Alfred.Tests
 
             console.Log("Alfred Test Framework", "Testing logging to Alfred", LogLevel.Verbose);
 
-            console.Events.Count().ShouldBe(numEvents + 1,
-                "Event count did not increase after logging.");
+            console.Events.Count()
+                   .ShouldBe(numEvents + 1, "Event count did not increase after logging.");
         }
 
         /// <summary>
@@ -188,7 +139,10 @@ namespace MattEland.Ani.Alfred.Tests
         public void ModulesCannotBeAddedWhileOnline()
         {
             Alfred.Initialize();
-            Alfred.Register(new AlfredCoreSubsystem(Container));
+
+            var subsystem = new AlfredCoreSubsystem(Container);
+
+            Alfred.RegistrationProvider.Register(subsystem);
         }
 
         /// <summary>
@@ -198,7 +152,7 @@ namespace MattEland.Ani.Alfred.Tests
         [ExpectedException(typeof(InvalidOperationException))]
         public void ModulesCannotUpdateWhileOffline()
         {
-            Alfred.Register(new AlfredCoreSubsystem(Container));
+            Alfred.RegistrationProvider.Register(new AlfredCoreSubsystem(Container));
 
             Alfred.Update();
         }
@@ -216,7 +170,7 @@ namespace MattEland.Ani.Alfred.Tests
             testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
             testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
 
-            Alfred.Register(_subsystem);
+            Alfred.RegistrationProvider.Register(_subsystem);
             _subsystem.AddAutoRegisterPage(_page);
             _page.Register(testModule);
 
@@ -224,7 +178,8 @@ namespace MattEland.Ani.Alfred.Tests
         }
 
         /// <summary>
-        ///     Registering null subsystem generates null reference exceptions.
+        ///     Registering <see langword="null" /> subsystem generates a
+        ///     <see cref="NullReferenceException" />
         /// </summary>
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -232,11 +187,12 @@ namespace MattEland.Ani.Alfred.Tests
         public void RegisteringNullSubsystemGeneratesNullRef()
         {
             AlfredSubsystem system = null;
-            Alfred.Register(system);
+            Alfred.RegistrationProvider.Register(system);
         }
 
         /// <summary>
-        ///     Ensures registering widget at initialize and shutdown leaves one copy in list at reinitialize.
+        ///     Ensures registering widget at initialize and shutdown leaves one copy in list at
+        ///     reinitialize.
         /// </summary>
         [Test]
         public void RegisteringWidgetAtInitializeAndShutdownLeavesOneCopyInListAtReinitialize()
@@ -247,7 +203,7 @@ namespace MattEland.Ani.Alfred.Tests
             testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
             testModule.WidgetsToRegisterOnShutdown.Add(textWidget);
 
-            Alfred.Register(_subsystem);
+            Alfred.RegistrationProvider.Register(_subsystem);
             _subsystem.AddAutoRegisterPage(_page);
             _page.Register(testModule);
 
@@ -264,80 +220,12 @@ namespace MattEland.Ani.Alfred.Tests
         }
 
         /// <summary>
-        ///     Ensures shutdown creates events in log.
-        /// </summary>
-        [Test]
-        public void ShutdownCreatesEventsInLog()
-        {
-            var container = Container;
-            var al = Alfred;
-            var console = Container.Provide<IConsole>();
-
-            // We need to be online to shut down or else we'll get errors
-            al.Initialize();
-            al.Container.ShouldBeSameAs(container);
-
-            var numEvents = console.EventCount;
-
-            al.Shutdown();
-
-            if (console.EventCount <= numEvents)
-            {
-                var message = $"Shutting Alfred down did not create any log entries ({console.EventCount}) on container {container.Name} with collection of type {console.Events.GetType()}";
-                Assert.Fail(message);
-            }
-        }
-
-        /// <summary>
-        ///     Tests that starting Alfred creates log entries
-        /// </summary>
-        [Test]
-        public void InitializeCreatesEventsInLog()
-        {
-            var container = Container;
-            var al = Alfred;
-            var console = Container.Provide<IConsole>();
-
-            var numEvents = console.EventCount;
-
-            al.Initialize();
-            al.Container.ShouldBeSameAs(container);
-
-            if (console.EventCount <= numEvents)
-            {
-                var message = $"Initializing Alfred did not create any log entries ({console.EventCount}) on container {container.Name} with collection of type {console.Events.GetType()}";
-                Assert.Fail(message);
-            }
-        }
-
-        /// <summary>
-        ///     Ensures shutdown while offline errors.
-        /// </summary>
-        [Test]
-        public void ShutdownWhileOfflineErrors()
-        {
-            try
-            {
-                Alfred.Shutdown();
-
-                Assert.Fail("Expected an InvalidOperationException since Alfred was already offline.");
-            }
-            catch (InvalidOperationException)
-            {
-                // No action
-            }
-
-            // Assert that we're now offline.
-            Assert.AreEqual(Alfred.Status, AlfredStatus.Offline);
-        }
-
-        /// <summary>
         ///     Shutting down shuts down components.
         /// </summary>
         [Test]
         public void ShuttingDownShutsDownComponents()
         {
-            Alfred.Register(new AlfredCoreSubsystem(Container));
+            Alfred.RegistrationProvider.Register(new AlfredCoreSubsystem(Container));
 
             Alfred.Initialize();
             Alfred.Shutdown();

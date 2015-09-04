@@ -558,15 +558,6 @@ namespace MattEland.Ani.Alfred.Chat {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hi.
-        /// </summary>
-        internal static string InitialGreetingText {
-            get {
-                return ResourceManager.GetString("InitialGreetingText", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to No end tag for OOB command: {0}.
         /// </summary>
         internal static string NoEndTagForOobCommand {

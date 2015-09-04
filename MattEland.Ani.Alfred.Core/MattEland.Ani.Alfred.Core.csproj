@@ -51,7 +51,10 @@
     <None Include="Widgets\Widgets.cd" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlfredCommand.cs" />
     <Compile Include="AlfredCommandResult.cs" />
+    <Compile Include="AlfredRegistrationExtensions.cs" />
+    <Compile Include="ComponentRegistrationProvider.cs" />
     <Compile Include="Console\AlfredLoggingExtensions.cs" />
     <Compile Include="ComponentBase.cs" />
     <Compile Include="Console\ConsoleEventExplorerDecorator.cs" />
@@ -60,18 +63,24 @@
     <Compile Include="Console\ExplorerEventFactory.cs" />
     <Compile Include="Definitions\AlfredProperty.cs" />
     <Compile Include="Definitions\ChatCommand.cs" />
+    <Compile Include="Definitions\FrameworkEvent.cs" />
     <Compile Include="Definitions\IAlfred.cs" />
+    <Compile Include="Definitions\IAlfredCommand.cs" />
     <Compile Include="Definitions\IAlfredCommandRecipient.cs" />
     <Compile Include="Definitions\IAlfredModule.cs" />
     <Compile Include="Definitions\IAlfredPage.cs" />
     <Compile Include="Definitions\IAlfredSubsystem.cs" />
     <Compile Include="Console\IConsoleEvent.cs" />
+    <Compile Include="Definitions\ICommandResult.cs" />
     <Compile Include="Definitions\IHasIdentifier.cs" />
+    <Compile Include="Definitions\IHasStatus.cs" />
     <Compile Include="Definitions\IPropertyItem.cs" />
     <Compile Include="Definitions\IPropertyProvider.cs" />
+    <Compile Include="Definitions\IRegistrationProvider.cs" />
     <Compile Include="Definitions\IShellCommandRecipient.cs" />
     <Compile Include="Definitions\IStatusController.cs" />
     <Compile Include="Definitions\IChatProvider.cs" />
+    <Compile Include="Definitions\IWidget.cs" />
     <Compile Include="Definitions\ShellCommand.cs" />
     <Compile Include="Definitions\UserStatementResponse.cs" />
     <Compile Include="Modules\AlertVisibilityCalculator.cs" />
@@ -94,7 +103,7 @@
     <Compile Include="Console\ConsoleEvent.cs" />
     <Compile Include="Console\IConsole.cs" />
     <Compile Include="Modules\AlfredPowerModule.cs" />
-    <Compile Include="Resources.Designer.cs">
+    <Compile Include="Definitions\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
@@ -104,7 +113,6 @@
     <Compile Include="Widgets\AlfredTextWidget.cs" />
     <Compile Include="Widgets\WidgetBase.cs" />
     <Compile Include="Widgets\ButtonWidget.cs" />
-    <Compile Include="Definitions\AlfredCommand.cs" />
     <Compile Include="Widgets\TextWidget.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Console\SimpleConsole.cs" />
@@ -112,7 +120,7 @@
     <Compile Include="Widgets\WidgetCreationParameters.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources.resx">
+    <EmbeddedResource Include="Definitions\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
@@ -122,6 +130,9 @@
     <Reference Include="JetBrains.Annotations.PCL328, Version=9.2.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Annotations.9.2.0\lib\portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\JetBrains.Annotations.PCL328.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime">
+      <HintPath>..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\Facades\System.Runtime.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

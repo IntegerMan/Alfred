@@ -28,7 +28,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
     /// <summary>
     ///     Tests <see cref="AlfredPagesListModule"/>
     /// </summary>
-    [UnitTest]
+    [UnitTestProvider]
     public class AlfredPagesListModuleTests : AlfredTestBase
     {
         /// <summary>

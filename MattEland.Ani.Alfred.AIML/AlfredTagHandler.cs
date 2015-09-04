@@ -42,7 +42,8 @@ namespace MattEland.Ani.Alfred.Chat
         /// <returns>The processed output</returns>
         protected override string ProcessChange()
         {
-            var result = new AlfredCommandResult();
+            // TODO: Create this via Container
+            ICommandResult result = new AlfredCommandResult();
 
             var recipient = ChatEngine.Owner as IAlfredCommandRecipient;
 

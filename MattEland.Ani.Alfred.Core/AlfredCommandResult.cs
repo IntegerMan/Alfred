@@ -1,9 +1,12 @@
+using MattEland.Ani.Alfred.Core.Definitions;
+
 namespace MattEland.Ani.Alfred.Core
 {
+
     /// <summary>
     /// Represents the result of sending a command to a subsystem for handling
     /// </summary>
-    public sealed class AlfredCommandResult
+    public sealed class AlfredCommandResult : ICommandResult
     {
 
         /// <summary>

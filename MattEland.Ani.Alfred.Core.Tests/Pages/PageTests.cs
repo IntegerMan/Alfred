@@ -24,7 +24,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
     /// <summary>
     ///     Tests oriented around testing the page update pumps and related functions
     /// </summary>
-    [UnitTest]
+    [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public class PageTests : AlfredTestBase
     {

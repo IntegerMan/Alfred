@@ -25,7 +25,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
     /// <summary>
     /// A series of tests related to the System Monitoring SubSystem
     /// </summary>
-    [UnitTest]
+    [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public class SystemSubsystemTests : AlfredTestBase
     {
@@ -54,7 +54,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         [Test]
         public void SystemMonitoringSubsystemCanBeRegisteredInAlfred()
         {
-            _alfred.Register(_subsystem);
+            _alfred.RegistrationProvider.Register(_subsystem);
 
             _alfred.Subsystems.Count().ShouldBe(1);
             _alfred.Subsystems.ShouldContain(_subsystem);
@@ -63,7 +63,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         [Test]
         public void SystemMonitoringSubsystemContainsModules()
         {
-            _alfred.Register(_subsystem);
+            _alfred.RegistrationProvider.Register(_subsystem);
 
             var page = _subsystem.Pages.First() as AlfredModuleListPage;
             Assert.NotNull(page);
@@ -78,7 +78,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         {
             Assert.AreEqual(0, _subsystem.Pages.Count());
 
-            _alfred.Register(_subsystem);
+            _alfred.RegistrationProvider.Register(_subsystem);
             _alfred.Initialize();
 
             Assert.AreEqual(1, _subsystem.Pages.Count());
@@ -89,7 +89,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         {
             var pages = _alfred.RootPages.Count();
 
-            _alfred.Register(_subsystem);
+            _alfred.RegistrationProvider.Register(_subsystem);
             _alfred.Initialize();
 
             Assert.AreEqual(pages + _subsystem.RootPages.Count(), _alfred.RootPages.Count());

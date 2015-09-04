@@ -21,13 +21,6 @@ namespace MattEland.Ani.Alfred.Core.Console
     /// </summary>
     public static class AlfredLoggingExtensions
     {
-        /// <summary>
-        ///     Gets or sets the console used by the logging methods.
-        /// </summary>
-        /// <value>
-        ///     The console.
-        /// </value>
-        private static IConsole Console { get; set; }
 
         /// <summary>
         ///     A string extension method that logs messages to the console.
@@ -38,18 +31,15 @@ namespace MattEland.Ani.Alfred.Core.Console
         /// <param name="container"> The container. </param>
         public static void Log([CanBeNull] this string message, [CanBeNull] string title, LogLevel level, [CanBeNull] IObjectContainer container)
         {
-            // If we don't have a console, we'll have to use the container to find one
-            if (Console == null)
+            // Grab the console from the container
+            if (container == null)
             {
-                if (container == null)
-                {
-                    container = CommonProvider.Container;
-                }
-                Console = container.TryProvide<IConsole>();
+                container = CommonProvider.Container;
             }
+            var console = container.TryProvide<IConsole>();
 
             // Use the other extension method to log it
-            message.Log(title, level, Console);
+            message.Log(title, level, console);
         }
 
         /// <summary>
@@ -67,9 +57,6 @@ namespace MattEland.Ani.Alfred.Core.Console
         {
             if (console != null)
             {
-                // Save it for later to use in the variant that doesn't store the console.
-                Console = console;
-
                 // Perform the logging
                 console.Log(title, message, level);
             }
