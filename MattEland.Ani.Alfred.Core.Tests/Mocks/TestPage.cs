@@ -20,6 +20,7 @@ using MattEland.Common.Providers;
 namespace MattEland.Ani.Alfred.Tests.Mocks
 {
     /// <summary>A test page for testing the <see cref="AlfredPage" /> update pumps</summary>
+    [Obsolete("Use Moq instead")]
     public class TestPage : AlfredPage
     {
         /// <summary>Initializes a new instance of the <see cref="AlfredSubsystem" /> class.</summary>

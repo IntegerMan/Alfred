@@ -5,7 +5,6 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
-using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Tests.Mocks
@@ -13,6 +12,7 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
     /// <summary>
     ///     An <see cref="AlfredModule"/> used explicitly for testing purposes
     /// </summary>
+    [Obsolete("Use Moq instead")]
     internal sealed class AlfredTestModule : AlfredModule
     {
         /// <summary>

@@ -7,13 +7,13 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common.Providers;
 
@@ -22,6 +22,7 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
     /// <summary>
     ///     A mock implementation of Alfred for testing purposes
     /// </summary>
+    [Obsolete("Use Moq instead")]
     public class TestAlfred : IAlfred, IRegistrationProvider, IHasStatus, IHasContainer
     {
 

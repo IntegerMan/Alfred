@@ -22,6 +22,7 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
     /// <summary>
     /// A test Subsystem. This class cannot be inherited.
     /// </summary>
+    [Obsolete("Use Moq instead")]
     public sealed class TestSubsystem : AlfredSubsystem
     {
         /// <summary>
