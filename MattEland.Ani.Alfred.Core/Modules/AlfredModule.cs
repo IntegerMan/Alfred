@@ -19,9 +19,9 @@ using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Modules
 {
-
     /// <summary>
-    ///     Represents a module within Alfred. Modules contain different bits of information to present to the user.
+    ///     Represents a module within Alfred. Modules contain different bits of information to
+    ///     present to the user.
     /// </summary>
     public abstract class AlfredModule : ComponentBase, IAlfredModule
     {
@@ -113,6 +113,18 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
+        ///     Registers many widgets to the module.
+        /// </summary>
+        /// <param name="widgets"> The widgets. </param>
+        public void Register(params IWidget[] widgets)
+        {
+            foreach (var widget in widgets.Where(widget => widget != null))
+            {
+                Register(widget);
+            }
+        }
+
+        /// <summary>
         /// Processes an Alfred Command. If the command is handled, result should be modified accordingly and the method should return true. Returning false will not stop the message from being propogated.
         /// </summary>
         /// <param name="command">The command.</param>
@@ -159,5 +171,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
 
             return command;
         }
+
     }
+
 }

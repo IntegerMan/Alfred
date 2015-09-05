@@ -16,10 +16,13 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Common;
 using MattEland.Common.Providers;
 using MattEland.Testing;
+
+using Moq;
 
 namespace MattEland.Ani.Alfred.Tests
 {
@@ -107,6 +110,21 @@ namespace MattEland.Ani.Alfred.Tests
             node.ShouldNotBeNull($"Could not find child of {provider.Name} with name {name}");
 
             return node;
+        }
+
+        /// <summary>
+        ///     Initializes the <paramref name="module"/> without the need for building up a
+        ///     containing page, subsystem, or Alfred application. This isn't ideal for most cases,
+        ///     but is good for testing aspects of Module.
+        /// </summary>
+        /// <param name="module">The module.</param>
+        internal static void InitializeWithoutPageOrSubsystem(this IAlfredModule module)
+        {
+            // We don't need a full Alfred for this case - just use a default one
+            var alfred = new Mock<IAlfred>(MockBehavior.Strict);
+
+            // Initialize the module as if it were being initialized during Alfred initialization
+            module.Initialize(alfred.Object);
         }
 
     }

@@ -86,6 +86,7 @@
     <Compile Include="Modules\AlertVisibilityCalculator.cs" />
     <Compile Include="Modules\AlfredPagesListModule.cs" />
     <Compile Include="Definitions\IAlfredComponent.cs" />
+    <Compile Include="Modules\SimpleModule.cs" />
     <Compile Include="Pages\AlfredEventLogPage.cs" />
     <Compile Include="Pages\AlfredModuleListPage.cs" />
     <Compile Include="Pages\AlfredPage.cs" />

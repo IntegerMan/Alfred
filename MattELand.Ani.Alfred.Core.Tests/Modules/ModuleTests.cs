@@ -7,14 +7,18 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Ani.Alfred.Tests.Mocks;
 using MattEland.Testing;
+
+using Moq;
 
 using NUnit.Framework;
 
@@ -24,8 +28,22 @@ namespace MattEland.Ani.Alfred.Tests.Modules
     ///     Contains general test cases related to <see cref="AlfredModule" />.
     /// </summary>
     [UnitTestProvider]
+    [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
+    [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
+    [SuppressMessage("ReSharper", "ExceptionNotDocumentedOptional")]
     public class ModuleTests : AlfredTestBase
     {
+
+        /// <summary>
+        /// Sets up the environment for each test.
+        /// </summary>
+        [SetUp]
+        public override void SetUp()
+        {
+            base.SetUp();
+
+            Container.RegisterProvidedInstance(typeof(IAlfred), new TestAlfred(Container));
+        }
 
         /// <summary>
         ///     Builds widget creation parameters.
@@ -47,23 +65,36 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         [Test]
         public void ModulesWithWidgetsShouldListAllChildWidgets()
         {
-            const string TextBlockName = "lblFoo";
-            const string ButtonName = "btnBar";
+            //! Arrange
+
+            const string TextBlockName = @"lblFoo";
+            var textWidget = new TextWidget(BuildWidgetParams(TextBlockName));
+
+            const string ButtonName = @"btnBar";
+            var buttonWidget = new ButtonWidget(BuildWidgetParams(ButtonName));
 
             // Register our controls
-            var module = new AlfredTestModule(Container);
-            module.WidgetsToRegisterOnInitialize.Add(new TextWidget(BuildWidgetParams(TextBlockName)));
-            module.WidgetsToRegisterOnInitialize.Add(new ButtonWidget(BuildWidgetParams(ButtonName)));
+            var module = new SimpleModule(Container, "Test Module");
+            module.WidgetsToRegisterOnInitialize.Add(textWidget);
+            module.WidgetsToRegisterOnInitialize.Add(buttonWidget);
 
-            // Don't do this normally, but this will be enough to populate the collection to evaluate
-            module.Initialize(new TestAlfred(Container));
+            //! Act
+
+            /* We just want to test that module.Initialize causes widgets to be added 
+               and that those widgets show up as property providers. There's no need for
+               a page, module, or subsystem to do this */
+
+            module.InitializeWithoutPageOrSubsystem();
+
+            //! Assert
 
             // Grab the values for assertion
             var providers = module.PropertyProviders.ToList();
 
             // Make sure the items we just put in there are present
-            Assert.IsNotNull(providers.Find(TextBlockName), $"Could not find {TextBlockName}");
-            Assert.IsNotNull(providers.Find(ButtonName), $"Could not find {ButtonName}");
+            providers.Find(TextBlockName).ShouldNotBeNull($"Could not find {TextBlockName}");
+            providers.Find(ButtonName).ShouldNotBeNull($"Could not find {ButtonName}");
         }
+
     }
 }
