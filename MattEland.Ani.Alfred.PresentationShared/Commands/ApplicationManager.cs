@@ -179,7 +179,9 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             _console.TryDispose();
         }
 
-        /// <summary>Sets up the mappings for types the container will need to provide.</summary>
+        /// <summary>
+        ///     Sets up the mappings for types the container will need to provide.
+        /// </summary>
         private void ConfigureContainer()
         {
             Container.CollectionType = typeof(SafeObservableCollection<>);
@@ -189,6 +191,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             Container.TryRegister(typeof(IMetricProviderFactory),
                                   typeof(CounterMetricProviderFactory));
             Container.TryRegister(typeof(IAlfred), typeof(AlfredApplication));
+            Container.TryRegister(typeof(IMessageBoxProvider), typeof(XamlMessageBoxProvider));
         }
 
         /// <summary>Initializes the console for the application and returns the instantiated console.</summary>

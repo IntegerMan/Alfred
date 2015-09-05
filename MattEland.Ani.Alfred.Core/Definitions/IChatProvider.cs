@@ -19,24 +19,6 @@ namespace MattEland.Ani.Alfred.Core.Definitions
     {
 
         /// <summary>
-        ///     Gets the last response from the system.
-        /// </summary>
-        /// <value>
-        /// The last response.
-        /// </value>
-        [CanBeNull]
-        UserStatementResponse LastResponse { get; }
-
-        /// <summary>
-        ///     Gets the last input from the user.
-        /// </summary>
-        /// <value>
-        /// The last input.
-        /// </value>
-        [CanBeNull]
-        string LastInput { get; }
-
-        /// <summary>
         ///     Handles a user statement.
         /// </summary>
         /// <param name="userInput">The user input.</param>
@@ -49,5 +31,21 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// </summary>
         /// <param name="frameworkEvent">The event.</param>
         void HandleFrameworkEvent(FrameworkEvent frameworkEvent);
+
+        /// <summary>
+        ///     Gets the last input from the user.
+        /// </summary>
+        /// <value>
+        /// The last input.
+        /// </value>
+        string LastInput { get; }
+
+        /// <summary>
+        ///     Gets the last response from the system.
+        /// </summary>
+        /// <value>
+        /// The last response.
+        /// </value>
+        UserStatementResponse LastResponse { get; }
     }
 }

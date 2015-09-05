@@ -90,9 +90,9 @@
     <Compile Include="Controls\ChatPaneTests.cs" />
     <Compile Include="Controls\ExplorerControlTests.cs" />
     <Compile Include="Controls\RootPagesControlTests.cs" />
-    <Compile Include="Mocks\UserInterfaceTestBase.cs" />
+    <Compile Include="Controls\TestMessageBoxProvider.cs" />
+    <Compile Include="Controls\UserInterfaceTestBase.cs" />
     <Compile Include="Mocks\TestAlfred.cs" />
-    <Compile Include="Mocks\TestChatProvider.cs" />
     <Compile Include="Mocks\TestPage.cs" />
     <Compile Include="Modules\AlfredPagesListModuleTests.cs" />
     <Compile Include="Modules\ModuleTests.cs" />

@@ -14,10 +14,13 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.PresentationShared.Controls;
-using MattEland.Ani.Alfred.Tests.Mocks;
 using MattEland.Testing;
 
+using Moq;
+
 using NUnit.Framework;
+
+using Shouldly;
 
 namespace MattEland.Ani.Alfred.Tests.Controls
 {
@@ -28,6 +31,7 @@ namespace MattEland.Ani.Alfred.Tests.Controls
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "IsExpressionAlwaysTrue")]
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
+    [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
     public sealed class ChatPaneTests : UserInterfaceTestBase
     {
 
@@ -39,8 +43,11 @@ namespace MattEland.Ani.Alfred.Tests.Controls
         {
             base.SetUp();
 
-            _chatPane = new ChatPane();
-            _chatProvider = new TestChatProvider();
+            _chatPane = new ChatPane(Container);
+            _chatMock = new Mock<IChatProvider>(MockBehavior.Strict);
+
+            // Chat Pane gets the chat provider in its data context
+            _chatPane.DataContext = _chatMock.Object;
 
             // Get the control ready for interaction
             InitializeControl(_chatPane);
@@ -51,8 +58,11 @@ namespace MattEland.Ani.Alfred.Tests.Controls
         [NotNull]
         private ChatPane _chatPane;
 
+        /// <summary>
+        ///     The chat provider mock.
+        /// </summary>
         [NotNull]
-        private TestChatProvider _chatProvider;
+        private Mock<IChatProvider> _chatMock;
 
         /// <summary>
         ///     Ensures that a submit button is part of the chat pane.
@@ -96,7 +106,7 @@ namespace MattEland.Ani.Alfred.Tests.Controls
         [ExpectedException(typeof(InvalidOperationException))]
         public void ChatPaneNotShouldSendTextToProviderWhenNoTextIsPresent()
         {
-            _chatPane.SendChatMessage(_chatProvider, null);
+            _chatPane.SendChatMessage(_chatMock.Object, null);
         }
 
         /// <summary>
@@ -123,28 +133,62 @@ namespace MattEland.Ani.Alfred.Tests.Controls
         ///     <see cref="InvalidOperationException" /> will be handled in the UI via a message box.
         /// 
         ///     Test ALF-70 for feature ALF-46
+        /// 
+        ///     This method is primarily testing the <see cref="ChatPane.SendChatMessage"/> method.
         /// </remarks>
         [Test]
         [STAThread]
         public void ChatPaneShouldSendTextToProviderGivenValidText()
         {
-            _chatPane.SendChatMessage(_chatProvider, TestText);
+            //! Arrange
+            ConfigureChatMockToReceiveText(TestText);
 
-            Assert.AreEqual(TestText, _chatProvider.LastInput);
+            //! Act
+            _chatPane.SendChatMessage(_chatMock.Object, TestText);
+
+            //! Assert
+            _chatMock.Object.LastInput.ShouldBe(TestText);
+            _chatMock.Verify(c => c.HandleUserStatement(TestText), Times.Once);
         }
 
+        /// <summary>
+        ///     Tests that when the chat pane's submit button is clicked and a chat provider and
+        ///     input text is present, the chat provider is sent the inputted text.
+        /// </summary>
+        /// <remarks>
+        ///     This method is effectively testing the <see cref="ChatPane.HandleSubmitClicked" /> method simulating a submit button click.
+        /// </remarks>
         [Test]
         [STAThread]
         public void ChatPaneSubmitButtonCausesTextToBeSentToProvider()
         {
+            //! Arrange
             _chatPane.InputText.Text = TestText;
 
-            // Chat Pane sends to the chat provider in its data context
-            _chatPane.DataContext = _chatProvider;
+            // HandleUserStatement must be called with the expected text
+            ConfigureChatMockToReceiveText(TestText);
 
+            //! Act
             _chatPane.HandleSubmitClicked();
 
-            Assert.AreEqual(TestText, _chatProvider.LastInput);
+            //! Assert
+            _chatMock.Verify(c => c.HandleUserStatement(TestText), Times.Once);
+            _chatMock.Object.LastInput.ShouldBe(TestText);
+        }
+
+        /// <summary>
+        ///     Configures the chat provider mock to expect the text.
+        /// </summary>
+        /// <param name="input"> The input. </param>
+        private void ConfigureChatMockToReceiveText(string input)
+        {
+            _chatMock.Setup(c => c.HandleUserStatement(It.Is<string>(i => i == input)))
+
+                     // After the call, set up the LastInput property to return the input
+                     .Callback(() => _chatMock.SetupGet(m => m.LastInput).Returns(input))
+
+                     // HandleUserStatement returns a blank response (we're not testing the return value)
+                     .Returns(new UserStatementResponse());
         }
     }
 
