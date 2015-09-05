@@ -42,6 +42,7 @@ namespace MattEland.Ani.Alfred.Tests
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
+    [SuppressMessage("ReSharper", "ExceptionNotDocumentedOptional")]
     public sealed class AlfredEventingTests : AlfredTestBase
     {
 
@@ -214,25 +215,30 @@ namespace MattEland.Ani.Alfred.Tests
         [Test]
         public void RegisteringWidgetAtInitializeAndShutdownLeavesOneCopyInListAtReinitialize()
         {
-            var testModule = new AlfredTestModule(Container);
+            //! Arrange 
 
             var textWidget = new TextWidget(BuildWidgetParams());
+
+            // This module should register its control both at initialize and shutdown
+            var testModule = new SimpleModule(Container, "Test Module");
             testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
             testModule.WidgetsToRegisterOnShutdown.Add(textWidget);
 
-            Alfred.RegistrationProvider.Register(_subsystem);
+            // Set up our systems
+            Alfred.Register(_subsystem);
             _subsystem.AddAutoRegisterPage(_page);
             _page.Register(testModule);
 
+            //! Act
+
             Alfred.Initialize();
-            Alfred.Update();
             Alfred.Shutdown();
             Alfred.Initialize();
-            Alfred.Update();
 
-            Assert.IsNotNull(testModule.Widgets, "testModule.Widgets was null");
-            Assert.AreEqual(1,
-                            testModule.Widgets.Count(),
+            //! Assert
+
+            testModule.Widgets.ShouldNotBeNull("testModule.Widgets was null");
+            testModule.Widgets.Count().ShouldBe(1,
                             "Widgets were not properly cleared from list after re-initialize");
         }
 

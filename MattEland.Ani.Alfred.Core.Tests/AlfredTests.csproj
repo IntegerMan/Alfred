@@ -108,7 +108,6 @@
     <Compile Include="Shell\ShellTagHandlerTests.cs" />
     <Compile Include="Subsystems\AlfredCoreSubsystemTests.cs" />
     <Compile Include="AlfredEventingTests.cs" />
-    <Compile Include="Mocks\AlfredTestModule.cs" />
     <Compile Include="Subsystems\ChatSubsystemTests.cs" />
     <Compile Include="Subsystems\MindExplorerSubsystemTests.cs" />
     <Compile Include="Subsystems\SubsystemTests.cs" />
