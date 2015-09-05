@@ -8,6 +8,7 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
@@ -16,12 +17,16 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Ani.Alfred.Tests.Mocks;
 using MattEland.Common.Providers;
 using MattEland.Testing;
+
+using Moq;
+using Moq.Protected;
 
 using NUnit.Framework;
 
@@ -35,6 +40,8 @@ namespace MattEland.Ani.Alfred.Tests
     /// </summary>
     [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
+    [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
+    [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
     public sealed class AlfredEventingTests : AlfredTestBase
     {
 
@@ -164,16 +171,26 @@ namespace MattEland.Ani.Alfred.Tests
         [ExpectedException(typeof(InvalidOperationException))]
         public void RegisteringAWidgetMultipleTimesThrowsAnException()
         {
-            var testModule = new AlfredTestModule(Container);
+            //! Arrange
 
+            // Build a duplicate list of widgets
             var textWidget = new TextWidget(BuildWidgetParams());
-            testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
-            testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
+            var duplicateWidgets = new List<IWidget> { textWidget, textWidget };
 
-            Alfred.RegistrationProvider.Register(_subsystem);
+            // Build a mock object so that it will register the duplicates during its initialize
+            var mockModule = new Mock<AlfredModule>(MockBehavior.Strict, Container);
+            mockModule.Setup(m => m.OnRegistered(It.IsAny<IAlfred>()));
+            mockModule.Setup(m => m.Initialize(It.Is<IAlfred>(a => a == Alfred)))
+                .Callback(() => mockModule.Object.Register(duplicateWidgets));
+
+            //! Act / Assert (exception expected)
+
+            // Register all of the things
+            _page.Register(mockModule.Object);
             _subsystem.AddAutoRegisterPage(_page);
-            _page.Register(testModule);
+            Alfred.Register(_subsystem);
 
+            // Start up Alfred and watch the world burn
             Alfred.Initialize();
         }
 

@@ -84,7 +84,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <param name="widget">
         ///     The widget.
         /// </param>
-        protected void Register([NotNull] IWidget widget)
+        public void Register([NotNull] IWidget widget)
         {
             _widgets.AddSafe(widget);
 
@@ -99,7 +99,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         ///     The widgets.
         /// </param>
         /// <exception cref="ArgumentNullException"><paramref name="widgets"/> is <see langword="null" />.</exception>
-        protected void Register([NotNull] IEnumerable<IWidget> widgets)
+        public void Register([NotNull] IEnumerable<IWidget> widgets)
         {
             if (widgets == null)
             {
@@ -108,7 +108,6 @@ namespace MattEland.Ani.Alfred.Core.Modules
 
             foreach (var widget in widgets)
             {
-                // ReSharper disable once AssignNullToNotNullAttribute - for testing purposes we'll allow this
                 Register(widget);
             }
         }

@@ -6,6 +6,7 @@
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 
 using JetBrains.Annotations;
@@ -25,5 +26,22 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <value>The user interface widgets.</value>
         [NotNull, ItemNotNull]
         IEnumerable<IWidget> Widgets { get; }
+
+        /// <summary>
+        ///     Registers a widget for the module.
+        /// </summary>
+        /// <param name="widget">
+        ///     The widget.
+        /// </param>
+        void Register([NotNull] IWidget widget);
+
+        /// <summary>
+        ///     Registers multiple widgets at once.
+        /// </summary>
+        /// <param name="widgets">
+        ///     The widgets.
+        /// </param>
+        /// <exception cref="ArgumentNullException"><paramref name="widgets"/> is <see langword="null" />.</exception>
+        void Register([NotNull, ItemNotNull] IEnumerable<IWidget> widgets);
     }
 }
