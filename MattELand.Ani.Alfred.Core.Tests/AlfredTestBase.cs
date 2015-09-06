@@ -63,6 +63,10 @@ namespace MattEland.Ani.Alfred.Tests
 
                 return alfred;
             }
+            set
+            {
+                value.RegisterAsProvidedInstance(typeof(IAlfred), Container);
+            }
         }
 
         /// <summary>

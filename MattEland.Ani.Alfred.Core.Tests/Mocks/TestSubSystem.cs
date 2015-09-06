@@ -157,7 +157,7 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
         /// <exception cref="ArgumentNullException">
         /// <paramref name="page" /> is <see langword="null" /> .
         /// </exception>
-        internal void AddAutoRegisterPage([NotNull] AlfredPage page)
+        internal void AddAutoRegisterPage([NotNull] IAlfredPage page)
         {
             if (page == null)
             {

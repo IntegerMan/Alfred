@@ -25,9 +25,7 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
     {
         /// <summary>Initializes a new instance of the <see cref="AlfredSubsystem" /> class.</summary>
         /// <param name="container">The container.</param>
-        public TestPage([NotNull] IObjectContainer container) : base(container, "Test Page", "Test")
-        {
-        }
+        public TestPage([NotNull] IObjectContainer container) : base(container, "Test Page", "Test") { }
 
         /// <summary>
         ///     Gets or sets the last time the page was updated.
