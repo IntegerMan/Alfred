@@ -7,7 +7,6 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -15,7 +14,7 @@ using System.Linq;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Tests.Mocks;
+using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Testing;
 
 using Moq;
@@ -138,14 +137,14 @@ namespace MattEland.Ani.Alfred.Tests.Pages
         ///     Prepare the test subsystem prior to registration and startup.
         /// </summary>
         /// <param name="testSubsystem"> The test subsystem. </param>
-        protected override void PrepareTestSubsystem(TestSubsystem testSubsystem)
+        protected override void PrepareTestSubsystem(SimpleSubsystem testSubsystem)
         {
             base.PrepareTestSubsystem(testSubsystem);
 
             // Add all pages we want t o register to the test
             foreach (var page in _testPages)
             {
-                testSubsystem.RegisterPages.Add(page);
+                testSubsystem.PagesToRegister.Add(page);
             }
         }
 

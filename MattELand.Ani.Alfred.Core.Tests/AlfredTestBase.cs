@@ -9,7 +9,6 @@ using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Ani.Alfred.PresentationShared.Commands;
-using MattEland.Ani.Alfred.Tests.Mocks;
 using MattEland.Common;
 using MattEland.Common.Providers;
 using MattEland.Testing;
@@ -96,7 +95,7 @@ namespace MattEland.Ani.Alfred.Tests
         /// <value>
         ///     The test subsystem.
         /// </value>
-        protected TestSubsystem TestSubsystem { get; set; }
+        protected SimpleSubsystem TestSubsystem { get; set; }
 
         /// <summary>
         ///     Creates and starts up the <see cref="IAlfred"/> instance.
@@ -108,7 +107,7 @@ namespace MattEland.Ani.Alfred.Tests
         protected AlfredApplication StartAlfred()
         {
             // Create test subsystem
-            TestSubsystem = new TestSubsystem(Container);
+            TestSubsystem = new SimpleSubsystem(Container, "Test Subsystem", "Test");
             TestSubsystem.RegisterAsProvidedInstance(Container);
 
             // Allow individual tests to customize the Test Subsystem as needed
@@ -137,7 +136,7 @@ namespace MattEland.Ani.Alfred.Tests
         ///     Prepare the test subsystem prior to registration and startup.
         /// </summary>
         /// <param name="testSubsystem"> The test subsystem. </param>
-        protected virtual void PrepareTestSubsystem([NotNull] TestSubsystem testSubsystem)
+        protected virtual void PrepareTestSubsystem([NotNull] SimpleSubsystem testSubsystem)
         {
             // Do nothing. Individual tests can manipulate this as needed via overrides
         }
