@@ -151,12 +151,12 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
         }
 
         /// <summary>
-        ///     Adds a <paramref name="page"/> to be automatically registered on initialization
+        ///     Adds a <paramref name="page"/> to be automatically registered on initialization.
         /// </summary>
-        /// <param name="page">The page.</param>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="page" /> is <see langword="null" /> .
+        ///     <paramref name="page" /> is <see langword="null" /> .
         /// </exception>
+        /// <param name="page"> The page. </param>
         internal void AddAutoRegisterPage([NotNull] IAlfredPage page)
         {
             if (page == null)

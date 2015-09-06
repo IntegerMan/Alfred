@@ -21,12 +21,10 @@ using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Ani.Alfred.Core.Widgets;
-using MattEland.Ani.Alfred.Tests.Mocks;
 using MattEland.Common.Providers;
 using MattEland.Testing;
 
 using Moq;
-using Moq.Protected;
 
 using NUnit.Framework;
 
@@ -50,7 +48,7 @@ namespace MattEland.Ani.Alfred.Tests
         private AlfredModuleListPage _page;
 
         [NotNull]
-        private TestSubsystem _subsystem;
+        private SimpleSubsystem _subsystem;
 
         /// <summary>
         ///     Sets up the Alfred provider's tests.
@@ -62,7 +60,7 @@ namespace MattEland.Ani.Alfred.Tests
 
             var alfred = new AlfredApplication(Container);
             alfred.RegisterAsProvidedInstance(typeof(IAlfred), Container);
-            _subsystem = new TestSubsystem(Container);
+            _subsystem = BuildTestSubsystem();
             _page = new AlfredModuleListPage(Container, "Test Page", "Test");
         }
 
@@ -184,12 +182,12 @@ namespace MattEland.Ani.Alfred.Tests
             mockModule.Setup(m => m.Initialize(It.Is<IAlfred>(a => a == Alfred)))
                 .Callback(() => mockModule.Object.Register(duplicateWidgets));
 
-            //! Act / Assert (exception expected)
-
             // Register all of the things
             _page.Register(mockModule.Object);
-            _subsystem.AddAutoRegisterPage(_page);
+            _subsystem.PagesToRegister.Add(_page);
             Alfred.Register(_subsystem);
+
+            //! Act / Assert (exception expected)
 
             // Start up Alfred and watch the world burn
             Alfred.Initialize();
@@ -226,7 +224,7 @@ namespace MattEland.Ani.Alfred.Tests
 
             // Set up our systems
             Alfred.Register(_subsystem);
-            _subsystem.AddAutoRegisterPage(_page);
+            _subsystem.PagesToRegister.Add(_page);
             _page.Register(testModule);
 
             //! Act

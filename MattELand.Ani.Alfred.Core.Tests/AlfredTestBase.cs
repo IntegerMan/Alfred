@@ -7,6 +7,7 @@ using MattEland.Ani.Alfred.Chat.Aiml;
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Ani.Alfred.PresentationShared.Commands;
 using MattEland.Ani.Alfred.Tests.Mocks;
 using MattEland.Common;
@@ -256,5 +257,15 @@ namespace MattEland.Ani.Alfred.Tests
             return console;
         }
 
+        /// <summary>
+        ///     Builds a <see cref="SimpleSubsystem"/> for testing.
+        /// </summary>
+        /// <returns>
+        ///     The subsystem.
+        /// </returns>
+        protected SimpleSubsystem BuildTestSubsystem()
+        {
+            return new SimpleSubsystem(Container, "Test Subsystem");
+        }
     }
 }
