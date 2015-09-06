@@ -60,38 +60,6 @@ namespace MattEland.Ani.Alfred.Tests.Pages
         }
 
         /// <summary>
-        ///     Builds a page mock.
-        /// </summary>
-        /// <param name="mockBehavior"> The mocking behavior for the new mock. </param>
-        /// <returns>
-        ///     The mock page.
-        /// </returns>
-        private Mock<IAlfredPage> BuildPageMock(MockBehavior mockBehavior)
-        {
-            // Some tests will want strict control over mocking and others won't
-            var mock = new Mock<IAlfredPage>(mockBehavior);
-
-            // Set up simple members we expect to be hit during startup
-            mock.SetupGet(p => p.IsRootLevel).Returns(true);
-            mock.Setup(p => p.OnRegistered(It.Is<IAlfred>(a => a == Alfred)));
-            mock.Setup(p => p.OnInitializationCompleted());
-            mock.Setup(p => p.Update());
-            mock.Setup(p => p.OnShutdownCompleted());
-
-            // When initialize is hit, set Status to Online
-            mock.Setup(p => p.Initialize(It.Is<IAlfred>(a => a == Alfred)))
-                .Callback(() => mock.SetupGet(p => p.Status)
-                    .Returns(AlfredStatus.Online));
-
-            // When shutdown is hit, set Status to Offline
-            mock.Setup(p => p.Shutdown())
-                .Callback(() => mock.SetupGet(p => p.Status)
-                .Returns(AlfredStatus.Offline));
-
-            return mock;
-        }
-
-        /// <summary>
         ///     When Alfred is initialized, a message will be sent to all member pages to initialize.
         /// </summary>
         [Test]

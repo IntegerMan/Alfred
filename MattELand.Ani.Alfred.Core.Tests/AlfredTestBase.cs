@@ -13,6 +13,8 @@ using MattEland.Common;
 using MattEland.Common.Providers;
 using MattEland.Testing;
 
+using Moq;
+
 using NUnit.Framework;
 
 using Shouldly;
@@ -24,6 +26,7 @@ namespace MattEland.Ani.Alfred.Tests
     /// </summary>
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
+    [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     public abstract class AlfredTestBase : UnitTestBase
     {
         /// <summary>
@@ -207,16 +210,35 @@ namespace MattEland.Ani.Alfred.Tests
         }
 
         /// <summary>
-        ///     Builds test page.
+        ///     Builds a page mock.
         /// </summary>
-        /// <param name="isRoot"> <see langword="true"/> if this instance is root. </param>
+        /// <param name="mockBehavior"> The mocking behavior for the new mock. </param>
         /// <returns>
-        ///     A <see cref="TestPage"/>.
+        ///     The mock page.
         /// </returns>
-        [NotNull]
-        protected TestPage BuildTestPage(bool isRoot)
+        protected Mock<IAlfredPage> BuildPageMock(MockBehavior mockBehavior)
         {
-            return new TestPage(Container) { IsRootLevel = isRoot };
+            // Some tests will want strict control over mocking and others won't
+            var mock = new Mock<IAlfredPage>(mockBehavior);
+
+            // Set up simple members we expect to be hit during startup
+            mock.SetupGet(p => p.IsRootLevel).Returns(true);
+            mock.Setup(p => p.OnRegistered(It.IsAny<IAlfred>()));
+            mock.Setup(p => p.OnInitializationCompleted());
+            mock.Setup(p => p.Update());
+            mock.Setup(p => p.OnShutdownCompleted());
+
+            // When initialize is hit, set Status to Online
+            mock.Setup(p => p.Initialize(It.IsAny<IAlfred>()))
+                .Callback(() => mock.SetupGet(p => p.Status)
+                                    .Returns(AlfredStatus.Online));
+
+            // When shutdown is hit, set Status to Offline
+            mock.Setup(p => p.Shutdown())
+                .Callback(() => mock.SetupGet(p => p.Status)
+                                    .Returns(AlfredStatus.Offline));
+
+            return mock;
         }
 
         /// <summary>
@@ -233,5 +255,6 @@ namespace MattEland.Ani.Alfred.Tests
 
             return console;
         }
+
     }
 }
