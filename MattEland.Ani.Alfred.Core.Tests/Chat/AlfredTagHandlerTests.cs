@@ -7,19 +7,21 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Reflection;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat;
 using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
-using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Tests.Mocks;
-using MattEland.Common;
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Testing;
 
 using NUnit.Framework;
+
+using Shouldly;
 
 namespace MattEland.Ani.Alfred.Tests.Chat
 {
@@ -58,22 +60,29 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             Assert.AreEqual("alfred", attribute.Name, "Handler did not handle the expected type");
         }
 
+        /// <summary>
+        ///     Tests that saying something with an AIML command tag causes the command to be routed
+        /// </summary>
         [Test]
         public void AlfredTagHandlerCausesCommandToBeInvoked()
         {
+            //! Arrange
+
+            var console = Container.Provide<IConsole>();
+
+            //! Act
+
             Say("TEST COMMAND INVOKE");
 
-            var testAlfred = Container.Provide<TestAlfred>();
+            //! Assert - check that the event log contains an entry for the event firing
 
-            var command = testAlfred.LastCommand;
+            var events = console.Events.Where(e => e.Title == "CommandRouting").ToList();
+            events.Count().ShouldBe(1);
 
-            var subsystem = "test";
-            var expected = "invoketest";
+            var logEntry = events.First();
+            logEntry.ShouldNotBeNull();
 
-            Assert.IsNotNull(Engine.Owner, "Chat Engine had no owner. Commands will not be routed without an owner.");
-            Assert.That(command != ChatCommand.Empty, "Alfred's last command was an empty command. No command was invoked.");
-            Assert.That(command.Subsystem.Matches(subsystem), $"Chat Command had subsystem of '{command.Subsystem}' instead of '{subsystem}'");
-            Assert.That(command.Name.Matches(expected), $"Chat Command had command of '{command.Name}' instead of '{expected}'");
+            logEntry.Message.ShouldBe(@"Command 'invoketest' raised for subsystem 'test' with data value of ''.");
         }
 
     }

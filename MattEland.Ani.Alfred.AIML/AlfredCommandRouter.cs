@@ -24,11 +24,15 @@ namespace MattEland.Ani.Alfred.Chat
     ///     This class takes commands in and handles them by routing them to various components in an
     ///     Alfred application.
     /// </summary>
-    internal class AlfredCommandRouter : IAlfredCommandRecipient, IShellCommandRecipient
+    internal class AlfredCommandRouter : IAlfredCommandRecipient, IShellCommandRecipient, IHasContainer
     {
-        /// <summary>Initializes a new instance of the <see cref="object" /> class.</summary>
-        /// <param name="container">The container.</param>
-        /// <exception cref="ArgumentNullException">Thrown when one or more required arguments are null.</exception>
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="AlfredCommandRouter" /> class.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when one or more required arguments are null.
+        /// </exception>
+        /// <param name="container"> The container. </param>
         internal AlfredCommandRouter([NotNull] IObjectContainer container)
         {
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
@@ -36,13 +40,21 @@ namespace MattEland.Ani.Alfred.Chat
             Container = container;
         }
 
-        /// <summary>Gets the container.</summary>
-        /// <value>The container.</value>
+        /// <summary>
+        ///     Gets the container.
+        /// </summary>
+        /// <value>
+        ///     The container.
+        /// </value>
         [NotNull]
-        private IObjectContainer Container { get; }
+        public IObjectContainer Container { get; }
 
-        /// <summary>Gets or sets the alfred instance.</summary>
-        /// <value>The <see cref="MattEland.Ani.Alfred.Chat.AlfredCommandRouter.Alfred" /> instance.</value>
+        /// <summary>
+        ///     Gets or sets the Alfred instance.
+        /// </summary>
+        /// <value>
+        ///     The <see cref="AlfredCommandRouter.Alfred" /> instance.
+        /// </value>
         [CanBeNull]
         public IAlfred Alfred { get; set; }
 
@@ -83,10 +95,14 @@ namespace MattEland.Ani.Alfred.Chat
             return false;
         }
 
-        /// <summary>Processes a <see cref="ShellCommand" /> by sending it on to the user
-        ///     <see langword="interface" /> layer.</summary>
-        /// <param name="command">The command.</param>
-        /// <returns>A string indicating the result of the command.</returns>
+        /// <summary>
+        ///     Processes a <see cref="ShellCommand" /> by sending it on to the user
+        ///     <see langword="interface" /> layer.
+        /// </summary>
+        /// <param name="command"> The command. </param>
+        /// <returns>
+        ///     A string indicating the result of the command.
+        /// </returns>
         [NotNull]
         public string ProcessShellCommand(ShellCommand command)
         {
@@ -100,10 +116,14 @@ namespace MattEland.Ani.Alfred.Chat
             return result.NonNull();
         }
 
-        /// <summary>Logs a <see cref="ChatCommand" /> or <see cref="ShellCommand" /> .</summary>
-        /// <param name="commandName">Name of the command.</param>
-        /// <param name="commandTarget">The command target.</param>
-        /// <param name="commandData">Information describing additional parameters for the command.</param>
+        /// <summary>
+        ///     Logs a <see cref="ChatCommand" /> or <see cref="ShellCommand" /> .
+        /// </summary>
+        /// <param name="commandName"> Name of the command. </param>
+        /// <param name="commandTarget"> The command target. </param>
+        /// <param name="commandData">
+        ///     Information describing additional parameters for the command.
+        /// </param>
         private void LogCommand(
             [CanBeNull] string commandName,
             [CanBeNull] string commandTarget,

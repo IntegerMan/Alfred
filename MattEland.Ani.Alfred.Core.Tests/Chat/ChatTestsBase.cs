@@ -18,7 +18,6 @@ using MattEland.Ani.Alfred.Chat.Aiml;
 using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Ani.Alfred.Tests.Mocks;
@@ -37,13 +36,12 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
     public class ChatTestsBase : AlfredTestBase
     {
-        private IChatProvider _chat;
 
         [NotNull]
         private SystemMonitoringSubsystem _sysSubsystem;
 
         [NotNull]
-        private TestSubsystem _testSubsystem;
+        private IAlfredSubsystem _testSubsystem;
 
         [NotNull]
         public ValueMetricProviderFactory MetricProviderFactory
@@ -81,39 +79,6 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         /// <value>The chat engine.</value>
         [NotNull]
         protected ChatEngine Engine { get; set; }
-
-        /// <summary>
-        ///     Gets the chat provider.
-        /// </summary>
-        /// <value>The chat provider.</value>
-        public IChatProvider Chat
-        {
-            [DebuggerStepThrough]
-            get
-            {
-                return _chat;
-            }
-        }
-
-        [NotNull]
-        public new TestSubsystem TestSubsystem
-        {
-            [DebuggerStepThrough]
-            get
-            {
-                return _testSubsystem;
-            }
-        }
-
-        [NotNull]
-        public SystemMonitoringSubsystem SysSubsystem
-        {
-            [DebuggerStepThrough]
-            get
-            {
-                return _sysSubsystem;
-            }
-        }
 
         /// <summary>
         ///     Asserts that the chat input gets a reply template with the specified ID.
@@ -218,7 +183,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             ChatSubsystem = new ChatSubsystem(Container, "Alfredo");
             alfred.Register(ChatSubsystem);
 
-            _testSubsystem = new TestSubsystem(Container);
+            _testSubsystem = new SimpleSubsystem(Container, "Test Subsystem", "Test");
             alfred.Register(_testSubsystem);
 
             _sysSubsystem = new SystemMonitoringSubsystem(Container);
@@ -228,7 +193,6 @@ namespace MattEland.Ani.Alfred.Tests.Chat
 
             // Store Chat Handler Details
             var chatHandler = ChatSubsystem.ChatHandler;
-            _chat = chatHandler;
 
             // Store Engine
             Assert.IsNotNull(chatHandler.ChatEngine, "Chat Engine was null");
