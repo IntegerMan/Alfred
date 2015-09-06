@@ -24,6 +24,8 @@ using MattEland.Ani.Alfred.Tests.Mocks;
 using MattEland.Common;
 using MattEland.Common.Providers;
 
+using Moq;
+
 using NUnit.Framework;
 
 namespace MattEland.Ani.Alfred.Tests.Chat
@@ -34,6 +36,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     /// </summary>
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
+    [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     public class ChatTestsBase : AlfredTestBase
     {
 
@@ -183,7 +186,8 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             ChatSubsystem = new ChatSubsystem(Container, "Alfredo");
             alfred.Register(ChatSubsystem);
 
-            _testSubsystem = new SimpleSubsystem(Container, "Test Subsystem", "Test");
+            var mock = BuildMockSubsystem(MockBehavior.Loose);
+            _testSubsystem = mock.Object;
             alfred.Register(_testSubsystem);
 
             _sysSubsystem = new SystemMonitoringSubsystem(Container);
