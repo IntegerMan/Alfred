@@ -51,7 +51,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
             _module = new AlfredTimeModule(Container);
             _page.Register(_module);
 
-            var subsystem = new SimpleSubsystem(Container, "Test Subsystem");
+            var subsystem = BuildTestSubsystem();
             subsystem.PagesToRegister.Add(_page);
             _subsystem = subsystem;
 

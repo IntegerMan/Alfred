@@ -107,7 +107,7 @@ namespace MattEland.Ani.Alfred.Tests
         protected AlfredApplication StartAlfred()
         {
             // Create test subsystem
-            TestSubsystem = new SimpleSubsystem(Container, "Test Subsystem", "Test");
+            TestSubsystem = BuildTestSubsystem();
             TestSubsystem.RegisterAsProvidedInstance(Container);
 
             // Allow individual tests to customize the Test Subsystem as needed

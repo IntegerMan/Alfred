@@ -115,7 +115,6 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Subsystems\SystemSubsystemTests.cs" />
-    <Compile Include="Mocks\TestSubSystem.cs" />
     <Compile Include="Widgets\ExplorerWidgetTests.cs" />
     <Compile Include="Widgets\TextWidgetTests.cs" />
     <Compile Include="Modules\TimeModuleTests.cs" />

@@ -54,7 +54,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         /// <param name="module">The module.</param>
         private void RegisterTestModule([NotNull] IAlfred alfred, [NotNull] IAlfredModule module)
         {
-            var subsystem = new SimpleSubsystem(Container, "Test Subsystem", "Test");
+            var subsystem = BuildTestSubsystem();
 
             var page = new AlfredModuleListPage(Container, "Test Page", "Test");
             subsystem.PagesToRegister.Add(page);

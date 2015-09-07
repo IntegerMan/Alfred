@@ -13,6 +13,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Ani.Alfred.Tests.Mocks;
 using MattEland.Testing;
 
@@ -39,7 +40,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
         private Mock<IAlfredPage> _pageMock;
 
         [NotNull]
-        private TestSubsystem _subsystem;
+        private SimpleSubsystem _subsystem;
 
         /// <summary>
         ///     Arranges the scenario so that a page mock is set inside of Alfred inside of a test subsystem.
@@ -51,11 +52,11 @@ namespace MattEland.Ani.Alfred.Tests.Pages
             Alfred = new AlfredApplication(Container);
 
             // TODO: This should be a mock or simple non-test object
-            _subsystem = new TestSubsystem(Container);
+            _subsystem = BuildTestSubsystem();
 
             _pageMock = BuildPageMock(mockBehavior);
 
-            _subsystem.AddAutoRegisterPage(_pageMock.Object);
+            _subsystem.PagesToRegister.Add(_pageMock.Object);
             Alfred.Register(_subsystem);
         }
 
