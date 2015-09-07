@@ -18,6 +18,7 @@ using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Pages;
+using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Ani.Alfred.Tests.Mocks;
 using MattEland.Common;
 using MattEland.Common.Providers;
@@ -29,20 +30,30 @@ using Shouldly;
 
 namespace MattEland.Ani.Alfred.Tests.Modules
 {
+    /// <summary>
+    ///     Unit tests related to the <see cref="AlfredTimeModule"/>
+    /// </summary>
     [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public sealed class TimeModuleTests : AlfredTestBase
     {
+        /// <summary>
+        ///     Sets up the environment for each test.
+        /// </summary>
         [SetUp]
-        public void OnStartup()
+        public override void SetUp()
         {
+            base.SetUp();
+
             _alfred = new AlfredApplication(Container);
 
             _page = new AlfredModuleListPage(Container, "Time", "Time");
             _module = new AlfredTimeModule(Container);
             _page.Register(_module);
-            _subsystem = new TestSubsystem(Container);
-            _subsystem.AddAutoRegisterPage(_page);
+
+            var subsystem = new SimpleSubsystem(Container, "Test Subsystem");
+            subsystem.PagesToRegister.Add(_page);
+            _subsystem = subsystem;
 
             _alfred.RegistrationProvider.Register(_subsystem);
         }
@@ -54,7 +65,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         private AlfredTimeModule _module;
 
         [NotNull]
-        private TestSubsystem _subsystem;
+        private IAlfredSubsystem _subsystem;
 
         [NotNull]
         private AlfredModuleListPage _page;
