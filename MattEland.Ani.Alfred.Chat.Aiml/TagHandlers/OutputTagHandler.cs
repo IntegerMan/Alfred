@@ -20,7 +20,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     /// </summary>
     [HandlesAimlTag("that")]
     [UsedImplicitly]
-    public class OutputTagHandler : AimlTagHandler
+    internal sealed class OutputTagHandler : AimlTagHandler
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.

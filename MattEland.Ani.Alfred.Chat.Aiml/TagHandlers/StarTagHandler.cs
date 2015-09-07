@@ -21,8 +21,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     ///     InputStar collection for the query. This is a way of referencing the rest of a
     ///     sentence after handling part of the input.
     /// </summary>
-    [HandlesAimlTag("star")]
-    public class StarTagHandler : AimlTagHandler
+    [HandlesAimlTag("star"), PublicAPI]
+    public sealed class StarTagHandler : AimlTagHandler
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.

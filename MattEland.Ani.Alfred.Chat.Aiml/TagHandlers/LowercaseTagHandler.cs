@@ -20,7 +20,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     /// </summary>
     [HandlesAimlTag("lowercase")]
     [UsedImplicitly]
-    public class LowercaseTagHandler : AimlTagHandler
+    internal sealed class LowercaseTagHandler : AimlTagHandler
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.

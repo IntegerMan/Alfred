@@ -18,7 +18,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     ///     A tag handler for the AIML "system" tag. This tag currently does nothing.
     /// </summary>
     [HandlesAimlTag("system")]
-    public class SystemTagHandler : AimlTagHandler
+    [UsedImplicitly]
+    public sealed class SystemTagHandler : AimlTagHandler
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.

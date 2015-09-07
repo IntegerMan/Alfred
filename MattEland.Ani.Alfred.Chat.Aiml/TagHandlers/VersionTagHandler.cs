@@ -19,7 +19,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     /// </summary>
     [HandlesAimlTag("version")]
     [UsedImplicitly]
-    public class VersionTagHandler : AimlTagHandler
+    public sealed class VersionTagHandler : AimlTagHandler
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.

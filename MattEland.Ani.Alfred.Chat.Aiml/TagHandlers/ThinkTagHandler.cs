@@ -17,7 +17,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     ///     A tag handler for the AIML think tag. This outputs nothing.
     /// </summary>
     [HandlesAimlTag("think")]
-    public class ThinkTagHandler : AimlTagHandler
+    [UsedImplicitly]
+    internal sealed class ThinkTagHandler : AimlTagHandler
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.

@@ -19,7 +19,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     /// </summary>
     [HandlesAimlTag("size")]
     [UsedImplicitly]
-    public class SizeTagHandler : AimlTagHandler
+    internal sealed class SizeTagHandler : AimlTagHandler
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.

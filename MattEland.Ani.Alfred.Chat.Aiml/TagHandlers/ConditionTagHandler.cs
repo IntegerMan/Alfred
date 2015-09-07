@@ -20,12 +20,12 @@ using MattEland.Common;
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// <summary>
-    ///     This is an AimlTagHandler for the "condition" tag that is used for variable and branch
-    ///     evaluation
+    ///     This is an <see cref="AimlTagHandler"/> for the "condition" tag that is used for
+    ///     variable and branch evaluation
     /// </summary>
     [HandlesAimlTag("ConditionTagHandler")]
     [UsedImplicitly]
-    public class ConditionTagHandler : AimlTagHandler
+    public sealed class ConditionTagHandler : AimlTagHandler
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="ConditionTagHandler" /> class.

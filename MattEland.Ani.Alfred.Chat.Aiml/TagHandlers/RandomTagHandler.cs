@@ -28,7 +28,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     ///     the random tag.
     /// </remarks>
     [HandlesAimlTag("random"), UsedImplicitly]
-    public class RandomTagHandler : AimlTagHandler
+    public sealed class RandomTagHandler : AimlTagHandler
     {
         [NotNull]
         private static readonly Random _randomizer = new Random();

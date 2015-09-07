@@ -15,13 +15,14 @@ using MattEland.Common;
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// <summary>
-    ///     A tag handler for the AIML "gender" tag that subsitutes gender pronouns for their equivalent
+    ///     A tag handler for the AIML "gender" tag that substitutes gender pronouns for their equivalent
     ///     value in the chat engine's GenderSubstitutions
     /// 
     ///     See "http://www.alicebot.org/TR/2005/WD-aiml/#section-gender" for more on the gender tag.
     /// </summary>
     [HandlesAimlTag("gender")]
-    public class GenderTagHandler : AimlTagHandler
+    [UsedImplicitly]
+    internal sealed class GenderTagHandler : AimlTagHandler
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Root CoveredStatements="5670" TotalStatements="8364" CoveragePercent="68" ReportType="NDependXML" DotCoverVersion="3.1.1">
+<Root CoveredStatements="5673" TotalStatements="8362" CoveragePercent="68" ReportType="NDependXML" DotCoverVersion="3.1.1">
   <Assembly Name="MattEland.Ani.Alfred.Chat" CoveredStatements="449" TotalStatements="639" CoveragePercent="70">
     <Namespace Name="MattEland.Ani.Alfred.Chat" CoveredStatements="449" TotalStatements="639" CoveragePercent="70">
       <Type Name="AimlExplorerNode" CoveredStatements="33" TotalStatements="44" CoveragePercent="75">
@@ -183,8 +183,8 @@
       </Type>
     </Namespace>
   </Assembly>
-  <Assembly Name="MattEland.Ani.Alfred.Chat.Aiml" CoveredStatements="1038" TotalStatements="2184" CoveragePercent="48">
-    <Namespace Name="MattEland.Ani.Alfred.Chat.Aiml" CoveredStatements="416" TotalStatements="734" CoveragePercent="57">
+  <Assembly Name="MattEland.Ani.Alfred.Chat.Aiml" CoveredStatements="1037" TotalStatements="2182" CoveragePercent="48">
+    <Namespace Name="MattEland.Ani.Alfred.Chat.Aiml" CoveredStatements="415" TotalStatements="732" CoveragePercent="57">
       <Type Name="ChatEngine" CoveredStatements="66" TotalStatements="105" CoveragePercent="63">
         <Method Name=".ctor(IObjectContainer,String)" CoveredStatements="17" TotalStatements="21" CoveragePercent="81" FirstStatementLine="159" />
         <Method Name="AddCategoryToGraph(XmlNode,String)" CoveredStatements="6" TotalStatements="14" CoveragePercent="43" FirstStatementLine="352" />
@@ -331,19 +331,18 @@
         <Method Name="get_UserCtorNullId()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="456" />
         <Method Name="set_Culture(CultureInfo)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="58" />
       </Type>
-      <Type Name="User" CoveredStatements="29" TotalStatements="58" CoveragePercent="50">
+      <Type Name="User" CoveredStatements="28" TotalStatements="56" CoveragePercent="50">
         <Method Name=".ctor(String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="36" />
-        <Method Name=".ctor(String,Boolean)" CoveredStatements="10" TotalStatements="12" CoveragePercent="83" FirstStatementLine="29" />
-        <Method Name="AddResult(ChatResult)" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="204" />
-        <Method Name="get_IsSystemUser()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="141" />
-        <Method Name="get_LastChatOutput()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="130" />
-        <Method Name="get_LastChatResult()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="120" />
-        <Method Name="get_Name()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="93" />
-        <Method Name="get_Topic()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="105" />
-        <Method Name="get_UniqueId()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="84" />
-        <Method Name="get_UserVariables()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="75" />
-        <Method Name="GetInputSentence(Int32,Int32)" CoveredStatements="0" TotalStatements="12" CoveragePercent="0" FirstStatementLine="177" />
-        <Method Name="GetOutputSentence(Int32,Int32)" CoveredStatements="0" TotalStatements="12" CoveragePercent="0" FirstStatementLine="151" />
+        <Method Name=".ctor(String,Boolean)" CoveredStatements="9" TotalStatements="11" CoveragePercent="82" FirstStatementLine="29" />
+        <Method Name="AddResult(ChatResult)" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="191" />
+        <Method Name="get_IsSystemUser()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="128" />
+        <Method Name="get_LastChatOutput()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="117" />
+        <Method Name="get_LastChatResult()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="107" />
+        <Method Name="get_Name()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="80" />
+        <Method Name="get_Topic()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="92" />
+        <Method Name="get_UserVariables()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="71" />
+        <Method Name="GetInputSentence(Int32,Int32)" CoveredStatements="0" TotalStatements="12" CoveragePercent="0" FirstStatementLine="164" />
+        <Method Name="GetOutputSentence(Int32,Int32)" CoveredStatements="0" TotalStatements="12" CoveragePercent="0" FirstStatementLine="138" />
       </Type>
     </Namespace>
     <Namespace Name="MattEland.Ani.Alfred.Chat.Aiml.TagHandlers" CoveredStatements="146" TotalStatements="627" CoveragePercent="23">
@@ -1424,7 +1423,7 @@
       </Type>
     </Namespace>
   </Assembly>
-  <Assembly Name="MattEland.Ani.Alfred.Tests" CoveredStatements="1962" TotalStatements="2011" CoveragePercent="98">
+  <Assembly Name="MattEland.Ani.Alfred.Tests" CoveredStatements="1966" TotalStatements="2011" CoveragePercent="98">
     <Namespace Name="MattEland.Ani.Alfred.Tests" CoveredStatements="285" TotalStatements="305" CoveragePercent="93">
       <Type Name="AlfredEventingTests" CoveredStatements="87" TotalStatements="92" CoveragePercent="95">
         <Type Name="&lt;&gt;c" CoveredStatements="2" TotalStatements="2" CoveragePercent="100">
@@ -1884,19 +1883,20 @@
         <Method Name="SetUp()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="43" />
       </Type>
     </Namespace>
-    <Namespace Name="MattEland.Ani.Alfred.Tests.Presentation" CoveredStatements="51" TotalStatements="56" CoveragePercent="91">
-      <Type Name="VisibilityConverterTests" CoveredStatements="51" TotalStatements="56" CoveragePercent="91">
-        <Method Name="ConvertBackThrowsNotSupported()" CoveredStatements="4" TotalStatements="5" CoveragePercent="80" FirstStatementLine="237" />
-        <Method Name="ConverterDefaultsToCollapsed()" CoveredStatements="4" TotalStatements="5" CoveragePercent="80" FirstStatementLine="125" />
-        <Method Name="FalseResultsInCollapsed()" CoveredStatements="4" TotalStatements="5" CoveragePercent="80" FirstStatementLine="104" />
-        <Method Name="get_Converter()" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="47" />
-        <Method Name="get_Culture()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="73" />
-        <Method Name="get_TargetType()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="62" />
-        <Method Name="NullWhenInvertedReturnsVisible()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="216" />
-        <Method Name="TrueResultsInVisible()" CoveredStatements="4" TotalStatements="5" CoveragePercent="80" FirstStatementLine="83" />
-        <Method Name="TrueStringResultsInVisible()" CoveredStatements="4" TotalStatements="5" CoveragePercent="80" FirstStatementLine="146" />
-        <Method Name="WhenInvertedFalseReturnsVisible()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="193" />
-        <Method Name="WhenInvertedTrueReturnsCollapsed()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="169" />
+    <Namespace Name="MattEland.Ani.Alfred.Tests.Presentation" CoveredStatements="55" TotalStatements="56" CoveragePercent="98">
+      <Type Name="VisibilityConverterTests" CoveredStatements="55" TotalStatements="56" CoveragePercent="98">
+        <Method Name="ConvertBackThrowsNotSupported()" CoveredStatements="4" TotalStatements="5" CoveragePercent="80" FirstStatementLine="244" />
+        <Method Name="ConverterDefaultsToCollapsed()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="132" />
+        <Method Name="FalseResultsInCollapsed()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="111" />
+        <Method Name="get_Converter()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="58" />
+        <Method Name="get_Culture()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="80" />
+        <Method Name="get_TargetType()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="69" />
+        <Method Name="NullWhenInvertedReturnsVisible()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="223" />
+        <Method Name="SetUp()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="36" />
+        <Method Name="TrueResultsInVisible()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="90" />
+        <Method Name="TrueStringResultsInVisible()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="153" />
+        <Method Name="WhenInvertedFalseReturnsVisible()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="200" />
+        <Method Name="WhenInvertedTrueReturnsCollapsed()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="176" />
       </Type>
     </Namespace>
     <Namespace Name="MattEland.Ani.Alfred.Tests.Shell" CoveredStatements="12" TotalStatements="12" CoveragePercent="100">

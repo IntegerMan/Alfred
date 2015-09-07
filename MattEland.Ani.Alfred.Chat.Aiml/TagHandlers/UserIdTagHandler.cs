@@ -15,11 +15,11 @@ using MattEland.Common;
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// <summary>
-    ///     A tag handler for the AIML "id" tag that outputs the user's identifier found in the User.Id
-    ///     property.
+    ///     A tag handler for the AIML "id" tag that outputs the user's identifier found in
+    ///     <see cref="User.UniqueId"/>.
     /// </summary>
     [HandlesAimlTag("id"), UsedImplicitly]
-    public class UserIdTagHandler : AimlTagHandler
+    public sealed class UserIdTagHandler : AimlTagHandler
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.
@@ -36,7 +36,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// <returns>The processed output</returns>
         protected override string ProcessChange()
         {
-            return User.Name;
+            return User.UniqueId.ToString();
         }
     }
 }

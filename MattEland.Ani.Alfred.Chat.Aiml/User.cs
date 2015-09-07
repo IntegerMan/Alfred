@@ -54,6 +54,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             if (name.IsEmpty()) { throw new ArgumentOutOfRangeException(nameof(name)); }
 
             Name = name;
+            UniqueId = Guid.NewGuid();
             IsSystemUser = isSystemUser;
 
             // Set up the variables collection
@@ -78,6 +79,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// </value>
         [NotNull]
         public string Name { get; }
+
+
+        /// <summary>
+        ///     Gets the user's identifier.
+        /// </summary>
+        /// <value>The user's identifier.</value>
+        [NotNull]
+        public Guid UniqueId { get; }
 
         /// <summary>
         ///     Gets the topic.

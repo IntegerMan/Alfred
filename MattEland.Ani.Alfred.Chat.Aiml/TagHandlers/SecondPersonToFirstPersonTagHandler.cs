@@ -20,7 +20,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     /// </summary>
     [HandlesAimlTag("person2")]
     [UsedImplicitly]
-    public class SecondPersonToFirstPersonTagHandler : AimlTagHandler
+    internal sealed class SecondPersonToFirstPersonTagHandler : AimlTagHandler
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.

@@ -18,7 +18,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     /// </summary>
     [HandlesAimlTag("uppercase")]
     [UsedImplicitly]
-    public class UppercaseTagHandler : AimlTagHandler
+    internal sealed class UppercaseTagHandler : AimlTagHandler
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.

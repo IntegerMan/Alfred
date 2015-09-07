@@ -22,7 +22,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     /// </summary>
     [HandlesAimlTag("gossip")]
     [UsedImplicitly]
-    public class GossipTagHandler : AimlTagHandler
+    internal sealed class GossipTagHandler : AimlTagHandler
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.

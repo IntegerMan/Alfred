@@ -19,7 +19,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     /// </summary>
     [HandlesAimlTag("set")]
     [UsedImplicitly]
-    public class SetTagHandler : AimlTagHandler
+    internal sealed class SetTagHandler : AimlTagHandler
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.
