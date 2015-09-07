@@ -12,13 +12,11 @@ using System.Linq;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Widgets;
-using MattEland.Ani.Alfred.Tests.Mocks;
 using MattEland.Testing;
-
-using Moq;
 
 using NUnit.Framework;
 
@@ -42,7 +40,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         {
             base.SetUp();
 
-            Container.RegisterProvidedInstance(typeof(IAlfred), new TestAlfred(Container));
+            Container.RegisterProvidedInstance(typeof(IAlfred), new AlfredApplication(Container));
         }
 
         /// <summary>
