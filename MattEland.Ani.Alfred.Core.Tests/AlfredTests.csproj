@@ -86,7 +86,9 @@
     <Compile Include="Chat\ChatTestsBase.cs" />
     <Compile Include="Chat\ConversationTests.cs" />
     <Compile Include="Common\CommonExtensionTests.cs" />
+    <Compile Include="Common\CommonProviderRegisterTests.cs" />
     <Compile Include="Common\CommonProviderTests.cs" />
+    <Compile Include="Common\CommonProviderTestsBase.cs" />
     <Compile Include="Controls\ChatPaneTests.cs" />
     <Compile Include="Controls\ExplorerControlTests.cs" />
     <Compile Include="Controls\RootPagesControlTests.cs" />
