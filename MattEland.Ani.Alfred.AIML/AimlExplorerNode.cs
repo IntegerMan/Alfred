@@ -76,7 +76,9 @@ namespace MattEland.Ani.Alfred.Chat
         {
             get
             {
-                RebuildChildren();
+                // Only rebuild as needed
+                if (_children.Count != _node.Children.Count) { RebuildChildren(); }
+
                 return _children;
             }
         }

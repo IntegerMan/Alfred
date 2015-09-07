@@ -53,7 +53,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <value>
         /// The locale.
         /// </value>
-        public CultureInfo Locale
+        private CultureInfo Locale
         {
             get { return _chatEngine.Locale; }
         }
@@ -78,35 +78,33 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             if (!Directory.Exists(directoryPath))
             {
                 var message = string.Format(Locale,
-                                            "The directory specified as the directoryPath to the AIML files ({0}) cannot be found by the AimlLoader object. Please make sure the directory where you think the AIML files are to be found is the same as the directory specified in the settings file.",
+                                            @"The directory specified as the directoryPath to the AIML files ({0}) cannot be found by the AimlLoader object. Please make sure the directory where you think the AIML files are to be found is the same as the directory specified in the settings file.",
                                             directoryPath);
                 throw new DirectoryNotFoundException(message);
             }
 
             // Grab all files in the directory that should meet our needs
-            Log(
-                string.Format(Locale,
-                              "Starting to process AIML files found in the directory {0}",
+            Log(string.Format(Locale,
+                              @"Starting to process AIML files found in the directory {0}",
                               directoryPath),
                 LogLevel.Verbose);
 
             var files = Directory.GetFiles(directoryPath, "*.aiml");
             if (files.Length <= 0)
             {
-                Log(
-                    string.Format(Locale,
-                                  "Could not find any .aiml files in the specified directory ({0}). Please make sure that your aiml file end in a lowercase aiml extension, for example - myFile.aiml is valid but myFile.AIML is not.",
+                Log(string.Format(Locale,
+                                  @"Could not find any .aiml files in the specified directory ({0}). Please make sure that your aiml file end in a lowercase aiml extension, for example - myFile.aiml is valid but myFile.AIML is not.",
                                   directoryPath),
                     LogLevel.Error);
+
                 return;
             }
 
             // Load each file we've found
             foreach (var filename in files) { LoadAimlFileSafe(filename); }
 
-            Log(
-                string.Format(Locale,
-                              "Finished processing the AIML files. {0} categories processed.",
+            Log(string.Format(Locale,
+                              @"Finished processing the AIML files. {0} categories processed.",
                               _chatEngine.NodeCount),
                 LogLevel.Verbose);
         }
@@ -390,12 +388,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         ///     <paramref name="topicName" /> values.
         /// </returns>
         [NotNull]
-        public string BuildPathString(
+        internal string BuildPathString(
             [NotNull] string pattern,
             [NotNull] string that,
             [NotNull] string topicName,
             bool isUserInput)
         {
+            // TODO: This method has a high cyclomatic complexity and should be refactored
+
             //- Validate inputs
             if (pattern == null) { throw new ArgumentNullException(nameof(pattern)); }
             if (that == null) { throw new ArgumentNullException(nameof(that)); }
@@ -406,15 +406,17 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 
             // Build pattern string
             pattern = trustInput ? pattern.Trim() : Normalize(pattern, isUserInput).Trim();
-            if (string.IsNullOrEmpty(pattern)) { return string.Empty; }
+            if (string.IsNullOrEmpty(pattern))
+            {
+                return string.Empty;
+            }
 
             // Build "that" display string
             that = trustInput ? that.Trim() : Normalize(that, isUserInput).Trim();
-            if (string.IsNullOrEmpty(that))
+            if (string.IsNullOrEmpty(that) || that.Length > _chatEngine.MaxThatSize)
             {
                 that = "*";
             }
-            else if (that.Length > _chatEngine.MaxThatSize) { that = "*"; }
 
             // Build Topic display string
             topicName = trustInput ? topicName.Trim() : Normalize(topicName, isUserInput).Trim();
@@ -439,7 +441,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <param name="isUserInput">The is user input.</param>
         /// <returns>The normalized <paramref name="input" /></returns>
         [NotNull]
-        public string Normalize([CanBeNull] string input, bool isUserInput)
+        private string Normalize([CanBeNull] string input, bool isUserInput)
         {
             // Do common substitutions
             input = TextSubstitutionHelper.Substitute(_chatEngine.Librarian.Substitutions, input);

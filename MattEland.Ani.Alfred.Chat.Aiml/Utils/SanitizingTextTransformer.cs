@@ -18,24 +18,27 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
     /// <summary>
     ///     A text transformer to remove illegal characters.
     /// </summary>
-    public class SanitizingTextTransformer : TextTransformerBase
+    internal sealed class SanitizingTextTransformer : TextTransformerBase
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="TextTransformerBase" /> class.
         /// </summary>
         /// <param name="chatEngine">The ChatEngine.</param>
-        public SanitizingTextTransformer([NotNull] ChatEngine chatEngine)
+        internal SanitizingTextTransformer([NotNull] ChatEngine chatEngine)
             : base(chatEngine)
         {
-            StripperRegexPattern = @"[^0-9a-zA-Z_]";
+            SanitizerRegularExpression = @"[^0-9a-zA-Z_]";
         }
 
         /// <summary>
-        ///     Gets or sets the illegal character stripper regex pattern.
+        ///     Gets the illegal character stripper regular expression pattern. Items matching this
+        ///     pattern will be replaced with spaces.
         /// </summary>
-        /// <value>The stripper regex pattern.</value>
+        /// <value>
+        ///     The stripper regular expression pattern.
+        /// </value>
         [NotNull]
-        public string StripperRegexPattern { get; }
+        private string SanitizerRegularExpression { get; }
 
         /// <summary>
         ///     Processes the input text and returns the processed value.
@@ -44,7 +47,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         protected override string ProcessChange()
         {
             // Removes illegal characters and replaces them with spaces
-            var regex = new Regex(StripperRegexPattern, RegexOptions.IgnorePatternWhitespace);
+            var regex = new Regex(SanitizerRegularExpression, RegexOptions.IgnorePatternWhitespace);
 
             return regex.Replace(InputString.NonNull(), " ");
         }

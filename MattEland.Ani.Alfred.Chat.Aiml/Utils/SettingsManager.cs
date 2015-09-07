@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Security;
@@ -34,14 +35,20 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
     /// 
     ///     TODO: Clean up this class by using more built in mechanisms
     /// </remarks>
-    public class SettingsManager
+    public sealed class SettingsManager
     {
+        /// <summary>
+        ///     The ordered list of keys.
+        /// </summary>
         [NotNull]
         [ItemNotNull]
-        private readonly List<string> _orderedKeys = new List<string>();
+        private readonly IList<string> _orderedKeys = new List<string>();
 
+        /// <summary>
+        ///     The settings dictionary.
+        /// </summary>
         [NotNull]
-        private readonly Dictionary<string, string> _settingsHash = new Dictionary<string, string>();
+        private readonly IDictionary<string, string> _dictionary = new Dictionary<string, string>();
 
         /// <summary>
         ///     Gets the number of keys in the keys collection.
@@ -56,9 +63,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         ///     Gets the setting names as an array.
         /// </summary>
         /// <value>The setting names.</value>
-        /// <remarks>TODO: I'd love to remove this or use IEnumerable instead</remarks>
         [NotNull, ItemNotNull]
-        public IEnumerable<string> Keys
+        internal IEnumerable<string> Keys
         {
             get
             {
@@ -87,7 +93,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         ///     an unmapped drive).
         /// </exception>
         /// <exception cref="IOException">An I/O error occurred while opening the file. </exception>
-        public void Load([NotNull] string pathToSettings)
+        internal void Load([NotNull] string pathToSettings)
         {
             if (pathToSettings == null)
             {
@@ -118,8 +124,10 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// </summary>
         /// <param name="document">The settings as XML.</param>
         /// <exception cref="ArgumentNullException"><paramref name="document" /> is <see langword="null" />.</exception>
-        public void Load([NotNull] XmlDocument document)
+        private void Load([NotNull] XmlDocument document)
         {
+            // TODO: This method has a high cyclomatic complexity and should be refactored
+
             if (document == null)
             {
                 throw new ArgumentNullException(nameof(document));
@@ -181,7 +189,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             Remove(name);
 
             _orderedKeys.Add(name);
-            _settingsHash.Add(name, value);
+            _dictionary.Add(name, value);
         }
 
         /// <summary>
@@ -189,7 +197,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// </summary>
         /// <param name="name">The name.</param>
         /// <exception cref="ArgumentNullException"><paramref name="name" /> is <see langword="null" />.</exception>
-        public void Remove([NotNull] string name)
+        internal void Remove([NotNull] string name)
         {
             if (name == null)
             {
@@ -209,35 +217,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <param name="name">The name.</param>
         private void RemoveFromHash([NotNull] string name)
         {
-            _settingsHash.Remove(name.ToUpperInvariant());
-        }
-
-        /// <summary>
-        ///     Updates the entry under name with the specified value.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="value">The value.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        public void Update([NotNull] string name, [CanBeNull] string value)
-        {
-            if (name == null)
-            {
-                throw new ArgumentNullException(nameof(name));
-            }
-
-            name = name.ToUpperInvariant();
-
-            if (!Contains(name))
-            {
-                //? This seems like it should throw an exception or delegate to Add
-                return;
-            }
-
-            // Remove it from the list so that when we add it again it'll be at the end
-            RemoveFromHash(name);
-
-            // Do a simple add
-            _settingsHash.Add(name, value);
+            _dictionary.Remove(name.ToUpperInvariant());
         }
 
         /// <summary>
@@ -246,7 +226,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         public void Clear()
         {
             _orderedKeys.Clear();
-            _settingsHash.Clear();
+            _dictionary.Clear();
         }
 
         /// <summary>
@@ -256,7 +236,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <returns>The value in the dictionary</returns>
         /// <exception cref="System.ArgumentNullException"></exception>
         [NotNull]
-        public string GetValue([NotNull] string name)
+        internal string GetValue([NotNull] string name)
         {
             if (name == null)
             {
@@ -265,7 +245,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 
             name = name.ToUpperInvariant();
 
-            return Contains(name) ? _settingsHash[name].NonNull() : string.Empty;
+            return Contains(name) ? _dictionary[name].NonNull() : string.Empty;
         }
 
         /// <summary>
@@ -274,7 +254,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <param name="name">The name.</param>
         /// <returns><c>true</c> if there is an entry for name; otherwise, <c>false</c>.</returns>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public bool Contains([NotNull] string name)
+        internal bool Contains([NotNull] string name)
         {
             if (name == null)
             {
@@ -303,17 +283,22 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         }
 
         /// <summary>
-        ///     Loads files from the specified settings path and logs any encountered errors to the logger.
-        ///     This method will not throw exceptions due to failures while loading the dictionary.
+        ///     Loads files from the specified settings path and logs any encountered errors to the
+        ///     <paramref name="logger"/>. This method will not <see langword="throw"/> exceptions due to
+        ///     failures while loading the dictionary.
         /// </summary>
-        /// <param name="pathToSettings">The path to settings.</param>
-        /// <param name="logger">The logger.</param>
-        /// <param name="locale">The locale.</param>
-        /// <exception cref="ArgumentNullException">pathToSettings, locale</exception>
-        public void LoadSafe([NotNull] string pathToSettings,
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when one or more required arguments are null.
+        /// </exception>
+        /// <param name="pathToSettings"> The path to settings. </param>
+        /// <param name="logger"> The logger. </param>
+        /// <param name="locale"> The locale. </param>
+        internal void LoadSafe([NotNull] string pathToSettings,
                              [CanBeNull] IConsole logger,
                              [NotNull] CultureInfo locale)
         {
+            // TODO: This method has a high cyclomatic complexity and should be refactored
+
             //- Validate
             if (pathToSettings == null)
             {
@@ -385,7 +370,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// <param name="locale">The locale.</param>
         /// <exception cref="ArgumentNullException">
         ///   <paramref name="xml" /> is <see langword="null" />.</exception>
-        public void LoadXmlSafe([NotNull] string xml,
+        internal void LoadXmlSafe([NotNull] string xml,
                                 [CanBeNull] IConsole logger,
                                 [CanBeNull] CultureInfo locale)
         {
@@ -419,13 +404,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         ///     There is a load or parse error in the XML. In this case, the
         ///     document remains empty.
         /// </exception>
-        public void LoadXml([NotNull] string xml)
+        [SuppressMessage("ReSharper", "ExceptionNotThrown")]
+        private void LoadXml([NotNull] string xml)
         {
-            if (xml == null)
-            {
-                throw new ArgumentNullException(nameof(xml));
-            }
-
             var document = new XmlDocument();
             document.LoadXml(xml);
 
