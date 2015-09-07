@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Root CoveredStatements="5673" TotalStatements="8362" CoveragePercent="68" ReportType="NDependXML" DotCoverVersion="3.1.1">
+<Root CoveredStatements="5674" TotalStatements="8364" CoveragePercent="68" ReportType="NDependXML" DotCoverVersion="3.1.1">
   <Assembly Name="MattEland.Ani.Alfred.Chat" CoveredStatements="449" TotalStatements="639" CoveragePercent="70">
     <Namespace Name="MattEland.Ani.Alfred.Chat" CoveredStatements="449" TotalStatements="639" CoveragePercent="70">
       <Type Name="AimlExplorerNode" CoveredStatements="33" TotalStatements="44" CoveragePercent="75">
@@ -183,8 +183,8 @@
       </Type>
     </Namespace>
   </Assembly>
-  <Assembly Name="MattEland.Ani.Alfred.Chat.Aiml" CoveredStatements="1037" TotalStatements="2182" CoveragePercent="48">
-    <Namespace Name="MattEland.Ani.Alfred.Chat.Aiml" CoveredStatements="415" TotalStatements="732" CoveragePercent="57">
+  <Assembly Name="MattEland.Ani.Alfred.Chat.Aiml" CoveredStatements="1038" TotalStatements="2184" CoveragePercent="48">
+    <Namespace Name="MattEland.Ani.Alfred.Chat.Aiml" CoveredStatements="416" TotalStatements="734" CoveragePercent="57">
       <Type Name="ChatEngine" CoveredStatements="66" TotalStatements="105" CoveragePercent="63">
         <Method Name=".ctor(IObjectContainer,String)" CoveredStatements="17" TotalStatements="21" CoveragePercent="81" FirstStatementLine="159" />
         <Method Name="AddCategoryToGraph(XmlNode,String)" CoveredStatements="6" TotalStatements="14" CoveragePercent="43" FirstStatementLine="352" />
@@ -331,18 +331,19 @@
         <Method Name="get_UserCtorNullId()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="456" />
         <Method Name="set_Culture(CultureInfo)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="58" />
       </Type>
-      <Type Name="User" CoveredStatements="28" TotalStatements="56" CoveragePercent="50">
+      <Type Name="User" CoveredStatements="29" TotalStatements="58" CoveragePercent="50">
         <Method Name=".ctor(String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="36" />
-        <Method Name=".ctor(String,Boolean)" CoveredStatements="9" TotalStatements="11" CoveragePercent="82" FirstStatementLine="29" />
-        <Method Name="AddResult(ChatResult)" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="191" />
-        <Method Name="get_IsSystemUser()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="128" />
-        <Method Name="get_LastChatOutput()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="117" />
-        <Method Name="get_LastChatResult()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="107" />
-        <Method Name="get_Name()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="80" />
-        <Method Name="get_Topic()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="92" />
-        <Method Name="get_UserVariables()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="71" />
-        <Method Name="GetInputSentence(Int32,Int32)" CoveredStatements="0" TotalStatements="12" CoveragePercent="0" FirstStatementLine="164" />
-        <Method Name="GetOutputSentence(Int32,Int32)" CoveredStatements="0" TotalStatements="12" CoveragePercent="0" FirstStatementLine="138" />
+        <Method Name=".ctor(String,Boolean)" CoveredStatements="10" TotalStatements="12" CoveragePercent="83" FirstStatementLine="29" />
+        <Method Name="AddResult(ChatResult)" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="200" />
+        <Method Name="get_IsSystemUser()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="137" />
+        <Method Name="get_LastChatOutput()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="126" />
+        <Method Name="get_LastChatResult()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="116" />
+        <Method Name="get_Name()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="81" />
+        <Method Name="get_Topic()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="101" />
+        <Method Name="get_UniqueId()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="89" />
+        <Method Name="get_UserVariables()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="72" />
+        <Method Name="GetInputSentence(Int32,Int32)" CoveredStatements="0" TotalStatements="12" CoveragePercent="0" FirstStatementLine="173" />
+        <Method Name="GetOutputSentence(Int32,Int32)" CoveredStatements="0" TotalStatements="12" CoveragePercent="0" FirstStatementLine="147" />
       </Type>
     </Namespace>
     <Namespace Name="MattEland.Ani.Alfred.Chat.Aiml.TagHandlers" CoveredStatements="146" TotalStatements="627" CoveragePercent="23">
@@ -363,54 +364,54 @@
         <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="11" CoveragePercent="0" FirstStatementLine="44" />
       </Type>
       <Type Name="DateTagHandler" CoveredStatements="12" TotalStatements="12" CoveragePercent="100">
-        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="29" />
-        <Method Name="ProcessChange()" CoveredStatements="9" TotalStatements="9" CoveragePercent="100" FirstStatementLine="36" />
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="30" />
+        <Method Name="ProcessChange()" CoveredStatements="9" TotalStatements="9" CoveragePercent="100" FirstStatementLine="37" />
       </Type>
       <Type Name="FirstPersonToSecondPersonTagHandler" CoveredStatements="0" TotalStatements="18" CoveragePercent="0">
         <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="30" />
         <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="15" CoveragePercent="0" FirstStatementLine="39" />
       </Type>
       <Type Name="FormalTagHandler" CoveredStatements="0" TotalStatements="27" CoveragePercent="0">
-        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="32" />
-        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="24" CoveragePercent="0" FirstStatementLine="39" />
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="34" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="24" CoveragePercent="0" FirstStatementLine="41" />
       </Type>
       <Type Name="GenderTagHandler" CoveredStatements="0" TotalStatements="15" CoveragePercent="0">
-        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="31" />
-        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="12" CoveragePercent="0" FirstStatementLine="40" />
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="33" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="12" CoveragePercent="0" FirstStatementLine="42" />
       </Type>
       <Type Name="GetTagHandler" CoveredStatements="0" TotalStatements="13" CoveragePercent="0">
-        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="28" />
-        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="10" CoveragePercent="0" FirstStatementLine="35" />
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="29" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="10" CoveragePercent="0" FirstStatementLine="36" />
       </Type>
       <Type Name="GossipTagHandler" CoveredStatements="0" TotalStatements="11" CoveragePercent="0">
-        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="31" />
-        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="8" CoveragePercent="0" FirstStatementLine="40" />
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="32" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="8" CoveragePercent="0" FirstStatementLine="41" />
       </Type>
       <Type Name="HandlesAimlTagAttribute" CoveredStatements="5" TotalStatements="5" CoveragePercent="100">
         <Method Name=".ctor(String)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="28" />
         <Method Name="get_Name()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="40" />
       </Type>
       <Type Name="InputTagHandler" CoveredStatements="0" TotalStatements="28" CoveragePercent="0">
-        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="29" />
-        <Method Name="LogBadIndex(String)" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="74" />
-        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="21" CoveragePercent="0" FirstStatementLine="38" />
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="30" />
+        <Method Name="LogBadIndex(String)" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="75" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="21" CoveragePercent="0" FirstStatementLine="39" />
       </Type>
       <Type Name="JavaScriptTagHandler" CoveredStatements="0" TotalStatements="7" CoveragePercent="0">
-        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="28" />
-        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="37" />
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="30" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="39" />
       </Type>
       <Type Name="LearnTagHandler" CoveredStatements="0" TotalStatements="49" CoveragePercent="0">
-        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="35" />
-        <Method Name="LearnFromDocument(String)" CoveredStatements="0" TotalStatements="13" CoveragePercent="0" FirstStatementLine="111" />
-        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="33" CoveragePercent="0" FirstStatementLine="44" />
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="37" />
+        <Method Name="LearnFromDocument(String)" CoveredStatements="0" TotalStatements="13" CoveragePercent="0" FirstStatementLine="115" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="33" CoveragePercent="0" FirstStatementLine="46" />
       </Type>
       <Type Name="LowercaseTagHandler" CoveredStatements="0" TotalStatements="9" CoveragePercent="0">
-        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="29" />
-        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="36" />
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="30" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="37" />
       </Type>
       <Type Name="OutputTagHandler" CoveredStatements="0" TotalStatements="24" CoveragePercent="0">
-        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="29" />
-        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="21" CoveragePercent="0" FirstStatementLine="38" />
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="30" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="21" CoveragePercent="0" FirstStatementLine="39" />
       </Type>
       <Type Name="RandomTagHandler" CoveredStatements="21" TotalStatements="25" CoveragePercent="84">
         <Type Name="&lt;&gt;c" CoveredStatements="1" TotalStatements="1" CoveragePercent="100">
@@ -425,21 +426,21 @@
         <Method Name="ProcessChange()" CoveredStatements="10" TotalStatements="10" CoveragePercent="100" FirstStatementLine="36" />
       </Type>
       <Type Name="SecondPersonToFirstPersonTagHandler" CoveredStatements="0" TotalStatements="15" CoveragePercent="0">
-        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="30" />
-        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="12" CoveragePercent="0" FirstStatementLine="39" />
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="31" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="12" CoveragePercent="0" FirstStatementLine="40" />
       </Type>
       <Type Name="SentenceTagHandler" CoveredStatements="0" TotalStatements="33" CoveragePercent="0">
-        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="33" />
-        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="8" CoveragePercent="0" FirstStatementLine="42" />
-        <Method Name="ProcessSentenceText(String)" CoveredStatements="0" TotalStatements="22" CoveragePercent="0" FirstStatementLine="60" />
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="34" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="8" CoveragePercent="0" FirstStatementLine="43" />
+        <Method Name="ProcessSentenceText(String)" CoveredStatements="0" TotalStatements="22" CoveragePercent="0" FirstStatementLine="61" />
       </Type>
       <Type Name="SetTagHandler" CoveredStatements="0" TotalStatements="18" CoveragePercent="0">
-        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="28" />
-        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="15" CoveragePercent="0" FirstStatementLine="35" />
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="29" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="15" CoveragePercent="0" FirstStatementLine="36" />
       </Type>
       <Type Name="SizeTagHandler" CoveredStatements="0" TotalStatements="7" CoveragePercent="0">
-        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="28" />
-        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="35" />
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="29" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="36" />
       </Type>
       <Type Name="StarRedirectTagHandler" CoveredStatements="8" TotalStatements="8" CoveragePercent="100">
         <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="29" />
@@ -450,34 +451,34 @@
         <Method Name="ProcessChange()" CoveredStatements="7" TotalStatements="17" CoveragePercent="41" FirstStatementLine="40" />
       </Type>
       <Type Name="SystemTagHandler" CoveredStatements="0" TotalStatements="7" CoveragePercent="0">
-        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="28" />
-        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="37" />
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="29" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="38" />
       </Type>
       <Type Name="TagHandlerFactory" CoveredStatements="69" TotalStatements="115" CoveragePercent="60">
         <Type Name="&lt;&gt;c" CoveredStatements="1" TotalStatements="1" CoveragePercent="100">
-          <Method Name="&lt;RegisterTagHandlersInAppDomain&gt;b__3_0(Assembly)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="64" />
+          <Method Name="&lt;RegisterTagHandlersInAppDomain&gt;b__3_0(Assembly)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="67" />
         </Type>
-        <Method Name=".ctor(ChatEngine)" CoveredStatements="9" TotalStatements="9" CoveragePercent="100" FirstStatementLine="36" />
-        <Method Name="Build(XmlElement,SubQuery,Request,ChatResult,User,String)" CoveredStatements="9" TotalStatements="19" CoveragePercent="47" FirstStatementLine="153" />
-        <Method Name="BuildTagHandlerDynamic(String,TagHandlerParameters)" CoveredStatements="20" TotalStatements="35" CoveragePercent="57" FirstStatementLine="186" />
-        <Method Name="RegisterTagHandlersInAppDomain()" CoveredStatements="10" TotalStatements="10" CoveragePercent="100" FirstStatementLine="59" />
-        <Method Name="RegisterTagHandlersInAssembly(Assembly)" CoveredStatements="20" TotalStatements="41" CoveragePercent="49" FirstStatementLine="78" />
+        <Method Name=".ctor(ChatEngine)" CoveredStatements="9" TotalStatements="9" CoveragePercent="100" FirstStatementLine="39" />
+        <Method Name="Build(XmlElement,SubQuery,Request,ChatResult,User,String)" CoveredStatements="9" TotalStatements="19" CoveragePercent="47" FirstStatementLine="160" />
+        <Method Name="BuildTagHandlerDynamic(String,TagHandlerParameters)" CoveredStatements="20" TotalStatements="35" CoveragePercent="57" FirstStatementLine="193" />
+        <Method Name="RegisterTagHandlersInAppDomain()" CoveredStatements="10" TotalStatements="10" CoveragePercent="100" FirstStatementLine="62" />
+        <Method Name="RegisterTagHandlersInAssembly(Assembly)" CoveredStatements="20" TotalStatements="41" CoveragePercent="49" FirstStatementLine="83" />
       </Type>
       <Type Name="ThatStarTagHandler" CoveredStatements="0" TotalStatements="18" CoveragePercent="0">
         <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="30" />
         <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="15" CoveragePercent="0" FirstStatementLine="39" />
       </Type>
       <Type Name="ThinkTagHandler" CoveredStatements="0" TotalStatements="6" CoveragePercent="0">
-        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="27" />
-        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="36" />
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="29" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="38" />
       </Type>
       <Type Name="TopicStarTagHandler" CoveredStatements="0" TotalStatements="19" CoveragePercent="0">
         <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="31" />
         <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="16" CoveragePercent="0" FirstStatementLine="40" />
       </Type>
       <Type Name="UppercaseTagHandler" CoveredStatements="0" TotalStatements="7" CoveragePercent="0">
-        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="27" />
-        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="34" />
+        <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="28" />
+        <Method Name="ProcessChange()" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="35" />
       </Type>
       <Type Name="UserIdTagHandler" CoveredStatements="0" TotalStatements="6" CoveragePercent="0">
         <Method Name=".ctor(TagHandlerParameters)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="29" />
@@ -1991,12 +1992,12 @@
         <Method Name="NewButtonsDefaultToNullText()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="95" />
       </Type>
       <Type Name="ExplorerWidgetTests" CoveredStatements="18" TotalStatements="21" CoveragePercent="86">
-        <Method Name="ExplorerPageCanBeCreated()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="52" />
-        <Method Name="ExplorerPageIsVisible()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="88" />
-        <Method Name="ExplorerPageThrowsOnNoContainer()" CoveredStatements="2" TotalStatements="3" CoveragePercent="67" FirstStatementLine="63" />
-        <Method Name="ExplorerPageThrowsOnNoId()" CoveredStatements="2" TotalStatements="3" CoveragePercent="67" FirstStatementLine="79" />
-        <Method Name="ExplorerPageThrowsOnNoName()" CoveredStatements="2" TotalStatements="3" CoveragePercent="67" FirstStatementLine="71" />
-        <Method Name="SetUp()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="40" />
+        <Method Name="ExplorerPageCanBeCreated()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="49" />
+        <Method Name="ExplorerPageIsVisible()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="85" />
+        <Method Name="ExplorerPageThrowsOnNoContainer()" CoveredStatements="2" TotalStatements="3" CoveragePercent="67" FirstStatementLine="60" />
+        <Method Name="ExplorerPageThrowsOnNoId()" CoveredStatements="2" TotalStatements="3" CoveragePercent="67" FirstStatementLine="76" />
+        <Method Name="ExplorerPageThrowsOnNoName()" CoveredStatements="2" TotalStatements="3" CoveragePercent="67" FirstStatementLine="68" />
+        <Method Name="SetUp()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="37" />
       </Type>
       <Type Name="TextWidgetTests" CoveredStatements="11" TotalStatements="11" CoveragePercent="100">
         <Method Name="BuildWidgetParams(String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="52" />
