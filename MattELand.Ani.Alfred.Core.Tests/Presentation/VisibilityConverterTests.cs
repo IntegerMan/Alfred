@@ -29,6 +29,18 @@ namespace MattEland.Ani.Alfred.Tests.Presentation
     public sealed class VisibilityConverterTests : UnitTestBase
     {
         /// <summary>
+        ///     Sets up the environment for each test.
+        /// </summary>
+        [SetUp]
+        public override void SetUp()
+        {
+            base.SetUp();
+
+            // Ensure we have a new converter to deal with every test
+            _converter = null;
+        }
+
+        /// <summary>
         ///     The converter.
         /// </summary>
         [CanBeNull]
@@ -41,14 +53,9 @@ namespace MattEland.Ani.Alfred.Tests.Presentation
         /// The converter.
         /// </value>
         [NotNull]
-        public VisibilityConverter Converter
+        private VisibilityConverter Converter
         {
-            get
-            {
-                if (_converter == null) { _converter = new VisibilityConverter(); }
-
-                return _converter;
-            }
+            get { return _converter ?? (_converter = new VisibilityConverter()); }
         }
 
         /// <summary>
