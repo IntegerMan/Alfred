@@ -276,18 +276,28 @@ namespace MattEland.Ani.Alfred.Tests
         /// </returns>
         protected Mock<IAlfredSubsystem> BuildMockSubsystem(MockBehavior mockBehavior)
         {
+            // Build the Mock
             var mock = new Mock<IAlfredSubsystem>(mockBehavior);
 
+            // Setup Simple properties
             mock.SetupGet(s => s.Id).Returns("Test");
             mock.SetupGet(s => s.NameAndVersion).Returns("Test 1.0.0.0");
             mock.SetupGet(s => s.Status).Returns(AlfredStatus.Offline);
             mock.SetupGet(s => s.Pages).Returns(Container.ProvideCollection<IAlfredPage>());
 
+            // Setup simple methods
             mock.Setup(s => s.Update());
-            mock.Setup(s => s.Shutdown());
+            mock.Setup(s => s.OnRegistered(It.IsAny<IAlfred>()));
+            mock.Setup(s => s.OnInitializationCompleted());
+            mock.Setup(s => s.OnShutdownCompleted());
 
+            // Initialize causes the subsystem to go online
             mock.Setup(s => s.Initialize(It.IsAny<IAlfred>()))
                 .Callback(() => mock.SetupGet(s => s.Status).Returns(AlfredStatus.Online));
+
+            // Shutdown causes the subsystem to go offline
+            mock.Setup(s => s.Shutdown())
+                .Callback(() => mock.SetupGet(s => s.Status).Returns(AlfredStatus.Offline));
 
             return mock;
         }
