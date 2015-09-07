@@ -17,6 +17,7 @@ using MattEland.Ani.Alfred.Chat;
 using MattEland.Ani.Alfred.Chat.Aiml;
 using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
+using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Ani.Alfred.Core.Subsystems;
@@ -37,6 +38,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
+    [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
     public class ChatTestsBase : AlfredTestBase
     {
 
@@ -175,23 +177,21 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             AlfredTestTagHandler.WasInvoked = false;
 
             // Create Alfred and make it so the tests can find him via the Container
-            var alfred = new TestAlfred(Container);
-            alfred.RegisterAsProvidedInstance(Container);
-            alfred.RegisterAsProvidedInstance(typeof(IAlfred), Container);
+            Alfred = new AlfredApplication(Container);
 
             // Add Subsystems to Alfred
             CoreSubsystem = new AlfredCoreSubsystem(Container);
-            alfred.Register(CoreSubsystem);
+            Alfred.Register(CoreSubsystem);
 
             ChatSubsystem = new ChatSubsystem(Container, "Alfredo");
-            alfred.Register(ChatSubsystem);
+            Alfred.Register(ChatSubsystem);
 
             var mock = BuildMockSubsystem(MockBehavior.Loose);
             _testSubsystem = mock.Object;
-            alfred.Register(_testSubsystem);
+            Alfred.Register(_testSubsystem);
 
             _sysSubsystem = new SystemMonitoringSubsystem(Container);
-            alfred.Register(_sysSubsystem);
+            Alfred.Register(_sysSubsystem);
 
             MetricProviderFactory = Container.Provide<ValueMetricProviderFactory>();
 
@@ -206,12 +206,12 @@ namespace MattEland.Ani.Alfred.Tests.Chat
 
             if (shell != null)
             {
-                alfred.Register(shell);
+                Alfred.Register(shell);
             }
 
             // Start Alfred - doesn't make sense to have a chat test that doesn't need Alfred online first.
-            alfred.Initialize();
-            alfred.Update();
+            Alfred.Initialize();
+            Alfred.Update();
         }
 
         /// <summary>
