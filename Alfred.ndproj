@@ -1027,10 +1027,10 @@ from t in JustMyCode.Types where
   t.IsPresentInBothBuilds()
 
   // Optimization: fast discard of non-relevant types
-  where t.OlderVersion().NbMethods > 15
+  where t.OlderVersion().NbMethods > 20
 
   let oldMethods = getMethodsProc(t.OlderVersion())
-  where oldMethods.Count > 15
+  where oldMethods.Count > 20
 
   let newMethods = getMethodsProc(t)
   where newMethods.Count > oldMethods.Count
