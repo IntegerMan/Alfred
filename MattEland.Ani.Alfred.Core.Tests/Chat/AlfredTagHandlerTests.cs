@@ -30,7 +30,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     /// </summary>
     [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-    public class AlfredTagHandlerTests : ChatTestsBase
+    public sealed class AlfredTagHandlerTests : ChatTestsBase
     {
         [NotNull]
         private AlfredTagHandler _handler;

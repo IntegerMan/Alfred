@@ -20,7 +20,7 @@ namespace MattEland.Ani.Alfred.Tests.Controls
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "IsExpressionAlwaysTrue")]
     [UnitTestProvider]
-    public class ExplorerControlTests : UserInterfaceTestBase
+    public sealed class ExplorerControlTests : UserInterfaceTestBase
     {
         [NotNull]
         private ExplorerControl _control;

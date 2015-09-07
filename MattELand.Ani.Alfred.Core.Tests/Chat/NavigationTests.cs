@@ -24,7 +24,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     ///     Tests for navigational inquiries on the Alfred chat system.
     /// </summary>
     [UnitTestProvider]
-    public class NavigationTests : ChatTestsBase
+    public sealed class NavigationTests : ChatTestsBase
     {
         /// <summary>
         ///     Sets up the testing environment prior to each test run.

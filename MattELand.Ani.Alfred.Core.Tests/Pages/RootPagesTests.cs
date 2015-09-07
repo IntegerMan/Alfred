@@ -31,7 +31,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
     [UnitTestProvider]
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
-    public class RootPagesTests : AlfredTestBase
+    public sealed class RootPagesTests : AlfredTestBase
     {
         [NotNull, ItemNotNull]
         private readonly ICollection<IAlfredPage> _testPages = new List<IAlfredPage>();

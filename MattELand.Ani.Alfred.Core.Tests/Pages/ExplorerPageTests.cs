@@ -29,7 +29,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
     /// </summary>
     [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-    public class ExplorerPageTests : AlfredTestBase
+    public sealed class ExplorerPageTests : AlfredTestBase
     {
         /// <summary>
         ///     Sets up the environment for each test.

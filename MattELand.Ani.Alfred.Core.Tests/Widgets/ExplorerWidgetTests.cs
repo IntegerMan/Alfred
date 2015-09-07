@@ -10,9 +10,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-using JetBrains.Annotations;
-
-using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Testing;
 
@@ -27,7 +24,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
     [SuppressMessage("ReSharper", "ObjectCreationAsStatement")]
-    public class ExplorerWidgetTests : AlfredTestBase
+    public sealed class ExplorerWidgetTests : AlfredTestBase
     {
         private const string TestPageId = "TestExp";
         private const string TestPageName = "Explorer Page";

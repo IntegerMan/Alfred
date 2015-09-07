@@ -27,7 +27,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
     /// </summary>
     [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-    public class SystemSubsystemTests : AlfredTestBase
+    public sealed class SystemSubsystemTests : AlfredTestBase
     {
         [NotNull]
         private SystemMonitoringSubsystem _subsystem;

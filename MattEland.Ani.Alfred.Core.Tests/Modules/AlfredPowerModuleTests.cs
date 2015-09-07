@@ -31,7 +31,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
     /// </summary>
     [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-    public class AlfredPowerModuleTests : AlfredTestBase
+    public sealed class AlfredPowerModuleTests : AlfredTestBase
     {
         /// <summary>
         ///     Setups the tests.

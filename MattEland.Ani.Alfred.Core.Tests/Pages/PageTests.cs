@@ -32,7 +32,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
     [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
-    public class PageTests : AlfredTestBase
+    public sealed class PageTests : AlfredTestBase
     {
 
         [NotNull]

@@ -19,7 +19,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
     ///     A class for tests targeting <see cref="AlfredTimeModule" /> and its calculations related
     ///     to alert visibility.
     /// </summary>
-    public class TimeModuleAlertTests : TimeModuleTestsBase
+    public sealed class TimeModuleAlertTests : TimeModuleTestsBase
     {
 
         [Test]

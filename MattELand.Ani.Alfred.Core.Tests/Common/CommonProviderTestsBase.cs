@@ -31,7 +31,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
         /// <summary>
         ///     A testing class used by <see cref="CommonProviderTests" />
         /// </summary>
-        public class TestClass : TestClassBase, ITestInterfaceDerived
+        public sealed class TestClass : TestClassBase, ITestInterfaceDerived
         {
             /// <summary> The default constructor used. </summary>
             internal const string DefaultConstructorUsed = "Default Constructor was Used";
@@ -70,7 +70,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
         ///     A private class for testing <see cref="CommonProvider" />
         /// </summary>
         /// <seealso cref="T:TestClassBase"/>
-        protected class PrivateTestClass : TestClassBase
+        protected sealed class PrivateTestClass : TestClassBase
         {
             /// <summary>
             ///     Initializes a new instance of the
@@ -155,7 +155,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
         /// <summary>
         ///     Interface for test interface derived.
         /// </summary>
-        public interface ITestInterfaceDerived : ITestInterfaceBase
+        protected interface ITestInterfaceDerived : ITestInterfaceBase
         {
             /// <summary>
             ///     Gets the data.
@@ -170,7 +170,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
         ///     A test <see langword="interface"/> that <see cref="ITestInterfaceDerived"/> is derived
         ///     from.
         /// </summary>
-        public interface ITestInterfaceBase
+        protected interface ITestInterfaceBase
         {
             /// <summary>
             ///     Gets or sets the base property.

@@ -28,7 +28,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
     [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
-    public class ChatSubsystemTests : AlfredTestBase
+    public sealed class ChatSubsystemTests : AlfredTestBase
     {
 
         /// <summary>

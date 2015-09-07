@@ -30,7 +30,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
     [SuppressMessage("ReSharper", "UnusedParameter.Local")]
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
-    public class ConversationTests : ChatTestsBase
+    public sealed class ConversationTests : ChatTestsBase
     {
         /// <summary>
         ///     Sets up the testing environment prior to each test run.

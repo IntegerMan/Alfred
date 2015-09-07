@@ -30,6 +30,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public SentenceTagHandler([NotNull] TagHandlerParameters parameters) : base(parameters)
         {
         }
