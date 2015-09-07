@@ -18,7 +18,7 @@ namespace MattEland.Common.Providers
     ///     An <see cref="IObjectProvider" /> capable of creating an object.
     /// </summary>
     [PublicAPI]
-    public class DelegateObjectProvider : IObjectProvider
+    public sealed class DelegateObjectProvider : IObjectProvider
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="DelegateObjectProvider" /> class.

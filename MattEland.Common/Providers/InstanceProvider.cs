@@ -21,7 +21,7 @@ namespace MattEland.Common.Providers
     ///     one is present) as a fallback.
     /// </summary>
     [PublicAPI]
-    public class InstanceProvider : IObjectProvider
+    public sealed class InstanceProvider : IObjectProvider
     {
 
         /// <summary>
@@ -50,24 +50,28 @@ namespace MattEland.Common.Providers
         private IDictionary<Type, object> Mappings { get; } = new Dictionary<Type, object>();
 
         /// <summary>
-        ///     Gets or sets the fallback provider that is used when there is no mapping. If this is null, a
-        ///     <see cref="NotSupportedException" /> will be thrown in <see cref="CreateInstance" /> if no
-        ///     mapping is found.
+        ///     Gets or sets the fallback provider that is used when there is no mapping. If this is
+        ///     <see langword="null" /> , a <see cref="NotSupportedException" /> will be thrown in
+        ///     <see cref="InstanceProvider.CreateInstance" /> if no mapping is found.
         /// </summary>
-        /// <value>The fallback provider.</value>
+        /// <value>
+        ///     The fallback provider.
+        /// </value>
         [CanBeNull]
         public IObjectProvider FallbackProvider { get; set; }
 
         /// <summary>
-        /// Creates an instance of the requested type using the pre-defined mappings. If no mapping is
-        /// found, the <see cref="FallbackProvider" /> will be used. If there is no mapping and no
-        /// <see cref="FallbackProvider" />, this will return null.
+        ///     Creates an instance of the requested type using the predefined mappings. If no mapping
+        ///     is found, the <see cref="FallbackProvider" /> will be used. If there is no mapping and no
+        ///     <see cref="FallbackProvider" />, this will return null.
         /// </summary>
-        /// <param name="requestedType">The type that was requested.</param>
-        /// <param name="args">The arguments.</param>
-        /// <returns>A new instance of the requested type or null</returns>
+        /// <param name="requestedType"> The type that was requested. </param>
+        /// <param name="args"> The arguments. </param>
+        /// <returns>
+        ///     A new instance of the requested type or null.
+        /// </returns>
         [CanBeNull]
-        public object CreateInstance([NotNull] Type requestedType, params object[] args)
+        public object CreateInstance([NotNull] Type requestedType, [CanBeNull] params object[] args)
         {
             /* Grab from our mappings if present, otherwise defer to the fallback
                provider if present. If one isn't, send back null. The system will 
@@ -75,7 +79,7 @@ namespace MattEland.Common.Providers
 
             return Mappings.ContainsKey(requestedType)
                        ? Mappings[requestedType]
-                       : FallbackProvider?.CreateInstance(requestedType);
+                       : FallbackProvider?.CreateInstance(requestedType, args);
         }
 
         /// <summary>
