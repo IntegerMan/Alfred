@@ -202,9 +202,14 @@ namespace MattEland.Ani.Alfred.Tests
         /// </summary>
         /// <returns>The <see cref="ApplicationManagerOptions" />.</returns>
         [NotNull]
-        protected ApplicationManagerOptions BuildOptions()
+        protected static ApplicationManagerOptions BuildOptions()
         {
-            var options = new ApplicationManagerOptions { IsSpeechEnabled = false };
+            var options = new ApplicationManagerOptions
+            {
+                IsSpeechEnabled = false,
+                ShowMindExplorerPage = true,
+                AdditionalSubsystems = { }
+            };
 
             return options;
         }
