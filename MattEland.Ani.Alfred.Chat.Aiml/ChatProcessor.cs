@@ -26,7 +26,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
     /// <summary>
     ///     A helper class that handles the logic for processing a chat request for the chat engine.
     /// </summary>
-    internal class ChatProcessor
+    internal sealed class ChatProcessor
     {
 
         [NotNull]

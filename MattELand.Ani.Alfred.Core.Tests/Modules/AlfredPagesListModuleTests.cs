@@ -29,7 +29,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
     ///     Tests <see cref="AlfredPagesListModule"/>
     /// </summary>
     [UnitTestProvider]
-    public class AlfredPagesListModuleTests : AlfredTestBase
+    public sealed class AlfredPagesListModuleTests : AlfredTestBase
     {
         /// <summary>
         /// Sets up the environment for each test.

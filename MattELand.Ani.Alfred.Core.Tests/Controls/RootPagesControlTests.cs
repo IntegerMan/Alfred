@@ -22,7 +22,7 @@ namespace MattEland.Ani.Alfred.Tests.Controls
     [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "IsExpressionAlwaysTrue")]
-    public class RootPagesControlTests : UserInterfaceTestBase
+    public sealed class RootPagesControlTests : UserInterfaceTestBase
     {
         [NotNull]
         private RootPagesControl _control;

@@ -131,45 +131,54 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         /// </summary>
         /// <remarks>Test ALF-103 for sub-task ALF-60.</remarks>
         [Test]
-        [Repeat(100)]
         public void AimlNodesShouldTraceToTheirEndPoints()
         {
             var chatEngine = ChatEngine;
             var chatRoot = chatEngine.RootNode;
 
             var explorerNode = AimlRoot;
+            var rootExplorerNode = explorerNode;
 
-            Node lastNode = null;
             var node = chatRoot;
 
-            // This will be manually exited when a child has reached the end
-            while (true)
+            // At this point we want to follow the tree all the way down, asserting as we go
+            TestChildAimlExplorerNodesAreInSync(node, rootExplorerNode);
+        }
+
+        /// <summary>
+        ///     Tests that the specified AIML and Explorer nodes and their children are equivalent
+        ///     representations of the same AIML node.
+        /// </summary>
+        /// <param name="aimlRoot"> The AIML node. </param>
+        /// <param name="explorerRoot"> The explorer node. </param>
+        private static void TestChildAimlExplorerNodesAreInSync(
+            Node aimlRoot,
+            IPropertyProvider explorerRoot)
+        {
+            // Grab the children now
+            var childNodes = aimlRoot.Children;
+            var children = childNodes.Keys.ToList();
+
+            // Navigate the AIML Node into a random child
+            for (var i = 0; i < children.Count(); i++)
             {
-                // Protect against infinite loops
-                if (lastNode == node)
-                {
-                    Assert.Fail($"Infinite loop detected on node {node.Word}");
-                }
-                lastNode = node;
+                // Get the name of the child node we'll be visiting
+                var childName = children[i];
 
-                // If it doesn't have any children, get out of here
-                var children = node.Children.Keys.ToList();
-                var numChildren = children.Count;
-
-                // Exit if there aren't any children
-                if (numChildren <= 0) { break; }
-
-                // Navigate the AIML Node into a random child
-                var childName = children[Randomizer.Next(numChildren)];
-                node = node.Children[childName];
-
-                // Navigate to the AIML Node
+                // Ensure valid child node
                 childName.ShouldNotBeNull();
-                explorerNode = explorerNode.Nav(childName);
 
-                // Test on this entry
-                node.ShouldNotBeNull();
-                node.Word.ShouldBe(explorerNode.DisplayName);
+                // Navigate to the node we've selected
+                var explorerNode = explorerRoot.Nav(childName);
+                var aimlNode = childNodes[childName];
+
+                // Test that these nodes are equal
+                aimlNode.ShouldNotBeNull();
+                aimlNode.Word.ShouldBe(explorerNode.DisplayName);
+                aimlNode.Children.Count().ShouldBe(explorerNode.PropertyProviders.Count());
+
+                // Test recursively on these nodes and their children
+                TestChildAimlExplorerNodesAreInSync(aimlNode, explorerNode);
             }
         }
 
@@ -267,6 +276,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         /// <remarks> See ALF-61
         ///          </remarks>
         [Test]
+        [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         public void ChatOutputShouldContainInputTextInSubQueries()
         {
 

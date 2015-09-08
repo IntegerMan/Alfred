@@ -32,7 +32,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
 {
     [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-    public class AlfredCoreSubsystemTests : AlfredTestBase
+    public sealed class AlfredCoreSubsystemTests : AlfredTestBase
     {
         [SetUp]
         public override void SetUp()

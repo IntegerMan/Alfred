@@ -23,7 +23,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     ///     Tests for commands embedded in AIML that impact the functioning of the Alfred system.
     /// </summary>
     [UnitTestProvider]
-    public class ChatCommandTests : ChatTestsBase
+    public sealed class ChatCommandTests : ChatTestsBase
     {
         /// <summary>
         ///     Sets up the testing environment prior to each test run.

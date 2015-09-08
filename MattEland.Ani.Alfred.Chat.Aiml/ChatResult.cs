@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
-// Result.cs
+// ChatResult.cs
 // 
-// Created on:      08/12/2015 at 10:23 PM
-// Last Modified:   08/13/2015 at 3:24 PM
+// Created on:      09/03/2015 at 11:00 PM
+// Last Modified:   09/07/2015 at 9:56 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -24,7 +24,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
     /// <summary>
     ///     Represents the result of an Aiml query
     /// </summary>
-    public class ChatResult
+    public sealed class ChatResult
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="ChatResult" /> class.
@@ -32,22 +32,18 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <param name="user">The user.</param>
         /// <param name="chatEngine">The chat engine.</param>
         /// <param name="request">The request.</param>
-        /// <exception cref="ArgumentNullException">user, chatEngine, request</exception>
-        public ChatResult([NotNull] User user, [NotNull] ChatEngine chatEngine, [NotNull] Request request)
+        /// <exception cref="ArgumentNullException">
+        /// user, chatEngine, <paramref name="request"/>
+        /// </exception>
+        public ChatResult(
+            [NotNull] User user,
+            [NotNull] ChatEngine chatEngine,
+            [NotNull] Request request)
         {
             //- Validation
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-            if (chatEngine == null)
-            {
-                throw new ArgumentNullException(nameof(chatEngine));
-            }
-            if (request == null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            if (user == null) { throw new ArgumentNullException(nameof(user)); }
+            if (chatEngine == null) { throw new ArgumentNullException(nameof(chatEngine)); }
+            if (request == null) { throw new ArgumentNullException(nameof(request)); }
 
             //- Set Fields
             User = user;
@@ -61,97 +57,116 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <summary>
         ///     Gets the chat engine.
         /// </summary>
-        /// <value>The chat engine.</value>
+        /// <value>
+        /// The chat engine.
+        /// </value>
         [NotNull]
-        public ChatEngine ChatEngine { get; }
+        private ChatEngine ChatEngine { get; }
 
         /// <summary>
         ///     Gets the duration of the request.
         /// </summary>
-        /// <value>The duration.</value>
+        /// <value>
+        /// The duration.
+        /// </value>
         [UsedImplicitly]
         public TimeSpan Duration { get; private set; }
 
         /// <summary>
         ///     Gets the input sentences.
         /// </summary>
-        /// <value>The input sentences.</value>
+        /// <value>
+        /// The input sentences.
+        /// </value>
         [NotNull]
-        public IList<string> InputSentences { get; } = new List<string>();
+        internal IList<string> InputSentences { get; } = new List<string>();
 
         /// <summary>
         ///     Gets the normalized paths.
         /// </summary>
-        /// <value>The normalized paths.</value>
+        /// <value>
+        /// The normalized paths.
+        /// </value>
         [NotNull]
-        public ICollection<string> NormalizedPaths { get; } = new List<string>();
+        internal ICollection<string> NormalizedPaths { get; } = new List<string>();
 
         /// <summary>
         ///     Gets the output sentences.
         /// </summary>
-        /// <value>The output sentences.</value>
+        /// <value>
+        /// The output sentences.
+        /// </value>
         [NotNull]
-        public IList<string> OutputSentences { get; } = new List<string>();
+        internal IList<string> OutputSentences { get; } = new List<string>();
 
         /// <summary>
         ///     Gets the request.
         /// </summary>
-        /// <value>The request.</value>
+        /// <value>
+        /// The request.
+        /// </value>
         [NotNull]
         public Request Request { get; }
 
         /// <summary>
         ///     Gets the SubQueries.
         /// </summary>
-        /// <value>The SubQueries.</value>
-        [NotNull, ItemNotNull]
+        /// <value>
+        /// The SubQueries.
+        /// </value>
+        [NotNull]
+        [ItemNotNull]
         public ICollection<SubQuery> SubQueries { get; } = new List<SubQuery>();
 
         /// <summary>
         ///     Gets the user.
         /// </summary>
-        /// <value>The user.</value>
+        /// <value>
+        /// The user.
+        /// </value>
         [NotNull]
         public User User { get; }
 
         /// <summary>
         ///     Gets the raw input.
         /// </summary>
-        /// <value>The raw input.</value>
+        /// <value>
+        /// The raw input.
+        /// </value>
         public string RawInput
         {
             get { return Request.RawInput; }
         }
 
         /// <summary>
-        ///     Gets the output.
+        ///     <para>Gets the output.</para>
+        ///     <para>
+        ///         This is an additional layer on top of <see cref="RawOutput"/> that handles timeouts
+        ///         and no responses.
+        ///     </para>
         /// </summary>
-        /// <summary>
-        ///     This is an additional layer on top of RawOutput that handles timeouts and no responses.
-        /// </summary>
-        /// <value>The output.</value>
+        /// <value>
+        /// The output.
+        /// </value>
         [NotNull]
         public string Output
         {
             get
             {
                 // If we have sentences, just defer to the raw output
-                if (OutputSentences.Count > 0)
-                {
-                    return RawOutput;
-                }
+                if (OutputSentences.Count > 0) { return RawOutput; }
 
                 // If it timed out, we'll use the timeout message
-                if (Request.HasTimedOut)
-                {
-                    return Resources.ChatEngineRequestTimedOut.NonNull();
-                }
+                if (Request.HasTimedOut) { return Resources.ChatEngineRequestTimedOut.NonNull(); }
 
                 // No response and it didn't time out. Log it and return a different message.
                 var stringBuilder = new StringBuilder();
                 foreach (var path in NormalizedPaths)
                 {
-                    stringBuilder.AppendFormat(ChatEngine.Locale, "{0}{1}", path, Environment.NewLine);
+                    stringBuilder.AppendFormat(ChatEngine.Locale,
+                                               "{0}{1}",
+                                               path,
+                                               Environment.NewLine);
                 }
 
                 var message = string.Format(ChatEngine.Locale,
@@ -167,11 +182,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         }
 
         /// <summary>
-        ///     Gets the raw output. For displaying results to the user, use Output instead.
+        ///     Gets the raw output. For displaying results to the user, use <see cref="Output"/>
+        ///     instead.
         /// </summary>
-        /// <value>The raw output.</value>
+        /// <value>
+        /// The raw output.
+        /// </value>
         [NotNull]
-        public string RawOutput
+        internal string RawOutput
         {
             get
             {
@@ -182,10 +200,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
                     Debug.Assert(outputSentence != null);
 
                     var sentence = outputSentence.Trim();
-                    if (!SentenceEndsWithPunctuation(sentence))
-                    {
-                        sentence += ".";
-                    }
+                    if (!SentenceEndsWithPunctuation(sentence)) { sentence += "."; }
                     stringBuilder.AppendFormat(ChatEngine.Locale, "{0} ", sentence);
                 }
                 return stringBuilder.ToString().Trim();
@@ -195,38 +210,39 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <summary>
         ///     Returns a string that represents the current object.
         /// </summary>
-        /// <returns>
-        ///     A string that represents the current object.
-        /// </returns>
+        /// <returns>A string that represents the current object.</returns>
         public override string ToString()
         {
             return Output;
         }
 
         /// <summary>
-        ///     Calculates whether the input sentence ends with proper punctuation
-        ///     according to the ChatEngine.SentenceSplitters collection.
+        ///     Calculates whether the input <paramref name="sentence"/> ends with proper
+        ///     punctuation according to the ChatEngine.SentenceSplitters collection.
         /// </summary>
         /// <param name="sentence">The sentence.</param>
-        /// <returns>True if the sentence has the correct punctuation; false otherwise.</returns>
+        /// <returns>
+        ///     True if the <paramref name="sentence"/> has the correct punctuation;
+        ///     <see langword="false"/> otherwise.
+        /// </returns>
         private bool SentenceEndsWithPunctuation([NotNull] string sentence)
         {
-            return ChatEngine.SentenceSplitters.Any(splitter => sentence.Trim().EndsWith(splitter, StringComparison.OrdinalIgnoreCase));
+            return
+                ChatEngine.SentenceSplitters.Any(
+                                                 splitter =>
+                                                 sentence.Trim()
+                                                         .EndsWith(splitter,
+                                                                   StringComparison
+                                                                       .OrdinalIgnoreCase));
         }
 
         /// <summary>
-        ///     Tells the result that the request completed and it should calculate the Duration of the request
+        ///     Tells the result that the request completed and it should calculate the
+        ///     <see cref="Duration"/> of the request
         /// </summary>
-        public void Completed()
+        internal void Completed()
         {
             Duration = DateTime.Now - Request.StartedOn;
-            IsComplete = true;
         }
-
-        /// <summary>
-        /// Gets or sets whether this result is complete.
-        /// </summary>
-        /// <value>The is complete.</value>
-        public bool IsComplete { get; set; }
     }
 }

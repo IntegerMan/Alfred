@@ -23,12 +23,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     ///     See "http://www.alicebot.org/TR/2005/WD-aiml/#section-formal" for more on the formal tag
     /// </summary>
     [HandlesAimlTag("formal")]
-    public class FormalTagHandler : AimlTagHandler
+    [UsedImplicitly]
+    internal sealed class FormalTagHandler : AimlTagHandler
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public FormalTagHandler([NotNull] TagHandlerParameters parameters) : base(parameters) { }
 
         /// <summary>

@@ -19,12 +19,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     /// </summary>
     [HandlesAimlTag("size")]
     [UsedImplicitly]
-    public class SizeTagHandler : AimlTagHandler
+    internal sealed class SizeTagHandler : AimlTagHandler
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public SizeTagHandler([NotNull] TagHandlerParameters parameters) : base(parameters) { }
 
         /// <summary>

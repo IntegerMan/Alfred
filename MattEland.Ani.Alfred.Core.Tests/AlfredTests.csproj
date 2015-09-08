@@ -45,6 +45,10 @@
       <HintPath>..\packages\JetBrains.Annotations.9.2.0\lib\net20\JetBrains.Annotations.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Moq, Version=4.2.1507.118, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\packages\Moq.4.2.1507.0118\lib\net40\Moq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
       <Private>True</Private>
@@ -73,6 +77,7 @@
     <Compile Include="Chat\AimlExplorerTests.cs" />
     <Compile Include="Chat\AlfredTestTagHandler.cs" />
     <Compile Include="Chat\ExplorerTestsBase.cs" />
+    <Compile Include="Chat\NavigationTests.cs" />
     <Compile Include="Chat\TagHandlerTests.cs" />
     <Compile Include="Chat\TagHandlerFactoryTests.cs" />
     <Compile Include="Chat\RedirectTagHandlerTests.cs" />
@@ -81,21 +86,25 @@
     <Compile Include="Chat\ChatTestsBase.cs" />
     <Compile Include="Chat\ConversationTests.cs" />
     <Compile Include="Common\CommonExtensionTests.cs" />
+    <Compile Include="Common\CommonProviderRegisterTests.cs" />
     <Compile Include="Common\CommonProviderTests.cs" />
+    <Compile Include="Common\CommonProviderTestsBase.cs" />
     <Compile Include="Controls\ChatPaneTests.cs" />
     <Compile Include="Controls\ExplorerControlTests.cs" />
     <Compile Include="Controls\RootPagesControlTests.cs" />
-    <Compile Include="Mocks\UserInterfaceTestBase.cs" />
-    <Compile Include="Mocks\TestAlfred.cs" />
-    <Compile Include="Mocks\TestChatProvider.cs" />
-    <Compile Include="Mocks\TestPage.cs" />
-    <Compile Include="Mocks\TestShell.cs" />
+    <Compile Include="Controls\TestMessageBoxProvider.cs" />
+    <Compile Include="Controls\UserInterfaceTestBase.cs" />
     <Compile Include="Modules\AlfredPagesListModuleTests.cs" />
     <Compile Include="Modules\ModuleTests.cs" />
+    <Compile Include="Modules\TimeModuleAlertTests.cs" />
+    <Compile Include="Modules\TimeModuleTestsBase.cs" />
     <Compile Include="Pages\EventLogPageTests.cs" />
     <Compile Include="Pages\ExplorerPageTests.cs" />
     <Compile Include="Pages\PageTests.cs" />
     <Compile Include="Pages\RootPagesTests.cs" />
+    <Compile Include="Presentation\ConverterTestsBase.cs" />
+    <Compile Include="Presentation\LogLevelToBrushConverterTests.cs" />
+    <Compile Include="Presentation\VisibilityConverterTests.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -104,7 +113,6 @@
     <Compile Include="Shell\ShellTagHandlerTests.cs" />
     <Compile Include="Subsystems\AlfredCoreSubsystemTests.cs" />
     <Compile Include="AlfredEventingTests.cs" />
-    <Compile Include="Mocks\AlfredTestModule.cs" />
     <Compile Include="Subsystems\ChatSubsystemTests.cs" />
     <Compile Include="Subsystems\MindExplorerSubsystemTests.cs" />
     <Compile Include="Subsystems\SubsystemTests.cs" />
@@ -113,7 +121,6 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Subsystems\SystemSubsystemTests.cs" />
-    <Compile Include="Mocks\TestSubSystem.cs" />
     <Compile Include="Widgets\ExplorerWidgetTests.cs" />
     <Compile Include="Widgets\TextWidgetTests.cs" />
     <Compile Include="Modules\TimeModuleTests.cs" />

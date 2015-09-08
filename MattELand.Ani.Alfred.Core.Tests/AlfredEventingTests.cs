@@ -8,6 +8,7 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
@@ -16,12 +17,14 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Ani.Alfred.Core.Widgets;
-using MattEland.Ani.Alfred.Tests.Mocks;
 using MattEland.Common.Providers;
 using MattEland.Testing;
+
+using Moq;
 
 using NUnit.Framework;
 
@@ -35,6 +38,9 @@ namespace MattEland.Ani.Alfred.Tests
     /// </summary>
     [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
+    [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
+    [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
+    [SuppressMessage("ReSharper", "ExceptionNotDocumentedOptional")]
     public sealed class AlfredEventingTests : AlfredTestBase
     {
 
@@ -42,7 +48,7 @@ namespace MattEland.Ani.Alfred.Tests
         private AlfredModuleListPage _page;
 
         [NotNull]
-        private TestSubsystem _subsystem;
+        private SimpleSubsystem _subsystem;
 
         /// <summary>
         ///     Sets up the Alfred provider's tests.
@@ -54,7 +60,7 @@ namespace MattEland.Ani.Alfred.Tests
 
             var alfred = new AlfredApplication(Container);
             alfred.RegisterAsProvidedInstance(typeof(IAlfred), Container);
-            _subsystem = new TestSubsystem(Container);
+            _subsystem = BuildTestSubsystem();
             _page = new AlfredModuleListPage(Container, "Test Page", "Test");
         }
 
@@ -164,16 +170,26 @@ namespace MattEland.Ani.Alfred.Tests
         [ExpectedException(typeof(InvalidOperationException))]
         public void RegisteringAWidgetMultipleTimesThrowsAnException()
         {
-            var testModule = new AlfredTestModule(Container);
+            //! Arrange
 
+            // Build a duplicate list of widgets
             var textWidget = new TextWidget(BuildWidgetParams());
-            testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
-            testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
+            var duplicateWidgets = new List<IWidget> { textWidget, textWidget };
 
-            Alfred.RegistrationProvider.Register(_subsystem);
-            _subsystem.AddAutoRegisterPage(_page);
-            _page.Register(testModule);
+            // Build a mock object so that it will register the duplicates during its initialize
+            var mockModule = new Mock<AlfredModule>(MockBehavior.Strict, Container);
+            mockModule.Setup(m => m.OnRegistered(It.IsAny<IAlfred>()));
+            mockModule.Setup(m => m.Initialize(It.Is<IAlfred>(a => a == Alfred)))
+                .Callback(() => mockModule.Object.Register(duplicateWidgets));
 
+            // Register all of the things
+            _page.Register(mockModule.Object);
+            _subsystem.PagesToRegister.Add(_page);
+            Alfred.Register(_subsystem);
+
+            //! Act / Assert (exception expected)
+
+            // Start up Alfred and watch the world burn
             Alfred.Initialize();
         }
 
@@ -197,25 +213,30 @@ namespace MattEland.Ani.Alfred.Tests
         [Test]
         public void RegisteringWidgetAtInitializeAndShutdownLeavesOneCopyInListAtReinitialize()
         {
-            var testModule = new AlfredTestModule(Container);
+            //! Arrange 
 
             var textWidget = new TextWidget(BuildWidgetParams());
+
+            // This module should register its control both at initialize and shutdown
+            var testModule = new SimpleModule(Container, "Test Module");
             testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
             testModule.WidgetsToRegisterOnShutdown.Add(textWidget);
 
-            Alfred.RegistrationProvider.Register(_subsystem);
-            _subsystem.AddAutoRegisterPage(_page);
+            // Set up our systems
+            Alfred.Register(_subsystem);
+            _subsystem.PagesToRegister.Add(_page);
             _page.Register(testModule);
 
+            //! Act
+
             Alfred.Initialize();
-            Alfred.Update();
             Alfred.Shutdown();
             Alfred.Initialize();
-            Alfred.Update();
 
-            Assert.IsNotNull(testModule.Widgets, "testModule.Widgets was null");
-            Assert.AreEqual(1,
-                            testModule.Widgets.Count(),
+            //! Assert
+
+            testModule.Widgets.ShouldNotBeNull("testModule.Widgets was null");
+            testModule.Widgets.Count().ShouldBe(1,
                             "Widgets were not properly cleared from list after re-initialize");
         }
 

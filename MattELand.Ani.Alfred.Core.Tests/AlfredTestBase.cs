@@ -7,11 +7,13 @@ using MattEland.Ani.Alfred.Chat.Aiml;
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Ani.Alfred.PresentationShared.Commands;
-using MattEland.Ani.Alfred.Tests.Mocks;
 using MattEland.Common;
 using MattEland.Common.Providers;
 using MattEland.Testing;
+
+using Moq;
 
 using NUnit.Framework;
 
@@ -24,6 +26,7 @@ namespace MattEland.Ani.Alfred.Tests
     /// </summary>
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
+    [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     public abstract class AlfredTestBase : UnitTestBase
     {
         /// <summary>
@@ -63,6 +66,10 @@ namespace MattEland.Ani.Alfred.Tests
 
                 return alfred;
             }
+            set
+            {
+                value.RegisterAsProvidedInstance(typeof(IAlfred), Container);
+            }
         }
 
         /// <summary>
@@ -88,7 +95,7 @@ namespace MattEland.Ani.Alfred.Tests
         /// <value>
         ///     The test subsystem.
         /// </value>
-        protected TestSubsystem TestSubsystem { get; set; }
+        protected SimpleSubsystem TestSubsystem { get; set; }
 
         /// <summary>
         ///     Creates and starts up the <see cref="IAlfred"/> instance.
@@ -100,7 +107,7 @@ namespace MattEland.Ani.Alfred.Tests
         protected AlfredApplication StartAlfred()
         {
             // Create test subsystem
-            TestSubsystem = new TestSubsystem(Container);
+            TestSubsystem = BuildTestSubsystem();
             TestSubsystem.RegisterAsProvidedInstance(Container);
 
             // Allow individual tests to customize the Test Subsystem as needed
@@ -129,7 +136,7 @@ namespace MattEland.Ani.Alfred.Tests
         ///     Prepare the test subsystem prior to registration and startup.
         /// </summary>
         /// <param name="testSubsystem"> The test subsystem. </param>
-        protected virtual void PrepareTestSubsystem([NotNull] TestSubsystem testSubsystem)
+        protected virtual void PrepareTestSubsystem([NotNull] SimpleSubsystem testSubsystem)
         {
             // Do nothing. Individual tests can manipulate this as needed via overrides
         }
@@ -195,24 +202,48 @@ namespace MattEland.Ani.Alfred.Tests
         /// </summary>
         /// <returns>The <see cref="ApplicationManagerOptions" />.</returns>
         [NotNull]
-        protected ApplicationManagerOptions BuildOptions()
+        protected static ApplicationManagerOptions BuildOptions()
         {
-            var options = new ApplicationManagerOptions { IsSpeechEnabled = false };
+            var options = new ApplicationManagerOptions
+            {
+                IsSpeechEnabled = false,
+                ShowMindExplorerPage = true,
+                AdditionalSubsystems = { }
+            };
 
             return options;
         }
 
         /// <summary>
-        ///     Builds test page.
+        ///     Builds a page mock.
         /// </summary>
-        /// <param name="isRoot"> <see langword="true"/> if this instance is root. </param>
+        /// <param name="mockBehavior"> The mocking behavior for the new mock. </param>
         /// <returns>
-        ///     A <see cref="TestPage"/>.
+        ///     The mock page.
         /// </returns>
-        [NotNull]
-        protected TestPage BuildTestPage(bool isRoot)
+        protected Mock<IAlfredPage> BuildPageMock(MockBehavior mockBehavior)
         {
-            return new TestPage(Container) { IsRootLevel = isRoot };
+            // Some tests will want strict control over mocking and others won't
+            var mock = new Mock<IAlfredPage>(mockBehavior);
+
+            // Set up simple members we expect to be hit during startup
+            mock.SetupGet(p => p.IsRootLevel).Returns(true);
+            mock.Setup(p => p.OnRegistered(It.IsAny<IAlfred>()));
+            mock.Setup(p => p.OnInitializationCompleted());
+            mock.Setup(p => p.Update());
+            mock.Setup(p => p.OnShutdownCompleted());
+
+            // When initialize is hit, set Status to Online
+            mock.Setup(p => p.Initialize(It.IsAny<IAlfred>()))
+                .Callback(() => mock.SetupGet(p => p.Status)
+                                    .Returns(AlfredStatus.Online));
+
+            // When shutdown is hit, set Status to Offline
+            mock.Setup(p => p.Shutdown())
+                .Callback(() => mock.SetupGet(p => p.Status)
+                                    .Returns(AlfredStatus.Offline));
+
+            return mock;
         }
 
         /// <summary>
@@ -228,6 +259,52 @@ namespace MattEland.Ani.Alfred.Tests
             console.ShouldNotBeNull($"Could not find a console in container {Container}");
 
             return console;
+        }
+
+        /// <summary>
+        ///     Builds a <see cref="SimpleSubsystem"/> for testing.
+        /// </summary>
+        /// <returns>
+        ///     The subsystem.
+        /// </returns>
+        protected SimpleSubsystem BuildTestSubsystem()
+        {
+            return new SimpleSubsystem(Container, "Test Subsystem");
+        }
+
+        /// <summary>
+        ///     Builds a mock <see cref="IAlfredSubsystem"/>.
+        /// </summary>
+        /// <param name="mockBehavior"> The mocking behavior. </param>
+        /// <returns>
+        ///     A mock subsystem
+        /// </returns>
+        protected Mock<IAlfredSubsystem> BuildMockSubsystem(MockBehavior mockBehavior)
+        {
+            // Build the Mock
+            var mock = new Mock<IAlfredSubsystem>(mockBehavior);
+
+            // Setup Simple properties
+            mock.SetupGet(s => s.Id).Returns("Test");
+            mock.SetupGet(s => s.NameAndVersion).Returns("Test 1.0.0.0");
+            mock.SetupGet(s => s.Status).Returns(AlfredStatus.Offline);
+            mock.SetupGet(s => s.Pages).Returns(Container.ProvideCollection<IAlfredPage>());
+
+            // Setup simple methods
+            mock.Setup(s => s.Update());
+            mock.Setup(s => s.OnRegistered(It.IsAny<IAlfred>()));
+            mock.Setup(s => s.OnInitializationCompleted());
+            mock.Setup(s => s.OnShutdownCompleted());
+
+            // Initialize causes the subsystem to go online
+            mock.Setup(s => s.Initialize(It.IsAny<IAlfred>()))
+                .Callback(() => mock.SetupGet(s => s.Status).Returns(AlfredStatus.Online));
+
+            // Shutdown causes the subsystem to go offline
+            mock.Setup(s => s.Shutdown())
+                .Callback(() => mock.SetupGet(s => s.Status).Returns(AlfredStatus.Offline));
+
+            return mock;
         }
     }
 }

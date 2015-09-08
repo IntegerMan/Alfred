@@ -20,9 +20,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     ///     A tag handler for the AIML "topicstar" tag. This returns the output of the specified * value
     ///     within the topic node.
     /// </summary>
-    [HandlesAimlTag("topicstar")]
-    [UsedImplicitly]
-    public class TopicStarTagHandler : AimlTagHandler
+    [HandlesAimlTag(@"topicstar")]
+    [UsedImplicitly, PublicAPI]
+    public sealed class TopicStarTagHandler : AimlTagHandler
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.

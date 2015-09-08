@@ -15,11 +15,11 @@ using JetBrains.Annotations;
 namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 {
     /// <summary>
-    ///     A container for parameters given to AimlTagHandler objects upon creation. This
-    ///     keeps invocations from being unseemly long and makes it easier to manage parameter
+    ///     A container for parameters given to <see cref="AimlTagHandler"/> objects upon creation.
+    ///     This keeps invocations from being unseemly long and makes it easier to manage parameter
     ///     changes with many consumers.
     /// </summary>
-    public class TagHandlerParameters
+    public sealed class TagHandlerParameters
     {
 
         /// <summary>
@@ -63,40 +63,40 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
         /// </summary>
         /// <value>The chat engine.</value>
         [NotNull]
-        public ChatEngine ChatEngine { get; }
+        internal ChatEngine ChatEngine { get; }
 
         /// <summary>
         ///     Gets the user.
         /// </summary>
         /// <value>The user.</value>
         [NotNull]
-        public User User { get; }
+        internal User User { get; }
 
         /// <summary>
         ///     Gets the query.
         /// </summary>
         /// <value>The query.</value>
         [NotNull]
-        public SubQuery Query { get; }
+        internal SubQuery Query { get; }
 
         /// <summary>
         ///     Gets the request.
         /// </summary>
         /// <value>The request.</value>
         [NotNull]
-        public Request Request { get; }
+        internal Request Request { get; }
 
         /// <summary>
         ///     Gets the result.
         /// </summary>
         /// <value>The result.</value>
-        public ChatResult ChatResult { get; }
+        internal ChatResult ChatResult { get; }
 
         /// <summary>
         ///     Gets the template node.
         /// </summary>
         /// <value>The template node.</value>
         [NotNull]
-        public XmlElement Element { get; }
+        internal XmlElement Element { get; }
     }
 }

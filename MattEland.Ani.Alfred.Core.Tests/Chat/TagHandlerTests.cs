@@ -23,7 +23,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     ///     Tests for AimlTagHandlers of concern.
     /// </summary>
     [UnitTestProvider]
-    public class TagHandlerTests : ChatTestsBase
+    public sealed class TagHandlerTests : ChatTestsBase
     {
         /// <summary>
         ///     Sets up the testing environment prior to each test run.

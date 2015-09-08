@@ -16,11 +16,12 @@ using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {
     /// <summary>
-    ///     An AimlTagHandler for the "date" tag. This provides an easy way of giving the time and date.
+    ///     An <see cref="AimlTagHandler"/> for the "date" tag. This provides an easy way of giving
+    ///     the time and date.
     /// </summary>
     [HandlesAimlTag("date")]
     [UsedImplicitly]
-    public class DateTagHandler : AimlTagHandler
+    public sealed class DateTagHandler : AimlTagHandler
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="DateTagHandler" /> class.

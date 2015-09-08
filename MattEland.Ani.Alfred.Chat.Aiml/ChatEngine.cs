@@ -30,7 +30,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
     /// <remarks>
     ///     NOTE: This class is now a partial class. Check the other partial classes for more details
     /// </remarks>
-    public class ChatEngine
+    public sealed class ChatEngine
     {
         [NotNull]
         private readonly AimlLoader _aimlLoader;

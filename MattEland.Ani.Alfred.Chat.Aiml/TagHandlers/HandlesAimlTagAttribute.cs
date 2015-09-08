@@ -17,7 +17,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     /// <summary>
     /// An attribute describing a class that can handle an AIML tag
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class), UsedImplicitly]
+    [AttributeUsage(AttributeTargets.Class), UsedImplicitly, PublicAPI]
     public sealed class HandlesAimlTagAttribute : Attribute
     {
 

@@ -19,9 +19,9 @@ using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Modules
 {
-
     /// <summary>
-    ///     Represents a module within Alfred. Modules contain different bits of information to present to the user.
+    ///     Represents a module within Alfred. Modules contain different bits of information to
+    ///     present to the user.
     /// </summary>
     public abstract class AlfredModule : ComponentBase, IAlfredModule
     {
@@ -84,7 +84,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <param name="widget">
         ///     The widget.
         /// </param>
-        protected void Register([NotNull] IWidget widget)
+        public void Register([NotNull] IWidget widget)
         {
             _widgets.AddSafe(widget);
 
@@ -99,7 +99,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         ///     The widgets.
         /// </param>
         /// <exception cref="ArgumentNullException"><paramref name="widgets"/> is <see langword="null" />.</exception>
-        protected void Register([NotNull] IEnumerable<IWidget> widgets)
+        public void Register([NotNull] IEnumerable<IWidget> widgets)
         {
             if (widgets == null)
             {
@@ -108,7 +108,18 @@ namespace MattEland.Ani.Alfred.Core.Modules
 
             foreach (var widget in widgets)
             {
-                // ReSharper disable once AssignNullToNotNullAttribute - for testing purposes we'll allow this
+                Register(widget);
+            }
+        }
+
+        /// <summary>
+        ///     Registers many widgets to the module.
+        /// </summary>
+        /// <param name="widgets"> The widgets. </param>
+        public void Register(params IWidget[] widgets)
+        {
+            foreach (var widget in widgets.Where(widget => widget != null))
+            {
                 Register(widget);
             }
         }
@@ -160,5 +171,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
 
             return command;
         }
+
     }
+
 }

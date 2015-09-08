@@ -19,8 +19,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     /// <summary>
     ///     A tag handler for the AIML "srai" tag governing recursive / redirect style searches.
     /// </summary>
-    [HandlesAimlTag("srai")]
-    public class RedirectTagHandler : AimlTagHandler
+    [HandlesAimlTag(@"srai"), PublicAPI]
+    public sealed class RedirectTagHandler : AimlTagHandler
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.

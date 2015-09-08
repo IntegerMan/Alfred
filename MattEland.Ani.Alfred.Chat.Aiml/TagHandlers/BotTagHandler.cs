@@ -18,7 +18,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     /// An AIML Tag handler that handles the "bot" tag. This allows the system to interact with system variables.
     /// </summary>
     [HandlesAimlTag("bot"), UsedImplicitly]
-    public class BotTagHandler : AimlTagHandler
+    public sealed class BotTagHandler : AimlTagHandler
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AimlTagHandler" /> class.

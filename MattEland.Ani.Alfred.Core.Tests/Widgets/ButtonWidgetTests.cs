@@ -25,7 +25,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
     ///     class
     /// </summary>
     [UnitTestProvider]
-    public class ButtonWidgetTests : AlfredTestBase
+    public sealed class ButtonWidgetTests : AlfredTestBase
     {
         [Test]
         public void ButtonCommandDefaultsToNull()

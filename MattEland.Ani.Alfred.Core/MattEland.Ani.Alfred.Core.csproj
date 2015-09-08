@@ -21,7 +21,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS, JETBRAINS_ANNOTATIONS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>true</RunCodeAnalysis>
@@ -89,6 +89,7 @@
     <Compile Include="Modules\AlertVisibilityCalculator.cs" />
     <Compile Include="Modules\AlfredPagesListModule.cs" />
     <Compile Include="Definitions\IAlfredComponent.cs" />
+    <Compile Include="Modules\SimpleModule.cs" />
     <Compile Include="Pages\AlfredEventLogPage.cs" />
     <Compile Include="Pages\AlfredModuleListPage.cs" />
     <Compile Include="Pages\AlfredPage.cs" />
@@ -112,6 +113,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Subsystems\MindExplorerSubsystem.cs" />
+    <Compile Include="Subsystems\SimpleSubsystem.cs" />
     <Compile Include="Widgets\AlfredProgressBarWidget.cs" />
     <Compile Include="Widgets\AlfredTextWidget.cs" />
     <Compile Include="Widgets\WidgetBase.cs" />

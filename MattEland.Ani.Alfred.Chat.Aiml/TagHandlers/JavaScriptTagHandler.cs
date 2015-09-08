@@ -17,13 +17,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     /// <summary>
     /// A TagHandler for AIML "javascript" tags. JavaScript tags are not currently supported.
     /// </summary>
-    [HandlesAimlTag("javascript")]
-    public class JavaScriptTagHandler : AimlTagHandler
+    [HandlesAimlTag(@"javascript")]
+    [UsedImplicitly]
+    internal sealed class JavaScriptTagHandler : AimlTagHandler
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AimlTagHandler" /> class.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public JavaScriptTagHandler([NotNull] TagHandlerParameters parameters)
             : base(parameters)
         {

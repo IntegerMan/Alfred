@@ -34,7 +34,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
     /// </remarks>
     [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-    public class MindExplorerSubsystemTests : AlfredTestBase
+    public sealed class MindExplorerSubsystemTests : AlfredTestBase
     {
 
         /// <summary>

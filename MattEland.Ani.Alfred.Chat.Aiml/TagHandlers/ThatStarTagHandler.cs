@@ -19,9 +19,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     ///     ThatStar list depending on the specified index (defaults to the first one). The thatstar is
     ///     used to referred to * items inside the "that" tag.
     /// </summary>
-    [HandlesAimlTag("thatstar")]
-    [UsedImplicitly]
-    public class ThatStarTagHandler : AimlTagHandler
+    [HandlesAimlTag(@"thatstar")]
+    [UsedImplicitly, PublicAPI]
+    public sealed class ThatStarTagHandler : AimlTagHandler
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.
@@ -41,7 +41,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
             if (Query.ThatStar.Count <= 0)
             {
                 Error(string.Format(Locale,
-                                    "Encountered a thatstar query with no items in Query.ThatStar on request: {0}",
+                                    @"Encountered a thatstar query with no items in Query.ThatStar on request: {0}",
                                     Request.RawInput));
 
                 return string.Empty;

@@ -1,56 +1,57 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Modules;
-using MattEland.Ani.Alfred.Core.Widgets;
+using MattEland.Common;
 using MattEland.Common.Providers;
 
-namespace MattEland.Ani.Alfred.Tests.Mocks
+namespace MattEland.Ani.Alfred.Core.Modules
 {
     /// <summary>
-    ///     An <see cref="AlfredModule"/> used explicitly for testing purposes
+    ///     A simple module that only takes in a name. This class cannot be inherited.
     /// </summary>
-    internal sealed class AlfredTestModule : AlfredModule
+    public sealed class SimpleModule : AlfredModule
     {
         /// <summary>
-        ///     Initializes a new instance of the
-        ///     <see cref="AlfredTestModule" />
-        ///     class.
+        ///     Initializes a new instance of the <see cref="AlfredModule" /> class.
         /// </summary>
         /// <exception cref="ArgumentNullException">
         ///     Thrown when one or more required arguments are null.
         /// </exception>
         /// <param name="container"> The container. </param>
-        internal AlfredTestModule([NotNull] IObjectContainer container) : base(container)
+        /// <param name="name"> The name of the module. </param>
+        public SimpleModule([NotNull] IObjectContainer container, [NotNull] string name) : base(container)
         {
-            if (container == null) { throw new ArgumentNullException(nameof(container)); }
+            if (name.IsEmpty()) { throw new ArgumentNullException(nameof(name)); }
 
-            WidgetsToRegisterOnShutdown = new List<IWidget>();
+            Name = name;
+
+            // Set up collections
             WidgetsToRegisterOnInitialize = new List<IWidget>();
+            WidgetsToRegisterOnShutdown = new List<IWidget>();
         }
 
         /// <summary>
-        /// Gets the name of the module.
+        ///     Gets the name of the module.
         /// </summary>
         /// <value>The name of the module.</value>
-        public override string Name { get { return "Test"; } }
+        public override string Name { get; }
 
         /// <summary>
         /// Gets the widgets to register on initialize.
         /// </summary>
         /// <value>The widgets to register on initialize.</value>
         [NotNull]
-        internal ICollection<IWidget> WidgetsToRegisterOnInitialize { get; }
+        public ICollection<IWidget> WidgetsToRegisterOnInitialize { get; }
 
         /// <summary>
         /// Gets the widgets to register on shutdown.
         /// </summary>
         /// <value>The widgets to register on shutdown.</value>
         [NotNull]
-        internal ICollection<IWidget> WidgetsToRegisterOnShutdown { get; }
+        public ICollection<IWidget> WidgetsToRegisterOnShutdown { get; }
 
         /// <summary>
         ///     Handles module initialization events
@@ -68,5 +69,6 @@ namespace MattEland.Ani.Alfred.Tests.Mocks
         {
             Register(WidgetsToRegisterOnShutdown);
         }
+
     }
 }

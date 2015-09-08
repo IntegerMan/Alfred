@@ -22,12 +22,13 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     /// </summary>
     [HandlesAimlTag("gossip")]
     [UsedImplicitly]
-    public class GossipTagHandler : AimlTagHandler
+    internal sealed class GossipTagHandler : AimlTagHandler
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public GossipTagHandler([NotNull] TagHandlerParameters parameters) : base(parameters)
         {
         }

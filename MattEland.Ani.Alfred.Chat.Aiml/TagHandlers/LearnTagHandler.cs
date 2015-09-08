@@ -25,12 +25,14 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     ///     provided file path.
     /// </summary>
     [HandlesAimlTag("learn")]
-    public class LearnTagHandler : AimlTagHandler
+    [UsedImplicitly]
+    internal sealed class LearnTagHandler : AimlTagHandler
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="AimlTagHandler" /> class.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public LearnTagHandler([NotNull] TagHandlerParameters parameters)
             : base(parameters)
         {
@@ -42,6 +44,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         /// <returns>The processed output</returns>
         protected override string ProcessChange()
         {
+            // TODO: This method has a high cyclomatic complexity
+
             if (!NodeName.Matches("learn") || !Contents.HasText())
             {
                 return string.Empty;

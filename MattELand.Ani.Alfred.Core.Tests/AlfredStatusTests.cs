@@ -18,7 +18,7 @@ namespace MattEland.Ani.Alfred.Tests
     ///     Unit tests surrounding Alfred's statuses and status transitions
     /// </summary>
     [UnitTestProvider]
-    public class AlfredStatusTests : AlfredTestBase
+    public sealed class AlfredStatusTests : AlfredTestBase
     {
 
         /// <summary>

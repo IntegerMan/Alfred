@@ -19,9 +19,9 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     /// <summary>
     ///     A tag handler for testing. Not intended for actual product incorporation.
     /// </summary>
-    [HandlesAimlTag("alfredtest")]
+    [HandlesAimlTag(@"alfredtest")]
     [UsedImplicitly]
-    public class AlfredTestTagHandler : AimlTagHandler
+    public sealed class AlfredTestTagHandler : AimlTagHandler
     {
 
         /// <summary>

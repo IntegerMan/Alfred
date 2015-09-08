@@ -32,7 +32,7 @@ namespace MattEland.Common.Providers
     ///     this container.
     /// </remarks>
     [PublicAPI]
-    public class CommonContainer : IObjectContainer
+    public sealed class CommonContainer : IObjectContainer
     {
         /// <summary>
         ///     The <see cref="Type" /> used when providing collections.

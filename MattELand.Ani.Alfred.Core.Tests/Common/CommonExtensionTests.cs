@@ -18,7 +18,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
     /// Contains tests related to MattEland.Common extensions
     /// </summary>
     [UnitTestProvider]
-    public class CommonExtensionTests : AlfredTestBase
+    public sealed class CommonExtensionTests : AlfredTestBase
     {
 
         [Test]

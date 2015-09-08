@@ -7,6 +7,8 @@ using System.Windows.Controls.Primitives;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.PresentationShared.Controls;
+using MattEland.Ani.Alfred.PresentationShared.Helpers;
+using MattEland.Common.Providers;
 
 using NUnit.Framework;
 
@@ -19,6 +21,26 @@ namespace MattEland.Ani.Alfred.Tests.Controls
     [SuppressMessage("ReSharper", "IsExpressionAlwaysTrue")]
     public abstract class UserInterfaceTestBase : AlfredTestBase
     {
+        /// <summary>
+        ///     Gets the message box provider.
+        /// </summary>
+        /// <value>
+        ///     The message box.
+        /// </value>
+        public TestMessageBoxProvider MessageBox { get; private set; }
+
+        /// <summary>
+        /// Sets up the environment for each test.
+        /// </summary>
+        [SetUp]
+        public override void SetUp()
+        {
+            base.SetUp();
+
+            // Register a message box provider instance
+            MessageBox = new TestMessageBoxProvider();
+            MessageBox.RegisterAsProvidedInstance(typeof(IMessageBoxProvider));
+        }
 
         /// <summary>
         /// Gets the control.

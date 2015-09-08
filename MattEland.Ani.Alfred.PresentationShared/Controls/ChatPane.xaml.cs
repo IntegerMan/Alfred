@@ -17,22 +17,47 @@ using System.Windows;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.PresentationShared.Helpers;
 using MattEland.Common;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.PresentationShared.Controls
 {
     /// <summary>
-    ///     Interaction logic for ChatPane.xaml
+    /// Interaction logic for ChatPane.xaml
     /// </summary>
-    public sealed partial class ChatPane : IUserInterfaceTestable
+    public sealed partial class ChatPane : IUserInterfaceTestable, IHasContainer
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="ChatPane" /> class.
         /// </summary>
-        public ChatPane()
+        public ChatPane() : this(CommonProvider.Container)
         {
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="ChatPane"/> class.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when one or more required arguments are null.
+        /// </exception>
+        /// <param name="container"> The container. </param>
+        public ChatPane([NotNull] IObjectContainer container)
+        {
+            if (container == null) { throw new ArgumentNullException(nameof(container)); }
+
+            Container = container;
+
             InitializeComponent();
         }
+
+        /// <summary>
+        ///     Gets the container.
+        /// </summary>
+        /// <value>
+        ///     The container.
+        /// </value>
+        public IObjectContainer Container { get; }
 
         /// <summary>
         ///     Simulates the control's loaded event.
@@ -68,7 +93,8 @@ namespace MattEland.Ani.Alfred.PresentationShared.Controls
             }
             catch (InvalidOperationException ex)
             {
-                MessageBox.Show(ex.Message,
+                var messageBox = Container.Provide<IMessageBoxProvider>();
+                messageBox.Show(ex.Message,
                                 "Couldn't Send",
                                 MessageBoxButton.OK,
                                 MessageBoxImage.Asterisk);

@@ -28,6 +28,9 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
     /// </summary>
     public sealed class TagHandlerFactory
     {
+        /// <summary>
+        ///     The chat engine.
+        /// </summary>
         [NotNull]
         private readonly ChatEngine _engine;
 
@@ -68,14 +71,18 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
         }
 
         /// <summary>
-        ///     Loads and registers tag handlers in the given assembly. Valid tag handlers are non-abstract
-        ///     classes derived from
-        ///     AimlTagHandler and decorated with the HandlesAimlTag attribute.
+        ///     Loads and registers tag handlers in the given <paramref name="assembly" /> . Valid tag
+        ///     handlers are non-abstract classes derived from <see cref="AimlTagHandler" /> and
+        ///     decorated with the HandlesAimlTag attribute.
         /// </summary>
-        /// <param name="assembly">The assembly.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="assembly" /> is <see langword="null" />.</exception>
-        public void RegisterTagHandlersInAssembly([NotNull] Assembly assembly)
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="assembly" /> is <see langword="null" /> .
+        /// </exception>
+        /// <param name="assembly"> The assembly. </param>
+        private void RegisterTagHandlersInAssembly([NotNull] Assembly assembly)
         {
+            // TODO: This method has a high cyclomatic complexity
+
             //- Validation
             if (assembly == null) { throw new ArgumentNullException(nameof(assembly)); }
 

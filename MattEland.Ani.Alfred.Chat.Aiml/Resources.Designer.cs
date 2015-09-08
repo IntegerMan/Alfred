@@ -70,33 +70,6 @@ namespace MattEland.Ani.Alfred.Chat.Aiml {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to IO error reading file {0} {1}.
-        /// </summary>
-        internal static string AimlLoaderErrorIOException {
-            get {
-                return ResourceManager.GetString("AimlLoaderErrorIOException", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Security error reading file {0} {1}.
-        /// </summary>
-        internal static string AimlLoaderErrorSecurityException {
-            get {
-                return ResourceManager.GetString("AimlLoaderErrorSecurityException", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to XML error reading file {0}.
-        /// </summary>
-        internal static string AimlLoaderErrorXmlException {
-            get {
-                return ResourceManager.GetString("AimlLoaderErrorXmlException", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Processing AIML file: {0}.
         /// </summary>
         internal static string AimlLoaderProcessingFile {
@@ -295,47 +268,11 @@ namespace MattEland.Ani.Alfred.Chat.Aiml {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The directory specified as the directoryPath to the AIML files ({0}) cannot be found by the AimlLoader object. Please make sure the directory where you think the AIML files are to be found is the same as the directory specified in the settings file..
-        /// </summary>
-        internal static string LoadAimlDirectoryNotFound {
-            get {
-                return ResourceManager.GetString("LoadAimlDirectoryNotFound", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to ChatEngine.AimlDirectoryPath was not set.
         /// </summary>
         internal static string LoadAimlErrorNoDirectoryPath {
             get {
                 return ResourceManager.GetString("LoadAimlErrorNoDirectoryPath", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Finished processing the AIML files. {0} categories processed..
-        /// </summary>
-        internal static string LoadAimlFinishedLoading {
-            get {
-                return ResourceManager.GetString("LoadAimlFinishedLoading", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Could not find any .aiml files in the specified directory ({0}). Please make sure that your aiml file end in a lowercase aiml extension, for example - myFile.aiml is valid but myFile.AIML is not..
-        /// </summary>
-        internal static string LoadAimlNoFilesInDirectory {
-            get {
-                return ResourceManager.GetString("LoadAimlNoFilesInDirectory", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Starting to process AIML files found in the directory {0}.
-        /// </summary>
-        internal static string LoadAimlStartingToLoad {
-            get {
-                return ResourceManager.GetString("LoadAimlStartingToLoad", resourceCulture);
             }
         }
         

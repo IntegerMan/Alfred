@@ -10,6 +10,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 
 using JetBrains.Annotations;
@@ -25,12 +26,15 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
     ///     TODO: These methods are monstrous and are screaming for a better design. This is the bad code
     ///     that murders other classes and leaves the bodies out in the sun to decay.
     /// </remarks>
-    internal class NodeEvaluator
+    internal sealed class NodeEvaluator
     {
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
         /// </summary>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when one or more required arguments are null.
+        /// </exception>
+        /// <param name="node"> The node. </param>
         internal NodeEvaluator([NotNull] Node node)
         {
             if (node == null) { throw new ArgumentNullException(nameof(node)); }
@@ -70,6 +74,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             MatchState matchstate,
             [NotNull] StringBuilder wildcard)
         {
+            // TODO: This method has a high cyclomatic complexity and should be refactored
+
             //- Validate Inputs
             if (request == null) { throw new ArgumentNullException(nameof(request)); }
             if (wildcard == null) { throw new ArgumentNullException(nameof(wildcard)); }
@@ -79,7 +85,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             if (request.CheckForTimedOut()) { return string.Empty; }
 
             //- Ensure path is something we can manipulate
-            path = path?.Trim() ?? string.Empty;
+            path = path.Trim();
 
             // If no child nodes, this is it - this is our match
             if (Node.Children.Count == 0)
@@ -153,7 +159,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             [NotNull] SubQuery query,
             [NotNull] Request request,
             MatchState matchstate,
-            [NotNull] IReadOnlyList<string> words,
+            [NotNull, ItemNotNull] IReadOnlyList<string> words,
             string newPath)
         {
             //- Validate
@@ -162,7 +168,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             if (words == null) { throw new ArgumentNullException(nameof(words)); }
 
             var sbWildcard = new StringBuilder();
-            AddWordToStringBuilder(words[0], sbWildcard);
+            AddWordToStringBuilder(words.First(), sbWildcard);
 
             var node = Node.Children["*"];
             Debug.Assert(node != null);
@@ -207,6 +213,8 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             [NotNull] string key,
             string newPath)
         {
+            // TODO: This method has a high cyclomatic complexity and should be refactored
+
             //- Validate
             if (query == null) { throw new ArgumentNullException(nameof(query)); }
             if (request == null) { throw new ArgumentNullException(nameof(request)); }
@@ -268,7 +276,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
             [NotNull] SubQuery query,
             [NotNull] Request request,
             MatchState matchstate,
-            [NotNull] IReadOnlyList<string> words,
+            [NotNull, ItemNotNull] IReadOnlyList<string> words,
             string newPath)
         {
             //- Validate
@@ -278,7 +286,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 
             var sbWildcard = new StringBuilder();
 
-            AddWordToStringBuilder(words[0], sbWildcard);
+            AddWordToStringBuilder(words.First(), sbWildcard);
 
             var node = Node.Children["_"];
             Debug.Assert(node != null);

@@ -6,7 +6,6 @@
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
-using System;
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -17,7 +16,7 @@ using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Pages;
-using MattEland.Ani.Alfred.Tests.Mocks;
+using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Testing;
 
 using NUnit.Framework;
@@ -32,7 +31,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
     /// </summary>
     [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-    public class AlfredPowerModuleTests : AlfredTestBase
+    public sealed class AlfredPowerModuleTests : AlfredTestBase
     {
         /// <summary>
         ///     Setups the tests.
@@ -51,16 +50,14 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         /// <summary>
         /// Registers the module to the Alfred instance using a test subsystem and simple page.
         /// </summary>
-        /// <param name="alfred">The alfred.</param>
+        /// <param name="alfred">The Alfred instance.</param>
         /// <param name="module">The module.</param>
-        /// <exception cref="System.ArgumentNullException">alfred, module
-        /// </exception>
-        private void RegisterTestModule([NotNull] AlfredApplication alfred, [NotNull] IAlfredModule module)
+        private void RegisterTestModule([NotNull] IAlfred alfred, [NotNull] IAlfredModule module)
         {
-            var subsystem = new TestSubsystem(Container);
+            var subsystem = BuildTestSubsystem();
 
             var page = new AlfredModuleListPage(Container, "Test Page", "Test");
-            subsystem.AddAutoRegisterPage(page);
+            subsystem.PagesToRegister.Add(page);
 
             alfred.Register(subsystem);
 

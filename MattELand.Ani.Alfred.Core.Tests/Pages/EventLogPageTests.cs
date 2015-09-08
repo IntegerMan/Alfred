@@ -22,10 +22,10 @@ using Shouldly;
 namespace MattEland.Ani.Alfred.Tests.Pages
 {
     /// <summary>
-    ///     <see cref="Contains" /> tests related to <see cref="AlfredEventLogPage" /> .
+    /// Contains tests related to <see cref="AlfredEventLogPage" /> .
     /// </summary>
     [UnitTestProvider]
-    public class EventLogPageTests : AlfredTestBase
+    public sealed class EventLogPageTests : AlfredTestBase
     {
 
         /// <summary>Gets the event log page.</summary>

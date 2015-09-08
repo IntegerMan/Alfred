@@ -11,15 +11,9 @@ using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-using JetBrains.Annotations;
-
-using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
-using MattEland.Ani.Alfred.Core.Pages;
-using MattEland.Ani.Alfred.Tests.Mocks;
-using MattEland.Common;
 using MattEland.Common.Providers;
 using MattEland.Testing;
 
@@ -29,48 +23,27 @@ using Shouldly;
 
 namespace MattEland.Ani.Alfred.Tests.Modules
 {
+
+    /// <summary>
+    ///     Unit tests related to the <see cref="AlfredTimeModule"/>
+    /// </summary>
     [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-    public sealed class TimeModuleTests : AlfredTestBase
+    [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
+    public sealed class TimeModuleTests : TimeModuleTestsBase
     {
-        [SetUp]
-        public void OnStartup()
-        {
-            _alfred = new AlfredApplication(Container);
-
-            _page = new AlfredModuleListPage(Container, "Time", "Time");
-            _module = new AlfredTimeModule(Container);
-            _page.Register(_module);
-            _subsystem = new TestSubsystem(Container);
-            _subsystem.AddAutoRegisterPage(_page);
-
-            _alfred.RegistrationProvider.Register(_subsystem);
-        }
-
-        [NotNull]
-        private AlfredApplication _alfred;
-
-        [NotNull]
-        private AlfredTimeModule _module;
-
-        [NotNull]
-        private TestSubsystem _subsystem;
-
-        [NotNull]
-        private AlfredModuleListPage _page;
 
         private string GetTimeText()
         {
-            var widget = _module.CurrentTimeWidget;
+            var widget = Module.CurrentTimeWidget;
 
-            var displayed = widget.Text;
-            return displayed;
+            return widget.Text;
         }
 
         [Test]
         public void DisplayTextIsCorrectBeforeUpdate()
         {
-            _alfred.Initialize();
+            Alfred.Initialize();
 
             var currentTimeString = DateTime.Now.ToShortTimeString();
 
@@ -85,9 +58,9 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         [Test]
         public void DisplayTextIsNullAfterShutdown()
         {
-            _alfred.Initialize();
-            _alfred.Update();
-            _alfred.Shutdown();
+            Alfred.Initialize();
+            Alfred.Update();
+            Alfred.Shutdown();
 
             Assert.IsNull(GetTimeText(), "UI text was not null after shutdown");
         }
@@ -95,18 +68,18 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         [Test]
         public void ModuleIsOnlineAfterStartup()
         {
-            _alfred.Initialize();
+            Alfred.Initialize();
 
-            Assert.AreEqual(AlfredStatus.Online, _module.Status);
+            Assert.AreEqual(AlfredStatus.Online, Module.Status);
         }
 
         [Test]
         public void ModuleReturnsCorrectTime()
         {
-            _alfred.Initialize();
+            Alfred.Initialize();
 
             var currentTimeString = DateTime.Now.ToShortTimeString();
-            _alfred.Update();
+            Alfred.Update();
 
             var displayed = GetTimeText();
 
@@ -115,174 +88,15 @@ namespace MattEland.Ani.Alfred.Tests.Modules
                           displayed.Contains(currentTimeString),
                           $"The time is displaying {displayed} when current time is {currentTimeString}");
         }
-
-        [Test]
-        public void TimeModuleCautionWidgetHasText()
-        {
-            _module.IsAlertEnabled = false;
-
-            _alfred.Initialize();
-
-            // Feed in a time in the morning for testability purposes
-            var oneThirtyAm = new DateTime(1980, 9, 10, 1, 30, 0);
-            _module.Update(oneThirtyAm);
-
-            Assert.IsFalse(
-                           string.IsNullOrWhiteSpace(_module.AlertWidget.Text),
-                           "Alert text is not set when alert is visible.");
-        }
-
-        [Test]
-        public void TimeModuleCautionWidgetIsHiddenDuringTheAfternoon()
-        {
-            _alfred.Initialize();
-
-            // Feed in a time in the afternoon for testability purposes
-            var oneThirtyPm = new DateTime(1980, 9, 10, 13, 30, 0);
-            _module.Update(oneThirtyPm);
-
-            Assert.IsFalse(
-                           _module.AlertWidget.IsVisible,
-                           "It's the afternoon but the module is alerting that we're near bedtime.");
-        }
-
-        [Test]
-        public void TimeModuleCautionWidgetIsHiddenDuringTheMorning()
-        {
-            _alfred.Initialize();
-
-            // Feed in a time in the morning for testability purposes
-            var nineThirtyAm = new DateTime(1980, 9, 10, 9, 30, 0);
-            _module.Update(nineThirtyAm);
-
-            Assert.IsFalse(_module.AlertWidget.IsVisible,
-                           "It's morning but the module is alerting that we're near bedtime.");
-        }
-
-        [Test]
-        public void TimeModuleCautionWidgetIsHiddenLateAtNightForNoonBedtimes()
-        {
-            _module.AlertHour = 12;
-            _module.AlertMinute = 0;
-            _module.AlertDurationInHours = 2;
-
-            _alfred.Initialize();
-
-            var evening = new DateTime(1980, 9, 10, 22, 0, 0);
-            _module.Update(evening);
-
-            Assert.IsFalse(_module.AlertWidget.IsVisible,
-                           "It's late in the evening with a noon bedtime but the alert is still showing.");
-        }
-
-        [Test]
-        public void TimeModuleCautionWidgetIsNotVisibleAtNoon()
-        {
-            _alfred.Initialize();
-
-            // Feed in a time in the afternoon for testability purposes
-            var noon = new DateTime(1980, 9, 10, 12, 0, 0);
-            _module.Update(noon);
-
-            Assert.IsFalse(_module.AlertWidget.IsVisible,
-                           "It's noon but the module is alerting that we're near bedtime.");
-        }
-
-        [Test]
-        public void TimeModuleCautionWidgetIsNotVisibleWhenDisabled()
-        {
-            _module.IsAlertEnabled = false;
-
-            _alfred.Initialize();
-
-            // Feed in a time in the morning for testability purposes
-            var oneThirtyAm = new DateTime(1980, 9, 10, 1, 30, 0);
-            _module.Update(oneThirtyAm);
-
-            Assert.IsFalse(_module.AlertWidget.IsVisible, "Alerts are disabled but the alert is still visible.");
-        }
-
-        [Test]
-        public void TimeModuleCautionWidgetIsVisibleAfterAlarm()
-        {
-            _module.AlertMinute = 30;
-            _alfred.Initialize();
-
-            // This is just a minute after the alarm should start
-            var alarmTime = new DateTime(1980, 9, 10, _module.AlertHour, _module.AlertMinute + 1, 0);
-            _module.Update(alarmTime);
-
-            Assert.IsTrue(_module.AlertWidget.IsVisible,
-                          "It's right after the alarm but the alarm is off.");
-        }
-
-        [Test]
-        public void TimeModuleCautionWidgetIsVisibleAtMidnight()
-        {
-            _alfred.Initialize();
-
-            // Feed in exactly midnight for testing purposes
-            var midnight = new DateTime(1980, 9, 10, 0, 0, 0);
-            _module.Update(midnight);
-
-            Assert.IsTrue(
-                          _module.AlertWidget.IsVisible,
-                          "It's midnight but the module isn't alerting that we need to be in bed.");
-        }
-
-        [Test]
-        public void TimeModuleCautionWidgetIsVisibleBeforeEndOfAlarm()
-        {
-            _module.AlertHour = 12;
-            _module.AlertDurationInHours = 1;
-            _module.AlertMinute = 30;
-            _alfred.Initialize();
-
-            // Feed in a time right before the alarm should end
-            var endAlarmHour = new DateTime(1980, 9, 10, 13, 0, 0);
-            _module.Update(endAlarmHour);
-
-            Assert.IsTrue(_module.AlertWidget.IsVisible,
-                          "It's right before the end of the alarm but the alarm is off.");
-        }
-
-        [Test]
-        public void TimeModuleCautionWidgetIsVisibleDuringTheEarlyMorning()
-        {
-            _alfred.Initialize();
-
-            // Feed in a time in the morning for testability purposes
-            var oneThirtyAm = new DateTime(1980, 9, 10, 1, 30, 0);
-            _module.Update(oneThirtyAm);
-
-            Assert.IsTrue(
-                          _module.AlertWidget.IsVisible,
-                          "It's early morning but the module isn't alerting that we need to be in bed.");
-        }
-
-        [Test]
-        public void TimeModuleCautionWidgetIsVisibleDuringTheNight()
-        {
-            _alfred.Initialize();
-
-            // Feed in a time in the late evening for testability purposes
-            var elevenThirtyPm = new DateTime(1980, 9, 10, 23, 30, 0);
-            _module.Update(elevenThirtyPm);
-
-            Assert.IsTrue(
-                          _module.AlertWidget.IsVisible,
-                          "It's nearly midnight but the module isn't alerting that we need to be in bed.");
-        }
-
         [Test]
         public void TimeModuleCurrentDateIsVisible()
         {
-            _alfred.Initialize();
+            Alfred.Initialize();
 
             var evening = new DateTime(1980, 9, 10, 22, 0, 0);
-            _module.Update(evening);
+            Module.Update(evening);
 
-            Assert.IsTrue(_module.CurrentDateWidget.IsVisible, "The current date was not visible");
+            Assert.IsTrue(Module.CurrentDateWidget.IsVisible, "The current date was not visible");
         }
 
         [Test]
@@ -290,16 +104,16 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         {
             var console = new DiagnosticConsole(Container);
             console.RegisterAsProvidedInstance(typeof(IConsole), Container);
-            _alfred.Initialize();
+            Alfred.Initialize();
 
             // This is a bit of a testing hack - since initialize causes the module to update, it'll update based on the current time.
             // This is what it should do, but we want to force updates given specific times so we'll just clear out the
             // stored value from the initial run
-            _module.ClearLastTimeRun();
+            Module.ClearLastTimeRun();
 
-            _module.Update(new DateTime(1980, 9, 10, 9, 0, 0));
-            _module.Update(new DateTime(1980, 9, 10, 9, 0, 30));
-            _module.Update(new DateTime(1980, 9, 10, 9, 1, 0));
+            Module.Update(new DateTime(1980, 9, 10, 9, 0, 0));
+            Module.Update(new DateTime(1980, 9, 10, 9, 0, 30));
+            Module.Update(new DateTime(1980, 9, 10, 9, 1, 0));
 
             // This will error if 0 or > 1 events are logged
             Assert.IsFalse(
@@ -314,28 +128,28 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         [Test]
         public void TimeModuleHasCautionWidget()
         {
-            _alfred.Initialize();
+            Alfred.Initialize();
 
-            Assert.IsNotNull(_module.AlertWidget, "The Bedtime alert widget was not present");
+            Assert.IsNotNull(Module.AlertWidget, "The Bedtime alert widget was not present");
             Assert.Contains(
-                            _module.AlertWidget,
-                            _module.Widgets as ICollection,
+                            Module.AlertWidget,
+                            Module.Widgets as ICollection,
                             "The module did not contain a registered bedtime alert widget.");
         }
 
         [Test]
         public void TimeModuleHasName()
         {
-            Assert.IsNotNullOrEmpty(_module.Name);
+            Assert.IsNotNullOrEmpty(Module.Name);
         }
 
         [Test]
         public void TimeModuleHasNoWidgetsWhenOffline()
         {
-            _alfred.Initialize();
-            _alfred.Shutdown();
+            Alfred.Initialize();
+            Alfred.Shutdown();
 
-            Assert.IsTrue(!_module.Widgets.Any(), "Widgets were left over after shutdown");
+            Assert.IsTrue(!Module.Widgets.Any(), "Widgets were left over after shutdown");
         }
 
         /// <summary>
@@ -344,18 +158,18 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         [Test]
         public void TimeModuleHasTimeAlwaysVisible()
         {
-            _alfred.Initialize();
+            Alfred.Initialize();
 
-            Assert.IsTrue(_module.CurrentTimeWidget.IsVisible, "The time widget was hidden.");
+            Assert.IsTrue(Module.CurrentTimeWidget.IsVisible, "The time widget was hidden.");
         }
 
         [Test]
         public void TimeModuleHasWidgets()
         {
-            _alfred.Initialize();
+            Alfred.Initialize();
 
-            Assert.IsNotNull(_module.Widgets);
-            Assert.Greater(_module.Widgets.Count(), 0, "The time module did not have any Widgets");
+            Assert.IsNotNull(Module.Widgets);
+            Assert.Greater(Module.Widgets.Count(), 0, "The time module did not have any Widgets");
         }
 
         /// <summary>
@@ -367,10 +181,10 @@ namespace MattEland.Ani.Alfred.Tests.Modules
             // Have Alfred use the global console
             var console = Container.Provide<IConsole>();
             console.RegisterAsProvidedInstance(typeof(IConsole), Container);
-            _alfred.Initialize();
+            Alfred.Initialize();
 
-            _module.Update(new DateTime(1980, 9, 10, 9, 29, 0));
-            _module.Update(new DateTime(1980, 9, 10, 9, 30, 0));
+            Module.Update(new DateTime(1980, 9, 10, 9, 29, 0));
+            Module.Update(new DateTime(1980, 9, 10, 9, 30, 0));
 
             // This will error if 0 or > 1 events are logged
             var consoleEvent = console.Events.Single(e => e.Title == AlfredTimeModule.HalfHourAlertEventTitle);
@@ -390,10 +204,10 @@ namespace MattEland.Ani.Alfred.Tests.Modules
             var console = Container.Provide<IConsole>();
             console.RegisterAsProvidedInstance(typeof(IConsole), Container);
 
-            _alfred.Initialize();
+            Alfred.Initialize();
 
-            _module.Update(new DateTime(1980, 9, 10, 8, 59, 0));
-            _module.Update(new DateTime(1980, 9, 10, 9, 0, 0));
+            Module.Update(new DateTime(1980, 9, 10, 8, 59, 0));
+            Module.Update(new DateTime(1980, 9, 10, 9, 0, 0));
 
             // This will error if 0 or > 1 events are logged
             var consoleEvent = console.Events.Single(e => e.Title == AlfredTimeModule.HourAlertEventTitle);
@@ -406,24 +220,25 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         [Test]
         public void TimeModuleShowsCurrentDate()
         {
-            _alfred.Initialize();
+            Alfred.Initialize();
 
             var evening = new DateTime(1980, 9, 10, 22, 0, 0);
-            _module.Update(evening);
+            Module.Update(evening);
 
             const string Expected = "Wednesday, September 10, 1980";
-            var currentDateString = _module.CurrentTimeWidget.Text;
+            var currentDateString = Module.CurrentTimeWidget.Text;
 
             Assert.AreEqual(
                             Expected,
-                            _module.CurrentDateWidget.Text,
+                            Module.CurrentDateWidget.Text,
                             $"Expected '{Expected}' but was '{currentDateString}'");
         }
 
         [Test]
         public void TimeModuleStartsOffline()
         {
-            Assert.AreEqual(AlfredStatus.Offline, _module.Status);
+            Assert.AreEqual(AlfredStatus.Offline, Module.Status);
         }
     }
+
 }

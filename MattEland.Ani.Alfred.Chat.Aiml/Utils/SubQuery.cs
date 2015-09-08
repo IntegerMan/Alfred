@@ -16,7 +16,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
     /// <summary>
     ///     Represents a SubQuery of a chat message.
     /// </summary>
-    public class SubQuery
+    public sealed class SubQuery
     {
 
         /// <summary>

@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
 // ChatEngineLibrarian.cs
 // 
-// Created on:      08/16/2015 at 1:16 PM
-// Last Modified:   08/17/2015 at 12:24 AM
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   09/07/2015 at 9:58 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -23,22 +23,24 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
     /// <summary>
     ///     The librarian is a helper class that manages settings for the Chat Engine
     /// </summary>
-    public class ChatEngineLibrarian
+    public sealed class ChatEngineLibrarian
     {
+        /// <summary>
+        ///     The chat engine.
+        /// </summary>
         [NotNull]
         private readonly ChatEngine _chatEngine;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ChatEngineLibrarian" /> class.
         /// </summary>
-        /// <exception cref="ArgumentNullException"><paramref name="chatEngine" /> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="chatEngine" /> is <see langword="null" /> .
+        /// </exception>
         internal ChatEngineLibrarian([NotNull] ChatEngine chatEngine)
         {
             //-Validate
-            if (chatEngine == null)
-            {
-                throw new ArgumentNullException(nameof(chatEngine));
-            }
+            if (chatEngine == null) { throw new ArgumentNullException(nameof(chatEngine)); }
 
             _chatEngine = chatEngine;
 
@@ -51,27 +53,32 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         }
 
         /// <summary>
-        ///     Gets the substitutions dictionary. Substitutions are common phrases that are condensed and
-        ///     translated to their equivalent meaning to increase bot flexibility and make content authoring
-        ///     easier.
+        ///     Gets the substitutions dictionary. <see cref="Substitutions"/> are common phrases
+        ///     that are condensed and translated to their equivalent meaning to increase bot
+        ///     flexibility and make content authoring easier.
         /// </summary>
-        /// <value>The substitutions.</value>
+        /// <value>
+        /// The substitutions.
+        /// </value>
         [NotNull]
         public SettingsManager Substitutions { get; }
 
         /// <summary>
-        ///     Gets the gender substitutions dictionary. This is a collection of male and female pronouns and
-        ///     their
-        ///     replacement values to use when the "gender" AIML tag is present.
+        ///     Gets the gender substitutions dictionary. This is a collection of male and female
+        ///     pronouns and their replacement values to use when the "gender" AIML tag is present.
         /// </summary>
-        /// <value>The gender substitutions dictionary.</value>
+        /// <value>
+        /// The gender substitutions dictionary.
+        /// </value>
         [NotNull]
         public SettingsManager GenderSubstitutions { get; }
 
         /// <summary>
         ///     Gets the global settings dictionary.
         /// </summary>
-        /// <value>The global settings.</value>
+        /// <value>
+        /// The global settings.
+        /// </value>
         [NotNull]
         public SettingsManager GlobalSettings { get; }
 
@@ -79,15 +86,19 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         ///     Gets the person substitutions settings dictionary for second person to first person
         ///     conversions.
         /// </summary>
-        /// <value>The person substitutions settings dictionary.</value>
+        /// <value>
+        /// The person substitutions settings dictionary.
+        /// </value>
         [NotNull]
         public SettingsManager SecondPersonToFirstPersonSubstitutions { get; }
 
         /// <summary>
-        ///     Gets the person substitutions settings dictionary. This contains things related to moving from
-        ///     the first person to the second person.
+        ///     Gets the person substitutions settings dictionary. This contains things related to
+        ///     moving from the first person to the second person.
         /// </summary>
-        /// <value>The person substitutions settings dictionary.</value>
+        /// <value>
+        /// The person substitutions settings dictionary.
+        /// </value>
         [NotNull]
         public SettingsManager FirstPersonToSecondPersonSubstitutions { get; }
 
@@ -98,15 +109,17 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <exception cref="ArgumentException">Path to settings must be provided.</exception>
         /// <exception cref="XmlException">Path to settings must be provided.</exception>
         /// <exception cref="FileNotFoundException">The settings file was not found.</exception>
-        /// <exception cref="SecurityException">Could not find a settings file at the given path</exception>
-        /// <exception cref="UnauthorizedAccessException">The caller does not have the required permission.</exception>
+        /// <exception cref="SecurityException">
+        /// Could not find a settings file at the given path
+        /// </exception>
+        /// <exception cref="UnauthorizedAccessException">
+        /// The caller does not have the required permission.
+        /// </exception>
         /// <exception cref="DirectoryNotFoundException">
-        ///     Access to <paramref name="pathToConfigFiles" /> is
-        ///     denied.
+        /// Access to <paramref name="pathToConfigFiles" /> is denied.
         /// </exception>
         /// <exception cref="IOException">
-        ///     The specified path is invalid (for example, it is on an unmapped
-        ///     drive).
+        /// The specified path is invalid (for example, it is on an unmapped drive).
         /// </exception>
         internal void LoadSettingsFromConfigDirectory([NotNull] string pathToConfigFiles)
         {
@@ -122,31 +135,32 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
             GlobalSettings.Load(pathToSettings);
             AddDefaultSettings();
 
-            // Load the indiviual dictionaries. If any one of these fail, the failure will be logged but things will move on
+            // Load the individual dictionaries. If any one of these fail, the failure will be logged but things will move on
             var person2Path = Path.Combine(pathToConfigFiles,
-                                           GlobalSettings.GetValue("person2substitutionsfile").NonNull());
+                                           GlobalSettings.GetValue("person2substitutionsfile"));
+
             SecondPersonToFirstPersonSubstitutions.LoadSafe(person2Path,
                                                             _chatEngine.Logger,
                                                             _chatEngine.Locale);
 
             var person1Path = Path.Combine(pathToConfigFiles,
-                                           GlobalSettings.GetValue("personsubstitutionsfile").NonNull());
+                                           GlobalSettings.GetValue(@"personsubstitutionsfile"));
             FirstPersonToSecondPersonSubstitutions.LoadSafe(person1Path,
                                                             _chatEngine.Logger,
                                                             _chatEngine.Locale);
 
             var genderPath = Path.Combine(pathToConfigFiles,
-                                          GlobalSettings.GetValue("gendersubstitutionsfile").NonNull());
+                                          GlobalSettings.GetValue(@"gendersubstitutionsfile"));
             GenderSubstitutions.LoadSafe(genderPath, _chatEngine.Logger, _chatEngine.Locale);
 
             var substitutionPath = Path.Combine(pathToConfigFiles,
-                                                GlobalSettings.GetValue("substitutionsfile").NonNull());
+                                                GlobalSettings.GetValue(@"substitutionsfile"));
             Substitutions.LoadSafe(substitutionPath, _chatEngine.Logger, _chatEngine.Locale);
         }
 
         /// <summary>
-        ///     Loads various settings from XML files. Input parameters are all optional and should be the
-        ///     actual XML and not a file path.
+        ///     Loads various settings from XML files. Input parameters are all optional and should
+        ///     be the actual XML and not a file path.
         /// </summary>
         /// <param name="globalXml">The global XML.</param>
         /// <param name="firstPersonXml">The first person XML.</param>
@@ -154,11 +168,12 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <param name="genderXml">The gender XML.</param>
         /// <param name="substitutionsXml">The substitutions XML.</param>
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-        internal void LoadSettingsFromXml([CanBeNull] string globalXml = null,
-                                        [CanBeNull] string firstPersonXml = null,
-                                        [CanBeNull] string secondPersonXml = null,
-                                        [CanBeNull] string genderXml = null,
-                                        [CanBeNull] string substitutionsXml = null)
+        internal void LoadSettingsFromXml(
+            [CanBeNull] string globalXml = null,
+            [CanBeNull] string firstPersonXml = null,
+            [CanBeNull] string secondPersonXml = null,
+            [CanBeNull] string genderXml = null,
+            [CanBeNull] string substitutionsXml = null)
         {
             if (globalXml.HasText())
             {
@@ -194,12 +209,12 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// </summary>
         private void AddDefaultSettings()
         {
-            AddSettingIfMissing("person2substitutionsfile", "Person2Substitutions.xml");
-            AddSettingIfMissing("personsubstitutionsfile", "PersonSubstitutions.xml");
-            AddSettingIfMissing("gendersubstitutionsfile", "GenderSubstitutions.xml");
-            AddSettingIfMissing("substitutionsfile", "Substitutions.xml");
-            AddSettingIfMissing("aimldirectory", "aiml");
-            AddSettingIfMissing("configdirectory", "config");
+            AddSettingIfMissing(@"person2substitutionsfile", @"Person2Substitutions.xml");
+            AddSettingIfMissing(@"personsubstitutionsfile", @"PersonSubstitutions.xml");
+            AddSettingIfMissing(@"gendersubstitutionsfile", @"GenderSubstitutions.xml");
+            AddSettingIfMissing(@"substitutionsfile", @"Substitutions.xml");
+            AddSettingIfMissing(@"aimldirectory", @"aiml");
+            AddSettingIfMissing(@"configdirectory", @"config");
         }
 
         /// <summary>
@@ -207,14 +222,12 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// </summary>
         /// <param name="settingName">Name of the setting.</param>
         /// <param name="defaultValue">The default value.</param>
-        /// <exception cref="ArgumentNullException">settingName</exception>
-        private void AddSettingIfMissing([NotNull] string settingName,
-                                         [CanBeNull] string defaultValue)
+        /// <exception cref="ArgumentNullException"><paramref name="settingName"/></exception>
+        private void AddSettingIfMissing(
+            [NotNull] string settingName,
+            [CanBeNull] string defaultValue)
         {
-            if (settingName == null)
-            {
-                throw new ArgumentNullException(nameof(settingName));
-            }
+            if (settingName == null) { throw new ArgumentNullException(nameof(settingName)); }
 
             if (!GlobalSettings.Contains(settingName))
             {
