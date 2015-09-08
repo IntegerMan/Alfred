@@ -14,7 +14,7 @@ using JetBrains.Annotations;
 namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>
-    ///     Defines an object capable of providing search results
+    ///     Defines an <see langword="object"/> capable of providing search results
     /// </summary>
     public interface ISearchProvider
     {
@@ -26,7 +26,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         ///     An <see cref="ISearchOperation" /> representing the potentially ongoing search.
         /// </returns>
         [NotNull]
-        ISearchOperation DoSearch([NotNull] string searchText);
+        ISearchOperation PerformSearch([NotNull] string searchText);
     }
 
 }

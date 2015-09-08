@@ -9,6 +9,8 @@
 
 using System;
 
+using JetBrains.Annotations;
+
 namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>
@@ -22,6 +24,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <value>
         /// The title of the search result.
         /// </value>
+        [NotNull]
         string Title { get; }
 
         /// <summary>
@@ -30,7 +33,8 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <value>
         /// The description of the search result.
         /// </value>
-        string DescriptionText { get; }
+        [NotNull]
+        string Description { get; }
 
         /// <summary>
         ///     Gets a textual display of the location. Location can vary by the type of search and
@@ -40,6 +44,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <value>
         /// The location text.
         /// </value>
+        [NotNull]
         string LocationText { get; }
 
         /// <summary>
@@ -49,6 +54,16 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <value>
         /// The get more details action.
         /// </value>
+        [CanBeNull]
         Action<ISearchResult> MoreDetailsAction { get; }
+
+        /// <summary>
+        ///     Gets the more details link's text.
+        /// </summary>
+        /// <value>
+        ///     The more details text.
+        /// </value>
+        [CanBeNull]
+        string MoreDetailsText { get; }
     }
 }

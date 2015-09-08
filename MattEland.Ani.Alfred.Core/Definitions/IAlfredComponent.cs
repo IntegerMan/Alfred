@@ -72,9 +72,9 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         IObjectContainer Container { get; }
 
         /// <summary>
-        ///     Called when a component is registered with an alfred instance.
+        ///     Called when a component is registered with an Alfred instance.
         /// </summary>
-        /// <param name="alfredInstance">The alfred instance.</param>
+        /// <param name="alfredInstance">The Alfred instance.</param>
         void OnRegistered(IAlfred alfredInstance);
     }
 }

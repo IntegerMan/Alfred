@@ -76,6 +76,7 @@
     <Compile Include="Definitions\IHasStatus.cs" />
     <Compile Include="Definitions\IPropertyItem.cs" />
     <Compile Include="Definitions\IPropertyProvider.cs" />
+    <Compile Include="Definitions\ISearchController.cs" />
     <Compile Include="Definitions\ISearchOperation.cs" />
     <Compile Include="Definitions\ISearchProvider.cs" />
     <Compile Include="Definitions\ISearchResult.cs" />
@@ -145,6 +146,12 @@
       <Project>{514cb422-a6ef-4c75-b925-92ab599ba1be}</Project>
       <Name>MattEland.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Specifications\SubsystemRegistration.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Specifications\SearchProviders.md" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
