@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <NDepend AppName="Alfred" Platform="DotNet">
   <OutputDir KeepXmlFiles="False">C:\Dev\Alfred\NDependOut</OutputDir>
   <Assemblies>
@@ -85,13 +85,45 @@
       <Serie MetricName="# Third-Party Namespaces Used" MetricUnit="Namespaces" Color="#FF32CD32" ChartType="Line" ScaleExp="1" />
       <Serie MetricName="# Third-Party Fields Used" MetricUnit="Fields" Color="#FFFFD700" ChartType="Line" ScaleExp="1" />
     </Chart>
+    <Chart Name="Code Growth over Time" ShowInReport="True">
+      <Serie MetricName="# Lines of Code Added since the Baseline" MetricUnit="LoC" Color="#FF646464" ChartType="Line" ScaleExp="0" />
+      <Serie MetricName="# Lines of Code (JustMyCode)" MetricUnit="LoC" Color="#FF1E90FF" ChartType="Line" ScaleExp="0" />
+      <Serie MetricName="# Lines of Code" MetricUnit="LoC" Color="#FF0000FF" ChartType="Line" ScaleExp="0" />
+    </Chart>
+    <Chart Name="Type Usage over Time" ShowInReport="True">
+      <Serie MetricName="# Types" MetricUnit="Types" Color="#FF0000FF" ChartType="Line" ScaleExp="0" />
+      <Serie MetricName="# Public Types" MetricUnit="Types" Color="#FF00BFFF" ChartType="Line" ScaleExp="0" />
+      <Serie MetricName="# Abstract Classes" MetricUnit="Types" Color="#FF008000" ChartType="Line" ScaleExp="0" />
+      <Serie MetricName="# Interfaces" MetricUnit="Types" Color="#FF646464" ChartType="Line" ScaleExp="0" />
+      <Serie MetricName="# Structures" MetricUnit="Types" Color="#FFA52A2A" ChartType="Line" ScaleExp="0" />
+      <Serie MetricName="# Classes" MetricUnit="Types" Color="#FF66CDAA" ChartType="Line" ScaleExp="0" />
+      <Serie MetricName="# Third-Party Types Used" MetricUnit="Types" Color="#FFDB7093" ChartType="Line" ScaleExp="0" />
+      <Serie MetricName="# Source Files" MetricUnit="Source Files" Color="#FF000080" ChartType="Line" ScaleExp="0" />
+    </Chart>
+    <Chart Name="Method Complexity" ShowInReport="True">
+      <Serie MetricName="Max Cyclomatic Complexity for Methods" MetricUnit="Paths" Color="#FF008000" ChartType="Line" ScaleExp="0" />
+      <Serie MetricName="Average Cyclomatic Complexity for Methods" MetricUnit="Paths" Color="#FF32CD32" ChartType="Line" ScaleExp="0" />
+      <Serie MetricName="Max # Lines of Code for Methods (JustMyCode)" MetricUnit="LoC" Color="#FFFF0000" ChartType="Line" ScaleExp="0" />
+      <Serie MetricName="Average # Lines of Code for Methods with at least 3 Lines of Code" MetricUnit="LoC" Color="#FFFF8C00" ChartType="Line" ScaleExp="0" />
+      <Serie MetricName="Average C.R.A.P Score" MetricUnit="" Color="#FF646464" ChartType="Line" ScaleExp="0" />
+    </Chart>
+    <Chart Name="Fields" ShowInReport="True">
+      <Serie MetricName="# Fields" MetricUnit="Fields" Color="#FFA52A2A" ChartType="Line" ScaleExp="0" />
+      <Serie MetricName="# Third-Party Fields Used" MetricUnit="Fields" Color="#FF646464" ChartType="Line" ScaleExp="0" />
+    </Chart>
+    <Chart Name="Type Size" ShowInReport="True">
+      <Serie MetricName="Max # of Methods for Types" MetricUnit="Methods" Color="#FF0000FF" ChartType="Line" ScaleExp="0" />
+      <Serie MetricName="Average # Methods for Types" MetricUnit="Methods" Color="#FF1E90FF" ChartType="Line" ScaleExp="0" />
+      <Serie MetricName="Max # of Methods for Interfaces" MetricUnit="Methods" Color="#FF32CD32" ChartType="Line" ScaleExp="0" />
+      <Serie MetricName="Average # Methods for Interfaces" MetricUnit="Methods" Color="#FF66CDAA" ChartType="Line" ScaleExp="0" />
+      <Serie MetricName="Average # Lines of Code for Types" MetricUnit="LoC" Color="#FFCD853F" ChartType="Line" ScaleExp="0" />
+    </Chart>
   </TrendMetrics>
   <HistoricAnalysisResult PersistRecurrence="3" UseCustomDir="False" CustomDir="" />
   <SourceFileRebasing FromPath="" ToPath="" />
   <PathVariables />
   <RuleFiles />
-  <ProjectRules AreActive="True" />
-  <Queries>
+  <ProjectRules AreActive="True" /><Queries>
     <Group Name="Custom rules for Alfred" Active="True" ShownInReport="False">
       <Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="True"><![CDATA[// <Name>Definitions should not access Core</Name>
 warnif count > 0 from n in Namespaces where 
@@ -8114,10 +8146,8 @@ select new { t, t.NbLinesOfCode }
 //</HowToFix>]]></Query>
       </Group>
     </Group>
-  </Queries>
-  <WarnFilter>
+  </Queries><WarnFilter>
     <DontWarn>Invalid coverage file {C:\Dev\Alfred\Coverage\AlfredCoverage.xml}</DontWarn>
     <DontWarn>Coverage file extension must be in : .xml  .nccov  .coveragexml    {C:\Dev\Alfred\Coverage\AlfredCoverage.html}</DontWarn>
     <DontWarn>Invalid coverage file {C:\Dev\Alfred\Coverage\TestResult.xml}</DontWarn>
-  </WarnFilter>
-</NDepend>
+  </WarnFilter></NDepend>
