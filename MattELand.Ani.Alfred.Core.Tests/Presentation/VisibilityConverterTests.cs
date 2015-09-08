@@ -8,10 +8,8 @@
 // ---------------------------------------------------------
 
 using System;
-using System.Globalization;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
-
-using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.PresentationShared.Converters;
 using MattEland.Testing;
@@ -22,63 +20,14 @@ using Shouldly;
 
 namespace MattEland.Ani.Alfred.Tests.Presentation
 {
+
     /// <summary>
     ///     Provides tests around <see cref="VisibilityConverter" />
     /// </summary>
     [UnitTestProvider]
-    public sealed class VisibilityConverterTests : UnitTestBase
+    [SuppressMessage("ReSharper", "ExceptionNotDocumentedOptional")]
+    public sealed class VisibilityConverterTests : ConverterTestsBase<VisibilityConverter>
     {
-        /// <summary>
-        ///     Sets up the environment for each test.
-        /// </summary>
-        [SetUp]
-        public override void SetUp()
-        {
-            base.SetUp();
-
-            // Ensure we have a new converter to deal with every test
-            _converter = null;
-        }
-
-        /// <summary>
-        ///     The converter.
-        /// </summary>
-        [CanBeNull]
-        private VisibilityConverter _converter;
-
-        /// <summary>
-        ///     Gets the converter.
-        /// </summary>
-        /// <value>
-        /// The converter.
-        /// </value>
-        [NotNull]
-        private VisibilityConverter Converter
-        {
-            get { return _converter ?? (_converter = new VisibilityConverter()); }
-        }
-
-        /// <summary>
-        ///     Gets the target type for conversion.
-        /// </summary>
-        /// <value>
-        ///     The target type.
-        /// </value>
-        private static Type TargetType
-        {
-            get { return typeof(Visibility); }
-        }
-
-        /// <summary>
-        ///     Gets the culture.
-        /// </summary>
-        /// <value>
-        ///     The culture.
-        /// </value>
-        private static CultureInfo Culture
-        {
-            get { return CultureInfo.CurrentCulture; }
-        }
 
         /// <summary>
         ///     Tests that passing <see langword="true" /> into the
@@ -89,15 +38,12 @@ namespace MattEland.Ani.Alfred.Tests.Presentation
         public void TrueResultsInVisible()
         {
             //! Arrange
-
-            var converter = Converter;
+            Converter.Invert = false;
 
             //! Act
-
-            var result = converter.Convert(true, TargetType, null, Culture);
+            var result = Convert(true);
 
             //! Assert
-
             result.ShouldBe(Visibility.Visible);
         }
 
@@ -110,15 +56,12 @@ namespace MattEland.Ani.Alfred.Tests.Presentation
         public void FalseResultsInCollapsed()
         {
             //! Arrange
-
-            var converter = Converter;
+            Converter.Invert = false;
 
             //! Act
-
-            var result = converter.Convert(false, TargetType, null, Culture);
+            var result = Convert(false);
 
             //! Assert
-
             result.ShouldBe(Visibility.Collapsed);
         }
 
@@ -131,15 +74,12 @@ namespace MattEland.Ani.Alfred.Tests.Presentation
         public void ConverterDefaultsToCollapsed()
         {
             //! Arrange
-
             var converter = Converter;
 
             //! Act
-
-            var result = converter.Convert("MUFASA MUFASA MUFASA!", TargetType, null, Culture);
+            var result = Convert("MUFASA MUFASA MUFASA!");
 
             //! Assert
-
             result.ShouldBe(Visibility.Collapsed);
         }
 
@@ -151,16 +91,14 @@ namespace MattEland.Ani.Alfred.Tests.Presentation
         [Test]
         public void TrueStringResultsInVisible()
         {
-            //! Arrange
 
-            var converter = Converter;
+            //! Arrange
+            Converter.Invert = false;
 
             //! Act
-
-            var result = converter.Convert("TRUE", TargetType, null, Culture);
+            var result = Convert("TRUE");
 
             //! Assert
-
             result.ShouldBe(Visibility.Visible);
 
         }
@@ -174,17 +112,14 @@ namespace MattEland.Ani.Alfred.Tests.Presentation
         [Test]
         public void WhenInvertedTrueReturnsCollapsed()
         {
-            //! Arrange
 
-            var converter = Converter;
-            converter.Invert = true;
+            //! Arrange
+            Converter.Invert = true;
 
             //! Act
-
-            var result = converter.Convert(true, TargetType, null, Culture);
+            var result = Convert(true);
 
             //! Assert
-
             result.ShouldBe(Visibility.Collapsed);
 
         }
@@ -198,18 +133,16 @@ namespace MattEland.Ani.Alfred.Tests.Presentation
         [Test]
         public void WhenInvertedFalseReturnsVisible()
         {
-            //! Arrange
 
-            var converter = Converter;
-            converter.Invert = true;
+            //! Arrange
+            Converter.Invert = true;
 
             //! Act
-
-            var result = converter.Convert(false, TargetType, null, Culture);
+            var result = Convert(false);
 
             //! Assert
-
             result.ShouldBe(Visibility.Visible);
+
         }
 
         /// <summary>
@@ -222,16 +155,12 @@ namespace MattEland.Ani.Alfred.Tests.Presentation
         public void NullWhenInvertedReturnsVisible()
         {
             //! Arrange
-
-            var converter = Converter;
-            converter.Invert = true;
+            Converter.Invert = true;
 
             //! Act
-
-            var result = converter.Convert(null, TargetType, null, Culture);
+            var result = Convert(null);
 
             //! Assert
-
             result.ShouldBe(Visibility.Visible);
         }
 
@@ -249,7 +178,7 @@ namespace MattEland.Ani.Alfred.Tests.Presentation
 
             //! Act / Assert (Exception expected)
 
-            var result = converter.ConvertBack(Visibility.Visible, TargetType, null, Culture);
+            converter.ConvertBack(Visibility.Visible, TargetType, null, Culture);
         }
     }
 }

@@ -102,6 +102,8 @@
     <Compile Include="Pages\ExplorerPageTests.cs" />
     <Compile Include="Pages\PageTests.cs" />
     <Compile Include="Pages\RootPagesTests.cs" />
+    <Compile Include="Presentation\ConverterTestsBase.cs" />
+    <Compile Include="Presentation\LogLevelToBrushConverterTests.cs" />
     <Compile Include="Presentation\VisibilityConverterTests.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
