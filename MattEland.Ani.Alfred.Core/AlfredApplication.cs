@@ -196,7 +196,7 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     Gets the sub systems associated wih Alfred.
+        ///     Gets the sub systems associated with Alfred.
         /// </summary>
         /// <value>The sub systems.</value>
         [NotNull]
