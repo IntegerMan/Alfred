@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
-// Class1.cs
+// TestExtensions.cs
 // 
-// Created on:      09/01/2015 at 12:56 PM
-// Last Modified:   09/01/2015 at 1:04 PM
+// Created on:      09/03/2015 at 11:00 PM
+// Last Modified:   09/09/2015 at 11:10 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -27,14 +27,12 @@ namespace MattEland.Testing
     {
 
         /// <summary>
-        ///     Asserts that the <paramref name="source" /> object is not <see langword="null" /> and
-        ///     fails the test if it is.
+        ///     Asserts that the <paramref name="source" /> object is not <see langword="null" />
+        ///     and fails the test if it is.
         /// </summary>
         /// <param name="source">The source.</param>
         /// <param name="failureMessage">The failure message.</param>
-        /// <returns>
-        ///     The <paramref name="source"/> object.
-        /// </returns>
+        /// <returns>The <paramref name="source" /> object.</returns>
         [AssertionMethod]
         [NotNull]
         public static object ShouldNotBeNull(
@@ -47,14 +45,12 @@ namespace MattEland.Testing
         }
 
         /// <summary>
-        ///     Asserts that the <paramref name="source" /> object is <see langword="null" /> and fails
-        ///     the test if it is not.
+        ///     Asserts that the <paramref name="source" /> object is <see langword="null" /> and
+        ///     fails the test if it is not.
         /// </summary>
         /// <param name="source">The source.</param>
         /// <param name="failureMessage">The failure message.</param>
-        /// <returns>
-        ///     The <paramref name="source"/> object.
-        /// </returns>
+        /// <returns>The <paramref name="source" /> object.</returns>
         [AssertionMethod]
         [CanBeNull]
         public static object ShouldBeNull(
@@ -67,14 +63,14 @@ namespace MattEland.Testing
         }
 
         /// <summary>
-        ///     A boolean extension method that asserts that the <paramref name="actual" /> value will be
-        ///     <see langword="false" /> and fails if it is true.
+        ///     A boolean extension method that asserts that the <paramref name="actual" /> value
+        ///     will be <see langword="false" /> and fails if it is true.
         /// </summary>
         /// <param name="actual">the actual value to test.</param>
         /// <param name="failureMessage">The failure message to display if the test fails.</param>
         /// <returns>
-        ///     <see langword="true" /> if it succeeds. <see langword="false" /> will never be returned as that
-        ///     will cause an assertion to trigger.
+        ///     <see langword="true" /> if it succeeds. <see langword="false" /> will never be
+        ///     returned as that will cause an assertion to trigger.
         /// </returns>
         public static bool ShouldBeTrue(
             this bool actual,
@@ -86,14 +82,14 @@ namespace MattEland.Testing
         }
 
         /// <summary>
-        ///     A boolean extension method that asserts that the <paramref name="actual" /> value will be
-        ///     <see langword="false" /> and fails if it is true.
+        ///     A boolean extension method that asserts that the <paramref name="actual" /> value
+        ///     will be <see langword="false" /> and fails if it is true.
         /// </summary>
         /// <param name="actual">the actual value to test.</param>
         /// <param name="failureMessage">The failure message to display if the test fails.</param>
         /// <returns>
-        ///     <see langword="true" /> if it succeeds. <see langword="false" /> will never be returned as that
-        ///     will cause an assertion to trigger.
+        ///     <see langword="true" /> if it succeeds. <see langword="false" /> will never be
+        ///     returned as that will cause an assertion to trigger.
         /// </returns>
         public static bool ShouldBeFalse(
             this bool actual,
@@ -106,8 +102,8 @@ namespace MattEland.Testing
 
         /// <summary>
         ///     An <see langword="object" /> extension method that tries to cast the
-        ///     <paramref name="actual" /> object to the specified type parameter and returns a strongly- typed
-        ///     result if the action succeeds.
+        ///     <paramref name="actual" /> object to the specified type parameter and returns a
+        ///     strongly- typed result if the action succeeds.
         /// </summary>
         /// <typeparam name="T">The type to cast to.</typeparam>
         /// <param name="actual">The actual object to act on.</param>
@@ -133,13 +129,16 @@ namespace MattEland.Testing
             return cast;
         }
 
-        /// <summary>Enumerates the <paramref name="collection" /> and returns a strongly-typed collection.</summary>
+        /// <summary>
+        ///     Enumerates the <paramref name="collection" /> and returns a strongly-typed
+        ///     collection.
+        /// </summary>
         /// <typeparam name="T">The type each item should be cast to.</typeparam>
         /// <param name="collection">The collection to act on.</param>
         /// <param name="failureMessage">The failure message.</param>
         /// <returns>
-        ///     An enumerator that allows <see langword="foreach" /> to be used to process should all
-        ///     items <paramref name="collection" /> as a strongly-typed list.
+        ///     An enumerator that allows <see langword="foreach" /> to be used to process should
+        ///     all items <paramref name="collection" /> as a strongly-typed list.
         /// </returns>
         [NotNull]
         public static IList<T> ShouldAllBe<T>(
@@ -161,14 +160,12 @@ namespace MattEland.Testing
 
         /// <summary>
         ///     An IEnumerable extension method that asserts that every item in the
-        ///     <paramref name="collection"/> should not be of the generic type.
+        ///     <paramref name="collection" /> should not be of the generic type.
         /// </summary>
         /// <typeparam name="T">Generic type parameter.</typeparam>
         /// <param name="collection">The collection to act on.</param>
         /// <param name="failureMessage">The failure message to display if the test fails.</param>
-        /// <returns>
-        ///     The collection.
-        /// </returns>
+        /// <returns>The collection.</returns>
         public static IEnumerable ShouldNotAllBeOfType<T>(
             [CanBeNull] this IEnumerable collection,
             string failureMessage = null) where T : class
@@ -192,6 +189,30 @@ namespace MattEland.Testing
             }
 
             return items;
+        }
+
+        /// <summary>
+        ///     An <see langword="object"/> extension method that asserts that the
+        ///     <paramref name="source" /> object should implement the <see langword="interface"/>
+        ///     <typeparamref name="TInterface" />
+        /// </summary>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when <paramref name="source" /> is <see langword="null"/>.
+        /// </exception>
+        /// <typeparam name="TInterface"> Type of the interface. </typeparam>
+        /// <param name="source"> The source. </param>
+        /// <returns>
+        ///     <paramref name="source" /> cast to the appropriate <see langword="interface"/>
+        /// </returns>
+        public static TInterface ShouldImplementInterface<TInterface>(
+            [CanBeNull] this object source) where TInterface : class
+        {
+            if (source == null) { throw new ArgumentNullException(nameof(source)); }
+
+            var cast = source as TInterface;
+            cast.ShouldNotBeNull($"Could not convert {source.GetType().Name} to {typeof(TInterface).Name}");
+
+            return cast;
         }
     }
 }

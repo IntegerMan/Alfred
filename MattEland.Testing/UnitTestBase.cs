@@ -85,5 +85,14 @@ namespace MattEland.Testing
         /// <summary>Sets up the environment for each test.</summary>
         [SetUp]
         public virtual void SetUp() { }
+
+        /// <summary>
+        ///     Marks the test as inconclusive with a not implemented message
+        /// </summary>
+        protected static void TestIsNotImplemented()
+        {
+            const string NotImplementedMessage = "Test Not Implemented";
+            Assert.Inconclusive(NotImplementedMessage);
+        }
     }
 }

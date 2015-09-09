@@ -13,6 +13,8 @@ using MattEland.Testing;
 
 using NUnit.Framework;
 
+using Shouldly;
+
 namespace MattEland.Ani.Alfred.Tests.Search
 {
     /// <summary>
@@ -45,7 +47,24 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             //! Assert
             alfred.SearchController.ShouldNotBeNull();
+            alfred.SearchController.ShouldImplementInterface<ISearchController>();
 
+        }
+
+        /// <summary>
+        ///     When Alfred initializes, the <see cref="ISearchController"/> should get Initialize
+        ///     and OnInitializationCompleted method calls.
+        /// </summary>
+        [Test]
+        public void SearchControllerInitializesWhenAlfredInitializes()
+        {
+            //! Arrange
+
+            //! Act
+
+            //! Assert
+
+            TestIsNotImplemented();
         }
 
     }
