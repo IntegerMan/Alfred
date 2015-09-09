@@ -8,8 +8,6 @@
 // ---------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-
-using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common.Providers;
 using MattEland.Testing;
@@ -94,6 +92,26 @@ namespace MattEland.Ani.Alfred.Tests.Search
             //! Assert
             mock.Verify(c => c.Shutdown(), Times.Once);
             mock.Verify(c => c.OnShutdownCompleted(), Times.Once);
+        }
+
+        /// <summary>
+        ///     When Alfred updates, the <see cref="ISearchController" /> should get an Update method call.
+        /// </summary>
+        [Test]
+        public void SearchControllerUpdatesWhenAlfredUpdates()
+        {
+            //! Arrange
+            var mock = BuildMockSearchController(MockBehavior.Strict);
+            mock.Object.RegisterAsProvidedInstance(typeof(ISearchController), Container);
+
+            Alfred = CreateAlfredInstance();
+
+            //! Act
+            Alfred.Initialize();
+            Alfred.Update();
+
+            //! Assert
+            mock.Verify(c => c.Update(), Times.Once);
         }
 
     }

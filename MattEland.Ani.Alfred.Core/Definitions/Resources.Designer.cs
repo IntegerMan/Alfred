@@ -151,15 +151,6 @@ namespace MattEland.Ani.Alfred.Core.Definitions {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Alfred must be online in order to update modules..
-        /// </summary>
-        internal static string AlfredProvider_Update_ErrorMustBeOnline {
-            get {
-                return ResourceManager.GetString("AlfredProvider_Update_ErrorMustBeOnline", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Instructed to initialize but system is already online.
         /// </summary>
         internal static string AlfredStatusController_Initialize_ErrorAlreadyOnline {

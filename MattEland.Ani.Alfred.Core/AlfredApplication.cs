@@ -336,12 +336,11 @@ namespace MattEland.Ani.Alfred.Core
             // Error check
             if (Status != AlfredStatus.Online)
             {
-                throw new InvalidOperationException(
-                    Resources.AlfredProvider_Update_ErrorMustBeOnline);
+                throw new InvalidOperationException(@"Alfred must be online in order to update components.");
             }
 
-            // Update every system
-            foreach (var item in Subsystems) { item.Update(); }
+            // Update every registered component
+            foreach (var item in Components) { item.Update(); }
         }
 
         /// <summary>
@@ -372,8 +371,11 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         public void Dispose()
         {
-            // Tear down subsystems as needed
-            foreach (var subsystem in Subsystems) { subsystem.TryDispose(); }
+            // Tear down registered components
+            foreach (var component in Components)
+            {
+                component.TryDispose();
+            }
 
             // Tear down composite objects
             ChatProvider.TryDispose();

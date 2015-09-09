@@ -153,10 +153,6 @@
     <value>Alfred</value>
     <comment>The name of the framework.</comment>
   </data>
-  <data name="AlfredProvider_Update_ErrorMustBeOnline" xml:space="preserve">
-    <value>Alfred must be online in order to update modules.</value>
-    <comment>Error for updating while offline</comment>
-  </data>
   <data name="AlfredCoreModule_AlfredStatusText" xml:space="preserve">
     <value>{0} is currently {1}</value>
     <comment>UI text for displaying Alfred's status with {0} being Alfred's Name and {1} being the current Status.</comment>
