@@ -27,6 +27,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
     [UnitTestProvider]
     [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
+    [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
     public sealed class AlfredSearchTests : AlfredTestBase
     {
 
@@ -61,8 +62,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
         {
             //! Arrange
             var mock = BuildMockSearchController(MockBehavior.Strict);
-
-            mock.Object.RegisterAsProvidedInstance(typeof (ISearchController), Container);
+            mock.Object.RegisterAsProvidedInstance(typeof(ISearchController), Container);
 
             Alfred = CreateAlfredInstance();
 
@@ -75,19 +75,26 @@ namespace MattEland.Ani.Alfred.Tests.Search
         }
 
         /// <summary>
-        ///     Builds a mock search controller.
+        ///     When Alfred shuts down, the <see cref="ISearchController" /> should get Shutdown
+        ///     and OnShutdownCompleted method calls.
         /// </summary>
-        /// <param name="mockBehavior">The mocking behavior.</param>
-        /// <returns>The mock search controller</returns>
-        private Mock<ISearchController> BuildMockSearchController(MockBehavior mockBehavior)
+        [Test]
+        public void SearchControllerShutsDownWhenAlfredShutsDown()
         {
-            var mock = new Mock<ISearchController>(mockBehavior);
+            //! Arrange
+            var mock = BuildMockSearchController(MockBehavior.Strict);
+            mock.Object.RegisterAsProvidedInstance(typeof(ISearchController), Container);
 
-            mock.Setup(c => c.Initialize(It.Is<IAlfred>(a => a == Alfred)));
-            mock.Setup(c => c.OnInitializationCompleted());
-            mock.SetupGet(c => c.NameAndVersion).Returns("Test Search Controller 1.0.0.0");
+            Alfred = CreateAlfredInstance();
 
-            return mock;
+            //! Act
+            Alfred.Initialize();
+            Alfred.Shutdown();
+
+            //! Assert
+            mock.Verify(c => c.Shutdown(), Times.Once);
+            mock.Verify(c => c.OnShutdownCompleted(), Times.Once);
         }
+
     }
 }

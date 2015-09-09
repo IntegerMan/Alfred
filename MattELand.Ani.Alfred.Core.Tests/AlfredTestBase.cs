@@ -240,37 +240,6 @@ namespace MattEland.Ani.Alfred.Tests
             return options;
         }
 
-        /// <summary>
-        ///     Builds a page mock.
-        /// </summary>
-        /// <param name="mockBehavior"> The mocking behavior for the new mock. </param>
-        /// <returns>
-        ///     The mock page.
-        /// </returns>
-        protected Mock<IAlfredPage> BuildPageMock(MockBehavior mockBehavior)
-        {
-            // Some tests will want strict control over mocking and others won't
-            var mock = new Mock<IAlfredPage>(mockBehavior);
-
-            // Set up simple members we expect to be hit during startup
-            mock.SetupGet(p => p.IsRootLevel).Returns(true);
-            mock.Setup(p => p.OnRegistered(It.IsAny<IAlfred>()));
-            mock.Setup(p => p.OnInitializationCompleted());
-            mock.Setup(p => p.Update());
-            mock.Setup(p => p.OnShutdownCompleted());
-
-            // When initialize is hit, set Status to Online
-            mock.Setup(p => p.Initialize(It.IsAny<IAlfred>()))
-                .Callback(() => mock.SetupGet(p => p.Status)
-                                    .Returns(AlfredStatus.Online));
-
-            // When shutdown is hit, set Status to Offline
-            mock.Setup(p => p.Shutdown())
-                .Callback(() => mock.SetupGet(p => p.Status)
-                                    .Returns(AlfredStatus.Offline));
-
-            return mock;
-        }
 
         /// <summary>
         ///     Gets the <see cref="IConsole"/> instance.
@@ -310,11 +279,45 @@ namespace MattEland.Ani.Alfred.Tests
             // Build the Mock
             var mock = new Mock<IAlfredSubsystem>(mockBehavior);
 
-            // Setup Simple properties
             mock.SetupGet(s => s.Id).Returns("Test");
-            mock.SetupGet(s => s.NameAndVersion).Returns("Test 1.0.0.0");
-            mock.SetupGet(s => s.Status).Returns(AlfredStatus.Offline);
             mock.SetupGet(s => s.Pages).Returns(Container.ProvideCollection<IAlfredPage>());
+
+            SetupMockComponent(mock);
+
+            return mock;
+        }
+
+
+        /// <summary>
+        ///     Builds a page mock.
+        /// </summary>
+        /// <param name="mockBehavior"> The mocking behavior for the new mock. </param>
+        /// <returns>
+        ///     The mock page.
+        /// </returns>
+        protected Mock<IAlfredPage> BuildPageMock(MockBehavior mockBehavior)
+        {
+            // Some tests will want strict control over mocking and others won't
+            var mock = new Mock<IAlfredPage>(mockBehavior);
+
+            // Set up simple members we expect to be hit during startup
+            mock.SetupGet(p => p.IsRootLevel).Returns(true);
+
+            SetupMockComponent(mock);
+
+            return mock;
+        }
+
+        /// <summary>
+        ///     Sets up a <paramref name="mock"/> component with common component actions.
+        /// </summary>
+        /// <typeparam name="T"> Generic type parameter. </typeparam>
+        /// <param name="mock"> The Mock object that derives from <see cref="IAlfredComponent"/>. </param>
+        private static void SetupMockComponent<T>(Mock<T> mock) where T : class, IAlfredComponent
+        {
+            // Setup Simple properties
+            mock.SetupGet(s => s.NameAndVersion).Returns("Test Component 1.0.0.0");
+            mock.SetupGet(s => s.Status).Returns(AlfredStatus.Offline);
 
             // Setup simple methods
             mock.Setup(s => s.Update());
@@ -329,6 +332,18 @@ namespace MattEland.Ani.Alfred.Tests
             // Shutdown causes the subsystem to go offline
             mock.Setup(s => s.Shutdown())
                 .Callback(() => mock.SetupGet(s => s.Status).Returns(AlfredStatus.Offline));
+        }
+
+        /// <summary>
+        ///     Builds a mock search controller.
+        /// </summary>
+        /// <param name="mockBehavior">The mocking behavior.</param>
+        /// <returns>The mock search controller</returns>
+        protected static Mock<ISearchController> BuildMockSearchController(MockBehavior mockBehavior)
+        {
+            var mock = new Mock<ISearchController>(mockBehavior);
+
+            SetupMockComponent(mock);
 
             return mock;
         }
@@ -344,5 +359,6 @@ namespace MattEland.Ani.Alfred.Tests
         {
             return new AlfredApplication(Container);
         }
+
     }
 }
