@@ -67,6 +67,26 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         [NotNull]
         IRegistrationProvider RegistrationProvider { get; }
 
+        /// <summary>
+        ///     Gets the search controller. This <see langword="object"/> provides search functionality
+        ///     and manages the search and results processing.
+        /// </summary>
+        /// <value>
+        ///     The search controller.
+        /// </value>
+        [NotNull]
+        ISearchController SearchController { get; }
+
+        /// <summary>
+        ///     Gets the components registered to Alfred. This will include subsystems as well as various
+        ///     helper components.
+        /// </summary>
+        /// <value>
+        ///     The components.
+        /// </value>
+        [NotNull, ItemNotNull]
+        IEnumerable<IAlfredComponent> Components { get; }
+
     }
 
 }

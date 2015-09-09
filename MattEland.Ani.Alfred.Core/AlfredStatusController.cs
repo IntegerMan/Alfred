@@ -30,30 +30,23 @@ namespace MattEland.Ani.Alfred.Core
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredStatusController" /> class.
         /// </summary>
-        /// <param name="statusTarget">The alfred provider.</param>
+        /// <param name="alfred">The alfred provider.</param>
         /// <param name="container">The container.</param>
-        /// <param name="subsystems">The subsystems.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when one or more required arguments are null.
         /// </exception>
         internal AlfredStatusController(
-            [NotNull] IHasStatus statusTarget,
-            [NotNull] IObjectContainer container,
-            [NotNull] IEnumerable<IAlfredSubsystem> subsystems)
+            [NotNull] IAlfred alfred,
+            [NotNull] IObjectContainer container)
         {
             //- Validate
-            if (statusTarget == null) { throw new ArgumentNullException(nameof(statusTarget)); }
+            if (alfred == null) { throw new ArgumentNullException(nameof(alfred)); }
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
-            if (subsystems == null) { throw new ArgumentNullException(nameof(subsystems)); }
 
-            // TODO: Have subsystems just be IEnumerable<IHasStatus>
-
-            StatusTarget = statusTarget;
-            Subsystems = subsystems;
+            Alfred = alfred;
             Container = container;
 
-            // TODO: Get from Container
-            Locale = CultureInfo.CurrentCulture;
+            Locale = CultureInfo.CurrentCulture; // TODO: Get from Container
             Console = container.TryProvide<IConsole>();
         }
 
@@ -64,7 +57,7 @@ namespace MattEland.Ani.Alfred.Core
         /// The localization culture.
         /// </value>
         [NotNull]
-        public CultureInfo Locale { get; }
+        private CultureInfo Locale { get; }
 
         /// <summary>
         ///     Gets the console associated with this item.
@@ -89,21 +82,31 @@ namespace MattEland.Ani.Alfred.Core
         /// The Alfred framework.
         /// </value>
         [NotNull]
-        public IHasStatus StatusTarget { get; }
-
-        [NotNull]
-        [ItemNotNull]
-        private IEnumerable<IAlfredSubsystem> Subsystems { get; }
+        public IAlfred Alfred { get; }
 
         /// <summary>
-        ///     Tells Alfred it's okay to start itself up and begin operating.
+        ///     Gets the components to initialize / shut down. These will include subsystems and other
+        ///     helper components.
+        /// </summary>
+        /// <value>
+        ///     The components.
+        /// </value>
+        [NotNull]
+        [ItemNotNull]
+        private IEnumerable<IAlfredComponent> Components
+        {
+            get { return Alfred.Components; }
+        }
+
+        /// <summary>
+        ///     Tells <see cref="Alfred"/> it's okay to start itself up and begin operating.
         /// </summary>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if Alfred is already Online
+        /// Thrown if <see cref="Alfred"/> is already Offline
         /// </exception>
         public void Initialize()
         {
-            var statusTarget = StatusTarget;
+            var statusTarget = Alfred;
 
             var header = Resources.AlfredStatusController_Initialize_LogHeader.NonNull();
 
@@ -116,7 +119,7 @@ namespace MattEland.Ani.Alfred.Core
             statusTarget.Status = AlfredStatus.Initializing;
 
             // Boot up items and give them a provider
-            foreach (var item in Subsystems) { InitializeComponent(item, header); }
+            foreach (var item in Components) { InitializeComponent(item, header); }
 
             // We're done. Let the world know.
             statusTarget.Status = AlfredStatus.Online;
@@ -125,21 +128,21 @@ namespace MattEland.Ani.Alfred.Core
                                                                               Console);
 
             // Notify each item that startup was completed
-            foreach (var item in Subsystems) { item.OnInitializationCompleted(); }
+            foreach (var item in Components) { item.OnInitializationCompleted(); }
 
             // Log the completion
             "Alfred is now Online.".Log(header, LogLevel.Info, Console);
         }
 
         /// <summary>
-        ///     Tells Alfred to go ahead and shut down.
+        ///     Tells <see cref="Alfred"/> to go ahead and shut down.
         /// </summary>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if Alfred is already Offline
+        /// Thrown if <see cref="Alfred"/> is already Offline
         /// </exception>
         public void Shutdown()
         {
-            var statusTarget = StatusTarget;
+            var statusTarget = Alfred;
 
             var header = Resources.AlfredStatusController_Shutdown_LogHeader.NonNull();
 
@@ -151,14 +154,14 @@ namespace MattEland.Ani.Alfred.Core
             statusTarget.Status = AlfredStatus.Terminating;
 
             // Shut down items and decouple them from Alfred
-            foreach (var item in Subsystems) { ShutdownComponent(item, header); }
+            foreach (var item in Components) { ShutdownComponent(item, header); }
 
             // We're done here. Tell the world.
             statusTarget.Status = AlfredStatus.Offline;
             "Shut down completed.".Log(header, LogLevel.Info, Console);
 
             // Notify each item that shutdown was completed
-            foreach (var item in Subsystems) { item.OnShutdownCompleted(); }
+            foreach (var item in Components) { item.OnShutdownCompleted(); }
         }
 
         /// <summary>
@@ -194,7 +197,7 @@ namespace MattEland.Ani.Alfred.Core
 
             // Actually initialize the component
             // TODO: Remove this parameter and have children get Alfred from Container when needed
-            item.Initialize(StatusTarget as IAlfred);
+            item.Initialize(Alfred);
 
             // Log that initialization completed
             var initializedMessage = string.Format(Locale,

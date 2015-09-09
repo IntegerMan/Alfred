@@ -80,7 +80,7 @@ namespace MattEland.Ani.Alfred.Core
                                ?? new AlfredSearchController(Container);
 
             // Set composite objects - TODO: Get these from the container!
-            _statusController = new AlfredStatusController(this, container, _subsystems);
+            _statusController = new AlfredStatusController(this, container);
             RegistrationProvider = new ComponentRegistrationProvider(this, _subsystems, _rootPages);
         }
 
@@ -281,6 +281,23 @@ namespace MattEland.Ani.Alfred.Core
         /// </value>
         [NotNull]
         public ISearchController SearchController { get; private set; }
+
+        /// <summary>
+        ///     Gets the components registered to Alfred. This will include subsystems as well as various
+        ///     helper components.
+        /// </summary>
+        /// <value>
+        ///     The components.
+        /// </value>
+        public IEnumerable<IAlfredComponent> Components
+        {
+            get
+            {
+                foreach (var subsystem in this.Subsystems) { yield return subsystem; }
+
+                yield return SearchController;
+            }
+        }
 
         /// <summary>
         ///     Tells Alfred it's okay to start itself up and begin operating.
