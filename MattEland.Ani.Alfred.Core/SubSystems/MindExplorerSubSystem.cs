@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
 // MindExplorerSubsystem.cs
 // 
-// Created on:      08/22/2015 at 10:48 PM
-// Last Modified:   08/22/2015 at 11:15 PM
+// Created on:      09/03/2015 at 11:00 PM
+// Last Modified:   09/09/2015 at 6:45 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -19,39 +19,26 @@ using MattEland.Common.Providers;
 namespace MattEland.Ani.Alfred.Core.Subsystems
 {
     /// <summary>
-    ///     A <see cref="AlfredSubsystem"/> that pokes around at the internal state of each of Alfred's SubSystems and their
-    ///     sub-components. This Subsystem has a particular focus towards anything AI-related.
+    ///     A <see cref="AlfredSubsystem" /> that pokes around at the <see langword="internal"/>
+    ///     state of each of Alfred's SubSystems and their sub-components. This Subsystem has a
+    ///     particular focus towards anything AI-related.
     /// </summary>
-    public class MindExplorerSubsystem : AlfredSubsystem
+    public sealed class MindExplorerSubsystem : AlfredSubsystem
     {
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
-        /// <param name="container"> The container. </param>
+        /// <param name="container">The container.</param>
         /// <param name="includeExplorerPage">
-        ///     <see langword="true"/> to include the page in root pages, <see langword="false"/>
-        ///     otherwise.
+        ///      <see langword="true" /> to include the page in root pages, <see langword="false" /> otherwise.
         /// </param>
-        public MindExplorerSubsystem([NotNull] IObjectContainer container, bool includeExplorerPage) : base(container)
+        public MindExplorerSubsystem([NotNull] IObjectContainer container, bool includeExplorerPage)
+            : base(container)
         {
             MindExplorerPage = new ExplorerPage(container, "Mind Explorer", "MindMap");
 
             if (!includeExplorerPage) { MindExplorerPage.IsRootLevel = false; }
-        }
-
-        /// <summary>
-        /// Handles initialization events
-        /// </summary>
-        /// <param name="alfred">The Alfred instance.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="alfred"/> is <see langword="null" />.</exception>
-        protected override void InitializeProtected(IAlfred alfred)
-        {
-            if (alfred == null) { throw new ArgumentNullException(nameof(alfred)); }
-
-            // Add alfred to the collection as the root level will only contain Alfred.
-            MindExplorerPage.ClearNodes();
-            MindExplorerPage.AddRootNode(alfred);
         }
 
         /// <summary>
@@ -60,7 +47,9 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// <remarks>
         ///     This is intended primarily for testing
         /// </remarks>
-        /// <value>The Mind Explorer page.</value>
+        /// <value>
+        /// The Mind Explorer page.
+        /// </value>
         [NotNull]
         public ExplorerPage MindExplorerPage
         {
@@ -71,7 +60,9 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// <summary>
         ///     Gets the name of the component.
         /// </summary>
-        /// <value>The name of the component.</value>
+        /// <value>
+        /// The name of the component.
+        /// </value>
         public override string Name
         {
             get { return "Mind Explorer"; }
@@ -80,10 +71,28 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// <summary>
         ///     Gets the identifier for the subsystem to be used in command routing.
         /// </summary>
-        /// <value>The identifier for the subsystem.</value>
+        /// <value>
+        /// The identifier for the subsystem.
+        /// </value>
         public override string Id
         {
             get { return "Mind"; }
+        }
+
+        /// <summary>
+        ///     Handles initialization events
+        /// </summary>
+        /// <param name="alfred">The Alfred instance.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="alfred" /> is <see langword="null" /> .
+        /// </exception>
+        protected override void InitializeProtected(IAlfred alfred)
+        {
+            if (alfred == null) { throw new ArgumentNullException(nameof(alfred)); }
+
+            // Add alfred to the collection as the root level will only contain Alfred.
+            MindExplorerPage.ClearNodes();
+            MindExplorerPage.AddRootNode(alfred);
         }
 
         /// <summary>

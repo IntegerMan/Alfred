@@ -8,6 +8,11 @@
 // ---------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+
+using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common.Providers;
 using MattEland.Testing;
@@ -15,6 +20,8 @@ using MattEland.Testing;
 using Moq;
 
 using NUnit.Framework;
+
+using Shouldly;
 
 namespace MattEland.Ani.Alfred.Tests.Search
 {
@@ -26,6 +33,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
     [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
+    [SuppressMessage("ReSharper", "ExceptionNotDocumentedOptional")]
     public sealed class AlfredSearchTests : AlfredTestBase
     {
 
@@ -112,6 +120,50 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             //! Assert
             mock.Verify(c => c.Update(), Times.Once);
+        }
+
+        /// <summary>
+        ///     Registering a subsystem with search providers in Alfred should register those providers
+        ///     into the <see cref="ISearchController"/>.
+        /// </summary>
+        [Test]
+        public void RegisteringSubsystemWithSearchProviderRegistersProvider()
+        {
+            //! Arrange
+
+            // Build the collection of search providers to return from the subsystem
+            var searchProviders = Container.ProvideCollection<ISearchProvider>();
+            searchProviders.Add(BuildMockSearchProvider().Object);
+
+            // Build out a subsystem that returns the providers
+            var subsystem = BuildMockSubsystem(MockBehavior.Strict);
+            subsystem.SetupGet(s => s.SearchProviders)
+                .Returns(searchProviders);
+
+            // Build Alfred and count the initial search providers
+            Alfred = BuildAlfredInstance();
+            var numSearchProviders = Alfred.SearchController.SearchProviders.Count();
+
+            //! Act
+            Alfred.Register(subsystem.Object);
+
+            //! Assert
+            subsystem.VerifyGet(s => s.SearchProviders, Times.Once);
+            Alfred.SearchController.SearchProviders.Count().ShouldBe(numSearchProviders + 1);
+        }
+
+        /// <summary>
+        ///     Builds mock search provider.
+        /// </summary>
+        /// <returns>
+        ///     A mock search provider
+        /// </returns>
+        [NotNull]
+        private static Mock<ISearchProvider> BuildMockSearchProvider()
+        {
+            var mock = new Mock<ISearchProvider>(MockBehavior.Strict);
+
+            return mock;
         }
 
     }

@@ -281,6 +281,8 @@ namespace MattEland.Ani.Alfred.Tests
 
             mock.SetupGet(s => s.Id).Returns("Test");
             mock.SetupGet(s => s.Pages).Returns(Container.ProvideCollection<IAlfredPage>());
+            mock.SetupGet(s => s.SearchProviders)
+                .Returns(Container.ProvideCollection<ISearchProvider>());
 
             SetupMockComponent(mock);
 

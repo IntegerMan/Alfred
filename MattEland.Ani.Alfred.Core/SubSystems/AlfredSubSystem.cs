@@ -37,6 +37,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         protected AlfredSubsystem([NotNull] IObjectContainer container) : base(container)
         {
             _pages = container.ProvideCollection<IAlfredPage>();
+            SearchProviders = container.ProvideCollection<ISearchProvider>();
         }
 
         /// <summary>
@@ -92,6 +93,14 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// <value>The identifier for the subsystem.</value>
         [NotNull]
         public abstract string Id { get; }
+
+        /// <summary>
+        ///     Gets the search providers.
+        /// </summary>
+        /// <value>
+        ///     The search providers.
+        /// </value>
+        public virtual IEnumerable<ISearchProvider> SearchProviders { get; }
 
         /// <summary>
         ///     Gets the pages associated with the <see cref="IAlfredSubsystem"/>

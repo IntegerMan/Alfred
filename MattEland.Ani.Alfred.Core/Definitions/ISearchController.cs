@@ -69,7 +69,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <value>
         ///     The search providers.
         /// </value>
-        IEnumerable<ISearchProvider> Providers { get; }
+        IEnumerable<ISearchProvider> SearchProviders { get; }
 
         /// <summary>
         ///     Gets the results of the last search operation.

@@ -38,6 +38,15 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <value>The identifier for the subsystem.</value>
         [NotNull]
         string Id { get; }
+
+        /// <summary>
+        ///     Gets the search providers.
+        /// </summary>
+        /// <value>
+        ///     The search providers.
+        /// </value>
+        [NotNull, ItemNotNull]
+        IEnumerable<ISearchProvider> SearchProviders { get; }
     }
 
 }

@@ -118,7 +118,15 @@ namespace MattEland.Ani.Alfred.Core
 
             AssertNotOnline();
 
+            // Add the subsystem
             _subsystems.AddSafe(subsystem);
+
+            // Register all search providers
+            foreach (var searchProvider in subsystem.SearchProviders)
+            {
+                _alfred.SearchController.Register(searchProvider);
+            }
+
             subsystem.OnRegistered(_alfred);
         }
 

@@ -36,7 +36,7 @@ namespace MattEland.Ani.Alfred.Core
             // Create Collections
             OngoingOperations = container.ProvideCollection<ISearchOperation>();
             Results = container.ProvideCollection<ISearchResult>();
-            _providers = container.ProvideCollection<ISearchProvider>();
+            _searchProviders = container.ProvideCollection<ISearchProvider>();
         }
 
         /// <summary>
@@ -167,7 +167,7 @@ namespace MattEland.Ani.Alfred.Core
         ///     The search providers collection. This is used internally to add new providers.
         /// </summary>
         [NotNull, ItemNotNull]
-        private readonly ICollection<ISearchProvider> _providers;
+        private readonly ICollection<ISearchProvider> _searchProviders;
 
         /// <summary>
         ///     Gets the search providers.
@@ -177,9 +177,9 @@ namespace MattEland.Ani.Alfred.Core
         /// </value>
         [NotNull]
         [ItemNotNull]
-        public IEnumerable<ISearchProvider> Providers
+        public IEnumerable<ISearchProvider> SearchProviders
         {
-            get { return _providers; }
+            get { return _searchProviders; }
         }
 
         /// <summary>
@@ -237,7 +237,7 @@ namespace MattEland.Ani.Alfred.Core
                 throw new InvalidOperationException("Cannot register new providers unless the controller is offline");
             }
 
-            _providers.Add(provider);
+            _searchProviders.Add(provider);
         }
     }
 }
