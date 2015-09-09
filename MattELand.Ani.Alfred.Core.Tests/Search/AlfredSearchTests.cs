@@ -42,7 +42,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
         public void AlfredHasNonNullSearchController()
         {
             //! Arrange
-            var alfred = CreateAlfredInstance();
+            var alfred = BuildAlfredInstance();
 
             //! Act - No action - testing initial state
 
@@ -62,7 +62,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
             var mock = BuildMockSearchController(MockBehavior.Strict);
             mock.Object.RegisterAsProvidedInstance(typeof(ISearchController), Container);
 
-            Alfred = CreateAlfredInstance();
+            Alfred = BuildAlfredInstance();
 
             //! Act
             Alfred.Initialize();
@@ -83,7 +83,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
             var mock = BuildMockSearchController(MockBehavior.Strict);
             mock.Object.RegisterAsProvidedInstance(typeof(ISearchController), Container);
 
-            Alfred = CreateAlfredInstance();
+            Alfred = BuildAlfredInstance();
 
             //! Act
             Alfred.Initialize();
@@ -104,7 +104,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
             var mock = BuildMockSearchController(MockBehavior.Strict);
             mock.Object.RegisterAsProvidedInstance(typeof(ISearchController), Container);
 
-            Alfred = CreateAlfredInstance();
+            Alfred = BuildAlfredInstance();
 
             //! Act
             Alfred.Initialize();

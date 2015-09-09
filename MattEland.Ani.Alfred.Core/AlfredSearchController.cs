@@ -36,7 +36,7 @@ namespace MattEland.Ani.Alfred.Core
             // Create Collections
             OngoingOperations = container.ProvideCollection<ISearchOperation>();
             Results = container.ProvideCollection<ISearchResult>();
-            Providers = container.ProvideCollection<ISearchProvider>();
+            _providers = container.ProvideCollection<ISearchProvider>();
         }
 
         /// <summary>
@@ -164,13 +164,23 @@ namespace MattEland.Ani.Alfred.Core
         public TimeSpan? LastSearchDuration { get; }
 
         /// <summary>
+        ///     The search providers collection. This is used internally to add new providers.
+        /// </summary>
+        [NotNull, ItemNotNull]
+        private readonly ICollection<ISearchProvider> _providers;
+
+        /// <summary>
         ///     Gets the search providers.
         /// </summary>
         /// <value>
         ///     The search providers.
         /// </value>
-        [NotNull, ItemNotNull]
-        public IEnumerable<ISearchProvider> Providers { get; }
+        [NotNull]
+        [ItemNotNull]
+        public IEnumerable<ISearchProvider> Providers
+        {
+            get { return _providers; }
+        }
 
         /// <summary>
         ///     Gets the results of the last search operation.
@@ -210,13 +220,24 @@ namespace MattEland.Ani.Alfred.Core
         /// <summary>
         ///     Registers the search provider.
         /// </summary>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when <paramref name="provider"/> is <see langword="null"/>.
+        /// </exception>
         /// <exception cref="InvalidOperationException">
-        ///     Thrown if this was called when the component is not <see cref="AlfredStatus.Offline"/>.
+        ///     Thrown if this was called when the component is not
+        ///     <see cref="AlfredStatus.Offline" /> .
         /// </exception>
         /// <param name="provider"> The provider. </param>
         public void Register(ISearchProvider provider)
         {
-            // TODO: Register the provider
+            if (provider == null) { throw new ArgumentNullException(nameof(provider)); }
+
+            if (Status != AlfredStatus.Offline)
+            {
+                throw new InvalidOperationException("Cannot register new providers unless the controller is offline");
+            }
+
+            _providers.Add(provider);
         }
     }
 }

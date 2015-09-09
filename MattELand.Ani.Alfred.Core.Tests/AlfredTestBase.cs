@@ -355,7 +355,7 @@ namespace MattEland.Ani.Alfred.Tests
         ///     The new Alfred instance.
         /// </returns>
         [NotNull]
-        protected AlfredApplication CreateAlfredInstance()
+        protected AlfredApplication BuildAlfredInstance()
         {
             return new AlfredApplication(Container);
         }
