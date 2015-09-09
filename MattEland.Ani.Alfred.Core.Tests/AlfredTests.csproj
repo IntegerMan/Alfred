@@ -110,6 +110,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Search\AlfredSearchTests.cs" />
     <Compile Include="Shell\ShellTagHandlerTests.cs" />
     <Compile Include="Subsystems\AlfredCoreSubsystemTests.cs" />
     <Compile Include="AlfredEventingTests.cs" />

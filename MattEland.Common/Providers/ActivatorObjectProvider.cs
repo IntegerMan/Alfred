@@ -19,7 +19,7 @@ namespace MattEland.Common.Providers
     ///     type via the <see cref="ActivatorObjectProvider(System.Type)" /> constructor.
     /// </summary>
     [PublicAPI]
-    public sealed class ActivatorObjectProvider : IObjectProvider
+    public class ActivatorObjectProvider : IObjectProvider
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="ActivatorObjectProvider" /> class.
@@ -65,7 +65,7 @@ namespace MattEland.Common.Providers
         /// <returns>
         ///     A new instance of the requested type.
         /// </returns>
-        public object CreateInstance(Type requestedType, params object[] args)
+        public object CreateInstance(Type requestedType, [CanBeNull] params object[] args)
         {
             if (requestedType == null) { throw new ArgumentNullException(nameof(requestedType)); }
 
@@ -87,7 +87,7 @@ namespace MattEland.Common.Providers
                 throw new NotSupportedException("Cannot create an abstract class");
             }
 
-            var instance = Activator.CreateInstance(typeToCreate, args);
+            var instance = CreateInstanceUsingActivator(typeToCreate, args);
 
             if (instance == null)
             {
@@ -99,5 +99,22 @@ namespace MattEland.Common.Providers
             return instance;
         }
 
+        /// <summary>
+        ///     Creates instance using activator.
+        /// </summary>
+        /// <param name="typeToCreate">
+        ///     The type to create when <see cref="CreateInstance" /> is called.
+        /// </param>
+        /// <param name="args"> The arguments. </param>
+        /// <returns>
+        ///     A new instance of the requested type.
+        /// </returns>
+        [CanBeNull]
+        protected virtual object CreateInstanceUsingActivator(Type typeToCreate, object[] args)
+        {
+            return Activator.CreateInstance(typeToCreate, args);
+        }
+
     }
+
 }

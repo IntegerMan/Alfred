@@ -94,6 +94,7 @@
     <Compile Include="IntegerExtensions.cs" />
     <Compile Include="NotifyChangedBase.cs" />
     <Compile Include="ObjectExtensions.cs" />
+    <Compile Include="Providers\ActivatorHasContainerObjectProvider.cs" />
     <Compile Include="Providers\ActivatorObjectProvider.cs" />
     <Compile Include="Providers\CommonContainer.cs" />
     <Compile Include="Providers\CommonProvider.cs" />

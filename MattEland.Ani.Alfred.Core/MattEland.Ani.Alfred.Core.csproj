@@ -53,7 +53,9 @@
   <ItemGroup>
     <Compile Include="AlfredCommand.cs" />
     <Compile Include="AlfredCommandResult.cs" />
+    <Compile Include="AlfredContainerHelper.cs" />
     <Compile Include="AlfredRegistrationExtensions.cs" />
+    <Compile Include="AlfredSearchController.cs" />
     <Compile Include="ComponentRegistrationProvider.cs" />
     <Compile Include="Console\AlfredLoggingExtensions.cs" />
     <Compile Include="ComponentBase.cs" />

@@ -49,6 +49,15 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
+        ///     Initializes a new instance of the <see cref="AlfredCommand"/> class.
+        /// </summary>
+        /// <param name="container"> The container. </param>
+        public AlfredCommand(IObjectContainer container) : this(null, container)
+        {
+
+        }
+
+        /// <summary>
         ///     Initializes a new instance of the
         ///     <see cref="AlfredCommand" />
         ///     class.

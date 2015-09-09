@@ -130,7 +130,8 @@ namespace MattEland.Common.Providers
                 }
                 else
                 {
-                    provider = new ActivatorObjectProvider();
+                    // Default to an Activator-based provider that uses Container constructors
+                    provider = BuildTypeActivationProvider(null);
                 }
 
                 _fallbackProvider = provider;
@@ -373,8 +374,22 @@ namespace MattEland.Common.Providers
             ValidateTypeRegistration(baseType, preferredType);
 
             // Register the type mapping using the default Activator-based model.
-            var provider = new ActivatorObjectProvider(preferredType);
+            var provider = BuildTypeActivationProvider(preferredType);
             Register(baseType, provider);
+        }
+
+        /// <summary>
+        ///     Builds type activation <see cref="IObjectProvider"/>.
+        /// </summary>
+        /// <param name="preferredType">
+        ///     The type that should be created when <see cref="preferredType" /> is requested.
+        /// </param>
+        /// <returns>
+        ///     An IObjectProvider.
+        /// </returns>
+        private IObjectProvider BuildTypeActivationProvider([CanBeNull] Type preferredType)
+        {
+            return new ActivatorHasContainerObjectProvider(this, preferredType);
         }
 
         /// <summary>

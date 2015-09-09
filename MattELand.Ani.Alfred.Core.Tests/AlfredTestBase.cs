@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 using JetBrains.Annotations;
@@ -7,6 +8,7 @@ using MattEland.Ani.Alfred.Chat.Aiml;
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Ani.Alfred.PresentationShared.Commands;
 using MattEland.Common;
@@ -46,7 +48,31 @@ namespace MattEland.Ani.Alfred.Tests
         {
             base.SetUp();
 
-            Container.RegisterDefaultAlfredMappings();
+            ConfigureTestContainer(Container);
+        }
+
+        /// <summary>
+        ///     Registers the default Alfred <paramref name="container" /> with good default testing
+        ///     values.
+        /// </summary>
+        /// <param name="container"> The container. </param>
+        public void ConfigureTestContainer([NotNull] IObjectContainer container)
+        {
+            var console = new DiagnosticConsole(container);
+            console.RegisterAsProvidedInstance(typeof(IConsole), container);
+
+            container.ApplyDefaultAlfredMappings();
+
+            // Register mappings for promised types
+            container.Register(typeof(IConsoleEvent), typeof(ConsoleEvent));
+            container.Register(typeof(IAlfredCommand), typeof(AlfredCommand));
+            container.Register(typeof(MetricProviderBase), typeof(ValueMetricProvider));
+            container.Register(typeof(ISearchController), typeof(AlfredSearchController));
+
+            // We'll want to get at the same factory any time we request a factory for test purposes
+            var factory = new ValueMetricProviderFactory();
+            factory.RegisterAsProvidedInstance(typeof(IMetricProviderFactory), container);
+            factory.RegisterAsProvidedInstance(typeof(ValueMetricProviderFactory), container);
         }
 
         /// <summary>
@@ -305,6 +331,18 @@ namespace MattEland.Ani.Alfred.Tests
                 .Callback(() => mock.SetupGet(s => s.Status).Returns(AlfredStatus.Offline));
 
             return mock;
+        }
+
+        /// <summary>
+        ///     Creates an Alfred instance.
+        /// </summary>
+        /// <returns>
+        ///     The new Alfred instance.
+        /// </returns>
+        [NotNull]
+        protected AlfredApplication CreateAlfredInstance()
+        {
+            return new AlfredApplication(Container);
         }
     }
 }

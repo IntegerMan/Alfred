@@ -40,7 +40,8 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         {
             base.SetUp();
 
-            Container.RegisterProvidedInstance(typeof(IAlfred), new AlfredApplication(Container));
+            var alfred = CreateAlfredInstance();
+            Container.RegisterProvidedInstance(typeof(IAlfred), alfred);
         }
 
         /// <summary>

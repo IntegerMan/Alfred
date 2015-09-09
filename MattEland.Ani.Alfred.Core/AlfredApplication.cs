@@ -9,7 +9,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -63,12 +62,12 @@ namespace MattEland.Ani.Alfred.Core
         ///     Initializes a new instance of the <see cref="AlfredApplication" /> class.
         /// </summary>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when one or more required arguments are null.
+        ///     Thrown when the container is null.
         /// </exception>
         /// <param name="container"> The container. </param>
         public AlfredApplication([NotNull] IObjectContainer container)
         {
-            // Validate
+            // Set the container
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
             Container = container;
 
@@ -76,9 +75,12 @@ namespace MattEland.Ani.Alfred.Core
             _subsystems = container.ProvideCollection<IAlfredSubsystem>();
             _rootPages = container.ProvideCollection<IAlfredPage>();
 
-            // Set the controller
-            _statusController = new AlfredStatusController(this, container, _subsystems);
+            // Set the Search Controller from the provider, falling back to a new default type
+            SearchController = container.TryProvide<ISearchController>()
+                               ?? new AlfredSearchController(Container);
 
+            // Set composite objects - TODO: Get these from the container!
+            _statusController = new AlfredStatusController(this, container, _subsystems);
             RegistrationProvider = new ComponentRegistrationProvider(this, _subsystems, _rootPages);
         }
 
@@ -269,6 +271,16 @@ namespace MattEland.Ani.Alfred.Core
         {
             get { return Subsystems; }
         }
+
+        /// <summary>
+        ///     Gets the search controller. This <see langword="object"/> provides search functionality
+        ///     and manages the search and results processing.
+        /// </summary>
+        /// <value>
+        ///     The search controller.
+        /// </value>
+        [NotNull]
+        public ISearchController SearchController { get; private set; }
 
         /// <summary>
         ///     Tells Alfred it's okay to start itself up and begin operating.
