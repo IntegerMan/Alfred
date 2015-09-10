@@ -38,7 +38,7 @@ namespace MattEland.Ani.Alfred.Core
 
             // Create Collections
             _ongoingOperations = container.ProvideCollection<ISearchOperation>();
-            Results = container.ProvideCollection<ISearchResult>();
+            _results = container.ProvideCollection<ISearchResult>();
             _searchProviders = container.ProvideCollection<ISearchProvider>();
         }
 
@@ -217,13 +217,23 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
+        ///     The results collection. This is used to append new items.
+        /// </summary>
+        [NotNull, ItemNotNull]
+        private readonly ICollection<ISearchResult> _results;
+
+        /// <summary>
         ///     Gets the results of the last search operation.
         /// </summary>
         /// <value>
         ///     The results.
         /// </value>
-        [NotNull, ItemNotNull]
-        public IEnumerable<ISearchResult> Results { get; }
+        [NotNull]
+        [ItemNotNull]
+        public IEnumerable<ISearchResult> Results
+        {
+            get { return _results; }
+        }
 
         /// <summary>
         ///     The ongoing operations collection. This is used for adding new operations.
@@ -314,7 +324,15 @@ namespace MattEland.Ani.Alfred.Core
                 // Update the operation
                 op.Update();
 
-                // TODO: Add all results to the Results collection
+                // Add new results as they come in
+                foreach (var result in op.Results)
+                {
+                    // NOTE: This lookup operation may not scale well and a Set may be needed
+                    if (!_results.Contains(result))
+                    {
+                        _results.Add(result);
+                    }
+                }
 
                 // If the operation has completed, remove it from the list
                 if (op.IsSearchComplete) { _ongoingOperations.Remove(op); }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
@@ -370,7 +371,7 @@ namespace MattEland.Ani.Alfred.Tests
         /// <returns>
         ///     A mock search provider.
         /// </returns>
-        protected static Mock<ISearchProvider> BuildMockSearchProvider(MockBehavior mockBehavior,
+        protected Mock<ISearchProvider> BuildMockSearchProvider(MockBehavior mockBehavior,
                                                                    ISearchOperation resultOperation = null)
         {
             // Build a default operation
@@ -395,12 +396,27 @@ namespace MattEland.Ani.Alfred.Tests
         /// <returns>
         ///     A mock operation
         /// </returns>
-        protected static Mock<ISearchOperation> BuildMockOperation(MockBehavior mockBehavior)
+        protected Mock<ISearchOperation> BuildMockOperation(MockBehavior mockBehavior)
         {
             var mock = new Mock<ISearchOperation>(mockBehavior);
 
             mock.Setup(m => m.Update());
             mock.SetupGet(m => m.IsSearchComplete).Returns(false);
+            mock.SetupGet(m => m.Results).Returns(Container.ProvideCollection<ISearchResult>());
+
+            return mock;
+        }
+
+        /// <summary>
+        ///     Builds a mock search result.
+        /// </summary>
+        /// <param name="mockingBehavior"> The mocking behavior used when creating Moq mocks. </param>
+        /// <returns>
+        ///     A mock search result
+        /// </returns>
+        protected static Mock<ISearchResult> BuildMockSearchResult(MockBehavior mockingBehavior)
+        {
+            var mock = new Mock<ISearchResult>(mockingBehavior);
 
             return mock;
         }

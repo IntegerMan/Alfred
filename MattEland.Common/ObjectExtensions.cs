@@ -8,9 +8,12 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
+
+using MattEland.Common.Providers;
 
 namespace MattEland.Common
 {
@@ -48,6 +51,29 @@ namespace MattEland.Common
 
             var result = item.ToString();
             return result.NonNull();
+        }
+
+        /// <summary>
+        ///     Converts the given <paramref name="item"/> to a collection containing that item.
+        /// </summary>
+        /// <typeparam name="T"> Generic type parameter. </typeparam>
+        /// <param name="item"> The item. </param>
+        /// <param name="container"> The container. </param>
+        /// <returns>
+        ///     The given <paramref name="item"/> converted to a strongly typed collection.
+        /// </returns>
+        [NotNull, ItemNotNull]
+        public static ICollection<T> ToCollection<T>([NotNull] this T item,
+            IObjectContainer container = null)
+        {
+            // If no container, use the shared container
+            container = container ?? CommonProvider.Container;
+
+            // Create a new collection with the item in the collection
+            var collection = container.ProvideCollection<T>();
+            collection.Add(item);
+
+            return collection;
         }
     }
 }

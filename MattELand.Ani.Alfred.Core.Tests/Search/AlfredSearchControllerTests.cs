@@ -8,12 +8,14 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common;
 using MattEland.Common.Providers;
 using MattEland.Testing;
 
@@ -256,7 +258,50 @@ namespace MattEland.Ani.Alfred.Tests.Search
             //! Assert
             controller.OngoingOperations.ShouldNotContain(mockOp.Object);
             controller.OngoingOperations.Count().ShouldBe(0);
+        }
 
+        /// <summary>
+        ///     Ensures that results from providers are added to the controller after updates
+        /// </summary>
+        [Test]
+        public void NewSearchResultsAreAddedToControllerResults()
+        {
+            //! Arrange
+
+            // We'll be simulating a progressive disclosure of items
+            var results = new List<ISearchResult>();
+            var mockResult1 = BuildMockSearchResult(MockingBehavior);
+            var mockResult2 = BuildMockSearchResult(MockingBehavior);
+            results.Add(mockResult1.Object);
+
+            // Configure the operation to complete on update
+            var mockOp = BuildMockOperation(MockingBehavior);
+            mockOp.SetupGet(o => o.Results).Returns(results);
+
+            // Build out a search provider with the mock operations
+            var searchProvider = BuildMockSearchProvider(MockingBehavior, mockOp.Object);
+
+            // Add a controller with the provider. We're testing this detached from Alfred
+            var controller = new AlfredSearchController(Container);
+            controller.Register(searchProvider.Object);
+
+            //! Act
+            controller.Initialize(BuildAlfredInstance());
+            controller.PerformSearch(SearchString);
+            controller.Update();
+
+            // Simulate a new item coming back for the next update
+            results.Add(mockResult2.Object);
+
+            controller.Update();
+
+            // Simulate no new items next update
+            controller.Update();
+
+            //! Assert
+            controller.Results.Count().ShouldBe(2);
+            controller.Results.ShouldContain(mockResult1.Object);
+            controller.Results.ShouldContain(mockResult2.Object);
         }
 
     }

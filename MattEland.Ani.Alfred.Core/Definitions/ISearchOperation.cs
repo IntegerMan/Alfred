@@ -9,6 +9,8 @@
 
 using System.Collections.Generic;
 
+using JetBrains.Annotations;
+
 namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>
@@ -48,6 +50,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <value>
         ///     The results.
         /// </value>
+        [NotNull, ItemNotNull]
         IEnumerable<ISearchResult> Results { get; }
 
         /// <summary>
