@@ -133,7 +133,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             // Build the collection of search providers to return from the subsystem
             var searchProviders = Container.ProvideCollection<ISearchProvider>();
-            var provider = new Mock<ISearchProvider>(MockBehavior);
+            var provider = BuildMockSearchProvider(MockBehavior);
             searchProviders.Add(provider.Object);
 
             // Build out a subsystem that returns the providers

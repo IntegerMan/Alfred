@@ -370,7 +370,7 @@ namespace MattEland.Ani.Alfred.Tests
         /// <returns>
         ///     A mock search provider.
         /// </returns>
-        protected static Mock<ISearchProvider> BuildSearchProvider(MockBehavior mockBehavior,
+        protected static Mock<ISearchProvider> BuildMockSearchProvider(MockBehavior mockBehavior,
                                                                    ISearchOperation resultOperation = null)
         {
             // Build a default operation
@@ -378,7 +378,12 @@ namespace MattEland.Ani.Alfred.Tests
 
             // Set up the search provider
             var searchProvider = new Mock<ISearchProvider>(mockBehavior);
+
+            // When searching, there should always be an operation
             searchProvider.Setup(p => p.PerformSearch(It.IsAny<string>())).Returns(resultOperation);
+
+            // Return a unique identifier for the Id to prevent collisions
+            searchProvider.SetupGet(p => p.Id).Returns(Guid.NewGuid().ToString);
 
             return searchProvider;
         }

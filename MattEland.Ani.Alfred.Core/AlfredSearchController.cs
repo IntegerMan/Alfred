@@ -270,14 +270,26 @@ namespace MattEland.Ani.Alfred.Core
         ///     Thrown if this was called when the component is not
         ///     <see cref="AlfredStatus.Offline" /> .
         /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     When <paramref name="provider"/>'s Id is the same as another provider that has already
+        ///     been added.
+        /// </exception>
         /// <param name="provider"> The provider. </param>
         public void Register(ISearchProvider provider)
         {
             if (provider == null) { throw new ArgumentNullException(nameof(provider)); }
 
+            // Require Offline Status
             if (Status != AlfredStatus.Offline)
             {
                 throw new InvalidOperationException("Cannot register new providers unless the controller is offline");
+            }
+
+            // Check for Duplicates
+            var id = provider.Id;
+            if (_searchProviders.Any(p => p.Id.Matches(id)))
+            {
+                throw new ArgumentException($"A provider with the Id of {id} has already been added", nameof(provider));
             }
 
             _searchProviders.Add(provider);
