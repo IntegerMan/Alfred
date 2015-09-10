@@ -400,6 +400,7 @@ namespace MattEland.Ani.Alfred.Tests
             var mock = new Mock<ISearchOperation>(mockBehavior);
 
             mock.Setup(m => m.Update());
+            mock.SetupGet(m => m.IsSearchComplete).Returns(false);
 
             return mock;
         }

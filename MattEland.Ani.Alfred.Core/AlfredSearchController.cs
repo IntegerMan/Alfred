@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 using JetBrains.Annotations;
@@ -302,11 +303,28 @@ namespace MattEland.Ani.Alfred.Core
         {
             base.UpdateProtected();
 
-            var ongoingOperations = _ongoingOperations;
-            foreach (var operation in ongoingOperations)
+            // Get ops .ToList() because we may be removing operations while iterating
+            var ongoingOperations = _ongoingOperations.ToList();
+
+            // Update all ongoing operations.
+            foreach (var op in ongoingOperations)
             {
-                operation.Update();
+                Debug.Assert(op != null);
+
+                // Update the operation
+                op.Update();
+
+                // TODO: Add all results to the Results collection
+
+                // If the operation has completed, remove it from the list
+                if (op.IsSearchComplete) { _ongoingOperations.Remove(op); }
+
+                // TODO: Handle errors
+
             }
+
+            // TODO: Update status text
+
         }
     }
 }

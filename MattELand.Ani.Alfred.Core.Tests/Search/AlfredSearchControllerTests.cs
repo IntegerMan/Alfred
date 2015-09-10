@@ -211,11 +211,11 @@ namespace MattEland.Ani.Alfred.Tests.Search
         {
             //! Arrange
 
-            // Build out two search providers with mock operations
+            // Build out a search provider with a mock operations
             var mockOperation = BuildMockOperation(MockingBehavior);
             var searchProvider = BuildMockSearchProvider(MockingBehavior, mockOperation.Object);
 
-            // Add a controller with the two providers. We're testing this detached from Alfred
+            // Add a controller with the provider. We're testing this detached from Alfred
             var controller = new AlfredSearchController(Container);
             controller.Register(searchProvider.Object);
 
@@ -226,6 +226,37 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             //! Assert
             mockOperation.Verify(o => o.Update(), Times.Once);
+        }
+
+        /// <summary>
+        ///     Undirected searches should start search operations.
+        /// </summary>
+        [Test]
+        public void WhenSearchesCompleteTheyAreRemovedFromOngoingOperations()
+        {
+            //! Arrange
+
+            // Configure the operation to complete on update
+            var mockOp = BuildMockOperation(MockingBehavior);
+            mockOp.Setup(o => o.Update())
+                         .Callback(() => mockOp.SetupGet(o => o.IsSearchComplete).Returns(true));
+
+            // Build out a search provider with the mock operations
+            var searchProvider = BuildMockSearchProvider(MockingBehavior, mockOp.Object);
+
+            // Add a controller with the provider. We're testing this detached from Alfred
+            var controller = new AlfredSearchController(Container);
+            controller.Register(searchProvider.Object);
+
+            //! Act
+            controller.Initialize(BuildAlfredInstance());
+            controller.PerformSearch(SearchString);
+            controller.Update();
+
+            //! Assert
+            controller.OngoingOperations.ShouldNotContain(mockOp.Object);
+            controller.OngoingOperations.Count().ShouldBe(0);
+
         }
 
     }
