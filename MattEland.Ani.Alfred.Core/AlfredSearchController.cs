@@ -57,8 +57,6 @@ namespace MattEland.Ani.Alfred.Core
         {
             get
             {
-                // TODO: Return ISearchProviders
-
                 yield break;
             }
         }
@@ -257,6 +255,18 @@ namespace MattEland.Ani.Alfred.Core
             }
 
             _searchProviders.Add(provider);
+        }
+
+        /// <summary>
+        ///     Updates this instance.
+        /// </summary>
+        public void Update()
+        {
+            var ongoingOperations = _ongoingOperations;
+            foreach (var operation in ongoingOperations)
+            {
+                operation.Update();
+            }
         }
     }
 }

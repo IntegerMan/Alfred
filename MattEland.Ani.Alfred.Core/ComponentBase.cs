@@ -322,7 +322,10 @@ namespace MattEland.Ani.Alfred.Core
             UpdateProtected();
 
             // Pass on the message to the children
-            foreach (var child in Children) { child.Update(); }
+            foreach (var child in Children)
+            {
+                child.Update();
+            }
         }
 
         /// <summary>
