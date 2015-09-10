@@ -375,7 +375,7 @@ namespace MattEland.Ani.Alfred.Tests
                                                                    ISearchOperation resultOperation = null)
         {
             // Build a default operation
-            resultOperation = resultOperation ?? BuildMockOperation(mockBehavior).Object;
+            resultOperation = resultOperation ?? BuildMockSearchOperation(mockBehavior).Object;
 
             // Set up the search provider
             var searchProvider = new Mock<ISearchProvider>(mockBehavior);
@@ -396,7 +396,7 @@ namespace MattEland.Ani.Alfred.Tests
         /// <returns>
         ///     A mock operation
         /// </returns>
-        protected Mock<ISearchOperation> BuildMockOperation(MockBehavior mockBehavior)
+        protected Mock<ISearchOperation> BuildMockSearchOperation(MockBehavior mockBehavior)
         {
             var mock = new Mock<ISearchOperation>(mockBehavior);
 

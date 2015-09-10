@@ -9,9 +9,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+
+using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
@@ -35,8 +36,35 @@ namespace MattEland.Ani.Alfred.Tests.Search
     [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
     [SuppressMessage("ReSharper", "ExceptionNotDocumentedOptional")]
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
+    [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public sealed class AlfredSearchControllerTests : AlfredTestBase
     {
+
+        /// <summary>
+        ///     Gets the controller.
+        /// </summary>
+        /// <value>
+        ///     The controller.
+        /// </value>
+        [NotNull]
+        private AlfredSearchController Controller { get; set; }
+
+        /// <summary>
+        /// Sets up the environment for each test.
+        /// </summary>
+        [SetUp]
+        public override void SetUp()
+        {
+            base.SetUp();
+
+            // Set up the Controller
+            Controller = new AlfredSearchController(Container);
+            Controller.RegisterAsProvidedInstance(typeof(ISearchController), Container);
+
+            // Build Alfred - it should now grab the controller from Container
+            Alfred = BuildAlfredInstance();
+        }
+
         /// <summary>
         ///     The mocking behavior used when creating Moq mocks.
         /// </summary>
@@ -48,6 +76,11 @@ namespace MattEland.Ani.Alfred.Tests.Search
         const string SearchString = "This is a test search string";
 
         /// <summary>
+        ///     A testing search string different than the first one. The actual content doesn't matter.
+        /// </summary>
+        const string AnotherSearchString = "This is another search string for testing";
+
+        /// <summary>
         ///     Tests that search providers can be registered and show up in the controller's Providers
         ///     collection.
         /// </summary>
@@ -55,15 +88,14 @@ namespace MattEland.Ani.Alfred.Tests.Search
         public void SearchProvidersCanBeRegistered()
         {
             //! Arrange
-            var controller = new AlfredSearchController(Container);
             var mockProvider = BuildMockSearchProvider(MockBehavior.Strict);
 
             //! Act
-            controller.Register(mockProvider.Object);
+            Controller.Register(mockProvider.Object);
 
             //! Assert
-            controller.SearchProviders.ShouldNotBeNull();
-            controller.SearchProviders.ShouldContain(mockProvider.Object);
+            Controller.SearchProviders.ShouldNotBeNull();
+            Controller.SearchProviders.ShouldContain(mockProvider.Object);
         }
 
         /// <summary>
@@ -72,11 +104,8 @@ namespace MattEland.Ani.Alfred.Tests.Search
         [Test, ExpectedException(typeof(ArgumentNullException))]
         public void NullSearchProvidersCannotBeRegistered()
         {
-            //! Arrange
-            var controller = new AlfredSearchController(Container);
-
             //! Act / Assert - Expected ArgumentNullException
-            controller.Register(null);
+            Controller.Register(null);
         }
 
         /// <summary>
@@ -94,31 +123,26 @@ namespace MattEland.Ani.Alfred.Tests.Search
             var searchProvider2 = BuildMockSearchProvider(MockingBehavior);
             searchProvider2.SetupGet(s => s.Id).Returns(SearchProviderId);
 
-            var controller = new AlfredSearchController(Container);
-
             //! Act / Assert - Expected ArgumentNullException
-            controller.Register(searchProvider1.Object);
-            controller.Register(searchProvider2.Object);
+            Controller.Register(searchProvider1.Object);
+            Controller.Register(searchProvider2.Object);
         }
 
         /// <summary>
-        ///     Tests that search providers can be registered and show up in the controller's Providers
-        ///     collection.
+        ///     Tests that search providers cannot be registered when Alfred is offline
         /// </summary>
         [Test, ExpectedException(typeof(InvalidOperationException))]
         public void SearchProvidersCannotBeRegisteredWhenNotOffline()
         {
             //! Arrange
-            var controller = new AlfredSearchController(Container);
-            controller.RegisterAsProvidedInstance(typeof(ISearchController), Container);
-
             var provider = BuildMockSearchProvider(MockBehavior.Strict);
 
-            var alfred = BuildAlfredInstance();
+            // Reconstruct Alfred - it should now grab the 
+            Alfred = BuildAlfredInstance();
 
             //! Act / Assert - Expected InvalidOperationException
-            alfred.Initialize();
-            controller.Register(provider.Object);
+            Alfred.Initialize();
+            Controller.Register(provider.Object);
         }
 
         /// <summary>
@@ -128,15 +152,14 @@ namespace MattEland.Ani.Alfred.Tests.Search
         public void UndirectedSearchShouldStartSearchOperations()
         {
             //! Arrange
-            var mockOperation = BuildMockOperation(MockingBehavior);
+            var mockOperation = BuildMockSearchOperation(MockingBehavior);
 
             var searchProvider = BuildMockSearchProvider(MockingBehavior, mockOperation.Object);
 
-            var controller = new AlfredSearchController(Container);
-            controller.Register(searchProvider.Object);
+            Controller.Register(searchProvider.Object);
 
             //! Act
-            controller.PerformSearch(SearchString);
+            Controller.PerformSearch(SearchString);
 
             //! Assert
             searchProvider.Verify(s => s.PerformSearch(SearchString), Times.Once);
@@ -157,23 +180,21 @@ namespace MattEland.Ani.Alfred.Tests.Search
             searchProvider1.SetupGet(s => s.Id).Returns(Provider1Id);
 
             // Build out the target search provider and its operation
-            var mockOperation = BuildMockOperation(MockingBehavior);
+            var mockOperation = BuildMockSearchOperation(MockingBehavior);
             var searchProvider2 = BuildMockSearchProvider(MockingBehavior, mockOperation.Object);
             searchProvider2.SetupGet(s => s.Id).Returns(Provider2Id);
 
-
-            var controller = new AlfredSearchController(Container);
-            controller.Register(searchProvider1.Object);
-            controller.Register(searchProvider2.Object);
+            Controller.Register(searchProvider1.Object);
+            Controller.Register(searchProvider2.Object);
 
             //! Act
-            controller.PerformSearch(SearchString, Provider2Id);
+            Controller.PerformSearch(SearchString, Provider2Id);
 
             //! Assert
             searchProvider1.Verify(s => s.PerformSearch(SearchString), Times.Never);
             searchProvider2.Verify(s => s.PerformSearch(SearchString), Times.Once);
-            controller.OngoingOperations.Count().ShouldBe(1);
-            controller.OngoingOperations.ShouldContain(mockOperation.Object);
+            Controller.OngoingOperations.Count().ShouldBe(1);
+            Controller.OngoingOperations.ShouldContain(mockOperation.Object);
         }
 
         /// <summary>
@@ -185,10 +206,10 @@ namespace MattEland.Ani.Alfred.Tests.Search
             //! Arrange
 
             // Build out two search providers with mock operations
-            var mockOperation1 = BuildMockOperation(MockingBehavior);
+            var mockOperation1 = BuildMockSearchOperation(MockingBehavior);
             var searchProvider1 = BuildMockSearchProvider(MockingBehavior, mockOperation1.Object);
 
-            var mockOperation2 = BuildMockOperation(MockingBehavior);
+            var mockOperation2 = BuildMockSearchOperation(MockingBehavior);
             var searchProvider2 = BuildMockSearchProvider(MockingBehavior, mockOperation2.Object);
 
             // Add a controller with the two providers. We're testing this detached from Alfred
@@ -214,17 +235,16 @@ namespace MattEland.Ani.Alfred.Tests.Search
             //! Arrange
 
             // Build out a search provider with a mock operations
-            var mockOperation = BuildMockOperation(MockingBehavior);
+            var mockOperation = BuildMockSearchOperation(MockingBehavior);
             var searchProvider = BuildMockSearchProvider(MockingBehavior, mockOperation.Object);
 
-            // Add a controller with the provider. We're testing this detached from Alfred
-            var controller = new AlfredSearchController(Container);
-            controller.Register(searchProvider.Object);
+            // Add a controller with the provider
+            Controller.Register(searchProvider.Object);
 
             //! Act
-            controller.Initialize(BuildAlfredInstance());
-            controller.PerformSearch(SearchString);
-            controller.Update();
+            Alfred.Initialize();
+            Controller.PerformSearch(SearchString);
+            Controller.Update();
 
             //! Assert
             mockOperation.Verify(o => o.Update(), Times.Once);
@@ -239,29 +259,29 @@ namespace MattEland.Ani.Alfred.Tests.Search
             //! Arrange
 
             // Configure the operation to complete on update
-            var mockOp = BuildMockOperation(MockingBehavior);
+            var mockOp = BuildMockSearchOperation(MockingBehavior);
             mockOp.Setup(o => o.Update())
                          .Callback(() => mockOp.SetupGet(o => o.IsSearchComplete).Returns(true));
 
             // Build out a search provider with the mock operations
             var searchProvider = BuildMockSearchProvider(MockingBehavior, mockOp.Object);
 
-            // Add a controller with the provider. We're testing this detached from Alfred
-            var controller = new AlfredSearchController(Container);
-            controller.Register(searchProvider.Object);
+            // Add a controller with the provider
+            Controller.Register(searchProvider.Object);
 
             //! Act
-            controller.Initialize(BuildAlfredInstance());
-            controller.PerformSearch(SearchString);
-            controller.Update();
+            Controller.Initialize(BuildAlfredInstance());
+            Controller.PerformSearch(SearchString);
+            Controller.Update();
 
             //! Assert
-            controller.OngoingOperations.ShouldNotContain(mockOp.Object);
-            controller.OngoingOperations.Count().ShouldBe(0);
+            Controller.OngoingOperations.ShouldNotContain(mockOp.Object);
+            Controller.OngoingOperations.Count().ShouldBe(0);
         }
 
         /// <summary>
-        ///     Ensures that results from providers are added to the controller after updates
+        ///     Ensures that results from providers are added to the controller after updates.
+        ///     This also checks that multiple updates don't result in duplicate entries in the list.
         /// </summary>
         [Test]
         public void NewSearchResultsAreAddedToControllerResults()
@@ -269,13 +289,13 @@ namespace MattEland.Ani.Alfred.Tests.Search
             //! Arrange
 
             // We'll be simulating a progressive disclosure of items
-            var results = new List<ISearchResult>();
+            var results = Container.ProvideCollection<ISearchResult>();
             var mockResult1 = BuildMockSearchResult(MockingBehavior);
             var mockResult2 = BuildMockSearchResult(MockingBehavior);
             results.Add(mockResult1.Object);
 
             // Configure the operation to complete on update
-            var mockOp = BuildMockOperation(MockingBehavior);
+            var mockOp = BuildMockSearchOperation(MockingBehavior);
             mockOp.SetupGet(o => o.Results).Returns(results);
 
             // Build out a search provider with the mock operations
@@ -288,20 +308,118 @@ namespace MattEland.Ani.Alfred.Tests.Search
             //! Act
             controller.Initialize(BuildAlfredInstance());
             controller.PerformSearch(SearchString);
+
+            // The first update should return the initial list entry only
             controller.Update();
 
             // Simulate a new item coming back for the next update
             results.Add(mockResult2.Object);
-
             controller.Update();
 
             // Simulate no new items next update
             controller.Update();
 
             //! Assert
-            controller.Results.Count().ShouldBe(2);
+
+            controller.Results.Count().ShouldBe(2); // Test against duplicated items
             controller.Results.ShouldContain(mockResult1.Object);
             controller.Results.ShouldContain(mockResult2.Object);
+        }
+
+        /// <summary>
+        ///     Ensures that results from providers are added to the controller after updates.
+        ///     This also checks that multiple updates don't result in duplicate entries in the list.
+        /// </summary>
+        [Test]
+        public void SearchesClearOutOldResults()
+        {
+            //! Arrange
+
+            // Get the controller online with some sample data
+            var searchProvider = PrepareControllerToReturnOneSearchResult(Controller);
+
+            //! Act
+
+            // Do a search to generate some preliminary results
+            Controller.PerformSearch(SearchString);
+            Controller.Update();
+
+            // Next time we search, we shouldn't return any results - just a dummy operation
+            PrepareSearchProviderToReturnNewOperation(searchProvider);
+
+            // Do another search. We're testing that this clears out the first search
+            Controller.PerformSearch(AnotherSearchString);
+
+            // Note: we're not updating this time around - we just want to see if it cleared the results
+
+            //! Assert
+
+            Controller.Results.Count().ShouldBe(0);
+            searchProvider.Verify(p => p.PerformSearch(It.IsAny<string>()), Times.Exactly(2));
+        }
+
+        /// <summary>
+        ///     Prepare a search provider to return a new operation. This is useful in scenarios where
+        ///     more than one search operation is being conducted.
+        /// </summary>
+        /// <param name="searchProvider"> The search provider. </param>
+        /// <returns>
+        ///     The mock search operation
+        /// </returns>
+        [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Local")]
+        private Mock<ISearchOperation> PrepareSearchProviderToReturnNewOperation(Mock<ISearchProvider> searchProvider)
+        {
+            var mockSearchOperation = BuildMockSearchOperation(MockingBehavior);
+
+            searchProvider.Setup(s => s.PerformSearch(It.IsAny<string>()))
+                          .Returns(mockSearchOperation.Object);
+
+            return mockSearchOperation;
+        }
+
+        /// <summary>
+        ///     Prepares the controller to have a search provider that returns a search result and
+        ///     returns the new search provider.
+        /// </summary>
+        /// <param name="controller"> The controller. </param>
+        /// <returns>
+        ///     The search provider used to return results.
+        /// </returns>
+        private Mock<ISearchProvider> PrepareControllerToReturnOneSearchResult(AlfredSearchController controller)
+        {
+
+            // Build out a search provider with the mock operations
+            var searchProvider = BuildMockSearchProvider(MockingBehavior);
+
+            // Simulate items in the list to begin with
+            var mockOp = PrepareSearchProviderToReturnNewOperation(searchProvider);
+
+            // Ensure that this operation returns a valid result
+            ConfigureOperationToReturnOneSearchResult(mockOp);
+
+            // Add a controller with the provider. We're testing this detached from Alfred
+            controller.Register(searchProvider.Object);
+
+            controller.Initialize(Alfred);
+
+            return searchProvider;
+        }
+
+        /// <summary>
+        ///     Configure the mock operation to return a search result.
+        /// </summary>
+        /// <param name="mockOp"> The mock operation. </param>
+        /// <returns>
+        ///     The mock search result
+        /// </returns>
+        [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Local")]
+        private static Mock<ISearchResult> ConfigureOperationToReturnOneSearchResult(Mock<ISearchOperation> mockOp)
+        {
+            var result = BuildMockSearchResult(MockingBehavior);
+
+            mockOp.SetupGet(o => o.Results).Returns(result.Object.ToCollection());
+
+            return result;
         }
 
     }

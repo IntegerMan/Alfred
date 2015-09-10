@@ -92,6 +92,9 @@ namespace MattEland.Ani.Alfred.Core
         /// <param name="searchText"> The search text. </param>
         public void PerformSearch([NotNull] string searchText)
         {
+            // If there's stuff going on - cancel it
+            if (OngoingOperations.Any()) { Abort(); }
+
             // Search all providers
             foreach (var provider in SearchProviders)
             {
@@ -148,7 +151,11 @@ namespace MattEland.Ani.Alfred.Core
         {
             // TODO: Log this
 
-            // TODO: Tell ISearchProviders to abort
+            // TODO: Tell ISearchOperations to abort
+
+            // Clear out all old operations and results
+            _ongoingOperations.Clear();
+            _results.Clear();
         }
 
         private double _searchTimeoutInMilliseconds;
