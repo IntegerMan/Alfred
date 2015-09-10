@@ -258,10 +258,12 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     Updates this instance.
+        ///     Updates the component.
         /// </summary>
-        public void Update()
+        protected override void UpdateProtected()
         {
+            base.UpdateProtected();
+
             var ongoingOperations = _ongoingOperations;
             foreach (var operation in ongoingOperations)
             {
