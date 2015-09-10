@@ -9,6 +9,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
@@ -28,8 +29,21 @@ namespace MattEland.Ani.Alfred.Tests.Search
     /// </summary>
     [UnitTestProvider]
     [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
+    [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
+    [SuppressMessage("ReSharper", "ExceptionNotDocumentedOptional")]
+    [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     public sealed class AlfredSearchControllerTests : AlfredTestBase
     {
+        /// <summary>
+        ///     The mocking behavior used when creating Moq mocks.
+        /// </summary>
+        const MockBehavior MockingBehavior = MockBehavior.Strict;
+
+        /// <summary>
+        ///     A testing search string. The actual content doesn't matter.
+        /// </summary>
+        const string SearchString = "This is a test search string";
+
         /// <summary>
         ///     Tests that search providers can be registered and show up in the controller's Providers
         ///     collection.
@@ -50,7 +64,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
         }
 
         /// <summary>
-        ///     Tests that null search providers cannot be registered.
+        ///     Tests that <see langword="null"/> search providers cannot be registered.
         /// </summary>
         [Test, ExpectedException(typeof(ArgumentNullException))]
         public void NullSearchProvidersCannotBeRegistered()
@@ -93,6 +107,115 @@ namespace MattEland.Ani.Alfred.Tests.Search
             var mock = new Mock<ISearchProvider>(MockBehavior.Strict);
 
             return mock;
+        }
+
+        /// <summary>
+        ///     Undirected searches should start search operations.
+        /// </summary>
+        [Test]
+        public void UndirectedSearchShouldStartSearchOperations()
+        {
+            //! Arrange
+            var mockOperation = BuildMockOperation(MockingBehavior);
+
+            var searchProvider = BuildSearchProvider(MockingBehavior, mockOperation.Object);
+
+            var controller = new AlfredSearchController(Container);
+            controller.Register(searchProvider.Object);
+
+            //! Act
+            controller.PerformSearch(SearchString);
+
+            //! Assert
+            searchProvider.Verify(s => s.PerformSearch(SearchString), Times.Once);
+        }
+
+        /// <summary>
+        ///     Undirected searches should start search operations.
+        /// </summary>
+        [Test]
+        public void DirectedSearchShouldStartSearchOnTargetOnly()
+        {
+            //! Arrange
+            const string Provider1Id = "Provider1ID";
+            const string Provider2Id = "Provider2ID";
+
+            // Build out the first search provider. This one should not be called
+            var searchProvider1 = BuildSearchProvider(MockingBehavior);
+            searchProvider1.SetupGet(s => s.Id).Returns(Provider1Id);
+
+            // Build out the target search provider and its operation
+            var mockOperation = BuildMockOperation(MockingBehavior);
+            var searchProvider2 = BuildSearchProvider(MockingBehavior, mockOperation.Object);
+            searchProvider2.SetupGet(s => s.Id).Returns(Provider2Id);
+
+
+            var controller = new AlfredSearchController(Container);
+            controller.Register(searchProvider1.Object);
+            controller.Register(searchProvider2.Object);
+
+            //! Act
+            controller.PerformSearch(SearchString, Provider2Id);
+
+            //! Assert
+            searchProvider1.Verify(s => s.PerformSearch(SearchString), Times.Never);
+            searchProvider2.Verify(s => s.PerformSearch(SearchString), Times.Once);
+            controller.OngoingOperations.Count().ShouldBe(1);
+            controller.OngoingOperations.ShouldContain(mockOperation.Object);
+        }
+
+        /// <summary>
+        ///     Undirected searches should start search operations.
+        /// </summary>
+        [Test]
+        public void SearchWithMultipleProvidersShouldPopulateOperationsCorrectly()
+        {
+            //! Arrange
+
+            // Build out two search providers with mock operations
+            var mockOperation1 = BuildMockOperation(MockingBehavior);
+            var searchProvider1 = BuildSearchProvider(MockingBehavior, mockOperation1.Object);
+
+            var mockOperation2 = BuildMockOperation(MockingBehavior);
+            var searchProvider2 = BuildSearchProvider(MockingBehavior, mockOperation2.Object);
+
+            // Add a controller with the two providers. We're testing this detached from Alfred
+            var controller = new AlfredSearchController(Container);
+            controller.Register(searchProvider1.Object);
+            controller.Register(searchProvider2.Object);
+
+            //! Act
+            controller.PerformSearch(SearchString);
+
+            //! Assert
+            controller.OngoingOperations.Count().ShouldBe(2);
+            controller.OngoingOperations.ShouldContain(mockOperation1.Object);
+            controller.OngoingOperations.ShouldContain(mockOperation2.Object);
+        }
+
+        /// <summary>
+        ///     Undirected searches should start search operations.
+        /// </summary>
+        [Test]
+        public void UpdateWithAnOngoingSearchCallsUpdatesOperation()
+        {
+            //! Arrange
+
+            // Build out two search providers with mock operations
+            var mockOperation = BuildMockOperation(MockingBehavior);
+            var searchProvider = BuildSearchProvider(MockingBehavior, mockOperation.Object);
+
+            // Add a controller with the two providers. We're testing this detached from Alfred
+            var controller = new AlfredSearchController(Container);
+            controller.Register(searchProvider.Object);
+
+            //! Act
+            controller.Initialize(BuildAlfredInstance());
+            controller.PerformSearch(SearchString);
+            controller.Update();
+
+            //! Assert
+            mockOperation.Verify(o => o.Update(), Times.Once);
         }
 
     }

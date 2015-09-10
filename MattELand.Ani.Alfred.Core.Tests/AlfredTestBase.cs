@@ -362,5 +362,41 @@ namespace MattEland.Ani.Alfred.Tests
             return new AlfredApplication(Container);
         }
 
+        /// <summary>
+        ///     Builds mock search provider.
+        /// </summary>
+        /// <param name="mockBehavior"> The mocking behavior. </param>
+        /// <param name="resultOperation"> The result operation. </param>
+        /// <returns>
+        ///     A mock search provider.
+        /// </returns>
+        protected static Mock<ISearchProvider> BuildSearchProvider(MockBehavior mockBehavior,
+                                                                   ISearchOperation resultOperation = null)
+        {
+            // Build a default operation
+            resultOperation = resultOperation ?? BuildMockOperation(mockBehavior).Object;
+
+            // Set up the search provider
+            var searchProvider = new Mock<ISearchProvider>(mockBehavior);
+            searchProvider.Setup(p => p.PerformSearch(It.IsAny<string>())).Returns(resultOperation);
+
+            return searchProvider;
+        }
+
+        /// <summary>
+        ///     Builds a mock operation.
+        /// </summary>
+        /// <param name="mockBehavior"> The mocking behavior. </param>
+        /// <returns>
+        ///     A mock operation
+        /// </returns>
+        protected static Mock<ISearchOperation> BuildMockOperation(MockBehavior mockBehavior)
+        {
+            var mock = new Mock<ISearchOperation>(mockBehavior);
+
+            mock.Setup(m => m.Update());
+
+            return mock;
+        }
     }
 }

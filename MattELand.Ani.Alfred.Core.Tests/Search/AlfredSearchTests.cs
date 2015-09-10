@@ -34,10 +34,6 @@ namespace MattEland.Ani.Alfred.Tests.Search
     [SuppressMessage("ReSharper", "ExceptionNotDocumentedOptional")]
     public sealed class AlfredSearchTests : AlfredTestBase
     {
-        /// <summary>
-        ///     A testing search string. The actual content doesn't matter.
-        /// </summary>
-        const string SearchString = "This is a test search string";
 
         /// <summary>
         ///     Sets up the environment for each test.
@@ -158,121 +154,6 @@ namespace MattEland.Ani.Alfred.Tests.Search
             Alfred.SearchController.SearchProviders.Count().ShouldBe(numSearchProviders + 1);
         }
 
-        /// <summary>
-        ///     Undirected searches should start search operations.
-        /// </summary>
-        [Test]
-        public void UndirectedSearchShouldStartSearchOperations()
-        {
-            //! Arrange
-            const MockBehavior MockingBehavior = MockBehavior.Strict;
-
-            var mockOperation = BuildMockOperation(MockingBehavior);
-
-            var searchProvider = BuildSearchProvider(MockingBehavior, mockOperation.Object);
-
-            var controller = new AlfredSearchController(Container);
-            controller.Register(searchProvider.Object);
-
-            //! Act
-            controller.PerformSearch(SearchString);
-
-            //! Assert
-            searchProvider.Verify(s => s.PerformSearch(SearchString), Times.Once);
-        }
-
-        /// <summary>
-        ///     Builds mock search provider.
-        /// </summary>
-        /// <param name="mockBehavior"> The mocking behavior. </param>
-        /// <param name="resultOperation"> The result operation. </param>
-        /// <returns>
-        ///     A mock search provider.
-        /// </returns>
-        private static Mock<ISearchProvider> BuildSearchProvider(MockBehavior mockBehavior,
-            ISearchOperation resultOperation = null)
-        {
-            // Build a default operation
-            resultOperation = resultOperation ?? BuildMockOperation(mockBehavior).Object;
-
-            // Set up the search provider
-            var searchProvider = new Mock<ISearchProvider>(mockBehavior);
-            searchProvider.Setup(p => p.PerformSearch(It.IsAny<string>())).Returns(resultOperation);
-
-            return searchProvider;
-        }
-
-        /// <summary>
-        ///     Undirected searches should start search operations.
-        /// </summary>
-        [Test]
-        public void SearchWithMultipleProvidersShouldPopulateOperationsCorrectly()
-        {
-            //! Arrange
-            const MockBehavior MockingBehavior = MockBehavior.Strict;
-
-            // Build out two search providers with mock operations
-            var mockOperation1 = BuildMockOperation(MockingBehavior);
-            var searchProvider1 = BuildSearchProvider(MockingBehavior, mockOperation1.Object);
-
-            var mockOperation2 = BuildMockOperation(MockingBehavior);
-            var searchProvider2 = BuildSearchProvider(MockingBehavior, mockOperation2.Object);
-
-            // Add a controller with the two providers. We're testing this detached from Alfred
-            var controller = new AlfredSearchController(Container);
-            controller.Register(searchProvider1.Object);
-            controller.Register(searchProvider2.Object);
-
-            //! Act
-            controller.PerformSearch(SearchString);
-
-            //! Assert
-            controller.OngoingOperations.Count().ShouldBe(2);
-            controller.OngoingOperations.ShouldContain(mockOperation1.Object);
-            controller.OngoingOperations.ShouldContain(mockOperation2.Object);
-        }
-
-        /// <summary>
-        ///     Undirected searches should start search operations.
-        /// </summary>
-        [Test]
-        public void UpdateWithAnOngoingSearchCallsUpdatesOperation()
-        {
-            //! Arrange
-            const MockBehavior MockingBehavior = MockBehavior.Strict;
-
-            // Build out two search providers with mock operations
-            var mockOperation = BuildMockOperation(MockingBehavior);
-            var searchProvider = BuildSearchProvider(MockingBehavior, mockOperation.Object);
-
-            // Add a controller with the two providers. We're testing this detached from Alfred
-            var controller = new AlfredSearchController(Container);
-            controller.Register(searchProvider.Object);
-
-            //! Act
-            controller.Initialize(BuildAlfredInstance());
-            controller.PerformSearch(SearchString);
-            controller.Update();
-
-            //! Assert
-            mockOperation.Verify(o => o.Update(), Times.Once);
-        }
-
-        /// <summary>
-        ///     Builds a mock operation.
-        /// </summary>
-        /// <param name="mockBehavior"> The mocking behavior. </param>
-        /// <returns>
-        ///     A mock operation
-        /// </returns>
-        private static Mock<ISearchOperation> BuildMockOperation(MockBehavior mockBehavior)
-        {
-            var mock = new Mock<ISearchOperation>(mockBehavior);
-
-            mock.Setup(m => m.Update());
-
-            return mock;
-        }
 
     }
 }

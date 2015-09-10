@@ -9,10 +9,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common;
 using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core
@@ -87,15 +89,30 @@ namespace MattEland.Ani.Alfred.Core
         ///     Performs the search action against all search providers.
         /// </summary>
         /// <param name="searchText"> The search text. </param>
-        public void PerformSearch(string searchText)
+        public void PerformSearch([NotNull] string searchText)
         {
             // Search all providers
             foreach (var provider in SearchProviders)
             {
-                var operation = provider.PerformSearch(searchText);
-
-                _ongoingOperations.Add(operation);
+                StartSearchOperation(searchText, provider);
             }
+        }
+
+        /// <summary>
+        ///     Starts the search operation on the specified <paramref name="searchProvider"/>.
+        /// </summary>
+        /// <param name="searchText"> The search text. </param>
+        /// <param name="searchProvider"> The search provider. </param>
+        private void StartSearchOperation(
+            [NotNull] string searchText, [NotNull] ISearchProvider searchProvider)
+        {
+            // TODO: Log this
+
+            var operation = searchProvider.PerformSearch(searchText);
+
+            _ongoingOperations.Add(operation);
+
+            // TODO: Update status to in search / prepare tracking metrics
         }
 
         /// <summary>
@@ -103,15 +120,24 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <param name="searchText"> The search text. </param>
         /// <param name="providerId"> The provider's identifier. </param>
-        public void PerformSearch(string searchText, string providerId)
+        public void PerformSearch([NotNull] string searchText, [NotNull] string providerId)
         {
-            // TODO: Log this
+            // When searching all providers, use the simpler method
+            if (providerId.IsEmpty() || providerId.Matches("All"))
+            {
+                PerformSearch(searchText);
+                return;
+            }
 
-            // TODO: Tell ISearchProviders to search
-
-            // TODO: Store current search operations
-
-            // TODO: Update status to in search / prepare tracking metrics
+            var target = SearchProviders.FirstOrDefault(s => s.Id.Matches(providerId));
+            if (target != null)
+            {
+                StartSearchOperation(searchText, target);
+            }
+            else
+            {
+                // TODO: Log this
+            }
         }
 
         /// <summary>

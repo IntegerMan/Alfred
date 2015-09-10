@@ -16,7 +16,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
     /// <summary>
     ///     Defines an <see langword="object"/> capable of providing search results
     /// </summary>
-    public interface ISearchProvider
+    public interface ISearchProvider : IHasIdentifier
     {
         /// <summary>
         ///     Executes a search operation and returns a result to track the search.

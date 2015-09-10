@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Root CoveredStatements="6030" TotalStatements="8689" CoveragePercent="69" ReportType="NDependXML" DotCoverVersion="3.1.1">
+<Root CoveredStatements="6031" TotalStatements="8690" CoveragePercent="69" ReportType="NDependXML" DotCoverVersion="3.1.1">
   <Assembly Name="MattEland.Ani.Alfred.Chat" CoveredStatements="449" TotalStatements="639" CoveragePercent="70">
     <Namespace Name="MattEland.Ani.Alfred.Chat" CoveredStatements="449" TotalStatements="639" CoveragePercent="70">
       <Type Name="AimlExplorerNode" CoveredStatements="33" TotalStatements="44" CoveragePercent="75">
@@ -623,8 +623,8 @@
       </Type>
     </Namespace>
   </Assembly>
-  <Assembly Name="MattEland.Ani.Alfred.Core" CoveredStatements="1352" TotalStatements="1898" CoveragePercent="71">
-    <Namespace Name="MattEland.Ani.Alfred.Core" CoveredStatements="464" TotalStatements="593" CoveragePercent="78">
+  <Assembly Name="MattEland.Ani.Alfred.Core" CoveredStatements="1353" TotalStatements="1899" CoveragePercent="71">
+    <Namespace Name="MattEland.Ani.Alfred.Core" CoveredStatements="465" TotalStatements="594" CoveragePercent="78">
       <Type Name="AlfredApplication" CoveredStatements="85" TotalStatements="125" CoveragePercent="68">
         <Type Name="&lt;get_Components&gt;d__51" CoveredStatements="10" TotalStatements="10" CoveragePercent="100">
           <Method Name="MoveNext()" CoveredStatements="10" TotalStatements="10" CoveragePercent="100" FirstStatementLine="295" />
@@ -691,7 +691,7 @@
         <Method Name="Register(IAlfred,IChatProvider)" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="69" />
         <Method Name="Register(IAlfred,IShellCommandRecipient)" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="85" />
       </Type>
-      <Type Name="AlfredSearchController" CoveredStatements="50" TotalStatements="69" CoveragePercent="72">
+      <Type Name="AlfredSearchController" CoveredStatements="51" TotalStatements="70" CoveragePercent="73">
         <Type Name="&lt;get_Children&gt;d__4" CoveredStatements="2" TotalStatements="2" CoveragePercent="100">
           <Method Name="MoveNext()" CoveredStatements="2" TotalStatements="2" CoveragePercent="100" FirstStatementLine="59" />
         </Type>
@@ -713,7 +713,7 @@
         <Method Name="PerformSearch(String,String)" CoveredStatements="0" TotalStatements="2" CoveragePercent="0" FirstStatementLine="107" />
         <Method Name="Register(ISearchProvider)" CoveredStatements="9" TotalStatements="9" CoveragePercent="100" FirstStatementLine="249" />
         <Method Name="set_SearchTimeoutInMilliseconds(Double)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="139" />
-        <Method Name="Update()" CoveredStatements="10" TotalStatements="10" CoveragePercent="100" FirstStatementLine="264" />
+        <Method Name="UpdateProtected()" CoveredStatements="11" TotalStatements="11" CoveragePercent="100" FirstStatementLine="264" />
       </Type>
       <Type Name="AlfredStatusController" CoveredStatements="90" TotalStatements="98" CoveragePercent="92">
         <Method Name=".ctor(IAlfred,IObjectContainer)" CoveredStatements="9" TotalStatements="13" CoveragePercent="69" FirstStatementLine="38" />
