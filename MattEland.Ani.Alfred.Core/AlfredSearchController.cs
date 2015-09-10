@@ -34,7 +34,7 @@ namespace MattEland.Ani.Alfred.Core
             SearchTimeoutInMilliseconds = TimeSpan.FromSeconds(30).Milliseconds;
 
             // Create Collections
-            OngoingOperations = container.ProvideCollection<ISearchOperation>();
+            _ongoingOperations = container.ProvideCollection<ISearchOperation>();
             Results = container.ProvideCollection<ISearchResult>();
             _searchProviders = container.ProvideCollection<ISearchProvider>();
         }
@@ -89,7 +89,16 @@ namespace MattEland.Ani.Alfred.Core
         ///     Performs the search action against all search providers.
         /// </summary>
         /// <param name="searchText"> The search text. </param>
-        public void PerformSearch(string searchText) { }
+        public void PerformSearch(string searchText)
+        {
+            // Search all providers
+            foreach (var provider in SearchProviders)
+            {
+                var operation = provider.PerformSearch(searchText);
+
+                _ongoingOperations.Add(operation);
+            }
+        }
 
         /// <summary>
         ///     Performs the search action against a specific search provider.
@@ -192,13 +201,23 @@ namespace MattEland.Ani.Alfred.Core
         public IEnumerable<ISearchResult> Results { get; }
 
         /// <summary>
+        ///     The ongoing operations collection. This is used for adding new operations.
+        /// </summary>
+        [NotNull, ItemNotNull]
+        private readonly ICollection<ISearchOperation> _ongoingOperations;
+
+        /// <summary>
         ///     Gets the search operations that are currently executing.
         /// </summary>
         /// <value>
         ///     The ongoing operations.
         /// </value>
-        [NotNull, ItemNotNull]
-        public IEnumerable<ISearchOperation> OngoingOperations { get; }
+        [NotNull]
+        [ItemNotNull]
+        public IEnumerable<ISearchOperation> OngoingOperations
+        {
+            get { return _ongoingOperations; }
+        }
 
         /// <summary>
         ///     Gets a value indicating whether any providers are still searching.

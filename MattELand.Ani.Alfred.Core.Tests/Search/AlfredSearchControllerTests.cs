@@ -47,7 +47,6 @@ namespace MattEland.Ani.Alfred.Tests.Search
             //! Assert
             controller.SearchProviders.ShouldNotBeNull();
             controller.SearchProviders.ShouldContain(mockProvider.Object);
-
         }
 
         /// <summary>
