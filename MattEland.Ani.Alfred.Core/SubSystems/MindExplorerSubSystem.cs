@@ -8,6 +8,7 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 using JetBrains.Annotations;
@@ -25,6 +26,11 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
     /// </summary>
     public sealed class MindExplorerSubsystem : AlfredSubsystem
     {
+        /// <summary>
+        ///     The search provider.
+        /// </summary>
+        [NotNull]
+        private ExplorerSearchProvider _searchProvider;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
@@ -39,6 +45,8 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
             MindExplorerPage = new ExplorerPage(container, "Mind Explorer", "MindMap");
 
             if (!includeExplorerPage) { MindExplorerPage.IsRootLevel = false; }
+
+            _searchProvider = new ExplorerSearchProvider(Container, this);
         }
 
         /// <summary>
@@ -66,6 +74,17 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         public override string Name
         {
             get { return "Mind Explorer"; }
+        }
+
+        /// <summary>
+        ///     Gets the search providers.
+        /// </summary>
+        /// <value>
+        ///     The search providers.
+        /// </value>
+        public override IEnumerable<ISearchProvider> SearchProviders
+        {
+            get { yield return _searchProvider; }
         }
 
         /// <summary>

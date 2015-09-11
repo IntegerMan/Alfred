@@ -19,6 +19,15 @@ namespace MattEland.Ani.Alfred.Core.Definitions
     public interface ISearchProvider : IHasIdentifier
     {
         /// <summary>
+        ///     Gets the display name of the search provider.
+        /// </summary>
+        /// <value>
+        ///     The name.
+        /// </value>
+        [NotNull]
+        string Name { get; }
+
+        /// <summary>
         ///     Executes a search operation and returns a result to track the search.
         /// </summary>
         /// <param name="searchText">The search text.</param>
