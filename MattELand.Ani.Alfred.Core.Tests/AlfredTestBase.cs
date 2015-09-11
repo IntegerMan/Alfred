@@ -400,9 +400,23 @@ namespace MattEland.Ani.Alfred.Tests
         {
             var mock = new Mock<ISearchOperation>(mockBehavior);
 
-            mock.Setup(m => m.Update());
+            // Setup properties
+            mock.SetupGet(m => m.EncounteredError).Returns(false);
+            mock.SetupGet(m => m.ErrorMessage).Returns(string.Empty);
             mock.SetupGet(m => m.IsSearchComplete).Returns(false);
             mock.SetupGet(m => m.Results).Returns(Container.ProvideCollection<ISearchResult>());
+
+            // Setup simple methods
+            mock.Setup(m => m.Update());
+
+            // Abort will set the thing to completed with errors
+            mock.Setup(m => m.Abort())
+                .Callback(() =>
+                {
+                    mock.SetupGet(o => o.IsSearchComplete).Returns(true);
+                    mock.SetupGet(o => o.EncounteredError).Returns(true);
+                    mock.SetupGet(o => o.ErrorMessage).Returns("The search was aborted");
+                });
 
             return mock;
         }

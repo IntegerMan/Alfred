@@ -151,7 +151,11 @@ namespace MattEland.Ani.Alfred.Core
         {
             // TODO: Log this
 
-            // TODO: Tell ISearchOperations to abort
+            // Tell each search to abort
+            foreach (var operation in OngoingOperations)
+            {
+                operation.Abort();
+            }
 
             // Clear out all old operations and results
             _ongoingOperations.Clear();

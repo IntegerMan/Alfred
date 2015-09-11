@@ -359,6 +359,27 @@ namespace MattEland.Ani.Alfred.Tests.Search
         }
 
         /// <summary>
+        ///     Calling Abort on the search controller should in turn call abort on all ongoing searches.
+        /// </summary>
+        [Test]
+        public void AbortShouldAbortOngoingSearches()
+        {
+            //! Arrange
+
+            var provider = BuildMockSearchProvider(MockingBehavior);
+            var operation = PrepareSearchProviderToReturnNewOperation(provider);
+
+            Controller.Register(provider.Object);
+
+            //! Act
+            Controller.PerformSearch(SearchString);
+            Controller.Abort();
+
+            //! Assert
+            operation.Verify(o => o.Abort(), Times.Once);
+        }
+
+        /// <summary>
         ///     Prepare a search provider to return a new operation. This is useful in scenarios where
         ///     more than one search operation is being conducted.
         /// </summary>
