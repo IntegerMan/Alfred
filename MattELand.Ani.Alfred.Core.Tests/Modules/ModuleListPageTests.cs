@@ -74,6 +74,24 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         }
 
         /// <summary>
+        ///     You should be able to clear all modules on the module list page
+        /// </summary>
+        [Test]
+        public void CanClearModulesFromModuleListPage()
+        {
+            //! Arrange
+            var module = BuildMockModule(MockingBehavior);
+
+            //! Act
+            Page.Register(module.Object);
+            Page.ClearModules();
+
+            //! Assert
+            Page.Modules.Count().ShouldBe(0);
+            Page.Modules.ShouldNotContain(module.Object);
+        }
+
+        /// <summary>
         ///     Builds a mock module.
         /// </summary>
         /// <param name="mockingBehavior"> The mocking behavior. </param>
