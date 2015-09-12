@@ -27,7 +27,7 @@ namespace MattEland.Ani.Alfred.Tests.Controls
         /// <value>
         ///     The message box.
         /// </value>
-        public TestMessageBoxProvider MessageBox { get; private set; }
+        protected TestMessageBoxProvider MessageBox { get; private set; }
 
         /// <summary>
         /// Sets up the environment for each test.

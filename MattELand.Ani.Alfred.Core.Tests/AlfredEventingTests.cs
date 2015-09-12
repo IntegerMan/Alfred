@@ -45,7 +45,7 @@ namespace MattEland.Ani.Alfred.Tests
     {
 
         [NotNull]
-        private AlfredModuleListPage _page;
+        private ModuleListPage _page;
 
         [NotNull]
         private SimpleSubsystem _subsystem;
@@ -61,7 +61,7 @@ namespace MattEland.Ani.Alfred.Tests
             var alfred = new AlfredApplication(Container);
             alfred.RegisterAsProvidedInstance(typeof(IAlfred), Container);
             _subsystem = BuildTestSubsystem();
-            _page = new AlfredModuleListPage(Container, "Test Page", "Test");
+            _page = new ModuleListPage(Container, "Test Page", "Test");
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace MattEland.Ani.Alfred.Tests
 
             var numModules =
                 Alfred.Subsystems.SelectMany(subsystem => subsystem.Pages)
-                      .OfType<AlfredModuleListPage>()
+                      .OfType<ModuleListPage>()
                       .Sum(modulePage => modulePage.Modules.Count());
 
             const string FailMessage = "Alfred did not have any modules after calling add standard modules.";

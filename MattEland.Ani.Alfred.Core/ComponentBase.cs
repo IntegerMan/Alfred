@@ -27,7 +27,7 @@ namespace MattEland.Ani.Alfred.Core
     ///     An <see langword="abstract"/> class containing most common shared functionality between
     ///     Subsystems and Modules
     /// </summary>
-    public abstract class ComponentBase : NotifyChangedBase, IPropertyProvider
+    public abstract class ComponentBase : NotifyChangedBase, IPropertyProvider, IHasContainer
     {
 
         [CanBeNull]

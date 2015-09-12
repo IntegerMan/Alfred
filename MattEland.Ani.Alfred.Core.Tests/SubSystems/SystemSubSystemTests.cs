@@ -65,7 +65,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         {
             _alfred.RegistrationProvider.Register(_subsystem);
 
-            var page = _subsystem.Pages.First() as AlfredModuleListPage;
+            var page = _subsystem.Pages.First() as ModuleListPage;
             Assert.NotNull(page);
 
             Assert.IsTrue(page.Modules.Any(m => m is CpuMonitorModule), "CPU Monitor not found");

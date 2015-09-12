@@ -5,7 +5,7 @@
 
     <!-- Pages -->
     
-    <DataTemplate DataType="{x:Type pages:AlfredModuleListPage}">
+    <DataTemplate DataType="{x:Type pages:ModuleListPage}">
         <ItemsControl ItemsSource="{Binding Path=Modules}"                      
                       BorderThickness="0">
 

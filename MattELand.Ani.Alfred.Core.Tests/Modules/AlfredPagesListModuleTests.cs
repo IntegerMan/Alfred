@@ -78,7 +78,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
             page.ShouldNotBeNull("Core Page could not be found");
 
             // Convert to the module list page
-            var listPage = page.ShouldBeOfType<AlfredModuleListPage>();
+            var listPage = page.ShouldBeOfType<ModuleListPage>();
             listPage.ShouldNotBeNull("Could not find module list");
 
             // Find the module within the page

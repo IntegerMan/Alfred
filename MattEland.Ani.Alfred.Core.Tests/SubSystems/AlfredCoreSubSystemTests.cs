@@ -96,7 +96,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
 
             // Grab the Page
             var pageName = AlfredCoreSubsystem.ControlPageName;
-            var page = FindPage<AlfredModuleListPage>(pageName);
+            var page = FindPage<ModuleListPage>(pageName);
 
             // Ensure our expected modules are there
             AssertExpectedModules(page.Modules);

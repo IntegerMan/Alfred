@@ -39,7 +39,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         private readonly MemoryMonitorModule _memoryModule;
 
         [NotNull]
-        private readonly AlfredModuleListPage _page;
+        private readonly ModuleListPage _page;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
@@ -61,7 +61,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             _diskModule = new DiskMonitorModule(container, factory);
 
             // Set up the containing page
-            _page = new AlfredModuleListPage(container,
+            _page = new ModuleListPage(container,
                                              Resources.SystemMonitoringSystem_Name.NonNull(),
                                              "Sys");
         }

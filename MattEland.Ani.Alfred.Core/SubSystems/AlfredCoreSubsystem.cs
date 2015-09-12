@@ -32,7 +32,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
     public sealed class AlfredCoreSubsystem : AlfredSubsystem
     {
         [NotNull]
-        private readonly AlfredModuleListPage _controlPage;
+        private readonly ModuleListPage _controlPage;
 
         [NotNull]
         private readonly AlfredPagesListModule _pagesModule;
@@ -56,7 +56,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         {
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
 
-            _controlPage = new AlfredModuleListPage(container, ControlPageName, "Core");
+            _controlPage = new ModuleListPage(container, ControlPageName, "Core");
 
             // Instantiate the modules
             _powerModule = new AlfredPowerModule(container);

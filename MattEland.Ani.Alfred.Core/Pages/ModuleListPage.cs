@@ -1,8 +1,8 @@
 ﻿// ---------------------------------------------------------
-// AlfredModuleListPage.cs
+// ModuleListPage.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   08/22/2015 at 12:03 AM
+// Last Modified:   09/11/2015 at 10:11 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -23,25 +23,25 @@ namespace MattEland.Ani.Alfred.Core.Pages
     /// <summary>
     ///     A page grouping together multiple module collections of widgets
     /// </summary>
-    public sealed class AlfredModuleListPage : AlfredPage
+    public sealed class ModuleListPage : AlfredPage
     {
         [NotNull]
         [ItemNotNull]
         private readonly ICollection<IAlfredModule> _modules;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredModuleListPage" /> class.
+        ///     Initializes a new instance of the <see cref="ModuleListPage" /> class.
         /// </summary>
+        /// <param name="container">The container.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="id">The identifier.</param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when one or more required arguments are null.
+        /// Thrown when one or more required arguments are null.
         /// </exception>
-        /// <param name="container"> The container. </param>
-        /// <param name="name"> The name. </param>
-        /// <param name="id"> The identifier. </param>
-        public AlfredModuleListPage(
+        public ModuleListPage(
             [NotNull] IObjectContainer container,
-                                    [NotNull] string name,
-                                    [NotNull] string id) : base(container, name, id)
+            [NotNull] string name,
+            [NotNull] string id) : base(container, name, id)
         {
             //- Validate
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
@@ -52,7 +52,9 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <summary>
         ///     Gets the modules.
         /// </summary>
-        /// <value>The modules.</value>
+        /// <value>
+        /// The modules.
+        /// </value>
         [NotNull]
         [ItemNotNull]
         public IEnumerable<IAlfredModule> Modules
@@ -61,26 +63,23 @@ namespace MattEland.Ani.Alfred.Core.Pages
         }
 
         /// <summary>
-        ///     Gets the children of this component. Depending on the type of component this is, the children
-        ///     will
-        ///     vary in their own types.
+        ///     Gets the children of this component. Depending on the type of component this is, the
+        ///     children will vary in their own types.
         /// </summary>
-        /// <value>The children.</value>
+        /// <value>
+        /// The children.
+        /// </value>
         public override IEnumerable<IAlfredComponent> Children
         {
-            get
-            {
-                foreach (var module in _modules)
-                {
-                    yield return module;
-                }
-            }
+            get { foreach (var module in _modules) { yield return module; } }
         }
 
         /// <summary>
         ///     Gets whether or not the component is visible to the user interface.
         /// </summary>
-        /// <value>Whether or not the component is visible.</value>
+        /// <value>
+        /// Whether or not the component is visible.
+        /// </value>
         public override bool IsVisible
         {
             get
@@ -112,27 +111,23 @@ namespace MattEland.Ani.Alfred.Core.Pages
         }
 
         /// <summary>
-        ///     Processes an Alfred Command. If the <paramref name="command"/> is handled,
-        ///     <paramref name="result"/> should be modified accordingly and the method should
-        ///     return true. Returning <see langword="false"/> will not stop the message from being
+        ///     Processes an Alfred Command. If the <paramref name="command" /> is handled,
+        ///     <paramref name="result" /> should be modified accordingly and the method should
+        ///     return true. Returning <see langword="false" /> will not stop the message from being
         ///     propagated.
         /// </summary>
-        /// <param name="command"> The command. </param>
+        /// <param name="command">The command.</param>
         /// <param name="result">
-        ///     The result. If the <paramref name="command"/> was handled, this should be updated.
+        /// The result. If the <paramref name="command" /> was handled, this should be updated.
         /// </param>
         /// <returns>
-        ///     <c>True</c> if the <paramref name="command"/> was handled; otherwise false.
+        ///     <c>True</c> if the <paramref name="command" /> was handled; otherwise false.
         /// </returns>
         public override bool ProcessAlfredCommand(ChatCommand command, ICommandResult result)
         {
-
             foreach (var module in Modules)
             {
-                if (module.ProcessAlfredCommand(command, result))
-                {
-                    return true;
-                }
+                if (module.ProcessAlfredCommand(command, result)) { return true; }
             }
 
             return base.ProcessAlfredCommand(command, result);

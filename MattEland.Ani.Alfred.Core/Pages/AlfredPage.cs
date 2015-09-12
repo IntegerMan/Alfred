@@ -1,9 +1,10 @@
 ﻿// ---------------------------------------------------------
 // AlfredPage.cs
 // 
-// Created on:      08/11/2015 at 9:44 PM
-// Last Modified:   08/11/2015 at 9:45 PM
-// Original author: Matt Eland
+// Created on:      08/19/2015 at 9:31 PM
+// Last Modified:   09/11/2015 at 9:35 PM
+// 
+// Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
@@ -22,25 +23,28 @@ namespace MattEland.Ani.Alfred.Core.Pages
     {
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlfredPage" /> class.
+        ///     Initializes a new instance of the <see cref="AlfredPage" /> class.
         /// </summary>
         /// <param name="container">The container.</param>
         /// <param name="name">The name.</param>
         /// <param name="id">The ID</param>
-        /// <exception cref="ArgumentNullException"><paramref name="container" /> is <see langword="null" />.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="name" /> is <see langword="null" />.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="id" /> is <see langword="null" />.</exception>
-        protected AlfredPage([NotNull] IObjectContainer container, [NotNull] string name, [NotNull] string id) : base(container)
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="container" /> is <see langword="null" /> .
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="name" /> is <see langword="null" /> .
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="id" /> is <see langword="null" /> .
+        /// </exception>
+        protected AlfredPage(
+            [NotNull] IObjectContainer container,
+            [NotNull] string name,
+            [NotNull] string id) : base(container)
         {
             //- Validation
-            if (name == null)
-            {
-                throw new ArgumentNullException(nameof(name));
-            }
-            if (id == null)
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
+            if (name == null) { throw new ArgumentNullException(nameof(name)); }
+            if (id == null) { throw new ArgumentNullException(nameof(id)); }
 
             Name = name;
             Id = id;
@@ -51,7 +55,9 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <summary>
         ///     Gets whether or not the component is visible to the user interface.
         /// </summary>
-        /// <value>Whether or not the component is visible.</value>
+        /// <value>
+        /// Whether or not the component is visible.
+        /// </value>
         public override bool IsVisible
         {
             get { return Status == AlfredStatus.Online; }
@@ -60,51 +66,61 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <summary>
         ///     Gets or sets the name of the page.
         /// </summary>
-        /// <value>The name.</value>
+        /// <value>
+        /// The name.
+        /// </value>
         [NotNull]
-        public override string Name
-        {
-            get;
-        }
+        public override string Name { get; }
 
         /// <summary>
-        /// Gets the page identifier.
+        ///     Gets the page identifier.
         /// </summary>
-        /// <value>The identifier.</value>
-        public string Id
-        {
-            get;
-        }
+        /// <value>
+        /// The identifier.
+        /// </value>
+        public string Id { get; }
 
         /// <summary>
-        ///     Gets a value indicating whether this is a root level page that should show on the navigator.
+        ///     Gets a value indicating whether this is a root level page that should show on the
+        ///     navigator.
         /// </summary>
-        /// <value><c>true</c> if this page is root level; otherwise, <c>false</c>.</value>
+        /// <value>
+        /// <c>true</c> if this page is root level; otherwise, <c>false</c> .
+        /// </value>
         public bool IsRootLevel { get; set; }
 
         /// <summary>
-        /// Processes an Alfred Command. If the command is handled, result should be modified accordingly and the method should return true. Returning false will not stop the message from being propogated.
+        ///     Gets the name of the broad categorization or type that this item is.
         /// </summary>
-        /// <param name="command">The command.</param>
-        /// <param name="result">The result. If the command was handled, this should be updated.</param>
-        /// <returns><c>True</c> if the command was handled; otherwise false.</returns>
-        public virtual bool ProcessAlfredCommand(ChatCommand command, ICommandResult result)
-        {
-            return false;
-        }
-
-        /// <summary>
-        /// Gets the name of the broad categorization or type that this item is.
-        /// </summary>
+        /// <value>
+        /// The item type's name.
+        /// </value>
         /// <example>
-        /// Some examples of ItemTypeName values might be "Folder", "Application", "User", etc.
+        ///     Some examples of <see cref="ItemTypeName"/> values might be "Folder", "Application",
+        ///     "User", etc.
         /// </example>
-        /// <value>The item type's name.</value>
         public override string ItemTypeName
         {
             get { return "Page"; }
         }
 
+        /// <summary>
+        ///     Processes an Alfred Command. If the <paramref name="command"/> is handled,
+        ///     <paramref name="result"/> should be modified accordingly and the method should
+        ///     return true. Returning <see langword="false"/> will not stop the message from being
+        ///     propogated.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="result">
+        /// The result. If the <paramref name="command"/> was handled, this should be updated.
+        /// </param>
+        /// <returns>
+        ///     <c>True</c> if the <paramref name="command"/> was handled; otherwise false.
+        /// </returns>
+        public virtual bool ProcessAlfredCommand(ChatCommand command, ICommandResult result)
+        {
+            return false;
+        }
     }
 
 }

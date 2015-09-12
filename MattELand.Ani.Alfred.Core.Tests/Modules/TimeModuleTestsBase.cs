@@ -51,7 +51,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         ///     The page.
         /// </value>
         [NotNull]
-        public AlfredModuleListPage Page { get; private set; }
+        public ModuleListPage Page { get; private set; }
 
         /// <summary>
         ///     Gets the subsystem.
@@ -72,7 +72,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
 
             Alfred = new AlfredApplication(Container);
 
-            Page = new AlfredModuleListPage(Container, "Time", "Time");
+            Page = new ModuleListPage(Container, "Time", "Time");
             Module = new AlfredTimeModule(Container);
             Page.Register(Module);
 

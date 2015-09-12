@@ -94,6 +94,7 @@
     <Compile Include="Controls\RootPagesControlTests.cs" />
     <Compile Include="Controls\TestMessageBoxProvider.cs" />
     <Compile Include="Controls\UserInterfaceTestBase.cs" />
+    <Compile Include="Modules\ModuleListPageTests.cs" />
     <Compile Include="Modules\AlfredPagesListModuleTests.cs" />
     <Compile Include="Modules\ModuleTests.cs" />
     <Compile Include="Modules\TimeModuleAlertTests.cs" />
