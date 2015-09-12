@@ -29,7 +29,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
     [SuppressMessage("ReSharper", "ExceptionNotDocumentedOptional")]
-    public sealed class ModuleTests : AlfredTestBase
+    public sealed class ModuleTests : MockEnabledAlfredTestBase
     {
 
         /// <summary>

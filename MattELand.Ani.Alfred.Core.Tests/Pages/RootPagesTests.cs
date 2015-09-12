@@ -31,7 +31,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
     [UnitTestProvider]
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
-    public sealed class RootPagesTests : AlfredTestBase
+    public sealed class RootPagesTests : MockEnabledAlfredTestBase
     {
         [NotNull, ItemNotNull]
         private readonly ICollection<IAlfredPage> _testPages = new List<IAlfredPage>();
@@ -59,10 +59,10 @@ namespace MattEland.Ani.Alfred.Tests.Pages
 
             // Build out a pair of test pages - one root, the other not
             const MockBehavior Behavior = MockBehavior.Loose;
-            var nonRootPage = BuildPageMock(Behavior);
+            var nonRootPage = BuildMockPage(Behavior);
             nonRootPage.SetupGet(p => p.IsRootLevel).Returns(false);
 
-            var rootPage = BuildPageMock(Behavior);
+            var rootPage = BuildMockPage(Behavior);
             rootPage.SetupGet(p => p.IsRootLevel).Returns(true);
 
             _testPages.Add(nonRootPage.Object);
@@ -98,7 +98,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
         {
             //! Arrange
 
-            var nonRootPage = BuildPageMock(MockBehavior.Loose);
+            var nonRootPage = BuildMockPage(MockBehavior.Loose);
             nonRootPage.SetupGet(p => p.IsRootLevel).Returns(false);
             _testPages.Add(nonRootPage.Object);
 
@@ -119,7 +119,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
         {
             //! Arrange
 
-            var nonRootPage = BuildPageMock(MockBehavior.Loose);
+            var nonRootPage = BuildMockPage(MockBehavior.Loose);
             nonRootPage.SetupGet(p => p.IsRootLevel).Returns(false);
             _testPages.Add(nonRootPage.Object);
 

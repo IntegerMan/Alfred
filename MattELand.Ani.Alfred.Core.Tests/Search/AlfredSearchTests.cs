@@ -32,7 +32,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
     [SuppressMessage("ReSharper", "ExceptionNotDocumentedOptional")]
-    public sealed class AlfredSearchTests : AlfredTestBase
+    public sealed class AlfredSearchTests : MockEnabledAlfredTestBase
     {
 
         /// <summary>

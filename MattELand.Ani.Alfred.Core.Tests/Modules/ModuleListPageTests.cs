@@ -12,9 +12,12 @@ using System.Linq;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Pages;
+using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Ani.Alfred.Tests.Controls;
+using MattEland.Common;
+using MattEland.Testing;
 
 using Moq;
 
@@ -30,6 +33,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "ExceptionNotDocumentedOptional")]
     [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
+    [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     public sealed class ModuleListPageTests : UserInterfaceTestBase
     {
         /// <summary>
@@ -38,13 +42,23 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         private const MockBehavior MockingBehavior = MockBehavior.Strict;
 
         /// <summary>
-        /// Sets up the environment for each test.
+        ///     Sets up the environment for each test by creating a <see cref="ModuleListPage"/>, a
+        ///     Subsystem to contain it, and registering all of these into an Alfred instance.
         /// </summary>
         public override void SetUp()
         {
             base.SetUp();
 
+            // Create a subsystem to hold the page
+            var subsystem = new SimpleSubsystem(Container, "Test Subsystem", "TestSubsystemId");
+
+            // Build the Page and add it to the subsystem
             Page = new ModuleListPage(Container, "Test Page", "TestPageId");
+            subsystem.PagesToRegister.Add(Page);
+
+            // Build out Alfred and give it our page
+            Alfred = BuildAlfredInstance();
+            Alfred.Register(subsystem);
         }
 
         /// <summary>
@@ -55,6 +69,73 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         /// </value>
         [NotNull]
         private ModuleListPage Page { get; set; }
+
+        /// <summary>
+        ///     When a page has a module with widgets in it, the page should be visible
+        /// </summary>
+        [Test]
+        public void ModuleListPageIsVisibleWhenVisibleWidgetsArePresent()
+        {
+            //! Arrange
+
+            // Set up a widget to be visible
+            var widget = BuildMockWidget(MockingBehavior);
+            widget.SetupGet(w => w.IsVisible)
+                .Returns(true);
+
+            // Add a module to contain things
+            var module = BuildMockModule(MockingBehavior);
+            module.SetupGet(m => m.Widgets)
+                .Returns(widget.Object.ToCollection(Container));
+
+            //! Act
+            Page.Register(module.Object);
+            Alfred.Initialize();
+
+            //! Assert
+            Page.IsVisible.ShouldBeTrue();
+        }
+
+        /// <summary>
+        ///     When a page has no module with visible widgets, the page not should be visible
+        /// </summary>
+        [Test]
+        public void ModuleListPageIsNotVisibleWhenNoVisibleWidgetsArePresent()
+        {
+            //! Arrange
+
+            // Set up a widget to be hidden
+            var widget = BuildMockWidget(MockingBehavior);
+            widget.SetupGet(w => w.IsVisible)
+                .Returns(false);
+
+            // Add a module to contain things
+            var module = BuildMockModule(MockingBehavior);
+            module.SetupGet(m => m.Widgets)
+                .Returns(widget.Object.ToCollection(Container));
+
+            //! Act
+            Page.Register(module.Object);
+            Alfred.Initialize();
+
+            //! Assert
+            Page.IsVisible.ShouldBeFalse();
+        }
+
+        /// <summary>
+        ///     You should be able to add modules to the module list page
+        /// </summary>
+        [Test]
+        public void ModuleListPageIsNotVisibleWhenNoModulesArePresent()
+        {
+            //! Arrange - Object creation done in setup. Page is in Alfred with no Modules
+
+            //! Act
+            Alfred.Initialize();
+
+            //! Assert
+            Page.IsVisible.ShouldBeFalse();
+        }
 
         /// <summary>
         ///     You should be able to add modules to the module list page
@@ -89,22 +170,6 @@ namespace MattEland.Ani.Alfred.Tests.Modules
             //! Assert
             Page.Modules.Count().ShouldBe(0);
             Page.Modules.ShouldNotContain(module.Object);
-        }
-
-        /// <summary>
-        ///     Builds a mock module.
-        /// </summary>
-        /// <param name="mockingBehavior"> The mocking behavior. </param>
-        /// <returns>
-        ///     A mock module
-        /// </returns>
-        protected Mock<IAlfredModule> BuildMockModule(MockBehavior mockingBehavior)
-        {
-            var mock = new Mock<IAlfredModule>(mockingBehavior);
-
-            mock.Setup(m => m.OnRegistered(It.IsAny<IAlfred>()));
-
-            return mock;
         }
 
     }

@@ -32,7 +32,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
     [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
-    public sealed class PageTests : AlfredTestBase
+    public sealed class PageTests : MockEnabledAlfredTestBase
     {
 
         [NotNull]
@@ -53,7 +53,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
             // TODO: This should be a mock or simple non-test object
             _subsystem = BuildTestSubsystem();
 
-            _pageMock = BuildPageMock(mockBehavior);
+            _pageMock = BuildMockPage(mockBehavior);
 
             _subsystem.PagesToRegister.Add(_pageMock.Object);
             Alfred.Register(_subsystem);

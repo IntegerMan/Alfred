@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
@@ -16,8 +15,6 @@ using MattEland.Common;
 using MattEland.Common.Providers;
 using MattEland.Testing;
 
-using Moq;
-
 using NUnit.Framework;
 
 using Shouldly;
@@ -27,9 +24,6 @@ namespace MattEland.Ani.Alfred.Tests
     /// <summary>
     /// Represents common logic useful for helping initialize Alfred test classes
     /// </summary>
-    [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-    [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
-    [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     public abstract class AlfredTestBase : UnitTestBase
     {
         /// <summary>
@@ -131,7 +125,7 @@ namespace MattEland.Ani.Alfred.Tests
         ///     The Alfred instance.
         /// </returns>
         [NotNull]
-        protected AlfredApplication StartAlfred()
+        protected ApplicationManager StartAlfred()
         {
             // Create test subsystem
             TestSubsystem = BuildTestSubsystem();
@@ -156,7 +150,7 @@ namespace MattEland.Ani.Alfred.Tests
             alfred.ShouldNotBeNull();
             alfred.Initialize();
 
-            return alfred;
+            return app;
         }
 
         /// <summary>
@@ -229,6 +223,7 @@ namespace MattEland.Ani.Alfred.Tests
         /// </summary>
         /// <returns>The <see cref="ApplicationManagerOptions" />.</returns>
         [NotNull]
+        [SuppressMessage("ReSharper", "RedundantEmptyObjectOrCollectionInitializer")]
         protected static ApplicationManagerOptions BuildOptions()
         {
             var options = new ApplicationManagerOptions
@@ -269,170 +264,14 @@ namespace MattEland.Ani.Alfred.Tests
         }
 
         /// <summary>
-        ///     Builds a mock <see cref="IAlfredSubsystem"/>.
-        /// </summary>
-        /// <param name="mockBehavior"> The mocking behavior. </param>
-        /// <returns>
-        ///     A mock subsystem
-        /// </returns>
-        protected Mock<IAlfredSubsystem> BuildMockSubsystem(MockBehavior mockBehavior)
-        {
-            // Build the Mock
-            var mock = new Mock<IAlfredSubsystem>(mockBehavior);
-
-            mock.SetupGet(s => s.Id).Returns("Test");
-            mock.SetupGet(s => s.Pages).Returns(Container.ProvideCollection<IAlfredPage>());
-            mock.SetupGet(s => s.SearchProviders)
-                .Returns(Container.ProvideCollection<ISearchProvider>());
-
-            SetupMockComponent(mock);
-
-            return mock;
-        }
-
-
-        /// <summary>
-        ///     Builds a page mock.
-        /// </summary>
-        /// <param name="mockBehavior"> The mocking behavior for the new mock. </param>
-        /// <returns>
-        ///     The mock page.
-        /// </returns>
-        protected Mock<IAlfredPage> BuildPageMock(MockBehavior mockBehavior)
-        {
-            // Some tests will want strict control over mocking and others won't
-            var mock = new Mock<IAlfredPage>(mockBehavior);
-
-            // Set up simple members we expect to be hit during startup
-            mock.SetupGet(p => p.IsRootLevel).Returns(true);
-
-            SetupMockComponent(mock);
-
-            return mock;
-        }
-
-        /// <summary>
-        ///     Sets up a <paramref name="mock"/> component with common component actions.
-        /// </summary>
-        /// <typeparam name="T"> Generic type parameter. </typeparam>
-        /// <param name="mock"> The Mock object that derives from <see cref="IAlfredComponent"/>. </param>
-        private static void SetupMockComponent<T>(Mock<T> mock) where T : class, IAlfredComponent
-        {
-            // Setup Simple properties
-            mock.SetupGet(s => s.NameAndVersion).Returns("Test Component 1.0.0.0");
-            mock.SetupGet(s => s.Status).Returns(AlfredStatus.Offline);
-
-            // Setup simple methods
-            mock.Setup(s => s.Update());
-            mock.Setup(s => s.OnRegistered(It.IsAny<IAlfred>()));
-            mock.Setup(s => s.OnInitializationCompleted());
-            mock.Setup(s => s.OnShutdownCompleted());
-
-            // Initialize causes the subsystem to go online
-            mock.Setup(s => s.Initialize(It.IsAny<IAlfred>()))
-                .Callback(() => mock.SetupGet(s => s.Status).Returns(AlfredStatus.Online));
-
-            // Shutdown causes the subsystem to go offline
-            mock.Setup(s => s.Shutdown())
-                .Callback(() => mock.SetupGet(s => s.Status).Returns(AlfredStatus.Offline));
-        }
-
-        /// <summary>
-        ///     Builds a mock search controller.
-        /// </summary>
-        /// <param name="mockBehavior">The mocking behavior.</param>
-        /// <returns>The mock search controller</returns>
-        protected static Mock<ISearchController> BuildMockSearchController(MockBehavior mockBehavior)
-        {
-            var mock = new Mock<ISearchController>(mockBehavior);
-
-            SetupMockComponent(mock);
-
-            return mock;
-        }
-
-        /// <summary>
         ///     Creates an Alfred instance.
         /// </summary>
-        /// <returns>
-        ///     The new Alfred instance.
-        /// </returns>
+        /// <returns>The new Alfred instance.</returns>
         [NotNull]
         protected AlfredApplication BuildAlfredInstance()
         {
             return new AlfredApplication(Container);
         }
-
-        /// <summary>
-        ///     Builds mock search provider.
-        /// </summary>
-        /// <param name="mockBehavior"> The mocking behavior. </param>
-        /// <param name="resultOperation"> The result operation. </param>
-        /// <returns>
-        ///     A mock search provider.
-        /// </returns>
-        protected Mock<ISearchProvider> BuildMockSearchProvider(MockBehavior mockBehavior,
-                                                                   ISearchOperation resultOperation = null)
-        {
-            // Build a default operation
-            resultOperation = resultOperation ?? BuildMockSearchOperation(mockBehavior).Object;
-
-            // Set up the search provider
-            var searchProvider = new Mock<ISearchProvider>(mockBehavior);
-
-            // When searching, there should always be an operation
-            searchProvider.Setup(p => p.PerformSearch(It.IsAny<string>())).Returns(resultOperation);
-
-            // Return a unique identifier for the Id to prevent collisions
-            searchProvider.SetupGet(p => p.Id).Returns(Guid.NewGuid().ToString);
-
-            return searchProvider;
-        }
-
-        /// <summary>
-        ///     Builds a mock operation.
-        /// </summary>
-        /// <param name="mockBehavior"> The mocking behavior. </param>
-        /// <returns>
-        ///     A mock operation
-        /// </returns>
-        protected Mock<ISearchOperation> BuildMockSearchOperation(MockBehavior mockBehavior)
-        {
-            var mock = new Mock<ISearchOperation>(mockBehavior);
-
-            // Setup properties
-            mock.SetupGet(m => m.EncounteredError).Returns(false);
-            mock.SetupGet(m => m.ErrorMessage).Returns(string.Empty);
-            mock.SetupGet(m => m.IsSearchComplete).Returns(false);
-            mock.SetupGet(m => m.Results).Returns(Container.ProvideCollection<ISearchResult>());
-
-            // Setup simple methods
-            mock.Setup(m => m.Update());
-
-            // Abort will set the thing to completed with errors
-            mock.Setup(m => m.Abort())
-                .Callback(() =>
-                {
-                    mock.SetupGet(o => o.IsSearchComplete).Returns(true);
-                    mock.SetupGet(o => o.EncounteredError).Returns(true);
-                    mock.SetupGet(o => o.ErrorMessage).Returns("The search was aborted");
-                });
-
-            return mock;
-        }
-
-        /// <summary>
-        ///     Builds a mock search result.
-        /// </summary>
-        /// <param name="mockingBehavior"> The mocking behavior used when creating Moq mocks. </param>
-        /// <returns>
-        ///     A mock search result
-        /// </returns>
-        protected static Mock<ISearchResult> BuildMockSearchResult(MockBehavior mockingBehavior)
-        {
-            var mock = new Mock<ISearchResult>(mockingBehavior);
-
-            return mock;
-        }
     }
+
 }

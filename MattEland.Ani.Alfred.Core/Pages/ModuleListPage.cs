@@ -85,7 +85,10 @@ namespace MattEland.Ani.Alfred.Core.Pages
             get
             {
                 // Display if any module has a visible widget
-                return base.IsVisible && Modules.Any(m => m.Widgets.Any(w => w.IsVisible));
+                var baseVisbility = base.IsVisible;
+                var anyVisibleModules = Modules.Any(m => m.Widgets.Any(w => w.IsVisible));
+
+                return baseVisbility && anyVisibleModules;
             }
         }
 

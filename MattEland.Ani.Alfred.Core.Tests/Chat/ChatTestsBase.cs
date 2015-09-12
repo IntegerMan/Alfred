@@ -38,7 +38,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
     [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-    public class ChatTestsBase : AlfredTestBase
+    public class ChatTestsBase : MockEnabledAlfredTestBase
     {
 
         [NotNull]

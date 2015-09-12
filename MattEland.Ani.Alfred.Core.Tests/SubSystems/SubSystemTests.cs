@@ -30,7 +30,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
     [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
     [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
-    public sealed class SubsystemTests : AlfredTestBase
+    public sealed class SubsystemTests : MockEnabledAlfredTestBase
     {
         [NotNull]
         private AlfredApplication _alfred;

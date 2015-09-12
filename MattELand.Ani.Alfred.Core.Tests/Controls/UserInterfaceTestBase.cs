@@ -19,7 +19,7 @@ namespace MattEland.Ani.Alfred.Tests.Controls
     /// </summary>
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "IsExpressionAlwaysTrue")]
-    public abstract class UserInterfaceTestBase : AlfredTestBase
+    public abstract class UserInterfaceTestBase : MockEnabledAlfredTestBase
     {
         /// <summary>
         ///     Gets the message box provider.
