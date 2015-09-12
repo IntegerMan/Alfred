@@ -23,6 +23,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
     /// <summary>
     ///     A page grouping together multiple module collections of widgets
     /// </summary>
+    [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
     public sealed class ModuleListPage : AlfredPage
     {
         [NotNull]
