@@ -1,7 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:pages="clr-namespace:MattEland.Ani.Alfred.Core.Pages;assembly=MattEland.Ani.Alfred.Core"
-                    xmlns:controls="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Controls">
+                    xmlns:controls="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Controls"
+                    xmlns:helpers="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Helpers">
 
     <!-- Pages -->
     
@@ -11,7 +12,9 @@
 
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal" />
+                    <helpers:DynamicPanel LayoutType="VerticalStackPanel"
+                                          HorizontalAlignment="Left" 
+                                          VerticalAlignment="Top" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
 

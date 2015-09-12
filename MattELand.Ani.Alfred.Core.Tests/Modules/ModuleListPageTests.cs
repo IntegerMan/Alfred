@@ -34,6 +34,8 @@ namespace MattEland.Ani.Alfred.Tests.Modules
     [SuppressMessage("ReSharper", "ExceptionNotDocumentedOptional")]
     [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
+    [Category("Modules")]
+    [Category("Pages")]
     public sealed class ModuleListPageTests : UserInterfaceTestBase
     {
         /// <summary>
@@ -74,6 +76,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         ///     When a page has a module with widgets in it, the page should be visible
         /// </summary>
         [Test]
+        [Category("Visibility")]
         public void ModuleListPageIsVisibleWhenVisibleWidgetsArePresent()
         {
             //! Arrange
@@ -100,6 +103,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         ///     When a page has no module with visible widgets, the page not should be visible
         /// </summary>
         [Test]
+        [Category("Visibility")]
         public void ModuleListPageIsNotVisibleWhenNoVisibleWidgetsArePresent()
         {
             //! Arrange
@@ -126,6 +130,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         ///     You should be able to add modules to the module list page
         /// </summary>
         [Test]
+        [Category("Visibility")]
         public void ModuleListPageIsNotVisibleWhenNoModulesArePresent()
         {
             //! Arrange - Object creation done in setup. Page is in Alfred with no Modules
@@ -141,6 +146,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         ///     You should be able to add modules to the module list page
         /// </summary>
         [Test]
+        [Category("Registration")]
         public void CanAddModulesToModuleListPage()
         {
             //! Arrange
@@ -158,6 +164,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         ///     You should be able to clear all modules on the module list page
         /// </summary>
         [Test]
+        [Category("Registration")]
         public void CanClearModulesFromModuleListPage()
         {
             //! Arrange

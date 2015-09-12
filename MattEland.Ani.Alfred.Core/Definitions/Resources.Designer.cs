@@ -223,15 +223,6 @@ namespace MattEland.Ani.Alfred.Core.Definitions {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Tried to click the button when CanExecute on ClickCommand returned false..
-        /// </summary>
-        internal static string ButtonWidgetClickCantExecuteErrorMessage {
-            get {
-                return ResourceManager.GetString("ButtonWidgetClickCantExecuteErrorMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to {{Subsystem: {0}, Command: {1}, Data: {2}}}.
         /// </summary>
         internal static string ChatCommandToString {

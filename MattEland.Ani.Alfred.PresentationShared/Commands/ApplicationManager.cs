@@ -186,8 +186,6 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         {
             Container.CollectionType = typeof(SafeObservableCollection<>);
 
-            Container.ApplyDefaultAlfredMappings();
-
             Container.TryRegister(typeof(IAlfredCommand), typeof(XamlClientCommand));
             Container.TryRegister(typeof(MetricProviderBase), typeof(CounterMetricProvider));
             Container.TryRegister(typeof(IMetricProviderFactory),
@@ -195,6 +193,9 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             Container.TryRegister(typeof(IAlfred), typeof(AlfredApplication));
             Container.TryRegister(typeof(IMessageBoxProvider), typeof(XamlMessageBoxProvider));
             Container.TryRegister(typeof(ISearchController), typeof(AlfredSearchController));
+
+            // Add defaults last - after we've customized the preferences
+            Container.ApplyDefaultAlfredMappings();
         }
 
         /// <summary>Initializes the console for the application and returns the instantiated console.</summary>

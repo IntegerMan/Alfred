@@ -117,6 +117,7 @@
     <Compile Include="Converters\LogLevelToBrushConverter.cs" />
     <Compile Include="Commands\IUserInterfaceDirector.cs" />
     <Compile Include="Converters\VisibilityConverter.cs" />
+    <Compile Include="Helpers\DynamicPanel.cs" />
     <Compile Include="Helpers\IMessageBoxProvider.cs" />
     <Compile Include="Helpers\MessageBoxProviderBase.cs" />
     <Compile Include="Helpers\SafeObservableCollection.cs" />

@@ -26,6 +26,9 @@ namespace MattEland.Ani.Alfred.Core.Pages
     [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
     public sealed class ModuleListPage : AlfredPage
     {
+        /// <summary>
+        ///     The modules.
+        /// </summary>
         [NotNull]
         [ItemNotNull]
         private readonly ICollection<IAlfredModule> _modules;
@@ -39,13 +42,12 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <exception cref="ArgumentNullException">
         /// Thrown when one or more required arguments are null.
         /// </exception>
-        public ModuleListPage(
-            [NotNull] IObjectContainer container,
-            [NotNull] string name,
-            [NotNull] string id) : base(container, name, id)
+        public ModuleListPage([NotNull] IObjectContainer container,
+                              [NotNull] string name,
+                              [NotNull] string id) : base(container, name, id)
         {
             //- Validate
-            if (container == null) { throw new ArgumentNullException(nameof(container)); }
+            if (container == null) throw new ArgumentNullException(nameof(container));
 
             _modules = container.ProvideCollection<IAlfredModule>();
         }
@@ -72,7 +74,13 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// </value>
         public override IEnumerable<IAlfredComponent> Children
         {
-            get { foreach (var module in _modules) { yield return module; } }
+            get
+            {
+                foreach (var module in _modules)
+                {
+                    yield return module;
+                }
+            }
         }
 
         /// <summary>
@@ -131,7 +139,10 @@ namespace MattEland.Ani.Alfred.Core.Pages
         {
             foreach (var module in Modules)
             {
-                if (module.ProcessAlfredCommand(command, result)) { return true; }
+                if (module.ProcessAlfredCommand(command, result))
+                {
+                    return true;
+                }
             }
 
             return base.ProcessAlfredCommand(command, result);

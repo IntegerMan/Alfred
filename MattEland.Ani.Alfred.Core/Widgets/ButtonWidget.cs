@@ -8,12 +8,12 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Core.Widgets
 {
@@ -29,19 +29,19 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         private IAlfredCommand _clickCommand;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlfredTextWidget" /> class.
+        ///     Initializes a new instance of the <see cref="AlfredTextWidget" /> class.
         /// </summary>
-        /// <param name="parameters">The parameters.</param>
+        /// <param name="parameters"> The parameters. </param>
         public ButtonWidget([NotNull] WidgetCreationParameters parameters) : base(parameters)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ButtonWidget" /> class.
+        ///     Initializes a new instance of the <see cref="ButtonWidget" /> class.
         /// </summary>
-        /// <param name="text">The text.</param>
-        /// <param name="clickCommand">The click command.</param>
-        /// <param name="parameters">The parameters.</param>
+        /// <param name="text"> The text. </param>
+        /// <param name="clickCommand"> The click command. </param>
+        /// <param name="parameters"> The parameters. </param>
         public ButtonWidget(
             [CanBeNull] string text,
             [CanBeNull] IAlfredCommand clickCommand,
@@ -54,42 +54,25 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         /// <summary>
         ///     Gets or sets the command that is executed when the button is clicked.
         /// </summary>
-        /// <value>The click command.</value>
+        /// <value>
+        ///     The click command.
+        /// </value>
         [CanBeNull]
         public IAlfredCommand ClickCommand
         {
-            get { return _clickCommand; }
+            get
+            {
+                //Debug.Assert(_clickCommand != null);
+                return _clickCommand;
+            }
             set
             {
-                if (!Equals(value, _clickCommand))
-                {
-                    // Unsubscribe from old command's events
-                    if (_clickCommand != null)
-                    {
-                        _clickCommand.CanExecuteChanged -= OnClickCommandPropertyChanged;
-                    }
+                if (Equals(value, _clickCommand)) return;
 
-                    // Perform the change and notify anyone who is interested
-                    _clickCommand = value;
-                    OnPropertyChanged(nameof(ClickCommand));
-
-                    // Subscribe to new command's events
-                    if (_clickCommand != null)
-                    {
-                        _clickCommand.CanExecuteChanged += OnClickCommandPropertyChanged;
-                    }
-                }
+                // Perform the change and notify anyone who is interested
+                _clickCommand = value;
+                OnPropertyChanged(nameof(ClickCommand));
             }
-        }
-
-        /// <summary>
-        ///     Raises the click command property changed event.
-        /// </summary>
-        /// <param name="sender"> Source of the event. </param>
-        /// <param name="e"> Event information to send to registered event handlers. </param>
-        private void OnClickCommandPropertyChanged(object sender, EventArgs e)
-        {
-            OnPropertyChanged(nameof(IsVisible));
         }
 
         /// <summary>
@@ -105,34 +88,28 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         }
 
         /// <summary>
-        ///     Simulates a button click
+        ///     Simulates a button click.
         /// </summary>
-        /// <exception cref="System.InvalidOperationException">
-        ///     Tried to click the button when CanExecute on ClickCommand returned false.
-        /// </exception>
         /// <exception cref="InvalidOperationException">
-        ///     Tried to click the button when CanExecute on
-        ///     ClickCommand returned false.
+        ///     Tried to click the button when CanExecute on <see cref="ClickCommand"/> returned false.
         /// </exception>
         [SuppressMessage("ReSharper", "CatchAllClause")]
         public void Click()
         {
-            if (ClickCommand != null)
-            {
-                if (!ClickCommand.CanExecute(this))
-                {
-                    throw new InvalidOperationException(
-                        Resources.ButtonWidgetClickCantExecuteErrorMessage);
-                }
+            if (ClickCommand == null) return;
 
-                try
-                {
-                    ClickCommand.Execute(this);
-                }
-                catch (Exception exception)
-                {
-                    HandleCallbackException(exception, "Click");
-                }
+            if (!ClickCommand.CanExecute(this))
+            {
+                throw new InvalidOperationException("Tried to click the button when CanExecute on ClickCommand returned false.");
+            }
+
+            try
+            {
+                ClickCommand.Execute(this);
+            }
+            catch (Exception exception)
+            {
+                HandleCallbackException(exception, nameof(Click));
             }
         }
     }
