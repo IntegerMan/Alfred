@@ -189,14 +189,10 @@ namespace MattEland.Ani.Alfred.PresentationShared.Helpers
                     return StackPanelArrangeOverride(finalSize, true, children);
 
                 case LayoutTypes.VerticalWrapPanel:
-
-                    // TODO
-                    return base.ArrangeOverride(finalSize);
+                    return WrapPanelArrangeOverride(finalSize, false, children);
 
                 case LayoutTypes.HorizontalWrapPanel:
-
-                    // TODO
-                    return base.ArrangeOverride(finalSize);
+                    return WrapPanelArrangeOverride(finalSize, true, children);
 
                 default:
                     return base.ArrangeOverride(finalSize);
@@ -205,17 +201,119 @@ namespace MattEland.Ani.Alfred.PresentationShared.Helpers
 
         /// <summary>
         ///     <see cref="ArrangeOverride"/> implementation for when <see cref="LayoutType"/> is
+        ///     VerticalWrapPanel or HorizontalWrapPanel.
+        /// </summary>
+        /// <param name="finalSize">
+        ///     The final area within the parent that this element should use to arrange itself and its
+        ///     children.
+        /// </param>
+        /// <param name="isHorizontal">
+        ///     <see langword="true"/> if this instance is horizontal arrangement.
+        /// </param>
+        /// <param name="children"> The children to arrange. </param>
+        /// <returns>
+        ///     The actual size used.
+        /// </returns>
+        private static Size WrapPanelArrangeOverride(Size finalSize,
+                                                     bool isHorizontal,
+                                                     [NotNull] UIElementCollection children)
+        {
+            var firstInLine = 0;
+            double accumulatedV = 0;
+
+            double maxSize = isHorizontal ? finalSize.Width : finalSize.Height;
+            double lineSize = 0;
+            double lineOtherSize = 0;
+
+            for (int i = 0, count = children.Count; i < count; i++)
+            {
+                var child = children[i];
+
+                if (child == null) continue;
+
+                var childSize = GetChildSizeForWrapPanel(child, isHorizontal);
+
+                // Do we need to move on to the next line?
+                if (lineSize + childSize.Width > maxSize)
+                {
+                    // Arrange the line
+                    ArrangeLine(accumulatedV, lineOtherSize, firstInLine, i, isHorizontal, children);
+
+                    accumulatedV += lineOtherSize;
+                    lineSize = childSize.Width;
+
+                    // The element is Larger then the constraint - give it a separate line
+                    if (childSize.Width > maxSize)
+                    {
+                        // Switch to the next line which will only contain one element
+                        ArrangeLine(accumulatedV, childSize.Height, i, ++i, isHorizontal, children);
+
+                        accumulatedV += childSize.Height;
+
+                        lineSize = 0;
+                    }
+
+                    firstInLine = i;
+                }
+                else
+                {
+                    // We have more space to eat up
+                    lineSize += childSize.Width;
+                    lineOtherSize = Math.Max(lineOtherSize, childSize.Height);
+                }
+            }
+
+            //arrange the last line, if any
+            if (firstInLine < children.Count)
+            {
+                ArrangeLine(accumulatedV,
+                            lineOtherSize,
+                            firstInLine,
+                            children.Count,
+                            isHorizontal,
+                            children);
+            }
+
+            return finalSize;
+        }
+
+        private static Size GetChildSizeForWrapPanel(UIElement child, bool isHorizontal)
+        {
+            var childMainSize = isHorizontal ? child.DesiredSize.Width : child.DesiredSize.Height;
+
+            var childOtherSize = isHorizontal ? child.DesiredSize.Height : child.DesiredSize.Width;
+
+            var childSize = new Size(childMainSize, childOtherSize);
+            return childSize;
+        }
+
+        private static void ArrangeLine(double accumulatedV,
+                                        double lineOtherSize,
+                                        int firstItemIndex,
+                                        int lastItemIndex,
+                                        bool isHorizontal,
+                                        UIElementCollection children)
+        {
+
+            throw NotImplementedException();
+
+        }
+
+        /// <summary>
+        ///     <see cref="ArrangeOverride"/> implementation for when <see cref="LayoutType"/> is
         ///     VerticalStackPanel or HorizontalStackPanel.
         /// </summary>
         /// <param name="finalSize">
-        /// The final area within the parent that this element should use to arrange itself and its
-        /// children.
+        ///     The final area within the parent that this element should use to arrange itself and its
+        ///     children.
         /// </param>
         /// <param name="isHorizontal">
-        /// <see langword="true"/> if this instance is horizontal arrangement.
+        ///     <see langword="true"/> if this instance is horizontal arrangement.
         /// </param>
-        /// <param name="children"> </param>
-        /// <returns>The actual size used.</returns>
+        /// <param name="children"> The children to arrange. </param>
+        /// <returns>
+        ///     The actual size used.
+        /// </returns>
         private static Size StackPanelArrangeOverride(Size finalSize,
                                                       bool isHorizontal,
                                                       [NotNull] UIElementCollection children)
