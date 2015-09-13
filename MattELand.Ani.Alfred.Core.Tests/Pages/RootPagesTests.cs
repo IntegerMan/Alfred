@@ -34,7 +34,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
     public sealed class RootPagesTests : MockEnabledAlfredTestBase
     {
         [NotNull, ItemNotNull]
-        private readonly ICollection<IAlfredPage> _testPages = new List<IAlfredPage>();
+        private readonly ICollection<IPage> _testPages = new List<IPage>();
 
         /// <summary>
         /// Sets up the environment for each test.

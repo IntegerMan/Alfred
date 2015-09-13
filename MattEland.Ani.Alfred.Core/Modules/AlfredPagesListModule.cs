@@ -73,7 +73,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
 
                 // Interpret the DataContext and update its text if it's a page.
                 // If no page context, it's assumed to be the no items label.
-                var page = textWidget.DataContext as AlfredPage;
+                var page = textWidget.DataContext as Page;
 
                 if (page != null)
                 {
@@ -115,10 +115,10 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        ///     Adds a widget for an <see cref="IAlfredPage" /> .
+        ///     Adds a widget for an <see cref="IPage" /> .
         /// </summary>
         /// <param name="page">The page.</param>
-        private void AddPageWidget([NotNull] IAlfredPage page)
+        private void AddPageWidget([NotNull] IPage page)
         {
             var widget = new TextWidget(BuildWidgetParameters($"lblPage{page.Id}"))
             {
@@ -155,7 +155,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <exception cref="System.ArgumentNullException" />
         private static void UpdateWidgetText(
             [NotNull] AlfredTextWidget widget,
-            [NotNull] IAlfredPage page)
+            [NotNull] IPage page)
         {
             widget.Text = page.Name;
         }

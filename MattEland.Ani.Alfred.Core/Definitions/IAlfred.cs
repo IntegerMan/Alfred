@@ -39,7 +39,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// </value>
         [NotNull]
         [ItemNotNull]
-        IEnumerable<IAlfredPage> RootPages { get; }
+        IEnumerable<IPage> RootPages { get; }
 
         /// <summary>
         ///     Gets the chat provider.

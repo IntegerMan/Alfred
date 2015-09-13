@@ -36,7 +36,7 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         [NotNull]
         [ItemNotNull]
-        private readonly ICollection<IAlfredPage> _rootPages;
+        private readonly ICollection<IPage> _rootPages;
 
         /// <summary>
         ///     The status controller
@@ -73,7 +73,7 @@ namespace MattEland.Ani.Alfred.Core
 
             // Build out sub-collections
             _subsystems = container.ProvideCollection<IAlfredSubsystem>();
-            _rootPages = container.ProvideCollection<IAlfredPage>();
+            _rootPages = container.ProvideCollection<IPage>();
 
             // Set the Search Controller from the provider, falling back to a new default type
             SearchController = container.TryProvide<ISearchController>()
@@ -153,7 +153,7 @@ namespace MattEland.Ani.Alfred.Core
         [NotNull]
         [ItemNotNull]
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-        public IEnumerable<IAlfredPage> RootPages
+        public IEnumerable<IPage> RootPages
         {
             get
             {

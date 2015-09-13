@@ -36,14 +36,14 @@
                     ItemsSource="{Binding Alfred.RootPages}">
 
             <TabControl.ItemTemplate>
-                <DataTemplate DataType="{x:Type definitions:IAlfredPage}">
+                <DataTemplate DataType="{x:Type definitions:IPage}">
                     <!-- Tabs are pretty simple; just show the name -->
                     <TextBlock Text="{Binding Name}" />
                 </DataTemplate>
             </TabControl.ItemTemplate>
 
             <TabControl.ContentTemplate>
-                <DataTemplate DataType="{x:Type definitions:IAlfredPage}">
+                <DataTemplate DataType="{x:Type definitions:IPage}">
                     <DockPanel>
 
                         <!-- Header -->

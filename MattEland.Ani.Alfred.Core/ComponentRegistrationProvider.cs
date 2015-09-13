@@ -27,7 +27,7 @@ namespace MattEland.Ani.Alfred.Core
 
         [NotNull]
         [ItemNotNull]
-        private readonly ICollection<IAlfredPage> _rootPages;
+        private readonly ICollection<IPage> _rootPages;
 
         [NotNull]
         [ItemNotNull]
@@ -45,7 +45,7 @@ namespace MattEland.Ani.Alfred.Core
         internal ComponentRegistrationProvider(
             [NotNull] AlfredApplication alfred,
             [NotNull] ICollection<IAlfredSubsystem> subsystems,
-            [NotNull] ICollection<IAlfredPage> rootPages)
+            [NotNull] ICollection<IPage> rootPages)
         {
             _alfred = alfred;
             _subsystems = subsystems;
@@ -59,7 +59,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <exception cref="ArgumentNullException">
         /// Thrown when one or more required arguments are null.
         /// </exception>
-        public void Register([NotNull] IAlfredPage page)
+        public void Register([NotNull] IPage page)
         {
             if (page == null) { throw new ArgumentNullException(nameof(page)); }
 

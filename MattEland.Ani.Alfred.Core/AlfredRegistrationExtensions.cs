@@ -49,7 +49,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <param name="alfred"> The Alfred instance to act on. </param>
         /// <param name="page"> The page. </param>
         public static void Register(
-            [NotNull] this IAlfred alfred, [NotNull] IAlfredPage page)
+            [NotNull] this IAlfred alfred, [NotNull] IPage page)
         {
             if (alfred == null) { throw new ArgumentNullException(nameof(alfred)); }
 

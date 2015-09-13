@@ -55,7 +55,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
         [ItemNotNull]
         private IEnumerable<IPropertyProvider> GetSimpleCollection()
         {
-            return new List<IPropertyProvider> { new AlfredEventLogPage(Container, "Event Test") };
+            return new List<IPropertyProvider> { new EventLogPage(Container, "Event Test") };
         }
 
         /// <summary>

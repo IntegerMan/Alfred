@@ -22,7 +22,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
     ///     An explorer page intended for delving through the details of items in a hierarchical / detail
     ///     format.
     /// </summary>
-    public class ExplorerPage : AlfredPage
+    public class ExplorerPage : Page
     {
         /// <summary>
         ///     The root nodes.

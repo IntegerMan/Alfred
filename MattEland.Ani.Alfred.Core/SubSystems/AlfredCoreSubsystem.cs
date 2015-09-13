@@ -47,7 +47,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         private readonly AlfredTimeModule _timeModule;
 
         [CanBeNull]
-        private AlfredEventLogPage _eventLogPage;
+        private EventLogPage _eventLogPage;
 
         /// <summary>Initializes a new instance of the <see cref="AlfredSubsystem" /> class.</summary>
         /// <param name="container">The container.</param>
@@ -110,7 +110,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
             // Don't include the event log page if there are no events
             if (Container.HasMapping(typeof(IConsole)))
             {
-                _eventLogPage = new AlfredEventLogPage(Container, EventLogPageName);
+                _eventLogPage = new EventLogPage(Container, EventLogPageName);
                 Register(_eventLogPage);
             }
         }

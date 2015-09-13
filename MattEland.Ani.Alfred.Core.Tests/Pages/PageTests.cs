@@ -36,7 +36,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
     {
 
         [NotNull]
-        private Mock<IAlfredPage> _pageMock;
+        private Mock<IPage> _pageMock;
 
         [NotNull]
         private SimpleSubsystem _subsystem;

@@ -11,8 +11,8 @@ using System.Linq;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Pages;
-using MattEland.Common;
 using MattEland.Testing;
 
 using NUnit.Framework;
@@ -22,16 +22,18 @@ using Shouldly;
 namespace MattEland.Ani.Alfred.Tests.Pages
 {
     /// <summary>
-    /// Contains tests related to <see cref="AlfredEventLogPage" /> .
+    /// Contains tests related to <see cref="EventLogPage" /> .
     /// </summary>
     [UnitTestProvider]
+    [Category("Logging")]
+    [Category("Pages")]
     public sealed class EventLogPageTests : AlfredTestBase
     {
 
         /// <summary>Gets the event log page.</summary>
         /// <returns>The event log page.</returns>
         [NotNull]
-        private AlfredEventLogPage GetEventLogPage()
+        private EventLogPage GetEventLogPage()
         {
             // Grab the core subsystem
             var core = GetSubsystem("Core");
@@ -42,7 +44,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
             page.ShouldNotBeNull();
 
             // Do a proper cast to the required type
-            var eventLogPage = page.ShouldBeOfType<AlfredEventLogPage>();
+            var eventLogPage = page.ShouldBeOfType<EventLogPage>();
             eventLogPage.ShouldNotBeNull();
 
             return eventLogPage;
@@ -71,6 +73,22 @@ namespace MattEland.Ani.Alfred.Tests.Pages
             // Check our events
             var numPageEvents = eventLogPage.Events.Count();
             numPageEvents.ShouldBe(numConsoleEvents);
+        }
+
+        /// <summary>
+        ///     Event log pages should use vertical stack layout.
+        /// </summary>
+        [Test, Category("Layout")]
+        public void EventLogPageShouldUseVerticalStackLayout()
+        {
+            //! Arrange
+            StartAlfred();
+
+            //! Act
+            var eventLogPage = GetEventLogPage();
+
+            //! Assert
+            eventLogPage.LayoutType.ShouldBe(LayoutType.VerticalStackPanel);
         }
     }
 }

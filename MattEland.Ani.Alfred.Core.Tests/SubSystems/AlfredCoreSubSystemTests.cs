@@ -68,7 +68,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         /// <param name="pageName">Name of the page.</param>
         /// <returns>The page</returns>
         [NotNull]
-        private T FindPage<T>(string pageName) where T : AlfredPage
+        private T FindPage<T>(string pageName) where T : Page
         {
             var page = (T)_alfred.RootPages.First(p => p.Name == pageName);
             Assert.NotNull(page);
@@ -124,7 +124,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
             _alfred.Update();
 
             const string FailMessage = "Event Log Page was present when no console was provided";
-            _alfred.RootPages.ShouldNotAllBeOfType<AlfredEventLogPage>(FailMessage);
+            _alfred.RootPages.ShouldNotAllBeOfType<EventLogPage>(FailMessage);
         }
 
         [Test]

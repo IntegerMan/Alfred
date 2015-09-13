@@ -11,7 +11,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         ///     Registers the <paramref name="page"/> as a root page.
         /// </summary>
         /// <param name="page">The page.</param>
-        void Register([NotNull] IAlfredPage page);
+        void Register([NotNull] IPage page);
 
         /// <summary>
         ///     Registers the <paramref name="shell"/> command recipient that will allow the

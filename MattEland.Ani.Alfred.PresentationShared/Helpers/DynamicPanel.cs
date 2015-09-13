@@ -8,9 +8,7 @@
 // ---------------------------------------------------------
 
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -24,31 +22,42 @@ namespace MattEland.Ani.Alfred.PresentationShared.Helpers
     ///     A <see cref="Panel"/> for dynamic arrangement in modes similar to 
     ///     <see cref="WrapPanel"/>or <see cref="StackPanel"/>.
     /// </summary>
-    public sealed class DynamicPanel : Panel, INotifyPropertyChanged
+    [PublicAPI]
+    public sealed class DynamicPanel : Panel
     {
 
         /// <summary>
-        ///     The layout type
+        ///     Defines the <see cref="LayoutType"/> dependency property.
         /// </summary>
-        private LayoutType _layoutType = LayoutType.VerticalStackPanel;
+        /// <remarks>
+        ///		Defaults to LayoutType.VerticalStackPanel
+        /// </remarks>
+        [NotNull]
+        public static readonly DependencyProperty LayoutTypeProperty = DependencyProperty.Register("LayoutType",
+                                                                         typeof(LayoutType),
+                                                                         typeof(DynamicPanel),
+                                                                         new PropertyMetadata(Core.Definitions.LayoutType.VerticalStackPanel, OnLayoutTypeChanged));
+
 
         /// <summary>
-        ///     Gets or sets the type of the layout.
+        ///     Handles the dependency property changed event for <see cref="LayoutTypeProperty"/>.
         /// </summary>
-        /// <value>
-        ///     The type of the layout.
-        /// </value>
-        [PublicAPI]
+        /// <param name="panel"> The panel. </param>
+        /// <param name="e"> Event information. </param>
+        private static void OnLayoutTypeChanged(DependencyObject panel, DependencyPropertyChangedEventArgs e)
+        {
+            var dynamicPanel = (DynamicPanel)panel;
+            dynamicPanel.InvalidateMeasure();
+        }
+
+        /// <summary>
+        ///     Gets or sets the LayoutType property using <see cref="LayoutTypeProperty"/>.
+        /// </summary>
+        /// <value>The LayoutType.</value>
         public LayoutType LayoutType
         {
-            get { return _layoutType; }
-            set
-            {
-                _layoutType = value;
-                OnPropertyChanged();
-
-                InvalidateMeasure();
-            }
+            get { return (LayoutType)GetValue(LayoutTypeProperty); }
+            set { SetValue(LayoutTypeProperty, value); }
         }
 
         /// <summary>
@@ -459,21 +468,6 @@ namespace MattEland.Ani.Alfred.PresentationShared.Helpers
                 child.Arrange(childRect);
             }
             return finalSize;
-        }
-
-        /// <summary>
-        ///     Occurs when a property changed.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        ///     Handles a property changed by raising the <see cref="PropertyChanged"/> event.
-        /// </summary>
-        /// <param name="propertyName"> Name of the property. </param>
-        [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 

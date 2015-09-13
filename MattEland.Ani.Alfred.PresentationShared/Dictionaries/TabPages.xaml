@@ -2,28 +2,31 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:pages="clr-namespace:MattEland.Ani.Alfred.Core.Pages;assembly=MattEland.Ani.Alfred.Core"
                     xmlns:controls="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Controls"
-                    xmlns:helpers="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Helpers">
+                    xmlns:helpers="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Helpers"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
 
     <!-- Pages -->
+
+    <ItemsPanelTemplate x:Key="DynamicItemsPanelTemplate">
+        <helpers:DynamicPanel LayoutType="{Binding LayoutType}"
+                              HorizontalAlignment="Left" 
+                              VerticalAlignment="Top" 
+                              d:DataContext="{d:DesignInstance pages:Page}" />
+    </ItemsPanelTemplate>
     
     <DataTemplate DataType="{x:Type pages:ModuleListPage}">
         <ItemsControl ItemsSource="{Binding Path=Modules}"                      
-                      BorderThickness="0">
-
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <helpers:DynamicPanel LayoutType="HorizontalWrapPanel"
-                                          HorizontalAlignment="Left" 
-                                          VerticalAlignment="Top" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
+                      BorderThickness="0" 
+                      ItemsPanel="{StaticResource DynamicItemsPanelTemplate}">
 
         </ItemsControl>
     </DataTemplate>
     
-    <DataTemplate DataType="{x:Type pages:AlfredEventLogPage}">
+    <DataTemplate DataType="{x:Type pages:EventLogPage}">
         <ItemsControl ItemsSource="{Binding Path=Events}"                                                                
-                      BorderThickness="0" />
+                      BorderThickness="0"
+                      ItemsPanel="{StaticResource DynamicItemsPanelTemplate}" />
     </DataTemplate>
     
     <DataTemplate DataType="{x:Type pages:ExplorerPage}">

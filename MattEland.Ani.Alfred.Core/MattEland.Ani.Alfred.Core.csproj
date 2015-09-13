@@ -70,7 +70,7 @@
     <Compile Include="Definitions\IAlfredCommand.cs" />
     <Compile Include="Definitions\IAlfredCommandRecipient.cs" />
     <Compile Include="Definitions\IAlfredModule.cs" />
-    <Compile Include="Definitions\IAlfredPage.cs" />
+    <Compile Include="Definitions\IPage.cs" />
     <Compile Include="Definitions\IAlfredSubsystem.cs" />
     <Compile Include="Console\IConsoleEvent.cs" />
     <Compile Include="Definitions\ICommandResult.cs" />
@@ -94,9 +94,9 @@
     <Compile Include="Modules\AlfredPagesListModule.cs" />
     <Compile Include="Definitions\IAlfredComponent.cs" />
     <Compile Include="Modules\SimpleModule.cs" />
-    <Compile Include="Pages\AlfredEventLogPage.cs" />
+    <Compile Include="Pages\EventLogPage.cs" />
     <Compile Include="Pages\ModuleListPage.cs" />
-    <Compile Include="Pages\AlfredPage.cs" />
+    <Compile Include="Pages\Page.cs" />
     <Compile Include="Definitions\AlfredStatus.cs" />
     <Compile Include="AlfredStatusController.cs" />
     <Compile Include="Pages\ExplorerPage.cs" />

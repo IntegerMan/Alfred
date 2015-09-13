@@ -28,7 +28,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
     {
         [NotNull]
         [ItemNotNull]
-        private readonly ICollection<IAlfredPage> _pages;
+        private readonly ICollection<IPage> _pages;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
@@ -36,7 +36,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// <param name="container">The container.</param>
         protected AlfredSubsystem([NotNull] IObjectContainer container) : base(container)
         {
-            _pages = container.ProvideCollection<IAlfredPage>();
+            _pages = container.ProvideCollection<IPage>();
             SearchProviders = container.ProvideCollection<ISearchProvider>();
         }
 
@@ -107,7 +107,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// </summary>
         /// <value>The pages.</value>
         [ItemNotNull]
-        public IEnumerable<IAlfredPage> Pages
+        public IEnumerable<IPage> Pages
         {
             get { return _pages; }
         }
@@ -134,7 +134,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         ///     Gets the root-level pages provided by the <see cref="IAlfredSubsystem"/>.
         /// </summary>
         /// <value>The root-level pages.</value>
-        public IEnumerable<IAlfredPage> RootPages
+        public IEnumerable<IPage> RootPages
         {
             get { return _pages.Where(page => page.IsRootLevel); }
         }
@@ -157,7 +157,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// <param name="page">The page.</param>
         /// <exception cref="ArgumentNullException"><paramref name="page" /> is <see langword="null" />.</exception>
         /// <exception cref="InvalidOperationException">Cannot register page without an Alfred instance</exception>
-        protected void Register([NotNull] IAlfredPage page)
+        protected void Register([NotNull] IPage page)
         {
             if (page == null) { throw new ArgumentNullException(nameof(page)); }
             _pages.AddSafe(page);

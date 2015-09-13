@@ -1,5 +1,5 @@
 // ---------------------------------------------------------
-// IAlfredPage.cs
+// IPage.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
 // Last Modified:   08/20/2015 at 11:57 PM
@@ -7,12 +7,14 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System.ComponentModel;
+
 namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>
-    ///     Defines an Alfred page
+    ///     Defines a user interface page's view model
     /// </summary>
-    public interface IAlfredPage : IAlfredComponent, IAlfredCommandRecipient, IHasIdentifier
+    public interface IPage : IAlfredComponent, IAlfredCommandRecipient, IHasIdentifier, INotifyPropertyChanged
     {
         /// <summary>
         ///     Gets a value indicating whether this page is root level.

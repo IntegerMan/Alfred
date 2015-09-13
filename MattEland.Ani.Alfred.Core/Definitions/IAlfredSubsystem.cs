@@ -23,14 +23,14 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <value>The pages.</value>
         [NotNull]
         [ItemNotNull]
-        IEnumerable<IAlfredPage> Pages { get; }
+        IEnumerable<IPage> Pages { get; }
 
         /// <summary>
         /// Gets the root-level pages provided by this subsystem.
         /// </summary>
         /// <value>The root-level pages.</value>
         [NotNull, ItemNotNull]
-        IEnumerable<IAlfredPage> RootPages { get; }
+        IEnumerable<IPage> RootPages { get; }
 
         /// <summary>
         /// Gets the identifier for the subsystem to be used in command routing.

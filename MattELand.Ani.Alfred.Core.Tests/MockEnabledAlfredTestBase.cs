@@ -36,7 +36,7 @@ namespace MattEland.Ani.Alfred.Tests
             var mock = new Mock<IAlfredSubsystem>(mockBehavior);
 
             mock.SetupGet(s => s.Id).Returns("Test");
-            mock.SetupGet(s => s.Pages).Returns(Container.ProvideCollection<IAlfredPage>());
+            mock.SetupGet(s => s.Pages).Returns(Container.ProvideCollection<IPage>());
             mock.SetupGet(s => s.SearchProviders)
                 .Returns(Container.ProvideCollection<ISearchProvider>());
 
@@ -52,10 +52,10 @@ namespace MattEland.Ani.Alfred.Tests
         /// <returns>
         ///     The mock page.
         /// </returns>
-        protected Mock<IAlfredPage> BuildMockPage(MockBehavior mockBehavior)
+        protected Mock<IPage> BuildMockPage(MockBehavior mockBehavior)
         {
             // Some tests will want strict control over mocking and others won't
-            var mock = new Mock<IAlfredPage>(mockBehavior);
+            var mock = new Mock<IPage>(mockBehavior);
 
             // Set up simple members we expect to be hit during startup
             mock.SetupGet(p => p.IsRootLevel).Returns(true);

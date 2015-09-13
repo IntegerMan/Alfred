@@ -26,7 +26,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
             // ReSharper disable once AssignNullToNotNullAttribute
             Id = id.IsEmpty() ? name : id;
 
-            PagesToRegister = container.ProvideCollection<IAlfredPage>();
+            PagesToRegister = container.ProvideCollection<IPage>();
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         ///     The pages to register on startup.
         /// </value>
         [NotNull, ItemNotNull]
-        public ICollection<IAlfredPage> PagesToRegister
+        public ICollection<IPage> PagesToRegister
         {
             get;
         }

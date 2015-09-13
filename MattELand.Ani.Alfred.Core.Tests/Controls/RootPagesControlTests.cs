@@ -96,7 +96,7 @@ namespace MattEland.Ani.Alfred.Tests.Controls
 
             var selectedItem = tab.SelectedItem;
             Assert.IsNotNull(selectedItem, "Selected tab was null after navigate");
-            var selectedDomainItem = selectedItem as IAlfredPage;
+            var selectedDomainItem = selectedItem as IPage;
             Assert.IsNotNull(selectedDomainItem);
             Assert.AreEqual(lastPage.Id, selectedDomainItem.Id, "Selected tab's ID did not match last tab's ID");
         }

@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------
-// AlfredEventLogPage.cs
+// EventLogPage.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
 // Last Modified:   09/03/2015 at 5:41 PM
@@ -23,20 +23,20 @@ namespace MattEland.Ani.Alfred.Core.Pages
     ///     An event logging page. This will need a special client-side implementation to list out
     ///     the details
     /// </summary>
-    public sealed class AlfredEventLogPage : AlfredPage
+    public sealed class EventLogPage : Page
     {
         [CanBeNull]
         private IConsole _console;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredEventLogPage" /> class.
+        ///     Initializes a new instance of the <see cref="EventLogPage" /> class.
         /// </summary>
         /// <param name="container">The container.</param>
         /// <param name="name">The name.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when one or more required arguments are null.
         /// </exception>
-        public AlfredEventLogPage([NotNull] IObjectContainer container, [NotNull] string name)
+        public EventLogPage([NotNull] IObjectContainer container, [NotNull] string name)
             : base(container, name, "Log")
         {
             if (container == null) { throw new ArgumentNullException(nameof(container)); }

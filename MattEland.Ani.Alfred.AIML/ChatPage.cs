@@ -12,7 +12,7 @@ namespace MattEland.Ani.Alfred.Chat
     /// <summary>
     /// A custom page for interacting with Alfred via Chat
     /// </summary>
-    public sealed class ChatPage : AlfredPage
+    public sealed class ChatPage : Page
     {
         [NotNull]
         private readonly IChatProvider _chatHandler;
@@ -30,7 +30,7 @@ namespace MattEland.Ani.Alfred.Chat
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlfredPage" /> class.
+        /// Initializes a new instance of the <see cref="Page" /> class.
         /// </summary>
         /// <param name="container">The container.</param>
         /// <param name="name">The name.</param>
