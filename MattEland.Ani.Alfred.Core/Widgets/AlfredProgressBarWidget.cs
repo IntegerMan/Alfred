@@ -19,7 +19,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
     /// <summary>
     ///     A progress bar widget to be interpreted at the user interface layer
     /// </summary>
-    public sealed class AlfredProgressBarWidget : AlfredTextWidget
+    public sealed class AlfredProgressBarWidget : TextWidgetBase
     {
         private float _maximum = 100;
         private float _minimum;

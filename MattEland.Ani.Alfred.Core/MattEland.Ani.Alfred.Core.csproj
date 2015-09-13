@@ -124,7 +124,8 @@
     <Compile Include="Subsystems\MindExplorerSubsystem.cs" />
     <Compile Include="Subsystems\SimpleSubsystem.cs" />
     <Compile Include="Widgets\AlfredProgressBarWidget.cs" />
-    <Compile Include="Widgets\AlfredTextWidget.cs" />
+    <Compile Include="Widgets\TextBoxWidget.cs" />
+    <Compile Include="Widgets\TextWidgetBase.cs" />
     <Compile Include="Widgets\WidgetBase.cs" />
     <Compile Include="Widgets\ButtonWidget.cs" />
     <Compile Include="Widgets\TextWidget.cs" />

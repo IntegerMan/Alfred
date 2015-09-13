@@ -63,7 +63,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         {
             foreach (var widget in _widgets)
             {
-                var textWidget = widget as AlfredTextWidget;
+                var textWidget = widget as TextWidgetBase;
 
                 if (textWidget == null) { continue; }
 
@@ -149,7 +149,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <param name="component">The component.</param>
         /// <exception cref="ArgumentNullException" />
         private static void UpdateWidgetText(
-            [NotNull] AlfredTextWidget widget,
+            [NotNull] TextWidgetBase widget,
             [NotNull] IAlfredComponent component)
         {
             if (widget == null) { throw new ArgumentNullException(nameof(widget)); }

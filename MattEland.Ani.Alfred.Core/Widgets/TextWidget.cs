@@ -14,11 +14,11 @@ namespace MattEland.Ani.Alfred.Core.Widgets
     /// <summary>
     ///     Represents a simple textual display on the user interface.
     /// </summary>
-    public sealed class TextWidget : AlfredTextWidget
+    public sealed class TextWidget : TextWidgetBase
     {
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredTextWidget" /> class.
+        ///     Initializes a new instance of the <see cref="TextWidgetBase" /> class.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
         public TextWidget([NotNull] WidgetCreationParameters parameters) : this(null, parameters)
@@ -26,7 +26,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredTextWidget" /> class.
+        ///     Initializes a new instance of the <see cref="TextWidgetBase" /> class.
         /// </summary>
         /// <param name="text">The text of the control.</param>
         /// <param name="parameters">The parameters.</param>

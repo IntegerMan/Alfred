@@ -52,6 +52,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
         ///     The search module should contain a valid search button
         /// </summary>
         [Test]
+        [Category("Widgets")]
         public void SearchModuleContainsValidSearchButton()
         {
             //! Arrange
@@ -78,6 +79,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
         ///     The search module should contain a valid search label
         /// </summary>
         [Test]
+        [Category("Widgets")]
         public void SearchModuleContainsValidSearchLabel()
         {
             //! Arrange
@@ -96,6 +98,31 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             label.Text.ShouldBe("Search:");
             label.IsVisible.ShouldBeTrue();
+        }
+
+        /// <summary>
+        ///     The search module should contain a valid search text box
+        /// </summary>
+        [Test]
+        [Category("Widgets")]
+        public void SearchModuleContainsValidSearchTextBox()
+        {
+            //! Arrange
+
+            var module = Module;
+
+            //! Act
+
+            module.Initialize(Alfred);
+            var widget = module.Widgets.FirstOrDefault(w => w.Name.Matches(@"txtSearch"));
+
+            //! Assert
+
+            widget.ShouldNotBeNull();
+            var textBox = widget.ShouldBe<TextBoxWidget>();
+
+            textBox.Text.ShouldBeNullOrEmpty();
+            textBox.IsVisible.ShouldBeTrue();
         }
 
     }

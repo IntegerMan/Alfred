@@ -14,11 +14,11 @@ namespace MattEland.Ani.Alfred.Core.Widgets
     /// <summary>
     ///     A widget used for displaying warnings or errors to the user.
     /// </summary>
-    public sealed class WarningWidget : AlfredTextWidget
+    public sealed class WarningWidget : TextWidgetBase
     {
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredTextWidget" /> class.
+        ///     Initializes a new instance of the <see cref="TextWidgetBase" /> class.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
         public WarningWidget([NotNull] WidgetCreationParameters parameters)
@@ -27,7 +27,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredTextWidget" /> class.
+        ///     Initializes a new instance of the <see cref="TextWidgetBase" /> class.
         /// </summary>
         /// <param name="text">The text of the control.</param>
         /// <param name="parameters">The parameters.</param>

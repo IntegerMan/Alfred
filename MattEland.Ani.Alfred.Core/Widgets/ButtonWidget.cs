@@ -20,7 +20,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
     /// <summary>
     ///     Represents a button that the user can click in the user interface.
     /// </summary>
-    public sealed class ButtonWidget : AlfredTextWidget
+    public sealed class ButtonWidget : TextWidgetBase
     {
         /// <summary>
         ///     The command that is executed when the button is clicked.
@@ -29,7 +29,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         private IAlfredCommand _clickCommand;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredTextWidget" /> class.
+        ///     Initializes a new instance of the <see cref="TextWidgetBase" /> class.
         /// </summary>
         /// <param name="parameters"> The parameters. </param>
         public ButtonWidget([NotNull] WidgetCreationParameters parameters) : base(parameters)

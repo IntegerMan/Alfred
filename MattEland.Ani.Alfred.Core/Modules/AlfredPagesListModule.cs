@@ -154,7 +154,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <param name="page">The page.</param>
         /// <exception cref="System.ArgumentNullException" />
         private static void UpdateWidgetText(
-            [NotNull] AlfredTextWidget widget,
+            [NotNull] TextWidgetBase widget,
             [NotNull] IPage page)
         {
             widget.Text = page.Name;

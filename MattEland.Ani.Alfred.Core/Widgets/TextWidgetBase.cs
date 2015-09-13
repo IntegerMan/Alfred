@@ -1,5 +1,5 @@
 // ---------------------------------------------------------
-// AlfredTextWidget.cs
+// TextWidgetBase.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
 // Last Modified:   08/24/2015 at 11:35 PM
@@ -7,6 +7,7 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 
 using JetBrains.Annotations;
@@ -18,16 +19,18 @@ namespace MattEland.Ani.Alfred.Core.Widgets
     /// <summary>
     ///     Represents a widget that operates off of a Text field to present its contents.
     /// </summary>
-    public abstract class AlfredTextWidget : WidgetBase
+    public abstract class TextWidgetBase : WidgetBase
     {
-
+        /// <summary>
+        ///     The text.
+        /// </summary>
         [CanBeNull]
         private string _text;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredTextWidget" /> class.
+        ///     Initializes a new instance of the <see cref="TextWidgetBase" /> class.
         /// </summary>
-        protected AlfredTextWidget([NotNull] WidgetCreationParameters parameters)
+        protected TextWidgetBase([NotNull] WidgetCreationParameters parameters)
             : base(parameters)
         {
         }
@@ -41,9 +44,13 @@ namespace MattEland.Ani.Alfred.Core.Widgets
             get
             {
                 // Return base properties
-                foreach (var prop in base.Properties)
+                var propertyItems = base.Properties;
+                if (propertyItems != null)
                 {
-                    yield return prop;
+                    foreach (var prop in propertyItems)
+                    {
+                        yield return prop;
+                    }
                 }
 
                 yield return new AlfredProperty("Text", Text);
@@ -68,4 +75,5 @@ namespace MattEland.Ani.Alfred.Core.Widgets
             }
         }
     }
+
 }

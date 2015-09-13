@@ -14,9 +14,16 @@
                               d:DataContext="{d:DesignInstance pages:AlfredPage}" />
     </ItemsPanelTemplate>
 
-    <!-- Explorer Control uses its own full content control -->
+    <!-- Explorer Page -->
     <DataTemplate DataType="{x:Type pages:ExplorerPage}">
         <controls:ExplorerControl RootNodes="{Binding RootNodes}" />
+    </DataTemplate>
+
+    <!-- Event Log Page -->
+    <DataTemplate DataType="{x:Type pages:EventLogPage}">
+        <ItemsControl ItemsSource="{Binding Path=Events}"                      
+                      BorderThickness="0" 
+                      ItemsPanel="{StaticResource DynamicItemsPanelTemplate}" />
     </DataTemplate>
 
     <!-- Handles most pages -->

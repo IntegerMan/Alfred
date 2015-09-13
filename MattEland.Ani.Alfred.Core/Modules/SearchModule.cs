@@ -11,6 +11,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
+using MattEland.Common;
 using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Modules
@@ -34,12 +35,19 @@ namespace MattEland.Ani.Alfred.Core.Modules
         private ButtonWidget _searchButton;
 
         /// <summary>
+        ///     The search text.
+        /// </summary>
+        [NotNull]
+        private TextBoxWidget _searchText;
+
+        /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredModule" /> class.
         /// </summary>
         /// <param name="container"> The container. </param>
         public SearchModule([NotNull] IObjectContainer container) : base(container)
         {
             _searchLabel = new TextWidget("Search:", BuildWidgetParameters(@"lblSearch"));
+            _searchText = new TextBoxWidget(BuildWidgetParameters(@"txtSearch"));
             _searchButton = new ButtonWidget("Search", CreateCommand(OnSearchClicked), BuildWidgetParameters(@"btnSearch"));
         }
 
@@ -48,7 +56,14 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         private void OnSearchClicked()
         {
-            // TODO: Make things click
+            if (_searchText.Text.IsEmpty())
+            {
+                // TODO: Pop a message box
+            }
+            else
+            {
+                // TODO: Start a search             
+            }
         }
 
         /// <summary>
@@ -58,6 +73,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         protected override void InitializeProtected(IAlfred alfred)
         {
             Register(_searchLabel);
+            Register(_searchText);
             Register(_searchButton);
         }
 
