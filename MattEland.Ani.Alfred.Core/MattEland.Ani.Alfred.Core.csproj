@@ -87,6 +87,7 @@
     <Compile Include="Definitions\IStatusController.cs" />
     <Compile Include="Definitions\IChatProvider.cs" />
     <Compile Include="Definitions\IWidget.cs" />
+    <Compile Include="Definitions\LayoutType.cs" />
     <Compile Include="Definitions\ShellCommand.cs" />
     <Compile Include="Definitions\UserStatementResponse.cs" />
     <Compile Include="Modules\AlertVisibilityCalculator.cs" />

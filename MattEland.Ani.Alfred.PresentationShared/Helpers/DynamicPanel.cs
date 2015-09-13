@@ -16,6 +16,8 @@ using System.Windows.Controls;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Definitions;
+
 namespace MattEland.Ani.Alfred.PresentationShared.Helpers
 {
     /// <summary>
@@ -24,36 +26,11 @@ namespace MattEland.Ani.Alfred.PresentationShared.Helpers
     /// </summary>
     public sealed class DynamicPanel : Panel, INotifyPropertyChanged
     {
-        /// <summary>
-        ///     Governs various layout types supported by <see cref="DynamicPanel"/>
-        /// </summary>
-        public enum LayoutTypes
-        {
-            /// <summary>
-            ///     Represents a layout similar to StackPanel in Vertical orientation
-            /// </summary>
-            VerticalStackPanel,
-
-            /// <summary>
-            ///     Represents a layout similar to StackPanel in Horizontal orientation
-            /// </summary>
-            HorizontalStackPanel,
-
-            /// <summary>
-            ///     Represents a layout similar to WrapPanel in Vertical orientation
-            /// </summary>
-            VerticalWrapPanel,
-
-            /// <summary>
-            ///     Represents a layout similar to WrapPanel in Horizontal orientation
-            /// </summary>
-            HorizontalWrapPanel
-        }
 
         /// <summary>
         ///     The layout type
         /// </summary>
-        private LayoutTypes _layoutType = LayoutTypes.VerticalStackPanel;
+        private LayoutType _layoutType = LayoutType.VerticalStackPanel;
 
         /// <summary>
         ///     Gets or sets the type of the layout.
@@ -62,7 +39,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Helpers
         ///     The type of the layout.
         /// </value>
         [PublicAPI]
-        public LayoutTypes LayoutType
+        public LayoutType LayoutType
         {
             get { return _layoutType; }
             set
@@ -95,16 +72,16 @@ namespace MattEland.Ani.Alfred.PresentationShared.Helpers
 
             switch (LayoutType)
             {
-                case LayoutTypes.VerticalStackPanel:
+                case LayoutType.VerticalStackPanel:
                     return StackPanelMeasureOverride(availableSize, false, children);
 
-                case LayoutTypes.HorizontalStackPanel:
+                case LayoutType.HorizontalStackPanel:
                     return StackPanelMeasureOverride(availableSize, true, children);
 
-                case LayoutTypes.VerticalWrapPanel:
+                case LayoutType.VerticalWrapPanel:
                     return WrapPanelMeasureOverride(availableSize, false, children);
 
-                case LayoutTypes.HorizontalWrapPanel:
+                case LayoutType.HorizontalWrapPanel:
                     return WrapPanelMeasureOverride(availableSize, true, children);
 
                 default:
@@ -269,16 +246,16 @@ namespace MattEland.Ani.Alfred.PresentationShared.Helpers
 
             switch (LayoutType)
             {
-                case LayoutTypes.VerticalStackPanel:
+                case LayoutType.VerticalStackPanel:
                     return StackPanelArrangeOverride(finalSize, false, children);
 
-                case LayoutTypes.HorizontalStackPanel:
+                case LayoutType.HorizontalStackPanel:
                     return StackPanelArrangeOverride(finalSize, true, children);
 
-                case LayoutTypes.VerticalWrapPanel:
+                case LayoutType.VerticalWrapPanel:
                     return WrapPanelArrangeOverride(finalSize, false, children);
 
-                case LayoutTypes.HorizontalWrapPanel:
+                case LayoutType.HorizontalWrapPanel:
                     return WrapPanelArrangeOverride(finalSize, true, children);
 
                 default:
