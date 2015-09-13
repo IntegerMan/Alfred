@@ -8,7 +8,6 @@
 // ---------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 using MattEland.Ani.Alfred.Core.Definitions;
