@@ -83,24 +83,6 @@ namespace MattEland.Ani.Alfred.WPF.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The application has loaded..
-        /// </summary>
-        public static string AppOnlineLogMessage {
-            get {
-                return ResourceManager.GetString("AppOnlineLogMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Automatically starting Alfred.
-        /// </summary>
-        public static string AutoStartAlfredLogMessage {
-            get {
-                return ResourceManager.GetString("AutoStartAlfredLogMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Event Log.
         /// </summary>
         public static string ConsoleHeader {
@@ -115,15 +97,6 @@ namespace MattEland.Ani.Alfred.WPF.Properties {
         public static string ConsoleOnlineLogMessage {
             get {
                 return ResourceManager.GetString("ConsoleOnlineLogMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Initialization Complete.
-        /// </summary>
-        public static string InitializationCompleteLogMessage {
-            get {
-                return ResourceManager.GetString("InitializationCompleteLogMessage", resourceCulture);
             }
         }
         
@@ -169,15 +142,6 @@ namespace MattEland.Ani.Alfred.WPF.Properties {
         public static string WarningNoChatTextHeader {
             get {
                 return ResourceManager.GetString("WarningNoChatTextHeader", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to WinClient.Loaded.
-        /// </summary>
-        public static string WinClientLoadedLogHeader {
-            get {
-                return ResourceManager.GetString("WinClientLoadedLogHeader", resourceCulture);
             }
         }
     }

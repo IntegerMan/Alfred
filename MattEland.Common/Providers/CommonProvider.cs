@@ -190,7 +190,7 @@ namespace MattEland.Common.Providers
         /// </remarks>
         public static void ResetMappings()
         {
-            Container.ResetMappings();
+            Container.ClearMappings();
         }
 
         /// <summary>

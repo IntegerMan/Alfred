@@ -157,7 +157,7 @@ namespace MattEland.Common.Providers
         /// <remarks>
         ///     This is useful for unit testing for cleaning up before invoking each time
         /// </remarks>
-        void ResetMappings();
+        void ClearMappings();
 
         /// <summary>
         ///     Provides an instance of the requested <paramref name="type" /> .

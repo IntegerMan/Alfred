@@ -6,8 +6,6 @@
         xmlns:commands="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Commands;assembly=MattEland.Ani.Alfred.PresentationShared"
         xmlns:controls="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Controls;assembly=MattEland.Ani.Alfred.PresentationShared"
         mc:Ignorable="d"
-        Background="{StaticResource AppBackgroundBrush}"
-        Foreground="{StaticResource AppForegroundBrush}"
         Title="{Binding Path=Alfred.NameAndVersion}"
         Width="800"
         Height="600"
@@ -19,6 +17,20 @@
         Icon="alfred.ico"
         WindowStartupLocation="CenterScreen">
 
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/DarkStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Miscellaneous.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Logging.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Templates.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Widgets.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/TabPages.xaml" />                
+                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Styles.xaml" />                
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    
     <Window.TaskbarItemInfo>
         <!-- TODO: Look into what I can do with this -->
         <TaskbarItemInfo Description="{Binding Alfred.NameAndVersion}"
@@ -27,7 +39,7 @@
                          ProgressState="None" />
     </Window.TaskbarItemInfo>
 
-    <DockPanel>
+    <DockPanel Background="{StaticResource AppBackgroundBrush}">
 
         <!-- Header Bar -->
         <Border DockPanel.Dock="Top"
@@ -35,11 +47,15 @@
                 MinHeight="32">
 
             <StackPanel Orientation="Horizontal"
+
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center">
 
-                <TextBlock Text="{Binding Alfred.NameAndVersion}" />
-                <TextBlock Text=" - " Margin="4,0,4,0" />
+                <TextBlock Text="{Binding Alfred.NameAndVersion}"
+                           Foreground="{StaticResource AppForegroundBrush}"/>
+                <TextBlock Text=" - " 
+                           Margin="4,0,4,0"
+                           Foreground="{StaticResource AppForegroundBrush}"/>
                 <TextBlock Text="{Binding Alfred.Status}"
                            Foreground="{StaticResource AccentForegroundBrush}" />
 
@@ -51,11 +67,13 @@
         <Border Margin="132,4,8,0" 
                 DockPanel.Dock="Top"
                 Visibility="{Binding Alfred.IsOnline, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <controls:ChatPane DataContext="{Binding Path=Alfred.ChatProvider}" />
+            <controls:ChatPane DataContext="{Binding Path=Alfred.ChatProvider}" 
+                               Foreground="{StaticResource AppForegroundBrush}" />
         </Border>
 
         <!-- Tabbed Content Regions -->
         <controls:RootPagesControl x:Name="PagesControl"
+                                   Foreground="{StaticResource AppForegroundBrush}"
                                    x:FieldModifier="public"/>
 
     </DockPanel>

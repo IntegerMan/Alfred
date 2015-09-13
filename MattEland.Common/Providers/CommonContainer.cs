@@ -435,7 +435,7 @@ namespace MattEland.Common.Providers
         /// <remarks>
         ///     This is useful for unit testing for cleaning up before invoking each time
         /// </remarks>
-        public void ResetMappings()
+        public void ClearMappings()
         {
             // Clear out all usages
             Mappings.Clear();

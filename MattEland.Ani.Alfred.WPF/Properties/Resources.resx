@@ -144,23 +144,11 @@ Do you want to continue running this application?</value>
     <value>Initializing Modules</value>
     <comment>Note for initializing modules</comment>
   </data>
-  <data name="InitializationCompleteLogMessage" xml:space="preserve">
-    <value>Initialization Complete</value>
-  </data>
-  <data name="AppOnlineLogMessage" xml:space="preserve">
-    <value>The application has loaded.</value>
-  </data>
-  <data name="AutoStartAlfredLogMessage" xml:space="preserve">
-    <value>Automatically starting Alfred</value>
-  </data>
   <data name="ConsoleOnlineLogMessage" xml:space="preserve">
     <value>The console is now online</value>
   </data>
   <data name="InitializeConsoleLogHeader" xml:space="preserve">
     <value>WinClient.InitializeConsole</value>
-  </data>
-  <data name="WinClientLoadedLogHeader" xml:space="preserve">
-    <value>WinClient.Loaded</value>
   </data>
   <data name="WarningNoChatTextHeader" xml:space="preserve">
     <value>Empty Search</value>

@@ -117,7 +117,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         public void EventLogPageIsNotPresentInAlfredAfterInitializationWhenNoConsoleIsProvided()
         {
             // The IConsole comes from the Container now so clear out the container
-            Container.ResetMappings();
+            Container.ClearMappings();
 
             _alfred.Register(_subsystem);
             _alfred.Initialize();

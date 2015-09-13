@@ -107,6 +107,7 @@
     <Compile Include="Presentation\ConverterTestsBase.cs" />
     <Compile Include="Presentation\LogLevelToBrushConverterTests.cs" />
     <Compile Include="Presentation\VisibilityConverterTests.cs" />
+    <Compile Include="Presentation\XamlCommandTests.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -155,6 +156,10 @@
     <ProjectReference Include="..\MattEland.Ani.Alfred.PresentationShared\MattEland.Ani.Alfred.PresentationShared.csproj">
       <Project>{B4E5BAAE-27A8-456E-B0AC-3117E1E6EDDF}</Project>
       <Name>MattEland.Ani.Alfred.PresentationShared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MattEland.Ani.Alfred.WPF\MattEland.Ani.Alfred.WPF.csproj">
+      <Project>{E13E88B6-23C9-40EA-B10B-B8E52541B221}</Project>
+      <Name>MattEland.Ani.Alfred.WPF</Name>
     </ProjectReference>
     <ProjectReference Include="..\MattEland.Common\MattEland.Common.csproj">
       <Project>{514cb422-a6ef-4c75-b925-92ab599ba1be}</Project>

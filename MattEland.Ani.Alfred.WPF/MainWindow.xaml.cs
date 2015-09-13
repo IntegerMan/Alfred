@@ -22,42 +22,67 @@ using MattEland.Ani.Alfred.WPF.Properties;
 using MattEland.Common;
 using MattEland.Common.Providers;
 
-using Res = MattEland.Ani.Alfred.WPF.Properties.Resources;
-
 namespace MattEland.Ani.Alfred.WPF
 {
     /// <summary>
     ///     Interaction logic for MainWindow.xaml
     /// </summary>
-    public sealed partial class MainWindow : IDisposable, IUserInterfaceDirector
+    public sealed partial class MainWindow : IDisposable, IUserInterfaceDirector, IHasContainer
     {
-
-        [NotNull]
-        private readonly ApplicationManager _app;
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="MainWindow" /> class.
+        /// </summary>
+        [UsedImplicitly]
+        public MainWindow() : this(CommonProvider.Container, true)
+        {
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="MainWindow" /> class.
         /// </summary>
-        public MainWindow()
+        /// <param name="container"> The container. </param>
+        /// <param name="enableSpeech"> true to enable speech output, false to disable speech. </param>
+        public MainWindow(IObjectContainer container, bool enableSpeech)
         {
+            Container = container;
+
             InitializeComponent();
+
 #if DEBUG
             // Do not allow topmost window mode while debugging
             Topmost = false;
 #endif
             var options = new ApplicationManagerOptions
             {
-                IsSpeechEnabled = true,
+                IsSpeechEnabled = enableSpeech,
                 ShowMindExplorerPage = true
             };
 
-            _app = new ApplicationManager(CommonProvider.Container, options, this);
+            Application = new ApplicationManager(Container, options, this);
 
             // DataBindings rely on Alfred presently as there hasn't been a need for a page ViewModel yet
-            DataContext = _app;
+            DataContext = Application;
 
-            _app.Console?.Log("WinClient.Initialize", Res.InitializationCompleteLogMessage.NonNull(), LogLevel.Verbose);
+            "Initialization Complete".Log("WinClient.Initialize", LogLevel.Verbose, Container);
         }
+
+        /// <summary>
+        ///     Gets or sets the container.
+        /// </summary>
+        /// <value>
+        ///     The container.
+        /// </value>
+        [NotNull]
+        public IObjectContainer Container { get; }
+
+        /// <summary>
+        ///     Gets the application.
+        /// </summary>
+        /// <value>
+        ///     The application.
+        /// </value>
+        [NotNull]
+        public ApplicationManager Application { get; }
 
         /// <summary>
         ///     Handles the <see cref="E:WindowLoaded" /> event.
@@ -66,18 +91,19 @@ namespace MattEland.Ani.Alfred.WPF
         /// <param name="e">The <see cref="RoutedEventArgs" /> instance containing the event data.</param>
         private void OnWindowLoaded(object sender, RoutedEventArgs e)
         {
-            var logHeader = Res.WinClientLoadedLogHeader.NonNull();
+            const string LogHeader = "WinClient.Loaded";
 
             // Determine whether to auto-start or not based off of settings
             Debug.Assert(Settings.Default != null);
             if (Settings.Default.AutoStartAlfred)
             {
-                _app.Console?.Log(logHeader, Res.AutoStartAlfredLogMessage.NonNull(), LogLevel.Verbose);
-                _app.Start();
+                "Automatically starting Alfred".Log(LogHeader, LogLevel.Verbose, Container);
+
+                Application.Start();
             }
 
             // Log that we're good to go
-            _app.Console?.Log(logHeader, Res.AppOnlineLogMessage.NonNull(), LogLevel.Info);
+            "The application has loaded.".Log(LogHeader, LogLevel.Verbose, Container);
         }
 
         /// <summary>
@@ -87,7 +113,7 @@ namespace MattEland.Ani.Alfred.WPF
         /// <param name="e">The <see cref="CancelEventArgs" /> instance containing the event data.</param>
         private void OnWindowClosing(object sender, CancelEventArgs e)
         {
-            _app.Stop();
+            Application.Stop();
         }
 
         /// <summary>
@@ -96,7 +122,7 @@ namespace MattEland.Ani.Alfred.WPF
         [SuppressMessage("ReSharper", "UseNullPropagation")]
         public void Dispose()
         {
-            _app.Dispose();
+            Application.Dispose();
         }
 
         /// <summary>
@@ -107,6 +133,7 @@ namespace MattEland.Ani.Alfred.WPF
         public bool HandlePageNavigationCommand(ShellCommand command)
         {
             Debug.Assert(PagesControl != null);
+
             return PagesControl.HandlePageNavigationCommand(command);
         }
     }

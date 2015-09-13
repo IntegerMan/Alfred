@@ -6,6 +6,7 @@
     <Application.Resources>
         <ResourceDictionary>
             
+            <!--
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/DarkStyles.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Miscellaneous.xaml" />
@@ -15,7 +16,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/TabPages.xaml" />                
                 <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Styles.xaml" />                
             </ResourceDictionary.MergedDictionaries>
-            
+            -->
         </ResourceDictionary>
     </Application.Resources>
 </Application>

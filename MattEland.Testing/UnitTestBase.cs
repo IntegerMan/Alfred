@@ -55,6 +55,7 @@ namespace MattEland.Testing
                 return _container;
 
             }
+            set { _container = value; }
         }
 
         /// <summary>
