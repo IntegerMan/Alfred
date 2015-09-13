@@ -7,12 +7,12 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Pages
@@ -20,14 +20,21 @@ namespace MattEland.Ani.Alfred.Core.Pages
     /// <summary>
     ///     A search page that allows the user to search many aspects of Alfred and view search results.
     /// </summary>
-    public class SearchPage : AlfredPage
+    public sealed class SearchPage : AlfredPage
     {
+        /// <summary>
+        ///     The search module.
+        /// </summary>
+        [NotNull]
+        private SearchModule _searchModule;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredPage" /> class.
         /// </summary>
         /// <param name="container"> The container. </param>
         public SearchPage([NotNull] IObjectContainer container) : base(container, "Search", "SearchPage")
         {
+            _searchModule = new SearchModule(container);
         }
 
         /// <summary>
@@ -41,7 +48,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         {
             get
             {
-                yield break;
+                yield return _searchModule;
             }
         }
     }
