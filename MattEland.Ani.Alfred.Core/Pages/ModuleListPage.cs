@@ -50,6 +50,9 @@ namespace MattEland.Ani.Alfred.Core.Pages
             if (container == null) throw new ArgumentNullException(nameof(container));
 
             _modules = container.ProvideCollection<IAlfredModule>();
+
+            // By default use Horizontal wrap layout
+            LayoutType = LayoutType.HorizontalWrapPanel;
         }
 
         /// <summary>

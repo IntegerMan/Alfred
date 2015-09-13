@@ -13,6 +13,7 @@ using System.Linq;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Ani.Alfred.Tests.Controls;
@@ -177,6 +178,13 @@ namespace MattEland.Ani.Alfred.Tests.Modules
             //! Assert
             Page.Modules.Count().ShouldBe(0);
             Page.Modules.ShouldNotContain(module.Object);
+        }
+
+        [Test, Category("Layout")]
+        public void ModuleListPageShouldUseWrappingLayoutByDefault()
+        {
+            //! Assert
+            Page.LayoutType.ShouldBe(LayoutType.HorizontalWrapPanel);
         }
 
     }

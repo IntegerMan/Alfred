@@ -105,10 +105,32 @@ namespace MattEland.Ani.Alfred.Core.Pages
         }
 
         /// <summary>
+        ///     Type of the layout to use for this page.
+        /// </summary>
+        private LayoutType _layoutType = LayoutType.VerticalStackPanel;
+
+        /// <summary>
+        ///     Gets or sets the type of the layout used for this page.
+        /// </summary>
+        /// <value>
+        ///     The type of the layout.
+        /// </value>
+        public LayoutType LayoutType
+        {
+            get { return _layoutType; }
+            set
+            {
+                if (value == _layoutType) return;
+                _layoutType = value;
+                OnPropertyChanged(nameof(LayoutType));
+            }
+        }
+
+        /// <summary>
         ///     Processes an Alfred Command. If the <paramref name="command"/> is handled,
         ///     <paramref name="result"/> should be modified accordingly and the method should
         ///     return true. Returning <see langword="false"/> will not stop the message from being
-        ///     propogated.
+        ///     propagated.
         /// </summary>
         /// <param name="command">The command.</param>
         /// <param name="result">

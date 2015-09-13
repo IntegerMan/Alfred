@@ -10,7 +10,7 @@
 namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>
-    ///     Defines an alfred page
+    ///     Defines an Alfred page
     /// </summary>
     public interface IAlfredPage : IAlfredComponent, IAlfredCommandRecipient, IHasIdentifier
     {
@@ -19,5 +19,13 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// </summary>
         /// <value><c>true</c> if this page is root level; otherwise, <c>false</c>.</value>
         bool IsRootLevel { get; }
+
+        /// <summary>
+        ///     Gets or sets the type of the layout used for this page.
+        /// </summary>
+        /// <value>
+        ///     The type of the layout.
+        /// </value>
+        LayoutType LayoutType { get; set; }
     }
 }
