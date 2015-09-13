@@ -13,13 +13,9 @@ using System.Linq;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core;
-using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
-using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Common;
-using MattEland.Common.Providers;
 using MattEland.Testing;
 
 using Moq;
@@ -31,29 +27,6 @@ namespace MattEland.Ani.Alfred.Tests
     /// </summary>
     internal static class AlfredTestExtensions
     {
-        /// <summary>
-        ///     Registers the default Alfred <paramref name="container" /> with good default testing
-        ///     values.
-        /// </summary>
-        /// <exception cref="ArgumentNullException"> <paramref name="container" /> </exception>
-        /// <param name="container"> The container. </param>
-        public static void RegisterDefaultAlfredMappings([NotNull] this IObjectContainer container)
-        {
-            if (container == null) { throw new ArgumentNullException(nameof(container)); }
-
-            var console = new DiagnosticConsole(container);
-            console.RegisterAsProvidedInstance(typeof(IConsole), container);
-
-            // Register mappings for promised types
-            container.Register(typeof(IConsoleEvent), typeof(ConsoleEvent));
-            container.Register(typeof(IAlfredCommand), typeof(AlfredCommand));
-            container.Register(typeof(MetricProviderBase), typeof(ValueMetricProvider));
-
-            // We'll want to get at the same factory any time we request a factory for test purposes
-            var factory = new ValueMetricProviderFactory();
-            factory.RegisterAsProvidedInstance(typeof(IMetricProviderFactory), container);
-            factory.RegisterAsProvidedInstance(typeof(ValueMetricProviderFactory), container);
-        }
 
         /// <summary>
         ///     Finds the provider with the specified <paramref name="name" /> .
