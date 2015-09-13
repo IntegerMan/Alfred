@@ -8,7 +8,9 @@
 // ---------------------------------------------------------
 
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -20,16 +22,8 @@ namespace MattEland.Ani.Alfred.PresentationShared.Helpers
     ///     A <see cref="Panel"/> for dynamic arrangement in modes similar to 
     ///     <see cref="WrapPanel"/>or <see cref="StackPanel"/>.
     /// </summary>
-    public sealed class DynamicPanel : Panel
+    public sealed class DynamicPanel : Panel, INotifyPropertyChanged
     {
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="DynamicPanel"/> class.
-        /// </summary>
-        public DynamicPanel()
-        {
-            LayoutType = LayoutTypes.VerticalStackPanel;
-        }
-
         /// <summary>
         ///     Governs various layout types supported by <see cref="DynamicPanel"/>
         /// </summary>
@@ -57,12 +51,28 @@ namespace MattEland.Ani.Alfred.PresentationShared.Helpers
         }
 
         /// <summary>
+        ///     The layout type
+        /// </summary>
+        private LayoutTypes _layoutType = LayoutTypes.VerticalStackPanel;
+
+        /// <summary>
         ///     Gets or sets the type of the layout.
         /// </summary>
         /// <value>
         ///     The type of the layout.
         /// </value>
-        public LayoutTypes LayoutType { get; set; }
+        [PublicAPI]
+        public LayoutTypes LayoutType
+        {
+            get { return _layoutType; }
+            set
+            {
+                _layoutType = value;
+                OnPropertyChanged();
+
+                InvalidateMeasure();
+            }
+        }
 
         /// <summary>
         ///     When overridden in a derived class, measures the size in layout required for child
@@ -92,14 +102,10 @@ namespace MattEland.Ani.Alfred.PresentationShared.Helpers
                     return StackPanelMeasureOverride(availableSize, true, children);
 
                 case LayoutTypes.VerticalWrapPanel:
-
-                    // TODO
-                    return base.MeasureOverride(availableSize);
+                    return WrapPanelMeasureOverride(availableSize, false, children);
 
                 case LayoutTypes.HorizontalWrapPanel:
-
-                    // TODO
-                    return base.MeasureOverride(availableSize);
+                    return WrapPanelMeasureOverride(availableSize, true, children);
 
                 default:
                     return base.MeasureOverride(availableSize);
@@ -107,18 +113,99 @@ namespace MattEland.Ani.Alfred.PresentationShared.Helpers
         }
 
         /// <summary>
+        ///     <see cref="MeasureOverride"/> implementation for <see cref="WrapPanel"/> based layouts.
+        /// </summary>
+        /// <param name="availableSize">
+        ///     The available size that this element can give to child elements. Infinity can be
+        ///     specified as a value to indicate that the element will size to whatever content is
+        ///     available.
+        /// </param>
+        /// <param name="isHorizontal">
+        ///     <see langword="true" /> if this instance is horizontal arrangement.
+        /// </param>
+        /// <param name="children"> The children. </param>
+        /// <returns>
+        ///     The size that this element determines it needs during layout, based on its calculations
+        ///     of child element sizes.
+        /// </returns>
+        private static Size WrapPanelMeasureOverride(Size availableSize,
+                                                     bool isHorizontal,
+                                                     [NotNull] UIElementCollection children)
+        {
+            var maxSize = isHorizontal ? availableSize.Width : availableSize.Height;
+
+            var curLineDominant = 0.0;
+            var curLineNonDominant = 0.0;
+
+            var panelDominant = 0.0;
+            var panelNonDominant = 0.0;
+
+            for (int i = 0, count = children.Count; i < count; i++)
+            {
+                var child = children[i];
+
+                if (child == null) continue;
+
+                // Ask the children how much they want
+                child.Measure(availableSize);
+
+                var childDominant = isHorizontal
+                                        ? child.DesiredSize.Width
+                                        : child.DesiredSize.Height;
+
+                var childNonDominant = isHorizontal
+                                           ? child.DesiredSize.Height
+                                           : child.DesiredSize.Width;
+
+                if (curLineDominant + childDominant > maxSize) // need to switch to another line
+                {
+                    panelDominant = Math.Max(curLineDominant, panelDominant);
+                    panelNonDominant += curLineNonDominant;
+
+                    curLineDominant = childDominant;
+                    curLineNonDominant = childNonDominant;
+
+                    //the element is wider then the constraint - give it a separate line                    
+                    if (childDominant > maxSize)
+                    {
+                        panelDominant = Math.Max(childDominant, panelDominant);
+                        panelNonDominant += childNonDominant;
+                        curLineDominant = 0;
+                    }
+                }
+                else // continue to accumulate a line
+                {
+                    curLineDominant += childDominant;
+                    curLineNonDominant = Math.Max(childNonDominant, curLineNonDominant);
+                }
+            }
+
+            // the last line size, if any should be added
+            panelDominant = Math.Max(curLineDominant, panelDominant);
+            panelNonDominant += curLineNonDominant;
+
+            // Translate our dimensions to the appropriate ordering
+            return isHorizontal
+                       ? new Size(panelDominant, panelNonDominant)
+                       : new Size(panelNonDominant, panelDominant);
+        }
+
+        /// <summary>
         ///     <see cref="MeasureOverride"/> implementation for <see cref="StackPanel"/> based layouts.
         /// </summary>
         /// <param name="availableSize">
-        /// The available size that this element can give to child elements. Infinity can be
-        /// specified as a value to indicate that the element will size to whatever content is
-        /// available.
+        ///     The available size that this element can give to child elements. Infinity can be
+        ///     specified as a value to indicate that the element will size to whatever content is
+        ///     available.
         /// </param>
         /// <param name="isHorizontal">
-        /// <see langword="true" /> if this instance is horizontal arrangement.
+        ///     <see langword="true" /> if this instance is horizontal arrangement.
         /// </param>
-        /// <param name="children">The children.</param>
-        /// <returns>A Size.</returns>
+        /// <param name="children"> The children. </param>
+        /// <returns>
+        ///     The size that this element determines it needs during layout, based on its calculations
+        ///     of child element sizes.
+        /// </returns>
         private static Size StackPanelMeasureOverride(Size availableSize,
                                                       bool isHorizontal,
                                                       [NotNull] UIElementCollection children)
@@ -219,11 +306,11 @@ namespace MattEland.Ani.Alfred.PresentationShared.Helpers
                                                      [NotNull] UIElementCollection children)
         {
             var firstInLine = 0;
-            double accumulatedV = 0;
+            double nonDominantOffset = 0;
 
             double maxSize = isHorizontal ? finalSize.Width : finalSize.Height;
-            double lineSize = 0;
-            double lineOtherSize = 0;
+            double lineDominantSize = 0;
+            double lineNonDominantSize = 0;
 
             for (int i = 0, count = children.Count; i < count; i++)
             {
@@ -231,26 +318,44 @@ namespace MattEland.Ani.Alfred.PresentationShared.Helpers
 
                 if (child == null) continue;
 
-                var childSize = GetChildSizeForWrapPanel(child, isHorizontal);
+                var childDominantSize = isHorizontal
+                                            ? child.DesiredSize.Width
+                                            : child.DesiredSize.Height;
 
-                // Do we need to move on to the next line?
-                if (lineSize + childSize.Width > maxSize)
+                var childNonDominantSize = isHorizontal
+                                               ? child.DesiredSize.Height
+                                               : child.DesiredSize.Width;
+
+                // If we're done with the line, it's time to render
+                if (lineDominantSize + childDominantSize > maxSize)
                 {
                     // Arrange the line
-                    ArrangeLine(accumulatedV, lineOtherSize, firstInLine, i, isHorizontal, children);
+                    ArrangeWrappingLine(nonDominantOffset,
+                                        lineNonDominantSize,
+                                        firstInLine,
+                                        i,
+                                        isHorizontal,
+                                        children);
 
-                    accumulatedV += lineOtherSize;
-                    lineSize = childSize.Width;
+                    nonDominantOffset += lineNonDominantSize;
 
-                    // The element is Larger then the constraint - give it a separate line
-                    if (childSize.Width > maxSize)
+                    lineDominantSize = childDominantSize;
+                    lineNonDominantSize = childNonDominantSize;
+
+                    // If the next element is Larger then the constraint - give it a separate line
+                    if (childDominantSize > maxSize)
                     {
                         // Switch to the next line which will only contain one element
-                        ArrangeLine(accumulatedV, childSize.Height, i, ++i, isHorizontal, children);
+                        ArrangeWrappingLine(nonDominantOffset,
+                                            childNonDominantSize,
+                                            i,
+                                            ++i,
+                                            isHorizontal,
+                                            children);
 
-                        accumulatedV += childSize.Height;
+                        nonDominantOffset += childNonDominantSize;
 
-                        lineSize = 0;
+                        lineDominantSize = 0;
                     }
 
                     firstInLine = i;
@@ -258,45 +363,72 @@ namespace MattEland.Ani.Alfred.PresentationShared.Helpers
                 else
                 {
                     // We have more space to eat up
-                    lineSize += childSize.Width;
-                    lineOtherSize = Math.Max(lineOtherSize, childSize.Height);
+                    lineDominantSize += childDominantSize;
+                    lineNonDominantSize = Math.Max(lineNonDominantSize, childNonDominantSize);
                 }
             }
 
             //arrange the last line, if any
             if (firstInLine < children.Count)
             {
-                ArrangeLine(accumulatedV,
-                            lineOtherSize,
-                            firstInLine,
-                            children.Count,
-                            isHorizontal,
-                            children);
+                ArrangeWrappingLine(nonDominantOffset,
+                                    lineNonDominantSize,
+                                    firstInLine,
+                                    children.Count,
+                                    isHorizontal,
+                                    children);
             }
 
             return finalSize;
         }
 
-        private static Size GetChildSizeForWrapPanel(UIElement child, bool isHorizontal)
+        /// <summary>
+        ///     Arranges elements for a single line in a wrap panel.
+        /// </summary>
+        /// <remarks>
+        ///     This method does not calculate wrapping and assumes that it has already been determined.
+        /// </remarks>
+        /// <param name="lineOtherStart"> The line's start point on the non-dominant extent. </param>
+        /// <param name="lineOtherExtent"> Extent of the line's non-dominant dimension. </param>
+        /// <param name="startIndex"> The start index. </param>
+        /// <param name="endIndex"> The end index. </param>
+        /// <param name="isHorizontal">
+        ///     <see langword="true" /> if this instance uses horizontal arrangement.
+        /// </param>
+        /// <param name="children"> The children. </param>
+        private static void ArrangeWrappingLine(double lineOtherStart,
+                                                double lineOtherExtent,
+                                                int startIndex,
+                                                int endIndex,
+                                                bool isHorizontal,
+                                                UIElementCollection children)
         {
-            var childMainSize = isHorizontal ? child.DesiredSize.Width : child.DesiredSize.Height;
+            double lineSize = 0;
 
-            var childOtherSize = isHorizontal ? child.DesiredSize.Height : child.DesiredSize.Width;
+            // Move through the children we're working with. This assumes that line wrapping has already been computed
+            for (var i = startIndex; i < endIndex; i++)
+            {
+                var child = children[i];
 
-            var childSize = new Size(childMainSize, childOtherSize);
-            return childSize;
-        }
+                if (child == null) continue;
 
-        private static void ArrangeLine(double accumulatedV,
-                                        double lineOtherSize,
-                                        int firstItemIndex,
-                                        int lastItemIndex,
-                                        bool isHorizontal,
-                                        UIElementCollection children)
-        {
+                if (isHorizontal)
+                {
+                    var childWidth = child.DesiredSize.Width;
 
-            throw NotImplementedException();
+                    // Move it left to right
+                    child.Arrange(new Rect(lineSize, lineOtherStart, childWidth, lineOtherExtent));
+                    lineSize += childWidth;
+                }
+                else
+                {
+                    var childHeight = child.DesiredSize.Height;
 
+                    // Move it top to bottom
+                    child.Arrange(new Rect(lineOtherStart, lineSize, lineOtherExtent, childHeight));
+                    lineSize += childHeight;
+                }
+            }
         }
 
         /// <summary>
@@ -352,6 +484,20 @@ namespace MattEland.Ani.Alfred.PresentationShared.Helpers
             return finalSize;
         }
 
+        /// <summary>
+        ///     Occurs when a property changed.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        ///     Handles a property changed by raising the <see cref="PropertyChanged"/> event.
+        /// </summary>
+        /// <param name="propertyName"> Name of the property. </param>
+        [NotifyPropertyChangedInvocator]
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 
 }

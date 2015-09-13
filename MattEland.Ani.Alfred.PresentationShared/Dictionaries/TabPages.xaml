@@ -12,7 +12,7 @@
 
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <helpers:DynamicPanel LayoutType="VerticalStackPanel"
+                    <helpers:DynamicPanel LayoutType="HorizontalWrapPanel"
                                           HorizontalAlignment="Left" 
                                           VerticalAlignment="Top" />
                 </ItemsPanelTemplate>
