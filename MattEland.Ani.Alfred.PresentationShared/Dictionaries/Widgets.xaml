@@ -48,6 +48,16 @@
                 ToolTip="{Binding Text}" />
     </DataTemplate>
 
+    <!-- TextBox Template -->
+    <DataTemplate DataType="{x:Type widgets:TextBoxWidget}">
+        <TextBox Margin="0, 8, 0, 0"
+                Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
+                MinWidth="200"
+                HorizontalAlignment="Left"
+                Text="{Binding Text}"
+                ToolTip="{Binding Text}" />
+    </DataTemplate>
+
     <!-- AlfredProgressBarWidget Template -->
     <DataTemplate DataType="{x:Type widgets:AlfredProgressBarWidget}">
         <Grid Margin="0, 8, 0, 0"
