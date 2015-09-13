@@ -28,6 +28,14 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         IEnumerable<IWidget> Widgets { get; }
 
         /// <summary>
+        ///     Gets the type of the layout.
+        /// </summary>
+        /// <value>
+        ///     The type of the layout.
+        /// </value>
+        LayoutType LayoutType { get; }
+
+        /// <summary>
         ///     Registers a widget for the module.
         /// </summary>
         /// <param name="widget">

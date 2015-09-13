@@ -68,6 +68,14 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
+        ///     Gets the type of the layout.
+        /// </summary>
+        /// <value>
+        ///     The type of the layout.
+        /// </value>
+        public LayoutType LayoutType { get; set; } = LayoutType.VerticalStackPanel;
+
+        /// <summary>
         ///     Clears all child collections
         /// </summary>
         protected override void ClearChildCollections()
@@ -156,6 +164,14 @@ namespace MattEland.Ani.Alfred.Core.Modules
         {
             get { return Widgets; }
         }
+
+        /// <summary>
+        ///     Gets or sets the width of the module.
+        /// </summary>
+        /// <value>
+        ///     The width of the module.
+        /// </value>
+        public double Width { get; set; } = 250;
 
         /// <summary>
         ///     Creates an <see cref="AlfredCommand"/> with the specified <see cref="Action" />.

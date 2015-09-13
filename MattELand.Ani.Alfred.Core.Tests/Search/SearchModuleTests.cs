@@ -3,6 +3,7 @@ using System.Linq;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Ani.Alfred.Tests.Controls;
@@ -123,6 +124,46 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             textBox.Text.ShouldBeNullOrEmpty();
             textBox.IsVisible.ShouldBeTrue();
+        }
+
+        /// <summary>
+        ///     The search module should arrange items horizontally
+        /// </summary>
+        [Test]
+        [Category("Layout")]
+        public void SearchModuleUsesHorizontalLayout()
+        {
+            //! Arrange
+
+            var module = Module;
+
+            //! Act
+
+            var layout = module.LayoutType;
+
+            //! Assert
+
+            layout.ShouldBe(LayoutType.HorizontalStackPanel);
+        }
+
+        /// <summary>
+        ///     The search module should arrange items horizontally
+        /// </summary>
+        [Test]
+        [Category("Layout")]
+        public void SearchModuleShouldNotLimitWidth()
+        {
+            //! Arrange
+
+            var module = Module;
+
+            //! Act
+
+            var width = Module.Width;
+
+            //! Assert
+
+            width.ShouldBe(double.NaN);
         }
 
     }

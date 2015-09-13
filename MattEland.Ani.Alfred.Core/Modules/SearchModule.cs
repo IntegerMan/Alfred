@@ -7,6 +7,8 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System;
+
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
@@ -49,6 +51,9 @@ namespace MattEland.Ani.Alfred.Core.Modules
             _searchLabel = new TextWidget("Search:", BuildWidgetParameters(@"lblSearch"));
             _searchText = new TextBoxWidget(BuildWidgetParameters(@"txtSearch"));
             _searchButton = new ButtonWidget("Search", CreateCommand(OnSearchClicked), BuildWidgetParameters(@"btnSearch"));
+
+            LayoutType = LayoutType.HorizontalStackPanel;
+            Width = double.NaN;
         }
 
         /// <summary>

@@ -13,7 +13,7 @@
     <!-- TextWidget Template -->
     <DataTemplate DataType="{x:Type widgets:TextWidget}">
         <TextBlock
-            Margin="0, 8, 0, 0"
+            Margin="0, 8, 8, 0"
             Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
             Text="{Binding Text}"
             ToolTip="{Binding Text}" />
@@ -21,7 +21,7 @@
 
     <!-- AlertWidget Template -->
     <DataTemplate DataType="{x:Type widgets:WarningWidget}">
-        <Border Margin="0, 8, 0, 0"
+        <Border Margin="0, 8, 8, 0"
                 Padding="8"
                 HorizontalAlignment="Stretch"
                 Background="{DynamicResource CautionBackgroundBrush}"
@@ -38,7 +38,7 @@
 
     <!-- ButtonWidget Template -->
     <DataTemplate DataType="{x:Type widgets:ButtonWidget}">
-        <Button Margin="0, 8, 0, 0"
+        <Button Margin="0, 8, 8, 0"
                 Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
                 MinWidth="120"
                 HorizontalAlignment="Left"
@@ -50,7 +50,7 @@
 
     <!-- TextBox Template -->
     <DataTemplate DataType="{x:Type widgets:TextBoxWidget}">
-        <TextBox Margin="0, 8, 0, 0"
+        <TextBox Margin="0, 8, 8, 0"
                 Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
                 MinWidth="200"
                 HorizontalAlignment="Left"
@@ -64,8 +64,8 @@
               Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="80" />
+                <ColumnDefinition Width="170" />
             </Grid.ColumnDefinitions>
 
             <Grid.ToolTip>
@@ -101,7 +101,7 @@
     <!-- Fallback type of widget Template -->
     <DataTemplate DataType="{x:Type definitions:IWidget}">
 
-        <TextBlock
+        <TextBlock Margin="0, 8, 8, 0"
             Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
             Text="This is an unknown type of Widget" />
 

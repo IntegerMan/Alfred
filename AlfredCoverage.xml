@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Root CoveredStatements="2856" TotalStatements="3183" CoveragePercent="90" ReportType="NDependXML" DotCoverVersion="3.1.1">
-  <Assembly Name="MattEland.Ani.Alfred.Tests" CoveredStatements="2351" TotalStatements="2413" CoveragePercent="97">
-    <Namespace Name="MattEland.Ani.Alfred.Tests" CoveredStatements="338" TotalStatements="369" CoveragePercent="92">
+<Root CoveredStatements="2869" TotalStatements="3185" CoveragePercent="90" ReportType="NDependXML" DotCoverVersion="3.1.1">
+  <Assembly Name="MattEland.Ani.Alfred.Tests" CoveredStatements="2364" TotalStatements="2415" CoveragePercent="98">
+    <Namespace Name="MattEland.Ani.Alfred.Tests" CoveredStatements="338" TotalStatements="360" CoveragePercent="94">
       <Type Name="AlfredEventingTests" CoveredStatements="87" TotalStatements="92" CoveragePercent="95">
         <Type Name="&lt;&gt;c" CoveredStatements="2" TotalStatements="2" CoveragePercent="100">
           <Method Name="&lt;AddingStandardModulesAddsModules&gt;b__4_0(IAlfredSubsystem)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="88" />
@@ -61,23 +61,22 @@
         <Method Name="SetUpFixture()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="34" />
         <Method Name="StartAlfred()" CoveredStatements="14" TotalStatements="14" CoveragePercent="100" FirstStatementLine="129" />
       </Type>
-      <Type Name="AlfredTestExtensions" CoveredStatements="19" TotalStatements="34" CoveragePercent="56">
+      <Type Name="AlfredTestExtensions" CoveredStatements="19" TotalStatements="21" CoveragePercent="90">
+        <Type Name="&lt;&gt;c__DisplayClass0_0" CoveredStatements="1" TotalStatements="1" CoveragePercent="100">
+          <Method Name="&lt;Find&gt;b__0(IPropertyProvider)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="44" />
+        </Type>
         <Type Name="&lt;&gt;c__DisplayClass1_0" CoveredStatements="1" TotalStatements="1" CoveragePercent="100">
-          <Method Name="&lt;Find&gt;b__0(IPropertyProvider)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="71" />
+          <Method Name="&lt;Find&gt;b__0(IPropertyItem)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="60" />
         </Type>
         <Type Name="&lt;&gt;c__DisplayClass2_0" CoveredStatements="1" TotalStatements="1" CoveragePercent="100">
-          <Method Name="&lt;Find&gt;b__0(IPropertyItem)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="87" />
+          <Method Name="&lt;Nav&gt;b__0(IPropertyProvider)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="80" />
         </Type>
-        <Type Name="&lt;&gt;c__DisplayClass3_0" CoveredStatements="1" TotalStatements="1" CoveragePercent="100">
-          <Method Name="&lt;Nav&gt;b__0(IPropertyProvider)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="107" />
-        </Type>
-        <Method Name="Find(IEnumerable&lt;IPropertyItem&gt;,String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="86" />
-        <Method Name="Find(IEnumerable&lt;IPropertyProvider&gt;,String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="70" />
-        <Method Name="InitializeWithoutPageOrSubsystem(IAlfredModule)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="122" />
-        <Method Name="Nav(IPropertyProvider,String)" CoveredStatements="6" TotalStatements="8" CoveragePercent="75" FirstStatementLine="102" />
-        <Method Name="RegisterDefaultAlfredMappings(IObjectContainer)" CoveredStatements="0" TotalStatements="13" CoveragePercent="0" FirstStatementLine="41" />
+        <Method Name="Find(IEnumerable&lt;IPropertyItem&gt;,String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="59" />
+        <Method Name="Find(IEnumerable&lt;IPropertyProvider&gt;,String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="43" />
+        <Method Name="InitializeWithoutPageOrSubsystem(IAlfredModule)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="95" />
+        <Method Name="Nav(IPropertyProvider,String)" CoveredStatements="6" TotalStatements="8" CoveragePercent="75" FirstStatementLine="75" />
       </Type>
-      <Type Name="MockEnabledAlfredTestBase" CoveredStatements="78" TotalStatements="78" CoveragePercent="100">
+      <Type Name="MockEnabledAlfredTestBase" CoveredStatements="78" TotalStatements="82" CoveragePercent="95">
         <Type Name="&lt;&gt;c__DisplayClass2_0&lt;T&gt;" CoveredStatements="8" TotalStatements="8" CoveragePercent="100">
           <Method Name="&lt;SetupMockComponent&gt;b__0()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="89" />
           <Method Name="&lt;SetupMockComponent&gt;b__1()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="97" />
@@ -85,6 +84,7 @@
         <Type Name="&lt;&gt;c__DisplayClass6_0" CoveredStatements="5" TotalStatements="5" CoveragePercent="100">
           <Method Name="&lt;BuildMockSearchOperation&gt;b__0()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="184" />
         </Type>
+        <Method Name="BuildMockAlfred(MockBehavior)" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="233" />
         <Method Name="BuildMockModule(MockBehavior)" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="149" />
         <Method Name="BuildMockPage(MockBehavior)" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="56" />
         <Method Name="BuildMockSearchController(MockBehavior)" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="110" />
@@ -519,7 +519,7 @@
         <Method Name="SetUp()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="39" />
       </Type>
     </Namespace>
-    <Namespace Name="MattEland.Ani.Alfred.Tests.Search" CoveredStatements="213" TotalStatements="218" CoveragePercent="98">
+    <Namespace Name="MattEland.Ani.Alfred.Tests.Search" CoveredStatements="226" TotalStatements="229" CoveragePercent="99">
       <Type Name="AlfredSearchControllerTests" CoveredStatements="138" TotalStatements="141" CoveragePercent="98">
         <Type Name="&lt;&gt;c__DisplayClass16_0" CoveredStatements="1" TotalStatements="1" CoveragePercent="100">
           <Method Name="&lt;WhenSearchesCompleteTheyAreRemovedFromOngoingOperations&gt;b__0()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="264" />
@@ -560,11 +560,14 @@
         <Method Name="set_Subsystem(MindExplorerSubsystem)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="44" />
         <Method Name="SetUp()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="59" />
       </Type>
-      <Type Name="SearchPageTests" CoveredStatements="6" TotalStatements="8" CoveragePercent="75">
-        <Type Name="&lt;&gt;c" CoveredStatements="1" TotalStatements="1" CoveragePercent="100">
-          <Method Name="&lt;SearchPageIsARootPage&gt;b__0_0(IPage)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="35" />
+      <Type Name="SearchPageTests" CoveredStatements="19" TotalStatements="19" CoveragePercent="100">
+        <Type Name="&lt;&gt;c" CoveredStatements="2" TotalStatements="2" CoveragePercent="100">
+          <Method Name="&lt;SearchPageIsARootPage&gt;b__0_0(IPage)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="47" />
+          <Method Name="&lt;SearchPageShouldContainSearchModule&gt;b__1_0(IAlfredComponent)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="64" />
         </Type>
-        <Method Name="SearchPageIsARootPage()" CoveredStatements="5" TotalStatements="7" CoveragePercent="71" FirstStatementLine="29" />
+        <Method Name="SearchPageIsARootPage()" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="41" />
+        <Method Name="SearchPageShouldContainSearchModule()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="59" />
+        <Method Name="SearchPageShouldHaveVerticalLayout()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="75" />
       </Type>
     </Namespace>
     <Namespace Name="MattEland.Ani.Alfred.Tests.Shell" CoveredStatements="12" TotalStatements="12" CoveragePercent="100">
