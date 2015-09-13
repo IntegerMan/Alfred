@@ -221,5 +221,19 @@ namespace MattEland.Ani.Alfred.Tests
 
             return mock;
         }
+
+        /// <summary>
+        ///     Builds a mock Alfred instance.
+        /// </summary>
+        /// <param name="mockingBehavior"> The mocking behavior. </param>
+        /// <returns>
+        ///     A Mock Alfred instance.
+        /// </returns>
+        protected Mock<IAlfred> BuildMockAlfred(MockBehavior mockingBehavior)
+        {
+            var mock = new Mock<IAlfred>(mockingBehavior);
+
+            return mock;
+        }
     }
 }

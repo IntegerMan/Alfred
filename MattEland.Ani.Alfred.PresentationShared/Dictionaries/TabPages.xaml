@@ -6,31 +6,24 @@
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
 
-    <!-- Pages -->
-
+    <!-- Dynamic layout panel used in most pages -->
     <ItemsPanelTemplate x:Key="DynamicItemsPanelTemplate">
         <helpers:DynamicPanel LayoutType="{Binding LayoutType}"
                               HorizontalAlignment="Left" 
                               VerticalAlignment="Top" 
                               d:DataContext="{d:DesignInstance pages:AlfredPage}" />
     </ItemsPanelTemplate>
-    
-    <DataTemplate DataType="{x:Type pages:ModuleListPage}">
-        <ItemsControl ItemsSource="{Binding Path=Modules}"                      
-                      BorderThickness="0" 
-                      ItemsPanel="{StaticResource DynamicItemsPanelTemplate}">
 
-        </ItemsControl>
-    </DataTemplate>
-    
-    <DataTemplate DataType="{x:Type pages:EventLogPage}">
-        <ItemsControl ItemsSource="{Binding Path=Events}"                                                                
-                      BorderThickness="0"
-                      ItemsPanel="{StaticResource DynamicItemsPanelTemplate}" />
-    </DataTemplate>
-    
+    <!-- Explorer Control uses its own full content control -->
     <DataTemplate DataType="{x:Type pages:ExplorerPage}">
         <controls:ExplorerControl RootNodes="{Binding RootNodes}" />
     </DataTemplate>
 
+    <!-- Handles most pages -->
+    <DataTemplate DataType="{x:Type pages:AlfredPage}">
+        <ItemsControl ItemsSource="{Binding Path=Children}"                      
+                      BorderThickness="0" 
+                      ItemsPanel="{StaticResource DynamicItemsPanelTemplate}" />
+    </DataTemplate>
+    
 </ResourceDictionary>

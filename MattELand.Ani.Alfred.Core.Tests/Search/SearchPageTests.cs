@@ -7,7 +7,7 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 using MattEland.Ani.Alfred.Core.Definitions;
@@ -27,6 +27,10 @@ namespace MattEland.Ani.Alfred.Tests.Search
     ///     Holds tests related to the search page
     /// </summary>
     [UnitTestProvider]
+    [Category("Search")]
+    [Category("Pages")]
+    [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
+    [SuppressMessage("ReSharper", "ExceptionNotDocumentedOptional")]
     public sealed class SearchPageTests : UserInterfaceTestBase
     {
         /// <summary>
@@ -78,5 +82,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
             //! Assert
             layout.ShouldBe(LayoutType.VerticalStackPanel);
         }
+
     }
+
 }

@@ -101,6 +101,7 @@
     <Compile Include="Definitions\AlfredStatus.cs" />
     <Compile Include="AlfredStatusController.cs" />
     <Compile Include="Pages\ExplorerPage.cs" />
+    <Compile Include="Pages\ModulePageBase.cs" />
     <Compile Include="Pages\SearchPage.cs" />
     <Compile Include="Subsystems\AlfredSubsystem.cs" />
     <Compile Include="Console\LogLevel.cs" />

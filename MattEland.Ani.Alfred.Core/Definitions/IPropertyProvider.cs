@@ -29,14 +29,14 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// Gets a list of properties provided by this item.
         /// </summary>
         /// <returns>The properties</returns>
-        [NotNull, ItemNotNull]
+        [CanBeNull, ItemNotNull]
         IEnumerable<IPropertyItem> Properties { get; }
 
         /// <summary>
         /// Gets the property providers.
         /// </summary>
         /// <value>The property providers.</value>
-        [NotNull, ItemNotNull]
+        [CanBeNull, ItemNotNull]
         IEnumerable<IPropertyProvider> PropertyProviders { get; }
 
         /// <summary>

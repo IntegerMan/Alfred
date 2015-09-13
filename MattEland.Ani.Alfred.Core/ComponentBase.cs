@@ -131,7 +131,7 @@ namespace MattEland.Ani.Alfred.Core
         ///     will vary in their own types.
         /// </summary>
         /// <value>The children.</value>
-        [NotNull]
+        [CanBeNull]
         [ItemNotNull]
         public abstract IEnumerable<IAlfredComponent> Children { get; }
 
@@ -171,7 +171,7 @@ namespace MattEland.Ani.Alfred.Core
             {
                 yield return new AlfredProperty("Name", Name);
                 yield return new AlfredProperty("Status", Status);
-                yield return new AlfredProperty("Child Items", Children.Count());
+                yield return new AlfredProperty("Child Items", Children?.Count() ?? 0);
                 yield return new AlfredProperty("Visible", IsVisible);
                 yield return new AlfredProperty("Version", Version);
             }
@@ -181,7 +181,7 @@ namespace MattEland.Ani.Alfred.Core
         ///     Gets the property providers nested inside of this property provider.
         /// </summary>
         /// <value>The property providers.</value>
-        [NotNull]
+        [CanBeNull]
         [ItemNotNull]
         public virtual IEnumerable<IPropertyProvider> PropertyProviders
         {
@@ -279,7 +279,13 @@ namespace MattEland.Ani.Alfred.Core
             InitializeProtected(alfred);
 
             // Pass on the message to the children
-            foreach (var child in Children) { child.Initialize(alfred); }
+            if (Children != null)
+            {
+                foreach (var child in Children)
+                {
+                    child?.Initialize(alfred);
+                }
+            }
 
             Status = AlfredStatus.Online;
 

@@ -434,11 +434,11 @@ namespace MattEland.Ani.Alfred.Tests.Search
         ///     The mock search result
         /// </returns>
         [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Local")]
-        private static Mock<ISearchResult> ConfigureOperationToReturnOneSearchResult(Mock<ISearchOperation> mockOp)
+        private Mock<ISearchResult> ConfigureOperationToReturnOneSearchResult(Mock<ISearchOperation> mockOp)
         {
             var result = BuildMockSearchResult(MockingBehavior);
 
-            mockOp.SetupGet(o => o.Results).Returns(result.Object.ToCollection());
+            mockOp.SetupGet(o => o.Results).Returns(result.Object.ToCollection(Container));
 
             return result;
         }

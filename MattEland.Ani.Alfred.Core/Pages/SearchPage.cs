@@ -2,7 +2,7 @@
 // SearchPage.cs
 // 
 // Created on:      09/13/2015 at 12:04 PM
-// Last Modified:   09/13/2015 at 12:04 PM
+// Last Modified:   09/13/2015 at 3:57 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -18,9 +18,10 @@ using MattEland.Common.Providers;
 namespace MattEland.Ani.Alfred.Core.Pages
 {
     /// <summary>
-    ///     A search page that allows the user to search many aspects of Alfred and view search results.
+    ///     A search page that allows the user to search many aspects of Alfred and view search
+    ///     results.
     /// </summary>
-    public sealed class SearchPage : AlfredPage
+    public sealed class SearchPage : ModulePageBase
     {
         /// <summary>
         ///     The search module.
@@ -31,25 +32,22 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredPage" /> class.
         /// </summary>
-        /// <param name="container"> The container. </param>
-        public SearchPage([NotNull] IObjectContainer container) : base(container, "Search", "SearchPage")
+        /// <param name="container">The container.</param>
+        public SearchPage([NotNull] IObjectContainer container)
+            : base(container, "Search", "SearchPage")
         {
             _searchModule = new SearchModule(container);
         }
 
         /// <summary>
-        ///     Gets the children of the component. Depending on the type of component this is, the
-        ///     children will vary in their own types.
+        ///     Gets the modules.
         /// </summary>
         /// <value>
-        ///     The children.
+        /// The modules.
         /// </value>
-        public override IEnumerable<IAlfredComponent> Children
+        public override IEnumerable<IAlfredModule> Modules
         {
-            get
-            {
-                yield return _searchModule;
-            }
+            get { yield return _searchModule; }
         }
     }
 }

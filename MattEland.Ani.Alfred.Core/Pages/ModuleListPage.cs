@@ -2,7 +2,7 @@
 // ModuleListPage.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   09/11/2015 at 10:11 PM
+// Last Modified:   09/13/2015 at 3:56 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -10,7 +10,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 using JetBrains.Annotations;
 
@@ -24,7 +23,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
     ///     A page grouping together multiple module collections of widgets
     /// </summary>
     [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-    public sealed class ModuleListPage : AlfredPage
+    public sealed class ModuleListPage : ModulePageBase
     {
         /// <summary>
         ///     The modules.
@@ -59,49 +58,11 @@ namespace MattEland.Ani.Alfred.Core.Pages
         ///     Gets the modules.
         /// </summary>
         /// <value>
-        /// The modules.
+        ///     The modules.
         /// </value>
-        [NotNull]
-        [ItemNotNull]
-        public IEnumerable<IAlfredModule> Modules
+        public override IEnumerable<IAlfredModule> Modules
         {
             get { return _modules; }
-        }
-
-        /// <summary>
-        ///     Gets the children of this component. Depending on the type of component this is, the
-        ///     children will vary in their own types.
-        /// </summary>
-        /// <value>
-        /// The children.
-        /// </value>
-        public override IEnumerable<IAlfredComponent> Children
-        {
-            get
-            {
-                foreach (var module in _modules)
-                {
-                    yield return module;
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Gets whether or not the component is visible to the user interface.
-        /// </summary>
-        /// <value>
-        /// Whether or not the component is visible.
-        /// </value>
-        public override bool IsVisible
-        {
-            get
-            {
-                // Display if any module has a visible widget
-                var baseVisbility = base.IsVisible;
-                var anyVisibleModules = Modules.Any(m => m.Widgets.Any(w => w.IsVisible));
-
-                return baseVisbility && anyVisibleModules;
-            }
         }
 
         /// <summary>
@@ -123,32 +84,6 @@ namespace MattEland.Ani.Alfred.Core.Pages
         public void ClearModules()
         {
             _modules.Clear();
-        }
-
-        /// <summary>
-        ///     Processes an Alfred Command. If the <paramref name="command" /> is handled,
-        ///     <paramref name="result" /> should be modified accordingly and the method should
-        ///     return true. Returning <see langword="false" /> will not stop the message from being
-        ///     propagated.
-        /// </summary>
-        /// <param name="command">The command.</param>
-        /// <param name="result">
-        /// The result. If the <paramref name="command" /> was handled, this should be updated.
-        /// </param>
-        /// <returns>
-        ///     <c>True</c> if the <paramref name="command" /> was handled; otherwise false.
-        /// </returns>
-        public override bool ProcessAlfredCommand(ChatCommand command, ICommandResult result)
-        {
-            foreach (var module in Modules)
-            {
-                if (module.ProcessAlfredCommand(command, result))
-                {
-                    return true;
-                }
-            }
-
-            return base.ProcessAlfredCommand(command, result);
         }
     }
 }
