@@ -55,8 +55,8 @@ namespace MattEland.Ani.Alfred.Tests.Modules
             // Create a subsystem to hold the page
             var subsystem = new SimpleSubsystem(Container, "Test Subsystem", "TestSubsystemId");
 
-            // Build the Page and add it to the subsystem
-            Page = new ModuleListPage(Container, "Test Page", "TestPageId");
+            // Build the AlfredPage and add it to the subsystem
+            Page = new ModuleListPage(Container, "Test AlfredPage", "TestPageId");
             subsystem.PagesToRegister.Add(Page);
 
             // Build out Alfred and give it our page
@@ -134,7 +134,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         [Category("Visibility")]
         public void ModuleListPageIsNotVisibleWhenNoModulesArePresent()
         {
-            //! Arrange - Object creation done in setup. Page is in Alfred with no Modules
+            //! Arrange - Object creation done in setup. AlfredPage is in Alfred with no Modules
 
             //! Act
             Alfred.Initialize();

@@ -61,7 +61,7 @@ namespace MattEland.Ani.Alfred.Tests
             var alfred = new AlfredApplication(Container);
             alfred.RegisterAsProvidedInstance(typeof(IAlfred), Container);
             _subsystem = BuildTestSubsystem();
-            _page = new ModuleListPage(Container, "Test Page", "Test");
+            _page = new ModuleListPage(Container, "Test AlfredPage", "Test");
         }
 
         /// <summary>

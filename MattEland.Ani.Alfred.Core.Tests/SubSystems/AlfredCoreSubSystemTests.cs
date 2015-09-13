@@ -68,7 +68,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         /// <param name="pageName">Name of the page.</param>
         /// <returns>The page</returns>
         [NotNull]
-        private T FindPage<T>(string pageName) where T : Page
+        private T FindPage<T>(string pageName) where T : AlfredPage
         {
             var page = (T)_alfred.RootPages.First(p => p.Name == pageName);
             Assert.NotNull(page);
@@ -94,7 +94,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
             _alfred.Initialize();
             _alfred.Update();
 
-            // Grab the Page
+            // Grab the AlfredPage
             var pageName = AlfredCoreSubsystem.ControlPageName;
             var page = FindPage<ModuleListPage>(pageName);
 
@@ -110,7 +110,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
             _alfred.Update();
 
             Assert.IsTrue(_alfred.RootPages.Any(p => p.Name == AlfredCoreSubsystem.ControlPageName),
-                          "Control Page was not found");
+                          "Control AlfredPage was not found");
         }
 
         [Test]
@@ -123,7 +123,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
             _alfred.Initialize();
             _alfred.Update();
 
-            const string FailMessage = "Event Log Page was present when no console was provided";
+            const string FailMessage = "Event Log AlfredPage was present when no console was provided";
             _alfred.RootPages.ShouldNotAllBeOfType<EventLogPage>(FailMessage);
         }
 
@@ -138,7 +138,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
             _alfred.Update();
 
             Assert.IsTrue(_alfred.RootPages.Any(p => p.Name == AlfredCoreSubsystem.EventLogPageName),
-                          "Event Log Page was not found");
+                          "Event Log AlfredPage was not found");
         }
 
         [Test]

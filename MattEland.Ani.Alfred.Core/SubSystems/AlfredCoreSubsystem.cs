@@ -49,14 +49,18 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         [CanBeNull]
         private EventLogPage _eventLogPage;
 
+        [NotNull]
+        private SearchPage _searchPage;
+
         /// <summary>Initializes a new instance of the <see cref="AlfredSubsystem" /> class.</summary>
         /// <param name="container">The container.</param>
         /// <exception cref="ArgumentNullException">Thrown when one or more required arguments are null.</exception>
         public AlfredCoreSubsystem([NotNull] IObjectContainer container) : base(container)
         {
-            if (container == null) { throw new ArgumentNullException(nameof(container)); }
+            if (container == null) throw new ArgumentNullException(nameof(container));
 
             _controlPage = new ModuleListPage(container, ControlPageName, "Core");
+            _searchPage = new SearchPage(container);
 
             // Instantiate the modules
             _powerModule = new AlfredPowerModule(container);
@@ -99,6 +103,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         protected override void RegisterControls()
         {
             Register(_controlPage);
+            Register(_searchPage);
 
             // Build out our control page
             _controlPage.ClearModules();

@@ -39,7 +39,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
         {
             base.SetUp();
 
-            _page = new ExplorerPage(Container, "Test Page", "TestExp");
+            _page = new ExplorerPage(Container, "Test AlfredPage", "TestExp");
         }
 
         [NotNull]
@@ -71,7 +71,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
             _page.RootNodes.ShouldNotBeNull();
 
             foreach (var child in children) { _page.RootNodes.ShouldContain(child); }
-            children.Count().ShouldBe(_page.RootNodes.Count(), "Page's root nodes were not the new collection");
+            children.Count().ShouldBe(_page.RootNodes.Count(), "AlfredPage's root nodes were not the new collection");
         }
 
         /// <summary>

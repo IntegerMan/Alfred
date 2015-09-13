@@ -27,7 +27,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
     public sealed class ExplorerWidgetTests : AlfredTestBase
     {
         private const string TestPageId = "TestExp";
-        private const string TestPageName = "Explorer Page";
+        private const string TestPageName = "Explorer AlfredPage";
 
         /// <summary>
         /// Sets up the environment for each test

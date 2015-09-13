@@ -75,7 +75,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
 
             // Find the hosting page
             var page = subsystem.Pages.First(p => p.Id.Matches("Core"));
-            page.ShouldNotBeNull("Core Page could not be found");
+            page.ShouldNotBeNull("Core AlfredPage could not be found");
 
             // Convert to the module list page
             var listPage = page.ShouldBeOfType<ModuleListPage>();

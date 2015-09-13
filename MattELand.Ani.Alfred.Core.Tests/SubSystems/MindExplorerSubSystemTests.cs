@@ -110,7 +110,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         }
 
         /// <summary>
-        /// Tests that the Mind Explorer's Mind Explorer page must be of Mind Explorer Page type.
+        /// Tests that the Mind Explorer's Mind Explorer page must be of Mind Explorer AlfredPage type.
         /// </summary>
         /// <remarks>
         /// See ALF-15

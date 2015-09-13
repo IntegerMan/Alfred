@@ -116,6 +116,7 @@
     <Compile Include="Search\AlfredSearchControllerTests.cs" />
     <Compile Include="Search\AlfredSearchTests.cs" />
     <Compile Include="Search\MindExplorerSearchTests.cs" />
+    <Compile Include="Search\SearchPageTests.cs" />
     <Compile Include="Shell\ShellTagHandlerTests.cs" />
     <Compile Include="Subsystems\AlfredCoreSubsystemTests.cs" />
     <Compile Include="AlfredEventingTests.cs" />

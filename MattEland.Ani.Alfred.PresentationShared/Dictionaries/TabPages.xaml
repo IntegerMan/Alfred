@@ -12,7 +12,7 @@
         <helpers:DynamicPanel LayoutType="{Binding LayoutType}"
                               HorizontalAlignment="Left" 
                               VerticalAlignment="Top" 
-                              d:DataContext="{d:DesignInstance pages:Page}" />
+                              d:DataContext="{d:DesignInstance pages:AlfredPage}" />
     </ItemsPanelTemplate>
     
     <DataTemplate DataType="{x:Type pages:ModuleListPage}">

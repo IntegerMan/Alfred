@@ -96,10 +96,11 @@
     <Compile Include="Modules\SimpleModule.cs" />
     <Compile Include="Pages\EventLogPage.cs" />
     <Compile Include="Pages\ModuleListPage.cs" />
-    <Compile Include="Pages\Page.cs" />
+    <Compile Include="Pages\AlfredPage.cs" />
     <Compile Include="Definitions\AlfredStatus.cs" />
     <Compile Include="AlfredStatusController.cs" />
     <Compile Include="Pages\ExplorerPage.cs" />
+    <Compile Include="Pages\SearchPage.cs" />
     <Compile Include="Subsystems\AlfredSubsystem.cs" />
     <Compile Include="Console\LogLevel.cs" />
     <Compile Include="Subsystems\AlfredCoreSubsystem.cs" />

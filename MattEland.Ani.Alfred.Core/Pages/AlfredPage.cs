@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------
-// Page.cs
+// AlfredPage.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
 // Last Modified:   09/11/2015 at 9:35 PM
@@ -19,11 +19,11 @@ namespace MattEland.Ani.Alfred.Core.Pages
     /// <summary>
     ///     A page that can be used in Alfred
     /// </summary>
-    public abstract class Page : ComponentBase, IPage
+    public abstract class AlfredPage : ComponentBase, IPage
     {
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Page" /> class.
+        ///     Initializes a new instance of the <see cref="AlfredPage" /> class.
         /// </summary>
         /// <param name="container">The container.</param>
         /// <param name="name">The name.</param>
@@ -37,7 +37,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <exception cref="ArgumentNullException">
         /// <paramref name="id" /> is <see langword="null" /> .
         /// </exception>
-        protected Page(
+        protected AlfredPage(
             [NotNull] IObjectContainer container,
             [NotNull] string name,
             [NotNull] string id) : base(container)
@@ -101,7 +101,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// </example>
         public override string ItemTypeName
         {
-            get { return "Page"; }
+            get { return "AlfredPage"; }
         }
 
         /// <summary>

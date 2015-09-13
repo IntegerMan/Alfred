@@ -23,7 +23,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
     ///     An event logging page. This will need a special client-side implementation to list out
     ///     the details
     /// </summary>
-    public sealed class EventLogPage : Page
+    public sealed class EventLogPage : AlfredPage
     {
         [CanBeNull]
         private IConsole _console;

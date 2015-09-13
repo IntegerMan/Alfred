@@ -73,7 +73,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
 
                 // Interpret the DataContext and update its text if it's a page.
                 // If no page context, it's assumed to be the no items label.
-                var page = textWidget.DataContext as Page;
+                var page = textWidget.DataContext as AlfredPage;
 
                 if (page != null)
                 {
