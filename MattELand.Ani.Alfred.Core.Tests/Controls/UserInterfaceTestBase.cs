@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.PresentationShared.Controls;
 using MattEland.Ani.Alfred.PresentationShared.Helpers;
+using MattEland.Common;
 using MattEland.Common.Providers;
+using MattEland.Testing;
 
 using NUnit.Framework;
 
@@ -125,5 +129,37 @@ namespace MattEland.Ani.Alfred.Tests.Controls
         {
             AssertHasControl(element, typeof(TabControl));
         }
+
+        /// <summary>
+        ///     Searches for a widget by the specified <paramref name="name" /> and returns the first
+        ///     widget found or <see langword="null"/>.
+        /// </summary>
+        /// <param name="module"> The module. </param>
+        /// <param name="name"> Name of the widget. </param>
+        /// <returns>
+        ///     The widget.
+        /// </returns>
+        [CanBeNull]
+        protected static IWidget FindWidgetByName(IAlfredModule module, string name)
+        {
+            return module.Widgets.FirstOrDefault(w => w.Name.Matches(name));
+        }
+
+        /// <summary>
+        ///     Searches for the first widget matching the specified name and returns it, asserting that it matches the generic type.
+        /// </summary>
+        /// <typeparam name="T"> The type of the widget. </typeparam>
+        /// <param name="module"> The module. </param>
+        /// <param name="name"> The name. </param>
+        /// <returns>
+        ///     The widget.
+        /// </returns>
+        protected T FindWidgetOfTypeByName<T>(IAlfredModule module, string name)
+        {
+            var widget = FindWidgetByName(module, name);
+
+            return widget.ShouldBe<T>();
+        }
+
     }
 }

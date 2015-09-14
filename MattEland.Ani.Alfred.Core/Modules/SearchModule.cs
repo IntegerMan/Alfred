@@ -61,13 +61,16 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         private void OnSearchClicked()
         {
-            if (_searchText.Text.IsEmpty())
+            var searchText = _searchText.Text;
+
+            if (searchText.IsEmpty())
             {
                 // TODO: Pop a message box
             }
             else
             {
-                // TODO: Start a search             
+                // Start searching
+                AlfredInstance?.SearchController.PerformSearch(searchText.NonNull());
             }
         }
 

@@ -9,8 +9,13 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+
+using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common;
+using MattEland.Testing;
 
 using Moq;
 
@@ -72,11 +77,12 @@ namespace MattEland.Ani.Alfred.Tests
         /// <param name="mock">
         /// The Mock object that derives from <see cref="IAlfredComponent" /> .
         /// </param>
-        private static void SetupMockComponent<T>(Mock<T> mock) where T : class, IAlfredComponent
+        private void SetupMockComponent<T>(Mock<T> mock) where T : class, IAlfredComponent
         {
             // Setup Simple properties
             mock.SetupGet(s => s.NameAndVersion).Returns("Test Component 1.0.0.0");
             mock.SetupGet(s => s.Status).Returns(AlfredStatus.Offline);
+            mock.SetupGet(m => m.Container).Returns(Container);
 
             // Setup simple methods
             mock.Setup(s => s.Update());
@@ -106,7 +112,7 @@ namespace MattEland.Ani.Alfred.Tests
         /// </summary>
         /// <param name="mockBehavior">The mocking behavior.</param>
         /// <returns>The mock search controller</returns>
-        protected static Mock<ISearchController> BuildMockSearchController(MockBehavior mockBehavior)
+        protected Mock<ISearchController> BuildMockSearchController(MockBehavior mockBehavior)
         {
             var mock = new Mock<ISearchController>(mockBehavior);
 
@@ -233,7 +239,10 @@ namespace MattEland.Ani.Alfred.Tests
         {
             var mock = new Mock<IAlfred>(mockingBehavior);
 
+            mock.SetupGet(m => m.Container).Returns(Container);
+
             return mock;
         }
+
     }
 }
