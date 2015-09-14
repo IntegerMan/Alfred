@@ -64,6 +64,7 @@ namespace MattEland.Ani.Alfred.Core.Speech
             _speechEnabledLogLevels = new HashSet<LogLevel>
                                       {
                                           LogLevel.ChatResponse,
+                                          LogLevel.ChatNotification,
                                           LogLevel.Warning,
                                           LogLevel.Error
                                       };

@@ -9,6 +9,8 @@
 
 using System.Windows;
 
+using MattEland.Ani.Alfred.Core.Console;
+
 namespace MattEland.Ani.Alfred.PresentationShared.Helpers
 {
     /// <summary>
@@ -18,7 +20,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Helpers
     public abstract class MessageBoxProviderBase : IMessageBoxProvider
     {
         /// <summary>
-        ///     Shows a <paramref name="message"/> box with an okay button and a standard icon.
+        ///     Shows a message box with an okay button and a standard icon.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="caption">The <paramref name="message"/> caption.</param>
@@ -28,24 +30,23 @@ namespace MattEland.Ani.Alfred.PresentationShared.Helpers
         }
 
         /// <summary>
-        ///     Shows a <paramref name="message"/> box with a standard icon.
+        ///     Shows a message box with an alert icon.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="caption">The <paramref name="message"/> caption.</param>
-        /// <param name="buttons">The buttons to show.</param>
-        public void Show(string message, string caption, MessageBoxButton buttons)
+        public void ShowAlert(string message, string caption)
         {
-            Show(message, caption, buttons, MessageBoxImage.None);
+            Show(message, caption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
         }
 
         /// <summary>
-        ///     Shows a <paramref name="message"/> box.
+        ///     Shows a message box.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="caption">The <paramref name="message"/> caption.</param>
         /// <param name="buttons">The buttons to show.</param>
         /// <param name="icon">The icon to show.</param>
-        public abstract void Show(
+        protected abstract void Show(
             string message,
             string caption,
             MessageBoxButton buttons,

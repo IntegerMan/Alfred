@@ -43,7 +43,7 @@ namespace MattEland.Common
         /// </returns>
         public static bool IsEmpty([CanBeNull] this string input)
         {
-            return string.IsNullOrEmpty(input);
+            return string.IsNullOrEmpty(input.NonNull().Trim());
         }
 
         /// <summary>

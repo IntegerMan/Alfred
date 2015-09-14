@@ -7,6 +7,7 @@ using System.Windows.Controls.Primitives;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.PresentationShared.Controls;
 using MattEland.Ani.Alfred.PresentationShared.Helpers;
@@ -31,7 +32,15 @@ namespace MattEland.Ani.Alfred.Tests.Controls
         /// <value>
         ///     The message box.
         /// </value>
-        protected TestMessageBoxProvider MessageBox { get; private set; }
+        protected IMessageBoxProvider MessageBox
+        {
+            get { return Container.TryProvide<IMessageBoxProvider>(); }
+            set
+            {
+                value.ShouldNotBeNull();
+                Container.RegisterProvidedInstance(typeof(IMessageBoxProvider), value);
+            }
+        }
 
         /// <summary>
         /// Sets up the environment for each test.
@@ -43,7 +52,6 @@ namespace MattEland.Ani.Alfred.Tests.Controls
 
             // Register a message box provider instance
             MessageBox = new TestMessageBoxProvider();
-            MessageBox.RegisterAsProvidedInstance(typeof(IMessageBoxProvider));
         }
 
         /// <summary>

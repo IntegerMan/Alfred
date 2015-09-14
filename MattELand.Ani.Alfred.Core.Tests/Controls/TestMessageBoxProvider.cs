@@ -27,7 +27,7 @@ namespace MattEland.Ani.Alfred.Tests.Controls
         /// <summary>
         /// Initializes a new instance of the <see cref="TestMessageBoxProvider"/> class.
         /// </summary>
-        public TestMessageBoxProvider()
+        internal TestMessageBoxProvider()
         {
             // Set up our default error types
             ErrorOnImages = new HashSet<MessageBoxImage>
@@ -52,7 +52,7 @@ namespace MattEland.Ani.Alfred.Tests.Controls
         /// <param name="caption">The <paramref name="message"/> caption.</param>
         /// <param name="buttons">The buttons to show.</param>
         /// <param name="icon">The icon to show.</param>
-        public override void Show(
+        protected override void Show(
             string message,
             string caption,
             MessageBoxButton buttons,

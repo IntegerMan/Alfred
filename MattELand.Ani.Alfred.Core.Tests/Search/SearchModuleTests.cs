@@ -12,6 +12,7 @@ using System.Linq;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Widgets;
@@ -40,6 +41,10 @@ namespace MattEland.Ani.Alfred.Tests.Search
     [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
     public sealed class SearchModuleTests : UserInterfaceTestBase
     {
+        /// <summary>
+        ///     The mocking behavior.
+        /// </summary>
+        private const MockBehavior MockingBehavior = Moq.MockBehavior.Strict;
 
         /// <summary>
         ///     Gets or sets the module.
@@ -190,10 +195,10 @@ namespace MattEland.Ani.Alfred.Tests.Search
             //! Arrange
 
             // Set up a mock controller for verification of search requested
-            var searchController = BuildMockSearchController(MockBehavior.Strict);
+            var searchController = BuildMockSearchController(MockingBehavior);
 
             // Set up our Alfred to control where searches go
-            var alfred = BuildMockAlfred(MockBehavior.Strict);
+            var alfred = BuildMockAlfred(MockingBehavior);
             alfred.SetupGet(a => a.SearchController).Returns(searchController.Object);
 
             Alfred = alfred.Object;
@@ -219,6 +224,41 @@ namespace MattEland.Ani.Alfred.Tests.Search
             searchController.Verify(sc => sc.PerformSearch(SearchText),
                                     Times.Once,
                                     FailMessage);
+        }
+
+        /// <summary>
+        ///     An alert message box should be shown when attempting to search with bad search values.
+        /// </summary>
+        /// <param name="input"> The input. </param>
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase("   ")]
+        [Category("Validation")]
+        public void MessageBoxIsShownWhenSearchIsAttemptedWithBadInput(string input)
+        {
+            //! Arrange
+
+            var messageBox = new Mock<IMessageBoxProvider>(MockingBehavior);
+            MessageBox = messageBox.Object;
+
+            Alfred = BuildMockAlfred(MockingBehavior).Object;
+
+            //! Act
+
+            // Start up Alfred so we have a User Interface
+            Module.Initialize(Alfred);
+
+            // Grab UI components from the module
+            var textBox = FindWidgetOfTypeByName<TextBoxWidget>(Module, @"txtSearch");
+            var searchButton = FindWidgetOfTypeByName<ButtonWidget>(Module, @"btnSearch");
+
+            // Set the search and execute it
+            textBox.Text = input;
+            searchButton.Click();
+
+            //! Assert
+            messageBox.Verify(m => m.ShowAlert(It.IsAny<string>(), "Cannot Search"), Times.Once);
+
         }
     }
 }

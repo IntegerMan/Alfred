@@ -1,4 +1,4 @@
-﻿// ---------------------------------------------------------
+// ---------------------------------------------------------
 // IMessageBoxProvider.cs
 // 
 // Created on:      09/05/2015 at 2:58 PM
@@ -7,9 +7,7 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System.Windows;
-
-namespace MattEland.Ani.Alfred.PresentationShared.Helpers
+namespace MattEland.Ani.Alfred.Core.Console
 {
     /// <summary>
     ///     Defines a controller that manages message box behaviors.
@@ -24,20 +22,10 @@ namespace MattEland.Ani.Alfred.PresentationShared.Helpers
         void Show(string message, string caption);
 
         /// <summary>
-        ///     Shows a message box with a standard icon.
+        ///     Shows an alert message box with an okay button and an exclamation icon.
         /// </summary>
         /// <param name="message"> The message. </param>
         /// <param name="caption"> The message caption. </param>
-        /// <param name="buttons"> The buttons to show. </param>
-        void Show(string message, string caption, MessageBoxButton buttons);
-
-        /// <summary>
-        ///     Shows a message box.
-        /// </summary>
-        /// <param name="message"> The message. </param>
-        /// <param name="caption"> The message caption. </param>
-        /// <param name="buttons"> The buttons to show. </param>
-        /// <param name="icon"> The icon to show. </param>
-        void Show(string message, string caption, MessageBoxButton buttons, MessageBoxImage icon);
+        void ShowAlert(string message, string caption);
     }
 }

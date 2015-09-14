@@ -7,7 +7,6 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
 using System.Diagnostics;
 
 using JetBrains.Annotations;
@@ -64,6 +63,23 @@ namespace MattEland.Ani.Alfred.Core.Console
             {
                 Debug.WriteLine($"Could not log message: {title}: {message}");
             }
+        }
+
+        /// <summary>
+        ///     A string extension method that shows an alert message box.
+        /// </summary>
+        /// <param name="message"> The message. </param>
+        /// <param name="caption"> The caption. </param>
+        /// <param name="container"> The container used for logging and message box provisions. </param>
+        public static void ShowAlert(this string message, string caption, IObjectContainer container)
+        {
+            // Log it. If we have a speech-enabled console, this will be spoken aloud.
+            message.Log(caption, LogLevel.ChatNotification, container);
+
+            // Use the message box provider (if one is present) to show the alert
+            var provider = container.TryProvide<IMessageBoxProvider>();
+            provider?.ShowAlert(message, caption);
+
         }
     }
 }

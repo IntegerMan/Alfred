@@ -15,7 +15,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Helpers
     /// <summary>
     ///     An XAML message box provider.
     /// </summary>
-    public sealed class XamlMessageBoxProvider : MessageBoxProviderBase
+    internal sealed class XamlMessageBoxProvider : MessageBoxProviderBase
     {
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Helpers
         /// <param name="caption"> The message caption. </param>
         /// <param name="buttons"> The buttons to show. </param>
         /// <param name="icon"> The icon to show. </param>
-        public override void Show(
+        protected override void Show(
             string message,
             string caption,
             MessageBoxButton buttons,

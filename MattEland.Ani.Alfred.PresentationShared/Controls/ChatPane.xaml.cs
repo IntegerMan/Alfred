@@ -8,16 +8,14 @@
 // ---------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Windows;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.PresentationShared.Helpers;
 using MattEland.Common;
 using MattEland.Common.Providers;
 
@@ -93,19 +91,18 @@ namespace MattEland.Ani.Alfred.PresentationShared.Controls
             }
             catch (InvalidOperationException ex)
             {
-                var messageBox = Container.Provide<IMessageBoxProvider>();
-                messageBox.Show(ex.Message,
-                                "Couldn't Send",
-                                MessageBoxButton.OK,
-                                MessageBoxImage.Asterisk);
+                ex.Message.ShowAlert("Couldn't Send", Container);
             }
         }
 
         /// <summary>
-        /// Sends the chat message to the chat provider.
+        ///     Sends the chat message to the chat provider.
         /// </summary>
-        /// <param name="chatProvider">The chat handler.</param>
-        /// <param name="text">The text.</param>
+        /// <exception cref="InvalidOperationException">
+        ///     Thrown when no chat provider is present or no message was specified.
+        /// </exception>
+        /// <param name="chatProvider"> The chat handler. </param>
+        /// <param name="text"> The text. </param>
         public void SendChatMessage([CanBeNull] IChatProvider chatProvider, [CanBeNull] string text)
         {
             if (text.IsEmpty())
