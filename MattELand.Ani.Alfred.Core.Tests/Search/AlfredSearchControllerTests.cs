@@ -2,7 +2,7 @@
 // AlfredSearchControllerTests.cs
 // 
 // Created on:      09/09/2015 at 11:45 AM
-// Last Modified:   09/09/2015 at 11:45 AM
+// Last Modified:   09/14/2015 at 1:44 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -15,6 +15,7 @@ using System.Linq;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
 using MattEland.Common.Providers;
@@ -37,8 +38,24 @@ namespace MattEland.Ani.Alfred.Tests.Search
     [SuppressMessage("ReSharper", "ExceptionNotDocumentedOptional")]
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
+    [Category("Search")]
     public sealed class AlfredSearchControllerTests : MockEnabledAlfredTestBase
     {
+
+        /// <summary>
+        ///     A testing search string different than the first one. The actual content doesn't matter.
+        /// </summary>
+        private const string AnotherSearchString = "This is another search string for testing";
+
+        /// <summary>
+        ///     The mocking behavior used when creating Moq mocks.
+        /// </summary>
+        private const MockBehavior MockingBehavior = MockBehavior.Strict;
+
+        /// <summary>
+        ///     A testing search string. The actual content doesn't matter.
+        /// </summary>
+        private const string SearchString = "This is a test search string";
 
         /// <summary>
         ///     Gets the controller.
@@ -66,25 +83,11 @@ namespace MattEland.Ani.Alfred.Tests.Search
         }
 
         /// <summary>
-        ///     The mocking behavior used when creating Moq mocks.
-        /// </summary>
-        const MockBehavior MockingBehavior = MockBehavior.Strict;
-
-        /// <summary>
-        ///     A testing search string. The actual content doesn't matter.
-        /// </summary>
-        const string SearchString = "This is a test search string";
-
-        /// <summary>
-        ///     A testing search string different than the first one. The actual content doesn't matter.
-        /// </summary>
-        const string AnotherSearchString = "This is another search string for testing";
-
-        /// <summary>
         ///     Tests that search providers can be registered and show up in the controller's Providers
         ///     collection.
         /// </summary>
         [Test]
+        [Category("Registration")]
         public void SearchProvidersCanBeRegistered()
         {
             //! Arrange
@@ -101,7 +104,10 @@ namespace MattEland.Ani.Alfred.Tests.Search
         /// <summary>
         ///     Tests that <see langword="null"/> search providers cannot be registered.
         /// </summary>
-        [Test, ExpectedException(typeof(ArgumentNullException))]
+        [Test]
+        [ExpectedException(typeof(ArgumentNullException))]
+        [Category("Registration")]
+        [Category("Validation")]
         public void NullSearchProvidersCannotBeRegistered()
         {
             //! Act / Assert - Expected ArgumentNullException
@@ -111,7 +117,10 @@ namespace MattEland.Ani.Alfred.Tests.Search
         /// <summary>
         ///     Tests that search providers with the same Id cannot be registered.
         /// </summary>
-        [Test, ExpectedException(typeof(ArgumentException))]
+        [Test]
+        [ExpectedException(typeof(ArgumentException))]
+        [Category("Registration")]
+        [Category("Validation")]
         public void SearchProvidersWithSameIdCannotBeRegistered()
         {
             //! Arrange
@@ -131,7 +140,10 @@ namespace MattEland.Ani.Alfred.Tests.Search
         /// <summary>
         ///     Tests that search providers cannot be registered when Alfred is offline
         /// </summary>
-        [Test, ExpectedException(typeof(InvalidOperationException))]
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        [Category("Registration")]
+        [Category("Validation")]
         public void SearchProvidersCannotBeRegisteredWhenNotOffline()
         {
             //! Arrange
@@ -261,7 +273,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
             // Configure the operation to complete on update
             var mockOp = BuildMockSearchOperation(MockingBehavior);
             mockOp.Setup(o => o.Update())
-                         .Callback(() => mockOp.SetupGet(o => o.IsSearchComplete).Returns(true));
+                  .Callback(() => mockOp.SetupGet(o => o.IsSearchComplete).Returns(true));
 
             // Build out a search provider with the mock operations
             var searchProvider = BuildMockSearchProvider(MockingBehavior, mockOp.Object);
@@ -380,6 +392,31 @@ namespace MattEland.Ani.Alfred.Tests.Search
         }
 
         /// <summary>
+        ///     When searches are executed, a log entry should be created.
+        /// </summary>
+        [Test]
+        [Category("Logging")]
+        public void SearchShouldBeLogged()
+        {
+            //! Arrange
+
+            // Set up a console for verification
+            var console = BuildMockConsole(MockBehavior.Strict);
+            console.Object.RegisterAsProvidedInstance(typeof(IConsole), Container);
+
+            //! Act
+
+            Controller.PerformSearch(SearchString);
+
+            //! Assert
+
+            var title = "Search Executed";
+            var message = $"Searching for: {SearchString}";
+
+            console.Verify(c => c.Log(title, message, LogLevel.Info), Times.Once);
+        }
+
+        /// <summary>
         ///     Prepare a search provider to return a new operation. This is useful in scenarios where
         ///     more than one search operation is being conducted.
         /// </summary>
@@ -388,7 +425,8 @@ namespace MattEland.Ani.Alfred.Tests.Search
         ///     The mock search operation
         /// </returns>
         [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Local")]
-        private Mock<ISearchOperation> PrepareSearchProviderToReturnNewOperation(Mock<ISearchProvider> searchProvider)
+        private Mock<ISearchOperation> PrepareSearchProviderToReturnNewOperation(
+            Mock<ISearchProvider> searchProvider)
         {
             var mockSearchOperation = BuildMockSearchOperation(MockingBehavior);
 
@@ -399,16 +437,16 @@ namespace MattEland.Ani.Alfred.Tests.Search
         }
 
         /// <summary>
-        ///     Prepares the controller to have a search provider that returns a search result and
-        ///     returns the new search provider.
+        ///     Prepares the <paramref name="controller"/> to have a search provider that returns a
+        ///     search result and returns the new search provider.
         /// </summary>
         /// <param name="controller"> The controller. </param>
         /// <returns>
         ///     The search provider used to return results.
         /// </returns>
-        private Mock<ISearchProvider> PrepareControllerToReturnOneSearchResult(AlfredSearchController controller)
+        private Mock<ISearchProvider> PrepareControllerToReturnOneSearchResult(
+            AlfredSearchController controller)
         {
-
             // Build out a search provider with the mock operations
             var searchProvider = BuildMockSearchProvider(MockingBehavior);
 
@@ -434,7 +472,8 @@ namespace MattEland.Ani.Alfred.Tests.Search
         ///     The mock search result
         /// </returns>
         [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Local")]
-        private Mock<ISearchResult> ConfigureOperationToReturnOneSearchResult(Mock<ISearchOperation> mockOp)
+        private Mock<ISearchResult> ConfigureOperationToReturnOneSearchResult(
+            Mock<ISearchOperation> mockOp)
         {
             var result = BuildMockSearchResult(MockingBehavior);
 
@@ -442,6 +481,5 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             return result;
         }
-
     }
 }

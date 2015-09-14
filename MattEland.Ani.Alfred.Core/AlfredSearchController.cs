@@ -14,6 +14,7 @@ using System.Linq;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
 using MattEland.Common.Providers;
@@ -94,6 +95,10 @@ namespace MattEland.Ani.Alfred.Core
         {
             // If there's stuff going on - cancel it
             if (OngoingOperations.Any()) { Abort(); }
+
+            // Log this event
+            var logMessage = $"Searching for: {searchText}";
+            logMessage.Log("Search Executed", LogLevel.Info, Container);
 
             // Search all providers
             foreach (var provider in SearchProviders)

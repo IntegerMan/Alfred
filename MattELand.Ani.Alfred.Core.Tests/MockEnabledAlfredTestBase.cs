@@ -13,6 +13,7 @@ using System.Linq;
 
 using JetBrains.Annotations;
 
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
 using MattEland.Testing;
@@ -244,5 +245,22 @@ namespace MattEland.Ani.Alfred.Tests
             return mock;
         }
 
+        /// <summary>
+        ///     Builds a mock console.
+        /// </summary>
+        /// <param name="mockingBehavior"> The mocking behavior used when creating Moq mocks. </param>
+        /// <returns>
+        ///     A mock console;
+        /// </returns>
+        protected Mock<IConsole> BuildMockConsole(MockBehavior mockingBehavior)
+        {
+            var console = new Mock<IConsole>(mockingBehavior);
+
+            console.SetupGet(c => c.Container).Returns(Container);
+
+            console.Setup(c => c.Log(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<LogLevel>()));
+
+            return console;
+        }
     }
 }
