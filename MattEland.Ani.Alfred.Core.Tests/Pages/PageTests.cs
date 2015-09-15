@@ -44,8 +44,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
         /// <summary>
         ///     Arranges the scenario so that a page mock is set inside of Alfred inside of a test subsystem.
         /// </summary>
-        /// <param name="mockBehavior"> The mock behavior. </param>
-        private void ArrangeScenario(MockBehavior mockBehavior)
+        private void ArrangeScenario()
         {
             // The class we're testing here is the main Alfred pump
             Alfred = new AlfredApplication(Container);
@@ -53,7 +52,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
             // TODO: This should be a mock or simple non-test object
             _subsystem = BuildTestSubsystem();
 
-            _pageMock = BuildMockPage(mockBehavior);
+            _pageMock = BuildMockPage();
 
             _subsystem.PagesToRegister.Add(_pageMock.Object);
             Alfred.Register(_subsystem);
@@ -66,7 +65,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
         public void InitializeCausesPagesToGoOnline()
         {
             //! Arrange
-            ArrangeScenario(MockBehavior.Loose);
+            ArrangeScenario();
 
             //! Act
             Alfred.Initialize();
@@ -83,7 +82,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
         public void InitializeCausesRegisteredPagesToInitialize()
         {
             //! Arrange
-            ArrangeScenario(MockBehavior.Strict);
+            ArrangeScenario();
 
             //! Act
             Alfred.Initialize();
@@ -103,7 +102,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
         public void ShutdownCausesRegisteredPagesToGoOffline()
         {
             //! Arrange
-            ArrangeScenario(MockBehavior.Loose);
+            ArrangeScenario();
 
             //! Act
             Alfred.Initialize();
@@ -121,7 +120,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
         public void ShutdownCausesRegisteredPagesToShutdown()
         {
             //! Arrange
-            ArrangeScenario(MockBehavior.Strict);
+            ArrangeScenario();
 
             //! Act
             Alfred.Initialize();
@@ -140,7 +139,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
         public void UpdateCausesRegisteredPagesToUpdate()
         {
             //! Arrange
-            ArrangeScenario(MockBehavior.Loose);
+            ArrangeScenario();
 
             //! Act
             Alfred.Initialize();

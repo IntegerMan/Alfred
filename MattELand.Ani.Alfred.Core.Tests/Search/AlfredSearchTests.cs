@@ -65,7 +65,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
         public void SearchControllerInitializesWhenAlfredInitializes()
         {
             //! Arrange
-            var mock = BuildMockSearchController(MockBehavior.Strict);
+            var mock = BuildMockSearchController();
             mock.Object.RegisterAsProvidedInstance(typeof(ISearchController), Container);
 
             Alfred = BuildAlfredInstance();
@@ -86,7 +86,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
         public void SearchControllerShutsDownWhenAlfredShutsDown()
         {
             //! Arrange
-            var mock = BuildMockSearchController(MockBehavior.Strict);
+            var mock = BuildMockSearchController();
             mock.Object.RegisterAsProvidedInstance(typeof(ISearchController), Container);
 
             Alfred = BuildAlfredInstance();
@@ -107,7 +107,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
         public void SearchControllerUpdatesWhenAlfredUpdates()
         {
             //! Arrange
-            var mock = BuildMockSearchController(MockBehavior.Strict);
+            var mock = BuildMockSearchController();
             mock.Object.RegisterAsProvidedInstance(typeof(ISearchController), Container);
 
             Alfred = BuildAlfredInstance();
@@ -128,16 +128,13 @@ namespace MattEland.Ani.Alfred.Tests.Search
         public void RegisteringSubsystemWithSearchProviderRegistersProvider()
         {
             //! Arrange
-
-            const MockBehavior MockBehavior = MockBehavior.Strict;
-
             // Build the collection of search providers to return from the subsystem
             var searchProviders = Container.ProvideCollection<ISearchProvider>();
-            var provider = BuildMockSearchProvider(MockBehavior);
+            var provider = BuildMockSearchProvider();
             searchProviders.Add(provider.Object);
 
             // Build out a subsystem that returns the providers
-            var subsystem = BuildMockSubsystem(MockBehavior);
+            var subsystem = BuildMockSubsystem();
             subsystem.SetupGet(s => s.SearchProviders)
                 .Returns(searchProviders);
 

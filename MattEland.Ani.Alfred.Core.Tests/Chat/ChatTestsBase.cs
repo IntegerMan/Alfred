@@ -185,7 +185,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             ChatSubsystem = new ChatSubsystem(Container, "Alfredo");
             Alfred.Register(ChatSubsystem);
 
-            var mock = BuildMockSubsystem(MockBehavior.Loose);
+            var mock = BuildMockSubsystem();
             _testSubsystem = mock.Object;
             Alfred.Register(_testSubsystem);
 

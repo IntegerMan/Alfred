@@ -41,10 +41,6 @@ namespace MattEland.Ani.Alfred.Tests.Search
     [SuppressMessage("ReSharper", "ExceptionNotDocumented")]
     public sealed class SearchModuleTests : UserInterfaceTestBase
     {
-        /// <summary>
-        ///     The mocking behavior.
-        /// </summary>
-        private const MockBehavior MockingBehavior = Moq.MockBehavior.Strict;
 
         /// <summary>
         ///     Gets or sets the module.
@@ -195,10 +191,10 @@ namespace MattEland.Ani.Alfred.Tests.Search
             //! Arrange
 
             // Set up a mock controller for verification of search requested
-            var searchController = BuildMockSearchController(MockingBehavior);
+            var searchController = BuildMockSearchController();
 
             // Set up our Alfred to control where searches go
-            var alfred = BuildMockAlfred(MockingBehavior);
+            var alfred = BuildMockAlfred();
             alfred.SetupGet(a => a.SearchController).Returns(searchController.Object);
 
             Alfred = alfred.Object;
@@ -241,7 +237,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
             var messageBox = new Mock<IMessageBoxProvider>(MockingBehavior);
             MessageBox = messageBox.Object;
 
-            Alfred = BuildMockAlfred(MockingBehavior).Object;
+            Alfred = BuildMockAlfred().Object;
 
             //! Act
 

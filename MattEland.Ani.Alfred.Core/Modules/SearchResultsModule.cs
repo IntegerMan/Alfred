@@ -10,6 +10,7 @@
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Modules
@@ -21,14 +22,22 @@ namespace MattEland.Ani.Alfred.Core.Modules
     public sealed class SearchResultsModule : AlfredModule
     {
         /// <summary>
+        ///     The results label.
+        /// </summary>
+        [NotNull]
+        private readonly TextWidget _lblResults;
+
+        /// <summary>
         ///     Initializes a new instance of the <see cref="SearchResultsModule" /> class.
         /// </summary>
         /// <param name="container"> The container. </param>
         public SearchResultsModule([NotNull] IObjectContainer container) : base(container)
         {
-            LayoutType = LayoutType.HorizontalStackPanel;
+            LayoutType = LayoutType.VerticalStackPanel;
 
             Width = double.NaN;
+
+            _lblResults = new TextWidget(NoSearchesMadeMessage, BuildWidgetParameters(@"lblResults"));
         }
 
         /// <summary>
@@ -37,6 +46,8 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <param name="alfred">The Alfred instance.</param>
         protected override void InitializeProtected(IAlfred alfred)
         {
+            Register(_lblResults);
+
             // TODO: Register a list control
         }
 
@@ -47,6 +58,20 @@ namespace MattEland.Ani.Alfred.Core.Modules
         public override string Name
         {
             get { return "Search Results"; }
+        }
+
+        /// <summary>
+        ///     Gets a message indicating no searches have been made yet
+        /// </summary>
+        /// <value>
+        ///     A message indicating no searches have been made
+        /// </value>
+        public static string NoSearchesMadeMessage
+        {
+            get
+            {
+                return "No searches have been made yet.";
+            }
         }
     }
 }

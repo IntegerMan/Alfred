@@ -77,13 +77,15 @@ namespace MattEland.Ani.Alfred.Tests.Modules
             module.WidgetsToRegisterOnInitialize.Add(textWidget);
             module.WidgetsToRegisterOnInitialize.Add(buttonWidget);
 
+            Alfred = BuildMockAlfred().Object;
+
             //! Act
 
             /* We just want to test that module.Initialize causes widgets to be added 
                and that those widgets show up as property providers. There's no need for
                a page, module, or subsystem to do this */
 
-            module.InitializeWithoutPageOrSubsystem();
+            module.Initialize(Alfred);
 
             //! Assert
 

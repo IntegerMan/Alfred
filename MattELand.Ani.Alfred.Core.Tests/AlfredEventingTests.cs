@@ -41,7 +41,7 @@ namespace MattEland.Ani.Alfred.Tests
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
     [SuppressMessage("ReSharper", "ExceptionNotDocumentedOptional")]
-    public sealed class AlfredEventingTests : AlfredTestBase
+    public sealed class AlfredEventingTests : MockEnabledAlfredTestBase
     {
 
         [NotNull]
@@ -172,15 +172,18 @@ namespace MattEland.Ani.Alfred.Tests
         {
             //! Arrange
 
-            // Build a duplicate list of widgets
+            // Build a widget to register
             var textWidget = new TextWidget(BuildWidgetParams());
-            var duplicateWidgets = new List<IWidget> { textWidget, textWidget };
 
-            // Build a mock object so that it will register the duplicates during its initialize
-            var mockModule = new Mock<AlfredModule>(MockBehavior.Strict, Container);
-            mockModule.Setup(m => m.OnRegistered(It.IsAny<IAlfred>()));
-            mockModule.Setup(m => m.Initialize(It.Is<IAlfred>(a => a == Alfred)))
-                .Callback(() => mockModule.Object.Register(duplicateWidgets));
+            // Build a mock Alfred Module that will register the duplicates during its initialization
+            var mockModule = new Mock<AlfredModule>(MockingBehavior, Container);
+            mockModule.Setup(m => m.OnRegistered(null));
+            mockModule.Setup(m => m.Initialize(Alfred))
+                .Callback(() =>
+                          {
+                              mockModule.Object.Register(textWidget);
+                              mockModule.Object.Register(textWidget);
+                          });
 
             // Register all of the things
             _page.Register(mockModule.Object);

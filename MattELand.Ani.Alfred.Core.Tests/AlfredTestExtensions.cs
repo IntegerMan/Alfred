@@ -85,20 +85,5 @@ namespace MattEland.Ani.Alfred.Tests
             return node;
         }
 
-        /// <summary>
-        ///     Initializes the <paramref name="module"/> without the need for building up a
-        ///     containing page, subsystem, or Alfred application. This isn't ideal for most cases,
-        ///     but is good for testing aspects of Module.
-        /// </summary>
-        /// <param name="module">The module.</param>
-        internal static void InitializeWithoutPageOrSubsystem(this IAlfredModule module)
-        {
-            // We don't need a full Alfred for this case - just use a default one
-            var alfred = new Mock<IAlfred>(MockBehavior.Strict);
-
-            // Initialize the module as if it were being initialized during Alfred initialization
-            module.Initialize(alfred.Object);
-        }
-
     }
 }

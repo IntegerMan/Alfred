@@ -96,7 +96,7 @@ namespace MattEland.Ani.Alfred.VisualStudio
         /// <param name="e">The <see cref="RoutedEventArgs" /> instance containing the event data.</param>
         private void OnWindowLoaded([CanBeNull] object sender, [NotNull] RoutedEventArgs e)
         {
-            var logHeader = "VSClient.Loaded";
+            const string LogHeader = "VSClient.Loaded";
 
             Debug.Assert(TabPages != null);
 
@@ -114,7 +114,7 @@ namespace MattEland.Ani.Alfred.VisualStudio
             SelectionHelper.SelectFirstItem(TabPages);
 
             // Log that we're good to go
-            _app.Console?.Log(logHeader,
+            _app.Console?.Log(LogHeader,
                               Properties.Resources.AlfredToolWindowWindowLoadedMessage,
                               LogLevel.Info);
         }

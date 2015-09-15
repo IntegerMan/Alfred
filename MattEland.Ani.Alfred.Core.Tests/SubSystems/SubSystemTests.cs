@@ -48,7 +48,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
 
             _alfred = new AlfredApplication(Container);
 
-            _subsystem = BuildMockSubsystem(MockBehavior.Strict);
+            _subsystem = BuildMockSubsystem();
         }
 
         /// <summary>

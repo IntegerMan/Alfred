@@ -44,7 +44,7 @@ namespace MattEland.Ani.Alfred.Tests.Controls
             base.SetUp();
 
             _chatPane = new ChatPane(Container);
-            _chatMock = new Mock<IChatProvider>(MockBehavior.Strict);
+            _chatMock = BuildMockChatProvider();
 
             // Chat Pane gets the chat provider in its data context
             _chatPane.DataContext = _chatMock.Object;

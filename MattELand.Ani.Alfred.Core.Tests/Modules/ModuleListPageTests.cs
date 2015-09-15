@@ -20,8 +20,6 @@ using MattEland.Ani.Alfred.Tests.Controls;
 using MattEland.Common;
 using MattEland.Testing;
 
-using Moq;
-
 using NUnit.Framework;
 
 using Shouldly;
@@ -39,10 +37,6 @@ namespace MattEland.Ani.Alfred.Tests.Modules
     [Category("Pages")]
     public sealed class ModuleListPageTests : UserInterfaceTestBase
     {
-        /// <summary>
-        ///     The mocking behavior.
-        /// </summary>
-        private const MockBehavior MockingBehavior = MockBehavior.Strict;
 
         /// <summary>
         ///     Sets up the environment for each test by creating a <see cref="ModuleListPage"/>, a
@@ -83,12 +77,12 @@ namespace MattEland.Ani.Alfred.Tests.Modules
             //! Arrange
 
             // Set up a widget to be visible
-            var widget = BuildMockWidget(MockingBehavior);
+            var widget = BuildMockWidget();
             widget.SetupGet(w => w.IsVisible)
                 .Returns(true);
 
             // Add a module to contain things
-            var module = BuildMockModule(MockingBehavior);
+            var module = BuildMockModule();
             module.SetupGet(m => m.Widgets)
                 .Returns(widget.Object.ToCollection(Container));
 
@@ -110,12 +104,12 @@ namespace MattEland.Ani.Alfred.Tests.Modules
             //! Arrange
 
             // Set up a widget to be hidden
-            var widget = BuildMockWidget(MockingBehavior);
+            var widget = BuildMockWidget();
             widget.SetupGet(w => w.IsVisible)
                 .Returns(false);
 
             // Add a module to contain things
-            var module = BuildMockModule(MockingBehavior);
+            var module = BuildMockModule();
             module.SetupGet(m => m.Widgets)
                 .Returns(widget.Object.ToCollection(Container));
 
@@ -151,7 +145,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         public void CanAddModulesToModuleListPage()
         {
             //! Arrange
-            var module = BuildMockModule(MockingBehavior);
+            var module = BuildMockModule();
 
             //! Act
             Page.Register(module.Object);
@@ -169,7 +163,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         public void CanClearModulesFromModuleListPage()
         {
             //! Arrange
-            var module = BuildMockModule(MockingBehavior);
+            var module = BuildMockModule();
 
             //! Act
             Page.Register(module.Object);
@@ -180,6 +174,9 @@ namespace MattEland.Ani.Alfred.Tests.Modules
             Page.Modules.ShouldNotContain(module.Object);
         }
 
+        /// <summary>
+        ///     The Module List Page should use wrapping layout by default.
+        /// </summary>
         [Test, Category("Layout")]
         public void ModuleListPageShouldUseWrappingLayoutByDefault()
         {

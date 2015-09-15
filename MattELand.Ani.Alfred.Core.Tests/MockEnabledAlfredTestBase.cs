@@ -8,6 +8,7 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
@@ -34,12 +35,11 @@ namespace MattEland.Ani.Alfred.Tests
         /// <summary>
         ///     Builds a mock <see cref="IAlfredSubsystem" /> .
         /// </summary>
-        /// <param name="mockBehavior">The mocking behavior.</param>
         /// <returns>A mock subsystem</returns>
-        protected Mock<IAlfredSubsystem> BuildMockSubsystem(MockBehavior mockBehavior)
+        protected Mock<IAlfredSubsystem> BuildMockSubsystem()
         {
             // Build the Mock
-            var mock = new Mock<IAlfredSubsystem>(mockBehavior);
+            var mock = new Mock<IAlfredSubsystem>(MockingBehavior);
 
             mock.SetupGet(s => s.Id).Returns("Test");
             mock.SetupGet(s => s.Pages).Returns(Container.ProvideCollection<IPage>());
@@ -54,19 +54,20 @@ namespace MattEland.Ani.Alfred.Tests
         /// <summary>
         ///     Builds a page mock.
         /// </summary>
-        /// <param name="mockBehavior"> The mocking behavior for the new mock. </param>
         /// <returns>
         ///     The mock page.
         /// </returns>
-        protected Mock<IPage> BuildMockPage(MockBehavior mockBehavior)
+        protected Mock<IPage> BuildMockPage()
         {
             // Some tests will want strict control over mocking and others won't
-            var mock = new Mock<IPage>(mockBehavior);
+            var mock = new Mock<IPage>(MockingBehavior);
+
+            SetupMockComponent(mock);
 
             // Set up simple members we expect to be hit during startup
             mock.SetupGet(p => p.IsRootLevel).Returns(true);
-
-            SetupMockComponent(mock);
+            mock.SetupGet(p => p.Id).Returns("TestPage");
+            mock.SetupGet(p => p.Name).Returns("Test Page");
 
             return mock;
         }
@@ -111,11 +112,10 @@ namespace MattEland.Ani.Alfred.Tests
         /// <summary>
         ///     Builds a mock search controller.
         /// </summary>
-        /// <param name="mockBehavior">The mocking behavior.</param>
         /// <returns>The mock search controller</returns>
-        protected Mock<ISearchController> BuildMockSearchController(MockBehavior mockBehavior)
+        protected Mock<ISearchController> BuildMockSearchController()
         {
-            var mock = new Mock<ISearchController>(mockBehavior);
+            var mock = new Mock<ISearchController>(MockingBehavior);
 
             SetupMockComponent(mock);
 
@@ -125,18 +125,15 @@ namespace MattEland.Ani.Alfred.Tests
         /// <summary>
         ///     Builds mock search provider.
         /// </summary>
-        /// <param name="mockBehavior">The mocking behavior.</param>
         /// <param name="resultOperation">The result operation.</param>
         /// <returns>A mock search provider.</returns>
-        protected Mock<ISearchProvider> BuildMockSearchProvider(MockBehavior mockBehavior,
-                                                                ISearchOperation resultOperation =
-                                                                    null)
+        protected Mock<ISearchProvider> BuildMockSearchProvider(ISearchOperation resultOperation = null)
         {
             // Build a default operation
-            resultOperation = resultOperation ?? BuildMockSearchOperation(mockBehavior).Object;
+            resultOperation = resultOperation ?? BuildMockSearchOperation().Object;
 
             // Set up the search provider
-            var searchProvider = new Mock<ISearchProvider>(mockBehavior);
+            var searchProvider = new Mock<ISearchProvider>();
 
             // When searching, there should always be an operation
             searchProvider.Setup(p => p.PerformSearch(It.IsAny<string>())).Returns(resultOperation);
@@ -150,17 +147,18 @@ namespace MattEland.Ani.Alfred.Tests
         /// <summary>
         ///     Builds a mock module.
         /// </summary>
-        /// <param name="mockingBehavior">The mocking behavior.</param>
         /// <returns>A mock module</returns>
-        protected Mock<IAlfredModule> BuildMockModule(MockBehavior mockingBehavior)
+        protected Mock<IAlfredModule> BuildMockModule()
         {
-            var mock = new Mock<IAlfredModule>(mockingBehavior);
+            var mock = new Mock<IAlfredModule>(MockingBehavior);
 
             // Configure Common Properties
             SetupMockComponent(mock);
 
             // Setup Methods
             mock.Setup(m => m.OnRegistered(It.IsAny<IAlfred>()));
+            mock.Setup(m => m.Register(It.IsAny<IWidget>()));
+            mock.Setup(m => m.Register(It.IsAny<IEnumerable<IWidget>>()));
 
             // Build out collections
             mock.SetupGet(m => m.Widgets).Returns(Container.ProvideCollection<IWidget>());
@@ -171,11 +169,10 @@ namespace MattEland.Ani.Alfred.Tests
         /// <summary>
         ///     Builds a mock operation.
         /// </summary>
-        /// <param name="mockBehavior">The mocking behavior.</param>
         /// <returns>A mock operation.</returns>
-        protected Mock<ISearchOperation> BuildMockSearchOperation(MockBehavior mockBehavior)
+        protected Mock<ISearchOperation> BuildMockSearchOperation()
         {
-            var mock = new Mock<ISearchOperation>(mockBehavior);
+            var mock = new Mock<ISearchOperation>(MockingBehavior);
 
             // Setup properties
             mock.SetupGet(m => m.EncounteredError).Returns(false);
@@ -203,11 +200,10 @@ namespace MattEland.Ani.Alfred.Tests
         /// <summary>
         ///     Builds a mock search result.
         /// </summary>
-        /// <param name="mockingBehavior">The mocking behavior used when creating Moq mocks.</param>
         /// <returns>A mock search result</returns>
-        protected static Mock<ISearchResult> BuildMockSearchResult(MockBehavior mockingBehavior)
+        protected Mock<ISearchResult> BuildMockSearchResult()
         {
-            var mock = new Mock<ISearchResult>(mockingBehavior);
+            var mock = new Mock<ISearchResult>(MockingBehavior);
 
             return mock;
         }
@@ -215,13 +211,12 @@ namespace MattEland.Ani.Alfred.Tests
         /// <summary>
         ///     Builds a mock widget.
         /// </summary>
-        /// <param name="mockingBehavior"> The mocking behavior. </param>
         /// <returns>
         ///     A mock widget.
         /// </returns>
-        protected static Mock<IWidget> BuildMockWidget(MockBehavior mockingBehavior)
+        protected Mock<IWidget> BuildMockWidget()
         {
-            var mock = new Mock<IWidget>(mockingBehavior);
+            var mock = new Mock<IWidget>(MockingBehavior);
 
             // By default widgets will be visible
             mock.SetupGet(m => m.IsVisible).Returns(true);
@@ -232,13 +227,12 @@ namespace MattEland.Ani.Alfred.Tests
         /// <summary>
         ///     Builds a mock Alfred instance.
         /// </summary>
-        /// <param name="mockingBehavior"> The mocking behavior. </param>
         /// <returns>
         ///     A Mock Alfred instance.
         /// </returns>
-        protected Mock<IAlfred> BuildMockAlfred(MockBehavior mockingBehavior)
+        protected Mock<IAlfred> BuildMockAlfred()
         {
-            var mock = new Mock<IAlfred>(mockingBehavior);
+            var mock = new Mock<IAlfred>(MockingBehavior);
 
             mock.SetupGet(m => m.Container).Returns(Container);
 
@@ -248,19 +242,37 @@ namespace MattEland.Ani.Alfred.Tests
         /// <summary>
         ///     Builds a mock console.
         /// </summary>
-        /// <param name="mockingBehavior"> The mocking behavior used when creating Moq mocks. </param>
         /// <returns>
         ///     A mock console;
         /// </returns>
-        protected Mock<IConsole> BuildMockConsole(MockBehavior mockingBehavior)
+        protected Mock<IConsole> BuildMockConsole()
         {
-            var console = new Mock<IConsole>(mockingBehavior);
+            var console = new Mock<IConsole>(MockingBehavior);
 
             console.SetupGet(c => c.Container).Returns(Container);
 
             console.Setup(c => c.Log(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<LogLevel>()));
 
             return console;
+        }
+
+        /// <summary>
+        ///     The mocking behavior to use when creating Mock objects.
+        /// </summary>
+        protected MockBehavior MockingBehavior { get; set; } = Moq.MockBehavior.Strict;
+
+        /// <summary>
+        ///     Builds a mock chat provider.
+        /// </summary>
+        /// <returns>
+        ///     A Mock chat provider
+        /// </returns>
+        [NotNull]
+        protected Mock<IChatProvider> BuildMockChatProvider()
+        {
+            var mock = new Mock<IChatProvider>(MockingBehavior);
+
+            return mock;
         }
     }
 }

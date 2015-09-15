@@ -58,11 +58,11 @@ namespace MattEland.Ani.Alfred.Tests.Pages
             //! Arrange
 
             // Build out a pair of test pages - one root, the other not
-            const MockBehavior Behavior = MockBehavior.Loose;
-            var nonRootPage = BuildMockPage(Behavior);
+
+            var nonRootPage = BuildMockPage();
             nonRootPage.SetupGet(p => p.IsRootLevel).Returns(false);
 
-            var rootPage = BuildMockPage(Behavior);
+            var rootPage = BuildMockPage();
             rootPage.SetupGet(p => p.IsRootLevel).Returns(true);
 
             _testPages.Add(nonRootPage.Object);
@@ -98,7 +98,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
         {
             //! Arrange
 
-            var nonRootPage = BuildMockPage(MockBehavior.Loose);
+            var nonRootPage = BuildMockPage();
             nonRootPage.SetupGet(p => p.IsRootLevel).Returns(false);
             _testPages.Add(nonRootPage.Object);
 
@@ -119,7 +119,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
         {
             //! Arrange
 
-            var nonRootPage = BuildMockPage(MockBehavior.Loose);
+            var nonRootPage = BuildMockPage();
             nonRootPage.SetupGet(p => p.IsRootLevel).Returns(false);
             _testPages.Add(nonRootPage.Object);
 
