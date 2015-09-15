@@ -30,6 +30,12 @@ namespace MattEland.Ani.Alfred.Core.Pages
         private SearchModule _searchModule;
 
         /// <summary>
+        ///     The search results module.
+        /// </summary>
+        [NotNull]
+        private SearchResultsModule _searchResultsModule;
+
+        /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredPage" /> class.
         /// </summary>
         /// <param name="container">The container.</param>
@@ -37,6 +43,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
             : base(container, "Search", "SearchPage")
         {
             _searchModule = new SearchModule(container);
+            _searchResultsModule = new SearchResultsModule(container);
         }
 
         /// <summary>
@@ -47,7 +54,11 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// </value>
         public override IEnumerable<IAlfredModule> Modules
         {
-            get { yield return _searchModule; }
+            get
+            {
+                yield return _searchModule;
+                yield return _searchResultsModule;
+            }
         }
     }
 }

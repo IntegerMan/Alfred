@@ -7,8 +7,6 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
-
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
@@ -44,7 +42,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         private TextBoxWidget _searchText;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredModule" /> class.
+        ///     Initializes a new instance of the <see cref="SearchModule" /> class.
         /// </summary>
         /// <param name="container"> The container. </param>
         public SearchModule([NotNull] IObjectContainer container) : base(container)
@@ -88,9 +86,9 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        ///     Gets the name of the component.
+        ///     Gets the name of the module.
         /// </summary>
-        /// <value>The name of the component.</value>
+        /// <value>The name of the module.</value>
         public override string Name
         {
             get { return "Search"; }
