@@ -32,11 +32,6 @@ namespace MattEland.Ani.Alfred.Core.Console
         {
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
 
-            // Log for diagnostics!
-            string message =
-                $"DiagnosticConsole instantiated. This is instance # {(ConstructedCount + 1)} with container {container}";
-            Log("DC.Init", message, LogLevel.Verbose);
-
             ConstructedCount++;
         }
 
@@ -59,7 +54,7 @@ namespace MattEland.Ani.Alfred.Core.Console
         {
             if (evt == null) { throw new ArgumentNullException(nameof(evt)); }
 
-            Debug.WriteLine($"{Container}: {evt.Title}: {evt.Message} @ {evt.Time}. # Events: {EventCount + 1}");
+            Debug.WriteLine($"{Container}: {evt.Title}: {evt.Message} @ {evt.Time}");
 
             base.Log(evt);
         }

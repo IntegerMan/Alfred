@@ -7,6 +7,8 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System;
+
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
@@ -37,7 +39,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
 
             Width = double.NaN;
 
-            _lblResults = new TextWidget(NoSearchesMadeMessage, BuildWidgetParameters(@"lblResults"));
+            _lblResults = new TextWidget(string.Empty, BuildWidgetParameters(@"lblResults"));
         }
 
         /// <summary>
@@ -46,9 +48,27 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <param name="alfred">The Alfred instance.</param>
         protected override void InitializeProtected(IAlfred alfred)
         {
+            UpdateStatusMessage();
+
             Register(_lblResults);
 
             // TODO: Register a list control
+        }
+
+        /// <summary>
+        ///     Updates the component
+        /// </summary>
+        protected override void UpdateProtected()
+        {
+            UpdateStatusMessage();
+        }
+
+        /// <summary>
+        ///     Updates the status message with the latest status from the <see cref="SearchController"/>.
+        /// </summary>
+        private void UpdateStatusMessage()
+        {
+            _lblResults.Text = SearchController?.StatusMessage;
         }
 
         /// <summary>
@@ -72,6 +92,18 @@ namespace MattEland.Ani.Alfred.Core.Modules
             {
                 return "No searches have been made yet.";
             }
+        }
+
+        /// <summary>
+        ///     Gets the search controller.
+        /// </summary>
+        /// <value>
+        ///     The search controller.
+        /// </value>
+        [CanBeNull]
+        public ISearchController SearchController
+        {
+            get { return AlfredInstance?.SearchController; }
         }
     }
 }

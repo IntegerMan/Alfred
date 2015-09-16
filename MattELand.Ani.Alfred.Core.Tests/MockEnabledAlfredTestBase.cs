@@ -119,6 +119,8 @@ namespace MattEland.Ani.Alfred.Tests
 
             SetupMockComponent(mock);
 
+            mock.SetupGet(m => m.StatusMessage).Returns("No searches have been made yet.");
+
             return mock;
         }
 

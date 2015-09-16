@@ -584,9 +584,11 @@ namespace MattEland.Common.Providers
             try
             {
                 // Log a diagnostic message
-                var msg =
-                    $"Creating instance of {type.Name} using provider {provider.GetType().Name} on container {Name}";
-                Debug.WriteLine(msg);
+                if (LogCreation)
+                {
+                    var msg = $"Creating instance of {type.Name} using provider {provider.GetType().Name} on container {Name}";
+                    Debug.WriteLine(msg);
+                }
 
                 /* Create and return an instance of the requested type using the type 
                    determined earlier. This can throw many exceptions which will be
@@ -617,6 +619,14 @@ namespace MattEland.Common.Providers
                 throw new NotSupportedException(msg, ex);
             }
         }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether creation events are logged.
+        /// </summary>
+        /// <value>
+        ///     <see langword="true"/> if logging should be enabled, <see langword="false"/> if not.
+        /// </value>
+        public bool LogCreation { get; set; }
 
         /// <summary>
         ///     Gets an <paramref name="arguments" /> string for the specified

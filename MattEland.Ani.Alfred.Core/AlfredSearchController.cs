@@ -24,7 +24,7 @@ namespace MattEland.Ani.Alfred.Core
     /// <summary>
     ///     The default <see cref="ISearchController"/> for Alfred applications.
     /// </summary>
-    public sealed class AlfredSearchController : ComponentBase, ISearchController, IHasContainer
+    public sealed class AlfredSearchController : ComponentBase, ISearchController
     {
 
         /// <summary>
@@ -93,12 +93,10 @@ namespace MattEland.Ani.Alfred.Core
         /// <param name="searchText"> The search text. </param>
         public void PerformSearch([NotNull] string searchText)
         {
-            // If there's stuff going on - cancel it
+            // Cancel any ongoing searches
             if (OngoingOperations.Any()) { Abort(); }
 
-            // Log this event
-            var logMessage = $"Searching for: {searchText}";
-            logMessage.Log("Search Executed", LogLevel.Info, Container);
+            RecordSearchStart(searchText);
 
             // Search all providers
             foreach (var provider in SearchProviders)
@@ -115,13 +113,24 @@ namespace MattEland.Ani.Alfred.Core
         private void StartSearchOperation(
             [NotNull] string searchText, [NotNull] ISearchProvider searchProvider)
         {
-            // TODO: Log this
+            // Log this event
+            var logMessage = $"Searching {searchProvider.Id} for: '{searchText}'";
+            logMessage.Log("Search Executed", LogLevel.Info, Container);
 
             var operation = searchProvider.PerformSearch(searchText);
 
             _ongoingOperations.Add(operation);
 
             // TODO: Update status to in search / prepare tracking metrics
+        }
+
+        /// <summary>
+        ///     Records the start of a search.
+        /// </summary>
+        /// <param name="searchText"> The search text. </param>
+        private void RecordSearchStart(string searchText)
+        {
+            _lastSearchText = searchText;
         }
 
         /// <summary>
@@ -141,6 +150,8 @@ namespace MattEland.Ani.Alfred.Core
             var target = SearchProviders.FirstOrDefault(s => s.Id.Matches(providerId));
             if (target != null)
             {
+                RecordSearchStart(searchText);
+
                 StartSearchOperation(searchText, target);
             }
             else
@@ -258,6 +269,12 @@ namespace MattEland.Ani.Alfred.Core
         private readonly ICollection<ISearchOperation> _ongoingOperations;
 
         /// <summary>
+        ///     The last search's textual input.
+        /// </summary>
+        [CanBeNull]
+        private string _lastSearchText;
+
+        /// <summary>
         ///     Gets the search operations that are currently executing.
         /// </summary>
         /// <value>
@@ -276,7 +293,10 @@ namespace MattEland.Ani.Alfred.Core
         /// <value>
         ///     <see langword="true"/> if this instance is searching, <see langword="false"/> if not.
         /// </value>
-        public bool IsSearching { get; }
+        public bool IsSearching
+        {
+            get { return OngoingOperations.Any(); }
+        }
 
         /// <summary>
         ///     Gets a user-facing message describing the status of the last search including the number
@@ -285,7 +305,20 @@ namespace MattEland.Ani.Alfred.Core
         /// <value>
         ///     A message describing the status of the controller.
         /// </value>
-        public string StatusMessage { get; }
+        public string StatusMessage
+        {
+            get
+            {
+                if (_lastSearchText.HasText())
+                {
+                    return $"Searching for \"{_lastSearchText}\". No results found so far...";
+                }
+                else
+                {
+                    return "No searches have been made yet.";
+                }
+            }
+        }
 
         /// <summary>
         ///     Registers the search provider.

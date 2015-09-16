@@ -373,17 +373,36 @@ namespace MattEland.Ani.Alfred.Tests.Search
         {
             //! Arrange
 
-            var provider = BuildMockSearchProvider();
-            var operation = PrepareSearchProviderToReturnNewOperation(provider);
-
-            Controller.Register(provider.Object);
+            var operation = PrepareSearchControllerWithSearchProviderYieldingOperation();
 
             //! Act
+
             Controller.PerformSearch(SearchString);
             Controller.Abort();
 
             //! Assert
+
             operation.Verify(o => o.Abort(), Times.Once);
+        }
+
+        /// <summary>
+        ///     Calling Abort on the search controller should in turn call abort on all ongoing searches.
+        /// </summary>
+        [Test]
+        public void IsSearchingShouldBeTrueWhenSearching()
+        {
+            //! Arrange
+
+            var operation = PrepareSearchControllerWithSearchProviderYieldingOperation();
+
+            //! Act
+
+            Controller.PerformSearch(SearchString);
+
+            //! Assert
+
+            Controller.IsSearching.ShouldBeTrue();
+            Controller.OngoingOperations.ShouldContain(operation.Object);
         }
 
         /// <summary>
@@ -395,6 +414,8 @@ namespace MattEland.Ani.Alfred.Tests.Search
         {
             //! Arrange
 
+            PrepareSearchControllerWithSearchProviderYieldingOperation();
+
             // Set up a console for verification
             var console = BuildMockConsole();
             console.Object.RegisterAsProvidedInstance(typeof(IConsole), Container);
@@ -405,10 +426,28 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             //! Assert
 
-            var title = "Search Executed";
-            var message = $"Searching for: {SearchString}";
+            var firstProviderId = Controller.SearchProviders.First().Id;
 
-            console.Verify(c => c.Log(title, message, LogLevel.Info), Times.Once);
+            const string Title = "Search Executed";
+            var message = $"Searching {firstProviderId} for: '{SearchString}'";
+
+            console.Verify(c => c.Log(Title, message, LogLevel.Info), Times.Once);
+        }
+
+        /// <summary>
+        ///     Prepares the search controller with a simple Mock search provider that yields a Mock operation when a search is made.
+        /// </summary>
+        /// <returns>
+        ///     The Mock operation that will be yielded
+        /// </returns>
+        private Mock<ISearchOperation> PrepareSearchControllerWithSearchProviderYieldingOperation()
+        {
+            var provider = BuildMockSearchProvider();
+            var operation = PrepareSearchProviderToReturnNewOperation(provider);
+
+            Controller.Register(provider.Object);
+
+            return operation;
         }
 
         /// <summary>
@@ -420,6 +459,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
         ///     The mock search operation
         /// </returns>
         [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Local")]
+        [NotNull]
         private Mock<ISearchOperation> PrepareSearchProviderToReturnNewOperation(
             Mock<ISearchProvider> searchProvider)
         {
