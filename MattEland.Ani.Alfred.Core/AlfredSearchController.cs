@@ -2,7 +2,7 @@
 // AlfredSearchController.cs
 // 
 // Created on:      09/09/2015 at 12:30 AM
-// Last Modified:   09/16/2015 at 1:36 AM
+// Last Modified:   09/16/2015 at 10:51 AM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -104,8 +104,9 @@ namespace MattEland.Ani.Alfred.Core
         /// The item type's name.
         /// </value>
         /// <example>
-        ///     Some examples of <see cref="ItemTypeName"/> values might be "Folder", "Application",
-        ///     "User", etc.
+        ///     Some examples of
+        ///     <see cref="MattEland.Ani.Alfred.Core.AlfredSearchController.ItemTypeName" /> values
+        ///     might be "Folder", "Application", "User", etc.
         /// </example>
         public override string ItemTypeName
         {
@@ -220,30 +221,33 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        ///     Gets a user-facing message describing the status of the last search including the
-        ///     number of results found and details on any errors encountered.
+        ///     Gets a user-facing message describing the status of the last search including the number
+        ///     of results found and details on any errors encountered.
         /// </summary>
         /// <value>
-        /// A message describing the status of the controller.
+        ///     A message describing the status of the search.
         /// </value>
         public string StatusMessage
         {
             get
             {
-                if (_lastSearchText.HasText())
-                {
-                    var numResults = Results.Count();
-
-                    var resultText = numResults <= 0
-                                         ? "No results"
-                                         : $"{numResults} {numResults.Pluralize("result", "results")}";
-
-                    return $"Searching for \"{_lastSearchText}\". {resultText} found so far...";
-                }
-                else
+                // When starting up, no searches will be made, so just use static text
+                if (!_lastSearchText.HasText())
                 {
                     return "No searches have been made yet.";
                 }
+
+                var numResults = Results.Count();
+
+                // Build out a result string ("42 results" / "1 result" / "No results")
+                var resultText = numResults <= 0
+                                     ? "No results"
+                                     : $"{numResults} {numResults.Pluralize("result", "results")}";
+
+                // Format the results based on the search status (in process vs completed)
+                return IsSearching
+                           ? $"Searching for \"{_lastSearchText}\". {resultText} found so far..."
+                           : $"Search complete. {resultText} found for the search: \"{_lastSearchText}\".";
             }
         }
 
@@ -355,7 +359,7 @@ namespace MattEland.Ani.Alfred.Core
         /// </exception>
         /// <exception cref="ArgumentException">
         /// When <paramref name="provider" /> 's Id is the same as another
-        /// <paramref name="provider"/> that has already been added.
+        /// <paramref name="provider" /> that has already been added.
         /// </exception>
         public void Register(ISearchProvider provider)
         {
