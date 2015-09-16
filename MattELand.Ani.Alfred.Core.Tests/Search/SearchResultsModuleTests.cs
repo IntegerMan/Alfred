@@ -18,7 +18,6 @@ using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Ani.Alfred.Tests.Controls;
-using MattEland.Common;
 using MattEland.Testing;
 
 using Moq;
@@ -110,16 +109,22 @@ namespace MattEland.Ani.Alfred.Tests.Search
         }
 
         /// <summary>
-        ///     The status label should match the search controller's status during startup.
+        ///     The status label should provide an accurate status of search results for an ongoing
+        ///     search with a variable number of items returned so far.
         /// </summary>
+        /// <param name="numResults"> The number of items to return. </param>
+        /// <param name="expectedFound"> The expected found. </param>
         [Test]
-        public void SearchLabelShouldMatchSearchControllerStatusAfterUpdate()
+        [TestCase(0, "No results")]
+        [TestCase(1, "1 result")]
+        [TestCase(2, "2 results")]
+        public void SearchLabelShouldMatchActiveStatus(int numResults, string expectedFound)
         {
             //! Arrange
 
             // We're testing with an actual search controller and a dummy search provider
             // This lets us simulate searches while still testing the UI / controller interactions
-            var searchController = BuildSearchControllerWithMockProvider();
+            var searchController = BuildSearchControllerWithMockProvider(numResults);
 
             // Program Alfred to return this search controller
             MockAlfred.SetupGet(m => m.SearchController).Returns(searchController);
@@ -127,40 +132,46 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             //! Act
 
-            // Get the module settled in
+            // Get everything started - we're bypassing subsystems and pages for this test
+            searchController.Initialize(Alfred);
             Module.Initialize(Alfred);
             Module.Update();
 
             // Send across a search for all items
             searchController.PerformSearch("Goat Cheese Tuxedos", "All");
 
-            // Update the module. This should update the UI
+            // Simulate an update pulse
+            searchController.Update();
             Module.Update();
 
             //! Assert
 
-            const string ExpectedStatus = "Searching for \"Goat Cheese Tuxedos\". No results found so far...";
+            var expectedStatus = $"Searching for \"Goat Cheese Tuxedos\". {expectedFound} found so far...";
 
-            searchController.StatusMessage.ShouldBe(ExpectedStatus);
+            searchController.Results.Count().ShouldBe(numResults);
+            searchController.StatusMessage.ShouldBe(expectedStatus);
 
             var label = GetResultsLabel();
-            label.Text.ShouldBe(ExpectedStatus);
+            label.Text.ShouldBe(expectedStatus);
 
         }
 
         /// <summary>
         ///     Builds a search controller with a mock search provider.
         /// </summary>
+        /// <param name="numResults"> The number of results to yield. </param>
         /// <returns>
         ///     The <see cref="AlfredSearchController"/> instance.
         /// </returns>
-        private AlfredSearchController BuildSearchControllerWithMockProvider()
+        private AlfredSearchController BuildSearchControllerWithMockProvider(int numResults = 0)
         {
             var searchController = new AlfredSearchController(Container);
 
             // Build up a search operation that is an ongoing operation
             var operation = BuildMockSearchOperation();
             operation.SetupGet(o => o.IsSearchComplete).Returns(false);
+
+            ProgramOperationToReturnResults(operation, numResults);
 
             // Give the search controller something to return
             var mockSearchProvider = BuildMockSearchProvider(operation.Object);
@@ -173,36 +184,26 @@ namespace MattEland.Ani.Alfred.Tests.Search
         }
 
         /// <summary>
-        ///     Simulates that a search just started.
+        ///     Programs an operation to return search results.
         /// </summary>
-        /// <param name="searchController"> </param>
-        /// <param name="search"> The search. </param>
-        /// <param name="numResults"> Number of results found so far. </param>
-        /// <returns>
-        ///     The returned value of StatusMessage.
-        /// </returns>
-        private static string ProgramSearch(Mock<ISearchController> searchController, string search, int numResults = 0)
+        /// <param name="operation"> The operation. </param>
+        /// <param name="numResults"> The number of items to return. </param>
+        private void ProgramOperationToReturnResults(Mock<ISearchOperation> operation, int numResults)
         {
-            // TODO: Delete this once the controller supports this logic.
+            var results = Container.ProvideCollection<ISearchResult>();
 
-            searchController.SetupGet(s => s.IsSearching).Returns(true);
-
-            if (numResults <= 0)
+            for (var i = 1; i <= numResults; i++)
             {
-                search = $"Searching for \"{search}\". No results found so far...";
-            }
-            else
-            {
-                var results = numResults.Pluralize("result", "results");
+                var mockResult = BuildMockSearchResult();
+                mockResult.SetupGet(r => r.Title).Returns($"Result {i}");
 
-                search = $"Searching for \"{search}\". {numResults} {results} found so far...";
+                results.Add(mockResult.Object);
             }
 
-            searchController.SetupGet(s => s.StatusMessage).Returns(search);
+            // Sanity check
+            results.Count.ShouldBe(numResults);
 
-            // Update Alfred's search controller with the updated Mock
-
-            return search;
+            operation.SetupGet(o => o.Results).Returns(results);
         }
 
         /// <summary>
