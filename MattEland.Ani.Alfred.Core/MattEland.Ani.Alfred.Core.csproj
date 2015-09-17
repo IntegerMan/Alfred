@@ -123,6 +123,7 @@
     </Compile>
     <Compile Include="Subsystems\ExplorerSearchOperation.cs" />
     <Compile Include="Subsystems\ExplorerSearchProvider.cs" />
+    <Compile Include="Subsystems\ExplorerSearchResult.cs" />
     <Compile Include="Subsystems\MindExplorerSubsystem.cs" />
     <Compile Include="Subsystems\SimpleSubsystem.cs" />
     <Compile Include="Widgets\AlfredProgressBarWidget.cs" />

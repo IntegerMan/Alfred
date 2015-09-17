@@ -1,4 +1,14 @@
-﻿using System.Collections.Generic;
+﻿// ---------------------------------------------------------
+// ExplorerSearchOperation.cs
+// 
+// Created on:      09/10/2015 at 10:01 PM
+// Last Modified:   09/17/2015 at 1:15 AM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using System.Collections.Generic;
+using System.Linq;
 
 using JetBrains.Annotations;
 
@@ -19,21 +29,27 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         private readonly MindExplorerSubsystem _mindExplorerSubsystem;
 
         /// <summary>
+        ///     The search results.
+        /// </summary>
+        [NotNull]
+        [ItemNotNull]
+        private readonly ICollection<ISearchResult> _results;
+
+        /// <summary>
         ///     The search text.
         /// </summary>
         [NotNull]
         private readonly string _searchText;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="ExplorerSearchOperation"/> class.
+        ///     Initializes a new instance of the <see cref="ExplorerSearchOperation" /> class.
         /// </summary>
         /// <param name="container">The container.</param>
         /// <param name="mindExplorerSubsystem">The mind explorer subsystem.</param>
         /// <param name="searchText">The search text.</param>
-        internal ExplorerSearchOperation(
-            IObjectContainer container,
-            MindExplorerSubsystem mindExplorerSubsystem,
-            string searchText)
+        internal ExplorerSearchOperation(IObjectContainer container,
+                                         MindExplorerSubsystem mindExplorerSubsystem,
+                                         string searchText)
         {
             _results = container.ProvideCollection<ISearchResult>();
 
@@ -68,12 +84,6 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         public string ErrorMessage { get; } = string.Empty;
 
         /// <summary>
-        ///     The search results.
-        /// </summary>
-        [NotNull, ItemNotNull]
-        private readonly ICollection<ISearchResult> _results;
-
-        /// <summary>
         ///     Gets the results of the search operation.
         /// </summary>
         /// <value>
@@ -85,21 +95,101 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         }
 
         /// <summary>
-        ///     Updates the search operation, adding results to the <see cref="ISearchOperation.Results"/> collection and
-        ///     updating <see cref="ISearchOperation.IsSearchComplete"/> based on the state of the search operation.
+        ///     Updates the search operation, adding results to the
+        ///     <see cref="ISearchOperation.Results" />
+        ///     collection and updating
+        ///     <see cref="ISearchOperation.IsSearchComplete" />
+        ///     based on the state of the search operation.
         /// </summary>
         public void Update()
         {
-            // TODO: Implement search
+            // Start with Alfred as the Mind Explorer's root node
+            IPropertyProvider root = _mindExplorerSubsystem.AlfredInstance;
+
+            // Search the entire tree
+            if (root != null)
+            {
+                // Search using case insensitivity
+                var searchText = _searchText.ToUpperInvariant();
+
+                SearchPropertyProviderTreeNode(root, searchText);
+            }
+
+            // We've now navigated the tree and finished the search
+            IsSearchComplete = true;
+            EncounteredError = false;
         }
 
         /// <summary>
-        ///     Aborts the search.
-        ///     This is called when the user cancels a search or when a search times out.
+        ///     Searches the hierarchy of <paramref name="node" /> for matches to the search text
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="searchText"></param>
+        private void SearchPropertyProviderTreeNode([NotNull] IPropertyProvider node,
+                                                    [NotNull] string searchText)
+        {
+            // If this node matches our search criteria, add it to the results
+            if (IsNodeSearchMatch(node, searchText))
+            {
+                var searchResult = new ExplorerSearchResult(node);
+
+                _results.Add(searchResult);
+            }
+
+            // If there are no children, just exit now
+            if (node.PropertyProviders == null) return;
+
+            // Recursively search all children
+            foreach (var childNode in node.PropertyProviders.Where(childNode => childNode != null))
+            {
+                SearchPropertyProviderTreeNode(childNode, _searchText);
+            }
+        }
+
+        /// <summary>
+        ///     Query if the <paramref name="node" /> is a search match based on its name and
+        ///     property names and values.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="searchText">The search text.</param>
+        /// <returns>
+        ///     <see langword="true" /> if <paramref name="node" /> matches the search,
+        ///     <see langword="false" /> if not.
+        /// </returns>
+        private static bool IsNodeSearchMatch([NotNull] IPropertyProvider node, string searchText)
+        {
+            // If the name in of itself matches, exit now
+            if (node.DisplayName.ToUpperInvariant().Contains(searchText))
+            {
+                return true;
+            }
+
+            // Check properties for any match
+            if (node.Properties != null)
+            {
+                foreach (var property in node.Properties)
+                {
+                    if (property == null) continue;
+
+                    if (property.DisplayName.ToUpperInvariant().Contains(searchText)
+                        || property.DisplayValue.ToUpperInvariant().Contains(searchText))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        ///     Aborts the search. This is called when the user cancels a search or when a search
+        ///     times out.
         /// </summary>
         public void Abort()
         {
-            // TODO: Do something
+            // No actions to take since this search is not yet asynchronous.
         }
     }
+
 }

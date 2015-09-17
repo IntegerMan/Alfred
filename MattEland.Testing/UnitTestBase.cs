@@ -93,7 +93,7 @@ namespace MattEland.Testing
         protected static void TestIsNotImplemented()
         {
             const string NotImplementedMessage = "Test Not Implemented";
-            Assert.Inconclusive(NotImplementedMessage);
+            Assert.Fail(NotImplementedMessage);
         }
     }
 }

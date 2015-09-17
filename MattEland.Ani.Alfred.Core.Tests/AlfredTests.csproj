@@ -115,7 +115,7 @@
     </Compile>
     <Compile Include="Search\AlfredSearchControllerTests.cs" />
     <Compile Include="Search\AlfredSearchTests.cs" />
-    <Compile Include="Search\MindExplorerSearchTests.cs" />
+    <Compile Include="Search\ExplorerSearchProviderTests.cs" />
     <Compile Include="Search\SearchResultsModuleTests.cs" />
     <Compile Include="Search\SearchModuleTests.cs" />
     <Compile Include="Search\SearchPageTests.cs" />
