@@ -7,9 +7,9 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Windows.Controls;
 
 using JetBrains.Annotations;
 
@@ -18,8 +18,6 @@ using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Common;
 using MattEland.Testing;
-
-using Moq;
 
 using NUnit.Framework;
 
@@ -227,7 +225,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
             // Build out a property containing the name and value we desire
             var mockProperty = BuildMockPropertyItem("My Property", propertyValue);
 
-            var mock = BuildMockPropertyProvider(mockProperty.Object.ToCollection());
+            var mock = BuildMockPropertyProvider(properties: mockProperty.Object.ToCollection());
 
             // The IsNodeSearchMatch method expects values in uppercase invariant already for performance.
             searchText = searchText.ToUpperInvariant();
@@ -263,7 +261,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
             // Build out a property containing the name and value we desire
             var mockProperty = BuildMockPropertyItem(propertyName, "42");
 
-            var mock = BuildMockPropertyProvider(mockProperty.Object.ToCollection());
+            var mock = BuildMockPropertyProvider(properties: mockProperty.Object.ToCollection());
 
             // The IsNodeSearchMatch method expects values in uppercase invariant already for performance.
             searchText = searchText.ToUpperInvariant();
@@ -276,6 +274,79 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             var message = $"Searched node with property name {propertyName} for '{searchText}' expecting {expectedMatch}";
             isMatch.ShouldBe(expectedMatch, message);
+        }
+
+        /// <summary>
+        ///     Tests that explorer nodes with children do not count as matches even if their children
+        ///     would be matches.
+        /// </summary>
+        /// <param name="parentName"> Name of the parent. </param>
+        /// <param name="childName"> Name of the child. </param>
+        /// <param name="searchText"> The search text. </param>
+        /// <param name="expectedMatch"> <see langword="true"/> if a match is expected. </param>
+        [TestCase("Rhino Snout", "Cavernous Lichen", "Lichen", false)]
+        [TestCase("Rhino Snout", "Cavernous Lichen", "Bumble Bees", false)]
+        [TestCase("Daryl", "Daryl", "Bubba", false)]
+        [TestCase("Ted", "Royce", "Ted", true)]
+        [TestCase("Ted", "Royce", "Royce", false)]
+        [TestCase("Ted", "Royce", "Fred", false)]
+        public void ExplorerNodeMatchSearchDoesNotCountChildrenForIsParentMatch(string parentName, string childName, string searchText, bool expectedMatch)
+        {
+            //! Arrange
+
+            // Build a child node
+            var mockChild = BuildMockPropertyProvider();
+            mockChild.SetupGet(c => c.DisplayName).Returns(childName);
+
+            // Build a parent containing the mock child
+            var mockParent = BuildMockPropertyProvider(children: mockChild.Object.ToCollection());
+            mockParent.SetupGet(p => p.DisplayName).Returns(parentName);
+
+            // The IsNodeSearchMatch method expects values in uppercase invariant already for performance.
+            searchText = searchText.ToUpperInvariant();
+
+            //! Act
+
+            var isMatch = ExplorerSearchOperation.IsNodeSearchMatch(mockParent.Object, searchText);
+
+            //! Assert
+
+            var message = $"Searched '{parentName}' node with child '{childName}' for '{searchText}' expecting {expectedMatch}";
+            isMatch.ShouldBe(expectedMatch, message);
+        }
+
+        /// <summary>
+        ///     Tests that explorer nodes with children include the children when queried for a match
+        /// </summary>
+        [TestCase("Bobzilla", 0)]
+        [TestCase("Alice", 1)]
+        [TestCase("Bob", 1)]
+        [TestCase("CHARLIE", 1)]
+        [TestCase("Li", 2)]
+        [TestCase("Parent", 1)]
+        [TestCase("Nodezilla", 4)]
+        public void ExplorerNodeSearchIncludesMatchingChildren(string searchText, int expectedCount)
+        {
+            //! Arrange
+
+            // Build a child node
+            var children = Container.ProvideCollection<IPropertyProvider>();
+            children.Add(BuildMockPropertyProvider("Alice Nodezilla").Object);
+            children.Add(BuildMockPropertyProvider("Bob Nodezilla").Object);
+            children.Add(BuildMockPropertyProvider("Charlie Nodezilla").Object);
+
+            // Build a parent containing the children
+            var mockParent = BuildMockPropertyProvider("Parent Nodezilla", children: children);
+
+            // The search methods expect values in uppercase invariant already for performance.
+            searchText = searchText.ToUpperInvariant();
+            //! Act
+
+            var results = ExplorerSearchOperation.SearchPropertyProviderTreeNode(mockParent.Object, searchText);
+
+            //! Assert
+
+            results.Count().ShouldBe(expectedCount);
         }
 
     }

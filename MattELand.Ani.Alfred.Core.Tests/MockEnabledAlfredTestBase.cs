@@ -10,14 +10,11 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Common;
-using MattEland.Testing;
 
 using Moq;
 
@@ -298,12 +295,14 @@ namespace MattEland.Ani.Alfred.Tests
         /// <summary>
         ///     Builds a mock property provider.
         /// </summary>
+        /// <param name="name"> The display name. </param>
         /// <param name="properties"> The properties for the node. </param>
         /// <param name="children"> The children for the node. </param>
         /// <returns>
-        ///     A mock property provider
+        ///     A mock property provider.
         /// </returns>
         protected Mock<IPropertyProvider> BuildMockPropertyProvider(
+            string name = "A Test Node",
             IEnumerable<IPropertyItem> properties = null,
             IEnumerable<IPropertyProvider> children = null)
         {
@@ -311,7 +310,7 @@ namespace MattEland.Ani.Alfred.Tests
             var mock = new Mock<IPropertyProvider>(MockingBehavior);
 
             // Build Basic Properties
-            mock.SetupGet(m => m.DisplayName).Returns("A Test Node");
+            mock.SetupGet(m => m.DisplayName).Returns(name);
 
             // Build out a collection of children if none were provided
             children = children ?? Container.ProvideCollection<IPropertyProvider>();

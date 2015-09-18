@@ -2,7 +2,7 @@
 // ExplorerSearchOperation.cs
 // 
 // Created on:      09/10/2015 at 10:01 PM
-// Last Modified:   09/17/2015 at 1:15 AM
+// Last Modified:   09/17/2015 at 11:50 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -58,11 +58,11 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         }
 
         /// <summary>
-        ///     Gets a value indicating whether the search has completed yet. This is useful for slow or
-        ///     asynchronous search operations.
+        ///     Gets a value indicating whether the search has completed yet. This is useful for
+        ///     slow or asynchronous search operations.
         /// </summary>
         /// <value>
-        ///     <see langword="true" /> if the search is complete, otherwise <see langword="false" /> .
+        /// <see langword="true" /> if the search is complete, otherwise <see langword="false" /> .
         /// </value>
         public bool IsSearchComplete { get; private set; }
 
@@ -70,16 +70,16 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         ///     Gets a value indicating whether the operation encountered an error.
         /// </summary>
         /// <value>
-        ///     <see langword="true" /> if an error was encountered, <see langword="false" /> if not.
+        /// <see langword="true" /> if an error was encountered, <see langword="false" /> if not.
         /// </value>
         public bool EncounteredError { get; private set; }
 
         /// <summary>
-        ///     Gets a user-facing message describing the error if an error occurred retrieving search
-        ///     results.
+        ///     Gets a user-facing message describing the error if an error occurred retrieving
+        ///     search results.
         /// </summary>
         /// <value>
-        ///     A message describing the error.
+        /// A message describing the error.
         /// </value>
         public string ErrorMessage { get; } = string.Empty;
 
@@ -87,7 +87,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         ///     Gets the results of the search operation.
         /// </summary>
         /// <value>
-        ///     The results.
+        /// The results.
         /// </value>
         public IEnumerable<ISearchResult> Results
         {
@@ -95,16 +95,17 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         }
 
         /// <summary>
-        ///     Updates the search operation, adding results to the
-        ///     <see cref="ISearchOperation.Results" />
-        ///     collection and updating
-        ///     <see cref="ISearchOperation.IsSearchComplete" />
-        ///     based on the state of the search operation.
+        /// Carries out the search operation and adds any results to the results collection
         /// </summary>
         public void Update()
         {
             // Start with Alfred as the Mind Explorer's root node
             IPropertyProvider root = _mindExplorerSubsystem.AlfredInstance;
+
+            /* Since we're doing a complete search and not a partial, _results will be cleared
+               in case this operation is ever re-used. This prevents persistent results. */
+
+            _results.Clear();
 
             // Search the entire tree
             if (root != null)
@@ -112,7 +113,15 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
                 // Search using case insensitivity
                 var searchText = _searchText.ToUpperInvariant();
 
-                SearchPropertyProviderTreeNode(root, searchText);
+                var results = SearchPropertyProviderTreeNode(root, searchText);
+
+                /* Add to _results instead of setting to a new collection in case something is
+                   observing the list object. It's not likely here, but this is a good pattern. */
+
+                foreach (var result in results)
+                {
+                    _results.Add(result);
+                }
             }
 
             // We've now navigated the tree and finished the search
@@ -121,38 +130,55 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         }
 
         /// <summary>
-        ///     Searches the hierarchy of <paramref name="node" /> for matches to the search text
+        ///     Searches the hierarchy of <paramref name="node" /> for matches to the search text.
         /// </summary>
-        /// <param name="node">The node.</param>
-        /// <param name="searchText"></param>
-        private void SearchPropertyProviderTreeNode([NotNull] IPropertyProvider node,
-                                                    [NotNull] string searchText)
+        /// <param name="node"> The node. </param>
+        /// <param name="searchText">
+        ///     The search text. This is expected to be in uppercase invariant already and will not be
+        ///     checked for performance.
+        /// </param>
+        /// <returns>
+        ///     An enumerator that allows foreach to be used to process the property provider tree nodes
+        ///     in this collection.
+        /// </returns>
+        [NotNull, ItemNotNull]
+        public static IEnumerable<ISearchResult> SearchPropertyProviderTreeNode(
+            [NotNull] IPropertyProvider node,
+            [NotNull] string searchText)
         {
             // If this node matches our search criteria, add it to the results
             if (IsNodeSearchMatch(node, searchText))
             {
                 var searchResult = new ExplorerSearchResult(node);
 
-                _results.Add(searchResult);
+                // Yield a direct result
+                yield return searchResult;
             }
 
-            // If there are no children, just exit now
-            if (node.PropertyProviders == null) return;
+            // Early exit if no children
+            if (node.PropertyProviders == null) yield break;
 
             // Recursively search all children
             foreach (var childNode in node.PropertyProviders.Where(childNode => childNode != null))
             {
-                SearchPropertyProviderTreeNode(childNode, _searchText);
+                var results = SearchPropertyProviderTreeNode(childNode, searchText);
+
+                // Yield all results
+                foreach (var result in results)
+                {
+                    yield return result;
+                }
             }
         }
 
         /// <summary>
-        ///     Query if the <paramref name="node" /> is a search match based on its name and property
-        ///     names and values.
+        ///     Query if the <paramref name="node" /> is a search match based on its name and
+        ///     property names and values.
         /// </summary>
-        /// <param name="node"> The node. </param>
+        /// <param name="node">The node.</param>
         /// <param name="searchText">
-        ///     The search text. This should already be in uppercase (invariant) for a correct comparison.
+        /// The search text. This should already be in uppercase (invariant) for a correct
+        /// comparison.
         /// </param>
         /// <returns>
         ///     <see langword="true" /> if <paramref name="node" /> matches the search,
@@ -160,7 +186,6 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// </returns>
         public static bool IsNodeSearchMatch([NotNull] IPropertyProvider node, string searchText)
         {
-
             // If the name in of itself matches, exit now
             if (node.DisplayName.ToUpperInvariant().Contains(searchText))
             {
