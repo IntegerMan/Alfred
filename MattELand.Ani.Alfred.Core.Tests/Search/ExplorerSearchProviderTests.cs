@@ -13,7 +13,6 @@ using System.Linq;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core;
-using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Testing;
 
@@ -113,6 +112,10 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
         }
 
+        /// <summary>
+        ///     Checks that searches will complete and return the expected amount of data
+        /// </summary>
+        /// <param name="searchText"> The search text. </param>
         [TestCase("Alfred")]
         public void SearchCompletesInstantlyAndReturnsData(string searchText)
         {
@@ -140,6 +143,26 @@ namespace MattEland.Ani.Alfred.Tests.Search
                 () => searchController.Results.Count().ShouldBeGreaterThan(0),
                 () => searchController.IsSearching.ShouldBe(false));
 
+        }
+
+        /// <summary>
+        ///     After search and one update, search operations are complete.
+        /// </summary>
+        [Test]
+        public void AfterSearchAndOneUpdateSearchOperationsAreComplete()
+        {
+            //! Arrange
+
+            var provider = SearchProvider;
+
+            //! Act
+
+            var operation = provider.PerformSearch("An irrelevant string");
+            operation.Update();
+
+            //! Assert
+
+            operation.IsSearchComplete.ShouldBeTrue();
         }
     }
 }
