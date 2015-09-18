@@ -276,5 +276,52 @@ namespace MattEland.Ani.Alfred.Tests
 
             return mock;
         }
+
+        /// <summary>
+        ///     Builds mock property item.
+        /// </summary>
+        /// <param name="displayName"> The node's display name. </param>
+        /// <param name="displayValue"> The display value. </param>
+        /// <returns>
+        ///     A mock property item
+        /// </returns>
+        protected Mock<IPropertyItem> BuildMockPropertyItem(string displayName, string displayValue)
+        {
+            var mockProperty = new Mock<IPropertyItem>(MockingBehavior);
+
+            mockProperty.SetupGet(p => p.DisplayName).Returns(displayName);
+            mockProperty.SetupGet(p => p.DisplayValue).Returns(displayValue);
+
+            return mockProperty;
+        }
+
+        /// <summary>
+        ///     Builds a mock property provider.
+        /// </summary>
+        /// <param name="properties"> The properties for the node. </param>
+        /// <param name="children"> The children for the node. </param>
+        /// <returns>
+        ///     A mock property provider
+        /// </returns>
+        protected Mock<IPropertyProvider> BuildMockPropertyProvider(
+            IEnumerable<IPropertyItem> properties = null,
+            IEnumerable<IPropertyProvider> children = null)
+        {
+            // Create a mock for that
+            var mock = new Mock<IPropertyProvider>(MockingBehavior);
+
+            // Build Basic Properties
+            mock.SetupGet(m => m.DisplayName).Returns("A Test Node");
+
+            // Build out a collection of children if none were provided
+            children = children ?? Container.ProvideCollection<IPropertyProvider>();
+            mock.SetupGet(m => m.PropertyProviders).Returns(children);
+
+            // Build out a collection of properties if none were provided
+            properties = properties ?? Container.ProvideCollection<IPropertyItem>();
+            mock.SetupGet(m => m.Properties).Returns(properties);
+
+            return mock;
+        }
     }
 }

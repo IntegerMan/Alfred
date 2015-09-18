@@ -2,7 +2,7 @@
 // ExplorerSearchProviderTests.cs
 // 
 // Created on:      09/10/2015 at 9:46 PM
-// Last Modified:   09/11/2015 at 10:43 AM
+// Last Modified:   09/17/2015 at 11:23 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -16,6 +16,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Subsystems;
+using MattEland.Common;
 using MattEland.Testing;
 
 using Moq;
@@ -70,7 +71,6 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             SearchProvider = Subsystem.SearchProviders.FirstOrDefault() as ExplorerSearchProvider;
             SearchProvider.ShouldNotBeNull();
-
         }
 
         /// <summary>
@@ -79,7 +79,6 @@ namespace MattEland.Ani.Alfred.Tests.Search
         [Test]
         public void MindExplorerSubsystemContainsSearchProvider()
         {
-
             //! Arrange
 
             var subsystem = Subsystem;
@@ -93,7 +92,6 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             numProviders.ShouldBeGreaterThan(0);
             subsystem.SearchProviders.ShouldContain(provider);
-
         }
 
         /// <summary>
@@ -102,7 +100,6 @@ namespace MattEland.Ani.Alfred.Tests.Search
         [Test]
         public void MindExplorerSearchResultsInExpectedOperationType()
         {
-
             //! Arrange
 
             var searchProvider = SearchProvider;
@@ -115,7 +112,6 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             operation.ShouldNotBeNull();
             operation.ShouldBeOfType<ExplorerSearchOperation>();
-
         }
 
         /// <summary>
@@ -125,7 +121,6 @@ namespace MattEland.Ani.Alfred.Tests.Search
         [TestCase("Alfred")]
         public void SearchCompletesInstantlyAndReturnsData(string searchText)
         {
-
             //! Arrange
 
             // Set up Alfred to have the mind explorer subsystem (and its search provider)
@@ -146,9 +141,11 @@ namespace MattEland.Ani.Alfred.Tests.Search
             //! Assert
 
             searchController.ShouldSatisfyAllConditions(
-                () => searchController.Results.Count().ShouldBeGreaterThan(0),
-                () => searchController.IsSearching.ShouldBe(false));
-
+                                                        () =>
+                                                        searchController.Results.Count()
+                                                                        .ShouldBeGreaterThan(0),
+                                                        () =>
+                                                        searchController.IsSearching.ShouldBe(false));
         }
 
         /// <summary>
@@ -159,7 +156,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
         {
             //! Arrange
 
-            ExplorerSearchProvider provider = SearchProvider;
+            var provider = SearchProvider;
 
             //! Act
 
@@ -169,8 +166,8 @@ namespace MattEland.Ani.Alfred.Tests.Search
             //! Assert
 
             operation.ShouldSatisfyAllConditions(
-                () => operation.ShouldBe<ExplorerSearchOperation>(),
-                () => operation.IsSearchComplete.ShouldBeTrue());
+                                                 () => operation.ShouldBe<ExplorerSearchOperation>(),
+                                                 () => operation.IsSearchComplete.ShouldBeTrue());
         }
 
         /// <summary>
@@ -186,14 +183,17 @@ namespace MattEland.Ani.Alfred.Tests.Search
         [TestCase(@"Apples", @"App", true)]
         [TestCase(@"Apples", @"ples", true)]
         [TestCase(@"Apples", @"les", true)]
-        public void ExplorerNodeMatchSearchByDisplayName(string displayName, string searchText, bool expectedMatch)
+        public void ExplorerNodeMatchSearchByDisplayName(string displayName,
+                                                         string searchText,
+                                                         bool expectedMatch)
         {
             //! Arrange
 
+            // Build out a node to test, yielding the correct display name
             var mock = BuildMockPropertyProvider();
-
             mock.SetupGet(m => m.DisplayName).Returns(displayName);
 
+            // The IsNodeSearchMatch method expects values in uppercase invariant already for performance.
             searchText = searchText.ToUpperInvariant();
 
             //! Act
@@ -204,34 +204,78 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             var message = $"Searched '{displayName}' for '{searchText}' expecting {expectedMatch}";
             isMatch.ShouldBe(expectedMatch, message);
-
         }
 
         /// <summary>
-        ///     Builds a mock property provider.
+        ///     Tests that explorer nodes are matched by property values even if their display names
+        ///     don't cause the match.
         /// </summary>
-        /// <returns>
-        ///     A mock property provider;
-        /// </returns>
-        protected Mock<IPropertyProvider> BuildMockPropertyProvider(
-            IEnumerable<IPropertyItem> properties = null,
-            IEnumerable<IPropertyProvider> children = null)
+        /// <param name="propertyValue"> The property value. </param>
+        /// <param name="searchText"> The search text. </param>
+        /// <param name="expectedMatch"> <see langword="true"/> if a match is expected. </param>
+        [TestCase(@"Robin", @"Robin", true)]
+        [TestCase(@"Dead Robin", @"Robin", true)]
+        [TestCase(@"Robin", @"Dead Robin", false)]
+        [TestCase(@"Apples", @"Oranges", false)]
+        [TestCase(@"Apples", @"App", true)]
+        [TestCase(@"Apples", @"ples", true)]
+        [TestCase(@"Apples", @"les", true)]
+        public void ExplorerNodeMatchSearchByPropertyValues(string propertyValue, string searchText, bool expectedMatch)
         {
-            // Create a mock for that
-            var mock = new Mock<IPropertyProvider>(MockingBehavior);
+            //! Arrange
 
-            // Build Basic Properties
-            mock.SetupGet(m => m.DisplayName).Returns("A Test Node");
+            // Build out a property containing the name and value we desire
+            var mockProperty = BuildMockPropertyItem("My Property", propertyValue);
 
-            // Build out a collection of children if none were provided
-            children = children ?? Container.ProvideCollection<IPropertyProvider>();
-            mock.SetupGet(m => m.PropertyProviders).Returns(children);
+            var mock = BuildMockPropertyProvider(mockProperty.Object.ToCollection());
 
-            // Build out a collection of properties if none were provided
-            properties = properties ?? Container.ProvideCollection<IPropertyItem>();
-            mock.SetupGet(m => m.Properties).Returns(properties);
+            // The IsNodeSearchMatch method expects values in uppercase invariant already for performance.
+            searchText = searchText.ToUpperInvariant();
 
-            return mock;
+            //! Act
+
+            var isMatch = ExplorerSearchOperation.IsNodeSearchMatch(mock.Object, searchText);
+
+            //! Assert
+
+            var message = $"Searched node with property value {propertyValue} for '{searchText}' expecting {expectedMatch}";
+            isMatch.ShouldBe(expectedMatch, message);
+        }
+
+        /// <summary>
+        ///     Tests that explorer nodes are matched by property values even if their display names
+        ///     don't cause the match.
+        /// </summary>
+        /// <param name="propertyName"> The property name. </param>
+        /// <param name="searchText"> The search text. </param>
+        /// <param name="expectedMatch"> <see langword="true"/> if a match is expected. </param>
+        [TestCase(@"Robin", @"Robin", true)]
+        [TestCase(@"Dead Robin", @"Robin", true)]
+        [TestCase(@"Robin", @"Dead Robin", false)]
+        [TestCase(@"Apples", @"Oranges", false)]
+        [TestCase(@"Apples", @"App", true)]
+        [TestCase(@"Apples", @"ples", true)]
+        [TestCase(@"Apples", @"les", true)]
+        public void ExplorerNodeMatchSearchByPropertyNames(string propertyName, string searchText, bool expectedMatch)
+        {
+            //! Arrange
+
+            // Build out a property containing the name and value we desire
+            var mockProperty = BuildMockPropertyItem(propertyName, "42");
+
+            var mock = BuildMockPropertyProvider(mockProperty.Object.ToCollection());
+
+            // The IsNodeSearchMatch method expects values in uppercase invariant already for performance.
+            searchText = searchText.ToUpperInvariant();
+
+            //! Act
+
+            var isMatch = ExplorerSearchOperation.IsNodeSearchMatch(mock.Object, searchText);
+
+            //! Assert
+
+            var message = $"Searched node with property name {propertyName} for '{searchText}' expecting {expectedMatch}";
+            isMatch.ShouldBe(expectedMatch, message);
         }
 
     }
