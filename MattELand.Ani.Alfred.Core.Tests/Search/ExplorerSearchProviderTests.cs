@@ -7,14 +7,18 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Testing;
+
+using Moq;
 
 using NUnit.Framework;
 
@@ -28,12 +32,14 @@ namespace MattEland.Ani.Alfred.Tests.Search
     [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-    public sealed class ExplorerSearchProviderTests : AlfredTestBase
+    [SuppressMessage("ReSharper", "ExceptionNotDocumentedOptional")]
+    [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
+    public sealed class ExplorerSearchProviderTests : MockEnabledAlfredTestBase
     {
         /// <summary>
         ///     The search text.
         /// </summary>
-        private const string SearchText = "Oh where is my hairbrush?";
+        private const string IrrelevantSearchString = "Some irrelevant search string";
 
         /// <summary>
         ///     Gets or sets the Mind Explorer subsystem.
@@ -103,7 +109,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             //! Act
 
-            var operation = searchProvider.PerformSearch(SearchText);
+            var operation = searchProvider.PerformSearch(IrrelevantSearchString);
 
             //! Assert
 
@@ -153,16 +159,80 @@ namespace MattEland.Ani.Alfred.Tests.Search
         {
             //! Arrange
 
-            var provider = SearchProvider;
+            ExplorerSearchProvider provider = SearchProvider;
 
             //! Act
 
-            var operation = provider.PerformSearch("An irrelevant string");
+            var operation = provider.PerformSearch(IrrelevantSearchString);
             operation.Update();
 
             //! Assert
 
-            operation.IsSearchComplete.ShouldBeTrue();
+            operation.ShouldSatisfyAllConditions(
+                () => operation.ShouldBe<ExplorerSearchOperation>(),
+                () => operation.IsSearchComplete.ShouldBeTrue());
         }
+
+        /// <summary>
+        ///     Testing matching nodes in an explorer search by their display name alone.
+        /// </summary>
+        /// <param name="displayName"> The node's display name. </param>
+        /// <param name="searchText"> The search text. </param>
+        /// <param name="expectedMatch"> <see langword="true"/> if a match is expected. </param>
+        [TestCase(@"Robin", @"Robin", true)]
+        [TestCase(@"Dead Robin", @"Robin", true)]
+        [TestCase(@"Robin", @"Dead Robin", false)]
+        [TestCase(@"Apples", @"Oranges", false)]
+        [TestCase(@"Apples", @"App", true)]
+        [TestCase(@"Apples", @"ples", true)]
+        [TestCase(@"Apples", @"les", true)]
+        public void ExplorerNodeMatchSearchByDisplayName(string displayName, string searchText, bool expectedMatch)
+        {
+            //! Arrange
+
+            var mock = BuildMockPropertyProvider();
+
+            mock.SetupGet(m => m.DisplayName).Returns(displayName);
+
+            searchText = searchText.ToUpperInvariant();
+
+            //! Act
+
+            var isMatch = ExplorerSearchOperation.IsNodeSearchMatch(mock.Object, searchText);
+
+            //! Assert
+
+            var message = $"Searched '{displayName}' for '{searchText}' expecting {expectedMatch}";
+            isMatch.ShouldBe(expectedMatch, message);
+
+        }
+
+        /// <summary>
+        ///     Builds a mock property provider.
+        /// </summary>
+        /// <returns>
+        ///     A mock property provider;
+        /// </returns>
+        protected Mock<IPropertyProvider> BuildMockPropertyProvider(
+            IEnumerable<IPropertyItem> properties = null,
+            IEnumerable<IPropertyProvider> children = null)
+        {
+            // Create a mock for that
+            var mock = new Mock<IPropertyProvider>(MockingBehavior);
+
+            // Build Basic Properties
+            mock.SetupGet(m => m.DisplayName).Returns("A Test Node");
+
+            // Build out a collection of children if none were provided
+            children = children ?? Container.ProvideCollection<IPropertyProvider>();
+            mock.SetupGet(m => m.PropertyProviders).Returns(children);
+
+            // Build out a collection of properties if none were provided
+            properties = properties ?? Container.ProvideCollection<IPropertyItem>();
+            mock.SetupGet(m => m.Properties).Returns(properties);
+
+            return mock;
+        }
+
     }
 }

@@ -147,17 +147,20 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         }
 
         /// <summary>
-        ///     Query if the <paramref name="node" /> is a search match based on its name and
-        ///     property names and values.
+        ///     Query if the <paramref name="node" /> is a search match based on its name and property
+        ///     names and values.
         /// </summary>
-        /// <param name="node">The node.</param>
-        /// <param name="searchText">The search text.</param>
+        /// <param name="node"> The node. </param>
+        /// <param name="searchText">
+        ///     The search text. This should already be in uppercase (invariant) for a correct comparison.
+        /// </param>
         /// <returns>
         ///     <see langword="true" /> if <paramref name="node" /> matches the search,
         ///     <see langword="false" /> if not.
         /// </returns>
-        private static bool IsNodeSearchMatch([NotNull] IPropertyProvider node, string searchText)
+        public static bool IsNodeSearchMatch([NotNull] IPropertyProvider node, string searchText)
         {
+
             // If the name in of itself matches, exit now
             if (node.DisplayName.ToUpperInvariant().Contains(searchText))
             {
