@@ -7,8 +7,6 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
-
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
@@ -30,6 +28,12 @@ namespace MattEland.Ani.Alfred.Core.Modules
         private readonly TextWidget _lblResults;
 
         /// <summary>
+        ///     The results list widget.
+        /// </summary>
+        [NotNull]
+        private readonly Repeater _listResults;
+
+        /// <summary>
         ///     Initializes a new instance of the <see cref="SearchResultsModule" /> class.
         /// </summary>
         /// <param name="container"> The container. </param>
@@ -39,7 +43,8 @@ namespace MattEland.Ani.Alfred.Core.Modules
 
             Width = double.NaN;
 
-            _lblResults = new TextWidget(string.Empty, BuildWidgetParameters(@"lblResults"));
+            _lblResults = new TextWidget(BuildWidgetParameters(@"lblResults"));
+            _listResults = new Repeater(BuildWidgetParameters(@"listResults"));
         }
 
         /// <summary>
@@ -50,9 +55,9 @@ namespace MattEland.Ani.Alfred.Core.Modules
         {
             UpdateStatusMessage();
 
+            // Register Controls
             Register(_lblResults);
-
-            // TODO: Register a list control
+            Register(_listResults);
         }
 
         /// <summary>
@@ -81,20 +86,6 @@ namespace MattEland.Ani.Alfred.Core.Modules
         }
 
         /// <summary>
-        ///     Gets a message indicating no searches have been made yet
-        /// </summary>
-        /// <value>
-        ///     A message indicating no searches have been made
-        /// </value>
-        public static string NoSearchesMadeMessage
-        {
-            get
-            {
-                return "No searches have been made yet.";
-            }
-        }
-
-        /// <summary>
         ///     Gets the search controller.
         /// </summary>
         /// <value>
@@ -104,6 +95,29 @@ namespace MattEland.Ani.Alfred.Core.Modules
         public ISearchController SearchController
         {
             get { return AlfredInstance?.SearchController; }
+        }
+
+        /// <summary>
+        ///     Gets the results label.
+        /// </summary>
+        /// <value>
+        ///     The results label.
+        /// </value>
+        [NotNull]
+        public TextWidget ResultsLabel
+        {
+            get { return _lblResults; }
+        }
+
+        /// <summary>
+        ///     Gets the results list widget.
+        /// </summary>
+        /// <value>
+        ///     The list of results.
+        /// </value>
+        public Repeater ResultsList
+        {
+            get { return _listResults; }
         }
     }
 }

@@ -233,6 +233,8 @@ namespace MattEland.Ani.Alfred.Tests
         {
             var mock = new Mock<IAlfred>(MockingBehavior);
 
+            mock.Setup(m => m.Initialize());
+
             mock.SetupGet(m => m.Container).Returns(Container);
 
             return mock;

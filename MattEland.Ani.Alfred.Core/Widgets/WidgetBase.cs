@@ -147,7 +147,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         {
             // Log to the console
             var message = exception.BuildDetailsMessage();
-            message = $"{operationName} encountered an error: {message}";
+            message = string.Format("{0} encountered an error: {1}", operationName, message);
             message.Log(operationName, LogLevel.Error, Container);
 
             // It's been logged. Don't throw it again

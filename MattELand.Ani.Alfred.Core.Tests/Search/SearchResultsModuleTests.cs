@@ -2,7 +2,7 @@
 // SearchResultsModuleTests.cs
 // 
 // Created on:      09/15/2015 at 12:57 AM
-// Last Modified:   09/15/2015 at 4:23 PM
+// Last Modified:   09/18/2015 at 1:07 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -105,7 +105,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             //! Assert
 
-            var label = GetResultsLabel();
+            var label = Module.ResultsLabel;
             label.Text.ShouldBe(SearchController.Object.StatusMessage);
         }
 
@@ -113,12 +113,13 @@ namespace MattEland.Ani.Alfred.Tests.Search
         ///     The status label should provide an accurate status of search results for an ongoing
         ///     search with a variable number of results returned so far.
         /// </summary>
-        /// <param name="numResults"> The number of results to return. </param>
-        /// <param name="expectedFound"> The expected results found substring. </param>
+        /// <param name="numResults">The number of results to return.</param>
+        /// <param name="expectedFound">The expected results found substring.</param>
         [TestCase(0, "No results")]
         [TestCase(1, "1 result")]
         [TestCase(2, "2 results")]
-        public void SearchLabelShouldMatchStatusForInProgressSearches(int numResults, string expectedFound)
+        public void SearchLabelShouldMatchStatusForInProgressSearches(int numResults,
+                                                                      string expectedFound)
         {
             //! Arrange
 
@@ -146,25 +147,26 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             //! Assert
 
-            var expectedStatus = $"Searching for \"Goat Cheese Tuxedos\". {expectedFound} found so far...";
+            var expectedStatus =
+                $"Searching for \"Goat Cheese Tuxedos\". {expectedFound} found so far...";
 
             searchController.StatusMessage.ShouldBe(expectedStatus);
 
-            var label = GetResultsLabel();
+            var label = Module.ResultsLabel;
             label.Text.ShouldBe(expectedStatus);
-
         }
 
         /// <summary>
         ///     The status label should provide an accurate status of search results for completed
         ///     searches with a variable number of results found.
         /// </summary>
-        /// <param name="numResults"> The number of results to return. </param>
-        /// <param name="expectedFound"> The expected results found substring. </param>
+        /// <param name="numResults">The number of results to return.</param>
+        /// <param name="expectedFound">The expected results found substring.</param>
         [TestCase(0, "No results")]
         [TestCase(1, "1 result")]
         [TestCase(2, "2 results")]
-        public void SearchLabelShouldMatchStatusForCompletedSearches(int numResults, string expectedFound)
+        public void SearchLabelShouldMatchStatusForCompletedSearches(int numResults,
+                                                                     string expectedFound)
         {
             //! Arrange
 
@@ -192,76 +194,32 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             //! Assert
 
-            var expectedStatus = $"Search complete. {expectedFound} found for the search: \"Squirrel Lice Tacos\".";
+            var expectedStatus =
+                $"Search complete. {expectedFound} found for the search: \"Squirrel Lice Tacos\".";
 
             searchController.StatusMessage.ShouldBe(expectedStatus);
 
-            var label = GetResultsLabel();
+            var label = Module.ResultsLabel;
             label.Text.ShouldBe(expectedStatus);
-
         }
 
         /// <summary>
-        ///     Builds a search controller with a mock search provider.
+        ///     Results list should not have any results in the results list before searching.
         /// </summary>
-        /// <param name="isSearchComplete">
-        ///     <see langword="true"/> if the operation should indicate the search is complete.
-        /// </param>
-        /// <param name="numResults"> The number of results to yield. </param>
-        /// <returns>
-        ///     The <see cref="AlfredSearchController"/> instance.
-        /// </returns>
-        private AlfredSearchController BuildSearchControllerWithProvider(bool isSearchComplete, int numResults = 0)
+        [Test]
+        public void ResultsListShouldNotHaveResultsBeforeSearch()
         {
-            var searchController = new AlfredSearchController(Container);
+            //! Arrange / Act
 
-            // Build up a search operation that is an ongoing operation
-            var operation = BuildMockSearchOperation();
-            operation.SetupGet(o => o.IsSearchComplete).Returns(isSearchComplete);
+            var list = Module.ResultsList;
 
-            ProgramOperationToReturnResults(operation, numResults);
+            //! Assert
 
-            // Give the search controller something to return
-            var mockSearchProvider = BuildMockSearchProvider(operation.Object);
-            searchController.Register(mockSearchProvider.Object);
-
-            // Just do a bit of verification so this doesn't throw off all tests
-            searchController.SearchProviders.Count().ShouldBe(1);
-
-            return searchController;
+            list.ShouldNotBeNull();
+            list.ShouldBe<Repeater>();
+            list.Items.ShouldBeEmpty();
         }
 
-        /// <summary>
-        ///     Programs an operation to return search results.
-        /// </summary>
-        /// <param name="operation"> The operation. </param>
-        /// <param name="numResults"> The number of items to return. </param>
-        private void ProgramOperationToReturnResults(Mock<ISearchOperation> operation, int numResults)
-        {
-            var results = Container.ProvideCollection<ISearchResult>();
-
-            for (var i = 1; i <= numResults; i++)
-            {
-                var mockResult = BuildMockSearchResult();
-                mockResult.SetupGet(r => r.Title).Returns($"Result {i}");
-
-                results.Add(mockResult.Object);
-            }
-
-            // Sanity check
-            results.Count.ShouldBe(numResults);
-
-            operation.SetupGet(o => o.Results).Returns(results);
-        }
-
-        /// <summary>
-        ///     Gets results label from the search results module.
-        /// </summary>
-        /// <returns>The results label.</returns>
-        private TextWidget GetResultsLabel()
-        {
-            return FindWidgetOfTypeByName<TextWidget>(Module, @"lblResults");
-        }
 
         /// <summary>
         ///     The <see cref="IStatusController" /> instance used by the search results module
@@ -297,5 +255,59 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             Module.LayoutType.ShouldBe(LayoutType.VerticalStackPanel);
         }
+
+        /// <summary>
+        ///     Builds a search controller with a mock search provider.
+        /// </summary>
+        /// <param name="isSearchComplete">
+        /// <see langword="true" /> if the operation should indicate the search is complete.
+        /// </param>
+        /// <param name="numResults">The number of results to yield.</param>
+        /// <returns>The <see cref="AlfredSearchController" /> instance.</returns>
+        private AlfredSearchController BuildSearchControllerWithProvider(bool isSearchComplete,
+                                                                         int numResults = 0)
+        {
+            var searchController = new AlfredSearchController(Container);
+
+            // Build up a search operation that is an ongoing operation
+            var operation = BuildMockSearchOperation();
+            operation.SetupGet(o => o.IsSearchComplete).Returns(isSearchComplete);
+
+            ProgramOperationToReturnResults(operation, numResults);
+
+            // Give the search controller something to return
+            var mockSearchProvider = BuildMockSearchProvider(operation.Object);
+            searchController.Register(mockSearchProvider.Object);
+
+            // Just do a bit of verification so this doesn't throw off all tests
+            searchController.SearchProviders.Count().ShouldBe(1);
+
+            return searchController;
+        }
+
+        /// <summary>
+        ///     Programs an <paramref name="operation"/> to return search results.
+        /// </summary>
+        /// <param name="operation">The operation.</param>
+        /// <param name="numResults">The number of items to return.</param>
+        private void ProgramOperationToReturnResults(Mock<ISearchOperation> operation,
+                                                     int numResults)
+        {
+            var results = Container.ProvideCollection<ISearchResult>();
+
+            for (var i = 1; i <= numResults; i++)
+            {
+                var mockResult = BuildMockSearchResult();
+                mockResult.SetupGet(r => r.Title).Returns($"Result {i}");
+
+                results.Add(mockResult.Object);
+            }
+
+            // Sanity check
+            results.Count.ShouldBe(numResults);
+
+            operation.SetupGet(o => o.Results).Returns(results);
+        }
+
     }
 }
