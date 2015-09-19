@@ -9,7 +9,6 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Windows.Controls;
 
 using JetBrains.Annotations;
 
@@ -138,8 +137,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             //! Assert
 
-            searchController.ShouldSatisfyAllConditions(
-                                                        () =>
+            searchController.ShouldSatisfyAllConditions(() =>
                                                         searchController.Results.Count()
                                                                         .ShouldBeGreaterThan(0),
                                                         () =>
@@ -163,8 +161,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             //! Assert
 
-            operation.ShouldSatisfyAllConditions(
-                                                 () => operation.ShouldBe<ExplorerSearchOperation>(),
+            operation.ShouldSatisfyAllConditions(() => operation.ShouldBe<ExplorerSearchOperation>(),
                                                  () => operation.IsSearchComplete.ShouldBeTrue());
         }
 

@@ -221,6 +221,11 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
+        ///     Occurs when all results are cleared.
+        /// </summary>
+        public event EventHandler ResultsCleared;
+
+        /// <summary>
         ///     Occurs when a new result is added.
         /// </summary>
         public event EventHandler<SearchResultEventArgs> ResultAdded;
@@ -350,7 +355,9 @@ namespace MattEland.Ani.Alfred.Core
             _ongoingOperations.Clear();
             _results.Clear();
 
-            // TODO: Raise results cleared event
+            // Tell other parts of the UI that our result set is now different
+            ResultsCleared?.Invoke(this, EventArgs.Empty);
+
         }
 
         /// <summary>

@@ -274,13 +274,13 @@ namespace MattEland.Ani.Alfred.Tests.Search
             //! Arrange
 
             var list = Module.ResultsList;
-            const int ExpectedResults = 42;
-            var searchController = BuildSearchControllerWithProvider(isSearchComplete: true,
-                                                                     numResults: ExpectedResults);
-            searchController.RegisterAsProvidedInstance(typeof(ISearchController), Container);
 
             // It's simpler to build an Alfred instance and work with that than worry about mocking here
             Alfred = BuildAlfredInstance();
+
+            // We'll be
+            var mindExplorer = new MindExplorerSubsystem(Container);
+            Alfred.Register(mindExplorer);
 
             // Build a subsystem to house the module
             Alfred.Register(BuildSubsystemForModule(Module));
@@ -291,16 +291,25 @@ namespace MattEland.Ani.Alfred.Tests.Search
             Alfred.Initialize();
 
             // Send across a search for all items
-            Alfred.SearchController.PerformSearch("A search");
-            Alfred.SearchController.PerformSearch("Some other search");
+            Alfred.SearchController.PerformSearch("Alfred");
+            Alfred.Update();
+            var search1Results = Alfred.SearchController.Results.Count();
+
+            Alfred.SearchController.Abort();
+            var abortSearchResults = Alfred.SearchController.Results.Count();
+
+            Alfred.SearchController.PerformSearch("Chat");
+            Alfred.Update();
+            var search2Results = Alfred.SearchController.Results.Count();
 
             // Ensure controller and module update
             Alfred.Update();
 
             //! Assert
 
-            searchController.Results.Count().ShouldBe(ExpectedResults);
-            list.Items.Count().ShouldBe(ExpectedResults);
+            abortSearchResults.ShouldBe(0);
+            search2Results.ShouldBeLessThan(search1Results);
+            list.Items.Count().ShouldBe(search2Results);
         }
 
         /// <summary>

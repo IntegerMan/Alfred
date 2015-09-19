@@ -35,6 +35,15 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
+        /// <param name="container"> The container. </param>
+        public MindExplorerSubsystem([NotNull] IObjectContainer container)
+            : this(container, true)
+        {
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
+        /// </summary>
         /// <param name="container">The container.</param>
         /// <param name="includeExplorerPage">
         ///      <see langword="true" /> to include the page in root pages, <see langword="false" /> otherwise.

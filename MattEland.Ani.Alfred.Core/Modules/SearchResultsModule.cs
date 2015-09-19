@@ -7,6 +7,7 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -57,6 +58,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
             if (AlfredInstance != null)
             {
                 AlfredInstance.SearchController.ResultAdded -= OnResultAdded;
+                AlfredInstance.SearchController.ResultsCleared -= OnResultsCleared;
             }
 
             _resultWidgets.Clear();
@@ -74,10 +76,21 @@ namespace MattEland.Ani.Alfred.Core.Modules
 
             // When a new result is added, we need to know so we can build a widget for it
             alfred.SearchController.ResultAdded += OnResultAdded;
+            alfred.SearchController.ResultsCleared += OnResultsCleared;
 
             // Register Controls
             Register(ResultsLabel);
             Register(ResultsList);
+        }
+
+        /// <summary>
+        ///     Responds to the search controller's results cleared event.
+        /// </summary>
+        /// <param name="sender"> Source of the event. </param>
+        /// <param name="e"> Event information to send to registered event handlers. </param>
+        private void OnResultsCleared(object sender, EventArgs e)
+        {
+            _resultWidgets.Clear();
         }
 
         /// <summary>

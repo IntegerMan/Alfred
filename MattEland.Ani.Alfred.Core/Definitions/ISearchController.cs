@@ -118,5 +118,10 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         ///     Occurs when a new result is added.
         /// </summary>
         event EventHandler<SearchResultEventArgs> ResultAdded;
+
+        /// <summary>
+        ///     Occurs when all results are cleared.
+        /// </summary>
+        event EventHandler ResultsCleared;
     }
 }
