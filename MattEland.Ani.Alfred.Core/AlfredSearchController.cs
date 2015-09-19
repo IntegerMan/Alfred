@@ -221,6 +221,11 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
+        ///     Occurs when a new result is added.
+        /// </summary>
+        public event EventHandler<SearchResultEventArgs> ResultAdded;
+
+        /// <summary>
         ///     Gets a user-facing message describing the status of the last search including the number
         ///     of results found and details on any errors encountered.
         /// </summary>
@@ -344,6 +349,8 @@ namespace MattEland.Ani.Alfred.Core
             // Clear out all old operations and results
             _ongoingOperations.Clear();
             _results.Clear();
+
+            // TODO: Raise results cleared event
         }
 
         /// <summary>
@@ -408,11 +415,7 @@ namespace MattEland.Ani.Alfred.Core
                 // Add new results as they come in
                 foreach (var result in op.Results)
                 {
-                    // NOTE: This lookup operation may not scale well and a Set may be needed
-                    if (!_results.Contains(result))
-                    {
-                        _results.Add(result);
-                    }
+                    AddResult(result);
                 }
 
                 // If the operation has completed, remove it from the list
@@ -426,5 +429,25 @@ namespace MattEland.Ani.Alfred.Core
 
             // TODO: Update status text
         }
+
+        /// <summary>
+        ///     Adds a result to the results collection and raises the <see cref="ResultAdded"/> event.
+        /// </summary>
+        /// <param name="result"> The result. </param>
+        private void AddResult([NotNull] ISearchResult result)
+        {
+            // Results can already exist in the collection, potentially, so guard against that
+            if (_results.Contains(result))
+            {
+                return;
+            }
+
+            _results.Add(result);
+
+            var e = new SearchResultEventArgs { Result = result };
+
+            ResultAdded?.Invoke(this, e);
+        }
     }
+
 }

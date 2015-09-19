@@ -45,6 +45,8 @@ namespace MattEland.Ani.Alfred.Tests.Search
     [SuppressMessage("ReSharper", "RedundantArgumentName")]
     public sealed class SearchResultsModuleTests : UserInterfaceTestBase
     {
+        private const string IrrelevantSearchText = "Some search goes here. Content doesn't matter for this test.";
+
         /// <summary>
         ///     Gets the mock Alfred instance.
         /// </summary>
@@ -252,17 +254,53 @@ namespace MattEland.Ani.Alfred.Tests.Search
             Alfred.Initialize();
 
             // Send across a search for all items
-            const string SearchText = "Some search goes here. Content doesn't matter for this test.";
-            Alfred.SearchController.PerformSearch(SearchText);
+            Alfred.SearchController.PerformSearch(IrrelevantSearchText);
 
             // Ensure controller and module update
             Alfred.Update();
 
             //! Assert
 
-            list.Items.ShouldBe(searchController.Results);
             searchController.Results.Count().ShouldBe(expectedResults);
             list.Items.Count().ShouldBe(expectedResults);
+        }
+
+        /// <summary>
+        ///     When doing subsequent searches, only the items from the latest search should be returned
+        /// </summary>
+        [Test]
+        public void ResultsListShouldIncludeOnlyItemsFromLatestSearch()
+        {
+            //! Arrange
+
+            var list = Module.ResultsList;
+            const int ExpectedResults = 42;
+            var searchController = BuildSearchControllerWithProvider(isSearchComplete: true,
+                                                                     numResults: ExpectedResults);
+            searchController.RegisterAsProvidedInstance(typeof(ISearchController), Container);
+
+            // It's simpler to build an Alfred instance and work with that than worry about mocking here
+            Alfred = BuildAlfredInstance();
+
+            // Build a subsystem to house the module
+            Alfred.Register(BuildSubsystemForModule(Module));
+
+            //! Act
+
+            // Get everything started - we're bypassing subsystems and pages for this test
+            Alfred.Initialize();
+
+            // Send across a search for all items
+            Alfred.SearchController.PerformSearch("A search");
+            Alfred.SearchController.PerformSearch("Some other search");
+
+            // Ensure controller and module update
+            Alfred.Update();
+
+            //! Assert
+
+            searchController.Results.Count().ShouldBe(ExpectedResults);
+            list.Items.Count().ShouldBe(ExpectedResults);
         }
 
         /// <summary>

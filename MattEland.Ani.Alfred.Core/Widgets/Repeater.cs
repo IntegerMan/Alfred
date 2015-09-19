@@ -7,12 +7,13 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 using JetBrains.Annotations;
+
+using MattEland.Ani.Alfred.Core.Definitions;
 
 namespace MattEland.Ani.Alfred.Core.Widgets
 {
@@ -25,39 +26,73 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         /// <summary>
         ///     The items source.
         /// </summary>
-        [NotNull]
-        private IEnumerable<object> _items;
+        [CanBeNull]
+        private object _itemsSource;
 
         /// <summary>
         ///     Initializes a new instance of the Repeater class.
         /// </summary>
         /// <param name="parameters">Options for controlling the operation.</param>
+        [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
         public Repeater(WidgetCreationParameters parameters) : base(parameters)
         {
+            _itemsSource = null;
+
             // Build out the default collection
-            _items = parameters.Container.ProvideCollection<object>();
+            Items = BuildEmptyItemsCollection();
         }
 
         /// <summary>
-        ///     Gets or sets the items source.
+        ///     Builds an empty items collection and returns it
+        /// </summary>
+        /// <returns>
+        ///     An empty items collection
+        /// </returns>
+        [NotNull]
+        private IEnumerable<IWidget> BuildEmptyItemsCollection()
+        {
+            return Container.ProvideCollection<IWidget>();
+        }
+
+        /// <summary>
+        ///     Gets or sets the items.
         /// </summary>
         /// <value>
-        /// The items source.
+        ///     The items.
         /// </value>
-        /// <exception cref="ArgumentNullException">
-        /// <paramref name="value" /> is <see langword="null" /> .
-        /// </exception>
         [NotNull]
-        public IEnumerable<object> Items
+        public IEnumerable<IWidget> Items { get; private set; }
+
+        /// <summary>
+        ///     Gets or sets the items source that populates the <see cref="Items"/> property.
+        /// </summary>
+        /// <value>
+        ///     The items source.
+        /// </value>
+        public object ItemsSource
         {
-            get { return _items; }
+            get { return _itemsSource; }
             set
             {
-                // Validate
-                if (value == null) throw new ArgumentNullException(nameof(value));
+                if (_itemsSource != value)
+                {
+                    // Update the source
+                    _itemsSource = value;
 
-                _items = value;
+                    // A new source means we need new items
+                    PopulateItemsFromItemsSource();
+                }
             }
+        }
+
+        /// <summary>
+        ///     Populates the <see cref="Items"/> collection from the <see cref="ItemsSource"/>.
+        /// </summary>
+        private void PopulateItemsFromItemsSource()
+        {
+            var items = _itemsSource as IEnumerable<IWidget>;
+
+            Items = items ?? BuildEmptyItemsCollection();
         }
 
         /// <summary>

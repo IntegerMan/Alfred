@@ -91,6 +91,7 @@
     <Compile Include="Common\CommonProviderTestsBase.cs" />
     <Compile Include="Controls\ChatPaneTests.cs" />
     <Compile Include="Controls\ExplorerControlTests.cs" />
+    <Compile Include="Controls\RepeaterTests.cs" />
     <Compile Include="Controls\RootPagesControlTests.cs" />
     <Compile Include="Controls\TestMessageBoxProvider.cs" />
     <Compile Include="Controls\UserInterfaceTestBase.cs" />

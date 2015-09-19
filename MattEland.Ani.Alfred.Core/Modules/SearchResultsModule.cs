@@ -7,6 +7,9 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Diagnostics;
+
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
@@ -21,17 +24,9 @@ namespace MattEland.Ani.Alfred.Core.Modules
     /// </summary>
     public sealed class SearchResultsModule : AlfredModule
     {
-        /// <summary>
-        ///     The results label.
-        /// </summary>
-        [NotNull]
-        private readonly TextWidget _lblResults;
 
-        /// <summary>
-        ///     The results list widget.
-        /// </summary>
         [NotNull]
-        private readonly Repeater _listResults;
+        private ICollection<IWidget> _resultWidgets;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="SearchResultsModule" /> class.
@@ -43,8 +38,28 @@ namespace MattEland.Ani.Alfred.Core.Modules
 
             Width = double.NaN;
 
-            _lblResults = new TextWidget(BuildWidgetParameters(@"lblResults"));
-            _listResults = new Repeater(BuildWidgetParameters(@"listResults"));
+            _resultWidgets = Container.ProvideCollection<IWidget>();
+
+            ResultsLabel = new TextWidget(BuildWidgetParameters(@"lblResults"));
+            ResultsList = new Repeater(BuildWidgetParameters(@"listResults"))
+            {
+                ItemsSource = _resultWidgets
+            };
+
+        }
+
+        /// <summary>
+        ///     Handles shutdown events
+        /// </summary>
+        protected override void ShutdownProtected()
+        {
+            // Unsubscribe from events
+            if (AlfredInstance != null)
+            {
+                AlfredInstance.SearchController.ResultAdded -= OnResultAdded;
+            }
+
+            _resultWidgets.Clear();
         }
 
         /// <summary>
@@ -55,12 +70,35 @@ namespace MattEland.Ani.Alfred.Core.Modules
         {
             UpdateStatusMessage();
 
-            // Hook up the result list to point to the controller's results collection. This will not change.
-            _listResults.Items = alfred.SearchController.Results;
+            _resultWidgets.Clear();
+
+            // When a new result is added, we need to know so we can build a widget for it
+            alfred.SearchController.ResultAdded += OnResultAdded;
 
             // Register Controls
-            Register(_lblResults);
-            Register(_listResults);
+            Register(ResultsLabel);
+            Register(ResultsList);
+        }
+
+        /// <summary>
+        ///     Handles when a new result is added by adding a new widget to the collection
+        /// </summary>
+        /// <param name="sender"> Source of the event. </param>
+        /// <param name="e"> Event information to send to registered event handlers. </param>
+        private void OnResultAdded(object sender, SearchResultEventArgs e)
+        {
+            var result = e.Result;
+            Debug.Assert(result != null);
+
+            var resultIndex = _resultWidgets.Count + 1;
+
+            var widget = new TextBoxWidget(BuildWidgetParameters(string.Format("result{0}", resultIndex)))
+            {
+                Text = result.Title,
+                DataContext = result
+            };
+
+            _resultWidgets.Add(widget);
         }
 
         /// <summary>
@@ -76,7 +114,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </summary>
         private void UpdateStatusMessage()
         {
-            _lblResults.Text = SearchController?.StatusMessage;
+            ResultsLabel.Text = SearchController?.StatusMessage;
         }
 
         /// <summary>
@@ -107,10 +145,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         ///     The results label.
         /// </value>
         [NotNull]
-        public TextWidget ResultsLabel
-        {
-            get { return _lblResults; }
-        }
+        public TextWidget ResultsLabel { get; }
 
         /// <summary>
         ///     Gets the results list widget.
@@ -118,9 +153,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <value>
         ///     The list of results.
         /// </value>
-        public Repeater ResultsList
-        {
-            get { return _listResults; }
-        }
+        [NotNull]
+        public Repeater ResultsList { get; }
     }
 }

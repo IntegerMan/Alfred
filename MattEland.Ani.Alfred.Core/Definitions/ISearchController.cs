@@ -113,5 +113,10 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// </exception>
         /// <param name="provider"> The provider. </param>
         void Register([NotNull] ISearchProvider provider);
+
+        /// <summary>
+        ///     Occurs when a new result is added.
+        /// </summary>
+        event EventHandler<SearchResultEventArgs> ResultAdded;
     }
 }

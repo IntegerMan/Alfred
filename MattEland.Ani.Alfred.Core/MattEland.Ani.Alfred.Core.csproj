@@ -105,6 +105,7 @@
     <Compile Include="Pages\ExplorerPage.cs" />
     <Compile Include="Pages\ModulePageBase.cs" />
     <Compile Include="Pages\SearchPage.cs" />
+    <Compile Include="SearchResultEventArgs.cs" />
     <Compile Include="Subsystems\AlfredSubsystem.cs" />
     <Compile Include="Console\LogLevel.cs" />
     <Compile Include="Subsystems\AlfredCoreSubsystem.cs" />

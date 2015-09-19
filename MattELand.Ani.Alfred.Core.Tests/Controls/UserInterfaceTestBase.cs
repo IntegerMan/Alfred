@@ -9,6 +9,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Ani.Alfred.PresentationShared.Controls;
 using MattEland.Ani.Alfred.PresentationShared.Helpers;
 using MattEland.Common;
@@ -169,5 +170,18 @@ namespace MattEland.Ani.Alfred.Tests.Controls
             return widget.ShouldBe<T>();
         }
 
+        /// <summary>
+        ///     Builds a repeater.
+        /// </summary>
+        /// <returns>
+        ///     A <see cref="Repeater"/>.
+        /// </returns>
+        [NotNull]
+        protected Repeater BuildRepeater()
+        {
+            var parameters = new WidgetCreationParameters(@"listRepeater", Container);
+
+            return new Repeater(parameters);
+        }
     }
 }
