@@ -37,6 +37,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         public Repeater(WidgetCreationParameters parameters) : base(parameters)
         {
             _itemsSource = null;
+            LayoutType = LayoutType.VerticalStackPanel;
 
             // Build out the default collection
             Items = BuildEmptyItemsCollection();
@@ -110,6 +111,14 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         {
             get { return "Repeater"; }
         }
+
+        /// <summary>
+        ///     Gets or sets layout type used by the repeater.
+        /// </summary>
+        /// <value>
+        ///     The type of the layout.
+        /// </value>
+        public LayoutType LayoutType { get; set; }
     }
 
 }

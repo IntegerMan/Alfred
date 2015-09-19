@@ -7,17 +7,16 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-
-using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Testing;
 
 using NUnit.Framework;
+
+using Shouldly;
 
 namespace MattEland.Ani.Alfred.Tests.Controls
 {
@@ -66,6 +65,25 @@ namespace MattEland.Ani.Alfred.Tests.Controls
             //! Assert
 
             items.ShouldNotBeNull();
+        }
+
+        /// <summary>
+        ///     The repeater should use vertical stacked layout by default
+        /// </summary>
+        [Test]
+        public void RepeaterShouldUseVerticalLayout()
+        {
+            //! Arrange
+
+            var repeater = BuildRepeater();
+
+            //! Act
+
+            var layout = repeater.LayoutType;
+
+            //! Assert
+
+            layout.ShouldBe(LayoutType.VerticalStackPanel);
         }
 
     }

@@ -2,7 +2,9 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:widgets="clr-namespace:MattEland.Ani.Alfred.Core.Widgets;assembly=MattEland.Ani.Alfred.Core"
                     xmlns:helpers="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Helpers"
-                    xmlns:definitions="clr-namespace:MattEland.Ani.Alfred.Core.Definitions;assembly=MattEland.Ani.Alfred.Core">
+                    xmlns:definitions="clr-namespace:MattEland.Ani.Alfred.Core.Definitions;assembly=MattEland.Ani.Alfred.Core"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
 
     <ResourceDictionary.MergedDictionaries>
         <helpers:SharedResourceDictionary Source="Miscellaneous.xaml"  />
@@ -96,6 +98,25 @@
                          HorizontalContentAlignment="Center" />
 
         </Grid>
+    </DataTemplate>
+
+    <!-- Dynamic layout panel used for repeaters -->
+    <ItemsPanelTemplate x:Key="RepeaterItemsPanelTemplate">
+        <helpers:DynamicPanel LayoutType="{Binding LayoutType}"
+                              HorizontalAlignment="Left" 
+                              VerticalAlignment="Top" 
+                              d:DataContext="{d:DesignInstance widgets:Repeater}" />
+    </ItemsPanelTemplate>
+    
+    <!-- Repeater Template -->
+    <DataTemplate DataType="{x:Type widgets:Repeater}">
+
+        <ItemsControl 
+            Margin="0,0,8,0"
+            Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
+            ItemsSource="{Binding Items}"
+            ItemsPanel="{StaticResource RepeaterItemsPanelTemplate}"/>
+
     </DataTemplate>
 
     <!-- Fallback type of widget Template -->

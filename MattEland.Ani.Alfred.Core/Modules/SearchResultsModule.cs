@@ -92,7 +92,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
 
             var resultIndex = _resultWidgets.Count + 1;
 
-            var widget = new TextBoxWidget(BuildWidgetParameters(string.Format("result{0}", resultIndex)))
+            var widget = new TextWidget(BuildWidgetParameters(string.Format("result{0}", resultIndex)))
             {
                 Text = result.Title,
                 DataContext = result
