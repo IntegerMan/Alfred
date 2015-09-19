@@ -7,6 +7,8 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System.Collections.Generic;
+
 using JetBrains.Annotations;
 
 namespace MattEland.Ani.Alfred.Core.Widgets
@@ -51,4 +53,5 @@ namespace MattEland.Ani.Alfred.Core.Widgets
             get { return "Text"; }
         }
     }
+
 }

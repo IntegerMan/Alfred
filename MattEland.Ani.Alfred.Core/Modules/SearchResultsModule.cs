@@ -101,15 +101,14 @@ namespace MattEland.Ani.Alfred.Core.Modules
         private void OnResultAdded(object sender, SearchResultEventArgs e)
         {
             var result = e.Result;
-            Debug.Assert(result != null);
+            if (result == null) return;
 
+            // Generate a unique name for the result
             var resultIndex = _resultWidgets.Count + 1;
 
-            var widget = new TextWidget(BuildWidgetParameters(string.Format("result{0}", resultIndex)))
-            {
-                Text = result.Title,
-                DataContext = result
-            };
+            // Build out a strongly-typed widget for the user interface
+            var widgetName = string.Format("result{0}", resultIndex);
+            var widget = new SearchResultWidget(result, BuildWidgetParameters(widgetName));
 
             _resultWidgets.Add(widget);
         }

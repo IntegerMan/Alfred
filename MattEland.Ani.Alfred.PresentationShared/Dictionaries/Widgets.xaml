@@ -16,7 +16,7 @@
     <DataTemplate DataType="{x:Type widgets:TextWidget}">
         <TextBlock
             Margin="0, 8, 8, 0"
-            Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
+            Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
             Text="{Binding Text}"
             ToolTip="{Binding Text}" />
     </DataTemplate>
@@ -29,7 +29,7 @@
                 Background="{DynamicResource CautionBackgroundBrush}"
                 BorderBrush="{DynamicResource CautionBorderBrush}"
                 BorderThickness="1"
-                Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
+                Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
 
             <TextBlock Text="{Binding Text}"
                        Foreground="{DynamicResource CautionForegroundBrush}"
@@ -41,7 +41,7 @@
     <!-- ButtonWidget Template -->
     <DataTemplate DataType="{x:Type widgets:ButtonWidget}">
         <Button Margin="0, 8, 8, 0"
-                Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
+                Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
                 MinWidth="120"
                 HorizontalAlignment="Left"
                 HorizontalContentAlignment="Center"
@@ -53,7 +53,7 @@
     <!-- TextBox Template -->
     <DataTemplate DataType="{x:Type widgets:TextBoxWidget}">
         <TextBox Margin="0, 8, 8, 0"
-                Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
+                Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
                 MinWidth="200"
                 HorizontalAlignment="Left"
                 Text="{Binding Text}"
@@ -63,7 +63,7 @@
     <!-- AlfredProgressBarWidget Template -->
     <DataTemplate DataType="{x:Type widgets:AlfredProgressBarWidget}">
         <Grid Margin="0, 8, 0, 0"
-              Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}">
+              Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" >
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="80" />
@@ -107,13 +107,44 @@
                               VerticalAlignment="Top" 
                               d:DataContext="{d:DesignInstance widgets:Repeater}" />
     </ItemsPanelTemplate>
-    
+
+    <!-- Search Result Items -->
+    <DataTemplate DataType="{x:Type widgets:SearchResultWidget}">
+
+        <Border Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                BorderThickness="1"
+                Margin="0, 8, 8, 0"
+                BorderBrush="{DynamicResource AppBorderBrush}">
+            
+            <StackPanel Margin="8">
+
+                <TextBlock Text="{Binding Title}" 
+                           Foreground="{DynamicResource AccentForegroundBrush}"
+                           TextWrapping="Wrap"
+                           Margin="0, 0, 8, 0"/>
+
+                <TextBlock Text="{Binding Description}" 
+                           Foreground="{DynamicResource ForegroundBrush}"
+                           TextWrapping="Wrap"
+                           Margin="16, 8, 8, 0"/>
+
+                <TextBlock Text="{Binding Location}"
+                           Foreground="{DynamicResource ForegroundBrush}"
+                           TextWrapping="Wrap"
+                           Margin="16, 8, 8, 0"/>
+
+            </StackPanel>
+            
+        </Border>
+
+    </DataTemplate>
+
     <!-- Repeater Template -->
     <DataTemplate DataType="{x:Type widgets:Repeater}">
 
         <ItemsControl 
             Margin="0,0,8,0"
-            Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
+            Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
             ItemsSource="{Binding Items}"
             ItemsPanel="{StaticResource RepeaterItemsPanelTemplate}"/>
 
@@ -123,7 +154,7 @@
     <DataTemplate DataType="{x:Type definitions:IWidget}">
 
         <TextBlock Margin="0, 8, 8, 0"
-            Visibility="{Binding Path=IsVisible, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter}}"
+            Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
             Text="This is an unknown type of Widget" />
 
     </DataTemplate>
