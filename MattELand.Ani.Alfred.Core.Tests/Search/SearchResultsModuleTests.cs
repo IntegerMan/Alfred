@@ -2,7 +2,7 @@
 // SearchResultsModuleTests.cs
 // 
 // Created on:      09/15/2015 at 12:57 AM
-// Last Modified:   09/18/2015 at 1:07 PM
+// Last Modified:   09/18/2015 at 9:39 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -16,8 +16,11 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
+using MattEland.Ani.Alfred.Core.Pages;
+using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Ani.Alfred.Tests.Controls;
+using MattEland.Common.Providers;
 using MattEland.Testing;
 
 using Moq;
@@ -220,6 +223,47 @@ namespace MattEland.Ani.Alfred.Tests.Search
             list.Items.ShouldBeEmpty();
         }
 
+        /// <summary>
+        ///     Results list should have the expected number of results after searching with a
+        ///     search that yields a variable number of results.
+        /// </summary>
+        /// <param name="expectedResults">The expected number of results.</param>
+        [TestCase(0)]
+        [TestCase(1)]
+        [TestCase(2)]
+        public void ResultsListShouldIncludeResultsAfterSearch(int expectedResults)
+        {
+            //! Arrange
+
+            var list = Module.ResultsList;
+            var searchController = BuildSearchControllerWithProvider(isSearchComplete: true,
+                                                                     numResults: expectedResults);
+            searchController.RegisterAsProvidedInstance(typeof(ISearchController), Container);
+
+            // It's simpler to build an Alfred instance and work with that than worry about mocking here
+            Alfred = BuildAlfredInstance();
+
+            // Build a subsystem to house the module
+            Alfred.Register(BuildSubsystemForModule(Module));
+
+            //! Act
+
+            // Get everything started - we're bypassing subsystems and pages for this test
+            Alfred.Initialize();
+
+            // Send across a search for all items
+            const string SearchText = "Some search goes here. Content doesn't matter for this test.";
+            Alfred.SearchController.PerformSearch(SearchText);
+
+            // Ensure controller and module update
+            Alfred.Update();
+
+            //! Assert
+
+            list.Items.ShouldBe(searchController.Results);
+            searchController.Results.Count().ShouldBe(expectedResults);
+            list.Items.Count().ShouldBe(expectedResults);
+        }
 
         /// <summary>
         ///     The <see cref="IStatusController" /> instance used by the search results module
@@ -286,7 +330,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
         }
 
         /// <summary>
-        ///     Programs an <paramref name="operation"/> to return search results.
+        ///     Programs an <paramref name="operation" /> to return search results.
         /// </summary>
         /// <param name="operation">The operation.</param>
         /// <param name="numResults">The number of items to return.</param>
@@ -298,7 +342,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
             for (var i = 1; i <= numResults; i++)
             {
                 var mockResult = BuildMockSearchResult();
-                mockResult.SetupGet(r => r.Title).Returns($"Result {i}");
+                mockResult.SetupGet(r => r.Title).Returns(string.Format("Result {0}", i));
 
                 results.Add(mockResult.Object);
             }
@@ -308,6 +352,5 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             operation.SetupGet(o => o.Results).Returns(results);
         }
-
     }
 }

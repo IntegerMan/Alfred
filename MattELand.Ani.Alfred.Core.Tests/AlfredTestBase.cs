@@ -9,6 +9,7 @@ using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
+using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Ani.Alfred.PresentationShared.Commands;
 using MattEland.Common;
@@ -271,6 +272,25 @@ namespace MattEland.Ani.Alfred.Tests
         protected AlfredApplication BuildAlfredInstance()
         {
             return new AlfredApplication(Container);
+        }
+
+        /// <summary>
+        ///     Builds a Subsystem for module testing. This subsystem only exists to provide a specific
+        ///     module a legitimate testing context within the Alfred Application Framework's context.
+        /// </summary>
+        /// <param name="module"> </param>
+        /// <returns>
+        ///     A SimpleSubsystem.
+        /// </returns>
+        protected SimpleSubsystem BuildSubsystemForModule(IAlfredModule module)
+        {
+            var page = new ModuleListPage(Container, "Test Page", "TestPage");
+            page.Register(module);
+
+            var subsystem = BuildTestSubsystem();
+            subsystem.PagesToRegister.Add(page);
+
+            return subsystem;
         }
     }
 

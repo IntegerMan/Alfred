@@ -77,6 +77,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <value>
         ///     The results.
         /// </value>
+        [NotNull]
         IEnumerable<ISearchResult> Results { get; }
 
         /// <summary>

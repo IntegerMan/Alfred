@@ -55,6 +55,9 @@ namespace MattEland.Ani.Alfred.Core.Modules
         {
             UpdateStatusMessage();
 
+            // Hook up the result list to point to the controller's results collection. This will not change.
+            _listResults.Items = alfred.SearchController.Results;
+
             // Register Controls
             Register(_lblResults);
             Register(_listResults);

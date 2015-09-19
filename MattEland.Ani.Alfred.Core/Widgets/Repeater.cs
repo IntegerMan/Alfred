@@ -8,11 +8,11 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 using JetBrains.Annotations;
-
-using MattEland.Ani.Alfred.Core.Definitions;
 
 namespace MattEland.Ani.Alfred.Core.Widgets
 {
@@ -26,7 +26,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         ///     The items source.
         /// </summary>
         [NotNull]
-        private IEnumerable<IWidget> _items;
+        private IEnumerable<object> _items;
 
         /// <summary>
         ///     Initializes a new instance of the Repeater class.
@@ -35,7 +35,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         public Repeater(WidgetCreationParameters parameters) : base(parameters)
         {
             // Build out the default collection
-            _items = parameters.Container.ProvideCollection<IWidget>();
+            _items = parameters.Container.ProvideCollection<object>();
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         /// <paramref name="value" /> is <see langword="null" /> .
         /// </exception>
         [NotNull]
-        public IEnumerable<IWidget> Items
+        public IEnumerable<object> Items
         {
             get { return _items; }
             set
