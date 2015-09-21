@@ -251,7 +251,6 @@ namespace MattEland.Ani.Alfred.Tests.Search
             //! Act
             Alfred.Initialize();
             Controller.PerformSearch(SearchString);
-            Controller.Update();
 
             //! Assert
             mockOperation.Verify(o => o.Update(), Times.Once);

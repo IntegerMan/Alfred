@@ -70,7 +70,9 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         [NotNull]
         public ISearchOperation PerformSearch([NotNull] string searchText)
         {
-            return new ExplorerSearchOperation(Container, _mindExplorerSubsystem, searchText);
+            var operation = new ExplorerSearchOperation(Container, _mindExplorerSubsystem, searchText);
+
+            return operation;
         }
 
         /// <summary>

@@ -279,16 +279,52 @@ namespace MattEland.Ani.Alfred.Core
             // Search all providers
             foreach (var provider in SearchProviders)
             {
-                StartSearchOperation(searchText, provider);
+                BuildSearchOperation(searchText, provider);
+            }
+
+            // Allow the searches to kick off
+            UpdateOngoingOperations();
+        }
+
+        /// <summary>
+        ///     Performs the search action against a specific search provider.
+        /// </summary>
+        /// <param name="searchText">The search text.</param>
+        /// <param name="providerId">The provider's identifier.</param>
+        public void PerformSearch([NotNull] string searchText, [NotNull] string providerId)
+        {
+            // When searching all providers, use the simpler method
+            if (providerId.IsEmpty() || providerId.Matches("All"))
+            {
+                PerformSearch(searchText);
+                return;
+            }
+
+            var target = SearchProviders.FirstOrDefault(s => s.Id.Matches(providerId));
+            if (target != null)
+            {
+                // Do a bit of record keeping for performance / timeout calculations
+                RecordSearchStart(searchText);
+
+                // Create the search and add it to our collection
+                BuildSearchOperation(searchText, target);
+
+                // Update the internal tracking mechanisms and start the search
+                UpdateOngoingOperations();
+            }
+            else
+            {
+                // TODO: Log this
             }
         }
 
         /// <summary>
-        ///     Starts the search operation on the specified <paramref name="searchProvider" /> .
+        ///     Builds a search operation from the specified <paramref name="searchProvider" /> for the
+        ///     specified <paramref name="searchText"/>.
         /// </summary>
-        /// <param name="searchText">The search text.</param>
-        /// <param name="searchProvider">The search provider.</param>
-        private void StartSearchOperation([NotNull] string searchText,
+        /// <param name="searchText"> The search text. </param>
+        /// <param name="searchProvider"> The search provider. </param>
+        private void BuildSearchOperation([NotNull] string searchText,
                                           [NotNull] ISearchProvider searchProvider)
         {
             // Log this event
@@ -309,33 +345,6 @@ namespace MattEland.Ani.Alfred.Core
             _lastSearchText = searchText;
 
             // TODO: Prepare tracking metrics
-        }
-
-        /// <summary>
-        ///     Performs the search action against a specific search provider.
-        /// </summary>
-        /// <param name="searchText">The search text.</param>
-        /// <param name="providerId">The provider's identifier.</param>
-        public void PerformSearch([NotNull] string searchText, [NotNull] string providerId)
-        {
-            // When searching all providers, use the simpler method
-            if (providerId.IsEmpty() || providerId.Matches("All"))
-            {
-                PerformSearch(searchText);
-                return;
-            }
-
-            var target = SearchProviders.FirstOrDefault(s => s.Id.Matches(providerId));
-            if (target != null)
-            {
-                RecordSearchStart(searchText);
-
-                StartSearchOperation(searchText, target);
-            }
-            else
-            {
-                // TODO: Log this
-            }
         }
 
         /// <summary>
@@ -408,6 +417,15 @@ namespace MattEland.Ani.Alfred.Core
         {
             base.UpdateProtected();
 
+            UpdateOngoingOperations();
+        }
+
+        /// <summary>
+        ///     Updates the ongoing operations, allowing each one to check on its status and update the
+        ///     results collection.
+        /// </summary>
+        private void UpdateOngoingOperations()
+        {
             // Get ops .ToList() because we may be removing operations while iterating
             var ongoingOperations = _ongoingOperations.ToList();
 
@@ -433,8 +451,6 @@ namespace MattEland.Ani.Alfred.Core
 
                 // TODO: Handle errors
             }
-
-            // TODO: Update status text
         }
 
         /// <summary>

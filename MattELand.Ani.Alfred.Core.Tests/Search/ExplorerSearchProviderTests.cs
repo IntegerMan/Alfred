@@ -132,16 +132,10 @@ namespace MattEland.Ani.Alfred.Tests.Search
             // Execute a Search for Alfred. The root node at least should match this
             searchController.PerformSearch(searchText);
 
-            // Let the search compute
-            Alfred.Update();
-
             //! Assert
 
-            searchController.ShouldSatisfyAllConditions(() =>
-                                                        searchController.Results.Count()
-                                                                        .ShouldBeGreaterThan(0),
-                                                        () =>
-                                                        searchController.IsSearching.ShouldBe(false));
+            searchController.Results.Count().ShouldBeGreaterThan(0);
+            searchController.IsSearching.ShouldBe(false);
         }
 
         /// <summary>
@@ -150,6 +144,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
         [Test]
         public void AfterSearchAndOneUpdateSearchOperationsAreComplete()
         {
+
             //! Arrange
 
             var provider = SearchProvider;
@@ -161,8 +156,9 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             //! Assert
 
-            operation.ShouldSatisfyAllConditions(() => operation.ShouldBe<ExplorerSearchOperation>(),
-                                                 () => operation.IsSearchComplete.ShouldBeTrue());
+            operation.ShouldBe<ExplorerSearchOperation>();
+            operation.IsSearchComplete.ShouldBeTrue();
+
         }
 
         /// <summary>
