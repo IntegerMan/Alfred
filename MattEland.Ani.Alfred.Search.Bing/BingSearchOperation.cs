@@ -11,6 +11,7 @@ namespace MattEland.Ani.Alfred.Search.Bing
     /// <summary>
     ///     A bing search operation. This class cannot be inherited.
     /// </summary>
+    [PublicAPI]
     public sealed class BingSearchOperation : ISearchOperation
     {
         /// <summary>
