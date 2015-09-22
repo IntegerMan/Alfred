@@ -25,6 +25,7 @@ using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Ani.Alfred.Core.Speech;
 using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Ani.Alfred.PresentationShared.Helpers;
+using MattEland.Ani.Alfred.Search.Bing;
 using MattEland.Common;
 using MattEland.Common.Providers;
 
@@ -230,6 +231,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             Register(new AlfredCoreSubsystem(Container));
             Register(new ChatSubsystem(Container, _alfred.Name));
             Register(new MindExplorerSubsystem(Container, Options.ShowMindExplorerPage));
+            Register(new BingSearchSubsystem(Container));
             InitializeSystemMonitoringSubsystem();
 
             // Add any dynamic subsystems
