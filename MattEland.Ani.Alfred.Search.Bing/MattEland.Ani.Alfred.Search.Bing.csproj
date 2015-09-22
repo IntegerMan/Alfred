@@ -57,6 +57,7 @@
     <Compile Include="BingSearchOperation.cs" />
     <Compile Include="BingSearchProvider.cs" />
     <Compile Include="BingSearchSubsystem.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
