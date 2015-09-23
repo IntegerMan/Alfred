@@ -152,7 +152,7 @@
       <Name>MattEland.Ani.Alfred.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\MattEland.Ani.Alfred.Search.Bing\MattEland.Ani.Alfred.Search.Bing.csproj">
-      <Project>{684d255a-7eb1-427d-988d-48c27649bd38}</Project>
+      <Project>{383e44c8-1cc9-4793-8e88-f65cad4955cf}</Project>
       <Name>MattEland.Ani.Alfred.Search.Bing</Name>
     </ProjectReference>
     <ProjectReference Include="..\MattEland.Common\MattEland.Common.csproj">

@@ -161,10 +161,6 @@
       <Project>{B4E5BAAE-27A8-456E-B0AC-3117E1E6EDDF}</Project>
       <Name>MattEland.Ani.Alfred.PresentationShared</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MattEland.Ani.Alfred.Search.Bing\MattEland.Ani.Alfred.Search.Bing.csproj">
-      <Project>{684d255a-7eb1-427d-988d-48c27649bd38}</Project>
-      <Name>MattEland.Ani.Alfred.Search.Bing</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MattEland.Ani.Alfred.WPF\MattEland.Ani.Alfred.WPF.csproj">
       <Project>{E13E88B6-23C9-40EA-B10B-B8E52541B221}</Project>
       <Name>MattEland.Ani.Alfred.WPF</Name>
