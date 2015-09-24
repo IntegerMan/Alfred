@@ -57,7 +57,7 @@ namespace MattEland.Ani.Alfred.Search.Bing
         /// </returns>
         public ISearchOperation PerformSearch(string searchText)
         {
-            return new BingSearchOperation(Container);
+            return new BingSearchOperation(Container, searchText);
         }
 
         /// <summary>

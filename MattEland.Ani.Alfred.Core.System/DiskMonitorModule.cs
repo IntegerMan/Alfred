@@ -108,7 +108,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             {
                 Minimum = 0,
                 Maximum = 100,
-                ValueFormatString = "{0:F2} %"
+                ValueFormatString = @"{0:F2} %"
             };
 
             return widget;

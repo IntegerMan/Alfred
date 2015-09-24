@@ -72,9 +72,18 @@
     <Compile Include="BingSearchContainer.cs" />
     <Compile Include="BingSearchOperation.cs" />
     <Compile Include="BingSearchProvider.cs" />
+    <Compile Include="BingSearchResult.cs" />
     <Compile Include="BingSearchSubsystem.cs" />
+    <Compile Include="ExpandableSearchResult.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="ImageResult.cs" />
+    <Compile Include="NewsResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RelatedSearchResult.cs" />
+    <Compile Include="SpellResult.cs" />
+    <Compile Include="Thumbnail.cs" />
+    <Compile Include="VideoResult.cs" />
+    <Compile Include="WebResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="AlfredAppTestCertificate.snk" />
