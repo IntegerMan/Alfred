@@ -231,7 +231,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             Register(new AlfredCoreSubsystem(Container));
             Register(new ChatSubsystem(Container, _alfred.Name));
             Register(new MindExplorerSubsystem(Container, Options.ShowMindExplorerPage));
-            Register(new BingSearchSubsystem(Container));
+            Register(new BingSearchSubsystem(Container, Options.BingApiKey));
             InitializeSystemMonitoringSubsystem();
 
             // Add any dynamic subsystems

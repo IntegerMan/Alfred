@@ -36,5 +36,12 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         [NotNull, ItemNotNull]
         public ICollection<IAlfredSubsystem> AdditionalSubsystems { get; } = new List<IAlfredSubsystem>();
 
+        /// <summary>
+        ///     Gets the bing API key.
+        /// </summary>
+        /// <value>
+        ///     The bing API key.
+        /// </value>
+        public string BingApiKey { get; set; } = "YourBingApiKeyGoesHere";
     }
 }

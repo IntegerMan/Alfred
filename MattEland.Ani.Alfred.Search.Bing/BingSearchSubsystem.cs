@@ -21,12 +21,13 @@ namespace MattEland.Ani.Alfred.Search.Bing
         private BingSearchProvider _bingSearchProvider;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
+        ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
-        /// <param name="container">The container.</param>
-        public BingSearchSubsystem([NotNull] IObjectContainer container) : base(container)
+        /// <param name="container"> The container. </param>
+        /// <param name="bingApiKey"> The bing API key. </param>
+        public BingSearchSubsystem([NotNull] IObjectContainer container, [NotNull] string bingApiKey) : base(container)
         {
-            _bingSearchProvider = new BingSearchProvider(container);
+            _bingSearchProvider = new BingSearchProvider(container, bingApiKey);
         }
 
         /// <summary>
@@ -49,7 +50,9 @@ namespace MattEland.Ani.Alfred.Search.Bing
         /// <summary>
         ///     Gets the identifier for the <see cref="IAlfredSubsystem"/> to be used in command routing.
         /// </summary>
-        /// <value>The identifier for the subsystem.</value>
+        /// <value>
+        ///     The identifier for the subsystem.
+        /// </value>
         public override string Id
         {
             get { return "Bing"; }

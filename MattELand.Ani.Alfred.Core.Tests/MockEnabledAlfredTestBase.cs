@@ -314,6 +314,7 @@ namespace MattEland.Ani.Alfred.Tests
 
             // Build Basic Properties
             mock.SetupGet(m => m.DisplayName).Returns(name);
+            mock.SetupGet(m => m.ItemTypeName).Returns("Test Node");
 
             // Build out a collection of children if none were provided
             children = children ?? Container.ProvideCollection<IPropertyProvider>();

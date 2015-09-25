@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common.Providers;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Search.Bing
 {
@@ -15,17 +16,27 @@ namespace MattEland.Ani.Alfred.Search.Bing
     public sealed class BingSearchProvider : ISearchProvider, IHasContainer
     {
         /// <summary>
+        ///     The Bing API key.
+        /// </summary>
+        [NotNull]
+        private readonly string _bingApiKey;
+
+        /// <summary>
         ///     Initializes a new instance of the <see cref="BingSearchProvider"/> class.
         /// </summary>
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="container"/> is null.
         /// </exception>
         /// <param name="container"> The container. </param>
-        public BingSearchProvider([NotNull] IObjectContainer container)
+        /// <param name="bingApiKey"> The Bing API key. </param>
+        public BingSearchProvider([NotNull] IObjectContainer container, [NotNull] string bingApiKey)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
+            if (bingApiKey.IsEmpty()) throw new ArgumentNullException(nameof(bingApiKey));
 
             Container = container;
+
+            _bingApiKey = bingApiKey;
         }
 
         /// <summary>
@@ -57,7 +68,7 @@ namespace MattEland.Ani.Alfred.Search.Bing
         /// </returns>
         public ISearchOperation PerformSearch(string searchText)
         {
-            return new BingSearchOperation(Container, searchText);
+            return new BingSearchOperation(Container, searchText, _bingApiKey);
         }
 
         /// <summary>

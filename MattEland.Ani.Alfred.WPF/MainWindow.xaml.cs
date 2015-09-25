@@ -55,7 +55,8 @@ namespace MattEland.Ani.Alfred.WPF
             var options = new ApplicationManagerOptions
             {
                 IsSpeechEnabled = enableSpeech,
-                ShowMindExplorerPage = true
+                ShowMindExplorerPage = true,
+                BingApiKey = Settings.Default.BingApiKey
             };
 
             Application = new ApplicationManager(Container, options, this);

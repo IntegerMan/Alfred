@@ -34,5 +34,17 @@ namespace MattEland.Ani.Alfred.WPF.Properties {
                 this["AutoStartAlfred"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("YourApiKeyGoesHere")]
+        public string BingApiKey {
+            get {
+                return ((string)(this["BingApiKey"]));
+            }
+            set {
+                this["BingApiKey"] = value;
+            }
+        }
     }
 }
