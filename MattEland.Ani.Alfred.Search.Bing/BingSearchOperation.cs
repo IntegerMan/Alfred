@@ -32,7 +32,7 @@ namespace MattEland.Ani.Alfred.Search.Bing
         [NotNull]
         private string SearchText;
         private IAsyncResult _queryResult;
-        private DataServiceQuery<ExpandableSearchResult> _query;
+        private DataServiceQuery<NewsResult> _query;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="BingSearchOperation" />
@@ -88,8 +88,8 @@ namespace MattEland.Ani.Alfred.Search.Bing
             const string operations = "web+image+news";
 
             // Set up the query
-            _query = bingContainer.Composite(operations, SearchText, null, null, Market,
-            null, null, null, null, null, null, null, null, null, null);
+            _query = bingContainer.News(SearchText, null, Market,
+            null, null, null, null, null, null);
 
             // Only include the top results per group
             _query = _query.AddQueryOption("$top", 10);
@@ -165,41 +165,62 @@ namespace MattEland.Ani.Alfred.Search.Bing
             Contract.Requires(result != null, "result is null.");
             Contract.Assume(result.AsyncState != null, "AsyncState is null.");
 
-            var query = (DataServiceQuery<ExpandableSearchResult>)result.AsyncState;
+            var query = (DataServiceQuery<NewsResult>)result.AsyncState;
 
             var results = query.EndExecute(result);
 
+            ProcessNewsResults(results);
+            //ProcessExpandableResults(results);
+
+            IsSearchComplete = true;
+        }
+
+        private void ProcessExpandableResults([NotNull, ItemNotNull] IEnumerable<ExpandableSearchResult> results)
+        {
             // Translate the web search results into domain-specific results
             foreach (ExpandableSearchResult expandableResult in results)
             {
 
                 // Add Web Results
-                foreach (var webResult in expandableResult.Web)
-                {
-                    var searchResult = new BingSearchResult(webResult);
-
-                    _results.Add(searchResult);
-                }
+                ProcessWebResults(expandableResult.Web);
 
                 // Add News Results
-                foreach (var newsResult in expandableResult.News)
-                {
-                    var searchResult = new BingSearchResult(newsResult);
-
-                    _results.Add(searchResult);
-                }
+                ProcessNewsResults(expandableResult.News);
 
                 // Add Image Results
-                foreach (var imageResult in expandableResult.Image)
-                {
-                    var searchResult = new BingSearchResult(imageResult);
-
-                    _results.Add(searchResult);
-                }
+                ProcessImageResults(expandableResult.Image);
 
             }
+        }
 
-            IsSearchComplete = true;
+        private void ProcessWebResults([NotNull, ItemNotNull] IEnumerable<WebResult> webResults)
+        {
+            foreach (var webResult in webResults)
+            {
+                var searchResult = new BingSearchResult(webResult);
+
+                _results.Add(searchResult);
+            }
+        }
+
+        private void ProcessImageResults([NotNull, ItemNotNull] IEnumerable<ImageResult> imageResults)
+        {
+            foreach (var imageResult in imageResults)
+            {
+                var searchResult = new BingSearchResult(imageResult);
+
+                _results.Add(searchResult);
+            }
+        }
+
+        private void ProcessNewsResults([NotNull, ItemNotNull] IEnumerable<NewsResult> results)
+        {
+            foreach (var newsResult in results)
+            {
+                var searchResult = new BingSearchResult(newsResult);
+
+                _results.Add(searchResult);
+            }
         }
 
         /// <summary>
