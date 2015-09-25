@@ -1,6 +1,7 @@
 ﻿using MattEland.Ani.Alfred.Core.Definitions;
 using System.Diagnostics.Contracts;
 using System;
+using JetBrains.Annotations;
 
 namespace MattEland.Ani.Alfred.Search.Bing
 {
@@ -10,16 +11,39 @@ namespace MattEland.Ani.Alfred.Search.Bing
         ///     Initializes a new instance of the <see cref="BingSearchResult"/> class.
         /// </summary>
         /// <param name="result"> The Bing search result. </param>
-        public BingSearchResult(WebResult result) : base(result.Title)
+        public BingSearchResult([NotNull] WebResult result) : base(result.Title)
         {
             Contract.Requires(result != null, "result is null.");
 
-            // Set the core property everything else feeds from
-            WebSearchResult = result;
+            // Set Basic Properties
+            Description = result.Description;
+            LocationText = result.DisplayUrl;
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="BingSearchResult"/> class.
+        /// </summary>
+        /// <param name="result"> The Bing search result. </param>
+        public BingSearchResult([NotNull] NewsResult result) : base(result.Title)
+        {
+            Contract.Requires(result != null, "result is null.");
 
             // Set Basic Properties
-            Description = WebSearchResult.Description;
-            LocationText = WebSearchResult.DisplayUrl;
+            Description = result.Description;
+            LocationText = result.Source; // TODO: Maybe Url?
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="BingSearchResult"/> class.
+        /// </summary>
+        /// <param name="result"> The Bing search result. </param>
+        public BingSearchResult([NotNull] ImageResult result) : base(result.Title)
+        {
+            Contract.Requires(result != null, "result is null.");
+
+            // Set Basic Properties
+            Description = result.ContentType;
+            LocationText = result.DisplayUrl;
         }
 
         /// <summary>
@@ -50,17 +74,6 @@ namespace MattEland.Ani.Alfred.Search.Bing
             {
                 return "Open Web Page";
             }
-        }
-
-        /// <summary>
-        ///     Gets the web search result.
-        /// </summary>
-        /// <value>
-        ///     The web search result.
-        /// </value>
-        public WebResult WebSearchResult
-        {
-            get;
         }
     }
 }

@@ -6,7 +6,6 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common.Providers;
 using MattEland.Common;
-using System.Globalization;
 using System.Data.Services.Client;
 using System.Diagnostics.Contracts;
 using System.Net;
@@ -33,7 +32,7 @@ namespace MattEland.Ani.Alfred.Search.Bing
         [NotNull]
         private string SearchText;
         private IAsyncResult _queryResult;
-        private DataServiceQuery<WebResult> _query;
+        private DataServiceQuery<ExpandableSearchResult> _query;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="BingSearchOperation" />
@@ -74,33 +73,30 @@ namespace MattEland.Ani.Alfred.Search.Bing
         private void StartSearch()
         {
             // Ensure the API Key has at least been set
-            if (BingApiKey.IsEmpty())
-            {
-                throw new InvalidOperationException("BingApiKey must be set before a search can be started");
-            }
+            if (BingApiKey.IsEmpty()) throw new InvalidOperationException("BingApiKey must be set before a search can be started");
+            if (BingApiKey.Contains("YourApi")) throw new InvalidOperationException("BingApiKey was not customized.");
 
             // Set up the Bing Search Container that will be used to make web service calls
-            const string BingSearchPath = @"https://api.datamarket.azure.com/Bing/Search";
+            const string BingSearchPath = @"http://api.datamarket.azure.com/Bing/Search";
 
             var bingContainer = new BingSearchContainer(new Uri(BingSearchPath));
             bingContainer.Credentials = new NetworkCredential(BingApiKey, BingApiKey);
 
             // Various settings for the query
-            const string ContentSafety = "Moderate";
-            var culture = CultureInfo.CurrentCulture.Name;
+            const string Market = "en-us";
+
+            const string operations = "web+image+news";
 
             // Set up the query
-            _query = bingContainer.Web(SearchText,
-                null,
-                null,
-                culture,
-                ContentSafety,
-                null,
-                null,
-                null);
+            _query = bingContainer.Composite(operations, SearchText, null, null, Market,
+            null, null, null, null, null, null, null, null, null, null);
+
+            // Only include the top results per group
+            _query = _query.AddQueryOption("$top", 10);
 
             _queryResult = _query.BeginExecute(null, _query);
         }
+
 
         /// <summary>
         ///     Gets or sets the search query.
@@ -169,16 +165,38 @@ namespace MattEland.Ani.Alfred.Search.Bing
             Contract.Requires(result != null, "result is null.");
             Contract.Assume(result.AsyncState != null, "AsyncState is null.");
 
-            var query = result.AsyncState as DataServiceQuery<WebResult>;
+            var query = (DataServiceQuery<ExpandableSearchResult>)result.AsyncState;
 
             var results = query.EndExecute(result);
 
             // Translate the web search results into domain-specific results
-            foreach (WebResult webResult in results)
+            foreach (ExpandableSearchResult expandableResult in results)
             {
-                var searchResult = new BingSearchResult(webResult);
 
-                _results.Add(searchResult);
+                // Add Web Results
+                foreach (var webResult in expandableResult.Web)
+                {
+                    var searchResult = new BingSearchResult(webResult);
+
+                    _results.Add(searchResult);
+                }
+
+                // Add News Results
+                foreach (var newsResult in expandableResult.News)
+                {
+                    var searchResult = new BingSearchResult(newsResult);
+
+                    _results.Add(searchResult);
+                }
+
+                // Add Image Results
+                foreach (var imageResult in expandableResult.Image)
+                {
+                    var searchResult = new BingSearchResult(imageResult);
+
+                    _results.Add(searchResult);
+                }
+
             }
 
             IsSearchComplete = true;
