@@ -307,8 +307,13 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             //! Assert
 
-            abortSearchResults.ShouldBe(0);
+            // Abort should maintain the initial found number
+            abortSearchResults.ShouldBe(search1Results);
+
+            // Search 2 should start all over again
             search2Results.ShouldBeLessThan(search1Results);
+
+            // The items should match up with search2Results
             list.Items.Count().ShouldBe(search2Results);
         }
 
