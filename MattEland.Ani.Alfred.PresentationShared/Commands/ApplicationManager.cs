@@ -305,7 +305,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             {
                 var message = string.Format(Locale,
                                             "Problem creating system monitoring module: Win32 exception: {0}",
-                                            ex.Message);
+                                            ex.BuildDetailsMessage());
 
                 _console?.Log(LogHeader, message, LogLevel.Error);
 
@@ -314,7 +314,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             {
                 var message = string.Format(Locale,
                                             "Problem creating system monitoring module: Unauthorized access exception: {0}",
-                                            ex.Message);
+                                            ex.BuildDetailsMessage());
 
                 _console?.Log(LogHeader, message, LogLevel.Error);
 
