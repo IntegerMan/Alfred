@@ -155,6 +155,10 @@
       <Project>{383e44c8-1cc9-4793-8e88-f65cad4955cf}</Project>
       <Name>MattEland.Ani.Alfred.Search.Bing</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MattEland.Ani.Alfred.Search.GitHub\MattEland.Ani.Alfred.Search.GitHub.csproj">
+      <Project>{b96783cd-2b8a-406a-af2c-4c4e99952b14}</Project>
+      <Name>MattEland.Ani.Alfred.Search.GitHub</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MattEland.Common\MattEland.Common.csproj">
       <Project>{514cb422-a6ef-4c75-b925-92ab599ba1be}</Project>
       <Name>MattEland.Common</Name>

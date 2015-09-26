@@ -6,12 +6,14 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Common.Providers;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MattEland.Ani.Alfred.Search.Bing
 {
     /// <summary>
     ///     A subsystem designed to provide Bing search capabilities.
     /// </summary>
+    [SuppressMessage("CodeRush", "Can implement base type constructors")]
     public sealed class BingSearchSubsystem : AlfredSubsystem
     {
         /// <summary>
@@ -25,7 +27,8 @@ namespace MattEland.Ani.Alfred.Search.Bing
         /// </summary>
         /// <param name="container"> The container. </param>
         /// <param name="bingApiKey"> The bing API key. </param>
-        public BingSearchSubsystem([NotNull] IObjectContainer container, [NotNull] string bingApiKey) : base(container)
+        public BingSearchSubsystem([NotNull] IObjectContainer container, [NotNull] string bingApiKey)
+            : base(container)
         {
             _bingSearchProvider = new BingSearchProvider(container, bingApiKey);
         }
