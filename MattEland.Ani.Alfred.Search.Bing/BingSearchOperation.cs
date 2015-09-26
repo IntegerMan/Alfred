@@ -32,7 +32,6 @@ namespace MattEland.Ani.Alfred.Search.Bing
         [NotNull]
         private string SearchText;
         private IAsyncResult _queryResult;
-        private DataServiceQuery<NewsResult> _query;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="BingSearchOperation" />
@@ -77,24 +76,23 @@ namespace MattEland.Ani.Alfred.Search.Bing
             if (BingApiKey.Contains("YourApi")) throw new InvalidOperationException("BingApiKey was not customized.");
 
             // Set up the Bing Search Container that will be used to make web service calls
-            const string BingSearchPath = @"http://api.datamarket.azure.com/Bing/Search";
+            const string BingSearchPath = @"https://api.datamarket.azure.com/Bing/SearchWeb/Web/";
 
-            var bingContainer = new BingSearchContainer(new Uri(BingSearchPath));
-            bingContainer.Credentials = new NetworkCredential(BingApiKey, BingApiKey);
+            var bingContainer = new BingSearchContainer(new Uri(BingSearchPath))
+            {
+                Credentials = new NetworkCredential(BingApiKey, BingApiKey)
+            };
 
             // Various settings for the query
-            const string Market = "en-us";
-
-            const string operations = "web+image+news";
+            const string Market = "en-US";
 
             // Set up the query
-            _query = bingContainer.News(SearchText, null, Market,
-            null, null, null, null, null, null);
+            Query = bingContainer.Web(SearchText, null, null, Market, null, null, null, null);
 
             // Only include the top results per group
-            _query = _query.AddQueryOption("$top", 10);
+            Query = Query.AddQueryOption(@"$top", 10);
 
-            _queryResult = _query.BeginExecute(null, _query);
+            _queryResult = Query.BeginExecute(null, Query);
         }
 
 
@@ -126,13 +124,10 @@ namespace MattEland.Ani.Alfred.Search.Bing
             try
             {
                 // This shouldn't happen, but guard anyway
-                if (IsSearchComplete)
-                {
-                    return;
-                }
+                if (IsSearchComplete) return;
 
                 // If this is the initial run, we'll need to boot up the search
-                if (_query == null)
+                if (Query == null)
                 {
                     StartSearch();
                 }
@@ -142,6 +137,7 @@ namespace MattEland.Ani.Alfred.Search.Bing
                 {
                     OnQueryCompleted(_queryResult);
                 }
+
             }
             catch (Exception ex)
             {
@@ -165,32 +161,13 @@ namespace MattEland.Ani.Alfred.Search.Bing
             Contract.Requires(result != null, "result is null.");
             Contract.Assume(result.AsyncState != null, "AsyncState is null.");
 
-            var query = (DataServiceQuery<NewsResult>)result.AsyncState;
+            var query = (DataServiceQuery<WebResult>)result.AsyncState;
 
             var results = query.EndExecute(result);
 
-            ProcessNewsResults(results);
-            //ProcessExpandableResults(results);
+            ProcessWebResults(results);
 
             IsSearchComplete = true;
-        }
-
-        private void ProcessExpandableResults([NotNull, ItemNotNull] IEnumerable<ExpandableSearchResult> results)
-        {
-            // Translate the web search results into domain-specific results
-            foreach (ExpandableSearchResult expandableResult in results)
-            {
-
-                // Add Web Results
-                ProcessWebResults(expandableResult.Web);
-
-                // Add News Results
-                ProcessNewsResults(expandableResult.News);
-
-                // Add Image Results
-                ProcessImageResults(expandableResult.Image);
-
-            }
         }
 
         private void ProcessWebResults([NotNull, ItemNotNull] IEnumerable<WebResult> webResults)
@@ -198,26 +175,6 @@ namespace MattEland.Ani.Alfred.Search.Bing
             foreach (var webResult in webResults)
             {
                 var searchResult = new BingSearchResult(webResult);
-
-                _results.Add(searchResult);
-            }
-        }
-
-        private void ProcessImageResults([NotNull, ItemNotNull] IEnumerable<ImageResult> imageResults)
-        {
-            foreach (var imageResult in imageResults)
-            {
-                var searchResult = new BingSearchResult(imageResult);
-
-                _results.Add(searchResult);
-            }
-        }
-
-        private void ProcessNewsResults([NotNull, ItemNotNull] IEnumerable<NewsResult> results)
-        {
-            foreach (var newsResult in results)
-            {
-                var searchResult = new BingSearchResult(newsResult);
 
                 _results.Add(searchResult);
             }

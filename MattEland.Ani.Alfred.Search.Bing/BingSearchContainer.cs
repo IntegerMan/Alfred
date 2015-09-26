@@ -1,17 +1,27 @@
 ﻿using System;
 using System.Data.Services.Client;
-
+using System.Data.Services.Common;
 namespace MattEland.Ani.Alfred.Search.Bing
 {
     /// <summary>
     ///     A bing search container.
     /// </summary>
-    public partial class BingSearchContainer : DataServiceContext
+    public class BingSearchContainer : DataServiceContext
     {
-
         public BingSearchContainer(Uri serviceRoot) :
                 base(serviceRoot)
         {
+        }
+
+        public BingSearchContainer()
+        {
+
+        }
+
+        public BingSearchContainer(Uri serviceRoot, DataServiceProtocolVersion maxProtocolVersion)
+            : base(serviceRoot, maxProtocolVersion)
+        {
+            
         }
 
         /// <summary>
@@ -68,37 +78,37 @@ namespace MattEland.Ani.Alfred.Search.Bing
         {
             if ((Sources == null))
             {
-                throw new System.ArgumentNullException("Sources", "Sources value cannot be null");
+                throw new ArgumentNullException("Sources", "Sources value cannot be null");
             }
             if ((Query == null))
             {
-                throw new System.ArgumentNullException("Query", "Query value cannot be null");
+                throw new ArgumentNullException("Query", "Query value cannot be null");
             }
-            DataServiceQuery<ExpandableSearchResult> query;
-            query = base.CreateQuery<ExpandableSearchResult>("Composite");
+
+            var query = base.CreateQuery<ExpandableSearchResult>("Composite");
             if ((Sources != null))
             {
-                query = query.AddQueryOption("Sources", string.Concat("\'", System.Uri.EscapeDataString(Sources), "\'"));
+                query = query.AddQueryOption("Sources", string.Concat("\'", Uri.EscapeDataString(Sources), "\'"));
             }
             if ((Query != null))
             {
-                query = query.AddQueryOption("Query", string.Concat("\'", System.Uri.EscapeDataString(Query), "\'"));
+                query = query.AddQueryOption("Query", string.Concat("\'", Uri.EscapeDataString(Query), "\'"));
             }
             if ((Options != null))
             {
-                query = query.AddQueryOption("Options", string.Concat("\'", System.Uri.EscapeDataString(Options), "\'"));
+                query = query.AddQueryOption("Options", string.Concat("\'", Uri.EscapeDataString(Options), "\'"));
             }
             if ((WebSearchOptions != null))
             {
-                query = query.AddQueryOption("WebSearchOptions", string.Concat("\'", System.Uri.EscapeDataString(WebSearchOptions), "\'"));
+                query = query.AddQueryOption("WebSearchOptions", string.Concat("\'", Uri.EscapeDataString(WebSearchOptions), "\'"));
             }
             if ((Market != null))
             {
-                query = query.AddQueryOption("Market", string.Concat("\'", System.Uri.EscapeDataString(Market), "\'"));
+                query = query.AddQueryOption("Market", string.Concat("\'", Uri.EscapeDataString(Market), "\'"));
             }
             if ((Adult != null))
             {
-                query = query.AddQueryOption("Adult", string.Concat("\'", System.Uri.EscapeDataString(Adult), "\'"));
+                query = query.AddQueryOption("Adult", string.Concat("\'", Uri.EscapeDataString(Adult), "\'"));
             }
             if (((Latitude != null)
                         && (Latitude.HasValue == true)))
@@ -112,31 +122,31 @@ namespace MattEland.Ani.Alfred.Search.Bing
             }
             if ((WebFileType != null))
             {
-                query = query.AddQueryOption("WebFileType", string.Concat("\'", System.Uri.EscapeDataString(WebFileType), "\'"));
+                query = query.AddQueryOption("WebFileType", string.Concat("\'", Uri.EscapeDataString(WebFileType), "\'"));
             }
             if ((ImageFilters != null))
             {
-                query = query.AddQueryOption("ImageFilters", string.Concat("\'", System.Uri.EscapeDataString(ImageFilters), "\'"));
+                query = query.AddQueryOption("ImageFilters", string.Concat("\'", Uri.EscapeDataString(ImageFilters), "\'"));
             }
             if ((VideoFilters != null))
             {
-                query = query.AddQueryOption("VideoFilters", string.Concat("\'", System.Uri.EscapeDataString(VideoFilters), "\'"));
+                query = query.AddQueryOption("VideoFilters", string.Concat("\'", Uri.EscapeDataString(VideoFilters), "\'"));
             }
             if ((VideoSortBy != null))
             {
-                query = query.AddQueryOption("VideoSortBy", string.Concat("\'", System.Uri.EscapeDataString(VideoSortBy), "\'"));
+                query = query.AddQueryOption("VideoSortBy", string.Concat("\'", Uri.EscapeDataString(VideoSortBy), "\'"));
             }
             if ((NewsLocationOverride != null))
             {
-                query = query.AddQueryOption("NewsLocationOverride", string.Concat("\'", System.Uri.EscapeDataString(NewsLocationOverride), "\'"));
+                query = query.AddQueryOption("NewsLocationOverride", string.Concat("\'", Uri.EscapeDataString(NewsLocationOverride), "\'"));
             }
             if ((NewsCategory != null))
             {
-                query = query.AddQueryOption("NewsCategory", string.Concat("\'", System.Uri.EscapeDataString(NewsCategory), "\'"));
+                query = query.AddQueryOption("NewsCategory", string.Concat("\'", Uri.EscapeDataString(NewsCategory), "\'"));
             }
             if ((NewsSortBy != null))
             {
-                query = query.AddQueryOption("NewsSortBy", string.Concat("\'", System.Uri.EscapeDataString(NewsSortBy), "\'"));
+                query = query.AddQueryOption("NewsSortBy", string.Concat("\'", Uri.EscapeDataString(NewsSortBy), "\'"));
             }
             return query;
         }
@@ -155,29 +165,30 @@ namespace MattEland.Ani.Alfred.Search.Bing
         {
             if ((Query == null))
             {
-                throw new System.ArgumentNullException("Query", "Query value cannot be null");
+                throw new ArgumentNullException("Query", "Query value cannot be null");
             }
-            DataServiceQuery<WebResult> query;
-            query = base.CreateQuery<WebResult>("Web");
+
+            DataServiceQuery<WebResult> query = base.CreateQuery<WebResult>("Web");
+
             if ((Query != null))
             {
-                query = query.AddQueryOption("Query", string.Concat("\'", System.Uri.EscapeDataString(Query), "\'"));
+                query = query.AddQueryOption("Query", string.Concat("\'", Uri.EscapeDataString(Query), "\'"));
             }
             if ((Options != null))
             {
-                query = query.AddQueryOption("Options", string.Concat("\'", System.Uri.EscapeDataString(Options), "\'"));
+                query = query.AddQueryOption("Options", string.Concat("\'", Uri.EscapeDataString(Options), "\'"));
             }
             if ((WebSearchOptions != null))
             {
-                query = query.AddQueryOption("WebSearchOptions", string.Concat("\'", System.Uri.EscapeDataString(WebSearchOptions), "\'"));
+                query = query.AddQueryOption("WebSearchOptions", string.Concat("\'", Uri.EscapeDataString(WebSearchOptions), "\'"));
             }
             if ((Market != null))
             {
-                query = query.AddQueryOption("Market", string.Concat("\'", System.Uri.EscapeDataString(Market), "\'"));
+                query = query.AddQueryOption("Market", string.Concat("\'", Uri.EscapeDataString(Market), "\'"));
             }
             if ((Adult != null))
             {
-                query = query.AddQueryOption("Adult", string.Concat("\'", System.Uri.EscapeDataString(Adult), "\'"));
+                query = query.AddQueryOption("Adult", string.Concat("\'", Uri.EscapeDataString(Adult), "\'"));
             }
             if (((Latitude != null)
                         && (Latitude.HasValue == true)))
@@ -191,7 +202,7 @@ namespace MattEland.Ani.Alfred.Search.Bing
             }
             if ((WebFileType != null))
             {
-                query = query.AddQueryOption("WebFileType", string.Concat("\'", System.Uri.EscapeDataString(WebFileType), "\'"));
+                query = query.AddQueryOption("WebFileType", string.Concat("\'", Uri.EscapeDataString(WebFileType), "\'"));
             }
             return query;
         }
@@ -209,25 +220,25 @@ namespace MattEland.Ani.Alfred.Search.Bing
         {
             if ((Query == null))
             {
-                throw new System.ArgumentNullException("Query", "Query value cannot be null");
+                throw new ArgumentNullException("Query", "Query value cannot be null");
             }
             DataServiceQuery<ImageResult> query;
             query = base.CreateQuery<ImageResult>("Image");
             if ((Query != null))
             {
-                query = query.AddQueryOption("Query", string.Concat("\'", System.Uri.EscapeDataString(Query), "\'"));
+                query = query.AddQueryOption("Query", string.Concat("\'", Uri.EscapeDataString(Query), "\'"));
             }
             if ((Options != null))
             {
-                query = query.AddQueryOption("Options", string.Concat("\'", System.Uri.EscapeDataString(Options), "\'"));
+                query = query.AddQueryOption("Options", string.Concat("\'", Uri.EscapeDataString(Options), "\'"));
             }
             if ((Market != null))
             {
-                query = query.AddQueryOption("Market", string.Concat("\'", System.Uri.EscapeDataString(Market), "\'"));
+                query = query.AddQueryOption("Market", string.Concat("\'", Uri.EscapeDataString(Market), "\'"));
             }
             if ((Adult != null))
             {
-                query = query.AddQueryOption("Adult", string.Concat("\'", System.Uri.EscapeDataString(Adult), "\'"));
+                query = query.AddQueryOption("Adult", string.Concat("\'", Uri.EscapeDataString(Adult), "\'"));
             }
             if (((Latitude != null)
                         && (Latitude.HasValue == true)))
@@ -241,7 +252,7 @@ namespace MattEland.Ani.Alfred.Search.Bing
             }
             if ((ImageFilters != null))
             {
-                query = query.AddQueryOption("ImageFilters", string.Concat("\'", System.Uri.EscapeDataString(ImageFilters), "\'"));
+                query = query.AddQueryOption("ImageFilters", string.Concat("\'", Uri.EscapeDataString(ImageFilters), "\'"));
             }
             return query;
         }
@@ -260,25 +271,25 @@ namespace MattEland.Ani.Alfred.Search.Bing
         {
             if ((Query == null))
             {
-                throw new System.ArgumentNullException("Query", "Query value cannot be null");
+                throw new ArgumentNullException("Query", "Query value cannot be null");
             }
             DataServiceQuery<VideoResult> query;
             query = base.CreateQuery<VideoResult>("Video");
             if ((Query != null))
             {
-                query = query.AddQueryOption("Query", string.Concat("\'", System.Uri.EscapeDataString(Query), "\'"));
+                query = query.AddQueryOption("Query", string.Concat("\'", Uri.EscapeDataString(Query), "\'"));
             }
             if ((Options != null))
             {
-                query = query.AddQueryOption("Options", string.Concat("\'", System.Uri.EscapeDataString(Options), "\'"));
+                query = query.AddQueryOption("Options", string.Concat("\'", Uri.EscapeDataString(Options), "\'"));
             }
             if ((Market != null))
             {
-                query = query.AddQueryOption("Market", string.Concat("\'", System.Uri.EscapeDataString(Market), "\'"));
+                query = query.AddQueryOption("Market", string.Concat("\'", Uri.EscapeDataString(Market), "\'"));
             }
             if ((Adult != null))
             {
-                query = query.AddQueryOption("Adult", string.Concat("\'", System.Uri.EscapeDataString(Adult), "\'"));
+                query = query.AddQueryOption("Adult", string.Concat("\'", Uri.EscapeDataString(Adult), "\'"));
             }
             if (((Latitude != null)
                         && (Latitude.HasValue == true)))
@@ -292,11 +303,11 @@ namespace MattEland.Ani.Alfred.Search.Bing
             }
             if ((VideoFilters != null))
             {
-                query = query.AddQueryOption("VideoFilters", string.Concat("\'", System.Uri.EscapeDataString(VideoFilters), "\'"));
+                query = query.AddQueryOption("VideoFilters", string.Concat("\'", Uri.EscapeDataString(VideoFilters), "\'"));
             }
             if ((VideoSortBy != null))
             {
-                query = query.AddQueryOption("VideoSortBy", string.Concat("\'", System.Uri.EscapeDataString(VideoSortBy), "\'"));
+                query = query.AddQueryOption("VideoSortBy", string.Concat("\'", Uri.EscapeDataString(VideoSortBy), "\'"));
             }
             return query;
         }
@@ -316,25 +327,25 @@ namespace MattEland.Ani.Alfred.Search.Bing
         {
             if ((Query == null))
             {
-                throw new System.ArgumentNullException("Query", "Query value cannot be null");
+                throw new ArgumentNullException("Query", "Query value cannot be null");
             }
             DataServiceQuery<NewsResult> query;
             query = base.CreateQuery<NewsResult>("News");
             if ((Query != null))
             {
-                query = query.AddQueryOption("Query", string.Concat("\'", System.Uri.EscapeDataString(Query), "\'"));
+                query = query.AddQueryOption("Query", string.Concat("\'", Uri.EscapeDataString(Query), "\'"));
             }
             if ((Options != null))
             {
-                query = query.AddQueryOption("Options", string.Concat("\'", System.Uri.EscapeDataString(Options), "\'"));
+                query = query.AddQueryOption("Options", string.Concat("\'", Uri.EscapeDataString(Options), "\'"));
             }
             if ((Market != null))
             {
-                query = query.AddQueryOption("Market", string.Concat("\'", System.Uri.EscapeDataString(Market), "\'"));
+                query = query.AddQueryOption("Market", string.Concat("\'", Uri.EscapeDataString(Market), "\'"));
             }
             if ((Adult != null))
             {
-                query = query.AddQueryOption("Adult", string.Concat("\'", System.Uri.EscapeDataString(Adult), "\'"));
+                query = query.AddQueryOption("Adult", string.Concat("\'", Uri.EscapeDataString(Adult), "\'"));
             }
             if (((Latitude != null)
                         && (Latitude.HasValue == true)))
@@ -348,15 +359,15 @@ namespace MattEland.Ani.Alfred.Search.Bing
             }
             if ((NewsLocationOverride != null))
             {
-                query = query.AddQueryOption("NewsLocationOverride", string.Concat("\'", System.Uri.EscapeDataString(NewsLocationOverride), "\'"));
+                query = query.AddQueryOption("NewsLocationOverride", string.Concat("\'", Uri.EscapeDataString(NewsLocationOverride), "\'"));
             }
             if ((NewsCategory != null))
             {
-                query = query.AddQueryOption("NewsCategory", string.Concat("\'", System.Uri.EscapeDataString(NewsCategory), "\'"));
+                query = query.AddQueryOption("NewsCategory", string.Concat("\'", Uri.EscapeDataString(NewsCategory), "\'"));
             }
             if ((NewsSortBy != null))
             {
-                query = query.AddQueryOption("NewsSortBy", string.Concat("\'", System.Uri.EscapeDataString(NewsSortBy), "\'"));
+                query = query.AddQueryOption("NewsSortBy", string.Concat("\'", Uri.EscapeDataString(NewsSortBy), "\'"));
             }
             return query;
         }
@@ -373,25 +384,25 @@ namespace MattEland.Ani.Alfred.Search.Bing
         {
             if ((Query == null))
             {
-                throw new System.ArgumentNullException("Query", "Query value cannot be null");
+                throw new ArgumentNullException("Query", "Query value cannot be null");
             }
             DataServiceQuery<RelatedSearchResult> query;
             query = base.CreateQuery<RelatedSearchResult>("RelatedSearch");
             if ((Query != null))
             {
-                query = query.AddQueryOption("Query", string.Concat("\'", System.Uri.EscapeDataString(Query), "\'"));
+                query = query.AddQueryOption("Query", string.Concat("\'", Uri.EscapeDataString(Query), "\'"));
             }
             if ((Options != null))
             {
-                query = query.AddQueryOption("Options", string.Concat("\'", System.Uri.EscapeDataString(Options), "\'"));
+                query = query.AddQueryOption("Options", string.Concat("\'", Uri.EscapeDataString(Options), "\'"));
             }
             if ((Market != null))
             {
-                query = query.AddQueryOption("Market", string.Concat("\'", System.Uri.EscapeDataString(Market), "\'"));
+                query = query.AddQueryOption("Market", string.Concat("\'", Uri.EscapeDataString(Market), "\'"));
             }
             if ((Adult != null))
             {
-                query = query.AddQueryOption("Adult", string.Concat("\'", System.Uri.EscapeDataString(Adult), "\'"));
+                query = query.AddQueryOption("Adult", string.Concat("\'", Uri.EscapeDataString(Adult), "\'"));
             }
             if (((Latitude != null)
                         && (Latitude.HasValue == true)))
@@ -408,7 +419,7 @@ namespace MattEland.Ani.Alfred.Search.Bing
 
         /// <summary>
         /// </summary>
-        /// <param name="Query">Bing search query Sample Values : xblox</param>
+        /// <param name="Query">Bing search query Sample Values : xbox</param>
         /// <param name="Options">Specifies options for this request for all Sources. Valid values are: DisableLocationDetection, EnableHighlighting. Sample Values : EnableHighlighting</param>
         /// <param name="Market">Market. Note: Not all Sources support all markets. Sample Values : en-US</param>
         /// <param name="Adult">Adult setting is used for filtering sexually explicit content Sample Values : Moderate</param>
@@ -418,25 +429,25 @@ namespace MattEland.Ani.Alfred.Search.Bing
         {
             if ((Query == null))
             {
-                throw new System.ArgumentNullException("Query", "Query value cannot be null");
+                throw new ArgumentNullException("Query", "Query value cannot be null");
             }
             DataServiceQuery<SpellResult> query;
             query = base.CreateQuery<SpellResult>("SpellingSuggestions");
             if ((Query != null))
             {
-                query = query.AddQueryOption("Query", string.Concat("\'", System.Uri.EscapeDataString(Query), "\'"));
+                query = query.AddQueryOption("Query", string.Concat("\'", Uri.EscapeDataString(Query), "\'"));
             }
             if ((Options != null))
             {
-                query = query.AddQueryOption("Options", string.Concat("\'", System.Uri.EscapeDataString(Options), "\'"));
+                query = query.AddQueryOption("Options", string.Concat("\'", Uri.EscapeDataString(Options), "\'"));
             }
             if ((Market != null))
             {
-                query = query.AddQueryOption("Market", string.Concat("\'", System.Uri.EscapeDataString(Market), "\'"));
+                query = query.AddQueryOption("Market", string.Concat("\'", Uri.EscapeDataString(Market), "\'"));
             }
             if ((Adult != null))
             {
-                query = query.AddQueryOption("Adult", string.Concat("\'", System.Uri.EscapeDataString(Adult), "\'"));
+                query = query.AddQueryOption("Adult", string.Concat("\'", Uri.EscapeDataString(Adult), "\'"));
             }
             if (((Latitude != null)
                         && (Latitude.HasValue == true)))

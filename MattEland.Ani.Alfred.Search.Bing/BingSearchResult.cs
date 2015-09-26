@@ -11,7 +11,7 @@ namespace MattEland.Ani.Alfred.Search.Bing
         ///     Initializes a new instance of the <see cref="BingSearchResult"/> class.
         /// </summary>
         /// <param name="result"> The Bing search result. </param>
-        public BingSearchResult([NotNull] WebResult result) : base(result.Title)
+        public BingSearchResult([NotNull] WebResult result) : this(result.Title)
         {
             Contract.Requires(result != null, "result is null.");
 
@@ -24,26 +24,35 @@ namespace MattEland.Ani.Alfred.Search.Bing
         ///     Initializes a new instance of the <see cref="BingSearchResult"/> class.
         /// </summary>
         /// <param name="result"> The Bing search result. </param>
-        public BingSearchResult([NotNull] NewsResult result) : base(result.Title)
+        public BingSearchResult([NotNull] NewsResult result) : this(result.Title)
         {
             Contract.Requires(result != null, "result is null.");
 
             // Set Basic Properties
             Description = result.Description;
-            LocationText = result.Source; // TODO: Maybe Url?
+            LocationText = result.Source; // TODO: Maybe URL?
         }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="BingSearchResult"/> class.
         /// </summary>
         /// <param name="result"> The Bing search result. </param>
-        public BingSearchResult([NotNull] ImageResult result) : base(result.Title)
+        public BingSearchResult([NotNull] ImageResult result) : this(result.Title)
         {
             Contract.Requires(result != null, "result is null.");
 
             // Set Basic Properties
             Description = result.ContentType;
             LocationText = result.DisplayUrl;
+        }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BingSearchResult"/> class.
+        /// </summary>
+        /// <param name="title">The title.</param>
+        public BingSearchResult(string title)
+            : base(title)
+        {
+
         }
 
         /// <summary>
