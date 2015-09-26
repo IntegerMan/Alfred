@@ -72,8 +72,10 @@ namespace MattEland.Ani.Alfred.Search.Bing
         private void StartSearch()
         {
             // Ensure the API Key has at least been set
-            if (BingApiKey.IsEmpty()) throw new InvalidOperationException("BingApiKey must be set before a search can be started");
-            if (BingApiKey.Contains("YourApi")) throw new InvalidOperationException("BingApiKey was not customized.");
+            if (BingApiKey.IsEmpty())
+            {
+                throw new InvalidOperationException("BingApiKey must be set");
+            }
 
             // Set up the Bing Search Container that will be used to make web service calls
             const string BingSearchPath = @"https://api.datamarket.azure.com/Bing/SearchWeb/Web/";
@@ -90,7 +92,7 @@ namespace MattEland.Ani.Alfred.Search.Bing
             Query = bingContainer.Web(SearchText, null, null, Market, null, null, null, null);
 
             // Only include the top results per group
-            Query = Query.AddQueryOption(@"$top", 10);
+            Query = Query.AddQueryOption(@"$top", 25);
 
             _queryResult = Query.BeginExecute(null, Query);
         }

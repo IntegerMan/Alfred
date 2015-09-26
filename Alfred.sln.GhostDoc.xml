@@ -7,6 +7,7 @@
     <IncludeExtensions>
     </IncludeExtensions>
     <IgnoreExtensions>
+      <IgnoreExtension>.cs</IgnoreExtension>
     </IgnoreExtensions>
     <IgnoreFiles>
     </IgnoreFiles>
