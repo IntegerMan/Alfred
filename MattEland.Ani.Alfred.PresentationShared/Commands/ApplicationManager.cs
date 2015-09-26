@@ -31,6 +31,10 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
     /// The application manager takes care of the discrete bits of managing Alfred that shouldn't be
     /// the concern of the client or other user interface elements.
     /// </summary>
+    [SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed",
+            Justification = "TryDispose is invoked")]
+    [SuppressMessage("CodeRush", "Fields should be disposed",
+            Justification = "TryDispose is invoked")]
     public sealed class ApplicationManager : IDisposable
     {
         private const string LogHeader = "AppManager.Initialize";
@@ -183,10 +187,6 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         /// <summary>
         /// Disposes of loose resources 
         /// </summary>
-        [SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed",
-            MessageId = "_console")]
-        [SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed",
-            MessageId = "_systemMonitoringSubsystem")]
         public void Dispose()
         {
             _alfred.TryDispose();
@@ -248,9 +248,12 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             // Give Alfred a way to talk to the application 
             _console = new SimpleConsole(Container, new ExplorerEventFactory());
 
+            // If we support speech, build the speech console
             if (Options.IsSpeechEnabled)
             {
-                _console = new AlfredSpeechConsole(Container, _console, _console.EventFactory);
+                var speech = new AlfredSpeechConsole(Container, _console, _console.EventFactory);
+
+                _console = speech;
             }
 
             // This will be our console. Stick it back in as a semi-singleton 
@@ -326,6 +329,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             var seconds = TimeSpan.FromSeconds(UpdateFrequencyInSeconds);
 
             var timer = new DispatcherTimer { Interval = seconds };
+
             timer.Tick += delegate { Update(); };
 
             timer.Start();
