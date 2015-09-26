@@ -344,7 +344,7 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
             // Register the subsystem with its own type as the instance of that type 
             subsystem.RegisterAsProvidedInstance(Container);
 
-            // Add the subsystem to to Alfred 
+            // Add the subsystem to Alfred 
             Alfred.Register(subsystem);
         }
     }
