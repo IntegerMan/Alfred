@@ -14,5 +14,7 @@
   </Dependencies>
   <Assets>
     <Asset Type="Microsoft.VisualStudio.VsPackage" Path="MattEland.Ani.Alfred.VisualStudio.pkgdef" />
+    <Asset Type="Microsoft.VisualStudio.Analyzer" Path="MattEland.Manticore.dll" />
+    <Asset Type="Microsoft.VisualStudio.MefComponent" Path="MattEland.Manticore.dll" />
   </Assets>
 </PackageManifest>

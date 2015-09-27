@@ -7,7 +7,7 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-namespace MattEland.Ani.Alfred.Core.Console
+namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>
     ///     Defines a controller that manages message box behaviors.
@@ -27,5 +27,13 @@ namespace MattEland.Ani.Alfred.Core.Console
         /// <param name="message"> The message. </param>
         /// <param name="caption"> The message caption. </param>
         void ShowAlert(string message, string caption);
+
+        /// <summary>
+        ///     Shows an alert message box.
+        /// </summary>
+        /// <param name="message"> The message. </param>
+        /// <param name="caption"> The message caption. </param>
+        /// <param name="alertType"> Type of the alert. </param>
+        void Show(string message, string caption, MessageBoxType alertType);
     }
 }

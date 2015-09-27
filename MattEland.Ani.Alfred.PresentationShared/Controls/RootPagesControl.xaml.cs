@@ -15,8 +15,9 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.PresentationShared.Commands;
-using MattEland.Ani.Alfred.PresentationShared.Helpers;
+
 using MattEland.Common;
+using MattEland.Ani.Alfred.PresentationShared.Helpers;
 
 namespace MattEland.Ani.Alfred.PresentationShared.Controls
 {

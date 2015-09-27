@@ -11,7 +11,7 @@ using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Ani.Alfred.PresentationShared.Controls;
-using MattEland.Ani.Alfred.PresentationShared.Helpers;
+
 using MattEland.Common;
 using MattEland.Common.Providers;
 using MattEland.Testing;

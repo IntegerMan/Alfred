@@ -51,6 +51,8 @@
     <None Include="Widgets\Widgets.cd" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Definitions\IMessageBoxProvider.cs" />
+    <Compile Include="Definitions\MessageBoxType.cs" />
     <Compile Include="AlfredCommand.cs" />
     <Compile Include="AlfredCommandResult.cs" />
     <Compile Include="AlfredContainerHelper.cs" />
@@ -63,7 +65,6 @@
     <Compile Include="Console\ConsoleEventFactory.cs" />
     <Compile Include="Console\DiagnosticConsole.cs" />
     <Compile Include="Console\ExplorerEventFactory.cs" />
-    <Compile Include="Console\IMessageBoxProvider.cs" />
     <Compile Include="Definitions\AlfredProperty.cs" />
     <Compile Include="Definitions\ChatCommand.cs" />
     <Compile Include="Definitions\FrameworkEvent.cs" />

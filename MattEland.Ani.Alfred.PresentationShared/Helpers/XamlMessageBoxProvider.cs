@@ -7,6 +7,7 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using MattEland.Ani.Alfred.Core.Definitions;
 using System.Windows;
 
 namespace MattEland.Ani.Alfred.PresentationShared.Helpers
@@ -17,21 +18,35 @@ namespace MattEland.Ani.Alfred.PresentationShared.Helpers
     /// </summary>
     internal sealed class XamlMessageBoxProvider : MessageBoxProviderBase
     {
-
         /// <summary>
         ///     Shows a message box.
         /// </summary>
         /// <param name="message"> The message. </param>
         /// <param name="caption"> The message caption. </param>
-        /// <param name="buttons"> The buttons to show. </param>
-        /// <param name="icon"> The icon to show. </param>
-        protected override void Show(
+        /// <param name="alertType"> Type of the alert. </param>
+        public override void Show(
             string message,
             string caption,
-            MessageBoxButton buttons,
-            MessageBoxImage icon)
+            MessageBoxType alertType)
         {
-            MessageBox.Show(message, caption, buttons, icon);
+            switch (alertType)
+            {
+                case MessageBoxType.Notification:
+                    MessageBox.Show(message, caption, MessageBoxButton.OK, MessageBoxImage.Information);
+                    break;
+
+                case MessageBoxType.Warning:
+                    MessageBox.Show(message, caption, MessageBoxButton.OK, MessageBoxImage.Warning);
+                    break;
+
+                case MessageBoxType.Error:
+                    MessageBox.Show(message, caption, MessageBoxButton.OK, MessageBoxImage.Error);
+                    break;
+
+                default:
+                    MessageBox.Show(message, caption);
+                    break;
+            }
         }
     }
 }

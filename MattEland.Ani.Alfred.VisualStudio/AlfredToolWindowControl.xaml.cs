@@ -18,8 +18,10 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.PresentationShared.Commands;
-using MattEland.Ani.Alfred.PresentationShared.Helpers;
+
 using MattEland.Common;
+using MattEland.Ani.Alfred.PresentationShared.Helpers;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.VisualStudio
 {
@@ -62,13 +64,12 @@ namespace MattEland.Ani.Alfred.VisualStudio
                 var message = ex.BuildDetailsMessage();
 
 #if DEBUG
-                Debugger.Break();
                 Debug.Fail(Caption, message);
 #else
-                MessageBox.Show(message,
+                var provider = CommonProvider.Provide<IMessageBoxProvider>();
+                provider.Show(message,
                                 Caption,
-                                MessageBoxButton.OK,
-                                MessageBoxImage.Error);
+                                MessageBoxType.Error);
 #endif
 
                 // We shouldn't load the page in a bad state. Crash the application

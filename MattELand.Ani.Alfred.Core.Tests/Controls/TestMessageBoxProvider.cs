@@ -10,11 +10,13 @@
 using System.Collections.Generic;
 using System.Windows;
 
-using MattEland.Ani.Alfred.PresentationShared.Helpers;
+
 
 using NUnit.Framework;
 
 using Shouldly;
+using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.PresentationShared.Helpers;
 
 namespace MattEland.Ani.Alfred.Tests.Controls
 {
@@ -30,37 +32,32 @@ namespace MattEland.Ani.Alfred.Tests.Controls
         internal TestMessageBoxProvider()
         {
             // Set up our default error types
-            ErrorOnImages = new HashSet<MessageBoxImage>
+            ErrorOnMessageTypes = new HashSet<MessageBoxType>()
                             {
-                                MessageBoxImage.Error,
-                                MessageBoxImage.Asterisk,
-                                MessageBoxImage.Exclamation,
-                                MessageBoxImage.Warning,
-                                MessageBoxImage.Stop
+                                MessageBoxType.Error,
+                                MessageBoxType.Warning
                             };
         }
 
         /// <summary>
-        ///     The types of <see cref="MessageBoxImage"/> to fail tests on.
+        ///     The types of <see cref="MessageBoxType"/> to fail tests on.
         /// </summary>
-        public readonly ISet<MessageBoxImage> ErrorOnImages;
+        public readonly ISet<MessageBoxType> ErrorOnMessageTypes;
 
         /// <summary>
         ///     Shows a <paramref name="message"/> box.
         /// </summary>
-        /// <param name="message">The message.</param>
-        /// <param name="caption">The <paramref name="message"/> caption.</param>
-        /// <param name="buttons">The buttons to show.</param>
-        /// <param name="icon">The icon to show.</param>
-        protected override void Show(
+        /// <param name="message"> The message. </param>
+        /// <param name="caption"> The <paramref name="message"/> caption. </param>
+        /// <param name="alertType"> Type of the alert. </param>
+        public override void Show(
             string message,
             string caption,
-            MessageBoxButton buttons,
-            MessageBoxImage icon)
+            MessageBoxType alertType)
         {
             // If it's an error message, fail
-            string failMessage = $"Encountered error message:\n\n \t{caption}: {message} ({icon})\n";
-            ErrorOnImages.ShouldNotContain(icon, failMessage);
+            string failMessage = $"Encountered error message:\n\n \t{caption}: {message} ({alertType})\n";
+            ErrorOnMessageTypes.ShouldNotContain(alertType, failMessage);
         }
     }
 }
