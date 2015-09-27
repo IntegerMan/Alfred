@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common.Providers;
+using Octokit;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
@@ -12,6 +13,10 @@ namespace MattEland.Ani.Alfred.Search.GitHub
     /// </summary>
     public sealed class GitHubSearchOperation : ISearchOperation, IHasContainer
     {
+        /// <summary>
+        ///     The GitHub client.
+        /// </summary>
+        private readonly GitHubClient _client;
         /// <summary>
         ///     The results collection. New items can be added using this field.
         /// </summary>
@@ -31,6 +36,12 @@ namespace MattEland.Ani.Alfred.Search.GitHub
 
             // Build out the results collection 
             _results = container.ProvideCollection<ISearchResult>();
+
+            // Create an identifier to provide to the client library
+            var assembly = GetType().Assembly;
+            var productHeader = new ProductHeaderValue(assembly.FullName);
+
+            _client = new GitHubClient(productHeader);
         }
 
         /// <summary>

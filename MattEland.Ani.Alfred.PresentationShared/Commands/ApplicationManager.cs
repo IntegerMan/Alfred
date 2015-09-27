@@ -96,8 +96,11 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         }
 
         /// <summary>
-        /// The Alfred Provider that makes the application possible 
+        ///     The Alfred Provider that makes the application possible.
         /// </summary>
+        /// <value>
+        ///     The alfred.
+        /// </value>
         [NotNull]
         [UsedImplicitly]
         public AlfredApplication Alfred
@@ -120,16 +123,20 @@ namespace MattEland.Ani.Alfred.PresentationShared.Commands
         }
 
         /// <summary>
-        /// Gets the container. 
+        ///     Gets the container.
         /// </summary>
-        /// <value> The container. </value>
+        /// <value>
+        ///     The container.
+        /// </value>
         [NotNull]
         public IObjectContainer Container { get; }
 
         /// <summary>
-        /// Gets the current culture's locale information. 
+        ///     Gets the current culture's locale information.
         /// </summary>
-        /// <value> The locale. </value>
+        /// <value>
+        ///     The locale.
+        /// </value>
         [NotNull]
         public CultureInfo Locale
         {
