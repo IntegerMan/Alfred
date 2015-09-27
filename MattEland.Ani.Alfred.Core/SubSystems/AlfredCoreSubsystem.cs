@@ -119,5 +119,37 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
                 Register(_eventLogPage);
             }
         }
+
+        /// <summary>
+        ///     Processes an Alfred Command. If the <paramref name="command"/> is handled,
+        ///     <paramref name="result"/> should be modified accordingly and the method should return
+        ///     true. Returning false will not stop the message from being propagated.
+        /// </summary>
+        /// <param name="command"> The command. </param>
+        /// <param name="result"> The result. If the command was handled, this should be updated. </param>
+        /// <returns>
+        ///     <c>True</c> if the command was handled; otherwise false.
+        /// </returns>
+        public override bool ProcessAlfredCommand(ChatCommand command, [CanBeNull] ICommandResult result)
+        {
+            // Allow the default implementation to take a swing at things
+            if (base.ProcessAlfredCommand(command, result))
+            {
+                return true;
+            }
+
+            // Ensure the command is for this module
+            if (command.IsFor(this))
+            {
+                // Route search commands to the search controller
+                if (command.Name.Matches("Search") && command.Data.HasText())
+                {
+                    AlfredInstance.SearchController.PerformSearch(command.Data);
+                }
+            }
+
+            // If we got here, the command wasn't handled
+            return false;
+        }
     }
 }

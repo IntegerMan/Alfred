@@ -17,6 +17,9 @@ using MattEland.Testing;
 
 using NUnit.Framework;
 
+using Shouldly;
+using Moq;
+
 namespace MattEland.Ani.Alfred.Tests.Chat
 {
     /// <summary>
@@ -83,13 +86,42 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         [Test]
         public void MemoryStatusIsAccurate()
         {
+            //! Arrange
+
             MetricProviderFactory.DefaultValue = 42.0f;
+
+            //! Act
 
             var reply = GetReply("MEMORY STATUS");
 
-            var expected = "The system is currently utilizing 42.0 % of all available memory.";
-            Assert.That(reply.Contains(expected),
-                        $"Reply '{reply}' did not match expected value of {expected}.");
+            //! Assert
+
+            const string Expected = "The system is currently utilizing 42.0 % of all available memory.";
+
+            reply.ShouldContain(Expected,
+                        $"Reply '{reply}' did not match expected value of {Expected}.");
+        }
+
+        /// <summary>
+        ///     The search command should result in a search template
+        /// </summary>
+        [Test]
+        public void SearchStartsSearch()
+        {
+            //! Act
+
+            var template = GetReplyTemplate("Find My Sanity");
+
+            //! Assert
+
+            // Ensure the response went where we expected it to go
+            template.ShouldContain(@"tmp_search");
+
+            // Ensure the search engine is the expected search engine
+            Alfred.SearchController.ShouldBe(MockSearchController.Object);
+
+            // Ensure that the search was started
+            MockSearchController.Verify(s => s.PerformSearch(It.IsAny<string>()), Times.Once);
         }
 
         /// <summary>

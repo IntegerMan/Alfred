@@ -13,7 +13,7 @@ This provides handling for searching via AIML
   <category>
     <pattern>SEARCH *</pattern>
     <template id="tmp_search">
-      <shell target="search" command="search" data="*" />
+      <alfred subsystem="core" command="search" data="*" />
       <shell target="pages" command="nav" data="SearchResults" />
     </template>
   </category>

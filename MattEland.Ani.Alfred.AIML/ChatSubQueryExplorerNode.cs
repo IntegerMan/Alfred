@@ -15,7 +15,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Ani.Alfred.Core.Definitions;
-
+using System.Diagnostics.Contracts;
 namespace MattEland.Ani.Alfred.Chat
 {
     /// <summary>
@@ -24,17 +24,13 @@ namespace MattEland.Ani.Alfred.Chat
     /// </summary>
     public class ChatSubQueryExplorerNode : IPropertyProvider
     {
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="ChatSubQueryExplorerNode" /> class.
         /// </summary>
-        /// <param name="subQuery">The sub query.</param>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when one or more required arguments are <see langword="null" /> .
-        /// </exception>
+        /// <param name="subQuery"> The sub query. </param>
         internal ChatSubQueryExplorerNode([NotNull] SubQuery subQuery)
         {
-            if (subQuery == null) { throw new ArgumentNullException(nameof(subQuery)); }
+            Contract.Requires(subQuery != null, "subQuery is null.");
 
             SubQuery = subQuery;
         }
@@ -142,7 +138,7 @@ namespace MattEland.Ani.Alfred.Chat
         [NotNull]
         public string Input
         {
-            get { return BuildStarString(SubQuery.InputStar); }
+            get { return SubQuery.InputStarString; }
         }
 
         /// <summary>
@@ -154,7 +150,7 @@ namespace MattEland.Ani.Alfred.Chat
         [NotNull]
         public string Topic
         {
-            get { return BuildStarString(SubQuery.TopicStar); }
+            get { return SubQuery.TopicStarString; }
         }
 
         /// <summary>
@@ -166,7 +162,7 @@ namespace MattEland.Ani.Alfred.Chat
         [NotNull]
         public string Subject
         {
-            get { return BuildStarString(SubQuery.ThatStar); }
+            get { return SubQuery.ThatStarString; }
         }
 
         /// <summary>
@@ -191,20 +187,6 @@ namespace MattEland.Ani.Alfred.Chat
         public string Template
         {
             get { return SubQuery.Template; }
-        }
-
-        /// <summary>
-        ///     Builds a string out of the items in <paramref name="input" />
-        /// </summary>
-        /// <param name="input">The input.</param>
-        /// <returns>A string.</returns>
-        private static string BuildStarString([NotNull] IEnumerable<string> input)
-        {
-            var sb = new StringBuilder();
-
-            foreach (var item in input) { sb.AppendFormat("{0} ", item); }
-
-            return sb.ToString();
         }
     }
 }

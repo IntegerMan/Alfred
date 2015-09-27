@@ -27,7 +27,7 @@ using MattEland.Common.Providers;
 using Moq;
 
 using NUnit.Framework;
-
+using System;
 namespace MattEland.Ani.Alfred.Tests.Chat
 {
 
@@ -47,16 +47,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         [NotNull]
         private IAlfredSubsystem _testSubsystem;
 
-        [NotNull]
-        public ValueMetricProviderFactory MetricProviderFactory
-        {
-            [DebuggerStepThrough]
-            get;
-            private set;
-        }
-
-        [NotNull]
-        public User User
+        public ChatSubsystem ChatSubsystem
         {
             [DebuggerStepThrough]
             get;
@@ -70,13 +61,29 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             private set;
         }
 
-        public ChatSubsystem ChatSubsystem
+        [NotNull]
+        public ValueMetricProviderFactory MetricProviderFactory
         {
             [DebuggerStepThrough]
             get;
             private set;
         }
 
+        /// <summary>
+        ///     Gets or sets the mock search controller.
+        /// </summary>
+        /// <value>
+        ///     The mock search controller.
+        /// </value>
+        public Mock<ISearchController> MockSearchController { get; set; }
+
+        [NotNull]
+        public User User
+        {
+            [DebuggerStepThrough]
+            get;
+            private set;
+        }
         /// <summary>
         ///     Gets or sets the chat engine.
         /// </summary>
@@ -97,17 +104,36 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         }
 
         /// <summary>
-        ///     Asserts that the template identifier is found in the response template.
+        /// Builds a strongly typed tag handler for the given tag name from the given XML using a Tag Handler Factory and dynamic creation.
         /// </summary>
-        /// <param name="template">The template.</param>
-        /// <param name="id">The template identifier.</param>
-        [SuppressMessage("ReSharper", "UnusedParameter.Local")]
-        private static void AssertTemplateId([CanBeNull] string template, [NotNull] string id)
+        /// <typeparam name="T">The type of tag handler</typeparam>
+        /// <param name="tagName">Name of the tag.</param>
+        /// <param name="xml">The XML.</param>
+        /// <returns>The strongly typed tag handler.</returns>
+        [NotNull]
+        protected T BuildTagHandler<T>([NotNull] string tagName, [NotNull] string xml) where T : AimlTagHandler
         {
-            var idString = $"id=\"{id.ToLowerInvariant()}\"";
+            var factory = new TagHandlerFactory(Engine);
 
-            Assert.IsTrue(template != null && template.ToLowerInvariant().Contains(idString),
-                          $"ID '{idString}' was not found. Template was: {template}");
+            var dynamicHandler = factory.BuildTagHandlerDynamic(tagName, BuildTagHandlerParameters(xml));
+            Assert.IsNotNull(dynamicHandler);
+
+            var typeHandler = (T)dynamicHandler;
+            Assert.IsNotNull(typeHandler);
+
+            return typeHandler;
+        }
+
+        /// <summary>
+        /// Builds the tag handler parameters.
+        /// </summary>
+        /// <param name="xml">The XML.</param>
+        /// <returns>The <see cref="TagHandlerParameters"/>.</returns>
+        [NotNull]
+        protected TagHandlerParameters BuildTagHandlerParameters([NotNull] string xml)
+        {
+            var element = AimlTagHandler.BuildElement(xml);
+            return BuildTagHandlerParameters("Testing is fun", element);
         }
 
         /// <summary>
@@ -123,35 +149,6 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             Assert.IsNotNull(response.ResponseText, "Response text was null");
 
             return response.ResponseText;
-        }
-
-        /// <summary>
-        ///     Says the specified message to Alfred.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        protected void Say([NotNull] string message)
-        {
-            GetResponse(message);
-        }
-
-        /// <summary>
-        ///     Gets the response to the chat message.
-        /// </summary>
-        /// <param name="text">The text.</param>
-        /// <returns>The response</returns>
-        private UserStatementResponse GetResponse([NotNull] string text)
-        {
-
-            var chatProvider = Alfred.ChatProvider;
-            Assert.NotNull(chatProvider,
-                           "Alfred's chat provider was null when instructed to handle chat message");
-
-            var response = chatProvider.HandleUserStatement(text);
-
-            // Do some basic validity checks
-            Assert.NotNull(response, "Response was null");
-            Assert.AreEqual(text, response.UserInput);
-            return response;
         }
 
         /// <summary>
@@ -174,6 +171,10 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         protected void InitializeChatSystem(IShellCommandRecipient shell = null)
         {
             AlfredTestTagHandler.WasInvoked = false;
+
+            // Set up a mock search engine
+            MockSearchController = BuildMockSearchController();
+            MockSearchController.Object.RegisterAsProvidedInstance(typeof(ISearchController), Container);
 
             // Create Alfred and make it so the tests can find him via the Container
             Alfred = new AlfredApplication(Container);
@@ -214,17 +215,27 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         }
 
         /// <summary>
-        /// Builds the tag handler parameters.
+        ///     Says the specified message to Alfred.
         /// </summary>
-        /// <param name="xml">The XML.</param>
-        /// <returns>The <see cref="TagHandlerParameters"/>.</returns>
-        [NotNull]
-        protected TagHandlerParameters BuildTagHandlerParameters([NotNull] string xml)
+        /// <param name="message">The message.</param>
+        protected void Say([NotNull] string message)
         {
-            var element = AimlTagHandler.BuildElement(xml);
-            return BuildTagHandlerParameters("Testing is fun", element);
+            GetResponse(message);
         }
 
+        /// <summary>
+        ///     Asserts that the template identifier is found in the response template.
+        /// </summary>
+        /// <param name="template">The template.</param>
+        /// <param name="id">The template identifier.</param>
+        [SuppressMessage("ReSharper", "UnusedParameter.Local")]
+        private static void AssertTemplateId([CanBeNull] string template, [NotNull] string id)
+        {
+            var idString = $"id=\"{id.ToLowerInvariant()}\"";
+
+            Assert.IsTrue(template != null && template.ToLowerInvariant().Contains(idString),
+                          $"ID '{idString}' was not found. Template was: {template}");
+        }
         /// <summary>
         /// Builds the tag handler parameters.
         /// </summary>
@@ -241,24 +252,23 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         }
 
         /// <summary>
-        /// Builds a strongly typed tag handler for the given tag name from the given XML using a Tag Handler Factory and dynamic creation.
+        ///     Gets the response to the chat message.
         /// </summary>
-        /// <typeparam name="T">The type of tag handler</typeparam>
-        /// <param name="tagName">Name of the tag.</param>
-        /// <param name="xml">The XML.</param>
-        /// <returns>The strongly typed tag handler.</returns>
-        [NotNull]
-        protected T BuildTagHandler<T>([NotNull] string tagName, [NotNull] string xml) where T : AimlTagHandler
+        /// <param name="text">The text.</param>
+        /// <returns>The response</returns>
+        private UserStatementResponse GetResponse([NotNull] string text)
         {
-            var factory = new TagHandlerFactory(Engine);
 
-            var dynamicHandler = factory.BuildTagHandlerDynamic(tagName, BuildTagHandlerParameters(xml));
-            Assert.IsNotNull(dynamicHandler);
+            var chatProvider = Alfred.ChatProvider;
+            Assert.NotNull(chatProvider,
+                           "Alfred's chat provider was null when instructed to handle chat message");
 
-            var typeHandler = (T)dynamicHandler;
-            Assert.IsNotNull(typeHandler);
+            var response = chatProvider.HandleUserStatement(text);
 
-            return typeHandler;
+            // Do some basic validity checks
+            Assert.NotNull(response, "Response was null");
+            Assert.AreEqual(text, response.UserInput);
+            return response;
         }
     }
 

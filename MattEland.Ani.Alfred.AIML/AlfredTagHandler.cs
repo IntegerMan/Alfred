@@ -60,6 +60,12 @@ namespace MattEland.Ani.Alfred.Chat
             var subsystem = GetAttribute("subsystem");
             var data = GetAttribute("data");
 
+            // Allow smart-replacement of asterix in data attribute with the rest of the query
+            if (data.Matches("*"))
+            {
+                data = Query.InputStarString;
+            }
+
             var command = new ChatCommand(subsystem, name, data);
 
             // Send the command on to the owner. This may modify result or carry out other actions.
