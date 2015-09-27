@@ -59,16 +59,30 @@ namespace MattEland.Common
         }
 
         /// <summary>
-        /// Returns the singular value if count is 1. Otherwise plural is returned.
+        ///     Returns the <paramref name="singular" /> value if <paramref name="count"/> is 1.
+        ///     Otherwise <paramref name="plural"/> is returned.
         /// </summary>
-        /// <param name="count">The count.</param>
-        /// <param name="singular">The singular return value.</param>
-        /// <param name="plural">The plural return value.</param>
-        /// <returns>The singular value if count is 1. Otherwise plural is returned.</returns>
+        /// <param name="count"> The count. </param>
+        /// <param name="singular">
+        ///     The singular return value. The pound character can be used to represent
+        ///     <paramref name="count"/> in the output value.
+        /// </param>
+        /// <param name="plural">
+        ///     The plural return value. The pound character can be used to represent
+        ///     <paramref name="count"/> in the output value.
+        /// </param>
+        /// <returns>
+        ///     The <paramref name="singular"/> value if <paramref name="count"/> is 1. Otherwise
+        ///     <paramref name="plural"/> is returned.
+        /// </returns>
         [NotNull]
         public static string Pluralize(this int count, string singular, string plural)
         {
-            return count == 1 ? singular.NonNull() : plural.NonNull();
+
+            // Based on the input value, return the appropriate result, substituting count for #
+            return count == 1
+                ? singular.NonNull().Replace("#", count.ToString())
+                : plural.NonNull().Replace("#", count.ToString());
         }
     }
 }

@@ -53,7 +53,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="AlfredSearchController"/> class. 
         /// </summary>
-        /// <param name="container"> The cont ainer. </param>
+        /// <param name="container"> The container. </param>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="container"/> is <see langword="null"/> .
         /// </exception>
@@ -206,6 +206,23 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
+        ///     Gets a pluralized results string for logging, display, or user notification.
+        /// </summary>
+        /// <returns>
+        ///     The pluralized results string.
+        /// </returns>
+        private string GetPluralizedResultsString()
+        {
+            var numResults = _results.Count;
+
+            if (numResults <= 0)
+            {
+                return "No results";
+            }
+
+            return numResults.Pluralize("# result", "# results");
+        }
+        /// <summary>
         /// Gets a user-facing message describing the status of the last search including the number
         /// of results found and details on any errors encountered.
         /// </summary>
@@ -220,12 +237,8 @@ namespace MattEland.Ani.Alfred.Core
                     return "No searches have been made yet.";
                 }
 
-                var numResults = Results.Count();
-
                 // Build out a result string ("42 results" / "1 result" / "No results") 
-                var results = numResults <= 0
-                                     ? "No results"
-                                     : $"{numResults} {numResults.Pluralize("result", "results")}";
+                var results = GetPluralizedResultsString();
 
                 // Format the results based on the search status (in process vs completed) 
                 return IsSearching
@@ -309,20 +322,20 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        /// Registers the search provider. 
+        ///     Registers the search provider.
         /// </summary>
-        /// <param name="provider"> The provider. </param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="provider"/> is <see langword="null"/> .
+        ///     Thrown when <paramref name="provider"/> is <see langword="null"/> .
         /// </exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown if this was called when the component is not
-        /// <see cref="MattEland.Ani.Alfred.Core.Definitions.AlfredStatus.Offline"/> .
+        ///     Thrown if this was called when the component is not
+        ///     <see cref="MattEland.Ani.Alfred.Core.Definitions.AlfredStatus.Offline"/> .
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// When <paramref name="provider"/> 's Id is the same as another
-        /// <paramref name="provider"/> that has already been added.
+        ///     When <paramref name="provider"/> has an Id that is the same as another
+        ///     <paramref name="provider"/> that has already been added.
         /// </exception>
+        /// <param name="provider"> The provider. </param>
         public void Register(ISearchProvider provider)
         {
             if (provider == null) throw new ArgumentNullException(nameof(provider));
@@ -412,6 +425,21 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
+        ///     Logs that a search completed in such a way that it notifies the user.
+        /// </summary>
+        private void LogSearchCompleted()
+        {
+            //- Get the number of results
+            int numResults = _results.Count;
+
+            // Build a plural-friendly message
+            var message = string.Format("Search Complete. {0} returned.",
+                GetPluralizedResultsString());
+
+            //- Log the message
+            message.Log("Search Complete", LogLevel.ChatNotification, Container);
+        }
+        /// <summary>
         /// Updates the ongoing operations, allowing each one to check on its status and update the
         /// results collection.
         /// </summary>
@@ -438,6 +466,11 @@ namespace MattEland.Ani.Alfred.Core
                 if (op.IsSearchComplete)
                 {
                     _ongoingOperations.Remove(op);
+
+                    if (_ongoingOperations.Count == 0)
+                    {
+                        LogSearchCompleted();
+                    }
                 }
 
                 // TODO: Handle errors 
