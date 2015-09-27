@@ -141,6 +141,16 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MattEland.Ani.Alfred.Core\MattEland.Ani.Alfred.Core.csproj">
+      <Project>{549f22e5-1f66-4420-89bf-9460603f9516}</Project>
+      <Name>MattEland.Ani.Alfred.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MattEland.Common\MattEland.Common.csproj">
+      <Project>{514cb422-a6ef-4c75-b925-92ab599ba1be}</Project>
+      <Name>MattEland.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
