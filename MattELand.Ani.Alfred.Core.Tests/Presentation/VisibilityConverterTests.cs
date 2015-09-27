@@ -11,12 +11,13 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
-using MattEland.Ani.Alfred.PresentationShared.Converters;
+
 using MattEland.Testing;
 
 using NUnit.Framework;
 
 using Shouldly;
+using MattEland.Ani.Alfred.PresentationShared.Converters;
 
 namespace MattEland.Ani.Alfred.Tests.Presentation
 {
