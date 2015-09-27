@@ -131,6 +131,41 @@ namespace MattEland.Ani.Alfred.Chat {
         ///&lt;!-- 
         ///Copyright (c) 2015 Matt Eland
         ///
+        ///This provides handling for searching via AIML
+        ///--&gt;
+        ///
+        ///&lt;aiml&gt;
+        ///
+        ///  &lt;!-- Time Handling --&gt;
+        ///
+        ///  &lt;category&gt;
+        ///    &lt;pattern&gt;TIME&lt;/pattern&gt;
+        ///    &lt;template id=&quot;tmp_time&quot;&gt;
+        ///      &lt;random&gt;
+        ///        &lt;li&gt;The time is now &lt;/li&gt;
+        ///        &lt;li&gt;It is currently &lt;/li&gt;
+        ///        &lt;li&gt;It is now &lt;/li&gt;
+        ///      &lt;/random&gt;
+        ///      &lt;date format=&quot;t&quot; /&gt;
+        ///    &lt;/template&gt;
+        ///  &lt;/category&gt;
+        ///
+        ///  &lt;!-- Time Redirects --&gt;
+        ///  &lt;category&gt;
+        ///    &lt;pattern&gt;What TIME is it&lt;/p [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string AimlCoreSearch {
+            get {
+                return ResourceManager.GetString("AimlCoreSearch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+        ///
+        ///&lt;!-- 
+        ///Copyright (c) 2015 Matt Eland
+        ///
         ///This provides fallback functions to address any input not handled by other modules
         ///--&gt;
         ///

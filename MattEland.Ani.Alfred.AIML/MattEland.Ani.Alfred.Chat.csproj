@@ -98,6 +98,7 @@
     <None Include="Alfred.pfx" />
     <None Include="AlfredAppTestCertificate.snk" />
     <None Include="packages.config" />
+    <None Include="Resources\AimlCoreSearch.aiml" />
     <None Include="Resources\AimlCoreDateTime.aiml" />
     <None Include="Resources\AimlCorePower.aiml" />
     <None Include="Resources\AimlFallback.aiml" />

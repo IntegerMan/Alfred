@@ -20,17 +20,18 @@ namespace MattEland.Ani.Alfred.Chat
 {
     /// <summary>
     ///     An <see cref="IPropertyProvider" /> that provides explorer nodes for nodes inside of the
-    ///     <see cref="ChatEngine" />'s AIML tree.
+    ///     <see cref="ChatEngine" /> AIML tree.
     /// </summary>
     public class ChatHandlersProvider : IPropertyProvider
     {
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:System.Object" /> class.
+        ///     Initializes a new instance of the <see cref="T:System.Object" /> class.
         /// </summary>
-        /// <param name="container">The container.</param>
-        /// <param name="engine">The chat engine.</param>
-        /// <exception cref="System.ArgumentNullException">engine, container</exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when one or more required arguments are null.
+        /// </exception>
+        /// <param name="container"> The container. </param>
+        /// <param name="engine"> The chat engine. </param>
         internal ChatHandlersProvider(
             [NotNull] IObjectContainer container, [NotNull] ChatEngine engine)
         {

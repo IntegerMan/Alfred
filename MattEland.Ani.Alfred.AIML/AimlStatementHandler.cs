@@ -347,6 +347,7 @@ namespace MattEland.Ani.Alfred.Chat
 
             if (TryLoadAimlFile(Resources.AimlCoreDateTime)) { loaded++; }
             if (TryLoadAimlFile(Resources.AimlCorePower)) { loaded++; }
+            if (TryLoadAimlFile(Resources.AimlCoreSearch)) { loaded++; }
             if (TryLoadAimlFile(Resources.AimlFallback)) { loaded++; }
             if (TryLoadAimlFile(Resources.AimlGod)) { loaded++; }
             if (TryLoadAimlFile(Resources.AimlGreeting)) { loaded++; }
@@ -355,12 +356,10 @@ namespace MattEland.Ani.Alfred.Chat
             if (TryLoadAimlFile(Resources.AimlShellNavigation)) { loaded++; }
             if (TryLoadAimlFile(Resources.AimlSysStatus)) { loaded++; }
 
-            const string Singular = "1 AIML File Parsed";
-            const string PluralFormat = "{0} AIML Files Parsed";
+            const string Singular = "# AIML File Parsed";
+            const string Plural = "# AIML Files Parsed";
 
-            var plural = string.Format(ChatEngine.Locale, PluralFormat, loaded);
-
-            var message = loaded.Pluralize(Singular, plural);
+            var message = loaded.Pluralize(Singular, Plural);
             Console?.Log("Chat.Load", message, LogLevel.Verbose);
         }
 

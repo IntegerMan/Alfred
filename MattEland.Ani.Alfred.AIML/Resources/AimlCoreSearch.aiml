@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+Copyright (c) 2015 Matt Eland
+
+This provides handling for searching via AIML
+-->
+
+<aiml>
+
+  <!-- Search Handling -->
+
+  <category>
+    <pattern>SEARCH *</pattern>
+    <template id="tmp_search">
+      <shell target="search" command="search" data="*" />
+      <shell target="pages" command="nav" data="SearchResults" />
+    </template>
+  </category>
+
+  <!-- Search Redirects -->
+  <category>
+    <pattern>FIND *</pattern>
+    <template>
+        <srai>SEARCH <star /></srai>
+    </template>
+  </category>
+  <category>
+    <pattern>RESEARCH *</pattern>
+    <template>
+      <srai>
+        SEARCH <star />
+      </srai>
+    </template>
+  </category>
+  <category>
+    <pattern>LOOK ONLINE FOR *</pattern>
+    <template>
+      <srai>
+        SEARCH <star />
+      </srai>
+    </template>
+  </category>
+  <category>
+    <pattern>LOOK FOR *</pattern>
+    <template>
+      <srai>
+        SEARCH <star />
+      </srai>
+    </template>
+  </category>
+
+</aiml>

@@ -40,7 +40,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// </summary>
         /// <param name="container">The container.</param>
         public SearchPage([NotNull] IObjectContainer container)
-            : base(container, "Search", "SearchPage")
+            : base(container, "Search", "SearchResults")
         {
             _searchModule = new SearchModule(container);
             _searchResultsModule = new SearchResultsModule(container);
