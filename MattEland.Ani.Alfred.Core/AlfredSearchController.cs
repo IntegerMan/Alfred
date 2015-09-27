@@ -285,8 +285,16 @@ namespace MattEland.Ani.Alfred.Core
                 BuildSearchOperation(searchText, provider);
             }
 
-            // Allow the searches to kick off 
-            UpdateOngoingOperations();
+            if (OngoingOperations.Any())
+            {
+                // Allow the searches to kick off 
+                UpdateOngoingOperations();
+            }
+            else
+            {
+                // This didn't spawn any operations (perhaps no providers). Make sure its logged.
+                LogSearchCompleted();
+            }
         }
 
         /// <summary>
@@ -429,11 +437,8 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         private void LogSearchCompleted()
         {
-            //- Get the number of results
-            int numResults = _results.Count;
-
             // Build a plural-friendly message
-            var message = string.Format("Search Complete. {0} returned.",
+            var message = string.Format("Search complete. {0} found.",
                 GetPluralizedResultsString());
 
             //- Log the message
