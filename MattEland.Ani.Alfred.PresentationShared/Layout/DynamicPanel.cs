@@ -28,8 +28,6 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Layout
     public sealed class DynamicPanel : Panel
     {
 
-
-
         /// <summary>
         ///     Defines the <see cref="LayoutType"/> dependency property.
         /// </summary>
