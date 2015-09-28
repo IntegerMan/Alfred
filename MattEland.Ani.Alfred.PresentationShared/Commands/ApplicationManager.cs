@@ -12,7 +12,7 @@ using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Ani.Alfred.Core.Speech;
 using MattEland.Ani.Alfred.Core.Subsystems;
-using MattEland.Ani.Alfred.PresentationShared.Helpers;
+using MattEland.Ani.Alfred.PresentationAvalon.Helpers;
 using MattEland.Ani.Alfred.Search.Bing;
 using MattEland.Ani.Alfred.Search.GitHub;
 using MattEland.Common;
@@ -25,7 +25,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Windows.Threading;
 
-namespace MattEland.Ani.Alfred.PresentationShared.Commands
+namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
 {
     /// <summary>
     /// The application manager takes care of the discrete bits of managing Alfred that shouldn't be

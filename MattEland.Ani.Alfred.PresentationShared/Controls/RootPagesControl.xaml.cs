@@ -14,12 +14,12 @@ using System.Windows.Controls;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.PresentationShared.Commands;
+using MattEland.Ani.Alfred.PresentationAvalon.Commands;
 
 using MattEland.Common;
-using MattEland.Ani.Alfred.PresentationShared.Helpers;
+using MattEland.Ani.Alfred.PresentationAvalon.Helpers;
 
-namespace MattEland.Ani.Alfred.PresentationShared.Controls
+namespace MattEland.Ani.Alfred.PresentationAvalon.Controls
 {
     /// <summary>
     ///     The Root Pages Control contains a <see cref="TabControl" /> with all of Alfred's Root Pages.

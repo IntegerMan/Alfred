@@ -17,7 +17,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.PresentationShared.Commands;
+using MattEland.Ani.Alfred.PresentationAvalon.Commands;
 using MattEland.Ani.Alfred.WPF.Properties;
 using MattEland.Common;
 using MattEland.Common.Providers;

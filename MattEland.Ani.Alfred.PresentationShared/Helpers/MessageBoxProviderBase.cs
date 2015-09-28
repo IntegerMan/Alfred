@@ -9,7 +9,7 @@
 
 using MattEland.Ani.Alfred.Core.Definitions;
 
-namespace MattEland.Ani.Alfred.PresentationShared.Helpers
+namespace MattEland.Ani.Alfred.PresentationAvalon.Helpers
 {
     /// <summary>
     ///     A message box provider base class implementation that cascades all message handlers to

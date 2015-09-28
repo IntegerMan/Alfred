@@ -36,7 +36,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MattEland.Common", "MattEla
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MattEland.Ani.Alfred.Chat.Aiml", "MattEland.Ani.Alfred.Chat.Aiml\MattEland.Ani.Alfred.Chat.Aiml.csproj", "{818801E4-7862-409A-8E92-4F66800324EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MattEland.Ani.Alfred.PresentationShared", "MattEland.Ani.Alfred.PresentationShared\MattEland.Ani.Alfred.PresentationShared.csproj", "{B4E5BAAE-27A8-456E-B0AC-3117E1E6EDDF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MattEland.Ani.Alfred.PresentationAvalon", "MattEland.Ani.Alfred.PresentationShared\MattEland.Ani.Alfred.PresentationAvalon.csproj", "{B4E5BAAE-27A8-456E-B0AC-3117E1E6EDDF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MattEland.Ani.Alfred.VisualStudio", "MattEland.Ani.Alfred.VisualStudio\MattEland.Ani.Alfred.VisualStudio.csproj", "{54ACFB38-EF59-4D5F-A652-DEA2B8ECD2B7}"
 EndProject

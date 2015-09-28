@@ -13,7 +13,7 @@ using System.Windows;
 
 using JetBrains.Annotations;
 
-namespace MattEland.Ani.Alfred.PresentationShared.Helpers
+namespace MattEland.Ani.Alfred.PresentationAvalon.Helpers
 {
     /// <summary>
     ///     A resource dictionary that does not load its content multiple times when imported into multiple

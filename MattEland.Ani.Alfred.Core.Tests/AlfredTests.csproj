@@ -157,9 +157,9 @@
       <Project>{549f22e5-1f66-4420-89bf-9460603f9516}</Project>
       <Name>MattEland.Ani.Alfred.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MattEland.Ani.Alfred.PresentationShared\MattEland.Ani.Alfred.PresentationShared.csproj">
+    <ProjectReference Include="..\MattEland.Ani.Alfred.PresentationShared\MattEland.Ani.Alfred.PresentationAvalon.csproj">
       <Project>{B4E5BAAE-27A8-456E-B0AC-3117E1E6EDDF}</Project>
-      <Name>MattEland.Ani.Alfred.PresentationShared</Name>
+      <Name>MattEland.Ani.Alfred.PresentationAvalon</Name>
     </ProjectReference>
     <ProjectReference Include="..\MattEland.Ani.Alfred.WPF\MattEland.Ani.Alfred.WPF.csproj">
       <Project>{E13E88B6-23C9-40EA-B10B-B8E52541B221}</Project>

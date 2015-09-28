@@ -14,7 +14,7 @@ using System.Linq;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Chat;
-using MattEland.Ani.Alfred.PresentationShared.Commands;
+using MattEland.Ani.Alfred.PresentationAvalon.Commands;
 using MattEland.Common.Providers;
 using MattEland.Testing;
 

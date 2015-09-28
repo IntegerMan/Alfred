@@ -9,7 +9,7 @@
     <Name>MattEland.Ani.Alfred.Chat</Name>
     <Name>MattEland.Ani.Alfred.Chat.Aiml</Name>
     <Name>MattEland.Common</Name>
-    <Name>MattEland.Ani.Alfred.PresentationShared</Name>
+    <Name>MattEland.Ani.Alfred.PresentationAvalon</Name>
     <Name>MattEland.Ani.Alfred.Tests</Name>
   </Assemblies>
   <FrameworkAssemblies>
@@ -38,7 +38,7 @@
     <Dir>C:\Dev\Alfred\MattEland.Ani.Alfred.Chat.Aiml\bin\Debug</Dir>
     <Dir>C:\Dev\Alfred\MattEland.Common\bin\Debug</Dir>
     <Dir>C:\Dev\Alfred\MattEland.Ani.Alfred.VisualStudio\bin\Debug</Dir>
-    <Dir>C:\Dev\Alfred\MattEland.Ani.Alfred.PresentationShared\bin\Debug</Dir>
+    <Dir>C:\Dev\Alfred\MattEland.Ani.Alfred.PresentationAvalon\bin\Debug</Dir>
   </Dirs>
   <MergeCodeGeneratedByCompiler>True</MergeCodeGeneratedByCompiler>
   <Report Kind="0" SectionsEnabled="65535" XslPath="" Flags="261376" />

@@ -1,4 +1,4 @@
-﻿namespace MattEland.Ani.Alfred.PresentationShared.Controls
+﻿namespace MattEland.Ani.Alfred.PresentationAvalon.Controls
 {
     /// <summary>
     /// Represents a user interface component that can be tested via Unit tests to some degree

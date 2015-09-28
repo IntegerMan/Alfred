@@ -17,7 +17,7 @@ using MattEland.Testing;
 using NUnit.Framework;
 
 using Shouldly;
-using MattEland.Ani.Alfred.PresentationShared.Converters;
+using MattEland.Ani.Alfred.PresentationAvalon.Converters;
 
 namespace MattEland.Ani.Alfred.Tests.Presentation
 {

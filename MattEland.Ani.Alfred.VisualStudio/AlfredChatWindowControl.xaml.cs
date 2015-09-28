@@ -6,7 +6,7 @@
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.PresentationShared.Commands;
+using MattEland.Ani.Alfred.PresentationAvalon.Commands;
 
 namespace MattEland.Ani.Alfred.VisualStudio
 {

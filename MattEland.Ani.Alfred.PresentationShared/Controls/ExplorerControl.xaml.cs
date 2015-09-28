@@ -16,7 +16,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 
-namespace MattEland.Ani.Alfred.PresentationShared.Controls
+namespace MattEland.Ani.Alfred.PresentationAvalon.Controls
 {
 
     /// <summary>

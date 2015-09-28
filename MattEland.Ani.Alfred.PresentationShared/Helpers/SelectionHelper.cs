@@ -16,7 +16,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
 
-namespace MattEland.Ani.Alfred.PresentationShared.Helpers
+namespace MattEland.Ani.Alfred.PresentationAvalon.Helpers
 {
     /// <summary>
     /// A helper class containing methods for manipulating user interface selections.

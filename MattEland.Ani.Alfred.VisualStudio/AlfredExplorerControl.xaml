@@ -3,9 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:controls="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Controls;assembly=MattEland.Ani.Alfred.PresentationShared"
+             xmlns:controls="clr-namespace:MattEland.Ani.Alfred.PresentationAvalon.Controls;assembly=MattEland.Ani.Alfred.PresentationAvalon"
              xmlns:pages="clr-namespace:MattEland.Ani.Alfred.Core.Pages;assembly=MattEland.Ani.Alfred.Core"
-             xmlns:helpers="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Helpers;assembly=MattEland.Ani.Alfred.PresentationShared"
+             xmlns:helpers="clr-namespace:MattEland.Ani.Alfred.PresentationAvalon.Helpers;assembly=MattEland.Ani.Alfred.PresentationAvalon"
              xmlns:subsystems="clr-namespace:MattEland.Ani.Alfred.Core.Subsystems;assembly=MattEland.Ani.Alfred.Core"
              Loaded="OnControlLoaded"
              Background="{DynamicResource VsBrush.Window}"
@@ -16,13 +16,13 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/VsStyles.xaml" />
-                <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Miscellaneous.xaml" />
-                <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Logging.xaml" />
-                <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Templates.xaml" />
-                <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Widgets.xaml" />
-                <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/TabPages.xaml" />
-                <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Styles.xaml" />
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationAvalon;component/Dictionaries/VsStyles.xaml" />
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationAvalon;component/Dictionaries/Miscellaneous.xaml" />
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationAvalon;component/Dictionaries/Logging.xaml" />
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationAvalon;component/Dictionaries/Templates.xaml" />
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationAvalon;component/Dictionaries/Widgets.xaml" />
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationAvalon;component/Dictionaries/TabPages.xaml" />
+                <helpers:SharedResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationAvalon;component/Dictionaries/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>

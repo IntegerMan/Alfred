@@ -16,7 +16,7 @@ using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common.Providers;
 
-namespace MattEland.Ani.Alfred.PresentationShared.Commands
+namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
 {
     /// <summary>
     ///     The command manager for the WPF/XAML application.

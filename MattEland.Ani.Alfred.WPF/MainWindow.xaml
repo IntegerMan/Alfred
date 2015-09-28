@@ -3,8 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:commands="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Commands;assembly=MattEland.Ani.Alfred.PresentationShared"
-        xmlns:controls="clr-namespace:MattEland.Ani.Alfred.PresentationShared.Controls;assembly=MattEland.Ani.Alfred.PresentationShared"
+        xmlns:commands="clr-namespace:MattEland.Ani.Alfred.PresentationAvalon.Commands;assembly=MattEland.Ani.Alfred.PresentationAvalon"
+        xmlns:controls="clr-namespace:MattEland.Ani.Alfred.PresentationAvalon.Controls;assembly=MattEland.Ani.Alfred.PresentationAvalon"
         mc:Ignorable="d"
         Title="{Binding Path=Alfred.NameAndVersion}"
         Width="800"
@@ -20,13 +20,13 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/DarkStyles.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Miscellaneous.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Logging.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Templates.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Widgets.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/TabPages.xaml" />                
-                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationShared;component/Dictionaries/Styles.xaml" />                
+                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationAvalon;component/Dictionaries/DarkStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationAvalon;component/Dictionaries/Miscellaneous.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationAvalon;component/Dictionaries/Logging.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationAvalon;component/Dictionaries/Templates.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationAvalon;component/Dictionaries/Widgets.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationAvalon;component/Dictionaries/TabPages.xaml" />                
+                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.PresentationAvalon;component/Dictionaries/Styles.xaml" />                
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>

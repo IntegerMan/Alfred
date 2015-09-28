@@ -11,7 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
 
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.PresentationShared.Commands;
+using MattEland.Ani.Alfred.PresentationAvalon.Commands;
 using MattEland.Ani.Alfred.Tests.Controls;
 using MattEland.Ani.Alfred.WPF;
 using MattEland.Common.Providers;

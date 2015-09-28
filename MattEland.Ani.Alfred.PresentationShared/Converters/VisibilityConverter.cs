@@ -14,7 +14,7 @@ using System.Windows.Data;
 
 using JetBrains.Annotations;
 
-namespace MattEland.Ani.Alfred.PresentationShared.Converters
+namespace MattEland.Ani.Alfred.PresentationAvalon.Converters
 {
     /// <summary>
     ///     The visibility converter

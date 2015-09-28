@@ -15,7 +15,7 @@ using System.Windows.Threading;
 
 using JetBrains.Annotations;
 
-namespace MattEland.Ani.Alfred.PresentationShared.Helpers
+namespace MattEland.Ani.Alfred.PresentationAvalon.Helpers
 {
     /// <summary>
     ///     A thread-safe observable collection.

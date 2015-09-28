@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
-using MattEland.Ani.Alfred.PresentationShared.Commands;
+using MattEland.Ani.Alfred.PresentationAvalon.Commands;
 using MattEland.Ani.Alfred.VisualStudio.Properties;
 using MattEland.Common.Providers;
 

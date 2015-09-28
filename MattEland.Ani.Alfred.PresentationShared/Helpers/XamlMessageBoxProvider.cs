@@ -10,7 +10,7 @@
 using MattEland.Ani.Alfred.Core.Definitions;
 using System.Windows;
 
-namespace MattEland.Ani.Alfred.PresentationShared.Helpers
+namespace MattEland.Ani.Alfred.PresentationAvalon.Helpers
 {
 
     /// <summary>

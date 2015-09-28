@@ -19,7 +19,7 @@ using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
 using MattEland.Common.Providers;
 
-namespace MattEland.Ani.Alfred.PresentationShared.Controls
+namespace MattEland.Ani.Alfred.PresentationAvalon.Controls
 {
     /// <summary>
     /// Interaction logic for ChatPane.xaml

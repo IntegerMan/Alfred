@@ -16,7 +16,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 
-namespace MattEland.Ani.Alfred.PresentationShared.Helpers
+namespace MattEland.Ani.Alfred.PresentationAvalon.Helpers
 {
     /// <summary>
     ///     A <see cref="Panel"/> for dynamic arrangement in modes similar to 

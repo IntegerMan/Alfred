@@ -16,7 +16,7 @@ using NUnit.Framework;
 
 using Shouldly;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.PresentationShared.Helpers;
+using MattEland.Ani.Alfred.PresentationAvalon.Helpers;
 
 namespace MattEland.Ani.Alfred.Tests.Controls
 {

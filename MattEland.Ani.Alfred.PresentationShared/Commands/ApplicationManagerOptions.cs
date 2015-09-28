@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 
-namespace MattEland.Ani.Alfred.PresentationShared.Commands
+namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
 {
     /// <summary>
     ///     Options to pass in when instantiating an <see cref="ApplicationManager"/>.

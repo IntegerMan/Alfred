@@ -13,7 +13,7 @@ using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.PresentationShared.Controls;
+using MattEland.Ani.Alfred.PresentationAvalon.Controls;
 using MattEland.Testing;
 
 using Moq;

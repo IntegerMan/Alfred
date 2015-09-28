@@ -15,7 +15,7 @@ using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common.Providers;
 
-namespace MattEland.Ani.Alfred.PresentationShared.Commands
+namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
 {
     /// <summary>
     ///     A WPF/XAML compliant implementation of <see cref="IAlfredCommand"/>.

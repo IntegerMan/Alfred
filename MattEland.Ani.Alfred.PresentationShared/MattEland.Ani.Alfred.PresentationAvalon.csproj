@@ -7,8 +7,8 @@
     <ProjectGuid>{B4E5BAAE-27A8-456E-B0AC-3117E1E6EDDF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MattEland.Ani.Alfred.PresentationShared</RootNamespace>
-    <AssemblyName>MattEland.Ani.Alfred.PresentationShared</AssemblyName>
+    <RootNamespace>MattEland.Ani.Alfred.PresentationAvalon</RootNamespace>
+    <AssemblyName>MattEland.Ani.Alfred.PresentationAvalon</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

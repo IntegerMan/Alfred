@@ -18,7 +18,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
 
-namespace MattEland.Ani.Alfred.PresentationShared.Converters
+namespace MattEland.Ani.Alfred.PresentationAvalon.Converters
 {
     /// <summary>
     ///     An IValueConverter that converts LogLevels to brushes
