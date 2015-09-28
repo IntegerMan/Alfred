@@ -13,23 +13,15 @@ using System.Windows;
 using System.Windows.Data;
 
 using JetBrains.Annotations;
+using MattEland.Ani.Alfred.PresentationCommon.Converters;
 
 namespace MattEland.Ani.Alfred.PresentationAvalon.Converters
 {
     /// <summary>
     ///     The visibility converter
     /// </summary>
-    public sealed class VisibilityConverter : IValueConverter
+    public sealed class VisibilityConverter : VisibilityConverterBase, IValueConverter
     {
-        /// <summary>
-        ///     Gets or sets a value indicating whether the visibility value is inverted so that
-        ///     <see langword="false"/> is visible and <see langword="true"/> is not.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if inverted; otherwise, <c>false</c> .
-        /// </value>
-        [UsedImplicitly]
-        public bool Invert { get; set; }
 
         /// <summary>
         ///     Converts a <paramref name="value" /> .
@@ -48,20 +40,10 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Converters
             [CanBeNull] object parameter,
             [CanBeNull] CultureInfo culture)
         {
-            var result = false;
-
-            if (value != null)
-            {
-                // Work with boolean values
-                bool tryBool;
-                if (bool.TryParse(value.ToString(), out tryBool)) { result = tryBool; }
-            }
-
-            // If we're inverting, flip around which output we'll push out
-            if (Invert) { result = !result; }
-
-            // Convert the bool to a visibility
-            return result ? Visibility.Visible : Visibility.Collapsed;
+            // Use Shared Presentation Logic to convert the boolean to a visibility value
+            return ShouldBeVisible(value) ?
+                       Visibility.Visible :
+                       Visibility.Collapsed;
         }
 
         /// <summary>
