@@ -2,13 +2,13 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:pages="clr-namespace:MattEland.Ani.Alfred.Core.Pages;assembly=MattEland.Ani.Alfred.Core"
                     xmlns:controls="clr-namespace:MattEland.Ani.Alfred.PresentationAvalon.Controls"
-                    xmlns:helpers="clr-namespace:MattEland.Ani.Alfred.PresentationAvalon.Helpers"
+                    xmlns:layout="clr-namespace:MattEland.Ani.Alfred.PresentationAvalon.Layout"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
 
     <!-- Dynamic layout panel used in most pages -->
     <ItemsPanelTemplate x:Key="DynamicItemsPanelTemplate">
-        <helpers:DynamicPanel LayoutType="{Binding LayoutType}"
+        <layout:DynamicPanel LayoutType="{Binding LayoutType}"
                               HorizontalAlignment="Left" 
                               VerticalAlignment="Top" 
                               d:DataContext="{d:DesignInstance pages:AlfredPage}" />
