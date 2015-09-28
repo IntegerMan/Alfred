@@ -115,12 +115,15 @@
   <ItemGroup>
     <Compile Include="Converters\LogLevelToBrushConverter.cs" />
     <Compile Include="Converters\VisibilityConverter.cs" />
-    <Compile Include="Helpers\DynamicPanel.cs" />
+    <Compile Include="Layout\DynamicPanel.cs" />
     <Compile Include="Helpers\MessageBoxProviderBase.cs" />
     <Compile Include="Helpers\SafeObservableCollection.cs" />
     <Compile Include="Helpers\SelectionHelper.cs" />
     <Compile Include="Helpers\SharedResourceDictionary.cs" />
     <Compile Include="Helpers\XamlMessageBoxProvider.cs" />
+    <Compile Include="Layout\WrapPanelLayoutHelper.cs" />
+    <Compile Include="Layout\StackPanelLayoutHelper.cs" />
+    <Compile Include="Layout\UniversalExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Properties\MattEland.Ani.Alfred.PresentationUniversal.rd.xml" />
   </ItemGroup>
