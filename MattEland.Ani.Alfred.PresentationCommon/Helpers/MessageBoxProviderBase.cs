@@ -7,13 +7,9 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using Windows.UI.Xaml;
-
-using MattEland.Ani.Alfred.Core.Console;
-using Windows.UI.Popups;
 using MattEland.Ani.Alfred.Core.Definitions;
 
-namespace MattEland.Ani.Alfred.PresentationUniversal.Helpers
+namespace MattEland.Ani.Alfred.PresentationCommon.Helpers
 {
     /// <summary>
     ///     A message box provider base class implementation that cascades all message handlers to

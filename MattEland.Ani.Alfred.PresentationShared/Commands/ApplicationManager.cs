@@ -238,7 +238,7 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
             Container.TryRegister(typeof(IMetricProviderFactory),
                                   typeof(CounterMetricProviderFactory));
             Container.TryRegister(typeof(IAlfred), typeof(AlfredApplication));
-            Container.TryRegister(typeof(IMessageBoxProvider), typeof(XamlMessageBoxProvider));
+            Container.TryRegister(typeof(IMessageBoxProvider), typeof(AvalonMessageBoxProvider));
             Container.TryRegister(typeof(ISearchController), typeof(AlfredSearchController));
 
             // Add defaults last - after we've customized the preferences 

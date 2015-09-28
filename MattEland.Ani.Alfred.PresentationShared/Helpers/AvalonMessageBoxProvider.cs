@@ -8,15 +8,16 @@
 // ---------------------------------------------------------
 
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.PresentationCommon.Helpers;
 using System.Windows;
 
 namespace MattEland.Ani.Alfred.PresentationAvalon.Helpers
 {
 
     /// <summary>
-    ///     An XAML message box provider.
+    ///     A XAML message box provider useful for WPF based implementations.
     /// </summary>
-    internal sealed class XamlMessageBoxProvider : MessageBoxProviderBase
+    internal sealed class AvalonMessageBoxProvider : MessageBoxProviderBase
     {
         /// <summary>
         ///     Shows a message box.

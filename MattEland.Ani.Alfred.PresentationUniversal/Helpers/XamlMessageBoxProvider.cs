@@ -8,6 +8,7 @@
 // ---------------------------------------------------------
 
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.PresentationCommon.Helpers;
 using System.Diagnostics.CodeAnalysis;
 using Windows.UI.Popups;
 
@@ -34,6 +35,7 @@ namespace MattEland.Ani.Alfred.PresentationUniversal.Helpers
             MessageBoxType type)
         {
             var dialog = new MessageDialog(message, caption);
+
             dialog.ShowAsync();
         }
     }

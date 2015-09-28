@@ -8,15 +8,10 @@
 // ---------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Windows;
-
-
-
-using NUnit.Framework;
 
 using Shouldly;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.PresentationAvalon.Helpers;
+using MattEland.Ani.Alfred.PresentationCommon.Helpers;
 
 namespace MattEland.Ani.Alfred.Tests.Controls
 {
