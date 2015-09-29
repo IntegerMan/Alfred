@@ -80,6 +80,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
             _pagesModule = new AlfredPagesListModule(container);
         }
 
+
         /// <summary>Gets the name of the control page.</summary>
         /// <value>The name of the control page.</value>
         [NotNull]
