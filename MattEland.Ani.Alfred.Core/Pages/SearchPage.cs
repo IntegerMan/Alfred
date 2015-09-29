@@ -7,6 +7,7 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 
 using JetBrains.Annotations;
@@ -14,6 +15,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Common.Providers;
+using System.Linq;
 
 namespace MattEland.Ani.Alfred.Core.Pages
 {
@@ -26,7 +28,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <summary>
         ///     The search module.
         /// </summary>
-        [NotNull]
+        [CanBeNull]
         private SearchModule _searchModule;
 
         /// <summary>
@@ -39,10 +41,23 @@ namespace MattEland.Ani.Alfred.Core.Pages
         ///     Initializes a new instance of the <see cref="AlfredPage" /> class.
         /// </summary>
         /// <param name="container">The container.</param>
-        public SearchPage([NotNull] IObjectContainer container)
+        public SearchPage([NotNull] IObjectContainer container) : this(container, true)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AlfredPage" /> class.
+        /// </summary>
+        /// <param name="container">The container.</param>
+        /// <param name="includeSearchModule">Whether or not to include the search module.</param>
+        public SearchPage([NotNull] IObjectContainer container, bool includeSearchModule)
             : base(container, "Search", "SearchResults")
         {
-            _searchModule = new SearchModule(container);
+            if (includeSearchModule)
+            {
+                _searchModule = new SearchModule(container);
+            }
+
             _searchResultsModule = new SearchResultsModule(container);
         }
 
@@ -56,7 +71,9 @@ namespace MattEland.Ani.Alfred.Core.Pages
         {
             get
             {
-                yield return _searchModule;
+                // Only include search module if this instance supports it
+                if (_searchModule != null) yield return _searchModule;
+
                 yield return _searchResultsModule;
             }
         }

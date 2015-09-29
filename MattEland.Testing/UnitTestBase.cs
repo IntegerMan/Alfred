@@ -26,6 +26,9 @@ namespace MattEland.Testing
     [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
     public abstract class UnitTestBase : IHasContainer
     {
+        /// <summary>
+        /// The container
+        /// </summary>
         private IObjectContainer _container;
 
         /// <summary>Gets the random number generator.</summary>
@@ -85,7 +88,18 @@ namespace MattEland.Testing
 
         /// <summary>Sets up the environment for each test.</summary>
         [SetUp]
-        public virtual void SetUp() { }
+        public virtual void SetUp()
+        {
+            Some = new Some(Randomizer);
+        }
 
+        /// <summary>
+        /// Gets or sets the <see cref="Some"/> instance used by the tests.
+        /// </summary>
+        /// <value>The Some instance.</value>
+        public Some Some
+        {
+            get; protected set;
+        }
     }
 }

@@ -15,7 +15,6 @@ using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Ani.Alfred.PresentationAvalon.Commands;
 using MattEland.Ani.Alfred.Tests.Controls;
-using MattEland.Common;
 using MattEland.Testing;
 
 using NUnit.Framework;
@@ -35,6 +34,16 @@ namespace MattEland.Ani.Alfred.Tests.Search
     public sealed class SearchPageTests : UserInterfaceTestBase
     {
         /// <summary>
+        /// The search module's name
+        /// </summary>
+        private const string SearchModuleName = "Search";
+
+        /// <summary>
+        /// The search results module's name
+        /// </summary>
+        private const string SearchResultsModuleName = "Search Results";
+
+        /// <summary>
         ///     The search page should exist as a root page
         /// </summary>
         [Test]
@@ -51,7 +60,6 @@ namespace MattEland.Ani.Alfred.Tests.Search
             page.ShouldNotBeNull();
             page.IsRootLevel.ShouldBeTrue();
         }
-
         /// <summary>
         ///     The search page should contain a search module
         /// </summary>
@@ -63,7 +71,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
             var page = new SearchPage(Container);
 
             //! Act
-            var module = page.Children.FirstOrDefault(m => m.Name.Matches("Search"));
+            var module = page.FindModuleByName(SearchModuleName);
 
             //! Assert
             module.ShouldNotBeNull();
@@ -81,7 +89,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
             var page = new SearchPage(Container);
 
             //! Act
-            var module = page.Children.FirstOrDefault(m => m.Name.Matches("Search Results"));
+            var module = page.FindModuleByName(SearchResultsModuleName);
 
             //! Assert
             module.ShouldNotBeNull();
@@ -103,6 +111,26 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             //! Assert
             layout.ShouldBe(LayoutType.VerticalStackPanel);
+        }
+
+        /// <summary>
+        /// The search page should have an option to allow it not to include the search module
+        /// </summary>
+        [Test]
+        public void SearchPageShouldBeConfigurableToNotIncludeSearchModule()
+        {
+            //! Arrange
+
+            var page = new SearchPage(Container, false);
+
+            //! Act
+
+            var module = page.FindModuleByName(SearchModuleName);
+
+            //! Assert
+
+            module.ShouldBeNull();
+            page.Modules.Count().ShouldBe(1);
         }
 
     }

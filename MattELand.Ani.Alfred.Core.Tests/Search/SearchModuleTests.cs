@@ -256,5 +256,6 @@ namespace MattEland.Ani.Alfred.Tests.Search
             messageBox.Verify(m => m.ShowAlert(It.IsAny<string>(), "Cannot Search"), Times.Once);
 
         }
+
     }
 }

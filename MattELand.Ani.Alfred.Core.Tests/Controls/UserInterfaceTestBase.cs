@@ -17,6 +17,7 @@ using MattEland.Common.Providers;
 using MattEland.Testing;
 
 using NUnit.Framework;
+using MattEland.Ani.Alfred.Core.Pages;
 
 namespace MattEland.Ani.Alfred.Tests.Controls
 {
@@ -168,6 +169,24 @@ namespace MattEland.Ani.Alfred.Tests.Controls
             var widget = FindWidgetByName(module, name);
 
             return widget.ShouldBe<T>();
+        }
+
+        /// <summary>
+        /// Declares that the executing test has not been completely implemented
+        /// </summary>
+        /// <param name="isInconclusive">if set to <c>true</c> this will result in an inconclusive result instead of a failure result.</param>
+        protected void TestIsNotImplemented(bool isInconclusive = false)
+        {
+            var message = string.Format("{0} has not been completely implemented.", CurrentTestName);
+
+            if (isInconclusive)
+            {
+                Assert.Inconclusive(message);
+            }
+            else
+            {
+                Assert.Fail(message);
+            }
         }
 
         /// <summary>

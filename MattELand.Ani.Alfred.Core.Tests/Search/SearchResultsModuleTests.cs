@@ -404,5 +404,6 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             operation.SetupGet(o => o.Results).Returns(results);
         }
+
     }
 }

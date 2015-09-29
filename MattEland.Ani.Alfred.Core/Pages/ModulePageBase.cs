@@ -14,6 +14,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common.Providers;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Core.Pages
 {
@@ -89,6 +90,17 @@ namespace MattEland.Ani.Alfred.Core.Pages
         {
             return Modules.Any(module => module.ProcessAlfredCommand(command, result))
                    || base.ProcessAlfredCommand(command, result);
+        }
+
+        /// <summary>
+        /// Finds the module by its name
+        /// </summary>
+        /// <param name="name">Name of the module.</param>
+        /// <returns>The module or null if no module found.</returns>
+        [CanBeNull]
+        public IAlfredComponent FindModuleByName(string name)
+        {
+            return Children.FirstOrDefault(m => m.Name.Matches(name));
         }
     }
 }
