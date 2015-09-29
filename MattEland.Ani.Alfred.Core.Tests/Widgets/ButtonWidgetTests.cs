@@ -16,6 +16,7 @@ using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Testing;
 
 using NUnit.Framework;
+using MattEland.Ani.Alfred.Tests.Controls;
 
 namespace MattEland.Ani.Alfred.Tests.Widgets
 {
@@ -25,7 +26,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
     ///     class
     /// </summary>
     [UnitTestProvider]
-    public sealed class ButtonWidgetTests : AlfredTestBase
+    public sealed class ButtonWidgetTests : WidgetTestsBase
     {
         [Test]
         public void ButtonCommandDefaultsToNull()
@@ -50,18 +51,6 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
 
             Assert.IsNotNull(button.ClickCommand, "Button's ClickCommand was null");
             Assert.IsFalse(executed, "The button was invoked but the button was not set");
-        }
-
-
-        /// <summary>
-        ///     Builds widget parameters.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <returns>The WidgetCreationParameters.</returns>
-        [NotNull]
-        private WidgetCreationParameters BuildWidgetParams(string name = "WidgetTest")
-        {
-            return new WidgetCreationParameters(name, Container);
         }
 
         /// <summary>

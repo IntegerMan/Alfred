@@ -21,11 +21,21 @@ namespace MattEland.Ani.Alfred.Core.Widgets
     /// </summary>
     public abstract class TextWidgetBase : WidgetBase
     {
+
         /// <summary>
         ///     The text.
         /// </summary>
         [CanBeNull]
         private string _text;
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="TextWidgetBase" /> class.
+        /// </summary>
+        protected TextWidgetBase(string text, WidgetCreationParameters parameters)
+            : this(parameters)
+        {
+            _text = text;
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="TextWidgetBase" /> class.

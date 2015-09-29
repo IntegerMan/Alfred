@@ -132,9 +132,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Subsystems\SystemSubsystemTests.cs" />
     <Compile Include="Widgets\ExplorerWidgetTests.cs" />
+    <Compile Include="Widgets\LinkWidgetTests.cs" />
     <Compile Include="Widgets\TextWidgetTests.cs" />
     <Compile Include="Modules\TimeModuleTests.cs" />
     <Compile Include="Widgets\WarningWidgetTests.cs" />
+    <Compile Include="Widgets\WidgetTestsBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MattEland.Ani.Alfred.AIML\MattEland.Ani.Alfred.Chat.csproj">

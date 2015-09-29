@@ -130,6 +130,7 @@
     <Compile Include="Definitions\SearchResult.cs" />
     <Compile Include="Subsystems\SimpleSubsystem.cs" />
     <Compile Include="Widgets\AlfredProgressBarWidget.cs" />
+    <Compile Include="Widgets\LinkWidget.cs" />
     <Compile Include="Widgets\SearchResultWidget.cs" />
     <Compile Include="Widgets\TextBoxWidget.cs" />
     <Compile Include="Widgets\TextWidgetBase.cs" />
