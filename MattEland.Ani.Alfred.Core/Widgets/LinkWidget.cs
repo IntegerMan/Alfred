@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -28,6 +29,18 @@ namespace MattEland.Ani.Alfred.Core.Widgets
 
         }
 
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LinkWidget" /> class.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="url">The URL.</param>
+        /// <param name="parameters">The parameters.</param>
+        public LinkWidget(string text, string url, WidgetCreationParameters parameters) : base(text, parameters)
+        {
+            _url = url;
+        }
+
         /// <summary>
         /// Gets the name of the broad categorization or type that this item is.
         /// </summary>
@@ -40,6 +53,31 @@ namespace MattEland.Ani.Alfred.Core.Widgets
             get
             {
                 return "Hyperlink";
+            }
+        }
+
+        /// <summary>
+        /// The URL
+        /// </summary>
+        [CanBeNull]
+        private string _url = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the URL.
+        /// </summary>
+        /// <value>The URL.</value>
+        [CanBeNull]
+        public string Url
+        {
+            get { return _url; }
+            set
+            {
+                if (_url != value)
+                {
+                    _url = value;
+
+                    OnPropertyChanged(nameof(Url));
+                }
             }
         }
     }

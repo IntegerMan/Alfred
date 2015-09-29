@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MattEland.Testing
 {
@@ -21,6 +20,16 @@ namespace MattEland.Testing
         public static string Text
         {
             get { return "Unimportant text"; }
+        }
+
+        /// <summary>
+        /// Gets unimportant URL in string form.
+        /// </summary>
+        /// <value>The URL.</value>
+        [NotNull]
+        public static string Url
+        {
+            get { return "http://www.matteland.com/"; }
         }
 
         /// <summary>

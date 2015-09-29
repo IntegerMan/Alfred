@@ -37,5 +37,25 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
 
             link.Text.ShouldBe(text);
         }
+
+        /// <summary>
+        /// Checks that link widgets can have their hyperlink set at creation.
+        /// </summary>
+        [Test]
+        public void LinkWidgetHyperlinkCanBeSetFromConstructor()
+        {
+            //! Arrange
+
+            var text = Some.Text;
+            var url = Some.Url;
+
+            //! Act
+
+            var link = new LinkWidget(text, url, BuildWidgetParams());
+
+            //! Assert
+
+            link.Url.ShouldBe(url);
+        }
     }
 }
