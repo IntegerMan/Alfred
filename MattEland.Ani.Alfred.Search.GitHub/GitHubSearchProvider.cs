@@ -8,7 +8,7 @@ namespace MattEland.Ani.Alfred.Search.GitHub
     /// <summary>
     ///     A GitHub search provider.
     /// </summary>
-    public class GitHubSearchProvider : ISearchProvider, IHasContainer
+    public sealed class GitHubSearchProvider : ISearchProvider, IHasContainer
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="GitHubSearchProvider"/> class.
@@ -69,7 +69,7 @@ namespace MattEland.Ani.Alfred.Search.GitHub
         /// </returns>
         public ISearchOperation PerformSearch([NotNull] string searchText)
         {
-            return new GitHubSearchOperation(Container);
+            return new GitHubSearchOperation(Container, searchText);
         }
     }
 }

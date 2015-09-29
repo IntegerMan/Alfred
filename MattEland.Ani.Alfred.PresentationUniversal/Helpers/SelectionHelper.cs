@@ -15,6 +15,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
 using Windows.UI.Xaml.Controls.Primitives;
+using System.Diagnostics.Contracts;
 
 namespace MattEland.Ani.Alfred.PresentationUniversal.Helpers
 {
@@ -34,10 +35,8 @@ namespace MattEland.Ani.Alfred.PresentationUniversal.Helpers
         public static bool SelectItemById([NotNull] Selector selector, string id)
         {
             //- Validation
-            if (selector == null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
+            Contract.Requires(selector != null, "selector is null.");
+            Contract.Requires(id.HasText(), "id is null or empty.");
 
             // Ensure items exist
             var itemCollection = selector.Items;
@@ -66,10 +65,7 @@ namespace MattEland.Ani.Alfred.PresentationUniversal.Helpers
         /// <exception cref="ArgumentNullException"><paramref name="selector"/> is <see langword="null" />.</exception>
         public static void SelectFirstItem([NotNull] Selector selector)
         {
-            if (selector == null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
+            Contract.Requires(selector != null);
 
             if (selector.SelectedItem == null && selector.Items.Any())
             {
