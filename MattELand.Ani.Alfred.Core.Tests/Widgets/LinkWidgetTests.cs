@@ -19,20 +19,23 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
     public sealed class LinkWidgetTests : WidgetTestsBase
     {
 
+        /// <summary>
+        /// Tests that LinkWidget instances can be created
+        /// </summary>
         [Test]
         public void LinkWidgetCanBeConstructed()
         {
             //! Arrange
 
-            const string LinkText = "MyWidgetName";
+            var text = Some.Text;
 
             //! Act
 
-            var link = new LinkWidget(LinkText, BuildWidgetParams());
+            var link = new LinkWidget(text, BuildWidgetParams());
 
             //! Assert
 
-            link.Text.ShouldBe(LinkText);
+            link.Text.ShouldBe(text);
         }
     }
 }

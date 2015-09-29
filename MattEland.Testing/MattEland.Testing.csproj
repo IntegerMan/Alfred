@@ -80,6 +80,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Some.cs" />
     <Compile Include="TestExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitTestProvider.cs" />
