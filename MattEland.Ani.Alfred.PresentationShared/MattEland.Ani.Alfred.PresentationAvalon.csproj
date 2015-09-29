@@ -110,6 +110,9 @@
     <Compile Include="Controls\ExplorerControl.xaml.cs">
       <DependentUpon>ExplorerControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\HyperlinkControl.xaml.cs">
+      <DependentUpon>HyperlinkControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\IUserInterfaceTestable.cs" />
     <Compile Include="Controls\RootPagesControl.xaml.cs">
       <DependentUpon>RootPagesControl.xaml</DependentUpon>
@@ -178,6 +181,10 @@
     <Page Include="Controls\ExplorerControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\HyperlinkControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\RootPagesControl.xaml">
       <SubType>Designer</SubType>

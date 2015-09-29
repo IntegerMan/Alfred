@@ -47,6 +47,10 @@
 
     <SolidColorBrush Color="{DynamicResource GoodColor}" x:Key="ProgressBarNormalForegroundBrush" />
     
+    <!-- Brush / Color Pairs -->
+    <Color x:Key="DisabledForegroundColor">#FF838383</Color>
+    <SolidColorBrush Color="{DynamicResource DisabledColor}" x:Key="DisabledForegroundBrush" />
+
     <!-- Misc. Styling Settings -->
     <!-- Font Sizes -->
     <system:Double x:Key="FontSizeSmall">10</system:Double>

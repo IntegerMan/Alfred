@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:widgets="clr-namespace:MattEland.Ani.Alfred.Core.Widgets;assembly=MattEland.Ani.Alfred.Core"
+                    xmlns:controls="clr-namespace:MattEland.Ani.Alfred.PresentationAvalon.Controls"
                     xmlns:helpers="clr-namespace:MattEland.Ani.Alfred.PresentationAvalon.Helpers"
                     xmlns:layout="clr-namespace:MattEland.Ani.Alfred.PresentationAvalon.Layout"
                     xmlns:definitions="clr-namespace:MattEland.Ani.Alfred.Core.Definitions;assembly=MattEland.Ani.Alfred.Core"
@@ -51,6 +52,12 @@
                 ToolTip="{Binding Text}" />
     </DataTemplate>
 
+    <!-- LinkWidget Template -->
+    <DataTemplate DataType="{x:Type widgets:LinkWidget}">
+        <controls:HyperlinkControl Text="{Binding Text}" Url="{Binding Url}"
+                Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+    </DataTemplate>
+
     <!-- TextBox Template -->
     <DataTemplate DataType="{x:Type widgets:TextBoxWidget}">
         <TextBox Margin="0, 8, 8, 0"
@@ -71,8 +78,8 @@
                 <ColumnDefinition Width="170" />
             </Grid.ColumnDefinitions>
 
+            <!-- Show the full value in the ToolTip with a label -->
             <Grid.ToolTip>
-                <!-- Show the full value in the ToolTip with a label -->
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding Text}" />
                     <TextBlock Text="{Binding ValueText}"
@@ -80,23 +87,21 @@
                 </StackPanel>
             </Grid.ToolTip>
 
-            <TextBlock Grid.Column="0"
-                       MinWidth="75"
-                       Text="{Binding Text}"
-                       HorizontalAlignment="Right"
-                       TextAlignment="Right"
-                       Margin="0,0,8,0"
-                       VerticalAlignment="Center" />
+            <TextBlock Text="{Binding Text}"
+                    MinWidth="75"
+                    HorizontalAlignment="Right"
+                    TextAlignment="Right"
+                    Margin="0,0,8,0"
+                    VerticalAlignment="Center" />
 
             <ProgressBar Grid.Column="1"
-                         Foreground="{DynamicResource ProgressBarNormalForegroundBrush}"
-                         Background="{DynamicResource LightBackgroundBrush}"
-                         BorderBrush="{DynamicResource AppBorderBrush}"
-                         Minimum="{Binding Minimum}"
-                         Maximum="{Binding Maximum}"
-                         Value="{Binding Value}"
-                         HorizontalAlignment="Stretch"
-                         HorizontalContentAlignment="Center" />
+                    Foreground="{DynamicResource ProgressBarNormalForegroundBrush}"
+                    Background="{DynamicResource LightBackgroundBrush}"
+                    BorderBrush="{DynamicResource AppBorderBrush}"
+                    Minimum="{Binding Minimum}"
+                    Maximum="{Binding Maximum}"
+                    Value="{Binding Value}"
+                    HorizontalContentAlignment="Center" />
 
         </Grid>
     </DataTemplate>
@@ -133,6 +138,8 @@
                            Foreground="{DynamicResource ForegroundBrush}"
                            TextWrapping="Wrap"
                            Margin="16, 8, 8, 0"/>
+
+                <controls:HyperlinkControl Text="{Binding Text}" />
 
             </StackPanel>
             
