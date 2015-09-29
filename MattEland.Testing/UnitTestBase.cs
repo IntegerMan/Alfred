@@ -101,5 +101,22 @@ namespace MattEland.Testing
         {
             get; protected set;
         }
+
+        /// <summary>
+        /// Declares that the executing test has not been completely implemented
+        /// </summary>
+        /// <param name="isInconclusive">if set to <c>true</c> this will result in an inconclusive result instead of a failure result.</param>
+        protected void TestIsNotImplemented(bool isInconclusive = false)
+        {
+            var message = string.Format("{0} has not been completely implemented.", CurrentTestName);
+            if (isInconclusive)
+            {
+                Assert.Inconclusive(message);
+            }
+            else
+            {
+                Assert.Fail(message);
+            }
+        }
     }
 }

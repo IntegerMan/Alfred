@@ -52,15 +52,26 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         [NotNull]
         private SearchPage _searchPage;
 
-        /// <summary>Initializes a new instance of the <see cref="AlfredSubsystem" /> class.</summary>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AlfredCoreSubsystem" /> class.
+        /// </summary>
         /// <param name="container">The container.</param>
+        public AlfredCoreSubsystem([NotNull] IObjectContainer container) : this(container, true)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AlfredCoreSubsystem" /> class.
+        /// </summary>
+        /// <param name="container">The container.</param>
+        /// <param name="includeSearchModuleOnSearchPage">Whether or not to include the search module on the search page.</param>
         /// <exception cref="ArgumentNullException">Thrown when one or more required arguments are null.</exception>
-        public AlfredCoreSubsystem([NotNull] IObjectContainer container) : base(container)
+        public AlfredCoreSubsystem([NotNull] IObjectContainer container, bool includeSearchModuleOnSearchPage) : base(container)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
 
             _controlPage = new ModuleListPage(container, ControlPageName, "Core");
-            _searchPage = new SearchPage(container);
+            _searchPage = new SearchPage(container, includeSearchModuleOnSearchPage);
 
             // Instantiate the modules
             _powerModule = new AlfredPowerModule(container);

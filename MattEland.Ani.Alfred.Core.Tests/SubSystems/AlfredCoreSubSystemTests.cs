@@ -26,13 +26,15 @@ using MattEland.Testing;
 
 using NUnit.Framework;
 
+using System;
+
 using Shouldly;
 
 namespace MattEland.Ani.Alfred.Tests.Subsystems
 {
     [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-    public sealed class AlfredCoreSubsystemTests : AlfredTestBase
+    public sealed class AlfredCoreSubsystemTests : AlfredTestBase, IDisposable
     {
         [SetUp]
         public override void SetUp()
@@ -162,5 +164,43 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
 
             Assert.GreaterOrEqual(_subsystem.Pages.Count(), 1);
         }
+
+        /// <summary>
+        /// Ensures that the core subsystem can be created without a search module on the search page
+        /// </summary>
+        [Test]
+        public void CoreSubsystemCanBeCreatedWithoutSearchModule()
+        {
+            //! Arrange
+            const bool IncludeSearchModule = false;
+            const string SearchComponentName = "Search";
+
+            //! Act
+
+            // Set up the subsystem to not include a search module
+            var subsystem = new AlfredCoreSubsystem(Container, IncludeSearchModule);
+
+            // Get things online to load the pages
+            _alfred.Register(subsystem);
+            _alfred.Initialize();
+
+            var page = subsystem.Pages.FirstOrDefault(p => p.Name == SearchComponentName);
+            page.ShouldNotBeNull();
+            var modulePage = page.ShouldBeOfType<SearchPage>();
+            var searchModule = modulePage.FindModuleByName(SearchComponentName);
+
+            //! Assert
+            searchModule.ShouldBeNull();
+            modulePage.Children.Count().ShouldBe(1);
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            _alfred.TryDispose();
+        }
+
     }
 }

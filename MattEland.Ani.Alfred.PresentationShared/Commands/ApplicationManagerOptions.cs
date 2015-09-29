@@ -43,5 +43,11 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
         ///     The bing API key.
         /// </value>
         public string BingApiKey { get; set; } = "YourBingApiKeyGoesHere";
+
+        /// <summary>
+        /// Gets or sets whether to include the search module on the search page.
+        /// </summary>
+        /// <value>Whether or not to include the search module on the search page.</value>
+        public bool IncludeSearchModuleOnSearchPage { get; set; } = true;
     }
 }

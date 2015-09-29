@@ -281,7 +281,7 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
             // TODO: It'd be nice to replace this with reflection-based type loading 
 
             // Add Standard Subsystems 
-            Register(new AlfredCoreSubsystem(Container));
+            Register(new AlfredCoreSubsystem(Container, Options.IncludeSearchModuleOnSearchPage));
             Register(new ChatSubsystem(Container, _alfred.Name));
             Register(new MindExplorerSubsystem(Container, Options.ShowMindExplorerPage));
 
