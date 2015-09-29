@@ -604,7 +604,7 @@ namespace MattEland.Common.Providers
                     var arguments = GetArgumentsString(args);
 
                     var message =
-                        $"The {provider.GetType().FullName} activator for creating {typeName} on container {Name} returned a null value with arguments: {arguments}";
+                        $"The {provider.GetType().Name} activator for creating {typeName} on container {Name} returned a null value with arguments: {arguments}";
                     throw new NotSupportedException(message);
                 }
 

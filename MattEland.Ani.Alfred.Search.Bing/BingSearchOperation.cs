@@ -172,11 +172,15 @@ namespace MattEland.Ani.Alfred.Search.Bing
             IsSearchComplete = true;
         }
 
+        /// <summary>
+        /// Processes the web search results.
+        /// </summary>
+        /// <param name="webResults">The web results.</param>
         private void ProcessWebResults([NotNull, ItemNotNull] IEnumerable<WebResult> webResults)
         {
             foreach (var webResult in webResults)
             {
-                var searchResult = new BingSearchResult(webResult);
+                var searchResult = new BingSearchResult(Container, webResult);
 
                 _results.Add(searchResult);
             }

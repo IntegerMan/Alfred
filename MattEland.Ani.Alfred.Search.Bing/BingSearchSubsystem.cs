@@ -60,5 +60,6 @@ namespace MattEland.Ani.Alfred.Search.Bing
         {
             get { return "Bing"; }
         }
+
     }
 }
