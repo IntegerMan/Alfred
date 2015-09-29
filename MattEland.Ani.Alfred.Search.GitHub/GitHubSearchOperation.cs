@@ -40,7 +40,7 @@ namespace MattEland.Ani.Alfred.Search.GitHub
             if (container == null) throw new ArgumentNullException(nameof(searchText));
             if (searchText.IsEmpty()) throw new ArgumentNullException(nameof(searchText));
 
-            //- Set properties from parameters
+            // Set properties from parameters
             Container = container;
             _searchText = searchText;
 

@@ -24,6 +24,9 @@ namespace MattEland.Ani.Alfred.Core
         /// <summary>
         /// The ongoing operations collection. This is used for adding new operations. 
         /// </summary>
+        /// <remarks>
+        /// TODO: At some point these should probably become Task objects for more flexibility
+        /// </remarks>
         [NotNull]
         [ItemNotNull]
         private readonly ICollection<ISearchOperation> _ongoingOperations;
