@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MattEland.Ani.Alfred.Core.Widgets;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,6 +30,25 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Controls
         }
 
         /// <summary>
+        /// Gets or sets the <see cref="LinkWidget"/> associated with this control.
+        /// </summary>
+        /// <value>The widget.</value>
+        public LinkWidget Widget
+        {
+            get { return (LinkWidget)GetValue(WidgetProperty); }
+            set { SetValue(WidgetProperty, value); }
+        }
+
+        /// <summary>
+        /// The widget property definition.
+        /// </summary>
+        public static readonly DependencyProperty WidgetProperty =
+            DependencyProperty.Register("Widget",
+                typeof(LinkWidget),
+                typeof(HyperlinkControl),
+                new PropertyMetadata(null));
+
+        /// <summary>
         /// Gets or sets the text.
         /// </summary>
         /// <value>The text.</value>
@@ -42,8 +62,10 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Controls
         /// The text property definition.
         /// </summary>
         public static readonly DependencyProperty TextProperty =
-            DependencyProperty.Register("Text", typeof(string),
-                typeof(HyperlinkControl), new PropertyMetadata(string.Empty));
+            DependencyProperty.Register("Text",
+                typeof(string),
+                typeof(HyperlinkControl),
+                new PropertyMetadata(string.Empty));
 
         /// <summary>
         /// Gets or sets the text.
@@ -59,8 +81,10 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Controls
         /// The URL property definition.
         /// </summary>
         public static readonly DependencyProperty UrlProperty =
-            DependencyProperty.Register("Url", typeof(string),
-                typeof(HyperlinkControl), new PropertyMetadata(string.Empty));
+            DependencyProperty.Register("Url",
+                typeof(string),
+                typeof(HyperlinkControl),
+                new PropertyMetadata(string.Empty));
 
     }
 }

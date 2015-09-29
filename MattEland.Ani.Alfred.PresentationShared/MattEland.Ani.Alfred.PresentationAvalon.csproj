@@ -117,6 +117,9 @@
     <Compile Include="Controls\RootPagesControl.xaml.cs">
       <DependentUpon>RootPagesControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SearchResultControl.xaml.cs">
+      <DependentUpon>SearchResultControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\LogLevelToBrushConverter.cs" />
     <Compile Include="Commands\IUserInterfaceDirector.cs" />
     <Compile Include="Converters\VisibilityConverter.cs" />
@@ -187,6 +190,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\RootPagesControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SearchResultControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
