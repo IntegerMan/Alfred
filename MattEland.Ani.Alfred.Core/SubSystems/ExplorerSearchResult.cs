@@ -18,10 +18,12 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// <summary>
         ///     Initializes a new instance of the <see cref="ExplorerSearchResult" /> class.
         /// </summary>
-        /// <exception cref="ArgumentNullException">
+        /// <param name="container"> The container. </param>
+        /// <param name="node"> The node. </param>
+        ///
+        /// ### <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="node"/> is null.
         /// </exception>
-        /// <param name="node"> The node. </param>
         public ExplorerSearchResult([NotNull] IObjectContainer container,
             [NotNull] IPropertyProvider node) : base(container, node.DisplayName)
         {

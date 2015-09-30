@@ -40,9 +40,10 @@ namespace MattEland.Ani.Alfred.Core
         ///     </para>
         ///     <para>class.</para>
         /// </summary>
-        /// <param name="alfred">The alfred instance.</param>
-        /// <param name="subsystems">The subsystems instance.</param>
-        /// <param name="rootPages">The root pages instance.</param>
+        /// <param name="container"> The container. </param>
+        /// <param name="alfred"> The alfred instance. </param>
+        /// <param name="subsystems"> The subsystems instance. </param>
+        /// <param name="rootPages"> The root pages instance. </param>
         internal ComponentRegistrationProvider([NotNull] IObjectContainer container,
             [NotNull] AlfredApplication alfred,
             [NotNull] ICollection<IAlfredSubsystem> subsystems,
