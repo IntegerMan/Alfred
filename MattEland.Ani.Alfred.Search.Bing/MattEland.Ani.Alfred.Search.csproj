@@ -59,8 +59,16 @@
       <HintPath>..\packages\Microsoft.Data.Services.Client.5.6.4\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.0.4.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.4.0.4\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="ServiceStack.Text, Version=3.9.58.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ServiceStack.Text.3.9.58\lib\net35\ServiceStack.Text.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Stacky, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stacky.1.1.2\lib\net40\Stacky.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -81,12 +89,11 @@
     <Compile Include="Bing\BingSearchOperation.cs" />
     <Compile Include="Bing\BingSearchProvider.cs" />
     <Compile Include="Bing\BingSearchResult.cs" />
-    <Compile Include="Bing\BingSearchSubsystem.cs" />
     <Compile Include="Bing\ExpandableSearchResult.cs" />
     <Compile Include="GitHub\GitHubRepositoryResult.cs" />
     <Compile Include="GitHub\GitHubSearchOperation.cs" />
     <Compile Include="GitHub\GitHubSearchProvider.cs" />
-    <Compile Include="GitHub\GitHubSearchSubsystem.cs" />
+    <Compile Include="SearchSubsystem.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Bing\ImageResult.cs" />
     <Compile Include="Bing\NewsResult.cs" />
@@ -110,6 +117,9 @@
       <Project>{514cb422-a6ef-4c75-b925-92ab599ba1be}</Project>
       <Name>MattEland.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="StackOverflow\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

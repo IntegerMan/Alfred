@@ -13,8 +13,7 @@ using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Ani.Alfred.Core.Speech;
 using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Ani.Alfred.PresentationAvalon.Helpers;
-using MattEland.Ani.Alfred.Search.Bing;
-using MattEland.Ani.Alfred.Search.GitHub;
+using MattEland.Ani.Alfred.Search;
 using MattEland.Common;
 using MattEland.Common.Providers;
 using System;
@@ -284,10 +283,7 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
             Register(new AlfredCoreSubsystem(Container, Options.IncludeSearchModuleOnSearchPage));
             Register(new ChatSubsystem(Container, _alfred.Name));
             Register(new MindExplorerSubsystem(Container, Options.ShowMindExplorerPage));
-
-            // Add Search Provider Subsystems 
-            Register(new BingSearchSubsystem(Container, Options.BingApiKey));
-            Register(new GitHubSearchSubsystem(Container));
+            Register(new SearchSubsystem(Container, Options.BingApiKey));
 
             InitializeSystemMonitoringSubsystem();
 
