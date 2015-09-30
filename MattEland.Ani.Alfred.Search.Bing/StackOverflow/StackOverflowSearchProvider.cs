@@ -1,0 +1,78 @@
+﻿using MattEland.Ani.Alfred.Core.Definitions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using JetBrains.Annotations;
+using MattEland.Common.Providers;
+
+namespace MattEland.Ani.Alfred.Search.StackOverflow
+{
+    /// <summary>
+    ///     A stack overflow search provider. This class cannot be inherited.
+    /// </summary>
+    public sealed class StackOverflowSearchProvider : ISearchProvider, IHasContainer
+    {
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="StackOverflowSearchProvider" /> class.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when one or more required arguments are null.
+        /// </exception>
+        /// <param name="container"> The container. </param>
+        public StackOverflowSearchProvider([NotNull] IObjectContainer container)
+        {
+            if (container == null) throw new ArgumentNullException(nameof(container));
+
+            Container = container;
+        }
+
+        /// <summary>
+        ///     Gets the container.
+        /// </summary>
+        /// <value>
+        ///     The container.
+        /// </value>
+        public IObjectContainer Container
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Gets the identifier.
+        /// </summary>
+        /// <value>The identifier.</value>
+        public string Id
+        {
+            get
+            {
+                return "StackOverflowSearch";
+            }
+        }
+
+        /// <summary>
+        /// Gets the display name of the search provider.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
+        public string Name
+        {
+            get
+            {
+                return "StackOverflow Search Provider";
+            }
+        }
+
+        /// <summary>
+        /// Executes a search operation and returns a result to track the search.
+        /// </summary>
+        /// <param name="searchText">The search text.</param>
+        /// <returns>
+        /// An <see cref="ISearchOperation"/> representing the potentially ongoing search.
+        /// </returns>
+        public ISearchOperation PerformSearch([NotNull] string searchText)
+        {
+            return new StackOverflowSearchOperation(Container, searchText);
+        }
+    }
+}

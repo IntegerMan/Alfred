@@ -103,6 +103,8 @@
     <Compile Include="Bing\Thumbnail.cs" />
     <Compile Include="Bing\VideoResult.cs" />
     <Compile Include="Bing\WebResult.cs" />
+    <Compile Include="StackOverflow\StackOverflowSearchOperation.cs" />
+    <Compile Include="StackOverflow\StackOverflowSearchProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="AlfredAppTestCertificate.snk" />
@@ -118,9 +120,7 @@
       <Name>MattEland.Common</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="StackOverflow\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

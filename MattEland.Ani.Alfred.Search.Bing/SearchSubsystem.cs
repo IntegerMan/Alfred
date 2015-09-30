@@ -7,6 +7,7 @@ using MattEland.Ani.Alfred.Core.Definitions;
 using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Search.GitHub;
 using MattEland.Ani.Alfred.Search.Bing;
+using MattEland.Ani.Alfred.Search.StackOverflow;
 
 namespace MattEland.Ani.Alfred.Search
 {
@@ -27,6 +28,9 @@ namespace MattEland.Ani.Alfred.Search
         [NotNull]
         private readonly BingSearchProvider _bingSearchProvider;
 
+        [NotNull]
+        private readonly StackOverflowSearchProvider _stackOverflowSearchProvider;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="GitHubSearchSubsystem"/> class.
         /// </summary>
@@ -41,6 +45,7 @@ namespace MattEland.Ani.Alfred.Search
             if (container == null) throw new ArgumentNullException(nameof(container));
 
             _gitHubSearchProvider = new GitHubSearchProvider(container);
+            _stackOverflowSearchProvider = new StackOverflowSearchProvider(container);
             _bingSearchProvider = new BingSearchProvider(container, bingApiKey);
         }
         /// <summary>
@@ -79,6 +84,7 @@ namespace MattEland.Ani.Alfred.Search
             get
             {
                 yield return _gitHubSearchProvider;
+                yield return _stackOverflowSearchProvider;
                 yield return _bingSearchProvider;
             }
         }
