@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core.Definitions;
 
 namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
@@ -7,6 +8,12 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
     /// </summary>
     public interface IUserInterfaceDirector
     {
+        /// <summary>
+        /// Handles the event when a web page is requested.
+        /// </summary>
+        /// <param name="url">The URL that was requested.</param>
+        void HandleWebPageRequested([NotNull] string url);
+
         /// <summary>
         /// Handles the page navigation command.
         /// </summary>

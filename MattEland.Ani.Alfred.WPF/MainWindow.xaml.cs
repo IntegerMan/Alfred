@@ -138,5 +138,15 @@ namespace MattEland.Ani.Alfred.WPF
 
             return PagesControl.HandlePageNavigationCommand(command);
         }
+
+        /// <summary>
+        /// Handles the event when a web page is requested.
+        /// </summary>
+        /// <param name="url">The URL that was requested.</param>
+        public void HandleWebPageRequested(string url)
+        {
+            Process.Start(url);
+        }
+
     }
 }

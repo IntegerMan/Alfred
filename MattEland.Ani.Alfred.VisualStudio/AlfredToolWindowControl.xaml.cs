@@ -91,6 +91,14 @@ namespace MattEland.Ani.Alfred.VisualStudio
         }
 
         /// <summary>
+        /// Handles the event when a web page is requested.
+        /// </summary>
+        /// <param name="url">The URL that was requested.</param>
+        public void HandleWebPageRequested(string url)
+        {
+            Process.Start(url);
+        }
+        /// <summary>
         ///     Handles the <see cref="E:Loaded" /> event.
         /// </summary>
         /// <param name="sender">The sender.</param>

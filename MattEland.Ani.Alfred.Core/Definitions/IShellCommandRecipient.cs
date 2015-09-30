@@ -13,12 +13,13 @@ namespace MattEland.Ani.Alfred.Core.Definitions
     /// </summary>
     public interface IShellCommandRecipient
     {
-
         /// <summary>
-        /// Processes a shell command by sending it on to the user interface layer.
+        ///     Processes a shell command by sending it on to the user interface layer.
         /// </summary>
-        /// <param name="command">The command.</param>
-        /// <returns>The redirect target or string.empty for no redirect.</returns>
+        /// <param name="command"> The command. </param>
+        /// <returns>
+        ///     The redirect target or string.empty for no redirect.
+        /// </returns>
         string ProcessShellCommand(ShellCommand command);
 
     }

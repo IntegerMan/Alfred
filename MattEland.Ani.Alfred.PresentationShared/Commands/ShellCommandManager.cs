@@ -15,6 +15,7 @@ using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common.Providers;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
 {
@@ -90,9 +91,20 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
             {
                 case "NAV":
                     return HandleNavigationCommand(command) ? "NAVIGATE SUCCESS" : "NAVIGATE FAILED";
+
+                case "OPENWEBPAGE":
+
+                    if (UIDirector != null && command.Data.HasText())
+                    {
+                        UIDirector.HandleWebPageRequested(command.Data);
+                    }
+
+                    return string.Empty;
+
+                default:
+                    return string.Empty;
             }
 
-            return string.Empty;
         }
 
         /// <summary>
@@ -108,9 +120,10 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
             {
                 case "PAGES":
                     return UIDirector.HandlePageNavigationCommand(command);
-            }
 
-            return false;
+                default:
+                    return false;
+            }
         }
     }
 }

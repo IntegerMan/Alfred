@@ -76,7 +76,9 @@
 
         <!-- Button Content - a text block with the URL -->
         <TextBlock TextDecorations="Underline"
-            Text="{Binding Url}" />
+                   Foreground="{DynamicResource AccentForegroundBrush}"
+                   Text="{Binding Text}"
+                   ToolTip="{Binding Url}"/>
 
     </Button>
 

@@ -71,7 +71,7 @@ namespace MattEland.Ani.Alfred.Search.Bing
         {
             get
             {
-                return Url;
+                return "Visit Web Page";
             }
         }
     }
