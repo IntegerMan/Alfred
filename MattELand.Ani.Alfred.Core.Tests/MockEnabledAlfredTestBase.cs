@@ -205,6 +205,9 @@ namespace MattEland.Ani.Alfred.Tests
         {
             var mock = new Mock<ISearchResult>(MockingBehavior);
 
+            mock.SetupGet(m => m.MoreDetailsAction).Returns(null);
+            mock.SetupGet(m => m.MoreDetailsText).Returns(string.Empty);
+
             return mock;
         }
 

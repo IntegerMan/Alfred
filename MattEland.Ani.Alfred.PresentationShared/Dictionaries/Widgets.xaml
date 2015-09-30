@@ -122,7 +122,7 @@
                 Margin="0, 8, 8, 0"
                 BorderBrush="{DynamicResource AppBorderBrush}">
             
-            <StackPanel Margin="8">
+            <StackPanel Margin="24,8,8,8">
 
                 <TextBlock Text="{Binding Title}" 
                            Foreground="{DynamicResource AccentForegroundBrush}"
@@ -132,14 +132,15 @@
                 <TextBlock Text="{Binding Description}" 
                            Foreground="{DynamicResource ForegroundBrush}"
                            TextWrapping="Wrap"
-                           Margin="16, 8, 8, 0"/>
+                           Margin="0, 8, 8, 0"/>
 
                 <TextBlock Text="{Binding Location}"
                            Foreground="{DynamicResource ForegroundBrush}"
                            TextWrapping="Wrap"
-                           Margin="16, 8, 8, 0"/>
+                           Margin="0, 8, 8, 0"/>
 
-                <controls:HyperlinkControl />
+                <!-- Rely on the nested LinkWidget for rendering hyperlinks -->
+                <controls:HyperlinkControl DataContext="{Binding LinkWidget}" />
 
             </StackPanel>
             

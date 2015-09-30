@@ -25,7 +25,11 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         {
             if (result == null) throw new ArgumentNullException(nameof(result));
 
+            // Set the search result most properties feed off of
             SearchResult = result;
+
+            // Update the link widget given the search result
+            BuildLinkWidget();
         }
 
         /// <summary>
@@ -53,6 +57,27 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         }
 
         /// <summary>
+        /// Builds the link widget.
+        /// </summary>
+        private void BuildLinkWidget()
+        {
+            if (SearchResult.MoreDetailsAction != null)
+            {
+                string controlName = "linkResult" + SearchResult.GetHashCode();
+                var parameters = new WidgetCreationParameters(controlName, Container);
+
+                LinkWidget = new LinkWidget(SearchResult.MoreDetailsText, parameters)
+                {
+                    Command = CommandHelper.CreateCommand(Container, SearchResult.MoreDetailsAction)
+                };
+            }
+            else
+            {
+                LinkWidget = null;
+            }
+        }
+
+        /// <summary>
         ///     Gets the search result.
         /// </summary>
         /// <value>
@@ -60,6 +85,13 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         /// </value>
         [NotNull]
         public ISearchResult SearchResult { get; }
+
+        /// <summary>
+        /// Gets the link widget.
+        /// </summary>
+        /// <value>The link widget.</value>
+        [CanBeNull]
+        public LinkWidget LinkWidget { get; private set; }
 
         /// <summary>
         ///     Gets the name of the broad categorization or type that this item is.

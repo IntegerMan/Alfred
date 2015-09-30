@@ -45,8 +45,6 @@ namespace MattEland.Ani.Alfred.Tests.Search
     [SuppressMessage("ReSharper", "RedundantArgumentName")]
     public sealed class SearchResultsModuleTests : UserInterfaceTestBase
     {
-        private const string IrrelevantSearchText = "Some search goes here. Content doesn't matter for this test.";
-
         /// <summary>
         ///     Gets the mock Alfred instance.
         /// </summary>
@@ -254,7 +252,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
             Alfred.Initialize();
 
             // Send across a search for all items
-            Alfred.SearchController.PerformSearch(IrrelevantSearchText);
+            Alfred.SearchController.PerformSearch(Some.SearchText);
 
             // Ensure controller and module update
             Alfred.Update();

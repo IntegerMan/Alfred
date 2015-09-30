@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace MattEland.Testing
 {
@@ -30,6 +29,22 @@ namespace MattEland.Testing
         public Some(Random randomizer)
         {
             _rand = randomizer ?? new Random();
+        }
+
+        /// <summary>
+        /// Gets some sample search text.
+        /// </summary>
+        /// <remarks>
+        /// This is functionally equivalent to <see cref="Text"/> but provides a bit more flavor.
+        /// </remarks>
+        /// <value>The search text.</value>
+        [NotNull]
+        public string SearchText
+        {
+            get
+            {
+                return "Where can I find a good electronic butler?";
+            }
         }
         /// <summary>
         /// Gets unimportant text.
