@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using System.Diagnostics.Contracts;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Subsystems
 {
@@ -21,7 +22,8 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         ///     Thrown if <paramref name="node"/> is null.
         /// </exception>
         /// <param name="node"> The node. </param>
-        public ExplorerSearchResult([NotNull] IPropertyProvider node) : base(node.DisplayName)
+        public ExplorerSearchResult([NotNull] IObjectContainer container,
+            [NotNull] IPropertyProvider node) : base(container, node.DisplayName)
         {
             //- Validate
             Contract.Requires(node != null, "node is null.");

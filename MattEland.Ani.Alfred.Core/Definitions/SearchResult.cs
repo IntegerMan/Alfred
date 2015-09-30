@@ -1,4 +1,7 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+using MattEland.Common;
+using MattEland.Common.Providers;
+using System;
 
 namespace MattEland.Ani.Alfred.Core.Definitions
 {
@@ -8,11 +11,13 @@ namespace MattEland.Ani.Alfred.Core.Definitions
     public class SearchResult : ISearchResult
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SearchResult"/> class.
+        ///     Initializes a new instance of the <see cref="SearchResult"/> class.
         /// </summary>
-        /// <param name="title">The title.</param>
-        public SearchResult(string title)
+        /// <param name="container"> The container. </param>
+        /// <param name="title"> The title. </param>
+        public SearchResult(IObjectContainer container, string title)
         {
+            Container = container;
             Title = title;
         }
 
@@ -43,18 +48,6 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         }
 
         /// <summary>
-        ///     Gets an action that will provide more details on the search result. What this does varies
-        ///     by the type of search result.
-        /// </summary>
-        /// <value>
-        ///     The get more details action.
-        /// </value>
-        public virtual Action MoreDetailsAction
-        {
-            get;
-        }
-
-        /// <summary>
         ///     Gets the more details link's text.
         /// </summary>
         /// <value>
@@ -76,5 +69,62 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         {
             get;
         }
+        /// <summary>
+        /// Gets the URL.
+        /// </summary>
+        /// <value>The URL.</value>
+        public virtual string Url
+        {
+            get; protected set;
+        }
+
+        /// <summary>
+        /// Builds the more details action.
+        /// </summary>
+        /// <returns>An action</returns>
+        [CanBeNull]
+        private Action BuildMoreDetailsAction()
+        {
+            var shell = Container.TryProvide<IShellCommandRecipient>();
+            if (shell == null || Url.IsEmpty())
+                return null;
+            // Build out a web request command
+            return () =>
+            {
+                var command = new ShellCommand("OpenWebPage", "Browser", Url);
+                shell.ProcessShellCommand(command);
+            };
+        }
+
+        /// <summary>
+        /// The action to take on requesting more details
+        /// </summary>
+        private Action _action = null;
+
+        /// <summary>
+        ///     Gets the action that is executed when a user wants more information.
+        /// </summary>
+        /// <value>
+        ///     The more details action.
+        /// </value>
+        public virtual Action MoreDetailsAction
+        {
+            get
+            {
+                // Lazy load the action
+                if (_action == null)
+                {
+                    _action = BuildMoreDetailsAction();
+                }
+
+                return _action;
+            }
+        }
+
+        /// <summary>
+        /// Gets the container.
+        /// </summary>
+        /// <value>The container.</value>
+        public IObjectContainer Container { get; protected set; }
     }
 }

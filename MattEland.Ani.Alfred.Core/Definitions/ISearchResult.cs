@@ -19,6 +19,12 @@ namespace MattEland.Ani.Alfred.Core.Definitions
     public interface ISearchResult
     {
         /// <summary>
+        /// Gets the URL of the item, if any.
+        /// </summary>
+        /// <value>The URL.</value>
+        string Url { get; }
+
+        /// <summary>
         ///     Gets the title or heading to use when displaying the search result.
         /// </summary>
         /// <value>

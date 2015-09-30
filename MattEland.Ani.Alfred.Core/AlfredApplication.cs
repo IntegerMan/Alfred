@@ -81,7 +81,7 @@ namespace MattEland.Ani.Alfred.Core
 
             // Set composite objects - TODO: Get these from the container!
             _statusController = new AlfredStatusController(this, container);
-            RegistrationProvider = new ComponentRegistrationProvider(this, _subsystems, _rootPages);
+            RegistrationProvider = new ComponentRegistrationProvider(container, this, _subsystems, _rootPages);
         }
 
         /// <summary>

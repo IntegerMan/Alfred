@@ -14,13 +14,14 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core
 {
     /// <summary>
     ///     This registration provider handles component registration capabilities for Alfred.
     /// </summary>
-    internal class ComponentRegistrationProvider : IRegistrationProvider
+    internal class ComponentRegistrationProvider : IRegistrationProvider, IHasContainer
     {
         [NotNull]
         private readonly AlfredApplication _alfred;
@@ -42,14 +43,27 @@ namespace MattEland.Ani.Alfred.Core
         /// <param name="alfred">The alfred instance.</param>
         /// <param name="subsystems">The subsystems instance.</param>
         /// <param name="rootPages">The root pages instance.</param>
-        internal ComponentRegistrationProvider(
+        internal ComponentRegistrationProvider([NotNull] IObjectContainer container,
             [NotNull] AlfredApplication alfred,
             [NotNull] ICollection<IAlfredSubsystem> subsystems,
             [NotNull] ICollection<IPage> rootPages)
         {
+            Container = container;
+
             _alfred = alfred;
             _subsystems = subsystems;
             _rootPages = rootPages;
+        }
+
+        /// <summary>
+        /// Gets the container.
+        /// </summary>
+        /// <value>
+        /// The container.
+        /// </value>
+        public IObjectContainer Container
+        {
+            get;
         }
 
         /// <summary>
@@ -88,6 +102,9 @@ namespace MattEland.Ani.Alfred.Core
             AssertNotOnline();
 
             _alfred.ShellCommandHandler = shell;
+
+            // Make it easier for everything else to get ahold of the shell
+            shell.RegisterAsProvidedInstance(typeof(IShellCommandRecipient), Container);
         }
 
         /// <summary>

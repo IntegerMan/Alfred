@@ -138,7 +138,7 @@ namespace MattEland.Ani.Alfred.Search.GitHub
                 var result = _search.Result;
                 foreach (var repository in result.Repositories)
                 {
-                    var item = new GitHubRepositoryResult(repository);
+                    var item = new GitHubRepositoryResult(Container, repository);
 
                     _results.Add(item);
                 }

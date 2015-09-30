@@ -7,6 +7,7 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -20,7 +21,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
     /// <summary>
     ///     A search operation aimed at the Mind Explorer.
     /// </summary>
-    public sealed class ExplorerSearchOperation : ISearchOperation
+    public sealed class ExplorerSearchOperation : ISearchOperation, IHasContainer
     {
         /// <summary>
         ///     The mind explorer subsystem.
@@ -51,6 +52,8 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
                                          MindExplorerSubsystem mindExplorerSubsystem,
                                          string searchText)
         {
+            Container = container;
+
             _results = container.ProvideCollection<ISearchResult>();
 
             _mindExplorerSubsystem = mindExplorerSubsystem;
@@ -95,6 +98,17 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         }
 
         /// <summary>
+        ///     Gets the container.
+        /// </summary>
+        /// <value>
+        ///     The container.
+        /// </value>
+        public IObjectContainer Container
+        {
+            get;
+        }
+
+        /// <summary>
         /// Carries out the search operation and adds any results to the results collection
         /// </summary>
         public void Update()
@@ -113,7 +127,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
                 // Search using case insensitivity
                 var searchText = _searchText.ToUpperInvariant();
 
-                var results = SearchPropertyProviderTreeNode(root, searchText);
+                var results = SearchPropertyProviderTreeNode(Container, root, searchText);
 
                 /* Add to _results instead of setting to a new collection in case something is
                    observing the list object. It's not likely here, but this is a good pattern. */
@@ -132,6 +146,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// <summary>
         ///     Searches the hierarchy of <paramref name="node" /> for matches to the search text.
         /// </summary>
+        /// <param name="container"> The container. </param>
         /// <param name="node"> The node. </param>
         /// <param name="searchText">
         ///     The search text. This is expected to be in uppercase invariant already and will not be
@@ -143,13 +158,14 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// </returns>
         [NotNull, ItemNotNull]
         public static IEnumerable<ISearchResult> SearchPropertyProviderTreeNode(
+            [NotNull] IObjectContainer container,
             [NotNull] IPropertyProvider node,
             [NotNull] string searchText)
         {
             // If this node matches our search criteria, add it to the results
             if (IsNodeSearchMatch(node, searchText))
             {
-                var searchResult = new ExplorerSearchResult(node);
+                var searchResult = new ExplorerSearchResult(container, node);
 
                 // Yield a direct result
                 yield return searchResult;
@@ -161,7 +177,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
             // Recursively search all children
             foreach (var childNode in node.PropertyProviders.Where(childNode => childNode != null))
             {
-                var results = SearchPropertyProviderTreeNode(childNode, searchText);
+                var results = SearchPropertyProviderTreeNode(container, childNode, searchText);
 
                 // Yield all results
                 foreach (var result in results)

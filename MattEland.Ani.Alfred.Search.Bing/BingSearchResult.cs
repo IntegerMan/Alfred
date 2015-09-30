@@ -2,7 +2,6 @@
 using System;
 using JetBrains.Annotations;
 using MattEland.Common.Providers;
-using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Search.Bing
 {
@@ -16,7 +15,8 @@ namespace MattEland.Ani.Alfred.Search.Bing
         /// </summary>
         /// <param name="container">The container.</param>
         /// <param name="result">The Bing search result.</param>
-        public BingSearchResult([NotNull] IObjectContainer container, [NotNull] WebResult result) : base(result.Title)
+        public BingSearchResult([NotNull] IObjectContainer container, [NotNull] WebResult result)
+            : base(container, result.Title)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
             if (result == null) throw new ArgumentNullException(nameof(result));
@@ -25,7 +25,6 @@ namespace MattEland.Ani.Alfred.Search.Bing
             Description = result.Description;
             LocationText = result.DisplayUrl;
             Url = result.Url;
-            Container = container;
         }
 
         /// <summary>
@@ -33,16 +32,16 @@ namespace MattEland.Ani.Alfred.Search.Bing
         /// </summary>
         /// <param name="container">The container.</param>
         /// <param name="result"> The Bing search result. </param>
-        public BingSearchResult([NotNull] IObjectContainer container, [NotNull] NewsResult result) : base(result.Title)
+        public BingSearchResult([NotNull] IObjectContainer container, [NotNull] NewsResult result)
+            : base(container, result.Title)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
             if (result == null) throw new ArgumentNullException(nameof(result));
 
             // Set Basic Properties
             Description = result.Description;
-            LocationText = result.Source; // TODO: Maybe URL?
+            LocationText = result.Source;
             Url = result.Url;
-            Container = container;
         }
 
         /// <summary>
@@ -50,7 +49,8 @@ namespace MattEland.Ani.Alfred.Search.Bing
         /// </summary>
         /// <param name="container">The container.</param>
         /// <param name="result"> The Bing search result. </param>
-        public BingSearchResult([NotNull] IObjectContainer container, [NotNull] ImageResult result) : base(result.Title)
+        public BingSearchResult([NotNull] IObjectContainer container, [NotNull] ImageResult result)
+            : base(container, result.Title)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
             if (result == null) throw new ArgumentNullException(nameof(result));
@@ -59,59 +59,6 @@ namespace MattEland.Ani.Alfred.Search.Bing
             Description = result.ContentType;
             LocationText = result.DisplayUrl;
             Url = result.SourceUrl;
-            Container = container;
-        }
-
-
-        /// <summary>
-        /// Gets the URL.
-        /// </summary>
-        /// <value>The URL.</value>
-        public string Url { get; }
-
-        /// <summary>
-        /// Builds the more details action.
-        /// </summary>
-        /// <returns>An action</returns>
-        [CanBeNull]
-        private Action BuildMoreDetailsAction()
-        {
-            var shell = Container.TryProvide<IShellCommandRecipient>();
-
-            if (shell == null || Url.IsEmpty()) return null;
-
-            // Build out a web request command
-            return () =>
-            {
-                var command = new ShellCommand("OpenWebPage", "Browser", Url);
-
-                shell.ProcessShellCommand(command);
-            };
-        }
-
-        /// <summary>
-        /// The action to take on requesting more details
-        /// </summary>
-        private Action _action = null;
-
-        /// <summary>
-        ///     Gets the action that is executed when a user wants more information.
-        /// </summary>
-        /// <value>
-        ///     The more details action.
-        /// </value>
-        public override Action MoreDetailsAction
-        {
-            get
-            {
-                // Lazy load the action
-                if (_action == null)
-                {
-                    _action = BuildMoreDetailsAction();
-                }
-
-                return _action;
-            }
         }
 
         /// <summary>
@@ -126,15 +73,6 @@ namespace MattEland.Ani.Alfred.Search.Bing
             {
                 return Url;
             }
-        }
-
-        /// <summary>
-        /// Gets the container.
-        /// </summary>
-        /// <value>The container.</value>
-        public IObjectContainer Container
-        {
-            get;
         }
     }
 

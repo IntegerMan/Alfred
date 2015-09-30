@@ -335,7 +335,8 @@ namespace MattEland.Ani.Alfred.Tests.Search
             searchText = searchText.ToUpperInvariant();
             //! Act
 
-            var results = ExplorerSearchOperation.SearchPropertyProviderTreeNode(mockParent.Object, searchText);
+            var results = ExplorerSearchOperation.SearchPropertyProviderTreeNode(Container,
+                mockParent.Object, searchText);
 
             //! Assert
 

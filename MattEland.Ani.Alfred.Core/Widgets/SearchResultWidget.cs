@@ -66,7 +66,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
                 string controlName = "linkResult" + SearchResult.GetHashCode();
                 var parameters = new WidgetCreationParameters(controlName, Container);
 
-                LinkWidget = new LinkWidget(SearchResult.MoreDetailsText, parameters)
+                LinkWidget = new LinkWidget(SearchResult.MoreDetailsText, SearchResult.Url, parameters)
                 {
                     Command = CommandHelper.CreateCommand(Container, SearchResult.MoreDetailsAction)
                 };

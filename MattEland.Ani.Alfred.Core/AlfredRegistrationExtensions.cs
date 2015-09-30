@@ -36,6 +36,7 @@ namespace MattEland.Ani.Alfred.Core
             [NotNull] this IAlfred alfred, [NotNull] IAlfredSubsystem subsystem)
         {
             if (alfred == null) { throw new ArgumentNullException(nameof(alfred)); }
+            if (subsystem == null) { throw new ArgumentNullException(nameof(subsystem)); }
 
             alfred.RegistrationProvider.Register(subsystem);
         }
@@ -52,6 +53,7 @@ namespace MattEland.Ani.Alfred.Core
             [NotNull] this IAlfred alfred, [NotNull] IPage page)
         {
             if (alfred == null) { throw new ArgumentNullException(nameof(alfred)); }
+            if (page == null) { throw new ArgumentNullException(nameof(page)); }
 
             alfred.RegistrationProvider.Register(page);
         }
@@ -68,6 +70,7 @@ namespace MattEland.Ani.Alfred.Core
             [NotNull] this IAlfred alfred, [NotNull] IChatProvider provider)
         {
             if (alfred == null) { throw new ArgumentNullException(nameof(alfred)); }
+            if (provider == null) { throw new ArgumentNullException(nameof(provider)); }
 
             alfred.RegistrationProvider.Register(provider);
         }
@@ -84,6 +87,7 @@ namespace MattEland.Ani.Alfred.Core
             [NotNull] this IAlfred alfred, [NotNull] IShellCommandRecipient recipient)
         {
             if (alfred == null) { throw new ArgumentNullException(nameof(alfred)); }
+            if (recipient == null) { throw new ArgumentNullException(nameof(recipient)); }
 
             alfred.RegistrationProvider.Register(recipient);
         }
