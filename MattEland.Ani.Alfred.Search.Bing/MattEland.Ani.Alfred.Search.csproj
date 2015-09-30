@@ -7,8 +7,8 @@
     <ProjectGuid>{383E44C8-1CC9-4793-8E88-F65CAD4955CF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MattEland.Ani.Alfred.Search.Bing</RootNamespace>
-    <AssemblyName>MattEland.Ani.Alfred.Search.Bing</AssemblyName>
+    <RootNamespace>MattEland.Ani.Alfred.Search</RootNamespace>
+    <AssemblyName>MattEland.Ani.Alfred.Search</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -33,12 +33,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>AlfredAppTestCertificate.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="IronGitHub, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronGitHub.0.2.0.0\lib\net45\IronGitHub.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="JetBrains.Annotations, Version=9.2.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Annotations.9.2.0\lib\net20\JetBrains.Annotations.dll</HintPath>
       <Private>True</Private>
@@ -55,6 +59,10 @@
       <HintPath>..\packages\Microsoft.Data.Services.Client.5.6.4\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="ServiceStack.Text, Version=3.9.58.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Text.3.9.58\lib\net35\ServiceStack.Text.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Spatial, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -69,21 +77,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BingSearchContainer.cs" />
-    <Compile Include="BingSearchOperation.cs" />
-    <Compile Include="BingSearchProvider.cs" />
-    <Compile Include="BingSearchResult.cs" />
-    <Compile Include="BingSearchSubsystem.cs" />
-    <Compile Include="ExpandableSearchResult.cs" />
+    <Compile Include="Bing\BingSearchContainer.cs" />
+    <Compile Include="Bing\BingSearchOperation.cs" />
+    <Compile Include="Bing\BingSearchProvider.cs" />
+    <Compile Include="Bing\BingSearchResult.cs" />
+    <Compile Include="Bing\BingSearchSubsystem.cs" />
+    <Compile Include="Bing\ExpandableSearchResult.cs" />
+    <Compile Include="GitHub\GitHubRepositoryResult.cs" />
+    <Compile Include="GitHub\GitHubSearchOperation.cs" />
+    <Compile Include="GitHub\GitHubSearchProvider.cs" />
+    <Compile Include="GitHub\GitHubSearchSubsystem.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="ImageResult.cs" />
-    <Compile Include="NewsResult.cs" />
+    <Compile Include="Bing\ImageResult.cs" />
+    <Compile Include="Bing\NewsResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RelatedSearchResult.cs" />
-    <Compile Include="SpellResult.cs" />
-    <Compile Include="Thumbnail.cs" />
-    <Compile Include="VideoResult.cs" />
-    <Compile Include="WebResult.cs" />
+    <Compile Include="Bing\RelatedSearchResult.cs" />
+    <Compile Include="Bing\SpellResult.cs" />
+    <Compile Include="Bing\Thumbnail.cs" />
+    <Compile Include="Bing\VideoResult.cs" />
+    <Compile Include="Bing\WebResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="AlfredAppTestCertificate.snk" />
