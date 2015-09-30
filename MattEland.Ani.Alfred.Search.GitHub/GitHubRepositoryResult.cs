@@ -61,7 +61,7 @@ namespace MattEland.Ani.Alfred.Search.GitHub
         /// <value>
         /// The get more details action.
         /// </value>
-        public Action<ISearchResult> MoreDetailsAction
+        public Action MoreDetailsAction
         {
             get
             {

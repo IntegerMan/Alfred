@@ -51,6 +51,7 @@
     <None Include="Widgets\Widgets.cd" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Definitions\CommandHelper.cs" />
     <Compile Include="Definitions\IMessageBoxProvider.cs" />
     <Compile Include="Definitions\MessageBoxType.cs" />
     <Compile Include="AlfredCommand.cs" />

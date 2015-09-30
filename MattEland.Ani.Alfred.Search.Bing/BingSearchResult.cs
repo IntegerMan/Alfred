@@ -74,14 +74,14 @@ namespace MattEland.Ani.Alfred.Search.Bing
         /// </summary>
         /// <returns>An action</returns>
         [CanBeNull]
-        private Action<ISearchResult> BuildMoreDetailsAction()
+        private Action BuildMoreDetailsAction()
         {
             var shell = Container.TryProvide<IShellCommandRecipient>();
 
             if (shell == null || Url.IsEmpty()) return null;
 
             // Build out a web request command
-            return (r) =>
+            return () =>
             {
                 var command = new ShellCommand("OpenWebPage", "Browser", Url);
 
@@ -92,7 +92,7 @@ namespace MattEland.Ani.Alfred.Search.Bing
         /// <summary>
         /// The action to take on requesting more details
         /// </summary>
-        private Action<ISearchResult> _action = null;
+        private Action _action = null;
 
         /// <summary>
         ///     Gets the action that is executed when a user wants more information.
@@ -100,7 +100,7 @@ namespace MattEland.Ani.Alfred.Search.Bing
         /// <value>
         ///     The more details action.
         /// </value>
-        public override Action<ISearchResult> MoreDetailsAction
+        public override Action MoreDetailsAction
         {
             get
             {

@@ -48,7 +48,7 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Controls
                 var parameters = new WidgetCreationParameters(controlName, Container);
 
                 LinkWidget = new LinkWidget(Result.MoreDetailsText, parameters);
-
+                LinkWidget.Command = CommandHelper.CreateCommand(Container, Result.MoreDetailsAction);
                 // TODO: add in a command
             }
             else

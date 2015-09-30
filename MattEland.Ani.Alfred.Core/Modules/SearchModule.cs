@@ -49,7 +49,9 @@ namespace MattEland.Ani.Alfred.Core.Modules
         {
             _searchLabel = new TextWidget("Search:", BuildWidgetParameters(@"lblSearch"));
             _searchText = new TextBoxWidget(BuildWidgetParameters(@"txtSearch"));
-            _searchButton = new ButtonWidget("Search", CreateCommand(OnSearchClicked), BuildWidgetParameters(@"btnSearch"));
+
+            var searchCommand = CommandHelper.CreateCommand(container, OnSearchClicked);
+            _searchButton = new ButtonWidget("Search", searchCommand, BuildWidgetParameters(@"btnSearch"));
 
             LayoutType = LayoutType.HorizontalStackPanel;
             Width = double.NaN;

@@ -49,7 +49,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <value>
         ///     The get more details action.
         /// </value>
-        public virtual Action<ISearchResult> MoreDetailsAction
+        public virtual Action MoreDetailsAction
         {
             get;
         }

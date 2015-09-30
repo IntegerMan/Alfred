@@ -41,12 +41,14 @@ namespace MattEland.Ani.Alfred.Core.Modules
             AlfredStatusWidget = new TextWidget(Resources.AlfredCoreModule_AlfredNotSet,
                                                 BuildWidgetParameters(@"lblStatus"));
 
+            var initializeCommand = CommandHelper.CreateCommand(container, ExecuteInitializeCommand);
             InitializeButton = new ButtonWidget(Resources.InitializeButtonText,
-                                                CreateCommand(ExecuteInitializeCommand),
+                                                initializeCommand,
                                                 BuildWidgetParameters(@"btnInitialize"));
 
+            var shutdownCommand = CommandHelper.CreateCommand(container, ExecuteShutdownCommand);
             ShutdownButton = new ButtonWidget(Resources.ShutdownButtonText,
-                                              CreateCommand(ExecuteShutdownCommand),
+                                              shutdownCommand,
                                               BuildWidgetParameters(@"btnShutdown"));
         }
 

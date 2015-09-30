@@ -55,7 +55,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// The get more details action.
         /// </value>
         [CanBeNull]
-        Action<ISearchResult> MoreDetailsAction { get; }
+        Action MoreDetailsAction { get; }
 
         /// <summary>
         ///     Gets the more details link's text.

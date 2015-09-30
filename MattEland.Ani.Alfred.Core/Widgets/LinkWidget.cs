@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using MattEland.Ani.Alfred.Core.Definitions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,6 +43,24 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         }
 
         /// <summary>
+        /// The command that is executed when the link is clicked.
+        /// </summary>
+        [CanBeNull]
+        public IAlfredCommand Command
+        {
+            get { return _command; }
+            set
+            {
+                if (_command != value)
+                {
+                    _command = value;
+
+                    OnPropertyChanged(nameof(Command));
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets the name of the broad categorization or type that this item is.
         /// </summary>
         /// <example>
@@ -55,6 +74,12 @@ namespace MattEland.Ani.Alfred.Core.Widgets
                 return "Hyperlink";
             }
         }
+
+        /// <summary>
+        /// The command
+        /// </summary>
+        [NotNull]
+        private IAlfredCommand _command;
 
         /// <summary>
         /// The URL

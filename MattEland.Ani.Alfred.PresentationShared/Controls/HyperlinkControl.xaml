@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MattEland.Ani.Alfred.PresentationAvalon.Controls"
+             x:Name="LinkControl"
              mc:Ignorable="d" 
              d:DesignHeight="30" d:DesignWidth="300">
     <UserControl.Resources>
@@ -70,12 +71,13 @@
     <!-- The basic behavior we're going after is that of a button, so just house a link inside -->
     <Button Margin="0, 8, 8, 0"
             Style="{DynamicResource HyperlinkButtonStyle}"
+            Command="{Binding LinkWidget.Command, ElementName=LinkControl}"
             DataContext="{Binding RelativeSource={RelativeSource Self}}"
             ToolTip="{Binding Url}" >
 
         <!-- Button Content - a text block with the URL -->
         <TextBlock TextDecorations="Underline"
-            Text="{Binding Text, FallbackValue=Hyperlink}" />
+            Text="{Binding LinkWidget.Url, FallbackValue=Hyperlink}" />
 
     </Button>
 

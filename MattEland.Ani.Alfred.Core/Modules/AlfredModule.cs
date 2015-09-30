@@ -173,21 +173,6 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </value>
         public double Width { get; set; } = 250;
 
-        /// <summary>
-        ///     Creates an <see cref="AlfredCommand"/> with the specified <see cref="Action" />.
-        /// </summary>
-        /// <param name="action"> The <see cref="Action" /> to take when the command is executed. </param>
-        /// <returns>
-        ///     The new command.
-        /// </returns>
-        [NotNull]
-        protected IAlfredCommand CreateCommand([CanBeNull] Action action)
-        {
-            var command = Container.Provide<IAlfredCommand>(action, Container);
-
-            return command;
-        }
-
     }
 
 }
