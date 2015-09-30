@@ -48,11 +48,6 @@ namespace MattEland.Ani.Alfred.Tests.Search
         private const string AnotherSearchString = "This is another search string for testing";
 
         /// <summary>
-        ///     A testing search string. The actual content doesn't matter.
-        /// </summary>
-        private const string SearchString = "This is a test search string";
-
-        /// <summary>
         ///     Gets the controller.
         /// </summary>
         /// <value>
@@ -73,7 +68,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             //! Act
 
-            Controller.PerformSearch(SearchString);
+            Controller.PerformSearch(Some.SearchText);
             Controller.Abort();
 
             //! Assert
@@ -104,11 +99,12 @@ namespace MattEland.Ani.Alfred.Tests.Search
             Controller.Register(searchProvider2.Object);
 
             //! Act
-            Controller.PerformSearch(SearchString, Provider2Id);
+            string searchText = Some.SearchText;
+            Controller.PerformSearch(searchText, Provider2Id);
 
             //! Assert
-            searchProvider1.Verify(s => s.PerformSearch(SearchString), Times.Never);
-            searchProvider2.Verify(s => s.PerformSearch(SearchString), Times.Once);
+            searchProvider1.Verify(s => s.PerformSearch(searchText), Times.Never);
+            searchProvider2.Verify(s => s.PerformSearch(searchText), Times.Once);
             Controller.OngoingOperations.Count().ShouldBe(1);
             Controller.OngoingOperations.ShouldContain(mockOperation.Object);
         }
@@ -125,7 +121,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             //! Act
 
-            Controller.PerformSearch(SearchString);
+            Controller.PerformSearch(Some.SearchText);
 
             //! Assert
 
@@ -161,7 +157,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             //! Act
             controller.Initialize(BuildAlfredInstance());
-            controller.PerformSearch(SearchString);
+            controller.PerformSearch(Some.SearchText);
 
             // The first update should return the initial list entry only
             controller.Update();
@@ -208,7 +204,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
             //! Act
 
             // Do a search to generate some preliminary results
-            Controller.PerformSearch(SearchString);
+            Controller.PerformSearch(Some.SearchText);
             Controller.Update();
 
             // Next time we search, we shouldn't return any results - just a dummy operation
@@ -304,16 +300,40 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             //! Act
 
-            Controller.PerformSearch(SearchString);
+            string searchText = Some.SearchText;
+            Controller.PerformSearch(searchText);
 
             //! Assert
 
             var firstProviderId = Controller.SearchProviders.First().Id;
 
             const string Title = "Search Executed";
-            var message = $"Searching {firstProviderId} for: '{SearchString}'";
+            var message = string.Format("Searching {0} for: '{1}'", firstProviderId, searchText);
 
             console.Verify(c => c.Log(Title, message, LogLevel.Info), Times.Once);
+        }
+
+        /// <summary>
+        ///     When searches are executed, a log entry should be created.
+        /// </summary>
+        [Test]
+        [Category("Logging")]
+        public void SearchShouldAddToSearchHistory()
+        {
+            //! Arrange
+
+            PrepareSearchControllerWithSearchProviderYieldingOperation();
+
+            //! Act
+
+            string searchText = Some.SearchText;
+            Controller.PerformSearch(searchText);
+
+            //! Assert
+
+            var matches = Controller.SearchHistory.Count(h => h.SearchText.Matches(searchText));
+
+            matches.ShouldBe(1);
         }
 
         /// <summary>
@@ -331,7 +351,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             //! Act
 
-            Alfred.SearchController.PerformSearch(SearchString);
+            Alfred.SearchController.PerformSearch(Some.SearchText);
             Alfred.Update();
 
             //! Assert
@@ -348,7 +368,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
             var matchingEvents = console.Events.Where(e => e.Title.Matches(ExpectedTitle)).ToList();
 
             var lastEvent = console.Events.Last();
-            matchingEvents.Count.ShouldBe(1, "Did not find Search Complete event. Last event was: " + lastEvent);
+            matchingEvents.Count.ShouldBe(1, string.Format("Did not find Search Complete event. Last event was: {0}", lastEvent));
 
             var completedEvent = matchingEvents.First();
 
@@ -378,7 +398,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
             controller.Register(searchProvider2.Object);
 
             //! Act
-            controller.PerformSearch(SearchString);
+            controller.PerformSearch(Some.SearchText);
 
             //! Assert
             controller.OngoingOperations.Count().ShouldBe(2);
@@ -415,10 +435,11 @@ namespace MattEland.Ani.Alfred.Tests.Search
             Controller.Register(searchProvider.Object);
 
             //! Act
-            Controller.PerformSearch(SearchString);
+            string searchText = Some.SearchText;
+            Controller.PerformSearch(searchText);
 
             //! Assert
-            searchProvider.Verify(s => s.PerformSearch(SearchString), Times.Once);
+            searchProvider.Verify(s => s.PerformSearch(searchText), Times.Once);
         }
         /// <summary>
         ///     Undirected searches should start search operations.
@@ -437,7 +458,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             //! Act
             Alfred.Initialize();
-            Controller.PerformSearch(SearchString);
+            Controller.PerformSearch(Some.SearchText);
 
             //! Assert
             mockOperation.Verify(o => o.Update(), Times.Once);
@@ -464,13 +485,14 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             //! Act
             Controller.Initialize(BuildAlfredInstance());
-            Controller.PerformSearch(SearchString);
+            Controller.PerformSearch(Some.SearchText);
             Controller.Update();
 
             //! Assert
             Controller.OngoingOperations.ShouldNotContain(mockOp.Object);
             Controller.OngoingOperations.Count().ShouldBe(0);
         }
+
         /// <summary>
         ///     Configure the mock operation to return a search result.
         /// </summary>

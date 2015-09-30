@@ -51,6 +51,9 @@ namespace MattEland.Ani.Alfred.Core
         [CanBeNull]
         private string _lastSearch;
 
+        /// <summary>
+        ///     The search timeout in milliseconds.
+        /// </summary>
         private double _searchTimeoutInMilliseconds;
 
         /// <summary>
@@ -69,6 +72,7 @@ namespace MattEland.Ani.Alfred.Core
             _ongoingOperations = container.ProvideCollection<ISearchOperation>();
             _results = container.ProvideCollection<ISearchResult>();
             _searchProviders = container.ProvideCollection<ISearchProvider>();
+            _history = container.ProvideCollection<SearchHistoryEntry>();
         }
 
         /// <summary>
@@ -176,6 +180,27 @@ namespace MattEland.Ani.Alfred.Core
         public IEnumerable<ISearchResult> Results
         {
             get { return _results; }
+        }
+
+        /// <summary>
+        ///     The search history entries. This is a collection so it can be added to.
+        /// </summary>
+        [NotNull, ItemNotNull]
+        private ICollection<SearchHistoryEntry> _history;
+
+        /// <summary>
+        ///     Gets the search history entries.
+        /// </summary>
+        /// <value>
+        ///     The search history entries.
+        /// </value>
+        [NotNull, ItemNotNull]
+        public IEnumerable<SearchHistoryEntry> SearchHistory
+        {
+            get
+            {
+                return _history;
+            }
         }
 
         /// <summary>
@@ -423,6 +448,9 @@ namespace MattEland.Ani.Alfred.Core
         /// <param name="searchText"> The search text. </param>
         private void RecordSearchStart(string searchText)
         {
+            // Add a search history entry
+            _history.Add(new SearchHistoryEntry(searchText));
+
             // Clear out all old search results
             _results.Clear();
 
