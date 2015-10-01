@@ -71,6 +71,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\AlfredBrowserTests.cs" />
     <Compile Include="Core\AlfredStatusTests.cs" />
     <Compile Include="AlfredTestBase.cs" />
     <Compile Include="AlfredTestExtensions.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="Pages\ExplorerPageTests.cs" />
     <Compile Include="Pages\PageTests.cs" />
     <Compile Include="Pages\RootPagesTests.cs" />
+    <Compile Include="Pages\WebBrowserPageTests.cs" />
     <Compile Include="Presentation\ConverterTestsBase.cs" />
     <Compile Include="Presentation\LogLevelToBrushConverterTests.cs" />
     <Compile Include="Presentation\VisibilityConverterTests.cs" />

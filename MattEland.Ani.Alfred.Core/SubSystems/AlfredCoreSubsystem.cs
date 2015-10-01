@@ -25,10 +25,6 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
     ///     as the Alfred control page, an event log page, etc. as well as monitoring of the current time
     ///     and date.
     /// </summary>
-    /// <remarks>
-    ///     TODO: Once Alfred has a calendar subsystem, the time / date functionality may need to move
-    ///     there
-    /// </remarks>
     public sealed class AlfredCoreSubsystem : AlfredSubsystem
     {
         [NotNull]
@@ -46,11 +42,23 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         [NotNull]
         private readonly AlfredTimeModule _timeModule;
 
+        /// <summary>
+        ///     The event log page.
+        /// </summary>
         [CanBeNull]
         private EventLogPage _eventLogPage;
 
+        /// <summary>
+        ///     The search results page.
+        /// </summary>
         [NotNull]
         private SearchPage _searchPage;
+
+        /// <summary>
+        ///     The web browser page.
+        /// </summary>
+        [NotNull]
+        private WebBrowserPage _browserPage;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AlfredCoreSubsystem" /> class.
@@ -70,8 +78,10 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
 
+            // Set up pages
             _controlPage = new ModuleListPage(container, ControlPageName, "Core");
             _searchPage = new SearchPage(container, includeSearchModuleOnSearchPage);
+            _browserPage = new WebBrowserPage(container);
 
             // Instantiate the modules
             _powerModule = new AlfredPowerModule(container);
@@ -80,42 +90,61 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
             _pagesModule = new AlfredPagesListModule(container);
         }
 
-
-        /// <summary>Gets the name of the control page.</summary>
-        /// <value>The name of the control page.</value>
+        /// <summary>
+        ///     Gets the name of the control page.
+        /// </summary>
+        /// <value>
+        ///     The name of the control page.
+        /// </value>
         [NotNull]
         public static string ControlPageName
         {
             get { return "Alfred Core"; }
         }
 
-        /// <summary>Gets the name of the event log page.</summary>
-        /// <value>The name of the event log page.</value>
+        /// <summary>
+        ///     Gets the name of the event log page.
+        /// </summary>
+        /// <value>
+        ///     The name of the event log page.
+        /// </value>
         [NotNull]
         public static string EventLogPageName
         {
             get { return "Event Log"; }
         }
 
-        /// <summary>Gets the name of the module.</summary>
-        /// <value>The name of the module.</value>
+        /// <summary>
+        ///     Gets the name of the module.
+        /// </summary>
+        /// <value>
+        ///     The name of the module.
+        /// </value>
         public override string Name
         {
             get { return Resources.AlfredControlSubSystem_Name.NonNull(); }
         }
 
-        /// <summary>Gets the identifier for the subsystem to be used in command routing.</summary>
-        /// <value>The identifier for the subsystem.</value>
+        /// <summary>
+        ///     Gets the identifier for the subsystem to be used in command routing.
+        /// </summary>
+        /// <value>
+        ///     The identifier for the subsystem.
+        /// </value>
         public override string Id
         {
             get { return "Core"; }
         }
 
-        /// <summary>Registers the controls for this component.</summary>
+        /// <summary>
+        ///     Registers the controls for this component.
+        /// </summary>
         protected override void RegisterControls()
         {
+            // Register Pages
             Register(_controlPage);
             Register(_searchPage);
+            Register(_browserPage);
 
             // Build out our control page
             _controlPage.ClearModules();
