@@ -52,11 +52,13 @@ namespace MattEland.Ani.Alfred.WPF
             // Do not allow topmost window mode while debugging
             Topmost = false;
 #endif
+
             var options = new ApplicationManagerOptions
             {
                 IsSpeechEnabled = enableSpeech,
                 ShowMindExplorerPage = true,
                 BingApiKey = Settings.Default.BingApiKey,
+                StackOverflowApiKey = Settings.Default.StackOverflowApiKey,
                 IncludeSearchModuleOnSearchPage = false
             };
 

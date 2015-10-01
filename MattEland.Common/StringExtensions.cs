@@ -12,6 +12,7 @@ using System.Globalization;
 using System.Text;
 
 using JetBrains.Annotations;
+using System.Collections.Generic;
 
 namespace MattEland.Common
 {
@@ -226,5 +227,35 @@ namespace MattEland.Common
         {
             return input?.Format(CultureInfo.InvariantCulture) ?? string.Empty;
         }
+
+        /// <summary>
+        ///     Gets a comma delimited string of values.
+        /// </summary>
+        /// <param name="values"> The string values. </param>
+        /// <returns>
+        ///     The comma delimited string.
+        /// </returns>
+        public static string BuildCommaDelimitedString([CanBeNull] this IEnumerable<string> values)
+        {
+            // Guard against null
+            if (values == null) return string.Empty;
+
+            // Build out a comma separated list of values
+            var builder = new StringBuilder();
+            foreach (var tag in values)
+            {
+                builder.AppendFormat("{0}, ", tag);
+            }
+
+            var result = builder.ToString();
+
+            // Remove the last ", " from the string
+            if (result.Length > 2)
+            {
+                result = result.Substring(0, result.Length - 2);
+            }
+            return result;
+        }
+
     }
 }

@@ -19,12 +19,23 @@ namespace MattEland.Ani.Alfred.Search.StackOverflow
         ///     Thrown when one or more required arguments are null.
         /// </exception>
         /// <param name="container"> The container. </param>
-        public StackOverflowSearchProvider([NotNull] IObjectContainer container)
+        public StackOverflowSearchProvider([NotNull] IObjectContainer container, [CanBeNull] string apiKey)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
 
             Container = container;
+
+            ApiKey = apiKey;
         }
+
+        /// <summary>
+        ///     Gets the API key.
+        /// </summary>
+        /// <value>
+        ///     The API key.
+        /// </value>
+        [CanBeNull]
+        public string ApiKey { get; }
 
         /// <summary>
         ///     Gets the container.
@@ -72,7 +83,7 @@ namespace MattEland.Ani.Alfred.Search.StackOverflow
         /// </returns>
         public ISearchOperation PerformSearch([NotNull] string searchText)
         {
-            return new StackOverflowSearchOperation(Container, searchText);
+            return new StackOverflowSearchOperation(Container, searchText, ApiKey);
         }
     }
 }

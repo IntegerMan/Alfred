@@ -39,13 +39,16 @@ namespace MattEland.Ani.Alfred.Search
         /// </exception>
         /// <param name="container"> The container. </param>
         /// <param name="bingApiKey"> The Bing API key. </param>
-        public SearchSubsystem([NotNull] IObjectContainer container, [NotNull] string bingApiKey)
+        /// <param name="stackOverflowApiKey"> The stack overflow API key. </param>
+        public SearchSubsystem([NotNull] IObjectContainer container,
+            [NotNull] string bingApiKey,
+            [CanBeNull] string stackOverflowApiKey)
             : base(container)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
 
             _gitHubSearchProvider = new GitHubSearchProvider(container);
-            _stackOverflowSearchProvider = new StackOverflowSearchProvider(container);
+            _stackOverflowSearchProvider = new StackOverflowSearchProvider(container, stackOverflowApiKey);
             _bingSearchProvider = new BingSearchProvider(container, bingApiKey);
         }
         /// <summary>

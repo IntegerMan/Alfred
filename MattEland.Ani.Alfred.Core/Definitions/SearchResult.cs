@@ -88,6 +88,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
             var shell = Container.TryProvide<IShellCommandRecipient>();
             if (shell == null || Url.IsEmpty())
                 return null;
+
             // Build out a web request command
             return () =>
             {

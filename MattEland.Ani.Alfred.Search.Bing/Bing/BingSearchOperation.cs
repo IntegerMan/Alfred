@@ -147,8 +147,6 @@ namespace MattEland.Ani.Alfred.Search.Bing
                 EncounteredError = true;
                 ErrorMessage = ex.BuildDetailsMessage();
 
-                ErrorMessage.Log("Bing Search Error", LogLevel.Error, Container);
-
                 // Call off the rest of the search
                 IsSearchComplete = true;
             }

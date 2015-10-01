@@ -489,27 +489,54 @@ namespace MattEland.Ani.Alfred.Core
             {
                 Debug.Assert(op != null);
 
-                // Update the operation 
-                op.Update();
-
-                // Add new results as they come in 
-                foreach (var result in op.Results)
+                try
                 {
-                    AddResult(result);
-                }
+                    // Update the operation 
+                    op.Update();
 
-                // If the operation has completed, remove it from the list 
-                if (op.IsSearchComplete)
-                {
-                    _ongoingOperations.Remove(op);
-
-                    if (_ongoingOperations.Count == 0)
+                    // Check to see if it encountered an error
+                    if (op.EncounteredError)
                     {
-                        LogSearchCompleted();
+                        // Log the error
+                        var message = string.Format("{0} Operation Encountered Error", op.GetType().Name);
+                        op.ErrorMessage.Log(message, LogLevel.Error, Container);
+
+                        // Remove it from the queue and carry on
+                        _ongoingOperations.Remove(op);
+
+                        //? Should the operation be aborted?
+
+                        continue;
+                    }
+
+                    // Add new results as they come in 
+                    foreach (var result in op.Results)
+                    {
+                        AddResult(result);
+                    }
+
+                    // If the operation has completed, remove it from the list 
+                    if (op.IsSearchComplete)
+                    {
+                        _ongoingOperations.Remove(op);
+
+                        if (_ongoingOperations.Count == 0)
+                        {
+                            LogSearchCompleted();
+                        }
                     }
                 }
+                catch (Exception ex)
+                {
+                    // Log the failure
+                    var message = string.Format("Error Updating Operation {0}", op.GetType().Name);
+                    ex.BuildDetailsMessage().Log(message, LogLevel.Error, Container);
 
-                // TODO: Handle errors 
+                    // Remove the operation from our list
+                    _ongoingOperations.Remove(op);
+
+                    //? Should the operation be aborted?
+                }
             }
         }
     }

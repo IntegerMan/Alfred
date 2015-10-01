@@ -67,8 +67,8 @@
       <HintPath>..\packages\ServiceStack.Text.3.9.58\lib\net35\ServiceStack.Text.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Stacky, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Stacky.1.1.2\lib\net40\Stacky.dll</HintPath>
+    <Reference Include="StacMan, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StacMan.1.1.2\lib\StacMan.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -103,6 +103,7 @@
     <Compile Include="Bing\Thumbnail.cs" />
     <Compile Include="Bing\VideoResult.cs" />
     <Compile Include="Bing\WebResult.cs" />
+    <Compile Include="StackOverflow\StackOverflowQuestionResult.cs" />
     <Compile Include="StackOverflow\StackOverflowSearchOperation.cs" />
     <Compile Include="StackOverflow\StackOverflowSearchProvider.cs" />
   </ItemGroup>

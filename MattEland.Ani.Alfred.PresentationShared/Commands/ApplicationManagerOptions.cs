@@ -42,7 +42,17 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
         /// <value>
         ///     The bing API key.
         /// </value>
+        [NotNull]
         public string BingApiKey { get; set; } = "YourBingApiKeyGoesHere";
+
+        /// <summary>
+        ///     Gets or sets the stack overflow API key.
+        /// </summary>
+        /// <value>
+        ///     The stack overflow API key.
+        /// </value>
+        [CanBeNull]
+        public string StackOverflowApiKey { get; set; }
 
         /// <summary>
         /// Gets or sets whether to include the search module on the search page.

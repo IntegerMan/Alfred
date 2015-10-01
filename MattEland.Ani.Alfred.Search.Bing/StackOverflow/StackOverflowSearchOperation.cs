@@ -4,6 +4,9 @@ using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common.Providers;
 using JetBrains.Annotations;
 using MattEland.Common;
+using StackExchange.StacMan;
+using System.Threading.Tasks;
+using StackExchange.StacMan.Questions;
 
 namespace MattEland.Ani.Alfred.Search.StackOverflow
 {
@@ -12,6 +15,18 @@ namespace MattEland.Ani.Alfred.Search.StackOverflow
     /// </summary>
     internal sealed class StackOverflowSearchOperation : ISearchOperation, IHasContainer
     {
+        /// <summary>
+        ///     The client.
+        /// </summary>
+        [NotNull]
+        private readonly StacManClient _client;
+
+        /// <summary>
+        ///     The query.
+        /// </summary>
+        [CanBeNull]
+        private Task<StacManResponse<Question>> _query;
+
         /// <summary>
         ///     The search text.
         /// </summary>
@@ -26,7 +41,8 @@ namespace MattEland.Ani.Alfred.Search.StackOverflow
         /// </exception>
         /// <param name="container"> The container. </param>
         /// <param name="searchText"> The search text. </param>
-        public StackOverflowSearchOperation([NotNull] IObjectContainer container, [NotNull] string searchText)
+        /// <param name="apiKey"> The API key. </param>
+        public StackOverflowSearchOperation([NotNull] IObjectContainer container, [NotNull] string searchText, [CanBeNull] string apiKey)
         {
             //- Validate
             if (container == null) throw new ArgumentNullException(nameof(container));
@@ -35,9 +51,11 @@ namespace MattEland.Ani.Alfred.Search.StackOverflow
             // Set properties
             Container = container;
             _searchText = searchText;
+            _client = new StacManClient(apiKey);
 
             // Create nested collections
             _results = container.ProvideCollection<ISearchResult>();
+
         }
 
         /// <summary>
@@ -118,6 +136,59 @@ namespace MattEland.Ani.Alfred.Search.StackOverflow
         }
 
         /// <summary>
+        ///     Handles the result of the query.
+        /// </summary>
+        private void HandleQueryResult()
+        {
+            // If we got here, the operation has ended or encountered an error
+            IsSearchComplete = true;
+
+            // Check for task error
+            EncounteredError = _query.IsFaulted;
+            ErrorMessage = _query.Exception?.Message;
+
+            // If no response, we can't do much
+            var result = _query.Result;
+            if (result == null) return;
+
+            Wrapper<Question> wrapper = result.Data;
+
+            // Check for error in the wrapper
+            if (wrapper.ErrorMessage.HasText())
+            {
+                EncounteredError = true;
+                ErrorMessage = string.Format("{0}: {1} (Error ID: {2})", wrapper.ErrorName, wrapper.ErrorMessage, wrapper.ErrorId);
+
+                return;
+            }
+
+            // Process the questions returned
+            var items = wrapper.Items;
+            if (items != null)
+            {
+                foreach (var question in items)
+                {
+                    var item = new StackOverflowQuestionResult(Container, question);
+                    _results.Add(item);
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Starts the search operation.
+        /// </summary>
+        private void StartSearch()
+        {
+            const string SiteName = "stackoverflow";
+
+            _query = _client.Search.GetMatches(SiteName,
+                         intitle: _searchText,
+                         filter: @"withbody",
+                         page: 1,
+                         pagesize: 10,
+                         sort: SearchSort.Relevance);
+        }
+        /// <summary>
         /// Updates the search operation, adding results to the <see cref="Results"/> collection and
         /// updating <see cref="IsSearchComplete"/> based on the state of the search operation.
         /// </summary>
@@ -125,10 +196,17 @@ namespace MattEland.Ani.Alfred.Search.StackOverflow
         {
             if (IsSearchComplete) return;
 
-            // TODO: Complete this
-            IsSearchComplete = true;
-            EncounteredError = true;
-            ErrorMessage = "StackOverflow searching is not implemented yet.";
+            // Start query as needed
+            if (_query == null)
+            {
+                StartSearch();
+            }
+
+            // Check to see if the query completed and produce results as needed
+            if (_query.IsCompleted || _query.IsFaulted)
+            {
+                HandleQueryResult();
+            }
         }
     }
 }

@@ -46,5 +46,17 @@ namespace MattEland.Ani.Alfred.WPF.Properties {
                 this["BingApiKey"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string StackOverflowApiKey {
+            get {
+                return ((string)(this["StackOverflowApiKey"]));
+            }
+            set {
+                this["StackOverflowApiKey"] = value;
+            }
+        }
     }
 }

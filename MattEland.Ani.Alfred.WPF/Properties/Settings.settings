@@ -8,5 +8,8 @@
     <Setting Name="BingApiKey" Type="System.String" Scope="User">
       <Value Profile="(Default)">YourApiKeyGoesHere</Value>
     </Setting>
+    <Setting Name="StackOverflowApiKey" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

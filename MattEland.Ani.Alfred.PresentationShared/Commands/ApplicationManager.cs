@@ -283,7 +283,7 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
             Register(new AlfredCoreSubsystem(Container, Options.IncludeSearchModuleOnSearchPage));
             Register(new ChatSubsystem(Container, _alfred.Name));
             Register(new MindExplorerSubsystem(Container, Options.ShowMindExplorerPage));
-            Register(new SearchSubsystem(Container, Options.BingApiKey));
+            Register(new SearchSubsystem(Container, Options.BingApiKey, Options.StackOverflowApiKey));
 
             InitializeSystemMonitoringSubsystem();
 
