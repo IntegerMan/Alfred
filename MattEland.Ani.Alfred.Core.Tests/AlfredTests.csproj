@@ -71,7 +71,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AlfredStatusTests.cs" />
+    <Compile Include="Core\AlfredStatusTests.cs" />
     <Compile Include="AlfredTestBase.cs" />
     <Compile Include="AlfredTestExtensions.cs" />
     <Compile Include="Chat\AimlExplorerTests.cs" />
@@ -122,7 +122,7 @@
     <Compile Include="Search\SearchPageTests.cs" />
     <Compile Include="Shell\ShellTagHandlerTests.cs" />
     <Compile Include="Subsystems\AlfredCoreSubsystemTests.cs" />
-    <Compile Include="AlfredEventingTests.cs" />
+    <Compile Include="Core\AlfredEventingTests.cs" />
     <Compile Include="Subsystems\ChatSubsystemTests.cs" />
     <Compile Include="Subsystems\MindExplorerSubsystemTests.cs" />
     <Compile Include="Subsystems\SubsystemTests.cs" />

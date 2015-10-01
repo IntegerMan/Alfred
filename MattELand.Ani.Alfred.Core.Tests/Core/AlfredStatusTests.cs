@@ -11,8 +11,9 @@ using MattEland.Testing;
 using NUnit.Framework;
 
 using Shouldly;
+using JetBrains.Annotations;
 
-namespace MattEland.Ani.Alfred.Tests
+namespace MattEland.Ani.Alfred.Tests.Core
 {
     /// <summary>
     ///     Unit tests surrounding Alfred's statuses and status transitions
@@ -29,8 +30,7 @@ namespace MattEland.Ani.Alfred.Tests
         {
             base.SetUp();
 
-            var alfred = new AlfredApplication(Container);
-            alfred.RegisterAsProvidedInstance(typeof(IAlfred), Container);
+            Alfred = BuildAlfredInstance();
         }
 
         /// <summary>
@@ -39,8 +39,10 @@ namespace MattEland.Ani.Alfred.Tests
         [Test]
         public void AfterInitializationAlfredIsOnline()
         {
+            //! Act
             Alfred.Initialize();
 
+            //! Assert
             Alfred.Status.ShouldBe(AlfredStatus.Online);
         }
 
@@ -50,28 +52,36 @@ namespace MattEland.Ani.Alfred.Tests
         [Test]
         public void AlfredStartsOffline()
         {
-            Alfred.Status.ShouldBe(AlfredStatus.Offline);
-        }
+            //! Arrange
+            var alfred = BuildAlfredInstance();
 
+            //! Assert
+            alfred.Status.ShouldBe(AlfredStatus.Offline);
+        }
         /// <summary>
         ///     Ensures shutdown creates events in log.
         /// </summary>
         [Test]
         public void ShutdownCreatesEventsInLog()
         {
-            var container = Container;
+            //! Arrange
             var al = Alfred;
-            var console = Container.Provide<IConsole>();
+            var console = Console;
 
             // We need to be online to shut down or else we'll get errors
             al.Initialize();
-            al.Container.ShouldBeSameAs(container);
 
             var eventsBeforeShutdown = console.EventCount;
 
+            //! Act
             al.Shutdown();
 
-            var message = $"Shutting Alfred down did not create any log entries ({console.EventCount}) on container {container.Name} with collection of type {console.Events.GetType()}";
+            //! Assert
+
+            var message = string.Format("Shutting down did not create log entries ({0}) on container {1}",
+                              console.EventCount,
+                              Container.Name);
+
             console.EventCount.ShouldBeGreaterThan(eventsBeforeShutdown, message);
         }
 
@@ -90,7 +100,10 @@ namespace MattEland.Ani.Alfred.Tests
             al.Initialize();
             al.Container.ShouldBeSameAs(container);
 
-            var message = $"Initializing Alfred did not create any log entries ({console.EventCount}) on container {container.Name} with collection of type {console.Events.GetType()}";
+            var message = string.Format("Initializing did not create log entries ({0}) on container {1}",
+                              console.EventCount,
+                              Container.Name);
+
             console.EventCount.ShouldBeGreaterThan(eventsBeforeInitialize, message);
         }
 

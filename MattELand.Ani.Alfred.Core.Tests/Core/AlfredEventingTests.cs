@@ -30,10 +30,10 @@ using NUnit.Framework;
 
 using Shouldly;
 
-namespace MattEland.Ani.Alfred.Tests
+namespace MattEland.Ani.Alfred.Tests.Core
 {
     /// <summary>
-    ///     Tests <see cref="AlfredApplication" /> and its ability to relay status transitons to
+    ///     Tests <see cref="AlfredApplication" /> and its ability to relay status transitions to
     ///     other components and handle the component registration process.
     /// </summary>
     [UnitTestProvider]
@@ -58,8 +58,8 @@ namespace MattEland.Ani.Alfred.Tests
         {
             base.SetUp();
 
-            var alfred = new AlfredApplication(Container);
-            alfred.RegisterAsProvidedInstance(typeof(IAlfred), Container);
+            Alfred = BuildAlfredInstance();
+
             _subsystem = BuildTestSubsystem();
             _page = new ModuleListPage(Container, "Test AlfredPage", "Test");
         }
@@ -205,8 +205,7 @@ namespace MattEland.Ani.Alfred.Tests
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public void RegisteringNullSubsystemGeneratesNullRef()
         {
-            AlfredSubsystem system = null;
-            Alfred.RegistrationProvider.Register(system);
+            Alfred.RegistrationProvider.Register(null as AlfredSubsystem);
         }
 
         /// <summary>

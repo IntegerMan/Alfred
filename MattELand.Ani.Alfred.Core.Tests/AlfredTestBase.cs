@@ -292,6 +292,19 @@ namespace MattEland.Ani.Alfred.Tests
 
             return subsystem;
         }
+
+        /// <summary>
+        ///     Gets the console from the <see cref="Container"/>. If the console does not exist a
+        ///     <see cref="NullReferenceException"/> will be thrown.
+        /// </summary>
+        /// <value>
+        ///     The console.
+        /// </value>
+        [NotNull]
+        protected IConsole Console
+        {
+            get { return Container.Provide<IConsole>(); }
+        }
     }
 
 }
