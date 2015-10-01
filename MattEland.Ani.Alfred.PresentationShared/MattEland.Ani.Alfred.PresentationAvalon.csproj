@@ -104,6 +104,9 @@
     <Compile Include="Commands\ApplicationManagerOptions.cs" />
     <Compile Include="Commands\ShellCommandManager.cs" />
     <Compile Include="Commands\XamlClientCommand.cs" />
+    <Compile Include="Controls\BrowserControl.xaml.cs">
+      <DependentUpon>BrowserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ChatPane.xaml.cs">
       <DependentUpon>ChatPane.xaml</DependentUpon>
     </Compile>
@@ -173,6 +176,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\BrowserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\ChatPane.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

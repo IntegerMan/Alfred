@@ -26,6 +26,12 @@
                       ItemsPanel="{StaticResource DynamicItemsPanelTemplate}" />
     </DataTemplate>
 
+
+    <!-- Web Browser Page -->
+    <DataTemplate DataType="{x:Type pages:WebBrowserPage}">
+        <controls:BrowserControl Widget="{Binding Browser}" />
+    </DataTemplate>
+
     <!-- Handles most pages -->
     <DataTemplate DataType="{x:Type pages:AlfredPage}">
         <ItemsControl ItemsSource="{Binding Path=Children}"                      

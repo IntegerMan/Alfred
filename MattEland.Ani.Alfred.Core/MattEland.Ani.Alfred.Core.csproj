@@ -137,6 +137,7 @@
     <Compile Include="Widgets\SearchResultWidget.cs" />
     <Compile Include="Widgets\TextBoxWidget.cs" />
     <Compile Include="Widgets\TextWidgetBase.cs" />
+    <Compile Include="Widgets\WebBrowserWidget.cs" />
     <Compile Include="Widgets\WidgetBase.cs" />
     <Compile Include="Widgets\ButtonWidget.cs" />
     <Compile Include="Widgets\TextWidget.cs" />

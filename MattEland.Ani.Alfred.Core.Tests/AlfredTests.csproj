@@ -138,6 +138,7 @@
     <Compile Include="Widgets\TextWidgetTests.cs" />
     <Compile Include="Modules\TimeModuleTests.cs" />
     <Compile Include="Widgets\WarningWidgetTests.cs" />
+    <Compile Include="Widgets\WebBrowserWidgetTests.cs" />
     <Compile Include="Widgets\WidgetTestsBase.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -31,5 +31,39 @@ namespace MattEland.Ani.Alfred.Tests.Pages
             page.Id.ShouldBe("Browser");
         }
 
+
+        [Test]
+        public void BrowserDefaultsToCorrectUrl()
+        {
+            //! Arrange / Act
+
+            var page = new WebBrowserPage(Container);
+
+            //! Assert
+
+            var expected = new Uri("http://www.bing.com/");
+
+            page.Url.ShouldBe(expected);
+        }
+
+        [Test]
+        public void BrowserWidgetMatchesPageOnChangeUrl()
+        {
+            //! Arrange
+
+            var page = new WebBrowserPage(Container);
+            var widget = page.Browser;
+
+            //! Act
+
+            Uri newUrl = new Uri("http://www.matteland.com");
+            page.Url = newUrl;
+
+            //! Assert
+
+            page.Url.ShouldBe(newUrl);
+            widget.Url.ShouldBe(newUrl);
+        }
+
     }
 }
