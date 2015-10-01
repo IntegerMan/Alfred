@@ -85,15 +85,21 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         [CanBeNull]
         private Action BuildMoreDetailsAction()
         {
-            var shell = Container.TryProvide<IShellCommandRecipient>();
-            if (shell == null || Url.IsEmpty())
-                return null;
+            var router = Container.Provide<IAlfredCommandRecipient>();
+
+            //var shell = Container.TryProvide<IShellCommandRecipient>();
+            //if (shell == null || Url.IsEmpty())
+            //return null;
 
             // Build out a web request command
             return () =>
             {
-                var command = new ShellCommand("OpenWebPage", "Browser", Url);
-                shell.ProcessShellCommand(command);
+                var result = new AlfredCommandResult();
+                var command = new ChatCommand("Core", "Browse", Url);
+
+                router.ProcessAlfredCommand(command, result);
+                //var command = new ShellCommand("Browse", "Core", Url);
+                //shell.ProcessShellCommand(command);
             };
         }
 

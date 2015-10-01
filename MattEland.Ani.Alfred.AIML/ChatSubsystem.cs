@@ -32,9 +32,6 @@ namespace MattEland.Ani.Alfred.Chat
         [NotNull]
         private readonly ChatPage _chatPage;
 
-        [NotNull]
-        private readonly AlfredCommandRouter _commandRouter;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
@@ -44,7 +41,6 @@ namespace MattEland.Ani.Alfred.Chat
         public ChatSubsystem([NotNull] IObjectContainer container, [NotNull] string engineName) : base(container)
         {
             ChatHandler = new AimlStatementHandler(container, engineName);
-            _commandRouter = new AlfredCommandRouter(container);
             _chatPage = new ChatPage(container, Res.ChatModuleName.NonNull(), ChatHandler);
         }
 
@@ -115,8 +111,7 @@ namespace MattEland.Ani.Alfred.Chat
         protected override void InitializeProtected(IAlfred alfred)
         {
             // Tell the chat engine where to send its mail
-            _commandRouter.Alfred = alfred;
-            ChatHandler.UpdateOwner(_commandRouter);
+            ChatHandler.UpdateOwner(alfred.CommandRouter);
         }
 
         /// <summary>

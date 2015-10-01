@@ -82,6 +82,11 @@ namespace MattEland.Ani.Alfred.Core
             // Set composite objects - TODO: Get these from the container!
             _statusController = new AlfredStatusController(this, container);
             RegistrationProvider = new ComponentRegistrationProvider(container, this, _subsystems, _rootPages);
+
+            // Set Command Router
+            var router = new AlfredCommandRouter(container, this);
+            router.RegisterAsProvidedInstance(typeof(IAlfredCommandRecipient), container);
+            CommandRouter = router;
         }
 
         /// <summary>
@@ -297,6 +302,18 @@ namespace MattEland.Ani.Alfred.Core
 
                 yield return SearchController;
             }
+        }
+
+        /// <summary>
+        /// Gets the command router.
+        /// </summary>
+        /// <value>
+        /// The command router.
+        /// </value>
+        [NotNull]
+        public IAlfredCommandRecipient CommandRouter
+        {
+            get;
         }
 
         /// <summary>

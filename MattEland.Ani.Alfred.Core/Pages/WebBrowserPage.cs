@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common.Providers;
 using MattEland.Ani.Alfred.Core.Widgets;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Core.Pages
 {
@@ -75,6 +76,43 @@ namespace MattEland.Ani.Alfred.Core.Pages
             {
                 return _browserWidget;
             }
+        }
+
+        /// <summary>
+        /// Processes an Alfred Command. If the <paramref name="command"/> is handled,
+        /// <paramref name="result"/> should be modified accordingly and the method should
+        /// return true. Returning <see langword="false"/> will not stop the message from being
+        /// propagated.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="result">
+        /// The result. If the <paramref name="command"/> was handled, this should be updated.
+        /// </param>
+        /// <returns>
+        /// <c>True</c> if the <paramref name="command"/> was handled; otherwise false.
+        /// </returns>
+        public override bool ProcessAlfredCommand(ChatCommand command, ICommandResult result)
+        {
+            if (base.ProcessAlfredCommand(command, result)) return true;
+
+            // Ensure the command is one we can handle
+            if (command.Name.Matches("Browse") && command.Data.HasText())
+            {
+                // Browse
+                Browser.Url = new Uri(command.Data.Trim());
+
+                // Navigate to the web browser as needed
+                var shell = AlfredInstance?.ShellCommandHandler;
+                if (shell != null)
+                {
+                    var shellCommand = new ShellCommand("Navigate", "Browser", command.Data);
+                    shell.ProcessShellCommand(shellCommand);
+                }
+
+                return true;
+            }
+
+            return false;
         }
     }
 }

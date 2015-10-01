@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 
 using MattEland.Common.Providers;
-
+using System;
 namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>
@@ -20,6 +20,14 @@ namespace MattEland.Ani.Alfred.Core.Definitions
     /// </summary>
     public interface IAlfred : IPropertyProvider, IHasStatus, IHasContainer
     {
+        /// <summary>
+        ///     Gets the command router.
+        /// </summary>
+        /// <value>
+        ///     The command router.
+        /// </value>
+        [NotNull]
+        IAlfredCommandRecipient CommandRouter { get; }
 
         /// <summary>
         ///     Gets the sub systems associated with Alfred.
