@@ -273,7 +273,7 @@ namespace MattEland.Ani.Alfred.Tests
         /// </returns>
         protected IConsole GetConsole()
         {
-            var console = Container.TryProvide<IConsole>();
+            var console = AlfredContainer.Console;
 
             console.ShouldNotBeNull($"Could not find a console in container {Container}");
 
@@ -330,7 +330,7 @@ namespace MattEland.Ani.Alfred.Tests
         [NotNull]
         protected IConsole Console
         {
-            get { return Container.Provide<IConsole>(); }
+            get { return AlfredContainer.Console; }
         }
 
         /// <summary>
