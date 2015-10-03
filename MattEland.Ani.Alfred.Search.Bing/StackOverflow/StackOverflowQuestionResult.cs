@@ -27,8 +27,8 @@ namespace MattEland.Ani.Alfred.Search.StackOverflow
             : base(container, question.Title)
         {
             //- Validation
-            Contract.Requires<ArgumentNullException>(container != null);
-            Contract.Requires<ArgumentNullException>(question != null);
+            Contract.Requires(container != null);
+            Contract.Requires(question != null);
 
             // Set misc. properties from the question object
             Description = question.Body;

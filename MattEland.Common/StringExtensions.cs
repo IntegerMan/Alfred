@@ -13,6 +13,7 @@ using System.Text;
 
 using JetBrains.Annotations;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 
 namespace MattEland.Common
 {
@@ -28,6 +29,7 @@ namespace MattEland.Common
         /// </summary>
         /// <param name="input">The input string.</param>
         /// <returns><c>true</c> if the string has text; otherwise, <c>false</c> .</returns>
+        [System.Diagnostics.Contracts.Pure]
         public static bool HasText([CanBeNull] this string input)
         {
             return !input.IsNullOrWhitespace();

@@ -38,8 +38,8 @@ namespace MattEland.Ani.Alfred.Search.GitHub
         public GitHubSearchOperation([NotNull] IAlfredContainer container, string searchText)
         {
             //- Validation
-            Contract.Requires<ArgumentNullException>(container != null);
-            Contract.Requires<ArgumentException>(searchText.HasText());
+            Contract.Requires(container != null);
+            Contract.Requires(searchText.HasText());
 
             // Set properties from parameters
             Container = container;

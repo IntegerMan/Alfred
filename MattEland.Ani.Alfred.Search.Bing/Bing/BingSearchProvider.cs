@@ -33,8 +33,8 @@ namespace MattEland.Ani.Alfred.Search.Bing
         public BingSearchProvider([NotNull] IAlfredContainer container, [NotNull] string bingApiKey)
         {
             //- Validation
-            Contract.Requires<ArgumentNullException>(container != null);
-            Contract.Requires<ArgumentException>(bingApiKey.HasText());
+            Contract.Requires(container != null);
+            Contract.Requires(bingApiKey.HasText());
 
             Container = container;
 

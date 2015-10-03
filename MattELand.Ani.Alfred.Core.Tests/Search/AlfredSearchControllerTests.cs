@@ -362,7 +362,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
             const string ExpectedTitle = "Search Complete";
             const string ExpectedMessage = "Search complete. No results found.";
 
-            var console = Container.TryProvide<IConsole>();
+            var console = AlfredContainer.Console;
             console.ShouldNotBeNull();
 
             var matchingEvents = console.Events.Where(e => e.Title.Matches(ExpectedTitle)).ToList();

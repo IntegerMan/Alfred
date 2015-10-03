@@ -68,7 +68,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <param name="container"> The container. </param>
         public AlfredApplication([NotNull] IAlfredContainer container)
         {
-            Contract.Requires<ArgumentNullException>(container != null);
+            Contract.Requires(container != null);
 
             // The specialized container needs a reference to this object as we construct ourselves
             container.Alfred = this;

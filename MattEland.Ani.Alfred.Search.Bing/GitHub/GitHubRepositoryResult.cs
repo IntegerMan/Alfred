@@ -28,8 +28,8 @@ namespace MattEland.Ani.Alfred.Search.GitHub
             Repository.RepositorySearchResults.RepositoryResult repository) : base(container, repository.Name)
         {
             //- Validation
-            Contract.Requires<ArgumentNullException>(container != null);
-            Contract.Requires<ArgumentNullException>(repository != null);
+            Contract.Requires(container != null);
+            Contract.Requires(repository != null);
 
             _repository = repository;
 

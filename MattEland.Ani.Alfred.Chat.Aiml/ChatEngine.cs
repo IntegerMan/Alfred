@@ -54,7 +54,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
 
             // Get basic functionality set ASAP
             Container = container;
-            Logger = container.TryProvide<IConsole>();
+            Logger = container.Console;
 
             // Create a user to represent the system
             SystemUser = new User(name, true);

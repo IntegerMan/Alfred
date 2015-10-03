@@ -46,9 +46,9 @@ namespace MattEland.Ani.Alfred.Search.StackOverflow
         public StackOverflowSearchOperation([NotNull] IAlfredContainer container, [NotNull] string searchText, [CanBeNull] string apiKey)
         {
             //- Validate
-            Contract.Requires<ArgumentNullException>(container != null);
-            Contract.Requires<ArgumentException>(searchText.HasText());
-            Contract.Requires<ArgumentException>(apiKey.HasText(), "apiKey was not set");
+            Contract.Requires(container != null);
+            Contract.Requires(searchText.HasText());
+            Contract.Requires(apiKey.HasText(), "apiKey was not set");
 
             // Set properties
             Container = container;

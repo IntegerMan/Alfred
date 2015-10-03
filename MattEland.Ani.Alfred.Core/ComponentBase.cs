@@ -44,7 +44,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <exception cref="System.ArgumentNullException"><paramref name="container" /> is <see langword="null" />.</exception>
         protected ComponentBase([NotNull] IAlfredContainer container)
         {
-            Contract.Requires<ArgumentNullException>(container != null);
+            Contract.Requires(container != null);
 
             Container = container;
         }

@@ -117,7 +117,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// </exception>
         protected override void InitializeProtected(IAlfred alfred)
         {
-            Contract.Requires<ArgumentNullException>(alfred != null);
+            Contract.Requires(alfred != null);
 
             // Add alfred to the collection as the root level will only contain Alfred.
             MindExplorerPage.ClearNodes();

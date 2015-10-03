@@ -41,7 +41,7 @@ namespace MattEland.Ani.Alfred.Core
             Alfred = container.Alfred;
 
             Locale = container.Locale;
-            Console = container.TryProvide<IConsole>();
+            Console = container.Console;
         }
 
         /// <summary>

@@ -58,7 +58,7 @@ namespace MattEland.Manticore.Analyzers
                 Alfred.RegisterAsProvidedInstance(typeof(IAlfred));
             }
 
-            Console = Container.TryProvide<IConsole>();
+            Console = Container.Console;
         }
 
         /// <summary>

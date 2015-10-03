@@ -69,7 +69,7 @@ namespace MattEland.Ani.Alfred.Chat
 
             // Set up simple internal fields
             Container = container;
-            _console = container.TryProvide<IConsole>();
+            _console = container.Console;
             _chatHistory = new ChatHistoryProvider(container);
 
             // Create and set up the chat engine

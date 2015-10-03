@@ -17,7 +17,7 @@ namespace MattEland.Ani.Alfred.Search.GitHub
         public GitHubSearchProvider([NotNull] IAlfredContainer container)
         {
             //- Validation
-            Contract.Requires<ArgumentNullException>(container != null, "container is null.");
+            Contract.Requires(container != null, "container is null.");
 
             // Set Properties from parameters
             Container = container;

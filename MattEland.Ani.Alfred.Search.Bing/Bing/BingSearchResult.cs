@@ -19,8 +19,8 @@ namespace MattEland.Ani.Alfred.Search.Bing
             : base(container, result.Title)
         {
             //- Validation
-            Contract.Requires<ArgumentNullException>(container != null);
-            Contract.Requires<ArgumentNullException>(result != null);
+            Contract.Requires(container != null);
+            Contract.Requires(result != null);
 
             // Set Basic Properties
             Description = result.Description;
@@ -37,8 +37,8 @@ namespace MattEland.Ani.Alfred.Search.Bing
             : base(container, result.Title)
         {
             //- Validation
-            Contract.Requires<ArgumentNullException>(container != null);
-            Contract.Requires<ArgumentNullException>(result != null);
+            Contract.Requires(container != null);
+            Contract.Requires(result != null);
 
             // Set Basic Properties
             Description = result.Description;
@@ -55,8 +55,8 @@ namespace MattEland.Ani.Alfred.Search.Bing
             : base(container, result.Title)
         {
             //- Validation
-            Contract.Requires<ArgumentNullException>(container != null);
-            Contract.Requires<ArgumentNullException>(result != null);
+            Contract.Requires(container != null);
+            Contract.Requires(result != null);
 
             // Set Basic Properties
             Description = result.ContentType;

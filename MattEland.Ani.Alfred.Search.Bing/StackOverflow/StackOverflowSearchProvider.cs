@@ -23,7 +23,7 @@ namespace MattEland.Ani.Alfred.Search.StackOverflow
         public StackOverflowSearchProvider([NotNull] IAlfredContainer container, [CanBeNull] string apiKey)
         {
             //- Validate
-            Contract.Requires<ArgumentNullException>(container != null);
+            Contract.Requires(container != null);
 
             Container = container;
 

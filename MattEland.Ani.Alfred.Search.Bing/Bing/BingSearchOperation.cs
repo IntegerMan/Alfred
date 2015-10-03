@@ -44,9 +44,9 @@ namespace MattEland.Ani.Alfred.Search.Bing
         public BingSearchOperation([NotNull] IAlfredContainer container, string searchText, string bingApiKey)
         {
             //- Validate
-            Contract.Requires<ArgumentNullException>(container != null, "container was null");
-            Contract.Requires<ArgumentOutOfRangeException>(searchText.HasText(), "search text was empty");
-            Contract.Requires<ArgumentException>(bingApiKey.HasText(), "bingApiKey was not set");
+            Contract.Requires(container != null, "container was null");
+            Contract.Requires(searchText.HasText(), "search text was empty");
+            Contract.Requires(bingApiKey.HasText(), "bingApiKey was not set");
 
             //- Set Values from Parameters
             Container = container;
@@ -71,7 +71,7 @@ namespace MattEland.Ani.Alfred.Search.Bing
         private void StartSearch()
         {
             // Ensure the API Key has at least been set
-            Contract.Requires<ArgumentException>(BingApiKey.HasText(), "bingApiKey was not set");
+            Contract.Requires(BingApiKey.HasText(), "bingApiKey was not set");
 
             // Set up the Bing Search Container that will be used to make web service calls
             const string BingSearchPath = @"https://api.datamarket.azure.com/Bing/SearchWeb/Web/";

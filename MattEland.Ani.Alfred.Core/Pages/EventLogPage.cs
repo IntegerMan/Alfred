@@ -55,7 +55,10 @@ namespace MattEland.Ani.Alfred.Core.Pages
         {
             get
             {
-                if (_console == null) { _console = Container.TryProvide<IConsole>(); }
+                if (_console == null)
+                {
+                    _console = Container.Console;
+                }
 
                 return _console;
             }

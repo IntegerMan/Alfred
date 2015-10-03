@@ -83,14 +83,14 @@ namespace MattEland.Ani.Alfred.Tests
         {
             get
             {
-                var alfred = Container.Provide<IAlfred>();
+                var alfred = AlfredContainer.Alfred;
                 alfred.ShouldNotBeNull("Could not find the Alfred instance");
 
                 return alfred;
             }
             set
             {
-                value.RegisterAsProvidedInstance(typeof(IAlfred), Container);
+                AlfredContainer.Alfred = value;
             }
         }
 

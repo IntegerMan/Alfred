@@ -133,7 +133,7 @@ namespace MattEland.Ani.Alfred.Chat
             base.RegisterControls();
 
             // We don't have console until we're registered, so update it here
-            ChatHandler.Console = Container.TryProvide<IConsole>();
+            ChatHandler.Console = Container.Console;
 
             // Register with the rest of the system
             if (RegisterPage) { Register(_chatPage); }

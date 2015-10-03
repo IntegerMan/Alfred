@@ -46,7 +46,7 @@ namespace MattEland.Ani.Alfred.Search
             : base(container)
         {
             //- Validation
-            Contract.Requires<ArgumentNullException>(container != null);
+            Contract.Requires(container != null);
 
             _gitHubSearchProvider = new GitHubSearchProvider(container);
             _stackOverflowSearchProvider = new StackOverflowSearchProvider(container, stackOverflowApiKey);
