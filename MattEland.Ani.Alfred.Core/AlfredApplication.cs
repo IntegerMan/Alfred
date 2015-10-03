@@ -20,6 +20,7 @@ using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
 using MattEland.Common.Providers;
+using System.Diagnostics.Contracts;
 
 namespace MattEland.Ani.Alfred.Core
 {
@@ -65,10 +66,14 @@ namespace MattEland.Ani.Alfred.Core
         ///     Thrown when the container is null.
         /// </exception>
         /// <param name="container"> The container. </param>
-        public AlfredApplication([NotNull] IObjectContainer container)
+        public AlfredApplication([NotNull] IAlfredContainer container)
         {
+            Contract.Requires<ArgumentNullException>(container != null);
+
+            // The specialized container needs a reference to this object as we construct ourselves
+            container.Alfred = this;
+
             // Set the container
-            if (container == null) { throw new ArgumentNullException(nameof(container)); }
             Container = container;
 
             // Build out sub-collections
@@ -80,13 +85,13 @@ namespace MattEland.Ani.Alfred.Core
                                ?? new AlfredSearchController(Container);
 
             // Set composite objects - TODO: Get these from the container!
-            _statusController = new AlfredStatusController(this, container);
+            _statusController = new AlfredStatusController(container);
             RegistrationProvider = new ComponentRegistrationProvider(container, this, _subsystems, _rootPages);
 
             // Set Command Router
-            var router = new AlfredCommandRouter(container, this);
+            var router = new AlfredCommandRouter(container);
+            container.CommandRouter = router;
             router.RegisterAsProvidedInstance(typeof(IAlfredCommandRecipient), container);
-            CommandRouter = router;
         }
 
         /// <summary>
@@ -143,13 +148,6 @@ namespace MattEland.Ani.Alfred.Core
         {
             get { return Status == AlfredStatus.Online; }
         }
-
-        /// <summary>
-        /// Gets the locale.
-        /// </summary>
-        /// <value>The locale.</value>
-        [NotNull]
-        public CultureInfo Locale { get; set; } = CultureInfo.CurrentCulture;
 
         /// <summary>
         ///     Gets the user interface pages registered to the Alfred Framework at root level.
@@ -217,7 +215,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <value>
         ///     The container.
         /// </value>
-        public IObjectContainer Container { get; }
+        public IAlfredContainer Container { get; }
 
         /// <summary>
         ///     Gets the display name for use in the user interface.
@@ -313,7 +311,7 @@ namespace MattEland.Ani.Alfred.Core
         [NotNull]
         public IAlfredCommandRecipient CommandRouter
         {
-            get;
+            get { return Container.CommandRouter; }
         }
 
         /// <summary>
@@ -374,7 +372,7 @@ namespace MattEland.Ani.Alfred.Core
         public override bool HandleCallbackException(Exception exception, string operationName)
         {
             // Log to the console
-            var message = exception.BuildDetailsMessage(culture: Locale);
+            var message = exception.BuildDetailsMessage(culture: Container.Locale);
             message = $"{operationName} encountered an error: {message}";
             message.Log(operationName, LogLevel.Error, Container);
 

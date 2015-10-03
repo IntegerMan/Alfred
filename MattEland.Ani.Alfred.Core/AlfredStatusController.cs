@@ -16,7 +16,6 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
-using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core
 {
@@ -26,27 +25,22 @@ namespace MattEland.Ani.Alfred.Core
     /// </summary>
     internal sealed class AlfredStatusController : IStatusController
     {
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredStatusController" /> class.
         /// </summary>
-        /// <param name="alfred">The alfred provider.</param>
-        /// <param name="container">The container.</param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when one or more required arguments are null.
+        ///     Thrown when one or more required arguments are null.
         /// </exception>
-        internal AlfredStatusController(
-            [NotNull] IAlfred alfred,
-            [NotNull] IObjectContainer container)
+        /// <param name="container"> The container. </param>
+        internal AlfredStatusController([NotNull] IAlfredContainer container)
         {
             //- Validate
-            if (alfred == null) { throw new ArgumentNullException(nameof(alfred)); }
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
 
-            Alfred = alfred;
             Container = container;
+            Alfred = container.Alfred;
 
-            Locale = CultureInfo.CurrentCulture; // TODO: Get from Container
+            Locale = container.Locale;
             Console = container.TryProvide<IConsole>();
         }
 
@@ -73,7 +67,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <value>
         /// The container.
         /// </value>
-        public IObjectContainer Container { get; }
+        public IAlfredContainer Container { get; }
 
         /// <summary>
         ///     Gets or sets the Alfred framework.

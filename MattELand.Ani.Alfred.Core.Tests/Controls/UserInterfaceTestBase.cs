@@ -180,7 +180,7 @@ namespace MattEland.Ani.Alfred.Tests.Controls
         [NotNull]
         protected Repeater BuildRepeater()
         {
-            var parameters = new WidgetCreationParameters(@"listRepeater", Container);
+            var parameters = new WidgetCreationParameters(@"listRepeater", AlfredContainer);
 
             return new Repeater(parameters);
         }

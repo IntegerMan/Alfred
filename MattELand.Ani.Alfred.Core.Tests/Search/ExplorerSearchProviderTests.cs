@@ -64,7 +64,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
         {
             base.SetUp();
 
-            Subsystem = new MindExplorerSubsystem(Container, true);
+            Subsystem = new MindExplorerSubsystem(AlfredContainer, true);
 
             SearchProvider = Subsystem.SearchProviders.FirstOrDefault() as ExplorerSearchProvider;
             SearchProvider.ShouldNotBeNull();
@@ -322,11 +322,14 @@ namespace MattEland.Ani.Alfred.Tests.Search
         {
             //! Arrange
 
-            // Build a child node
+            // Build child nodes
             var children = Container.ProvideCollection<IPropertyProvider>();
-            children.Add(BuildMockPropertyProvider("Alice Nodezilla").Object);
-            children.Add(BuildMockPropertyProvider("Bob Nodezilla").Object);
-            children.Add(BuildMockPropertyProvider("Charlie Nodezilla").Object);
+            const int NumChildren = 3;
+            for (int i = 0; i < NumChildren; i++)
+            {
+                string name = Some.FullName;
+                children.Add(BuildMockPropertyProvider(name).Object);
+            }
 
             // Build a parent containing the children
             var mockParent = BuildMockPropertyProvider("Parent Nodezilla", children: children);
@@ -335,7 +338,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
             searchText = searchText.ToUpperInvariant();
             //! Act
 
-            var results = ExplorerSearchOperation.SearchPropertyProviderTreeNode(Container,
+            var results = ExplorerSearchOperation.SearchPropertyProviderTreeNode(AlfredContainer,
                 mockParent.Object, searchText);
 
             //! Assert

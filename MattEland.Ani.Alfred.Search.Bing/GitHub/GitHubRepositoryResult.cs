@@ -5,6 +5,7 @@ using MattEland.Common;
 using MattEland.Common.Providers;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 
 namespace MattEland.Ani.Alfred.Search.GitHub
@@ -23,11 +24,12 @@ namespace MattEland.Ani.Alfred.Search.GitHub
         /// <param name="repository">The repository.</param>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
-        public GitHubRepositoryResult([NotNull] IObjectContainer container,
+        public GitHubRepositoryResult([NotNull] IAlfredContainer container,
             Repository.RepositorySearchResults.RepositoryResult repository) : base(container, repository.Name)
         {
-            if (container == null) throw new ArgumentNullException(nameof(container));
-            if (repository == null) throw new ArgumentNullException(nameof(repository));
+            //- Validation
+            Contract.Requires<ArgumentNullException>(container != null);
+            Contract.Requires<ArgumentNullException>(repository != null);
 
             _repository = repository;
 

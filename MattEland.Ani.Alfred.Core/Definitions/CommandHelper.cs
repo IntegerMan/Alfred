@@ -18,10 +18,11 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <param name="action">The <see cref="Action" /> to take when the command is executed.</param>
         /// <returns>The new command.</returns>
         [NotNull]
-        public static IAlfredCommand CreateCommand([NotNull] IObjectContainer container, [CanBeNull] Action action)
+        public static IAlfredCommand CreateCommand([NotNull] IAlfredContainer container, [CanBeNull] Action action)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
 
+            // TODO: Move this into IAlfredContainer
             var command = container.Provide<IAlfredCommand>(action, container);
 
             return command;

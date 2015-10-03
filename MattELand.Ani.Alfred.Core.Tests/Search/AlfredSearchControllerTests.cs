@@ -152,7 +152,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
             var searchProvider = BuildMockSearchProvider(mockOp.Object);
 
             // Add a controller with the provider. We're testing this detached from Alfred
-            var controller = new AlfredSearchController(Container);
+            var controller = new AlfredSearchController(AlfredContainer);
             controller.Register(searchProvider.Object);
 
             //! Act
@@ -393,7 +393,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
             var searchProvider2 = BuildMockSearchProvider(mockOperation2.Object);
 
             // Add a controller with the two providers. We're testing this detached from Alfred
-            var controller = new AlfredSearchController(Container);
+            var controller = new AlfredSearchController(AlfredContainer);
             controller.Register(searchProvider1.Object);
             controller.Register(searchProvider2.Object);
 
@@ -415,7 +415,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
             base.SetUp();
 
             // Set up the Controller
-            Controller = new AlfredSearchController(Container);
+            Controller = new AlfredSearchController(AlfredContainer);
             Controller.RegisterAsProvidedInstance(typeof(ISearchController), Container);
 
             // Build Alfred - it should now grab the controller from Container

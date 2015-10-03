@@ -6,6 +6,7 @@ using MattEland.Common;
 using MattEland.Common.Providers;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 
 namespace MattEland.Ani.Alfred.Search.GitHub
@@ -13,7 +14,7 @@ namespace MattEland.Ani.Alfred.Search.GitHub
     /// <summary>
     /// A GitHub search operation. This class cannot be inherited. 
     /// </summary>
-    public sealed class GitHubSearchOperation : ISearchOperation, IHasContainer, IDisposable
+    public sealed class GitHubSearchOperation : ISearchOperation, IHasContainer<IAlfredContainer>, IDisposable
     {
         /// <summary>
         /// The GitHub API
@@ -34,11 +35,11 @@ namespace MattEland.Ani.Alfred.Search.GitHub
         /// </summary>
         /// <param name="container">The container.</param>
         /// <param name="searchText">The search text.</param>
-        public GitHubSearchOperation([NotNull] IObjectContainer container, string searchText)
+        public GitHubSearchOperation([NotNull] IAlfredContainer container, string searchText)
         {
             //- Validation
-            if (container == null) throw new ArgumentNullException(nameof(searchText));
-            if (searchText.IsEmpty()) throw new ArgumentNullException(nameof(searchText));
+            Contract.Requires<ArgumentNullException>(container != null);
+            Contract.Requires<ArgumentException>(searchText.HasText());
 
             // Set properties from parameters
             Container = container;
@@ -52,7 +53,7 @@ namespace MattEland.Ani.Alfred.Search.GitHub
         /// Gets the container. 
         /// </summary>
         /// <value> The container. </value>
-        public IObjectContainer Container
+        public IAlfredContainer Container
         {
             get;
         }

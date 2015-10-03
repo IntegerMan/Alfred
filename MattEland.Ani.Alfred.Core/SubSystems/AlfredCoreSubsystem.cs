@@ -64,7 +64,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// Initializes a new instance of the <see cref="AlfredCoreSubsystem" /> class.
         /// </summary>
         /// <param name="container">The container.</param>
-        public AlfredCoreSubsystem([NotNull] IObjectContainer container) : this(container, true)
+        public AlfredCoreSubsystem([NotNull] IAlfredContainer container) : this(container, true)
         {
         }
 
@@ -74,7 +74,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// <param name="container">The container.</param>
         /// <param name="includeSearchModuleOnSearchPage">Whether or not to include the search module on the search page.</param>
         /// <exception cref="ArgumentNullException">Thrown when one or more required arguments are null.</exception>
-        public AlfredCoreSubsystem([NotNull] IObjectContainer container, bool includeSearchModuleOnSearchPage) : base(container)
+        public AlfredCoreSubsystem([NotNull] IAlfredContainer container, bool includeSearchModuleOnSearchPage) : base(container)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
 

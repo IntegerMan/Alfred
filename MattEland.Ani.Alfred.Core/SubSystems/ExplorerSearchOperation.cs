@@ -21,7 +21,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
     /// <summary>
     ///     A search operation aimed at the Mind Explorer.
     /// </summary>
-    public sealed class ExplorerSearchOperation : ISearchOperation, IHasContainer
+    public sealed class ExplorerSearchOperation : ISearchOperation, IHasContainer<IAlfredContainer>
     {
         /// <summary>
         ///     The mind explorer subsystem.
@@ -48,7 +48,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// <param name="container">The container.</param>
         /// <param name="mindExplorerSubsystem">The mind explorer subsystem.</param>
         /// <param name="searchText">The search text.</param>
-        internal ExplorerSearchOperation(IObjectContainer container,
+        internal ExplorerSearchOperation(IAlfredContainer container,
                                          MindExplorerSubsystem mindExplorerSubsystem,
                                          string searchText)
         {
@@ -103,7 +103,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// <value>
         ///     The container.
         /// </value>
-        public IObjectContainer Container
+        public IAlfredContainer Container
         {
             get;
         }
@@ -158,7 +158,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// </returns>
         [NotNull, ItemNotNull]
         public static IEnumerable<ISearchResult> SearchPropertyProviderTreeNode(
-            [NotNull] IObjectContainer container,
+            [NotNull] IAlfredContainer container,
             [NotNull] IPropertyProvider node,
             [NotNull] string searchText)
         {

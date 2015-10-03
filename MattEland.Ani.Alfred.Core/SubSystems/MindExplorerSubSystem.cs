@@ -16,6 +16,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Common.Providers;
+using System.Diagnostics.Contracts;
 
 namespace MattEland.Ani.Alfred.Core.Subsystems
 {
@@ -36,7 +37,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         ///     Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
         /// <param name="container"> The container. </param>
-        public MindExplorerSubsystem([NotNull] IObjectContainer container)
+        public MindExplorerSubsystem([NotNull] IAlfredContainer container)
             : this(container, true)
         {
         }
@@ -48,14 +49,14 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// <param name="includeExplorerPage">
         ///      <see langword="true" /> to include the page in root pages, <see langword="false" /> otherwise.
         /// </param>
-        public MindExplorerSubsystem([NotNull] IObjectContainer container, bool includeExplorerPage)
+        public MindExplorerSubsystem([NotNull] IAlfredContainer container, bool includeExplorerPage)
             : base(container)
         {
             MindExplorerPage = new ExplorerPage(container, "Mind Explorer", "MindMap");
 
             if (!includeExplorerPage) { MindExplorerPage.IsRootLevel = false; }
 
-            _searchProvider = new ExplorerSearchProvider(Container, this);
+            _searchProvider = new ExplorerSearchProvider(container, this);
         }
 
         /// <summary>
@@ -116,7 +117,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// </exception>
         protected override void InitializeProtected(IAlfred alfred)
         {
-            if (alfred == null) { throw new ArgumentNullException(nameof(alfred)); }
+            Contract.Requires<ArgumentNullException>(alfred != null);
 
             // Add alfred to the collection as the root level will only contain Alfred.
             MindExplorerPage.ClearNodes();

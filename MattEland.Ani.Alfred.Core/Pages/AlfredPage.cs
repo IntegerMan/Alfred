@@ -38,7 +38,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <paramref name="id" /> is <see langword="null" /> .
         /// </exception>
         protected AlfredPage(
-            [NotNull] IObjectContainer container,
+            [NotNull] IAlfredContainer container,
             [NotNull] string name,
             [NotNull] string id) : base(container)
         {

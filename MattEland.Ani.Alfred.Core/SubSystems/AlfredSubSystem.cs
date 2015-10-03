@@ -34,7 +34,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// Initializes a new instance of the <see cref="AlfredSubsystem" /> class.
         /// </summary>
         /// <param name="container">The container.</param>
-        protected AlfredSubsystem([NotNull] IObjectContainer container) : base(container)
+        protected AlfredSubsystem([NotNull] IAlfredContainer container) : base(container)
         {
             _pages = container.ProvideCollection<IPage>();
             SearchProviders = container.ProvideCollection<ISearchProvider>();

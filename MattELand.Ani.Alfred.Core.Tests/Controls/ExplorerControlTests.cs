@@ -36,10 +36,10 @@ namespace MattEland.Ani.Alfred.Tests.Controls
         {
             base.SetUp();
 
-            Container.ShouldNotBeNull();
-            _app = new ApplicationManager(Container, BuildOptions());
-            _app.RootNodes.ShouldNotBeNull();
+            _app = BuildApplicationInstance();
+
             _control = new ExplorerControl(_app.RootNodes);
+
             _app.Alfred.Initialize();
 
             // Get the control ready for interaction

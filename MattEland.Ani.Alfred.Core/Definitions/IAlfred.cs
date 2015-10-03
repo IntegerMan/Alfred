@@ -18,7 +18,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
     /// <summary>
     ///     An <see langword="interface"/> promising Alfred Framework style capabilities
     /// </summary>
-    public interface IAlfred : IPropertyProvider, IHasStatus, IHasContainer
+    public interface IAlfred : IPropertyProvider, IHasStatus, IHasContainer<IAlfredContainer>
     {
         /// <summary>
         ///     Gets the command router.
@@ -55,6 +55,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <value>
         /// The chat provider.
         /// </value>
+        [CanBeNull]
         IChatProvider ChatProvider { get; }
 
         /// <summary>

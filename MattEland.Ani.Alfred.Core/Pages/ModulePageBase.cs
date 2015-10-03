@@ -29,7 +29,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <param name="container">The container.</param>
         /// <param name="name">The name.</param>
         /// <param name="id">The identifier.</param>
-        protected ModulePageBase(IObjectContainer container, string name, string id)
+        protected ModulePageBase(IAlfredContainer container, string name, string id)
             : base(container, name, id)
         {
         }

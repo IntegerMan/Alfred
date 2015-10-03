@@ -44,7 +44,7 @@ namespace MattEland.Ani.Alfred.Tests
         {
             base.SetUp();
 
-            ConfigureTestContainer(Container);
+            ConfigureTestContainer(AlfredContainer);
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace MattEland.Ani.Alfred.Tests
         ///     values.
         /// </summary>
         /// <param name="container"> The container. </param>
-        public void ConfigureTestContainer([NotNull] IObjectContainer container)
+        public void ConfigureTestContainer([NotNull] IAlfredContainer container)
         {
             var console = new DiagnosticConsole(container);
             console.RegisterAsProvidedInstance(typeof(IConsole), container);
@@ -141,17 +141,43 @@ namespace MattEland.Ani.Alfred.Tests
             options.AdditionalSubsystems.Add(TestSubsystem);
 
             // Build the Application
-            var app = new ApplicationManager(Container, options);
+            var app = new ApplicationManager(AlfredContainer, options);
             var alfred = app.Alfred;
 
             // Register the application instance in the container
-            app.RegisterAsProvidedInstance(Container);
+            app.RegisterAsProvidedInstance(AlfredContainer);
 
             // Start up Alfred
             alfred.ShouldNotBeNull();
             alfred.Initialize();
 
             return app;
+        }
+
+        /// <summary>
+        ///     Gets the Alfred container.
+        /// </summary>
+        /// <value>
+        ///     The Alfred container.
+        /// </value>
+        [NotNull]
+        public IAlfredContainer AlfredContainer
+        {
+            get
+            {
+                return Container as IAlfredContainer;
+            }
+        }
+
+        /// <summary>
+        ///     Builds the container.
+        /// </summary>
+        /// <returns>
+        ///     An IObjectContainer.
+        /// </returns>
+        protected override IObjectContainer BuildContainer()
+        {
+            return new AlfredContainer();
         }
 
         /// <summary>
@@ -261,7 +287,7 @@ namespace MattEland.Ani.Alfred.Tests
         /// </returns>
         protected SimpleSubsystem BuildTestSubsystem()
         {
-            return new SimpleSubsystem(Container, "Test Subsystem");
+            return new SimpleSubsystem(AlfredContainer, "Test Subsystem");
         }
 
         /// <summary>
@@ -271,7 +297,7 @@ namespace MattEland.Ani.Alfred.Tests
         [NotNull]
         protected AlfredApplication BuildAlfredInstance()
         {
-            return new AlfredApplication(Container);
+            return new AlfredApplication(AlfredContainer);
         }
 
         /// <summary>
@@ -284,7 +310,7 @@ namespace MattEland.Ani.Alfred.Tests
         /// </returns>
         protected SimpleSubsystem BuildSubsystemForModule(IAlfredModule module)
         {
-            var page = new ModuleListPage(Container, "Test Page", "TestPage");
+            var page = new ModuleListPage(AlfredContainer, "Test Page", "TestPage");
             page.Register(module);
 
             var subsystem = BuildTestSubsystem();
@@ -304,6 +330,18 @@ namespace MattEland.Ani.Alfred.Tests
         protected IConsole Console
         {
             get { return Container.Provide<IConsole>(); }
+        }
+
+        /// <summary>
+        ///     Builds the application.
+        /// </summary>
+        /// <returns>
+        ///     An ApplicationManager.
+        /// </returns>
+        [NotNull]
+        protected ApplicationManager BuildApplicationInstance()
+        {
+            return new ApplicationManager(AlfredContainer, BuildOptions());
         }
     }
 

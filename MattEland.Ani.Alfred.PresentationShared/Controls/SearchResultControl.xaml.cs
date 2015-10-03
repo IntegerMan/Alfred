@@ -1,4 +1,5 @@
-﻿using MattEland.Ani.Alfred.Core.Definitions;
+﻿using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common.Providers;
 using System;
 using System.Windows;
@@ -9,12 +10,12 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Controls
     /// <summary>
     /// Interaction logic for SearchResultControl.xaml
     /// </summary>
-    public partial class SearchResultControl : UserControl, IHasContainer
+    public partial class SearchResultControl : UserControl, IHasContainer<IAlfredContainer>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchResultControl"/> class.
         /// </summary>
-        public SearchResultControl() : this(CommonProvider.Container, null)
+        public SearchResultControl() : this(AlfredContainerHelper.ProvideContainer(), null)
         {
         }
 
@@ -23,7 +24,7 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Controls
         /// </summary>
         /// <param name="container">The container.</param>
         /// <param name="result">The result.</param>
-        public SearchResultControl(IObjectContainer container, ISearchResult result)
+        public SearchResultControl(IAlfredContainer container, ISearchResult result)
         {
             // Validate
             if (container == null) throw new ArgumentNullException(nameof(container));
@@ -42,7 +43,7 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Controls
         /// <value>
         /// The container.
         /// </value>
-        public IObjectContainer Container { get; }
+        public IAlfredContainer Container { get; }
 
         /// <summary>
         /// Gets or sets the search result.

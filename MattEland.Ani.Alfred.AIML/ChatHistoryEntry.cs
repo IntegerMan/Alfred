@@ -31,7 +31,7 @@ namespace MattEland.Ani.Alfred.Chat
         /// <param name="chatResult">The result.</param>
         /// <exception cref="ArgumentNullException">Thrown when one or more required arguments are null.</exception>
         internal ChatHistoryEntry(
-            [NotNull] IObjectContainer container,
+            [NotNull] IAlfredContainer container,
             [NotNull] User user,
             [NotNull] string message,
             [CanBeNull] ChatResult chatResult = null)

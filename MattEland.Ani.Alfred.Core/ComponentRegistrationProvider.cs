@@ -21,7 +21,7 @@ namespace MattEland.Ani.Alfred.Core
     /// <summary>
     ///     This registration provider handles component registration capabilities for Alfred.
     /// </summary>
-    internal class ComponentRegistrationProvider : IRegistrationProvider, IHasContainer
+    internal class ComponentRegistrationProvider : IRegistrationProvider, IHasContainer<IAlfredContainer>
     {
         [NotNull]
         private readonly AlfredApplication _alfred;
@@ -44,7 +44,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <param name="alfred"> The alfred instance. </param>
         /// <param name="subsystems"> The subsystems instance. </param>
         /// <param name="rootPages"> The root pages instance. </param>
-        internal ComponentRegistrationProvider([NotNull] IObjectContainer container,
+        internal ComponentRegistrationProvider([NotNull] IAlfredContainer container,
             [NotNull] AlfredApplication alfred,
             [NotNull] ICollection<IAlfredSubsystem> subsystems,
             [NotNull] ICollection<IPage> rootPages)
@@ -62,7 +62,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <value>
         /// The container.
         /// </value>
-        public IObjectContainer Container
+        public IAlfredContainer Container
         {
             get;
         }

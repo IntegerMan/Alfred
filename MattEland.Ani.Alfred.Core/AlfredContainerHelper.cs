@@ -23,7 +23,7 @@ namespace MattEland.Ani.Alfred.Core
     public static class AlfredContainerHelper
     {
         /// <summary>
-        ///     An <see cref="IObjectContainer" /> extension method that applies the default Alfred type
+        ///     An <see cref="IAlfredContainer" /> extension method that applies the default Alfred type
         ///     mappings in the <paramref name="container" /> . This method eases the configuration pains
         ///     in customizing an Alfred instance.
         /// </summary>
@@ -31,7 +31,7 @@ namespace MattEland.Ani.Alfred.Core
         ///     Thrown when one or more required arguments are null.
         /// </exception>
         /// <param name="container"> The container to act on. </param>
-        public static void ApplyDefaultAlfredMappings([NotNull] this IObjectContainer container)
+        public static void ApplyDefaultAlfredMappings([NotNull] this IAlfredContainer container)
         {
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
 
@@ -39,6 +39,25 @@ namespace MattEland.Ani.Alfred.Core
             container.TryRegister(typeof(IAlfred), typeof(AlfredApplication));
             container.TryRegister(typeof(ISearchController), typeof(AlfredSearchController));
 
+        }
+
+        /// <summary>
+        ///     Provide an Alfred container from the common provider and builds a new container as needed,
+        ///     setting it into the common provider's container.
+        /// </summary>
+        /// <returns>
+        ///     An IAlfredContainer.
+        /// </returns>
+        [NotNull]
+        public static IAlfredContainer ProvideContainer()
+        {
+            var container = CommonProvider.Container as IAlfredContainer;
+            if (container == null)
+            {
+                container = new AlfredContainer();
+                CommonProvider.Container = container;
+            }
+            return container;
         }
     }
 }

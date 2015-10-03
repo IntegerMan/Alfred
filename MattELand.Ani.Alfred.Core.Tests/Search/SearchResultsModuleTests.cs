@@ -88,7 +88,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
             // Use our Mock as the Alfred Instance
             Alfred = MockAlfred.Object;
 
-            Module = new SearchResultsModule(Container);
+            Module = new SearchResultsModule(AlfredContainer);
         }
 
         /// <summary>
@@ -277,7 +277,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
             Alfred = BuildAlfredInstance();
 
             // We'll be
-            var mindExplorer = new MindExplorerSubsystem(Container);
+            var mindExplorer = new MindExplorerSubsystem(AlfredContainer);
             Alfred.Register(mindExplorer);
 
             // Build a subsystem to house the module
@@ -361,7 +361,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
         private AlfredSearchController BuildSearchControllerWithProvider(bool isSearchComplete,
                                                                          int numResults = 0)
         {
-            var searchController = new AlfredSearchController(Container);
+            var searchController = new AlfredSearchController(AlfredContainer);
 
             // Build up a search operation that is an ongoing operation
             var operation = BuildMockSearchOperation();

@@ -32,7 +32,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// </summary>
         /// <param name="container"> The container. </param>
         /// <param name="metricProvider"> The metric provider. </param>
-        protected SystemMonitorModule([NotNull] IObjectContainer container,
+        protected SystemMonitorModule([NotNull] IAlfredContainer container,
                                       [NotNull] IMetricProviderFactory metricProvider) : base(container)
         {
             // Use the provided metric provider

@@ -69,5 +69,31 @@ namespace MattEland.Common
             var count = collection.Count();
             return count.Pluralize(singular, plural);
         }
+
+        /// <summary>
+        ///     A generic list extension method that returns a random item within the
+        ///     <paramref name="list"/>.
+        /// </summary>
+        /// <typeparam name="T"> The type of item the list contains. </typeparam>
+        /// <param name="list"> The list to act on. </param>
+        /// <param name="randomizer">
+        ///     The randomizer. If this is null a new randomizer will be used.
+        /// </param>
+        /// <returns>
+        ///     The random item.
+        /// </returns>
+        public static T GetRandomItem<T>([NotNull] this IList<T> list, [CanBeNull] Random randomizer = null)
+        {
+            // Default to a new randomizer if none provided
+            randomizer = randomizer ?? new Random();
+
+            // Get a random index somewhere in the list
+            int index = randomizer.Next(list.Count);
+
+            // Return the item at the random index
+            return list[index];
+        }
+
+
     }
 }

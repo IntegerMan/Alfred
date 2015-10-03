@@ -39,7 +39,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         {
             base.SetUp();
 
-            _chat = new ChatSubsystem(Container, "Alfredo");
+            _chat = new ChatSubsystem(AlfredContainer, "Alfredo");
         }
 
         [NotNull]
@@ -71,7 +71,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         public void ChatHistoryHasNodesAfterConversation()
         {
             // Initialize an Alfred application
-            var app = new ApplicationManager(Container, BuildOptions());
+            var app = BuildApplicationInstance();
             var alfred = app.Alfred;
             var chat = alfred.Subsystems.First(s => s is ChatSubsystem);
             alfred.Initialize();

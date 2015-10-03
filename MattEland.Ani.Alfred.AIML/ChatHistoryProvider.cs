@@ -32,7 +32,7 @@ namespace MattEland.Ani.Alfred.Chat
         ///     <paramref name="container"/> is <see langword="null" />.
         /// </exception>
         /// <param name="container"> The container. </param>
-        internal ChatHistoryProvider([NotNull] IObjectContainer container)
+        internal ChatHistoryProvider([NotNull] IAlfredContainer container)
         {
             //- Validate
             if (container == null) { throw new ArgumentNullException(nameof(container)); }

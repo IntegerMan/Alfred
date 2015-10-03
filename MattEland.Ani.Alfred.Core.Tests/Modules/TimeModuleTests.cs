@@ -102,8 +102,9 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         [Test]
         public void TimeModuleDoesNotLogWhenTheHourDoesNotChange()
         {
-            var console = new DiagnosticConsole(Container);
-            console.RegisterAsProvidedInstance(typeof(IConsole), Container);
+            var console = new DiagnosticConsole(AlfredContainer);
+            AlfredContainer.Console = console;
+
             Alfred.Initialize();
 
             // This is a bit of a testing hack - since initialize causes the module to update, it'll update based on the current time.

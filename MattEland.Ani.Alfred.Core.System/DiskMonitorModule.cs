@@ -43,7 +43,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// </summary>
         /// <param name="container"> The container. </param>
         /// <param name="factory"> The metric provider factory. </param>
-        internal DiskMonitorModule([NotNull] IObjectContainer container,
+        internal DiskMonitorModule([NotNull] IAlfredContainer container,
                                  [NotNull] IMetricProviderFactory factory) : base(container, factory)
         {
             _diskReadCounter = MetricProvider.Build(DiskCategoryName, DiskReadCounterName, TotalInstanceName);

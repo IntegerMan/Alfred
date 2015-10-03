@@ -19,7 +19,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// <param name="container"> The container. </param>
         /// <param name="name"> The name of the subsystem. </param>
         /// <param name="id"> The identifier for the subsystem. </param>
-        public SimpleSubsystem([NotNull] IObjectContainer container, string name, string id = null) : base(container)
+        public SimpleSubsystem([NotNull] IAlfredContainer container, string name, string id = null) : base(container)
         {
             Name = name;
 

@@ -45,12 +45,12 @@ namespace MattEland.Ani.Alfred.Core.Modules
         ///     Initializes a new instance of the <see cref="SearchModule" /> class.
         /// </summary>
         /// <param name="container"> The container. </param>
-        public SearchModule([NotNull] IObjectContainer container) : base(container)
+        public SearchModule([NotNull] IAlfredContainer container) : base(container)
         {
             _searchLabel = new TextWidget("Search:", BuildWidgetParameters(@"lblSearch"));
             _searchText = new TextBoxWidget(BuildWidgetParameters(@"txtSearch"));
 
-            var searchCommand = CommandHelper.CreateCommand(container, OnSearchClicked);
+            var searchCommand = Container.BuildCommand(OnSearchClicked);
             _searchButton = new ButtonWidget("Search", searchCommand, BuildWidgetParameters(@"btnSearch"));
 
             LayoutType = LayoutType.HorizontalStackPanel;

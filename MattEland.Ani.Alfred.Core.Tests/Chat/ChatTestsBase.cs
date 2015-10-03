@@ -177,20 +177,20 @@ namespace MattEland.Ani.Alfred.Tests.Chat
             MockSearchController.Object.RegisterAsProvidedInstance(typeof(ISearchController), Container);
 
             // Create Alfred and make it so the tests can find him via the Container
-            Alfred = new AlfredApplication(Container);
+            Alfred = BuildAlfredInstance();
 
             // Add Subsystems to Alfred
-            CoreSubsystem = new AlfredCoreSubsystem(Container);
+            CoreSubsystem = new AlfredCoreSubsystem(AlfredContainer);
             Alfred.Register(CoreSubsystem);
 
-            ChatSubsystem = new ChatSubsystem(Container, "Alfredo");
+            ChatSubsystem = new ChatSubsystem(AlfredContainer, "Alfredo");
             Alfred.Register(ChatSubsystem);
 
             var mock = BuildMockSubsystem();
             _testSubsystem = mock.Object;
             Alfred.Register(_testSubsystem);
 
-            _sysSubsystem = new SystemMonitoringSubsystem(Container);
+            _sysSubsystem = new SystemMonitoringSubsystem(AlfredContainer);
             Alfred.Register(_sysSubsystem);
 
             MetricProviderFactory = Container.Provide<ValueMetricProviderFactory>();

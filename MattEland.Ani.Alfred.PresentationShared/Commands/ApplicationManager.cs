@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Windows.Threading;
 
@@ -34,7 +35,7 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
             Justification = "TryDispose is invoked")]
     [SuppressMessage("CodeRush", "Fields should be disposed",
             Justification = "TryDispose is invoked")]
-    public sealed class ApplicationManager : IDisposable
+    public sealed class ApplicationManager : IDisposable, IHasContainer<IAlfredContainer>
     {
         private const string LogHeader = "AppManager.Initialize";
 
@@ -49,9 +50,18 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
         [NotNull]
         private readonly AlfredApplication _alfred;
 
+        [NotNull]
         private IConsole _console;
 
         private IUserInterfaceDirector _userInterfaceDirector;
+
+        [ContractInvariantMethod]
+        private void Invariants()
+        {
+            Contract.Invariant(_alfred != null);
+            Contract.Invariant(Container != null);
+            Contract.Invariant(_console != null);
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class with the specified
@@ -61,17 +71,14 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
         /// <param name="options"> Options for creating the application. </param>
         /// <param name="director"> The user interface director. </param>
         public ApplicationManager(
-            [CanBeNull] IObjectContainer container,
+            [CanBeNull] IAlfredContainer container,
             [NotNull] ApplicationManagerOptions options,
             [CanBeNull] IUserInterfaceDirector director = null)
         {
             Options = options;
 
             // Everything will need a container. Provide one. 
-            Container = container ?? CommonProvider.Container;
-
-            // Use this container whenever a container is requested 
-            Container.RegisterAsProvidedInstance(typeof(IObjectContainer), Container);
+            Container = container ?? new AlfredContainer();
 
             // Register default mappings 
             ConfigureContainer();
@@ -128,7 +135,7 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
         ///     The container.
         /// </value>
         [NotNull]
-        public IObjectContainer Container { get; }
+        public IAlfredContainer Container { get; }
 
         /// <summary>
         ///     Gets the current culture's locale information.

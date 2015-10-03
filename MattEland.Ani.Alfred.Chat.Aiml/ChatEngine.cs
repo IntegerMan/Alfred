@@ -20,6 +20,7 @@ using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Common;
 using MattEland.Common.Providers;
+using MattEland.Ani.Alfred.Core.Definitions;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml
 {
@@ -30,7 +31,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
     /// <remarks>
     ///     NOTE: This class is now a partial class. Check the other partial classes for more details
     /// </remarks>
-    public sealed class ChatEngine
+    public sealed class ChatEngine : IHasContainer<IAlfredContainer>
     {
         [NotNull]
         private readonly AimlLoader _aimlLoader;
@@ -46,7 +47,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// </exception>
         /// <param name="container"> The container. </param>
         /// <param name="name"> The name of the chat engine. </param>
-        public ChatEngine([NotNull] IObjectContainer container, [NotNull] string name)
+        public ChatEngine([NotNull] IAlfredContainer container, [NotNull] string name)
         {
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
             if (name == null) { throw new ArgumentNullException(nameof(name)); }
@@ -87,7 +88,7 @@ namespace MattEland.Ani.Alfred.Chat.Aiml
         /// <value>
         ///     The container.
         /// </value>
-        public IObjectContainer Container { get; }
+        public IAlfredContainer Container { get; }
 
         /// <summary>
         ///     Gets the librarian that manages settings.

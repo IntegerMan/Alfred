@@ -2,24 +2,25 @@
 using System;
 using JetBrains.Annotations;
 using MattEland.Common.Providers;
-
+using System.Diagnostics.Contracts;
 namespace MattEland.Ani.Alfred.Search.Bing
 {
     /// <summary>
-    /// A Bing search result
+    ///     A Bing search result.
     /// </summary>
-    internal class BingSearchResult : SearchResult, IHasContainer
+    internal class BingSearchResult : SearchResult, IHasContainer<IAlfredContainer>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BingSearchResult" /> class.
+        ///     Initializes a new instance of the <see cref="BingSearchResult" /> class.
         /// </summary>
-        /// <param name="container">The container.</param>
-        /// <param name="result">The Bing search result.</param>
-        public BingSearchResult([NotNull] IObjectContainer container, [NotNull] WebResult result)
+        /// <param name="container"> The container. </param>
+        /// <param name="result"> The Bing search result. </param>
+        public BingSearchResult([NotNull] IAlfredContainer container, [NotNull] WebResult result)
             : base(container, result.Title)
         {
-            if (container == null) throw new ArgumentNullException(nameof(container));
-            if (result == null) throw new ArgumentNullException(nameof(result));
+            //- Validation
+            Contract.Requires<ArgumentNullException>(container != null);
+            Contract.Requires<ArgumentNullException>(result != null);
 
             // Set Basic Properties
             Description = result.Description;
@@ -30,13 +31,14 @@ namespace MattEland.Ani.Alfred.Search.Bing
         /// <summary>
         ///     Initializes a new instance of the <see cref="BingSearchResult"/> class.
         /// </summary>
-        /// <param name="container">The container.</param>
+        /// <param name="container"> The container. </param>
         /// <param name="result"> The Bing search result. </param>
-        public BingSearchResult([NotNull] IObjectContainer container, [NotNull] NewsResult result)
+        public BingSearchResult([NotNull] IAlfredContainer container, [NotNull] NewsResult result)
             : base(container, result.Title)
         {
-            if (container == null) throw new ArgumentNullException(nameof(container));
-            if (result == null) throw new ArgumentNullException(nameof(result));
+            //- Validation
+            Contract.Requires<ArgumentNullException>(container != null);
+            Contract.Requires<ArgumentNullException>(result != null);
 
             // Set Basic Properties
             Description = result.Description;
@@ -47,13 +49,14 @@ namespace MattEland.Ani.Alfred.Search.Bing
         /// <summary>
         ///     Initializes a new instance of the <see cref="BingSearchResult"/> class.
         /// </summary>
-        /// <param name="container">The container.</param>
+        /// <param name="container"> The container. </param>
         /// <param name="result"> The Bing search result. </param>
-        public BingSearchResult([NotNull] IObjectContainer container, [NotNull] ImageResult result)
+        public BingSearchResult([NotNull] IAlfredContainer container, [NotNull] ImageResult result)
             : base(container, result.Title)
         {
-            if (container == null) throw new ArgumentNullException(nameof(container));
-            if (result == null) throw new ArgumentNullException(nameof(result));
+            //- Validation
+            Contract.Requires<ArgumentNullException>(container != null);
+            Contract.Requires<ArgumentNullException>(result != null);
 
             // Set Basic Properties
             Description = result.ContentType;

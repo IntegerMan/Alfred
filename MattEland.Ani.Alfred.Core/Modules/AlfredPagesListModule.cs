@@ -34,7 +34,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         ///     Initializes a new instance of the <see cref="AlfredPagesListModule" /> class.
         /// </summary>
         /// <param name="container">The container.</param>
-        internal AlfredPagesListModule([NotNull] IObjectContainer container) : base(container)
+        internal AlfredPagesListModule([NotNull] IAlfredContainer container) : base(container)
         {
             _widgets = container.ProvideCollection<IWidget>();
         }

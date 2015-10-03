@@ -22,7 +22,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// </exception>
         /// <param name="container"> The container. </param>
         /// <param name="name"> The name of the module. </param>
-        public SimpleModule([NotNull] IObjectContainer container, [NotNull] string name) : base(container)
+        public SimpleModule([NotNull] IAlfredContainer container, [NotNull] string name) : base(container)
         {
             if (name.IsEmpty()) { throw new ArgumentNullException(nameof(name)); }
 

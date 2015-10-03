@@ -20,11 +20,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// </summary>
         /// <param name="container"> The container. </param>
         /// <param name="node"> The node. </param>
-        ///
-        /// ### <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="node"/> is null.
-        /// </exception>
-        public ExplorerSearchResult([NotNull] IObjectContainer container,
+        public ExplorerSearchResult([NotNull] IAlfredContainer container,
             [NotNull] IPropertyProvider node) : base(container, node.DisplayName)
         {
             //- Validate

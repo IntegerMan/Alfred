@@ -47,10 +47,10 @@ namespace MattEland.Ani.Alfred.Tests.Modules
             base.SetUp();
 
             // Create a subsystem to hold the page
-            var subsystem = new SimpleSubsystem(Container, "Test Subsystem", "TestSubsystemId");
+            var subsystem = new SimpleSubsystem(AlfredContainer, "Test Subsystem", "TestSubsystemId");
 
             // Build the AlfredPage and add it to the subsystem
-            Page = new ModuleListPage(Container, "Test AlfredPage", "TestPageId");
+            Page = new ModuleListPage(AlfredContainer, "Test AlfredPage", "TestPageId");
             subsystem.PagesToRegister.Add(Page);
 
             // Build out Alfred and give it our page

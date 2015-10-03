@@ -38,8 +38,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <param name="name"> The name. </param>
         /// <param name="id"> The ID. </param>
         /// <param name="displayName"> The display name. </param>
-        public ExplorerPage(
-            [NotNull] IObjectContainer container,
+        public ExplorerPage([NotNull] IAlfredContainer container,
                             [NotNull] string name,
                             [NotNull] string id,
                             [CanBeNull] string displayName = "Name") : base(container, name, id)

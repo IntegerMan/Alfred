@@ -13,13 +13,14 @@ using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Common.Providers;
+using MattEland.Ani.Alfred.Core.Definitions;
 
 namespace MattEland.Ani.Alfred.Core.Widgets
 {
     /// <summary>
     ///     Contains common parameters needed to create any <see cref="WidgetBase" />
     /// </summary>
-    public class WidgetCreationParameters : IHasContainer
+    public class WidgetCreationParameters : IHasContainer<IAlfredContainer>
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="WidgetCreationParameters" /> class.
@@ -28,7 +29,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         /// <param name="container"> The container. </param>
         public WidgetCreationParameters(
             [NotNull] string name,
-            [NotNull] IObjectContainer container)
+            [NotNull] IAlfredContainer container)
         {
             Name = name;
             Container = container;
@@ -48,6 +49,6 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         ///     The container.
         /// </value>
         [NotNull]
-        public IObjectContainer Container { get; }
+        public IAlfredContainer Container { get; }
     }
 }

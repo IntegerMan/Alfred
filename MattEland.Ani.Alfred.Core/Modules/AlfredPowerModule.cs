@@ -33,7 +33,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         ///     Thrown when one or more required arguments are null.
         /// </exception>
         /// <param name="container"> The container. </param>
-        public AlfredPowerModule([NotNull] IObjectContainer container)
+        public AlfredPowerModule([NotNull] IAlfredContainer container)
             : base(container)
         {
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
@@ -41,12 +41,12 @@ namespace MattEland.Ani.Alfred.Core.Modules
             AlfredStatusWidget = new TextWidget(Resources.AlfredCoreModule_AlfredNotSet,
                                                 BuildWidgetParameters(@"lblStatus"));
 
-            var initializeCommand = CommandHelper.CreateCommand(container, ExecuteInitializeCommand);
+            var initializeCommand = container.BuildCommand(ExecuteInitializeCommand);
             InitializeButton = new ButtonWidget(Resources.InitializeButtonText,
                                                 initializeCommand,
                                                 BuildWidgetParameters(@"btnInitialize"));
 
-            var shutdownCommand = CommandHelper.CreateCommand(container, ExecuteShutdownCommand);
+            var shutdownCommand = container.BuildCommand(ExecuteShutdownCommand);
             ShutdownButton = new ButtonWidget(Resources.ShutdownButtonText,
                                               shutdownCommand,
                                               BuildWidgetParameters(@"btnShutdown"));

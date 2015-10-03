@@ -20,6 +20,7 @@ using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Common;
 using MattEland.Common.Providers;
+using System.Diagnostics.Contracts;
 
 namespace MattEland.Ani.Alfred.Core
 {
@@ -27,7 +28,7 @@ namespace MattEland.Ani.Alfred.Core
     ///     An <see langword="abstract"/> class containing most common shared functionality between
     ///     Subsystems and Modules
     /// </summary>
-    public abstract class ComponentBase : NotifyChangedBase, IPropertyProvider, IHasContainer
+    public abstract class ComponentBase : NotifyChangedBase, IPropertyProvider, IHasContainer<IAlfredContainer>
     {
 
         [CanBeNull]
@@ -41,9 +42,9 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <param name="container">The container.</param>
         /// <exception cref="System.ArgumentNullException"><paramref name="container" /> is <see langword="null" />.</exception>
-        protected ComponentBase([NotNull] IObjectContainer container)
+        protected ComponentBase([NotNull] IAlfredContainer container)
         {
-            if (container == null) { throw new ArgumentNullException(nameof(container)); }
+            Contract.Requires<ArgumentNullException>(container != null);
 
             Container = container;
         }
@@ -61,11 +62,11 @@ namespace MattEland.Ani.Alfred.Core
         }
 
         /// <summary>
-        /// Gets the <see cref="IObjectContainer"/> used to provide types.
+        /// Gets the <see cref="IAlfredContainer"/> used to provide types.
         /// </summary>
         /// <value>The container.</value>
         [NotNull]
-        public IObjectContainer Container { get; }
+        public IAlfredContainer Container { get; }
 
         /// <summary>
         ///     Gets a value indicating whether this instance is online.

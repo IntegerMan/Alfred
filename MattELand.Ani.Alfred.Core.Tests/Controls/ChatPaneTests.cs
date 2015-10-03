@@ -43,7 +43,7 @@ namespace MattEland.Ani.Alfred.Tests.Controls
         {
             base.SetUp();
 
-            _chatPane = new ChatPane(Container);
+            _chatPane = new ChatPane(AlfredContainer);
             _chatMock = BuildMockChatProvider();
 
             // Chat Pane gets the chat provider in its data context

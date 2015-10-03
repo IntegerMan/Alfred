@@ -18,7 +18,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
     /// <summary>
     ///     A search provider for the mind explorer. This class cannot be inherited.
     /// </summary>
-    public sealed class ExplorerSearchProvider : ISearchProvider, IHasContainer
+    public sealed class ExplorerSearchProvider : ISearchProvider, IHasContainer<IAlfredContainer>
     {
         /// <summary>
         ///     The mind explorer subsystem.
@@ -33,7 +33,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// <param name="container"> The container. </param>
         /// <param name="mindExplorerSubsystem"> The mind explorer subsystem. </param>
         internal ExplorerSearchProvider(
-            [NotNull] IObjectContainer container,
+            [NotNull] IAlfredContainer container,
             [NotNull] MindExplorerSubsystem mindExplorerSubsystem)
         {
             Container = container;
@@ -82,7 +82,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         ///     The container.
         /// </value>
         [NotNull]
-        public IObjectContainer Container { get; }
+        public IAlfredContainer Container { get; }
     }
 
 }

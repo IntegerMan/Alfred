@@ -81,7 +81,7 @@ namespace MattEland.Ani.Alfred.Tests
             // Setup Simple properties
             mock.SetupGet(s => s.NameAndVersion).Returns("Test Component 1.0.0.0");
             mock.SetupGet(s => s.Status).Returns(AlfredStatus.Offline);
-            mock.SetupGet(m => m.Container).Returns(Container);
+            mock.SetupGet(m => m.Container).Returns(AlfredContainer);
 
             // Setup simple methods
             mock.Setup(s => s.Update());
@@ -239,7 +239,7 @@ namespace MattEland.Ani.Alfred.Tests
 
             mock.Setup(m => m.Initialize());
 
-            mock.SetupGet(m => m.Container).Returns(Container);
+            mock.SetupGet(m => m.Container).Returns(AlfredContainer);
 
             return mock;
         }
@@ -254,7 +254,7 @@ namespace MattEland.Ani.Alfred.Tests
         {
             var console = new Mock<IConsole>(MockingBehavior);
 
-            console.SetupGet(c => c.Container).Returns(Container);
+            console.SetupGet(c => c.Container).Returns(AlfredContainer);
 
             console.Setup(c => c.Log(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<LogLevel>()));
 

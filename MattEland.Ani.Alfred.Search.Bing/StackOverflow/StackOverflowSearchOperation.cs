@@ -7,13 +7,14 @@ using MattEland.Common;
 using StackExchange.StacMan;
 using System.Threading.Tasks;
 using StackExchange.StacMan.Questions;
+using System.Diagnostics.Contracts;
 
 namespace MattEland.Ani.Alfred.Search.StackOverflow
 {
     /// <summary>
     ///     A stack overflow search operation. This class cannot be inherited.
     /// </summary>
-    internal sealed class StackOverflowSearchOperation : ISearchOperation, IHasContainer
+    internal sealed class StackOverflowSearchOperation : ISearchOperation, IHasContainer<IAlfredContainer>
     {
         /// <summary>
         ///     The client.
@@ -42,11 +43,12 @@ namespace MattEland.Ani.Alfred.Search.StackOverflow
         /// <param name="container"> The container. </param>
         /// <param name="searchText"> The search text. </param>
         /// <param name="apiKey"> The API key. </param>
-        public StackOverflowSearchOperation([NotNull] IObjectContainer container, [NotNull] string searchText, [CanBeNull] string apiKey)
+        public StackOverflowSearchOperation([NotNull] IAlfredContainer container, [NotNull] string searchText, [CanBeNull] string apiKey)
         {
             //- Validate
-            if (container == null) throw new ArgumentNullException(nameof(container));
-            if (searchText.IsEmpty()) throw new ArgumentNullException(nameof(Search));
+            Contract.Requires<ArgumentNullException>(container != null);
+            Contract.Requires<ArgumentException>(searchText.HasText());
+            Contract.Requires<ArgumentException>(apiKey.HasText(), "apiKey was not set");
 
             // Set properties
             Container = container;
@@ -65,7 +67,7 @@ namespace MattEland.Ani.Alfred.Search.StackOverflow
         /// The container.
         /// </value>
         [NotNull]
-        public IObjectContainer Container
+        public IAlfredContainer Container
         {
             get;
         }

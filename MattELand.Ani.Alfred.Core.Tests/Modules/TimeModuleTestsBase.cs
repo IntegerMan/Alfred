@@ -70,10 +70,10 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         {
             base.SetUp();
 
-            Alfred = new AlfredApplication(Container);
+            Alfred = BuildAlfredInstance();
 
-            Page = new ModuleListPage(Container, "Time", "Time");
-            Module = new AlfredTimeModule(Container);
+            Page = new ModuleListPage(AlfredContainer, "Time", "Time");
+            Module = new AlfredTimeModule(AlfredContainer);
             Page.Register(Module);
 
             var subsystem = BuildTestSubsystem();

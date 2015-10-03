@@ -21,7 +21,7 @@ namespace MattEland.Ani.Alfred.Core
     /// doesn't reference that assembly so clients will have to provide their own version to support
     /// MVVM bindings, etc.
     /// </remarks>
-    public class AlfredCommand : IAlfredCommand, IHasContainer
+    public class AlfredCommand : IAlfredCommand, IHasContainer<IAlfredContainer>
     {
         /// <summary>
         /// The <see cref="Action"/> invoked when the <see ref="Execute"/> method is called. 
@@ -37,7 +37,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="AlfredCommand"/> class. 
         /// </summary>
-        public AlfredCommand() : this(null, CommonProvider.Container)
+        public AlfredCommand() : this(null, AlfredContainerHelper.ProvideContainer())
         {
         }
 
@@ -45,7 +45,7 @@ namespace MattEland.Ani.Alfred.Core
         /// Initializes a new instance of the <see cref="AlfredCommand"/> class. 
         /// </summary>
         /// <param name="container"> The container. </param>
-        public AlfredCommand(IObjectContainer container) : this(null, container)
+        public AlfredCommand(IAlfredContainer container) : this(null, container)
         {
         }
 
@@ -54,7 +54,7 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <param name="executeAction"> The execute action. </param>
         /// <param name="container"> The container. </param>
-        public AlfredCommand([CanBeNull] Action executeAction, [CanBeNull] IObjectContainer container)
+        public AlfredCommand([CanBeNull] Action executeAction, [CanBeNull] IAlfredContainer container)
         {
             ExecuteAction = executeAction;
             Container = container;
@@ -70,7 +70,7 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         /// <value> The container. </value>
         [CanBeNull]
-        public IObjectContainer Container { get; set; }
+        public IAlfredContainer Container { get; set; }
 
         /// <summary>
         /// Gets or sets the <see cref="Action"/> that is invoked when a command's

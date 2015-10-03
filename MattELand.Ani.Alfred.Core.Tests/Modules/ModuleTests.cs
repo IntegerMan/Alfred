@@ -52,7 +52,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         [NotNull]
         private WidgetCreationParameters BuildWidgetParams([NotNull] string name)
         {
-            return new WidgetCreationParameters(name, Container);
+            return new WidgetCreationParameters(name, AlfredContainer);
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
             var buttonWidget = new ButtonWidget(BuildWidgetParams(ButtonName));
 
             // Register our controls
-            var module = new SimpleModule(Container, "Test Module");
+            var module = new SimpleModule(AlfredContainer, "Test Module");
             module.WidgetsToRegisterOnInitialize.Add(textWidget);
             module.WidgetsToRegisterOnInitialize.Add(buttonWidget);
 

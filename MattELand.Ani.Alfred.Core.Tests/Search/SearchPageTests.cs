@@ -50,7 +50,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
         public void SearchPageIsARootPage()
         {
             //! Arrange
-            var app = new ApplicationManager(Container, BuildOptions());
+            var app = BuildApplicationInstance();
             Alfred = app.Alfred;
 
             //! Act
@@ -68,7 +68,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
         public void SearchPageShouldContainSearchModule()
         {
             //! Arrange
-            var page = new SearchPage(Container);
+            var page = new SearchPage(AlfredContainer);
 
             //! Act
             var module = page.FindModuleByName(SearchModuleName);
@@ -86,7 +86,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
         public void SearchPageShouldContainSearchResultsModule()
         {
             //! Arrange
-            var page = new SearchPage(Container);
+            var page = new SearchPage(AlfredContainer);
 
             //! Act
             var module = page.FindModuleByName(SearchResultsModuleName);
@@ -104,7 +104,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
         public void SearchPageShouldHaveVerticalLayout()
         {
             //! Arrange
-            var page = new SearchPage(Container);
+            var page = new SearchPage(AlfredContainer);
 
             //! Act
             var layout = page.LayoutType;
@@ -121,7 +121,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
         {
             //! Arrange
 
-            var page = new SearchPage(Container, false);
+            var page = new SearchPage(AlfredContainer, false);
 
             //! Act
 

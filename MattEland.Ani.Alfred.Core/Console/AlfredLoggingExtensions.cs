@@ -29,14 +29,14 @@ namespace MattEland.Ani.Alfred.Core.Console
         /// <param name="title"> The title. </param>
         /// <param name="level"> The level. </param>
         /// <param name="container"> The container. </param>
-        public static void Log([CanBeNull] this string message, [CanBeNull] string title, LogLevel level, [CanBeNull] IObjectContainer container)
+        public static void Log([CanBeNull] this string message, [CanBeNull] string title, LogLevel level, [CanBeNull] IAlfredContainer container)
         {
             // Grab the console from the container
             if (container == null)
             {
-                container = CommonProvider.Container;
+                container = AlfredContainerHelper.ProvideContainer();
             }
-            var console = container.TryProvide<IConsole>();
+            var console = container.Console;
 
             // Use the other extension method to log it
             message.Log(title, level, console);
@@ -72,7 +72,7 @@ namespace MattEland.Ani.Alfred.Core.Console
         /// <param name="message"> The message. </param>
         /// <param name="caption"> The caption. </param>
         /// <param name="container"> The container used for logging and message box provisions. </param>
-        public static void ShowAlert(this string message, string caption, IObjectContainer container)
+        public static void ShowAlert(this string message, string caption, IAlfredContainer container)
         {
             // Log it. If we have a speech-enabled console, this will be spoken aloud.
             message.Log(caption, LogLevel.ChatNotification, container);

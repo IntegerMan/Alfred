@@ -21,7 +21,7 @@ namespace MattEland.Common.Providers
     ///     <see cref="ActivatorObjectProvider" /> in creating objects as needed but will try the
     ///     constructor with a single <see cref="IObjectContainer" /> if it is present.
     /// </summary>
-    public sealed class ActivatorHasContainerObjectProvider : ActivatorObjectProvider, IHasContainer
+    public sealed class ActivatorHasContainerObjectProvider : ActivatorObjectProvider, IHasContainer<IObjectContainer>
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="ActivatorObjectProvider" /> class. This
@@ -85,7 +85,7 @@ namespace MattEland.Common.Providers
         {
             // If it's not an IHasContainer, just use the standard way
             var interfaces = typeToCreate.GetInterfaces();
-            if (!interfaces.Contains(typeof(IHasContainer)))
+            if (!interfaces.Contains(typeof(IHasContainer<IObjectContainer>)))
             {
                 return base.CreateInstanceUsingActivator(typeToCreate, args);
             }

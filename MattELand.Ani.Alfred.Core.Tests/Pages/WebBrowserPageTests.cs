@@ -24,7 +24,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
         {
             //! Arrange / Act
 
-            var page = new WebBrowserPage(Container);
+            var page = new WebBrowserPage(AlfredContainer);
 
             //! Assert
 
@@ -37,7 +37,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
         {
             //! Arrange / Act
 
-            var page = new WebBrowserPage(Container);
+            var page = new WebBrowserPage(AlfredContainer);
 
             //! Assert
 
@@ -51,7 +51,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
         {
             //! Arrange
 
-            var page = new WebBrowserPage(Container);
+            var page = new WebBrowserPage(AlfredContainer);
             var widget = page.Browser;
 
             //! Act

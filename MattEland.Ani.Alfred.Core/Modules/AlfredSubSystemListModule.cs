@@ -38,7 +38,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         /// <exception cref="ArgumentNullException">
         /// Thrown when one or more required arguments are null.
         /// </exception>
-        internal AlfredSubsystemListModule([NotNull] IObjectContainer container) : base(container)
+        internal AlfredSubsystemListModule([NotNull] IAlfredContainer container) : base(container)
         {
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
 

@@ -96,6 +96,7 @@
     <None Include="AlfredAppTestCertificate.snk" />
     <None Include="app.config" />
     <None Include="packages.config" />
+    <Compile Include="Some.Names.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

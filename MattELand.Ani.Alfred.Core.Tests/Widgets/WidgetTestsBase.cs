@@ -16,7 +16,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
         [NotNull]
         protected WidgetCreationParameters BuildWidgetParams(string name = "WidgetTest")
         {
-            return new WidgetCreationParameters(name, Container);
+            return new WidgetCreationParameters(name, AlfredContainer);
         }
 
     }

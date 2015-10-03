@@ -51,14 +51,14 @@ namespace MattEland.Ani.Alfred.Tests.Presentation
         {
             //! Arrange
             IAlfredCommand command;
-            var container = new CommonContainer { Name = CurrentTestName };
+            var container = new AlfredContainer { Name = CurrentTestName };
 
             //! Act
             using (var window = new MainWindow(container, false))
             {
                 var app = window.Application;
 
-                command = app.Container.Provide<IAlfredCommand>();
+                command = app.Container.BuildCommand();
             }
 
             //! Assert

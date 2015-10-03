@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using MattEland.Common.Providers;
+using System.Diagnostics.Contracts;
 
 namespace MattEland.Ani.Alfred.Search.StackOverflow
 {
     /// <summary>
     ///     A stack overflow search provider. This class cannot be inherited.
     /// </summary>
-    public sealed class StackOverflowSearchProvider : ISearchProvider, IHasContainer
+    public sealed class StackOverflowSearchProvider : ISearchProvider, IHasContainer<IAlfredContainer>
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="StackOverflowSearchProvider" /> class.
@@ -19,9 +20,10 @@ namespace MattEland.Ani.Alfred.Search.StackOverflow
         ///     Thrown when one or more required arguments are null.
         /// </exception>
         /// <param name="container"> The container. </param>
-        public StackOverflowSearchProvider([NotNull] IObjectContainer container, [CanBeNull] string apiKey)
+        public StackOverflowSearchProvider([NotNull] IAlfredContainer container, [CanBeNull] string apiKey)
         {
-            if (container == null) throw new ArgumentNullException(nameof(container));
+            //- Validate
+            Contract.Requires<ArgumentNullException>(container != null);
 
             Container = container;
 
@@ -43,7 +45,7 @@ namespace MattEland.Ani.Alfred.Search.StackOverflow
         /// <value>
         ///     The container.
         /// </value>
-        public IObjectContainer Container
+        public IAlfredContainer Container
         {
             get;
         }

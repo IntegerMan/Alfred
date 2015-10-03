@@ -68,7 +68,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
 
                 LinkWidget = new LinkWidget(SearchResult.MoreDetailsText, SearchResult.Url, parameters)
                 {
-                    Command = CommandHelper.CreateCommand(Container, SearchResult.MoreDetailsAction)
+                    Command = Container.BuildCommand(SearchResult.MoreDetailsAction)
                 };
             }
             else

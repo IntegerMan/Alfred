@@ -27,13 +27,13 @@ namespace MattEland.Ani.Alfred.WPF
     /// <summary>
     ///     Interaction logic for MainWindow.xaml
     /// </summary>
-    public sealed partial class MainWindow : IDisposable, IUserInterfaceDirector, IHasContainer
+    public sealed partial class MainWindow : IDisposable, IUserInterfaceDirector, IHasContainer<IAlfredContainer>
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="MainWindow" /> class.
         /// </summary>
         [UsedImplicitly]
-        public MainWindow() : this(CommonProvider.Container, true)
+        public MainWindow() : this(new AlfredContainer(), true)
         {
         }
 
@@ -42,7 +42,7 @@ namespace MattEland.Ani.Alfred.WPF
         /// </summary>
         /// <param name="container"> The container. </param>
         /// <param name="enableSpeech"> true to enable speech output, false to disable speech. </param>
-        public MainWindow(IObjectContainer container, bool enableSpeech)
+        public MainWindow(IAlfredContainer container, bool enableSpeech)
         {
             Container = container;
 
@@ -77,7 +77,7 @@ namespace MattEland.Ani.Alfred.WPF
         ///     The container.
         /// </value>
         [NotNull]
-        public IObjectContainer Container { get; }
+        public IAlfredContainer Container { get; }
 
         /// <summary>
         ///     Gets the application.

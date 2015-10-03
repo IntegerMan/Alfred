@@ -11,13 +11,14 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 
 using MattEland.Common.Providers;
+using MattEland.Ani.Alfred.Core.Definitions;
 
 namespace MattEland.Ani.Alfred.Core.Console
 {
     /// <summary>
     ///     An interface describing the display console Alfred can interact with
     /// </summary>
-    public interface IConsole : IHasContainer
+    public interface IConsole : IHasContainer<IAlfredContainer>
     {
         /// <summary>
         ///     Gets the console events.

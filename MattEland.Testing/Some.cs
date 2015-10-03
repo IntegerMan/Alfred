@@ -8,7 +8,7 @@ namespace MattEland.Testing
     /// <summary>
     /// A helper class intended to help make tests more meaningful by hiding unimportant values.
     /// </summary>
-    public sealed class Some
+    public sealed partial class Some
     {
 
         [NotNull]
@@ -19,7 +19,6 @@ namespace MattEland.Testing
         /// </summary>
         public Some() : this(new Random())
         {
-
         }
 
         /// <summary>
@@ -29,6 +28,20 @@ namespace MattEland.Testing
         public Some(Random randomizer)
         {
             _rand = randomizer ?? new Random();
+
+            // Prepare the name collections
+            _firstNames = GetFirstNames();
+            _lastNames = GetLastNames();
+        }
+
+
+        /// <summary>
+        /// Gets an unimportant number.
+        /// </summary>
+        /// <value>The number.</value>
+        public double Number
+        {
+            get { return _rand.NextDouble() * 100; }
         }
 
         /// <summary>
@@ -46,6 +59,7 @@ namespace MattEland.Testing
                 return "Where can I find a good electronic butler?";
             }
         }
+
         /// <summary>
         /// Gets unimportant text.
         /// </summary>
@@ -66,14 +80,6 @@ namespace MattEland.Testing
             get { return "http://www.matteland.com/"; }
         }
 
-        /// <summary>
-        /// Gets an unimportant number.
-        /// </summary>
-        /// <value>The number.</value>
-        public double Number
-        {
-            get { return _rand.NextDouble() * 100; }
-        }
     }
 
 }

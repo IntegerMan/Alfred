@@ -164,7 +164,7 @@ namespace MattEland.Common.Providers
             if (instance == null) { throw new ArgumentNullException(nameof(instance)); }
             if (type == null) { throw new ArgumentNullException(nameof(type)); }
 
-            var hasContainer = instance as IHasContainer;
+            var hasContainer = instance as IHasContainer<IObjectContainer>;
 
             if (container == null)
             {

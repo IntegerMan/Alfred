@@ -2,12 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using MattEland.Common.Providers;
 using MattEland.Ani.Alfred.Core.Definitions;
 using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Search.GitHub;
 using MattEland.Ani.Alfred.Search.Bing;
 using MattEland.Ani.Alfred.Search.StackOverflow;
+using System.Diagnostics.Contracts;
 
 namespace MattEland.Ani.Alfred.Search
 {
@@ -40,12 +40,13 @@ namespace MattEland.Ani.Alfred.Search
         /// <param name="container"> The container. </param>
         /// <param name="bingApiKey"> The Bing API key. </param>
         /// <param name="stackOverflowApiKey"> The stack overflow API key. </param>
-        public SearchSubsystem([NotNull] IObjectContainer container,
+        public SearchSubsystem([NotNull] IAlfredContainer container,
             [NotNull] string bingApiKey,
             [CanBeNull] string stackOverflowApiKey)
             : base(container)
         {
-            if (container == null) throw new ArgumentNullException(nameof(container));
+            //- Validation
+            Contract.Requires<ArgumentNullException>(container != null);
 
             _gitHubSearchProvider = new GitHubSearchProvider(container);
             _stackOverflowSearchProvider = new StackOverflowSearchProvider(container, stackOverflowApiKey);

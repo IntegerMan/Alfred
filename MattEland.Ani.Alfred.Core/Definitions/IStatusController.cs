@@ -15,7 +15,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
     /// <summary>
     ///     The Status Controller provides a way to control Alfred's status
     /// </summary>
-    public interface IStatusController : IHasContainer
+    public interface IStatusController : IHasContainer<IAlfredContainer>
     {
 
         /// <summary>

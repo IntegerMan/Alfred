@@ -41,8 +41,8 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         {
             base.SetUp();
 
-            _alfred = new AlfredApplication(Container);
-            _module = new AlfredPowerModule(Container);
+            _alfred = BuildAlfredInstance();
+            _module = new AlfredPowerModule(AlfredContainer);
 
             RegisterTestModule(_alfred, _module);
         }
@@ -56,7 +56,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         {
             var subsystem = BuildTestSubsystem();
 
-            var page = new ModuleListPage(Container, "Test AlfredPage", "Test");
+            var page = new ModuleListPage(AlfredContainer, "Test AlfredPage", "Test");
             subsystem.PagesToRegister.Add(page);
 
             alfred.Register(subsystem);
@@ -88,8 +88,8 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         public void AtInitialStateInitializeIsVisible()
         {
             // Doing this again here to illustrate creation / configuration order more clearly
-            _alfred = new AlfredApplication(Container);
-            _module = new AlfredPowerModule(Container);
+            _alfred = BuildAlfredInstance();
+            _module = new AlfredPowerModule(AlfredContainer);
 
             RegisterTestModule(_alfred, _module);
 
@@ -116,8 +116,8 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         [Test]
         public void CoreModuleHasNoProviderText()
         {
-            _alfred = new AlfredApplication(Container);
-            _module = new AlfredPowerModule(Container);
+            _alfred = BuildAlfredInstance();
+            _module = new AlfredPowerModule(AlfredContainer);
 
             var text = _module.AlfredStatusWidget.Text;
             Assert.IsNotNull(text, "Widget text was null");

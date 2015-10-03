@@ -15,7 +15,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// </summary>
         /// <param name="container"> The container. </param>
         /// <param name="title"> The title. </param>
-        public SearchResult(IObjectContainer container, string title)
+        public SearchResult(IAlfredContainer container, string title)
         {
             Container = container;
             Title = title;
@@ -85,8 +85,8 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         [CanBeNull]
         private Action BuildMoreDetailsAction()
         {
-            var router = Container.Provide<IAlfredCommandRecipient>();
-            var shell = Container.TryProvide<IShellCommandRecipient>();
+            var router = Container.CommandRouter;
+            var shell = Container.Shell;
 
             // Build out a command handler
             return () =>
@@ -136,7 +136,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// Gets the container.
         /// </summary>
         /// <value>The container.</value>
-        public IObjectContainer Container { get; protected set; }
+        public IAlfredContainer Container { get; protected set; }
     }
 }
 

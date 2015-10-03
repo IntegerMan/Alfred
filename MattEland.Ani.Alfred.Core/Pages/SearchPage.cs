@@ -41,7 +41,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         ///     Initializes a new instance of the <see cref="AlfredPage" /> class.
         /// </summary>
         /// <param name="container">The container.</param>
-        public SearchPage([NotNull] IObjectContainer container) : this(container, true)
+        public SearchPage([NotNull] IAlfredContainer container) : this(container, true)
         {
         }
 
@@ -50,7 +50,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// </summary>
         /// <param name="container">The container.</param>
         /// <param name="includeSearchModule">Whether or not to include the search module.</param>
-        public SearchPage([NotNull] IObjectContainer container, bool includeSearchModule)
+        public SearchPage([NotNull] IAlfredContainer container, bool includeSearchModule)
             : base(container, "Search", "SearchResults")
         {
             if (includeSearchModule)

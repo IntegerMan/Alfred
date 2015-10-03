@@ -41,7 +41,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <exception cref="ArgumentNullException">
         /// Thrown when one or more required arguments are null.
         /// </exception>
-        public ModuleListPage([NotNull] IObjectContainer container,
+        public ModuleListPage([NotNull] IAlfredContainer container,
                               [NotNull] string name,
                               [NotNull] string id) : base(container, name, id)
         {

@@ -24,7 +24,7 @@ namespace MattEland.Testing
     /// <summary>A <see langword="base" /> class for all unit tests</summary>
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
-    public abstract class UnitTestBase : IHasContainer
+    public abstract class UnitTestBase : IHasContainer<IObjectContainer>
     {
         /// <summary>
         /// The container
@@ -40,6 +40,17 @@ namespace MattEland.Testing
         [NotNull]
         public Random Randomizer { get; set; }
 
+        /// <summary>
+        ///     Builds the container.
+        /// </summary>
+        /// <returns>
+        ///     An IObjectContainer.
+        /// </returns>
+        [NotNull]
+        protected virtual IObjectContainer BuildContainer()
+        {
+            return new CommonContainer();
+        }
         /// <summary>Gets the <see cref="IObjectContainer" /> used by the test.</summary>
         /// <value>The container.</value>
         [NotNull]
@@ -49,7 +60,7 @@ namespace MattEland.Testing
             {
                 if (_container == null)
                 {
-                    _container = new CommonContainer();
+                    _container = BuildContainer();
                 }
 
                 // Ensure the name is accurate

@@ -44,7 +44,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
         public void ButtonCommandsDoNotExecuteWhenButtonIsNotClicked()
         {
             var executed = false;
-            var command = Container.Provide<IAlfredCommand>();
+            var command = AlfredContainer.BuildCommand();
             command.ExecuteAction = () => { executed = true; };
 
             var button = new ButtonWidget("Click Me", command, BuildWidgetParams());
@@ -60,7 +60,7 @@ namespace MattEland.Ani.Alfred.Tests.Widgets
         public void ButtonCommandsExecuteWhenClicked()
         {
             var executed = false;
-            var command = Container.Provide<IAlfredCommand>();
+            var command = AlfredContainer.BuildCommand();
             command.ExecuteAction = () => { executed = true; };
 
             var button = new ButtonWidget(BuildWidgetParams()) { ClickCommand = command };

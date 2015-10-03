@@ -34,7 +34,7 @@ namespace MattEland.Ani.Alfred.Tests.Core
         {
             //! Arrange
 
-            var core = new AlfredCoreSubsystem(Container);
+            var core = new AlfredCoreSubsystem(AlfredContainer);
 
             Alfred.Register(core);
             Alfred.Initialize();

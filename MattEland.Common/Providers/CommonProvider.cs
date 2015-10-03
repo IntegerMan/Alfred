@@ -29,7 +29,7 @@ namespace MattEland.Common.Providers
         private static IObjectContainer _container;
 
         /// <summary>
-        ///     Gets the default dependency injection container.
+        ///     Gets or sets the default dependency injection container.
         /// </summary>
         /// <exception cref="UnauthorizedAccessException">
         ///     Cannot access the common container when
@@ -53,6 +53,10 @@ namespace MattEland.Common.Providers
                     _container = new CommonContainer() { Name = "CommonProvider Container" };
                 }
                 return _container;
+            }
+            set
+            {
+                _container = value;
             }
         }
 

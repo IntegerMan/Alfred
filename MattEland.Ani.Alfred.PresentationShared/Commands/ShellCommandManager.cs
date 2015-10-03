@@ -22,7 +22,7 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
     /// <summary>
     ///     The command manager for the WPF/XAML application.
     /// </summary>
-    public class ShellCommandManager : IShellCommandRecipient
+    public class ShellCommandManager : IShellCommandRecipient, IHasContainer<IAlfredContainer>
     {
         /// <summary>
         ///     Gets the Alfred instance.
@@ -52,7 +52,7 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
         /// <param name="director"> The user <see langword="interface" /> director. </param>
         /// <param name="alfred"> The alfred instance. </param>
         internal ShellCommandManager(
-            [NotNull] IObjectContainer container,
+            [NotNull] IAlfredContainer container,
             [NotNull] IUserInterfaceDirector director,
             [NotNull] AlfredApplication alfred)
         {
@@ -72,7 +72,7 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
         /// <value>
         ///     The container.
         /// </value>
-        public IObjectContainer Container { get; }
+        public IAlfredContainer Container { get; }
 
         /// <summary>
         ///     Processes a shell <paramref name="command" /> by sending it on to the user

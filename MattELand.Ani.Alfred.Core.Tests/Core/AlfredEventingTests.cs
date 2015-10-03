@@ -61,7 +61,7 @@ namespace MattEland.Ani.Alfred.Tests.Core
             Alfred = BuildAlfredInstance();
 
             _subsystem = BuildTestSubsystem();
-            _page = new ModuleListPage(Container, "Test AlfredPage", "Test");
+            _page = new ModuleListPage(AlfredContainer, "Test AlfredPage", "Test");
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace MattEland.Ani.Alfred.Tests.Core
         [NotNull]
         private WidgetCreationParameters BuildWidgetParams(string name = "WidgetTest")
         {
-            return new WidgetCreationParameters(name, Container);
+            return new WidgetCreationParameters(name, AlfredContainer);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace MattEland.Ani.Alfred.Tests.Core
         [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         public void AddingStandardModulesAddsModules()
         {
-            Alfred.RegistrationProvider.Register(new AlfredCoreSubsystem(Container));
+            Alfred.RegistrationProvider.Register(new AlfredCoreSubsystem(AlfredContainer));
 
             var numModules =
                 Alfred.Subsystems.SelectMany(subsystem => subsystem.Pages)
@@ -109,7 +109,7 @@ namespace MattEland.Ani.Alfred.Tests.Core
         [Test]
         public void InitializingInitializesComponents()
         {
-            Alfred.RegistrationProvider.Register(new AlfredCoreSubsystem(Container));
+            Alfred.RegistrationProvider.Register(new AlfredCoreSubsystem(AlfredContainer));
 
             Alfred.Initialize();
 
@@ -146,7 +146,7 @@ namespace MattEland.Ani.Alfred.Tests.Core
         {
             Alfred.Initialize();
 
-            var subsystem = new AlfredCoreSubsystem(Container);
+            var subsystem = new AlfredCoreSubsystem(AlfredContainer);
 
             Alfred.RegistrationProvider.Register(subsystem);
         }
@@ -158,7 +158,7 @@ namespace MattEland.Ani.Alfred.Tests.Core
         [ExpectedException(typeof(InvalidOperationException))]
         public void ModulesCannotUpdateWhileOffline()
         {
-            Alfred.RegistrationProvider.Register(new AlfredCoreSubsystem(Container));
+            Alfred.RegistrationProvider.Register(new AlfredCoreSubsystem(AlfredContainer));
 
             Alfred.Update();
         }
@@ -220,7 +220,7 @@ namespace MattEland.Ani.Alfred.Tests.Core
             var textWidget = new TextWidget(BuildWidgetParams());
 
             // This module should register its control both at initialize and shutdown
-            var testModule = new SimpleModule(Container, "Test Module");
+            var testModule = new SimpleModule(AlfredContainer, "Test Module");
             testModule.WidgetsToRegisterOnInitialize.Add(textWidget);
             testModule.WidgetsToRegisterOnShutdown.Add(textWidget);
 
@@ -248,7 +248,7 @@ namespace MattEland.Ani.Alfred.Tests.Core
         [Test]
         public void ShuttingDownShutsDownComponents()
         {
-            Alfred.RegistrationProvider.Register(new AlfredCoreSubsystem(Container));
+            Alfred.RegistrationProvider.Register(new AlfredCoreSubsystem(AlfredContainer));
 
             Alfred.Initialize();
             Alfred.Shutdown();

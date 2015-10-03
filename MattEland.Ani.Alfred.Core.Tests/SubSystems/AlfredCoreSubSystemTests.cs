@@ -41,9 +41,9 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         {
             base.SetUp();
 
-            _subsystem = new AlfredCoreSubsystem(Container);
+            _subsystem = new AlfredCoreSubsystem(AlfredContainer);
 
-            _alfred = new AlfredApplication(Container);
+            _alfred = BuildAlfredInstance();
         }
 
         [NotNull]
@@ -132,8 +132,8 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         [Test]
         public void EventLogPageIsPresentInAlfredAfterInitializationWhenConsoleIsProvided()
         {
-            var console = new DiagnosticConsole(Container);
-            console.RegisterAsProvidedInstance(typeof(IConsole), Container);
+            var console = new DiagnosticConsole(AlfredContainer);
+            AlfredContainer.Console = console;
 
             _alfred.Register(_subsystem);
             _alfred.Initialize();
@@ -178,7 +178,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
             //! Act
 
             // Set up the subsystem to not include a search module
-            var subsystem = new AlfredCoreSubsystem(Container, IncludeSearchModule);
+            var subsystem = new AlfredCoreSubsystem(AlfredContainer, IncludeSearchModule);
 
             // Get things online to load the pages
             _alfred.Register(subsystem);

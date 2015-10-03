@@ -48,7 +48,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <exception cref="ArgumentNullException">
         /// Thrown when one or more required arguments are null.
         /// </exception>
-        public SystemMonitoringSubsystem([NotNull] IObjectContainer container) : base(container)
+        public SystemMonitoringSubsystem([NotNull] IAlfredContainer container) : base(container)
         {
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
 

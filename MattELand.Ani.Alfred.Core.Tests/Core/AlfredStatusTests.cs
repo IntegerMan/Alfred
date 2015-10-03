@@ -156,7 +156,7 @@ namespace MattEland.Ani.Alfred.Tests.Core
         public void ShutdownCausesAlfredToSayGoodbye()
         {
             // Alfred will need a chat subsystem for this test
-            var chatSubsystem = new ChatSubsystem(Container, "Test Monkey");
+            var chatSubsystem = new ChatSubsystem(AlfredContainer, "Test Monkey");
             Alfred.RegistrationProvider.Register(chatSubsystem);
             Alfred.Subsystems.ShouldContain(chatSubsystem);
 

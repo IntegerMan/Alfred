@@ -16,6 +16,7 @@ using MattEland.Ani.Alfred.VisualStudio.Properties;
 using MattEland.Common.Providers;
 
 using Microsoft.VisualStudio.Shell;
+using MattEland.Ani.Alfred.Core;
 
 namespace MattEland.Ani.Alfred.VisualStudio
 {
@@ -83,7 +84,8 @@ namespace MattEland.Ani.Alfred.VisualStudio
                 };
 
                 // Build out the app manager
-                _app = new ApplicationManager(CommonProvider.Container, options);
+                var container = AlfredContainerHelper.ProvideContainer();
+                _app = new ApplicationManager(container, options);
 
                 _app.Console?.Log(Resources.AlfredPackageInstantiatingAlfredLogHeader, Resources.AlfredPackageInstantiatingAlfredLogMessage, LogLevel.Verbose);
 

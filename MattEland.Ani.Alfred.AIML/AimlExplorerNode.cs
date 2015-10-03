@@ -25,7 +25,7 @@ namespace MattEland.Ani.Alfred.Chat
         private readonly ICollection<AimlExplorerNode> _children;
 
         [NotNull]
-        private readonly IObjectContainer _container;
+        private readonly IAlfredContainer _container;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AimlExplorerNode" /> class.
@@ -33,7 +33,7 @@ namespace MattEland.Ani.Alfred.Chat
         /// <param name="container">The container.</param>
         /// <param name="node">The node.</param>
         /// <exception cref="System.ArgumentNullException">node</exception>
-        internal AimlExplorerNode([NotNull] IObjectContainer container, [NotNull] Node node)
+        internal AimlExplorerNode([NotNull] IAlfredContainer container, [NotNull] Node node)
         {
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
             if (node == null) { throw new ArgumentNullException(nameof(node)); }

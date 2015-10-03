@@ -23,7 +23,7 @@ namespace MattEland.Ani.Alfred.Core
     ///     This class takes commands in and handles them by routing them to various components in an
     ///     Alfred application.
     /// </summary>
-    internal class AlfredCommandRouter : IAlfredCommandRecipient, IShellCommandRecipient, IHasContainer
+    internal class AlfredCommandRouter : IAlfredCommandRecipient, IShellCommandRecipient, IHasContainer<IAlfredContainer>
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="AlfredCommandRouter" /> class.
@@ -32,14 +32,12 @@ namespace MattEland.Ani.Alfred.Core
         ///     Thrown when one or more required arguments are null.
         /// </exception>
         /// <param name="container"> The container. </param>
-        /// <param name="alfred"> The Alfred instance. </param>
-        internal AlfredCommandRouter([NotNull] IObjectContainer container, [NotNull] IAlfred alfred)
+        internal AlfredCommandRouter([NotNull] IAlfredContainer container)
         {
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
-            if (alfred == null) { throw new ArgumentNullException(nameof(alfred)); }
 
             Container = container;
-            Alfred = alfred;
+            Alfred = container.Alfred;
         }
 
         /// <summary>
@@ -49,7 +47,7 @@ namespace MattEland.Ani.Alfred.Core
         ///     The container.
         /// </value>
         [NotNull]
-        public IObjectContainer Container { get; }
+        public IAlfredContainer Container { get; }
 
         /// <summary>
         ///     Gets or sets the Alfred instance.

@@ -13,6 +13,7 @@ using System.Diagnostics;
 using JetBrains.Annotations;
 
 using MattEland.Common.Providers;
+using MattEland.Ani.Alfred.Core.Definitions;
 
 namespace MattEland.Ani.Alfred.Core.Console
 {
@@ -28,7 +29,7 @@ namespace MattEland.Ani.Alfred.Core.Console
         ///     Thrown when one or more required arguments are null.
         /// </exception>
         /// <param name="container"> The container. </param>
-        public DiagnosticConsole([NotNull] IObjectContainer container) : base(container)
+        public DiagnosticConsole([NotNull] IAlfredContainer container) : base(container)
         {
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
 

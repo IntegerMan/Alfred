@@ -33,7 +33,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         ///     Initializes a new instance of the <see cref="AlfredModule" /> class.
         /// </summary>
         /// <param name="container"> The container. </param>
-        protected AlfredModule([NotNull] IObjectContainer container) : base(container)
+        protected AlfredModule([NotNull] IAlfredContainer container) : base(container)
         {
             _widgets = container.ProvideCollection<IWidget>();
         }

@@ -26,7 +26,7 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
         ///     Initializes a new instance of the <see cref="XamlClientCommand" /> class.
         /// </summary>
         [UsedImplicitly]
-        public XamlClientCommand() : this(null, CommonProvider.Container)
+        public XamlClientCommand() : this(null, AlfredContainerHelper.ProvideContainer())
         {
         }
 
@@ -34,7 +34,7 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
         ///     Initializes a new instance of the <see cref="XamlClientCommand" /> class.
         /// </summary>
         /// <param name="executeAction">The execute action.</param>
-        public XamlClientCommand(Action executeAction, IObjectContainer container) : base(executeAction, container)
+        public XamlClientCommand(Action executeAction, IAlfredContainer container) : base(executeAction, container)
         {
         }
     }

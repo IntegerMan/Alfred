@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 
 using MattEland.Common.Providers;
+using MattEland.Ani.Alfred.Core.Definitions;
 
 namespace MattEland.Ani.Alfred.Core.Console
 {
@@ -31,7 +32,7 @@ namespace MattEland.Ani.Alfred.Core.Console
         /// <exception cref="ArgumentNullException">
         /// Thrown when one or more required arguments are null.
         /// </exception>
-        public SimpleConsole([NotNull] IObjectContainer container)
+        public SimpleConsole([NotNull] IAlfredContainer container)
             : this(container, new ConsoleEventFactory())
         {
         }
@@ -45,7 +46,7 @@ namespace MattEland.Ani.Alfred.Core.Console
         /// Thrown when one or more required arguments are null.
         /// </exception>
         public SimpleConsole(
-            [NotNull] IObjectContainer container,
+            [NotNull] IAlfredContainer container,
             [NotNull] ConsoleEventFactory factory)
         {
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
@@ -128,7 +129,7 @@ namespace MattEland.Ani.Alfred.Core.Console
         /// The container.
         /// </value>
         [NotNull]
-        public IObjectContainer Container { get; }
+        public IAlfredContainer Container { get; }
 
         /// <summary>
         ///     Logs the specified console event.

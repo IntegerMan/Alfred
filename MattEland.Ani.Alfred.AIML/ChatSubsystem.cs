@@ -38,7 +38,7 @@ namespace MattEland.Ani.Alfred.Chat
         /// <param name="container">The container.</param>
         /// <param name="engineName">Name of the chat engine.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public ChatSubsystem([NotNull] IObjectContainer container, [NotNull] string engineName) : base(container)
+        public ChatSubsystem([NotNull] IAlfredContainer container, [NotNull] string engineName) : base(container)
         {
             ChatHandler = new AimlStatementHandler(container, engineName);
             _chatPage = new ChatPage(container, Res.ChatModuleName.NonNull(), ChatHandler);

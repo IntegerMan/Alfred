@@ -18,6 +18,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Common;
 using MattEland.Common.Providers;
+using MattEland.Ani.Alfred.Core.Definitions;
 
 namespace MattEland.Ani.Alfred.Core.Speech
 {
@@ -45,7 +46,7 @@ namespace MattEland.Ani.Alfred.Core.Speech
         /// Thrown when one or more required arguments are null.
         /// </exception>
         public AlfredSpeechConsole(
-            [NotNull] IObjectContainer container,
+            [NotNull] IAlfredContainer container,
             [CanBeNull] IConsole console,
             [CanBeNull] ConsoleEventFactory factory)
         {
@@ -182,6 +183,6 @@ namespace MattEland.Ani.Alfred.Core.Speech
         /// The container.
         /// </value>
         [NotNull]
-        public IObjectContainer Container { get; }
+        public IAlfredContainer Container { get; }
     }
 }

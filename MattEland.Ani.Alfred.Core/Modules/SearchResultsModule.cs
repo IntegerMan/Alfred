@@ -33,7 +33,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         ///     Initializes a new instance of the <see cref="SearchResultsModule" /> class.
         /// </summary>
         /// <param name="container"> The container. </param>
-        public SearchResultsModule([NotNull] IObjectContainer container) : base(container)
+        public SearchResultsModule([NotNull] IAlfredContainer container) : base(container)
         {
             LayoutType = LayoutType.VerticalStackPanel;
 

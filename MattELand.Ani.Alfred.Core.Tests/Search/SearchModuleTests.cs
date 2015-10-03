@@ -59,7 +59,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
         {
             base.SetUp();
 
-            Module = new SearchModule(Container);
+            Module = new SearchModule(AlfredContainer);
         }
 
         /// <summary>

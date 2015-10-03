@@ -45,7 +45,7 @@ namespace MattEland.Ani.Alfred.Core.Modules
         ///     Thrown when one or more required arguments are null.
         /// </exception>
         /// <param name="container"> The container. </param>
-        public AlfredTimeModule([NotNull] IObjectContainer container) : base(container)
+        public AlfredTimeModule([NotNull] IAlfredContainer container) : base(container)
         {
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
 

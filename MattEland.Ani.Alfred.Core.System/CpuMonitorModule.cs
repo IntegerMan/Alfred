@@ -54,7 +54,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// </summary>
         /// <param name="container">The container.</param>
         /// <param name="factory">The metric provider factory.</param>
-        internal CpuMonitorModule([NotNull] IObjectContainer container,
+        internal CpuMonitorModule([NotNull] IAlfredContainer container,
             [NotNull] IMetricProviderFactory factory) : base(container, factory)
         {
         }

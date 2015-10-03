@@ -19,7 +19,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         ///     class.
         /// </summary>
         /// <param name="container"> The container. </param>
-        public WebBrowserPage([NotNull] IObjectContainer container)
+        public WebBrowserPage([NotNull] IAlfredContainer container)
             : base(container, "Web Browser", "Browser")
         {
             _browserWidget = new WebBrowserWidget(new WidgetCreationParameters("browser", container));

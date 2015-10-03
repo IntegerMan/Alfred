@@ -32,7 +32,7 @@ namespace MattEland.Common.Providers
     ///     this container.
     /// </remarks>
     [PublicAPI]
-    public sealed class CommonContainer : IObjectContainer
+    public class CommonContainer : IObjectContainer
     {
         /// <summary>
         ///     The <see cref="Type" /> used when providing collections.
@@ -412,7 +412,7 @@ namespace MattEland.Common.Providers
             if (type == null) { throw new ArgumentNullException(nameof(type)); }
             if (instance == null) { throw new ArgumentNullException(nameof(instance)); }
 
-            var hasContainer = instance as IHasContainer;
+            var hasContainer = instance as IHasContainer<IObjectContainer>;
             if (hasContainer != null && hasContainer.Container != this)
             {
                 throw new InvalidOperationException(

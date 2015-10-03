@@ -30,7 +30,7 @@ namespace MattEland.Manticore.Analyzers
         ///     The container.
         /// </value>
         [NotNull]
-        public IObjectContainer Container { get; }
+        public IAlfredContainer Container { get; }
 
         /// <summary>
         /// Gets the console.
@@ -44,8 +44,9 @@ namespace MattEland.Manticore.Analyzers
         /// </summary>
         protected ManticoreAnalyzerBase()
         {
-            // Set up the provider
-            Container = CommonProvider.Container;
+            // Set up the container
+            IAlfredContainer container = AlfredContainerHelper.ProvideContainer();
+            Container = container;
 
             if (Container.HasMapping(typeof(IAlfred)))
             {

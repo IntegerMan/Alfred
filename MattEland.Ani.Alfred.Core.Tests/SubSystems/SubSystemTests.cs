@@ -32,8 +32,6 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     public sealed class SubsystemTests : MockEnabledAlfredTestBase
     {
-        [NotNull]
-        private AlfredApplication _alfred;
 
         [NotNull]
         private Mock<IAlfredSubsystem> _subsystem;
@@ -46,7 +44,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         {
             base.SetUp();
 
-            _alfred = new AlfredApplication(Container);
+            Alfred = BuildAlfredInstance();
 
             _subsystem = BuildMockSubsystem();
         }
@@ -60,15 +58,15 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         {
             //! Arrange
 
-            _alfred.RegistrationProvider.Register(_subsystem.Object);
+            Alfred.RegistrationProvider.Register(_subsystem.Object);
 
             //! Act
 
-            _alfred.Initialize();
+            Alfred.Initialize();
 
             //! Assert
 
-            _subsystem.Verify(s => s.Initialize(It.Is<IAlfred>(a => a == _alfred)), Times.Once);
+            _subsystem.Verify(s => s.Initialize(It.Is<IAlfred>(a => a == Alfred)), Times.Once);
             _subsystem.Verify(s => s.OnInitializationCompleted(), Times.Once);
         }
 
@@ -81,11 +79,11 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
 
             //! Arrange
 
-            _alfred.RegistrationProvider.Register(_subsystem.Object);
+            Alfred.RegistrationProvider.Register(_subsystem.Object);
 
             //! Act
 
-            _alfred.Initialize();
+            Alfred.Initialize();
 
             //! Assert
 
@@ -101,12 +99,12 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
 
             //! Arrange
 
-            _alfred.RegistrationProvider.Register(_subsystem.Object);
+            Alfred.RegistrationProvider.Register(_subsystem.Object);
 
             //! Act
 
-            _alfred.Initialize();
-            _alfred.Update();
+            Alfred.Initialize();
+            Alfred.Update();
 
             //! Assert
 
@@ -123,13 +121,13 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
 
             //! Arrange
 
-            _alfred.RegistrationProvider.Register(_subsystem.Object);
+            Alfred.RegistrationProvider.Register(_subsystem.Object);
 
             //! Act
 
-            _alfred.Initialize();
-            _alfred.Update();
-            _alfred.Shutdown();
+            Alfred.Initialize();
+            Alfred.Update();
+            Alfred.Shutdown();
 
             //! Assert
 
@@ -146,13 +144,13 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
 
             //! Arrange
 
-            _alfred.RegistrationProvider.Register(_subsystem.Object);
+            Alfred.RegistrationProvider.Register(_subsystem.Object);
 
             //! Act
 
-            _alfred.Initialize();
-            _alfred.Update();
-            _alfred.Shutdown();
+            Alfred.Initialize();
+            Alfred.Update();
+            Alfred.Shutdown();
 
             //! Assert
 

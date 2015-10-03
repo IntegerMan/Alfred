@@ -36,7 +36,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <exception cref="ArgumentNullException">
         /// Thrown when one or more required arguments are null.
         /// </exception>
-        public EventLogPage([NotNull] IObjectContainer container, [NotNull] string name)
+        public EventLogPage([NotNull] IAlfredContainer container, [NotNull] string name)
             : base(container, name, "Log")
         {
             if (container == null) { throw new ArgumentNullException(nameof(container)); }

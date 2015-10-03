@@ -35,7 +35,7 @@ namespace MattEland.Ani.Alfred.Chat
         /// <param name="container">The container.</param>
         /// <param name="name">The name.</param>
         /// <param name="chatHandler">The input handler</param>
-        internal ChatPage([NotNull] IObjectContainer container, [NotNull] string name, [NotNull] IChatProvider chatHandler) : base(container, name, "Chat")
+        internal ChatPage([NotNull] IAlfredContainer container, [NotNull] string name, [NotNull] IChatProvider chatHandler) : base(container, name, "Chat")
         {
             _chatHandler = chatHandler;
         }

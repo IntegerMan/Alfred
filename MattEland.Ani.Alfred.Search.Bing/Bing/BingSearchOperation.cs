@@ -4,12 +4,11 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Common.Providers;
 using MattEland.Common;
 using System.Data.Services.Client;
 using System.Diagnostics.Contracts;
 using System.Net;
-using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Search.Bing
 {
@@ -17,7 +16,7 @@ namespace MattEland.Ani.Alfred.Search.Bing
     ///     A bing search operation. This class cannot be inherited.
     /// </summary>
     [PublicAPI]
-    public sealed class BingSearchOperation : ISearchOperation, IHasContainer
+    public sealed class BingSearchOperation : ISearchOperation, IHasContainer<IAlfredContainer>
     {
 
         /// <summary>
@@ -42,12 +41,12 @@ namespace MattEland.Ani.Alfred.Search.Bing
         /// </exception>
         /// <param name="container"> The container. </param>
         /// <param name="searchText"> The search text. </param>
-        public BingSearchOperation([NotNull] IObjectContainer container, string searchText, string bingApiKey)
+        public BingSearchOperation([NotNull] IAlfredContainer container, string searchText, string bingApiKey)
         {
             //- Validate
-            Contract.Requires(container != null, "container was null");
-            Contract.Requires(searchText.HasText(), "search text was empty");
-            Contract.Requires(bingApiKey.HasText(), "bingApiKey was not set");
+            Contract.Requires<ArgumentNullException>(container != null, "container was null");
+            Contract.Requires<ArgumentOutOfRangeException>(searchText.HasText(), "search text was empty");
+            Contract.Requires<ArgumentException>(bingApiKey.HasText(), "bingApiKey was not set");
 
             //- Set Values from Parameters
             Container = container;
@@ -72,10 +71,7 @@ namespace MattEland.Ani.Alfred.Search.Bing
         private void StartSearch()
         {
             // Ensure the API Key has at least been set
-            if (BingApiKey.IsEmpty())
-            {
-                throw new InvalidOperationException("BingApiKey must be set");
-            }
+            Contract.Requires<ArgumentException>(BingApiKey.HasText(), "bingApiKey was not set");
 
             // Set up the Bing Search Container that will be used to make web service calls
             const string BingSearchPath = @"https://api.datamarket.azure.com/Bing/SearchWeb/Web/";
@@ -235,7 +231,7 @@ namespace MattEland.Ani.Alfred.Search.Bing
         /// <value>
         ///     The container.
         /// </value>
-        public IObjectContainer Container
+        public IAlfredContainer Container
         {
             get;
         }

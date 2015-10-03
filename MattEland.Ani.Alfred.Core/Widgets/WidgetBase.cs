@@ -15,7 +15,6 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
-using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Widgets
 {
@@ -160,6 +159,6 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         /// <value>
         ///     The container.
         /// </value>
-        public IObjectContainer Container { get; }
+        public IAlfredContainer Container { get; }
     }
 }

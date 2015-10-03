@@ -39,7 +39,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
         {
             base.SetUp();
 
-            _page = new ExplorerPage(Container, "Test AlfredPage", "TestExp");
+            _page = new ExplorerPage(AlfredContainer, "Test AlfredPage", "TestExp");
         }
 
         [NotNull]
@@ -55,7 +55,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
         [ItemNotNull]
         private IEnumerable<IPropertyProvider> GetSimpleCollection()
         {
-            return new List<IPropertyProvider> { new EventLogPage(Container, "Event Test") };
+            return new List<IPropertyProvider> { new EventLogPage(AlfredContainer, "Event Test") };
         }
 
         /// <summary>

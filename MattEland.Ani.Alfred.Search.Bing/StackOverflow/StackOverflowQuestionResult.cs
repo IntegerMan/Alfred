@@ -4,6 +4,7 @@ using MattEland.Common.Providers;
 using JetBrains.Annotations;
 using MattEland.Common;
 using StackExchange.StacMan;
+using System.Diagnostics.Contracts;
 
 namespace MattEland.Ani.Alfred.Search.StackOverflow
 {
@@ -21,13 +22,13 @@ namespace MattEland.Ani.Alfred.Search.StackOverflow
         /// </exception>
         /// <param name="container"> The container. </param>
         /// <param name="question"> The question. </param>
-        internal StackOverflowQuestionResult([NotNull] IObjectContainer container,
+        internal StackOverflowQuestionResult([NotNull] IAlfredContainer container,
                     [NotNull] Question question)
             : base(container, question.Title)
         {
-            //- Validate
-            if (container == null) throw new ArgumentNullException(nameof(container));
-            if (question == null) throw new ArgumentNullException(nameof(question));
+            //- Validation
+            Contract.Requires<ArgumentNullException>(container != null);
+            Contract.Requires<ArgumentNullException>(question != null);
 
             // Set misc. properties from the question object
             Description = question.Body;

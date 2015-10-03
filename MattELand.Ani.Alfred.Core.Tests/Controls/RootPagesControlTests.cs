@@ -38,7 +38,7 @@ namespace MattEland.Ani.Alfred.Tests.Controls
         {
             base.SetUp();
 
-            _app = new ApplicationManager(Container, BuildOptions());
+            _app = BuildApplicationInstance();
             _control = new RootPagesControl(_app);
             _app.Alfred.Initialize();
 

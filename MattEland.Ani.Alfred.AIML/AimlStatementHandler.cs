@@ -60,7 +60,7 @@ namespace MattEland.Ani.Alfred.Chat
         /// <param name="container"> The container to use for inversion of control. </param>
         /// <param name="engineName"> Name of the chat engine. </param>
         public AimlStatementHandler(
-            [NotNull] IObjectContainer container,
+            [NotNull] IAlfredContainer container,
             [NotNull] string engineName)
         {
             //- Validate
@@ -92,7 +92,7 @@ namespace MattEland.Ani.Alfred.Chat
         ///     The container.
         /// </value>
         [NotNull]
-        public IObjectContainer Container { get; }
+        public IAlfredContainer Container { get; }
 
         /// <summary>
         ///     Gets the console.

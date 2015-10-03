@@ -8,16 +8,16 @@ namespace MattEland.Ani.Alfred.Search.GitHub
     /// <summary>
     ///     A GitHub search provider.
     /// </summary>
-    public sealed class GitHubSearchProvider : ISearchProvider, IHasContainer
+    public sealed class GitHubSearchProvider : ISearchProvider, IHasContainer<IAlfredContainer>
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="GitHubSearchProvider"/> class.
         /// </summary>
         /// <param name="container"> The container. </param>
-        public GitHubSearchProvider([NotNull] IObjectContainer container)
+        public GitHubSearchProvider([NotNull] IAlfredContainer container)
         {
             //- Validation
-            Contract.Requires(container != null, "container is null.");
+            Contract.Requires<ArgumentNullException>(container != null, "container is null.");
 
             // Set Properties from parameters
             Container = container;
@@ -27,7 +27,7 @@ namespace MattEland.Ani.Alfred.Search.GitHub
         /// Gets the container. 
         /// </summary>
         /// <value> The container. </value>
-        public IObjectContainer Container
+        public IAlfredContainer Container
         {
             get;
         }

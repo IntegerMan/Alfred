@@ -63,7 +63,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <exception cref="ArgumentNullException">
         /// <paramref name="container"/> is <see langword="null"/> .
         /// </exception>
-        public AlfredSearchController([NotNull] IObjectContainer container) : base(container)
+        public AlfredSearchController([NotNull] IAlfredContainer container) : base(container)
         {
             // Default search timeouts to 30 seconds 
             SearchTimeoutInMilliseconds = TimeSpan.FromSeconds(30).Milliseconds;

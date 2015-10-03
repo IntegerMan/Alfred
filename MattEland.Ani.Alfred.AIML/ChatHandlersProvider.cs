@@ -33,7 +33,7 @@ namespace MattEland.Ani.Alfred.Chat
         /// <param name="container"> The container. </param>
         /// <param name="engine"> The chat engine. </param>
         internal ChatHandlersProvider(
-            [NotNull] IObjectContainer container, [NotNull] ChatEngine engine)
+            [NotNull] IAlfredContainer container, [NotNull] ChatEngine engine)
         {
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
             if (engine == null) { throw new ArgumentNullException(nameof(engine)); }

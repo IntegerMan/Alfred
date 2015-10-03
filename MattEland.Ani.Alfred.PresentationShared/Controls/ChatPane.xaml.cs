@@ -18,18 +18,19 @@ using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
 using MattEland.Common.Providers;
+using MattEland.Ani.Alfred.Core;
 
 namespace MattEland.Ani.Alfred.PresentationAvalon.Controls
 {
     /// <summary>
     /// Interaction logic for ChatPane.xaml
     /// </summary>
-    public sealed partial class ChatPane : IUserInterfaceTestable, IHasContainer
+    public sealed partial class ChatPane : IUserInterfaceTestable, IHasContainer<IAlfredContainer>
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="ChatPane" /> class.
         /// </summary>
-        public ChatPane() : this(CommonProvider.Container)
+        public ChatPane() : this(AlfredContainerHelper.ProvideContainer())
         {
         }
 
@@ -40,7 +41,7 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Controls
         ///     Thrown when one or more required arguments are null.
         /// </exception>
         /// <param name="container"> The container. </param>
-        public ChatPane([NotNull] IObjectContainer container)
+        public ChatPane([NotNull] IAlfredContainer container)
         {
             if (container == null) { throw new ArgumentNullException(nameof(container)); }
 
@@ -55,7 +56,7 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Controls
         /// <value>
         ///     The container.
         /// </value>
-        public IObjectContainer Container { get; }
+        public IAlfredContainer Container { get; }
 
         /// <summary>
         ///     Simulates the control's loaded event.

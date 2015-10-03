@@ -47,7 +47,7 @@ namespace MattEland.Ani.Alfred.Tests.Pages
         private void ArrangeScenario()
         {
             // The class we're testing here is the main Alfred pump
-            Alfred = new AlfredApplication(Container);
+            Alfred = BuildAlfredInstance();
 
             // TODO: This should be a mock or simple non-test object
             _subsystem = BuildTestSubsystem();
