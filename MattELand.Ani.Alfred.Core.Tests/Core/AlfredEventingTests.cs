@@ -126,13 +126,16 @@ namespace MattEland.Ani.Alfred.Tests.Core
         [Test]
         public void LogToConsole()
         {
-            var console = Container.Provide<IConsole>();
+            //! Arrange
+            var console = Console;
             console.ShouldNotBeNull("Console was not present");
 
             var numEvents = console.Events.Count();
 
+            //! Act
             console.Log("Alfred Test Framework", "Testing logging to Alfred", LogLevel.Verbose);
 
+            //! Assert
             console.Events.Count()
                    .ShouldBe(numEvents + 1, "Event count did not increase after logging.");
         }

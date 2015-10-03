@@ -86,7 +86,7 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
 
             // Create Alfred. It won't be online and running yet, but create it. 
             _alfred = Container.Provide<AlfredApplication>(Container);
-            _alfred.RegisterAsProvidedInstance(typeof(IAlfred), Container);
+            Container.Alfred = _alfred;
 
             // Give Alfred a way to talk to the user and the client a way to log events that are
             // separate from Alfred

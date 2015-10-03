@@ -200,9 +200,7 @@ namespace MattEland.Ani.Alfred.Tests
         [NotNull]
         protected IAlfredSubsystem GetSubsystem(string subsystemId)
         {
-            var alfred = Container.Provide<IAlfred>();
-
-            var subsystem = alfred.Subsystems.FirstOrDefault(s => s.Id.Matches(subsystemId));
+            var subsystem = Alfred.Subsystems.FirstOrDefault(s => s.Id.Matches(subsystemId));
             subsystem.ShouldNotBeNull($"The Subsystem with id '{subsystemId}' could not be found");
 
             return subsystem;

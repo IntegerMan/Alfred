@@ -48,14 +48,15 @@ namespace MattEland.Manticore.Analyzers
             IAlfredContainer container = AlfredContainerHelper.ProvideContainer();
             Container = container;
 
+            // Grab or Create Alfred
             if (Container.HasMapping(typeof(IAlfred)))
             {
-                Alfred = Container.Provide<IAlfred>();
+                Alfred = Container.Alfred;
             }
             else
             {
                 Alfred = new AlfredApplication(Container);
-                Alfred.RegisterAsProvidedInstance(typeof(IAlfred));
+                Container.Alfred = Alfred;
             }
 
             Console = Container.Console;
