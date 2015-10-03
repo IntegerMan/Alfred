@@ -11,12 +11,14 @@ using System.Runtime.InteropServices;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
-using MattEland.Ani.Alfred.PresentationAvalon.Commands;
+
 using MattEland.Ani.Alfred.VisualStudio.Properties;
 using MattEland.Common.Providers;
 
 using Microsoft.VisualStudio.Shell;
 using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.PresentationAvalon.Commands;
+using MattEland.Ani.Alfred.PresentationCommon.Commands;
 
 namespace MattEland.Ani.Alfred.VisualStudio
 {

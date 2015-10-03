@@ -102,8 +102,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\ApplicationManager.cs" />
-    <Compile Include="Commands\ApplicationManagerOptions.cs" />
-    <Compile Include="Commands\ShellCommandManager.cs" />
     <Compile Include="Commands\XamlClientCommand.cs" />
     <Compile Include="Controls\BrowserControl.xaml.cs">
       <DependentUpon>BrowserControl.xaml</DependentUpon>
@@ -125,7 +123,6 @@
       <DependentUpon>SearchResultControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\LogLevelToBrushConverter.cs" />
-    <Compile Include="Commands\IUserInterfaceDirector.cs" />
     <Compile Include="Converters\VisibilityConverter.cs" />
     <Compile Include="Helpers\SafeObservableCollection.cs" />
     <Compile Include="Helpers\SelectionHelper.cs" />

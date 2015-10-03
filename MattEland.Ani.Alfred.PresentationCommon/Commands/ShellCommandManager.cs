@@ -17,7 +17,7 @@ using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common.Providers;
 using MattEland.Common;
 
-namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
+namespace MattEland.Ani.Alfred.PresentationCommon.Commands
 {
     /// <summary>
     ///     The command manager for the WPF/XAML application.
@@ -46,12 +46,12 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
         ///     Initializes a new instance of the <see cref="object" /> class.
         /// </summary>
         /// <exception cref="ArgumentNullException">
-        ///     <paramref name="director" /> is <see langword="null" /> .
+        ///     Thrown when one or more required arguments are null.
         /// </exception>
         /// <param name="container"> The container. </param>
         /// <param name="director"> The user <see langword="interface" /> director. </param>
         /// <param name="alfred"> The alfred instance. </param>
-        internal ShellCommandManager(
+        public ShellCommandManager(
             [NotNull] IAlfredContainer container,
             [NotNull] IUserInterfaceDirector director,
             [NotNull] AlfredApplication alfred)

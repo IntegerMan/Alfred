@@ -1,11 +1,4 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="AlfredChatWindowControl.xaml.cs" company="Company">
-//     Copyright (c) Company.  All rights reserved.
-// </copyright>
-//------------------------------------------------------------------------------
-
-using JetBrains.Annotations;
-
+﻿using JetBrains.Annotations;
 using MattEland.Ani.Alfred.PresentationAvalon.Commands;
 
 namespace MattEland.Ani.Alfred.VisualStudio

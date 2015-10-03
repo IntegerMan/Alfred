@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core.Definitions;
 
-namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
+namespace MattEland.Ani.Alfred.PresentationCommon.Commands
 {
     /// <summary>
     /// Defines a class capable of managing a user interface in response to application commands from the Alfred framework.

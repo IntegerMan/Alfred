@@ -9,7 +9,7 @@ using System.Windows;
 
 using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Ani.Alfred.Core.Subsystems;
-using MattEland.Ani.Alfred.PresentationAvalon.Commands;
+
 using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.VisualStudio

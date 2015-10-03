@@ -6,11 +6,12 @@ using System.Windows.Controls;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.PresentationAvalon.Commands;
+
 using MattEland.Ani.Alfred.PresentationAvalon.Controls;
 using MattEland.Testing;
 
 using NUnit.Framework;
+using MattEland.Ani.Alfred.PresentationAvalon.Commands;
 
 namespace MattEland.Ani.Alfred.Tests.Controls
 {

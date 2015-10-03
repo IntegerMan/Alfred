@@ -13,6 +13,7 @@ using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Ani.Alfred.Core.Speech;
 using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Ani.Alfred.PresentationAvalon.Helpers;
+using MattEland.Ani.Alfred.PresentationCommon.Commands;
 using MattEland.Ani.Alfred.Search;
 using MattEland.Common;
 using MattEland.Common.Providers;
@@ -53,7 +54,7 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
         [NotNull]
         private IConsole _console;
 
-        private IUserInterfaceDirector _userInterfaceDirector;
+        private MattEland.Ani.Alfred.PresentationCommon.Commands.IUserInterfaceDirector _userInterfaceDirector;
 
         [ContractInvariantMethod]
         private void Invariants()
@@ -72,8 +73,8 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
         /// <param name="director"> The user interface director. </param>
         public ApplicationManager(
             [CanBeNull] IAlfredContainer container,
-            [NotNull] ApplicationManagerOptions options,
-            [CanBeNull] IUserInterfaceDirector director = null)
+            [NotNull] MattEland.Ani.Alfred.PresentationCommon.Commands.ApplicationManagerOptions options,
+            [CanBeNull] MattEland.Ani.Alfred.PresentationCommon.Commands.IUserInterfaceDirector director = null)
         {
             Options = options;
 
@@ -158,7 +159,7 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
         /// </summary>
         /// <value> The options. </value>
         [NotNull]
-        public ApplicationManagerOptions Options { get; }
+        public MattEland.Ani.Alfred.PresentationCommon.Commands.ApplicationManagerOptions Options { get; }
 
         /// <summary>
         /// Gets the root nodes. 
@@ -174,7 +175,7 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
         /// </summary>
         /// <value> The user interface director. </value>
         [CanBeNull]
-        public IUserInterfaceDirector UserInterfaceDirector
+        public MattEland.Ani.Alfred.PresentationCommon.Commands.IUserInterfaceDirector UserInterfaceDirector
         {
             [DebuggerStepThrough]
             get

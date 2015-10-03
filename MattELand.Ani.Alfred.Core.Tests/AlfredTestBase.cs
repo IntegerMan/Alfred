@@ -11,7 +11,7 @@ using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Ani.Alfred.Core.Subsystems;
-using MattEland.Ani.Alfred.PresentationAvalon.Commands;
+
 using MattEland.Common;
 using MattEland.Common.Providers;
 using MattEland.Testing;
@@ -19,6 +19,7 @@ using MattEland.Testing;
 using NUnit.Framework;
 
 using Shouldly;
+using MattEland.Ani.Alfred.PresentationAvalon.Commands;
 
 namespace MattEland.Ani.Alfred.Tests
 {
@@ -251,9 +252,9 @@ namespace MattEland.Ani.Alfred.Tests
         /// <returns>The <see cref="ApplicationManagerOptions" />.</returns>
         [NotNull]
         [SuppressMessage("ReSharper", "RedundantEmptyObjectOrCollectionInitializer")]
-        protected static ApplicationManagerOptions BuildOptions()
+        protected static MattEland.Ani.Alfred.PresentationCommon.Commands.ApplicationManagerOptions BuildOptions()
         {
-            var options = new ApplicationManagerOptions
+            var options = new MattEland.Ani.Alfred.PresentationCommon.Commands.ApplicationManagerOptions
             {
                 IsSpeechEnabled = false,
                 ShowMindExplorerPage = true,

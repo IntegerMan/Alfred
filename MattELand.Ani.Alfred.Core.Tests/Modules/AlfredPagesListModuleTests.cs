@@ -15,7 +15,7 @@ using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Pages;
-using MattEland.Ani.Alfred.PresentationAvalon.Commands;
+
 using MattEland.Common;
 using MattEland.Testing;
 

@@ -13,7 +13,7 @@ using System.Linq;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Pages;
-using MattEland.Ani.Alfred.PresentationAvalon.Commands;
+
 using MattEland.Ani.Alfred.Tests.Controls;
 using MattEland.Testing;
 
