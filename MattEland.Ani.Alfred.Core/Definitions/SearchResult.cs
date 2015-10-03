@@ -86,14 +86,24 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         private Action BuildMoreDetailsAction()
         {
             var router = Container.Provide<IAlfredCommandRecipient>();
+            var shell = Container.TryProvide<IShellCommandRecipient>();
 
-            // Build out a web request command
+            // Build out a command handler
             return () =>
             {
+                // Build out a command to navigate the browser widget to the proper locationText
                 var result = new AlfredCommandResult();
                 var command = new ChatCommand("Core", "Browse", Url);
 
                 router.ProcessAlfredCommand(command, result);
+
+                /* Tell the shell to navigate as well. This is separate from the prior command since
+                   we don't want the user interface to have specific knowledge of its contents. */
+                if (shell != null)
+                {
+                    var shellCommand = new ShellCommand("Nav", "Pages", "Browser");
+                    shell.ProcessShellCommand(shellCommand);
+                }
             };
         }
 
@@ -129,3 +139,4 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         public IObjectContainer Container { get; protected set; }
     }
 }
+
