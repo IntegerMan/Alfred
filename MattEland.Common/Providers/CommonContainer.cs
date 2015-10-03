@@ -544,14 +544,6 @@ namespace MattEland.Common.Providers
         }
 
         /// <summary>
-        ///     Adds default mappings to the container.
-        /// </summary>
-        public void AddDefaultMappings()
-        {
-            // TODO: This is empty
-        }
-
-        /// <summary>
         ///     Provides an instance of the requested <paramref name="type" /> .
         /// </summary>
         /// <param name="type">The <see cref="Type" /> that was requested to be provided.</param>
@@ -689,32 +681,15 @@ namespace MattEland.Common.Providers
         /// <summary>
         ///     Initializes a new instance of the <see cref="CommonContainer" /> class.
         /// </summary>
-        public CommonContainer() : this(true)
+        public CommonContainer() : this(null)
         {
         }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="CommonContainer" /> class.
         /// </summary>
-        /// <param name="addDefaultMappings">Whether or not to add default mappings.</param>
-        public CommonContainer(bool addDefaultMappings) : this(addDefaultMappings, null)
-        {
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="CommonContainer" /> class.
-        /// </summary>
-        /// <param name="parent">The parent container.</param>
-        public CommonContainer([CanBeNull] IObjectContainer parent) : this(true, parent)
-        {
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="CommonContainer" /> class.
-        /// </summary>
-        /// <param name="addDefaultMappings">Whether or not to add default mappings.</param>
-        /// <param name="parent">The parent container.</param>
-        public CommonContainer(bool addDefaultMappings, [CanBeNull] IObjectContainer parent)
+        /// <param name="parent"> The parent container. </param>
+        public CommonContainer([CanBeNull] IObjectContainer parent)
         {
             Mappings = new Dictionary<Type, IObjectProvider>();
             InstanceProvider = new InstanceProvider();
@@ -723,8 +698,6 @@ namespace MattEland.Common.Providers
 
             // Give it a random Name for cross thread diagnostics
             Name = $"Con_{Guid.NewGuid()}";
-
-            if (addDefaultMappings) { AddDefaultMappings(); }
         }
 
         #endregion
