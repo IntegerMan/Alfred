@@ -93,7 +93,7 @@ namespace MattEland.Ani.Alfred.Tests.Core
         {
             var container = Container;
             var al = Alfred;
-            var console = Container.Provide<IConsole>();
+            var console = AlfredContainer.Console;
 
             var eventsBeforeInitialize = console.EventCount;
 

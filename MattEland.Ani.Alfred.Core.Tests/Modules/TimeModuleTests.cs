@@ -180,8 +180,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         public void TimeModuleLogsOnHalfHourChanges()
         {
             // Have Alfred use the global console
-            var console = Container.Provide<IConsole>();
-            console.RegisterAsProvidedInstance(typeof(IConsole), Container);
+            var console = AlfredContainer.Console;
             Alfred.Initialize();
 
             Module.Update(new DateTime(1980, 9, 10, 9, 29, 0));
@@ -202,8 +201,7 @@ namespace MattEland.Ani.Alfred.Tests.Modules
         public void TimeModuleLogsWhenTheHourChanges()
         {
             // Have Alfred use the global console
-            var console = Container.Provide<IConsole>();
-            console.RegisterAsProvidedInstance(typeof(IConsole), Container);
+            var console = AlfredContainer.Console;
 
             Alfred.Initialize();
 

@@ -132,6 +132,9 @@ namespace MattEland.Ani.Alfred.Core.Definitions
                 {
                     // It's important to have a console, so build a default one if we have to
                     _console = TryProvide<IConsole>() ?? new SimpleConsole(this);
+
+                    // If we did create one, make sure its registered
+                    _console.RegisterAsProvidedInstance(typeof(IConsole), this);
                 }
 
                 return _console;
