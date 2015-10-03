@@ -16,7 +16,7 @@ using JetBrains.Annotations;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
-
+using System.Diagnostics.Contracts;
 namespace MattEland.Ani.Alfred.Core
 {
     /// <summary>
@@ -35,13 +35,9 @@ namespace MattEland.Ani.Alfred.Core
         internal AlfredStatusController([NotNull] IAlfredContainer container)
         {
             //- Validate
-            if (container == null) { throw new ArgumentNullException(nameof(container)); }
+            Contract.Requires(container != null, "container is null.");
 
             Container = container;
-            Alfred = container.Alfred;
-
-            Locale = container.Locale;
-            Console = container.Console;
         }
 
         /// <summary>
@@ -51,7 +47,7 @@ namespace MattEland.Ani.Alfred.Core
         /// The localization culture.
         /// </value>
         [NotNull]
-        private CultureInfo Locale { get; }
+        private CultureInfo Locale { get { return Container.Locale; } }
 
         /// <summary>
         ///     Gets the console associated with this item.
@@ -59,7 +55,8 @@ namespace MattEland.Ani.Alfred.Core
         /// <value>
         /// The console.
         /// </value>
-        private IConsole Console { get; }
+        [CanBeNull]
+        private IConsole Console { get { return Container.Console; } }
 
         /// <summary>
         ///     Gets the container.
@@ -67,6 +64,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <value>
         /// The container.
         /// </value>
+        [NotNull]
         public IAlfredContainer Container { get; }
 
         /// <summary>
@@ -76,7 +74,7 @@ namespace MattEland.Ani.Alfred.Core
         /// The Alfred framework.
         /// </value>
         [NotNull]
-        public IAlfred Alfred { get; }
+        public IAlfred Alfred { get { return Container.Alfred; } }
 
         /// <summary>
         ///     Gets the components to initialize / shut down. These will include subsystems and other

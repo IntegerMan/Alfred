@@ -68,7 +68,7 @@ namespace MattEland.Ani.Alfred.Tests.Chat
         {
             //! Arrange
 
-            var console = Container.Provide<IConsole>();
+            var console = AlfredContainer.Console;
 
             //! Act
 

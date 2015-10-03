@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-
+using System.Diagnostics.Contracts;
 namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>
@@ -128,23 +128,22 @@ namespace MattEland.Ani.Alfred.Core.Definitions
             get
             {
                 // Lazy load - this is not guaranteed to provide a value
-                if (_console != null)
+                if (_console == null)
                 {
-                    _console = TryProvide<IConsole>();
+                    // It's important to have a console, so build a default one if we have to
+                    _console = TryProvide<IConsole>() ?? new SimpleConsole(this);
                 }
 
                 return _console;
             }
             set
             {
-                // Don't require non-null; allow callers to clear out the console
+                Contract.Requires(value != null, "value is null.");
+
                 _console = value;
 
                 // Register the console into the container
-                if (value != null)
-                {
-                    value.RegisterAsProvidedInstance(typeof(IConsole), this);
-                }
+                value.RegisterAsProvidedInstance(typeof(IConsole), this);
             }
         }
 

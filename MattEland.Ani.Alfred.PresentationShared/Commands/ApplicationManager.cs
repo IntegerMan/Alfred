@@ -51,17 +51,17 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
         [NotNull]
         private readonly AlfredApplication _alfred;
 
-        [NotNull]
-        private IConsole _console;
-
-        private MattEland.Ani.Alfred.PresentationCommon.Commands.IUserInterfaceDirector _userInterfaceDirector;
+        /// <summary>
+        ///     The user interface director.
+        /// </summary>
+        [CanBeNull]
+        private IUserInterfaceDirector _userInterfaceDirector;
 
         [ContractInvariantMethod]
         private void Invariants()
         {
             Contract.Invariant(_alfred != null);
             Contract.Invariant(Container != null);
-            Contract.Invariant(_console != null);
         }
 
         /// <summary>
@@ -73,8 +73,8 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
         /// <param name="director"> The user interface director. </param>
         public ApplicationManager(
             [CanBeNull] IAlfredContainer container,
-            [NotNull] MattEland.Ani.Alfred.PresentationCommon.Commands.ApplicationManagerOptions options,
-            [CanBeNull] MattEland.Ani.Alfred.PresentationCommon.Commands.IUserInterfaceDirector director = null)
+            [NotNull] ApplicationManagerOptions options,
+            [CanBeNull] IUserInterfaceDirector director = null)
         {
             Options = options;
 
@@ -90,7 +90,7 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
 
             // Give Alfred a way to talk to the user and the client a way to log events that are
             // separate from Alfred
-            _console = InitializeConsole();
+            Console = InitializeConsole();
 
             // Set the director. This will, in turn, set the shell 
             UserInterfaceDirector = director;
@@ -126,7 +126,14 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
         [CanBeNull]
         public IConsole Console
         {
-            get { return _console; }
+            get
+            {
+                return Container.Console;
+            }
+            set
+            {
+                Container.Console = value;
+            }
         }
 
         /// <summary>
@@ -149,8 +156,7 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
         {
             get
             {
-                //? It might make sense to make this a property on Alfred.
-                return CultureInfo.CurrentCulture;
+                return Container.Locale;
             }
         }
 
@@ -159,7 +165,7 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
         /// </summary>
         /// <value> The options. </value>
         [NotNull]
-        public MattEland.Ani.Alfred.PresentationCommon.Commands.ApplicationManagerOptions Options { get; }
+        public ApplicationManagerOptions Options { get; }
 
         /// <summary>
         /// Gets the root nodes. 
@@ -175,7 +181,7 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
         /// </summary>
         /// <value> The user interface director. </value>
         [CanBeNull]
-        public MattEland.Ani.Alfred.PresentationCommon.Commands.IUserInterfaceDirector UserInterfaceDirector
+        public IUserInterfaceDirector UserInterfaceDirector
         {
             [DebuggerStepThrough]
             get
@@ -204,7 +210,6 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
         public void Dispose()
         {
             _alfred.TryDispose();
-            _console.TryDispose();
         }
 
         /// <summary>
@@ -260,21 +265,19 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
         private IConsole InitializeConsole()
         {
             // Give Alfred a way to talk to the application 
-            _console = new SimpleConsole(Container, new ExplorerEventFactory());
+            IConsole console = new SimpleConsole(Container, new ExplorerEventFactory());
 
             // If we support speech, build the speech console
             if (Options.IsSpeechEnabled)
             {
-                var speech = new AlfredSpeechConsole(Container, _console, _console.EventFactory);
+                var speech = new AlfredSpeechConsole(Container, console, console.EventFactory);
 
-                _console = speech;
+                console = speech;
             }
 
-            // This will be our console. Stick it back in as a semi-singleton 
-            _console.Log("AppManager.InitConsole", "Initializing console.", LogLevel.Verbose);
-            _console.RegisterAsProvidedInstance(typeof(IConsole), Container);
+            console.Log("AppManager.InitConsole", "Initializing console.", LogLevel.Verbose);
 
-            return _console;
+            return console;
         }
 
         /// <summary>
@@ -283,7 +286,7 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
         private void InitializeSubsystems()
         {
             // Log header 
-            _console?.Log(LogHeader, "Initializing subsystems", LogLevel.Verbose);
+            Console?.Log(LogHeader, "Initializing subsystems", LogLevel.Verbose);
 
             // TODO: It'd be nice to replace this with reflection-based type loading 
 
@@ -318,7 +321,7 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
                                             "Problem creating system monitoring module: Win32 exception: {0}",
                                             ex.BuildDetailsMessage());
 
-                _console?.Log(LogHeader, message, LogLevel.Error);
+                Console?.Log(LogHeader, message, LogLevel.Error);
 
             }
             catch (UnauthorizedAccessException ex)
@@ -327,7 +330,7 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Commands
                                             "Problem creating system monitoring module: Unauthorized access exception: {0}",
                                             ex.BuildDetailsMessage());
 
-                _console?.Log(LogHeader, message, LogLevel.Error);
+                Console?.Log(LogHeader, message, LogLevel.Error);
 
             }
         }

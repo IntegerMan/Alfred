@@ -296,7 +296,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
 
             // Set up a console for verification
             var console = BuildMockConsole();
-            console.Object.RegisterAsProvidedInstance(typeof(IConsole), Container);
+            AlfredContainer.Console = console.Object;
 
             //! Act
 

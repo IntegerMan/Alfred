@@ -46,7 +46,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <value>
         /// The console.
         /// </value>
-        [CanBeNull]
+        [NotNull]
         IConsole Console { get; set; }
 
         /// <summary>
