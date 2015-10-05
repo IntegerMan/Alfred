@@ -11,10 +11,6 @@ using JetBrains.Annotations;
 
 namespace MattEland.Common.Providers
 {
-    /// <summary>
-    ///     Interface for types that have <see cref="IObjectContainer"/> members.
-    /// </summary>
-    public interface IHasContainer : IHasContainer<IObjectContainer> { }
 
     /// <summary>
     ///     Interface for types that have <see cref="IObjectContainer"/> members.
@@ -28,6 +24,6 @@ namespace MattEland.Common.Providers
         ///     The container.
         /// </value>
         [NotNull]
-        T Container { get; }
+        new T Container { get; }
     }
 }

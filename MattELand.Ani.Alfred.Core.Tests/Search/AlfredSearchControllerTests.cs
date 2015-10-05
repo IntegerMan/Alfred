@@ -421,6 +421,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
             // Build Alfred - it should now grab the controller from Container
             Alfred = BuildAlfredInstance();
         }
+
         /// <summary>
         ///     Undirected searches should start search operations.
         /// </summary>

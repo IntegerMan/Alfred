@@ -11,7 +11,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
-
+using System.Diagnostics.Contracts;
 namespace MattEland.Common.Providers
 {
     /// <summary>
@@ -82,40 +82,11 @@ namespace MattEland.Common.Providers
         /// <returns>The provided instance.</returns>
         /// <exception cref="NotSupportedException">The type is not correctly configured to allow for
         /// instantiation.</exception>
-        public static object ProvideInstanceOf([NotNull] this Type type)
+        public static object ProvideInstanceOf([NotNull] this Type type, [NotNull] IObjectContainer container)
         {
-            return CommonProvider.ProvideType(type);
-        }
+            Contract.Requires(container != null, "container is null.");
 
-        /// <summary>
-        ///     Registers the instance as the instance that will be provided when
-        ///     <see cref="CommonProvider.Provide{TRequested}" /> or
-        ///     <see cref="CommonProvider.ProvideType" /> is called for the instance's type
-        /// </summary>
-        /// <param name="instance">The instance.</param>
-        /// <exception cref="System.ArgumentNullException">type, instance</exception>
-        public static void RegisterAsProvidedInstance([NotNull] this object instance)
-        {
-            if (instance == null) { throw new ArgumentNullException(nameof(instance)); }
-
-            // Default to the root container
-            instance.RegisterAsProvidedInstance(instance.GetType(), CommonProvider.Container);
-        }
-
-        /// <summary>
-        ///     Registers the <paramref name="instance"/> as the <paramref name="instance"/> that will be
-        ///     provided when <see cref="CommonProvider.Provide{type}"/>
-        ///     or <see cref="CommonProvider.ProvideType" /> are called for
-        ///     <paramref name="type"/> <paramref name="type" />
-        /// </summary>
-        /// <param name="instance"> The instance. </param>
-        /// <param name="type"> The type that will be requested. </param>
-        public static void RegisterAsProvidedInstance(
-            [NotNull] this object instance,
-            [NotNull] Type type)
-        {
-            // Default to the root container
-            instance.RegisterAsProvidedInstance(type, CommonProvider.Container);
+            return container.ProvideType(type);
         }
 
         /// <summary>

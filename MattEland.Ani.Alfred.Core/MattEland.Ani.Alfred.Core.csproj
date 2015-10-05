@@ -153,6 +153,7 @@
     <Compile Include="AlfredStatusController.cs" />
     <Compile Include="Pages\ExplorerPage.cs" />
     <Compile Include="Pages\ModulePageBase.cs" />
+    <Compile Include="Pages\SearchHistoryPage.cs" />
     <Compile Include="Pages\SearchPage.cs" />
     <Compile Include="Pages\WebBrowserPage.cs" />
     <Compile Include="SearchResultEventArgs.cs" />

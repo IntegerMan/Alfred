@@ -13,7 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-
+using System.Diagnostics.Contracts;
 namespace MattEland.Ani.Alfred.Core
 {
     /// <summary>
@@ -374,6 +374,7 @@ namespace MattEland.Ani.Alfred.Core
         /// <param name="provider"> The provider. </param>
         public void Register(ISearchProvider provider)
         {
+            Contract.Requires(provider != null, "provider is null.");
             if (provider == null) throw new ArgumentNullException(nameof(provider));
 
             // Require Offline Status 

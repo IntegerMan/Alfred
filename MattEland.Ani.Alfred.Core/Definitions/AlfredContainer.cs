@@ -130,11 +130,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
                 // Lazy load - this is not guaranteed to provide a value
                 if (_console == null)
                 {
-                    // It's important to have a console, so build a default one if we have to
-                    _console = TryProvide<IConsole>() ?? new SimpleConsole(this);
-
-                    // If we did create one, make sure its registered
-                    _console.RegisterAsProvidedInstance(typeof(IConsole), this);
+                    _console = TryProvide<IConsole>();
                 }
 
                 return _console;
@@ -197,9 +193,30 @@ namespace MattEland.Ani.Alfred.Core.Definitions
             }
             set
             {
-                if (value == null) throw new ArgumentNullException(nameof(value));
+                Contract.Requires(value != null, "value is null.");
 
                 value.RegisterAsProvidedInstance(this);
+            }
+        }
+
+        /// <summary>
+        ///     Gets the search controller.
+        /// </summary>
+        /// <value>
+        ///     The search controller.
+        /// </value>
+        [NotNull]
+        public ISearchController SearchController
+        {
+            get
+            {
+                return Provide<ISearchController>();
+            }
+            set
+            {
+                Contract.Requires(value != null, "value is null.");
+
+                value.RegisterAsProvidedInstance(typeof(ISearchController), this);
             }
         }
 

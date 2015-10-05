@@ -31,7 +31,6 @@ namespace MattEland.Ani.Alfred.Core
     /// </summary>
     public sealed class AlfredApplication : NotifyChangedBase, IAlfred, IDisposable
     {
-
         /// <summary>
         ///     The root pages collection
         /// </summary>
@@ -45,6 +44,10 @@ namespace MattEland.Ani.Alfred.Core
         [NotNull]
         private readonly IStatusController _statusController;
 
+        /// <summary>
+        ///     The subsystems collection. This is used to allow the modification of
+        ///     <see cref="Subsystems"/>.
+        /// </summary>
         [NotNull]
         private readonly ICollection<IAlfredSubsystem> _subsystems;
 
@@ -283,7 +286,17 @@ namespace MattEland.Ani.Alfred.Core
         ///     The search controller.
         /// </value>
         [NotNull]
-        public ISearchController SearchController { get; private set; }
+        public ISearchController SearchController
+        {
+            get
+            {
+                return Container.SearchController;
+            }
+            set
+            {
+                Container.SearchController = value;
+            }
+        }
 
         /// <summary>
         ///     Gets the components registered to Alfred. This will include subsystems as well as various
@@ -292,6 +305,8 @@ namespace MattEland.Ani.Alfred.Core
         /// <value>
         ///     The components.
         /// </value>
+        [NotNull]
+        [ItemNotNull]
         public IEnumerable<IAlfredComponent> Components
         {
             get

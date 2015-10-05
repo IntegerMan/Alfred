@@ -13,7 +13,7 @@ using System.Linq;
 using System.Reflection;
 
 using JetBrains.Annotations;
-
+using System.Diagnostics.Contracts;
 namespace MattEland.Common.Providers
 {
     /// <summary>
@@ -40,7 +40,8 @@ namespace MattEland.Common.Providers
             [NotNull] IObjectContainer container,
             [CanBeNull] Type typeToCreate) : base(typeToCreate)
         {
-            if (container == null) { throw new ArgumentNullException(nameof(container)); }
+            //- Validate
+            Contract.Requires(container != null, "container is null.");
 
             Container = container;
         }
@@ -85,7 +86,7 @@ namespace MattEland.Common.Providers
         {
             // If it's not an IHasContainer, just use the standard way
             var interfaces = typeToCreate.GetInterfaces();
-            if (!interfaces.Contains(typeof(IHasContainer<IObjectContainer>)))
+            if (!interfaces.Any(i => i.Name.StartsWith("IHasContainer")))
             {
                 return base.CreateInstanceUsingActivator(typeToCreate, args);
             }

@@ -15,7 +15,7 @@ using System.Linq;
 using System.Text;
 
 using JetBrains.Annotations;
-
+using System.Diagnostics.Contracts;
 namespace MattEland.Common.Providers
 {
     /// <summary>
@@ -244,7 +244,7 @@ namespace MattEland.Common.Providers
         /// </returns>
         public bool HasMapping([NotNull] Type type)
         {
-            if (type == null) { throw new ArgumentNullException(nameof(type)); }
+            Contract.Requires(type != null, "type is null.");
 
             return Mappings.ContainsKey(type);
         }
@@ -261,6 +261,13 @@ namespace MattEland.Common.Providers
         public TRequested Provide<TRequested>(params object[] args)
         {
             var type = typeof(TRequested);
+
+            // Ensure the type can be instantiated and provide a better error if it can't
+            if (type.IsInterface && !HasMapping(type))
+            {
+                var message = string.Format("Cannot create interface type {0} without a mapping.", type.Name);
+                throw new NotSupportedException(message);
+            }
 
             var instance = ProvideTypePrivate(type, true, args);
             Debug.Assert(instance != null);
@@ -445,6 +452,18 @@ namespace MattEland.Common.Providers
         }
 
         /// <summary>
+        ///     Removes the mapping for providing a value of the specified <paramref name="type"/> if a
+        ///     mapping was present in this container.
+        /// </summary>
+        /// <param name="type"> The type in this container. </param>
+        public void RemoveMapping([NotNull] Type type)
+        {
+            Contract.Requires(type != null, "type is null.");
+
+            Mappings.Remove(type);
+        }
+
+        /// <summary>
         ///     Tries to provide an instance of type <typeparamref name="T" /> and returns
         ///     <see langword="null" /> if it cannot.
         /// </summary>
@@ -562,7 +581,8 @@ namespace MattEland.Common.Providers
             bool errorOnNoInstance,
             [CanBeNull] params object[] args)
         {
-            if (type == null) { throw new ArgumentNullException(nameof(type)); }
+            //- Validate
+            Contract.Requires(type != null, "type is null.");
 
             // Determine which type to create
             var provider = GetObjectProvider(type);
@@ -596,7 +616,12 @@ namespace MattEland.Common.Providers
                     var arguments = GetArgumentsString(args);
 
                     var message =
-                        $"The {provider.GetType().Name} activator for creating {typeName} on container {Name} returned a null value with arguments: {arguments}";
+                        string.Format("The {0} activator for creating {1} on container {2} returned a null value with arguments: {3}",
+                        provider.GetType().Name,
+                        typeName,
+                        Name,
+                        arguments);
+
                     throw new NotSupportedException(message);
                 }
 
@@ -605,8 +630,9 @@ namespace MattEland.Common.Providers
             catch (MissingMemberException ex)
             {
                 // Try to throw the same type of exception with additional information.
-                string msg =
-                    $"Could not instantiate {type.FullName} due to missing member exception: '{ex.Message}'";
+                var msg = string.Format("Could not instantiate {0} due to missing member exception: '{1}'",
+                    type.FullName,
+                    ex.Message);
 
                 throw new NotSupportedException(msg, ex);
             }

@@ -13,12 +13,13 @@ namespace MattEland.Ani.Alfred.Core.Definitions
     /// </summary>
     public interface IAlfredContainer : IObjectContainer
     {
+        void RemoveMapping(Type type);
         /// <summary>
-        /// Builds a command.
+        ///     Builds a command.
         /// </summary>
         /// <param name="action"> The action the command will execute. </param>
         /// <returns>
-        /// A command.
+        ///     A command.
         /// </returns>
         [NotNull]
         IAlfredCommand BuildCommand([CanBeNull] Action action = null);
@@ -34,35 +35,46 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         IAlfredCommandRecipient CommandRouter { get; set; }
 
         /// <summary>
-        /// Gets or sets the localization culture.
+        ///     Gets or sets the localization culture.
         /// </summary>
-        /// <value>The locale.</value>
+        /// <value>
+        ///     The locale.
+        /// </value>
         [NotNull]
         CultureInfo Locale { get; set; }
 
         /// <summary>
-        /// Gets or sets the console.
+        ///     Gets or sets the console.
         /// </summary>
         /// <value>
-        /// The console.
+        ///     The console.
         /// </value>
         [NotNull]
         IConsole Console { get; set; }
 
         /// <summary>
-        /// Gets the chat provider.
+        ///     Gets the chat provider.
         /// </summary>
         /// <value>
-        /// The chat provider.
+        ///     The chat provider.
         /// </value>
         [NotNull]
         IChatProvider ChatProvider { get; }
 
         /// <summary>
-        /// Gets the shell.
+        ///     Gets or sets the search controller.
         /// </summary>
         /// <value>
-        /// The shell.
+        ///     The search controller.
+        /// </value>
+        [NotNull]
+        ISearchController SearchController { get; set; }
+
+        /// <summary>
+        ///     Gets the shell.
+        /// </summary>
+        /// <value>
+        ///     The shell.
         /// </value>
         [NotNull]
         IShellCommandRecipient Shell { get; }

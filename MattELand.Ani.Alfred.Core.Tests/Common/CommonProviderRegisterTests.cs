@@ -34,8 +34,8 @@ namespace MattEland.Ani.Alfred.Tests.Common
         {
             var container = new CommonContainer();
 
-            var type = typeof (UnitTestBase);
-            var registerType = typeof (CommonProviderTests);
+            var type = typeof(UnitTestBase);
+            var registerType = typeof(CommonProviderTests);
 
             container.HasMapping(type).ShouldBe(false);
             var result = container.TryRegister(type, registerType);
@@ -52,10 +52,10 @@ namespace MattEland.Ani.Alfred.Tests.Common
         [Test]
         public void TryRegisterIfMappedShouldNotRegister()
         {
-            var type = typeof (AlfredTestBase);
-            var registerType = typeof (CommonProviderTests);
+            var type = typeof(AlfredTestBase);
+            var registerType = typeof(CommonProviderTests);
 
-            Container.Register(type, typeof (EventLogPageTests));
+            Container.Register(type, typeof(EventLogPageTests));
             Container.HasMapping(type).ShouldBe(true);
             var result = Container.TryRegister(type, registerType);
 
@@ -76,7 +76,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
         public void RegisterAndCreateForInterfaceBaseTypeWorks()
         {
             // Tell the container to create types of our object when that type is requested
-            CommonProvider.Register(typeof (ITestInterfaceDerived), typeof (TestClass));
+            CommonProvider.Register(typeof(ITestInterfaceDerived), typeof(TestClass));
 
             // Use the container to create the instance we want
             var result = CommonProvider.Provide<ITestInterfaceDerived>();
@@ -97,7 +97,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
         public void RegisterAndCreateInstantiatesUsingDefaultConstructor()
         {
             // Tell the container to create types of our object when that type is requested
-            var type = typeof (TestClass);
+            var type = typeof(TestClass);
             type.RegisterProvider(type);
 
             // Use the container to create the instance we want
@@ -120,8 +120,8 @@ namespace MattEland.Ani.Alfred.Tests.Common
         public void RegisterBaseTypeAndCreateInstantiatesUsingDefaultConstructor()
         {
             // Tell the container to create types of our object when that type is requested
-            var baseType = typeof (TestClassBase);
-            var preferredType = typeof (TestClass);
+            var baseType = typeof(TestClassBase);
+            var preferredType = typeof(TestClass);
             baseType.RegisterProvider(preferredType);
 
             // Use the container to create the instance we want
@@ -147,10 +147,10 @@ namespace MattEland.Ani.Alfred.Tests.Common
         ///     See ALF-98.
         /// </remarks>
         [Test]
-        [ExpectedException(typeof (InvalidOperationException))]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void RegisterBaseTypeForBaseTypeThrowsInvalidOperationException()
         {
-            CommonProvider.Register(typeof (TestClassBase), typeof (TestClassBase));
+            CommonProvider.Register(typeof(TestClassBase), typeof(TestClassBase));
         }
 
         /// <summary>
@@ -163,14 +163,14 @@ namespace MattEland.Ani.Alfred.Tests.Common
         [Test]
         public void RegisteringAnInstanceAsSingletonProvidesInstance()
         {
-            var t = typeof (ITestInterfaceBase);
+            var t = typeof(ITestInterfaceBase);
             var instance = new TestClass(42);
 
             // Register the instance (not type)
             CommonProvider.RegisterProvidedInstance(t, instance);
 
             // Get the instance from common provider
-            var result = t.ProvideInstanceOf();
+            var result = t.ProvideInstanceOf(CommonProvider.Container);
 
             // Validate
             result.ShouldNotBeNull();
@@ -189,7 +189,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
         {
             Func<PrivateTestClass> activator = PrivateTestClass.CreateInstance;
 
-            CommonProvider.Register(typeof (PrivateTestClass), activator);
+            CommonProvider.Register(typeof(PrivateTestClass), activator);
 
             var result = CommonProvider.Provide<PrivateTestClass>();
 
@@ -209,7 +209,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
             var activator =
                 new Func<object[], PrivateTestClass>(PrivateTestClass.CreateInstanceWithParams);
 
-            CommonProvider.Register(typeof (ITestInterfaceBase), activator);
+            CommonProvider.Register(typeof(ITestInterfaceBase), activator);
 
             var result = CommonProvider.TryProvideInstance<ITestInterfaceBase>(1, 3);
 
@@ -222,10 +222,10 @@ namespace MattEland.Ani.Alfred.Tests.Common
         ///     be instantiated, even if it does have inheritance.
         /// </summary>
         [Test]
-        [ExpectedException(typeof (InvalidOperationException))]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void CannotRegisterAnInterface()
         {
-            CommonProvider.Register(typeof (ITestInterfaceBase), typeof (ITestInterfaceDerived));
+            CommonProvider.Register(typeof(ITestInterfaceBase), typeof(ITestInterfaceDerived));
         }
 
         /// <summary>
@@ -233,10 +233,10 @@ namespace MattEland.Ani.Alfred.Tests.Common
         ///     implement an <see langword="interface" /> .
         /// </summary>
         [Test]
-        [ExpectedException(typeof (InvalidOperationException))]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void CannotRegisterUnimplementedInterface()
         {
-            CommonProvider.Register(typeof (ICustomFormatter), typeof (DateTime));
+            CommonProvider.Register(typeof(ICustomFormatter), typeof(DateTime));
         }
 
         /// <summary>
@@ -244,10 +244,10 @@ namespace MattEland.Ani.Alfred.Tests.Common
         ///     to the type it is being registered to handle.
         /// </summary>
         [Test]
-        [ExpectedException(typeof (InvalidOperationException))]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void CannotRegisterUnrelatedTypes()
         {
-            CommonProvider.Register(typeof (StringBuilder), typeof (DateTime));
+            CommonProvider.Register(typeof(StringBuilder), typeof(DateTime));
         }
     }
 }

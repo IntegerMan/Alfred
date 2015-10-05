@@ -44,7 +44,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
 
             // Change the fallback / default provider to be something that yields our magic string
             var provider = new InstanceProvider(null);
-            provider.Register(typeof (string), Bubba);
+            provider.Register(typeof(string), Bubba);
             CommonProvider.RegisterDefaultProvider(provider);
 
             // Grab the instance and check to see if its our string
@@ -64,8 +64,8 @@ namespace MattEland.Ani.Alfred.Tests.Common
             var child = new CommonContainer(parent);
 
             // Register the same type for both containers with different implementations
-            var t = typeof (TestClassBase);
-            parent.Register(t, typeof (TestClass));
+            var t = typeof(TestClassBase);
+            parent.Register(t, typeof(TestClass));
 
             // Build our instances
             var instance = child.Provide<TestClassBase>();
@@ -82,7 +82,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
         ///     See ALF-98.
         /// </remarks>
         [Test]
-        [ExpectedException(typeof (NotSupportedException))]
+        [ExpectedException(typeof(NotSupportedException))]
         public void CreateBaseTypeUsingDefaultConstructorThrowsException()
         {
             CommonProvider.Provide<TestClassBase>();
@@ -109,7 +109,7 @@ namespace MattEland.Ani.Alfred.Tests.Common
         public void CreateTypeWithParameterizedConstructor()
         {
             const int Data = 1980;
-            CommonProvider.Register(typeof (TestClassBase), typeof (TestClass));
+            CommonProvider.Register(typeof(TestClassBase), typeof(TestClass));
 
             var result = CommonProvider.Provide<TestClassBase>(Data);
 
@@ -133,10 +133,10 @@ namespace MattEland.Ani.Alfred.Tests.Common
         {
             // Create our default provider with instructions to yield itself as an IObjectProvider
             var instanceProvider = new InstanceProvider(null);
-            instanceProvider.Register(typeof (IObjectProvider), instanceProvider);
+            instanceProvider.Register(typeof(IObjectProvider), instanceProvider);
 
             // Register the new provider as a source for IObjectProvider
-            CommonProvider.Register(typeof (IObjectProvider), instanceProvider);
+            CommonProvider.Register(typeof(IObjectProvider), instanceProvider);
 
             // Cause DefaultProvider to be lazy loaded and store the result
             var defaultProvider = CommonProvider.Container.FallbackProvider;
@@ -159,10 +159,10 @@ namespace MattEland.Ani.Alfred.Tests.Common
             var containerB = new CommonContainer();
 
             // Register the same type for both containers with different implementations
-            var t = typeof (TestClassBase);
-            containerA.Register(t, typeof (TestClass));
+            var t = typeof(TestClassBase);
+            containerA.Register(t, typeof(TestClass));
             containerB.Register(t,
-                                (Func<object[], object>) PrivateTestClass.CreateInstanceWithParams);
+                                (Func<object[], object>)PrivateTestClass.CreateInstanceWithParams);
 
             // Build our instances
             var instanceA = containerA.Provide<TestClassBase>(35);
@@ -187,14 +187,14 @@ namespace MattEland.Ani.Alfred.Tests.Common
         ///     See ALF-98.
         /// </remarks>
         [Test]
-        [ExpectedException(typeof (NotSupportedException))]
+        [ExpectedException(typeof(NotSupportedException))]
         public void RequestingAnUnknownTypeCausesInstanceProviderToError()
         {
             // Don't do this. I'm just testing extension methods
             new InstanceProvider().RegisterAsDefaultProvider();
 
             // Don't code like this either.
-            typeof (string).ProvideInstanceOf();
+            typeof(string).ProvideInstanceOf(Container);
         }
 
         /// <summary>
@@ -207,15 +207,15 @@ namespace MattEland.Ani.Alfred.Tests.Common
         [Test]
         public void RequestingMultipleInstancesAfterRegisteringProvidedInstanceReturnsSameInstance()
         {
-            var t = typeof (ITestInterfaceBase);
+            var t = typeof(ITestInterfaceBase);
             var instance = new TestClass(42);
 
             // Register as singleton
-            instance.RegisterAsProvidedInstance(t);
+            instance.RegisterAsProvidedInstance(t, Container);
 
             // Grab a few instances
-            var a = t.ProvideInstanceOf();
-            var b = t.ProvideInstanceOf();
+            var a = t.ProvideInstanceOf(Container);
+            var b = t.ProvideInstanceOf(Container);
 
             // Check that the items are the same instance
             instance.ShouldBeSameAs(a);
@@ -251,8 +251,8 @@ namespace MattEland.Ani.Alfred.Tests.Common
         public void RequestingTypeUsingProvideInstanceOfTypeWorks()
         {
             // Register using extension methods
-            var t = typeof (ITestInterfaceBase);
-            t.RegisterProvider(typeof (TestClass));
+            var t = typeof(ITestInterfaceBase);
+            t.RegisterProvider(typeof(TestClass));
 
             // Use non-generic retrieval method
             var instance = CommonProvider.ProvideType(t);
@@ -287,13 +287,13 @@ namespace MattEland.Ani.Alfred.Tests.Common
         [Test]
         public void ProviderCanCreateCollectionsOfCustomType()
         {
-            CommonProvider.CollectionType = typeof (HashSet<>);
+            CommonProvider.CollectionType = typeof(HashSet<>);
 
             var collection = CommonProvider.ProvideCollection<ITestInterfaceDerived>();
 
             collection.ShouldNotBeNull();
             collection.ShouldBeEmpty();
-            collection.ShouldBeOfType(typeof (HashSet<ITestInterfaceDerived>));
+            collection.ShouldBeOfType(typeof(HashSet<ITestInterfaceDerived>));
         }
     }
 

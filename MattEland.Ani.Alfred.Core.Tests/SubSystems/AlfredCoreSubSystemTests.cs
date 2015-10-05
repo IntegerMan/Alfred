@@ -34,13 +34,14 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
 {
     [UnitTestProvider]
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-    public sealed class AlfredCoreSubsystemTests : AlfredTestBase, IDisposable
+    public sealed class AlfredCoreSubsystemTests : MockEnabledAlfredTestBase, IDisposable
     {
         [SetUp]
         public override void SetUp()
         {
             base.SetUp();
 
+            AlfredContainer.SearchController = BuildMockSearchController().Object;
             _subsystem = new AlfredCoreSubsystem(AlfredContainer);
 
             _alfred = BuildAlfredInstance();
@@ -119,7 +120,7 @@ namespace MattEland.Ani.Alfred.Tests.Subsystems
         public void EventLogPageIsNotPresentInAlfredAfterInitializationWhenNoConsoleIsProvided()
         {
             // The IConsole comes from the Container now so clear out the container
-            Container.ClearMappings();
+            Container.RemoveMapping(typeof(IConsole));
 
             _alfred.Register(_subsystem);
             _alfred.Initialize();

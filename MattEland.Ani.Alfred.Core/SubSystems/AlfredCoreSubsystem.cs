@@ -16,8 +16,7 @@ using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
 using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Common;
-using MattEland.Common.Providers;
-
+using System.Diagnostics.Contracts;
 namespace MattEland.Ani.Alfred.Core.Subsystems
 {
     /// <summary>
@@ -27,18 +26,33 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
     /// </summary>
     public sealed class AlfredCoreSubsystem : AlfredSubsystem
     {
+        /// <summary>
+        ///     The control page.
+        /// </summary>
         [NotNull]
         private readonly ModuleListPage _controlPage;
 
+        /// <summary>
+        ///     The pages list module.
+        /// </summary>
         [NotNull]
         private readonly AlfredPagesListModule _pagesModule;
 
+        /// <summary>
+        ///     The power module.
+        /// </summary>
         [NotNull]
         private readonly AlfredPowerModule _powerModule;
 
+        /// <summary>
+        ///     The systems list module.
+        /// </summary>
         [NotNull]
         private readonly AlfredSubsystemListModule _systemsModule;
 
+        /// <summary>
+        ///     The time module.
+        /// </summary>
         [NotNull]
         private readonly AlfredTimeModule _timeModule;
 
@@ -53,6 +67,12 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// </summary>
         [NotNull]
         private SearchPage _searchPage;
+
+        /// <summary>
+        ///     The search history page.
+        /// </summary>
+        [NotNull]
+        private SearchHistoryPage _searchHistoryPage;
 
         /// <summary>
         ///     The web browser page.
@@ -76,11 +96,13 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
         /// <exception cref="ArgumentNullException">Thrown when one or more required arguments are null.</exception>
         public AlfredCoreSubsystem([NotNull] IAlfredContainer container, bool includeSearchModuleOnSearchPage) : base(container)
         {
-            if (container == null) throw new ArgumentNullException(nameof(container));
+            //- Validate
+            Contract.Requires(container != null, "container is null.");
 
             // Set up pages
             _controlPage = new ModuleListPage(container, ControlPageName, "Core");
             _searchPage = new SearchPage(container, includeSearchModuleOnSearchPage);
+            _searchHistoryPage = new SearchHistoryPage(container);
             _browserPage = new WebBrowserPage(container);
 
             // Instantiate the modules
@@ -144,6 +166,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
             // Register Pages
             Register(_controlPage);
             Register(_searchPage);
+            Register(_searchHistoryPage);
             Register(_browserPage);
 
             // Build out our control page

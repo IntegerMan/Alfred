@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 
 using JetBrains.Annotations;
+using System.Diagnostics.Contracts;
 
 namespace MattEland.Common.Providers
 {
@@ -94,8 +95,8 @@ namespace MattEland.Common.Providers
         public void Register([NotNull] Type type, [NotNull] object instance)
         {
             //- Validate
-            if (type == null) { throw new ArgumentNullException(nameof(type)); }
-            if (instance == null) { throw new ArgumentNullException(nameof(instance)); }
+            Contract.Requires(type != null, "type is null.");
+            Contract.Requires(instance != null, "instance is null.");
 
             Mappings[type] = instance;
         }

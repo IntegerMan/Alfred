@@ -99,6 +99,13 @@ namespace MattEland.Common.Providers
         void Register([NotNull] Type type, [NotNull] IObjectProvider provider);
 
         /// <summary>
+        ///     Removes the mapping for providing a value of the specified <paramref name="type"/> if a
+        ///     mapping was present in this container.
+        /// </summary>
+        /// <param name="type"> The type in this container. </param>
+        void RemoveMapping([NotNull] Type type);
+
+        /// <summary>
         ///     Registers a mapping if no mapping for the specified <paramref name="type"/> already
         ///     exists.
         /// </summary>

@@ -7,17 +7,14 @@ using System.Windows.Controls.Primitives;
 
 using JetBrains.Annotations;
 
-using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Ani.Alfred.PresentationAvalon.Controls;
 
 using MattEland.Common;
-using MattEland.Common.Providers;
 using MattEland.Testing;
 
 using NUnit.Framework;
-using MattEland.Ani.Alfred.Core.Pages;
 
 namespace MattEland.Ani.Alfred.Tests.Controls
 {
@@ -184,5 +181,23 @@ namespace MattEland.Ani.Alfred.Tests.Controls
 
             return new Repeater(parameters);
         }
+
+        /// <summary>
+        /// Gets page by its identifier.
+        /// </summary>
+        /// <param name="pageId"> Identifier for the page. </param>
+        /// <returns>
+        /// The page.
+        /// </returns>
+        [NotNull]
+        protected T GetPageById<T>(string pageId) where T : IPage
+        {
+            IPage page = Alfred.RootPages.FirstOrDefault(p => p.Id.Matches(pageId));
+
+            page.ShouldNotBeNull();
+
+            return page.ShouldBe<T>();
+        }
+
     }
 }

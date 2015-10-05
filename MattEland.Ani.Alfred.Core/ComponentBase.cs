@@ -320,7 +320,7 @@ namespace MattEland.Ani.Alfred.Core
         {
             if (Status == AlfredStatus.Offline)
             {
-                var message = string.Format(CultureInfo.CurrentCulture,
+                var message = string.Format(Container.Locale,
                                             Resources.AlfredItemOfflineButToldToUpdate.NonNull(),
                                             NameAndVersion);
                 throw new InvalidOperationException(message);
