@@ -255,6 +255,7 @@ namespace MattEland.Ani.Alfred.Tests
             var console = new Mock<IConsole>(MockingBehavior);
 
             console.SetupGet(c => c.Container).Returns(AlfredContainer);
+            console.SetupGet(c => c.Events).Returns(Container.ProvideCollection<IConsoleEvent>);
 
             console.Setup(c => c.Log(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<LogLevel>()));
 

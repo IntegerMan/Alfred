@@ -206,8 +206,8 @@ namespace MattEland.Ani.Alfred.Tests.Common
         [Test]
         public void RegisterTypeUsingParameterizedActivationFunction()
         {
-            var activator =
-                new Func<object[], PrivateTestClass>(PrivateTestClass.CreateInstanceWithParams);
+            Func<object[], PrivateTestClass> activator =
+                PrivateTestClass.CreateInstanceWithParams;
 
             CommonProvider.Register(typeof(ITestInterfaceBase), activator);
 
