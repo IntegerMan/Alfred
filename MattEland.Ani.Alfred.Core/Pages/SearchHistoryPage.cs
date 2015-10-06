@@ -39,7 +39,7 @@ namespace MattEland.Ani.Alfred.Core.Pages
         /// <param name="container"> The container. </param>
         /// <param name="searchController"> The search controller. </param>
         public SearchHistoryPage([NotNull] IAlfredContainer container, [NotNull] ISearchController searchController)
-            : base(container, "Search History Page", "SearchHistory")
+            : base(container, "Search History", "SearchHistory")
         {
             //- Validate
             Contract.Requires(container != null, "container is null.");
