@@ -53,7 +53,7 @@ namespace MattEland.Ani.Alfred.Tests
         ///     values.
         /// </summary>
         /// <param name="container"> The container. </param>
-        public void ConfigureTestContainer([NotNull] IAlfredContainer container)
+        public static void ConfigureTestContainer([NotNull] IAlfredContainer container)
         {
             var console = new DiagnosticConsole(container);
             console.RegisterAsProvidedInstance(typeof(IConsole), container);

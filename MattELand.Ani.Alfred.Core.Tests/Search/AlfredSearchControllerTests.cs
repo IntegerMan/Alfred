@@ -337,6 +337,23 @@ namespace MattEland.Ani.Alfred.Tests.Search
         }
 
         /// <summary>
+        ///     Builds a console to use for testing and sets it into the <see cref="AlfredContainer"/>.
+        /// </summary>
+        /// <returns>
+        ///     A <see cref="SimpleConsole"/>.
+        /// </returns>
+        [NotNull]
+        protected SimpleConsole BuildConsole()
+        {
+            // Build the console
+            var console = new SimpleConsole(AlfredContainer);
+
+            // Set the console into the container
+            AlfredContainer.Console = console;
+
+            return console;
+        }
+        /// <summary>
         ///     When searches complete, a notifying log entry should be created.
         /// </summary>
         [Test]
@@ -346,8 +363,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
             //! Arrange
 
             // Set up the console
-            var console = new SimpleConsole(AlfredContainer);
-            AlfredContainer.Console = console;
+            SimpleConsole console = BuildConsole();
 
             // Get Alfred online. This will use the container to get the Controller and Console
             Alfred = BuildAlfredInstance();
