@@ -46,7 +46,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
             Alfred = app.Alfred;
 
             //! Act
-            var page = GetPageById<SearchHistoryPage>("SearchHistory");
+            var page = GetPageById<SearchHistoryPage>(SearchHistoryPage.PageId);
 
             //! Assert
             page.ShouldNotBeNull();
@@ -89,6 +89,90 @@ namespace MattEland.Ani.Alfred.Tests.Search
             repeater.ShouldBe<Repeater>();
         }
 
+        /// <summary>
+        ///     Search text should appear in search history.
+        /// </summary>
+        [Test]
+        public void SearchTextAppearsInSearchHistory()
+        {
+            //! Arrange
+
+            // We'll want the full Alfred instance to test the controller and page interacting
+            var app = BuildApplicationInstance();
+            Alfred = app.Alfred;
+
+            string searchText = Some.SearchText;
+
+            //! Act
+
+            // Bring Alfred Online
+            Alfred.Initialize();
+
+            // SearchPageTests
+            Alfred.SearchController.PerformSearch(searchText);
+            Alfred.Update();
+
+            // Get the page
+            var page = GetPageById<SearchHistoryPage>(SearchHistoryPage.PageId);
+
+            var noCountWidget = page.Widgets.FirstOrDefault(w => w.Name.Matches("lblNoItems"));
+            var listWidget = page.Widgets.FirstOrDefault(w => w.Name.Matches("listHistory"));
+
+            //! Assert
+
+            // Check the item count
+            listWidget.ShouldNotBeNull();
+            var repeater = listWidget.ShouldBe<Repeater>();
+            repeater.Items.Count().ShouldBe(1);
+
+            // Grab the widget represented by the search
+            var firstItem = repeater.Items.First();
+            var textControl = firstItem.ShouldBe<TextWidget>();
+
+            // Verify the widget has the text we searched for
+            textControl.Text.EndsWith(searchText);
+
+            // Check that the no items widget is hidden
+            noCountWidget.ShouldNotBeNull();
+            noCountWidget.IsVisible.ShouldBeFalse();
+
+        }
+
+        /// <summary>
+        ///     Search history should be empty without searches.
+        /// </summary>
+        [Test]
+        public void SearchHistoryIsEmptyWithNoSearches()
+        {
+            //! Arrange
+
+            // We'll want the full Alfred instance to test the controller and page interacting
+            var app = BuildApplicationInstance();
+            Alfred = app.Alfred;
+
+            //! Act
+
+            // Bring Alfred Online
+            Alfred.Initialize();
+            Alfred.Update();
+
+            // Get the page
+            var page = GetPageById<SearchHistoryPage>(SearchHistoryPage.PageId);
+
+            var noCountWidget = page.Widgets.FirstOrDefault(w => w.Name.Matches("lblNoItems"));
+            var listWidget = page.Widgets.FirstOrDefault(w => w.Name.Matches("listHistory"));
+
+            //! Assert
+
+            // The no count widget should be visible
+            noCountWidget.ShouldNotBeNull();
+            noCountWidget.IsVisible.ShouldBeTrue();
+
+            // Check the item count
+            var repeater = listWidget.ShouldBe<Repeater>();
+            repeater.Items.Count().ShouldBe(0);
+
+        }
     }
 
 }

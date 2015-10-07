@@ -116,8 +116,14 @@ namespace MattEland.Ani.Alfred.Tests
 
             SetupMockComponent(mock);
 
-            mock.SetupGet(m => m.StatusMessage).Returns("No searches have been made yet.");
-            mock.SetupGet(m => m.Results).Returns(Container.ProvideCollection<ISearchResult>());
+            mock.SetupGet(m => m.StatusMessage)
+                .Returns("No searches have been made yet.");
+
+            mock.SetupGet(m => m.Results)
+                .Returns(Container.ProvideCollection<ISearchResult>());
+
+            mock.SetupGet(m => m.SearchHistory)
+                .Returns(Container.ProvideCollection<SearchHistoryEntry>);
 
             return mock;
         }

@@ -20,6 +20,7 @@ using MattEland.Testing;
 using NUnit.Framework;
 
 using Shouldly;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.Tests.Search
 {

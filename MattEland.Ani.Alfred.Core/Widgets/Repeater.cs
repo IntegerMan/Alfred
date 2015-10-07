@@ -14,6 +14,7 @@ using System.Linq;
 using JetBrains.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
+using System;
 
 namespace MattEland.Ani.Alfred.Core.Widgets
 {
@@ -92,6 +93,12 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         private void PopulateItemsFromItemsSource()
         {
             var items = _itemsSource as IEnumerable<IWidget>;
+
+            // Validate Input
+            if (items == null)
+            {
+                throw new InvalidOperationException("ItemsSource must be an IEnumerable<IWidget>");
+            }
 
             Items = items ?? BuildEmptyItemsCollection();
         }

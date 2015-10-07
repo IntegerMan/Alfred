@@ -11,6 +11,15 @@ namespace MattEland.Ani.Alfred.Core.Definitions
     public interface ISearchController : IAlfredComponent
     {
         /// <summary>
+        /// Gets the search history entries.
+        /// </summary>
+        /// <value>
+        /// The search history entries.
+        /// </value>
+        [NotNull, ItemNotNull]
+        IEnumerable<SearchHistoryEntry> SearchHistory { get; }
+
+        /// <summary>
         ///     Performs the search action against all search providers.
         /// </summary>
         /// <param name="searchText"> The search text. </param>
