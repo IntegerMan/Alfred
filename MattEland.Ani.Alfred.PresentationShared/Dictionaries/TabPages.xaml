@@ -26,10 +26,16 @@
                       ItemsPanel="{StaticResource DynamicItemsPanelTemplate}" />
     </DataTemplate>
 
-
     <!-- Web Browser Page -->
     <DataTemplate DataType="{x:Type pages:WebBrowserPage}">
         <controls:BrowserControl Widget="{Binding Browser}" />
+    </DataTemplate>
+
+    <!-- Search History Page -->
+    <DataTemplate DataType="{x:Type pages:SearchHistoryPage}">
+        <ItemsControl ItemsSource="{Binding Path=Widgets}"                      
+                      BorderThickness="0" 
+                      ItemsPanel="{StaticResource DynamicItemsPanelTemplate}" />
     </DataTemplate>
 
     <!-- Handles most pages -->

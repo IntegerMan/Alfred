@@ -167,6 +167,9 @@ namespace MattEland.Ani.Alfred.Tests.Search
             // The no count widget should be visible
             noCountWidget.ShouldNotBeNull();
             noCountWidget.IsVisible.ShouldBeTrue();
+            var noCountText = noCountWidget.ShouldBe<TextWidget>();
+            noCountText.ShouldNotBeNull();
+            noCountText.Text.HasText().ShouldBeTrue();
 
             // Check the item count
             var repeater = listWidget.ShouldBe<Repeater>();
