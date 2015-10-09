@@ -91,6 +91,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\ApplicationManagerBase.cs" />
     <Compile Include="Commands\ApplicationManagerOptions.cs" />
     <Compile Include="Commands\IUserInterfaceDirector.cs" />
     <Compile Include="Commands\ShellCommandManager.cs" />

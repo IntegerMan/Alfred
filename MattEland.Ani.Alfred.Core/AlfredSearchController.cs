@@ -374,6 +374,7 @@ namespace MattEland.Ani.Alfred.Core
         public void Register(ISearchProvider provider)
         {
             Contract.Requires(provider != null, "provider is null.");
+
             if (provider == null) throw new ArgumentNullException(nameof(provider));
 
             // Require Offline Status 
