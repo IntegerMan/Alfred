@@ -219,3 +219,6 @@ MattEland.Ani.Alfred.WPF/DataFiles/Chat/AimlBot/Atomic.aiml
 *.ncrunchproject
 *.ncrunchsolution
 *.vpp~1
+Alfred.ldb
+Alfred.ump
+Alfred.vpp
