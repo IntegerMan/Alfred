@@ -210,12 +210,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MattEland.Common\MattEland.Common.csproj">
-      <Project>{514cb422-a6ef-4c75-b925-92ab599ba1be}</Project>
-      <Name>MattEland.Common</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Specifications\SubsystemRegistration.md" />
   </ItemGroup>
   <ItemGroup>

@@ -214,10 +214,6 @@
       <Project>{383e44c8-1cc9-4793-8e88-f65cad4955cf}</Project>
       <Name>MattEland.Ani.Alfred.Search</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MattEland.Common\MattEland.Common.csproj">
-      <Project>{514cb422-a6ef-4c75-b925-92ab599ba1be}</Project>
-      <Name>MattEland.Common</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6">
