@@ -9,7 +9,7 @@
 
 using System.Collections.Generic;
 
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 using System.Text;
 using System;
 namespace MattEland.Ani.Alfred.Chat.Aiml.Utils

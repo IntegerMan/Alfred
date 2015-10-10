@@ -13,7 +13,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Common;

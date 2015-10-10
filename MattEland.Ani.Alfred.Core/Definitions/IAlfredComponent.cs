@@ -6,7 +6,7 @@
 // Original author: Matt Eland
 // ---------------------------------------------------------
 
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 
 using MattEland.Common.Providers;
 

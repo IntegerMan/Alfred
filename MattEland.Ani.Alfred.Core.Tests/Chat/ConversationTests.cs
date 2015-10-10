@@ -10,11 +10,11 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 
 using MattEland.Ani.Alfred.Chat;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Testing;
+using MattEland.Common.Testing;
 
 using NUnit.Framework;
 

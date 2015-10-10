@@ -12,9 +12,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Windows.Data;
 
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 
-using MattEland.Testing;
+using MattEland.Common.Testing;
 
 namespace MattEland.Ani.Alfred.Tests.Presentation
 {

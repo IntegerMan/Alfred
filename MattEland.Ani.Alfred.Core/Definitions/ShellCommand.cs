@@ -10,7 +10,7 @@
 using System;
 using System.Globalization;
 
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 
 using MattEland.Common;
 

@@ -10,7 +10,7 @@
 using System;
 using System.Diagnostics;
 
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.TagHandlers
 {

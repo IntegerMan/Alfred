@@ -8,7 +8,7 @@
 // ---------------------------------------------------------
 
 using MattEland.Common;
-using MattEland.Testing;
+using MattEland.Common.Testing;
 
 using NUnit.Framework;
 

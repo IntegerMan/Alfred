@@ -11,7 +11,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 

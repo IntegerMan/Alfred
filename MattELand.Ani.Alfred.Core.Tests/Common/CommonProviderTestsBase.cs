@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 
 using MattEland.Common.Providers;
 

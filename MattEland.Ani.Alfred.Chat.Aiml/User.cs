@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.Utils;
 using MattEland.Common;

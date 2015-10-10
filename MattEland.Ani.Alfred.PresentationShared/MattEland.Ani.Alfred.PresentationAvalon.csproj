@@ -83,10 +83,6 @@
     <AssemblyOriginatorKeyFile>AlfredAppTestCertificate.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="JetBrains.Annotations, Version=9.2.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\packages\JetBrains.Annotations.9.2.0\lib\net20\JetBrains.Annotations.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -137,7 +133,6 @@
   <ItemGroup>
     <None Include="Alfred.pfx" />
     <None Include="AlfredAppTestCertificate.snk" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MattEland.Ani.Alfred.AIML\MattEland.Ani.Alfred.Chat.csproj">
@@ -167,6 +162,10 @@
     <ProjectReference Include="..\MattEland.Ani.Alfred.Search.Bing\MattEland.Ani.Alfred.Search.csproj">
       <Project>{383e44c8-1cc9-4793-8e88-f65cad4955cf}</Project>
       <Name>MattEland.Ani.Alfred.Search</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MattEland.Common\MattEland.Common\MattEland.Common.csproj">
+      <Project>{514cb422-a6ef-4c75-b925-92ab599ba1be}</Project>
+      <Name>MattEland.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

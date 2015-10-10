@@ -6,12 +6,12 @@ using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common.Providers;
-using MattEland.Testing;
+using MattEland.Common.Testing;
 
 using NUnit.Framework;
 
 using Shouldly;
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 
 namespace MattEland.Ani.Alfred.Tests.Core
 {

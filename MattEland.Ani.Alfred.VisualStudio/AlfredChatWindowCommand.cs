@@ -10,7 +10,7 @@
 using System;
 using System.ComponentModel.Design;
 
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;

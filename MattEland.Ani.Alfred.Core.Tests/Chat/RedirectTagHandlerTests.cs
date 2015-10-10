@@ -11,7 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 
 using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
 using MattEland.Common;
-using MattEland.Testing;
+using MattEland.Common.Testing;
 
 using NUnit.Framework;
 

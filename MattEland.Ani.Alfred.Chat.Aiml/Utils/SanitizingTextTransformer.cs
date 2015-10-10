@@ -9,7 +9,7 @@
 
 using System.Text.RegularExpressions;
 
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 
 using MattEland.Common;
 

@@ -12,7 +12,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 using MattEland.Ani.Alfred.PresentationCommon.Converters;
 
 namespace MattEland.Ani.Alfred.PresentationAvalon.Converters

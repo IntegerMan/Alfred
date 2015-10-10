@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 using Windows.UI.Xaml;
 using Windows.UI.Core;
 using System.Diagnostics.CodeAnalysis;

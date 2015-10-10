@@ -14,7 +14,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
 

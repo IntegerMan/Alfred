@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;

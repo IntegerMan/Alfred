@@ -1,6 +1,6 @@
 ﻿using MattEland.Ani.Alfred.PresentationCommon.Layout;
 using Windows.UI.Xaml;
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 using Windows.Foundation;
 
 namespace MattEland.Ani.Alfred.PresentationUniversal.Layout

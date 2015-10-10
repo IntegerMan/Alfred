@@ -13,7 +13,7 @@ using System.Linq;
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common.Providers;
-using MattEland.Testing;
+using MattEland.Common.Testing;
 
 using Moq;
 

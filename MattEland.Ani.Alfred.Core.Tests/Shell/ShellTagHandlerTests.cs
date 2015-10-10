@@ -10,12 +10,12 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 
 using MattEland.Ani.Alfred.Chat;
 using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
 using MattEland.Ani.Alfred.Tests.Chat;
-using MattEland.Testing;
+using MattEland.Common.Testing;
 
 using NUnit.Framework;
 

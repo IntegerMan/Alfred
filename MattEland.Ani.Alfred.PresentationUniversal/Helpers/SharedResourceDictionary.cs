@@ -10,7 +10,7 @@
 using System;
 using System.Collections.Generic;
 
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 using Windows.UI.Xaml;
 using System.Diagnostics.Contracts;
 

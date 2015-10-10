@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+﻿using MattEland.Common.Annotations;
 using MattEland.Ani.Alfred.PresentationAvalon.Commands;
 
 namespace MattEland.Ani.Alfred.VisualStudio

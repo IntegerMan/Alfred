@@ -159,6 +159,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\MattEland.Common\MattEland.Common.Testing\MattEland.Common.Testing.csproj">
+      <Project>{913569fc-7b28-432f-a29a-8acc7a1a5fbc}</Project>
+      <Name>MattEland.Common.Testing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MattEland.Common\MattEland.Common\MattEland.Common.csproj">
+      <Project>{514cb422-a6ef-4c75-b925-92ab599ba1be}</Project>
+      <Name>MattEland.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Manticore\Manticore.csproj">
       <Project>{F63E7BC1-9E96-4FEB-98AE-FB253A5E9635}</Project>
       <Name>Manticore</Name>

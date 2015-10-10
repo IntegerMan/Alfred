@@ -194,6 +194,10 @@
       <Project>{9c043913-2bb0-4481-a411-353561afe4b8}</Project>
       <Name>MattEland.Ani.Alfred.PresentationUniversal</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MattEland.Common\MattEland.Common\MattEland.Common.csproj">
+      <Project>{514cb422-a6ef-4c75-b925-92ab599ba1be}</Project>
+      <Name>MattEland.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

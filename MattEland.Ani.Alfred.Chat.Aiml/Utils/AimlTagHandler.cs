@@ -12,7 +12,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml.TagHandlers;
 using MattEland.Common;

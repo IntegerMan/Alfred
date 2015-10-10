@@ -1,7 +1,7 @@
 using System;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common.Providers;
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 using MattEland.Common;
 using StackExchange.StacMan;
 using System.Diagnostics.Contracts;

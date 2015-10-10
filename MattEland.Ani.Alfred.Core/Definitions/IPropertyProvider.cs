@@ -9,7 +9,7 @@
 
 using System.Collections.Generic;
 
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 
 namespace MattEland.Ani.Alfred.Core.Definitions
 {

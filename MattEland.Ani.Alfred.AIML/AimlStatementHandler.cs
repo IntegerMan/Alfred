@@ -17,7 +17,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Xml;
 
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml;
 using MattEland.Ani.Alfred.Core.Console;

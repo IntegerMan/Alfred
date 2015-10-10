@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 
 using MattEland.Ani.Alfred.Chat.Aiml;
 using MattEland.Ani.Alfred.Core;
@@ -14,12 +16,13 @@ using MattEland.Ani.Alfred.Core.Subsystems;
 
 using MattEland.Common;
 using MattEland.Common.Providers;
-using MattEland.Testing;
 
 using NUnit.Framework;
 
 using Shouldly;
 using MattEland.Ani.Alfred.PresentationAvalon.Commands;
+using MattEland.Ani.Alfred.PresentationCommon.Commands;
+using MattEland.Common.Testing;
 
 namespace MattEland.Ani.Alfred.Tests
 {

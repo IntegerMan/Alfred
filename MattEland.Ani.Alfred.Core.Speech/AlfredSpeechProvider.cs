@@ -11,7 +11,7 @@ using System;
 using System.Globalization;
 using System.Speech.Synthesis;
 
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Common;

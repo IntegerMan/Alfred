@@ -1,5 +1,5 @@
 ﻿using MattEland.Ani.Alfred.PresentationCommon.Layout;
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 using System.Windows;
 
 namespace MattEland.Ani.Alfred.PresentationAvalon.Layout

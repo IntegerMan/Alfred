@@ -1,5 +1,5 @@
 using IronGitHub.Entities;
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
 using MattEland.Common.Providers;

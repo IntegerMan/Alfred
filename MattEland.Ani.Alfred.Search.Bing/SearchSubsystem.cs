@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MattEland.Ani.Alfred.Core.Definitions;
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 using MattEland.Ani.Alfred.Search.GitHub;
 using MattEland.Ani.Alfred.Search.Bing;
 using MattEland.Ani.Alfred.Search.StackOverflow;

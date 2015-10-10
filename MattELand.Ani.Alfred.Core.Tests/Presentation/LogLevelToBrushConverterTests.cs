@@ -13,7 +13,7 @@ using System.Windows.Media;
 
 using MattEland.Ani.Alfred.Core.Console;
 
-using MattEland.Testing;
+using MattEland.Common.Testing;
 
 using NUnit.Framework;
 

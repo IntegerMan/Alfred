@@ -10,7 +10,7 @@
 using System;
 using System.Diagnostics;
 
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 
 using MattEland.Common.Providers;
 using MattEland.Ani.Alfred.Core.Definitions;

@@ -11,7 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 
 namespace MattEland.Ani.Alfred.PresentationAvalon.Helpers
 {

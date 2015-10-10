@@ -11,7 +11,7 @@ using System;
 using System.Linq;
 using System.Windows.Controls.Primitives;
 
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;

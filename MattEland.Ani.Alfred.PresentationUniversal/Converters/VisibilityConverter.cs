@@ -9,7 +9,7 @@
 
 using System;
 
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 using MattEland.Ani.Alfred.PresentationCommon.Converters;

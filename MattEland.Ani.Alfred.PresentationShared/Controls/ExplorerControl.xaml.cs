@@ -12,7 +12,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 

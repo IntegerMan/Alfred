@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+﻿using MattEland.Common.Annotations;
 using MattEland.Ani.Alfred.Core.Widgets;
 
 namespace MattEland.Ani.Alfred.Tests.Widgets

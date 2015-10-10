@@ -10,7 +10,7 @@
 using System;
 using System.Xml;
 
-using JetBrains.Annotations;
+using MattEland.Common.Annotations;
 
 namespace MattEland.Ani.Alfred.Chat.Aiml.Utils
 {
