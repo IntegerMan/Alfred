@@ -20,6 +20,7 @@ using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Ani.Alfred.Tests.Controls;
+using MattEland.Common.Definitions.Search;
 using MattEland.Common.Providers;
 using MattEland.Common.Testing;
 

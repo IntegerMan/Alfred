@@ -8,6 +8,8 @@ using MattEland.Common.Providers;
 using MattEland.Common;
 using System.Diagnostics.Contracts;
 
+using MattEland.Common.Definitions.Search;
+
 namespace MattEland.Ani.Alfred.Search.Bing
 {
     /// <summary>

@@ -1,9 +1,9 @@
-﻿using MattEland.Common.Annotations;
-using MattEland.Common;
-using MattEland.Common.Providers;
-using System;
+﻿using System;
 
-namespace MattEland.Ani.Alfred.Core.Definitions
+using MattEland.Common.Annotations;
+using MattEland.Common.Providers;
+
+namespace MattEland.Common.Definitions.Search
 {
     /// <summary>
     ///     A basic search result intended to provide simple search functionality.

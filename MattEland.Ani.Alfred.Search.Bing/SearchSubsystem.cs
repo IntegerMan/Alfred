@@ -9,6 +9,8 @@ using MattEland.Ani.Alfred.Search.Bing;
 using MattEland.Ani.Alfred.Search.StackOverflow;
 using System.Diagnostics.Contracts;
 
+using MattEland.Common.Definitions.Search;
+
 namespace MattEland.Ani.Alfred.Search
 {
     /// <summary>

@@ -1,8 +1,6 @@
 using System;
 
-using MattEland.Ani.Alfred.Core.Definitions;
-
-namespace MattEland.Ani.Alfred.Core
+namespace MattEland.Common.Definitions.Search
 {
     /// <summary>
     ///     The search result event arguments

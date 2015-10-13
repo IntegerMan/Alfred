@@ -15,6 +15,7 @@ using MattEland.Common.Annotations;
 
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common.Definitions.Search;
 
 using Moq;
 

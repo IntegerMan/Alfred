@@ -12,6 +12,7 @@ using System.Linq;
 
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common.Definitions.Search;
 using MattEland.Common.Providers;
 using MattEland.Common.Testing;
 

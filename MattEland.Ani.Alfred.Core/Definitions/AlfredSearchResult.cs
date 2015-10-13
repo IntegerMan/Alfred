@@ -13,6 +13,7 @@ using MattEland.Common.Annotations;
 using System.Diagnostics.Contracts;
 
 using MattEland.Common;
+using MattEland.Common.Definitions.Search;
 
 namespace MattEland.Ani.Alfred.Core.Definitions
 {

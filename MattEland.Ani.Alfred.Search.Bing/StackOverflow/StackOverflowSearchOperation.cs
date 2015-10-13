@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using StackExchange.StacMan.Questions;
 using System.Diagnostics.Contracts;
 
+using MattEland.Common.Definitions.Search;
+
 namespace MattEland.Ani.Alfred.Search.StackOverflow
 {
     /// <summary>

@@ -5,6 +5,8 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 
+using MattEland.Common.Definitions.Search;
+
 namespace MattEland.Ani.Alfred.PresentationAvalon.Controls
 {
     /// <summary>

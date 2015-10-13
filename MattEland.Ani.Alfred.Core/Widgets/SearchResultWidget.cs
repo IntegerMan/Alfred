@@ -5,6 +5,7 @@ using MattEland.Common.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
+using MattEland.Common.Definitions.Search;
 
 namespace MattEland.Ani.Alfred.Core.Widgets
 {

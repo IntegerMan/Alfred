@@ -9,9 +9,10 @@
 
 using System.Collections.Generic;
 
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common.Annotations;
 
-namespace MattEland.Ani.Alfred.Core.Definitions
+namespace MattEland.Common.Definitions.Search
 {
     /// <summary>
     ///     Defines an <see langword="object"/> capable of providing search results

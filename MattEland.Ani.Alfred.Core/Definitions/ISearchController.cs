@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 
 using MattEland.Common.Annotations;
+using MattEland.Common.Definitions.Search;
 
 namespace MattEland.Ani.Alfred.Core.Definitions
 {

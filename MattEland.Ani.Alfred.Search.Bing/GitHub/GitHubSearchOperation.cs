@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 
+using MattEland.Common.Definitions.Search;
+
 namespace MattEland.Ani.Alfred.Search.GitHub
 {
     /// <summary>

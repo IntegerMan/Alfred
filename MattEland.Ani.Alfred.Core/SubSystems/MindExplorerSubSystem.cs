@@ -18,6 +18,8 @@ using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Common.Providers;
 using System.Diagnostics.Contracts;
 
+using MattEland.Common.Definitions.Search;
+
 namespace MattEland.Ani.Alfred.Core.Subsystems
 {
     /// <summary>

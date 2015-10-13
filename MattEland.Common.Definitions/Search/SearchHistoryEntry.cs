@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MattEland.Ani.Alfred.Core.Definitions
+namespace MattEland.Common.Definitions.Search
 {
     /// <summary>
     ///     A search history entry.

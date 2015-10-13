@@ -11,7 +11,7 @@ using System;
 
 using MattEland.Common.Annotations;
 
-namespace MattEland.Ani.Alfred.Core.Definitions
+namespace MattEland.Common.Definitions.Search
 {
     /// <summary>
     ///     Interface for a search result.

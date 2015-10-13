@@ -3,6 +3,9 @@ using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common.Providers;
 using System;
 using System.Diagnostics.Contracts;
+
+using MattEland.Common.Definitions.Search;
+
 namespace MattEland.Ani.Alfred.Search.GitHub
 {
     /// <summary>

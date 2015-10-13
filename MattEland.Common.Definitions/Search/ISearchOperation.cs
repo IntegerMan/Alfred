@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 using MattEland.Common.Annotations;
 
-namespace MattEland.Ani.Alfred.Core.Definitions
+namespace MattEland.Common.Definitions.Search
 {
     /// <summary>
     ///     Interface for an ongoing search operation
