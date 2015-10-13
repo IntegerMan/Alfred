@@ -219,6 +219,10 @@
       <Project>{E13E88B6-23C9-40EA-B10B-B8E52541B221}</Project>
       <Name>MattEland.Ani.Alfred.WPF</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MattEland.Common.Definitions\MattEland.Common.Definitions.csproj">
+      <Project>{af66afb8-9523-4211-8b68-88b8b6f6e6f4}</Project>
+      <Name>MattEland.Common.Definitions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MattEland.Common\MattEland.Common.Testing\MattEland.Common.Testing.csproj">
       <Project>{913569fc-7b28-432f-a29a-8acc7a1a5fbc}</Project>
       <Name>MattEland.Common.Testing</Name>

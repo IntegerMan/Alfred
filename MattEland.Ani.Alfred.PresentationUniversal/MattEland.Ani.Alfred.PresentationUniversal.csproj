@@ -181,6 +181,10 @@
       <Project>{84a80aeb-adef-4490-93b1-5378f52094fa}</Project>
       <Name>MattEland.Ani.Alfred.PresentationCommon</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MattEland.Common.Definitions\MattEland.Common.Definitions.csproj">
+      <Project>{af66afb8-9523-4211-8b68-88b8b6f6e6f4}</Project>
+      <Name>MattEland.Common.Definitions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MattEland.Common\MattEland.Common\MattEland.Common.csproj">
       <Project>{514cb422-a6ef-4c75-b925-92ab599ba1be}</Project>
       <Name>MattEland.Common</Name>

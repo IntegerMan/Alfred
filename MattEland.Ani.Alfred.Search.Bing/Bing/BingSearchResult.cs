@@ -1,14 +1,13 @@
 ﻿using MattEland.Ani.Alfred.Core.Definitions;
 using System;
 using MattEland.Common.Annotations;
-using MattEland.Common.Providers;
 using System.Diagnostics.Contracts;
 namespace MattEland.Ani.Alfred.Search.Bing
 {
     /// <summary>
     ///     A Bing search result.
     /// </summary>
-    internal class BingSearchResult : SearchResult, IHasContainer<IAlfredContainer>
+    internal class BingSearchResult : AlfredSearchResult
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="BingSearchResult" /> class.

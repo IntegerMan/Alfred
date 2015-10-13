@@ -13,7 +13,6 @@ namespace MattEland.Ani.Alfred.Core.Definitions
     /// </summary>
     public interface IAlfredContainer : IObjectContainer
     {
-        void RemoveMapping(Type type);
         /// <summary>
         ///     Builds a command.
         /// </summary>

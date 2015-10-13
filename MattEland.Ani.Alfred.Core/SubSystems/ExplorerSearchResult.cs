@@ -5,7 +5,6 @@ using MattEland.Common.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using System.Diagnostics.Contracts;
-using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Subsystems
 {
@@ -13,7 +12,7 @@ namespace MattEland.Ani.Alfred.Core.Subsystems
     /// <summary>
     ///     A search result containing information about an explorer node.
     /// </summary>
-    internal sealed class ExplorerSearchResult : SearchResult
+    internal sealed class ExplorerSearchResult : AlfredSearchResult
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="ExplorerSearchResult" /> class.

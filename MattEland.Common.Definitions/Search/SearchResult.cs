@@ -8,14 +8,14 @@ namespace MattEland.Ani.Alfred.Core.Definitions
     /// <summary>
     ///     A basic search result intended to provide simple search functionality.
     /// </summary>
-    public class SearchResult : ISearchResult
+    public abstract class SearchResult : ISearchResult
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="SearchResult"/> class.
         /// </summary>
         /// <param name="container"> The container. </param>
         /// <param name="title"> The title. </param>
-        public SearchResult(IAlfredContainer container, string title)
+        public SearchResult(IObjectContainer container, string title)
         {
             Container = container;
             Title = title;
@@ -83,34 +83,13 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// </summary>
         /// <returns>An action</returns>
         [CanBeNull]
-        private Action BuildMoreDetailsAction()
-        {
-            var router = Container.CommandRouter;
-            var shell = Container.Shell;
-
-            // Build out a command handler
-            return () =>
-            {
-                // Build out a command to navigate the browser widget to the proper locationText
-                var result = new AlfredCommandResult();
-                var command = new ChatCommand("Core", "Browse", Url);
-
-                router.ProcessAlfredCommand(command, result);
-
-                /* Tell the shell to navigate as well. This is separate from the prior command since
-                   we don't want the user interface to have specific knowledge of its contents. */
-                if (shell != null)
-                {
-                    var shellCommand = new ShellCommand("Nav", "Pages", "Browser");
-                    shell.ProcessShellCommand(shellCommand);
-                }
-            };
-        }
+        protected abstract Action BuildMoreDetailsAction();
 
         /// <summary>
         /// The action to take on requesting more details
         /// </summary>
-        private Action _action = null;
+        [CanBeNull]
+        protected Action Action = null;
 
         /// <summary>
         ///     Gets the action that is executed when a user wants more information.
@@ -123,12 +102,12 @@ namespace MattEland.Ani.Alfred.Core.Definitions
             get
             {
                 // Lazy load the action
-                if (_action == null)
+                if (Action == null)
                 {
-                    _action = BuildMoreDetailsAction();
+                    Action = BuildMoreDetailsAction();
                 }
 
-                return _action;
+                return Action;
             }
         }
 
@@ -136,7 +115,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// Gets the container.
         /// </summary>
         /// <value>The container.</value>
-        public IAlfredContainer Container { get; protected set; }
+        public IObjectContainer Container { get; protected set; }
     }
 }
 

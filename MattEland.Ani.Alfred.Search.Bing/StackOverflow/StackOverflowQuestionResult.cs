@@ -1,6 +1,5 @@
 using System;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Common.Providers;
 using MattEland.Common.Annotations;
 using MattEland.Common;
 using StackExchange.StacMan;
@@ -11,7 +10,7 @@ namespace MattEland.Ani.Alfred.Search.StackOverflow
     /// <summary>
     ///     Represents a stack overflow question as a search result. This class cannot be inherited.
     /// </summary>
-    public sealed class StackOverflowQuestionResult : SearchResult
+    public sealed class StackOverflowQuestionResult : AlfredSearchResult
     {
 
         /// <summary>

@@ -13,7 +13,7 @@ namespace MattEland.Ani.Alfred.Search.GitHub
     /// <summary>
     /// Represents a GitHub repository found from a search result
     /// </summary>
-    internal sealed class GitHubRepositoryResult : SearchResult
+    internal sealed class GitHubRepositoryResult : AlfredSearchResult
     {
         private readonly Repository.RepositorySearchResults.RepositoryResult _repository;
 

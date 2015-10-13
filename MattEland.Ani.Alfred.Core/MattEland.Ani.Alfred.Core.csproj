@@ -96,8 +96,10 @@
   <ItemGroup>
     <Compile Include="AlfredCommandRouter.cs" />
     <Compile Include="Definitions\AlfredContainer.cs" />
+    <Compile Include="Definitions\AlfredSearchResult.cs" />
     <Compile Include="Definitions\IAlfredContainer.cs" />
     <Compile Include="Definitions\IMessageBoxProvider.cs" />
+    <Compile Include="Definitions\ISearchController.cs" />
     <Compile Include="Definitions\MessageBoxType.cs" />
     <Compile Include="AlfredCommand.cs" />
     <Compile Include="AlfredCommandResult.cs" />
@@ -122,21 +124,15 @@
     <Compile Include="Definitions\IAlfredSubsystem.cs" />
     <Compile Include="Console\IConsoleEvent.cs" />
     <Compile Include="Definitions\ICommandResult.cs" />
-    <Compile Include="Definitions\IHasIdentifier.cs" />
     <Compile Include="Definitions\IHasStatus.cs" />
     <Compile Include="Definitions\IPropertyItem.cs" />
     <Compile Include="Definitions\IPropertyProvider.cs" />
-    <Compile Include="Definitions\ISearchController.cs" />
-    <Compile Include="Definitions\ISearchOperation.cs" />
-    <Compile Include="Definitions\ISearchProvider.cs" />
-    <Compile Include="Definitions\ISearchResult.cs" />
     <Compile Include="Definitions\IRegistrationProvider.cs" />
     <Compile Include="Definitions\IShellCommandRecipient.cs" />
     <Compile Include="Definitions\IStatusController.cs" />
     <Compile Include="Definitions\IChatProvider.cs" />
     <Compile Include="Definitions\IWidget.cs" />
     <Compile Include="Definitions\LayoutType.cs" />
-    <Compile Include="Definitions\SearchHistoryEntry.cs" />
     <Compile Include="Definitions\ShellCommand.cs" />
     <Compile Include="Definitions\UserStatementResponse.cs" />
     <Compile Include="Modules\AlertVisibilityCalculator.cs" />
@@ -155,7 +151,6 @@
     <Compile Include="Pages\SearchHistoryPage.cs" />
     <Compile Include="Pages\SearchPage.cs" />
     <Compile Include="Pages\WebBrowserPage.cs" />
-    <Compile Include="SearchResultEventArgs.cs" />
     <Compile Include="Subsystems\AlfredSubsystem.cs" />
     <Compile Include="Console\LogLevel.cs" />
     <Compile Include="Subsystems\AlfredCoreSubsystem.cs" />
@@ -176,7 +171,6 @@
     <Compile Include="Subsystems\ExplorerSearchProvider.cs" />
     <Compile Include="Subsystems\ExplorerSearchResult.cs" />
     <Compile Include="Subsystems\MindExplorerSubsystem.cs" />
-    <Compile Include="Definitions\SearchResult.cs" />
     <Compile Include="Subsystems\SimpleSubsystem.cs" />
     <Compile Include="Widgets\AlfredProgressBarWidget.cs" />
     <Compile Include="Widgets\LinkWidget.cs" />
@@ -212,6 +206,10 @@
     <Compile Include="Widgets\Repeater.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MattEland.Common.Definitions\MattEland.Common.Definitions.csproj">
+      <Project>{af66afb8-9523-4211-8b68-88b8b6f6e6f4}</Project>
+      <Name>MattEland.Common.Definitions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MattEland.Common\MattEland.Common\MattEland.Common.csproj">
       <Project>{514cb422-a6ef-4c75-b925-92ab599ba1be}</Project>
       <Name>MattEland.Common</Name>
