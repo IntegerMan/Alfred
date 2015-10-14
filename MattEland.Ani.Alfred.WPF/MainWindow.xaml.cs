@@ -114,8 +114,10 @@ namespace MattEland.Ani.Alfred.WPF
         /// <summary>
         ///     Handles the <see cref="E:WindowClosing" /> event.
         /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="CancelEventArgs" /> instance containing the event data.</param>
+        /// <param name="sender"> The sender. </param>
+        /// <param name="e">
+        ///     The <see cref="CancelEventArgs" /> instance containing the event data.
+        /// </param>
         private void OnWindowClosing(object sender, CancelEventArgs e)
         {
             Application.Stop();
