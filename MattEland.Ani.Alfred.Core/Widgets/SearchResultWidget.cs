@@ -67,10 +67,13 @@ namespace MattEland.Ani.Alfred.Core.Widgets
                 string controlName = "linkResult" + SearchResult.GetHashCode();
                 var parameters = new WidgetCreationParameters(controlName, Container);
 
-                LinkWidget = new LinkWidget(SearchResult.MoreDetailsText, SearchResult.Url, parameters)
+                var alfredContainer = Container as IAlfredContainer;
+
+                LinkWidget = new LinkWidget(SearchResult.MoreDetailsText, SearchResult.Url, parameters);
+                if (alfredContainer != null)
                 {
-                    Command = Container.BuildCommand(SearchResult.MoreDetailsAction)
-                };
+                    LinkWidget.Command = alfredContainer.BuildCommand(SearchResult.MoreDetailsAction);
+                }
             }
             else
             {

@@ -20,7 +20,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
     /// <summary>
     ///     Contains common parameters needed to create any <see cref="WidgetBase" />
     /// </summary>
-    public class WidgetCreationParameters : IHasContainer<IAlfredContainer>
+    public class WidgetCreationParameters : IHasContainer<IObjectContainer>
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="WidgetCreationParameters" /> class.
@@ -29,7 +29,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         /// <param name="container"> The container. </param>
         public WidgetCreationParameters(
             [NotNull] string name,
-            [NotNull] IAlfredContainer container)
+            [NotNull] IObjectContainer container)
         {
             Name = name;
             Container = container;
@@ -49,6 +49,6 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         ///     The container.
         /// </value>
         [NotNull]
-        public IAlfredContainer Container { get; }
+        public IObjectContainer Container { get; }
     }
 }

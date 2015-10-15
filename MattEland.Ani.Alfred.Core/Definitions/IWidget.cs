@@ -10,7 +10,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
     ///     build, arrange, and configure the concrete client-specific user interface component(s)
     ///     for any given widget.
     /// </summary>
-    public interface IWidget : INotifyPropertyChanged, IPropertyProvider, IHasContainer<IAlfredContainer>
+    public interface IWidget : INotifyPropertyChanged, IPropertyProvider, IHasContainer<IObjectContainer>
     {
         /// <summary>
         ///     Gets or sets whether or not the widget is visible. This defaults to <c>true</c>.

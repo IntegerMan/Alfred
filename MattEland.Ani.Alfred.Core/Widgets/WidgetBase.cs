@@ -15,6 +15,7 @@ using MattEland.Common.Annotations;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Widgets
 {
@@ -147,7 +148,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
             // Log to the console
             var message = exception.BuildDetailsMessage();
             message = string.Format("{0} encountered an error: {1}", operationName, message);
-            message.Log(operationName, LogLevel.Error, Container);
+            message.Log(operationName, LogLevel.Error, Container as IAlfredContainer);
 
             // It's been logged. Don't throw it again
             return true;
@@ -159,6 +160,6 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         /// <value>
         ///     The container.
         /// </value>
-        public IAlfredContainer Container { get; }
+        public IObjectContainer Container { get; }
     }
 }
