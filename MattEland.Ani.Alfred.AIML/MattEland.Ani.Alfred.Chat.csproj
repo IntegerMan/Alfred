@@ -128,7 +128,7 @@
       <Project>{549F22E5-1F66-4420-89BF-9460603F9516}</Project>
       <Name>MattEland.Ani.Alfred.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MattEland.Common.Definitions\MattEland.Common.Definitions.csproj">
+    <ProjectReference Include="..\MattEland.Common\MattEland.Common.Definitions\MattEland.Common.Definitions.csproj">
       <Project>{af66afb8-9523-4211-8b68-88b8b6f6e6f4}</Project>
       <Name>MattEland.Common.Definitions</Name>
     </ProjectReference>

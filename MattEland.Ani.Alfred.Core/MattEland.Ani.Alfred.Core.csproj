@@ -206,7 +206,7 @@
     <Compile Include="Widgets\Repeater.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MattEland.Common.Definitions\MattEland.Common.Definitions.csproj">
+    <ProjectReference Include="..\MattEland.Common\MattEland.Common.Definitions\MattEland.Common.Definitions.csproj">
       <Project>{af66afb8-9523-4211-8b68-88b8b6f6e6f4}</Project>
       <Name>MattEland.Common.Definitions</Name>
     </ProjectReference>
