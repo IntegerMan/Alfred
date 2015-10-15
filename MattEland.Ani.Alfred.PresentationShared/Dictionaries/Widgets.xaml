@@ -69,7 +69,7 @@
     </DataTemplate>
 
     <!-- AlfredProgressBarWidget Template -->
-    <DataTemplate DataType="{x:Type widgets:AlfredProgressBarWidget}">
+    <DataTemplate DataType="{x:Type widgets:ProgressBarWidget}">
         <Grid Margin="0, 8, 0, 0"
               Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" >
 

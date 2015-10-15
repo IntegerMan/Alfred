@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------
-// AlfredProgressBarWidget.cs
+// ProgressBarWidget.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
 // Last Modified:   08/24/2015 at 11:22 PM
@@ -19,7 +19,7 @@ namespace MattEland.Ani.Alfred.Core.Widgets
     /// <summary>
     ///     A progress bar widget to be interpreted at the user interface layer
     /// </summary>
-    public sealed class AlfredProgressBarWidget : TextWidgetBase
+    public sealed class ProgressBarWidget : TextWidgetBase
     {
         private float _maximum = 100;
         private float _minimum;
@@ -29,10 +29,10 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         private string _valueFormatString;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AlfredProgressBarWidget" /> class.
+        ///     Initializes a new instance of the <see cref="ProgressBarWidget" /> class.
         /// </summary>
         /// <param name="parameters"> The parameters. </param>
-        public AlfredProgressBarWidget([NotNull] WidgetCreationParameters parameters) : base(parameters)
+        public ProgressBarWidget([NotNull] WidgetCreationParameters parameters) : base(parameters)
         {
         }
 

@@ -30,13 +30,13 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         private readonly MetricProviderBase _diskReadCounter;
 
         [NotNull]
-        private readonly AlfredProgressBarWidget _diskReadWidget;
+        private readonly ProgressBarWidget _diskReadWidget;
 
         [NotNull]
         private readonly MetricProviderBase _diskWriteCounter;
 
         [NotNull]
-        private readonly AlfredProgressBarWidget _diskWriteWidget;
+        private readonly ProgressBarWidget _diskWriteWidget;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="MemoryMonitorModule" /> class.
@@ -101,10 +101,10 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// </summary>
         /// <returns>A percentage progress bar widget</returns>
         [NotNull]
-        private static AlfredProgressBarWidget CreatePercentWidget(
+        private static ProgressBarWidget CreatePercentWidget(
             [NotNull] WidgetCreationParameters parameters)
         {
-            var widget = new AlfredProgressBarWidget(parameters)
+            var widget = new ProgressBarWidget(parameters)
             {
                 Minimum = 0,
                 Maximum = 100,

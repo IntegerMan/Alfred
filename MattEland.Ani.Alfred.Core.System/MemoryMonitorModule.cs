@@ -30,7 +30,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         private readonly MetricProviderBase _usedBytesCounter;
 
         [NotNull]
-        private readonly AlfredProgressBarWidget _widget;
+        private readonly ProgressBarWidget _widget;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="MemoryMonitorModule" /> class.
@@ -44,7 +44,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             _usedBytesCounter = MetricProvider.Build(MemoryCategoryName,
                                                         MemoryUtilizationBytesCounterName);
 
-            _widget = new AlfredProgressBarWidget(BuildWidgetParameters(@"progMemoryUsed"))
+            _widget = new ProgressBarWidget(BuildWidgetParameters(@"progMemoryUsed"))
             {
                 Minimum = 0,
                 Maximum = 100,

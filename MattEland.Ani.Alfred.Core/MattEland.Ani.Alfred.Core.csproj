@@ -172,7 +172,7 @@
     <Compile Include="Subsystems\ExplorerSearchResult.cs" />
     <Compile Include="Subsystems\MindExplorerSubsystem.cs" />
     <Compile Include="Subsystems\SimpleSubsystem.cs" />
-    <Compile Include="Widgets\AlfredProgressBarWidget.cs" />
+    <Compile Include="Widgets\ProgressBarWidget.cs" />
     <Compile Include="Widgets\LinkWidget.cs" />
     <Compile Include="Widgets\SearchResultWidget.cs" />
     <Compile Include="Widgets\TextBoxWidget.cs" />

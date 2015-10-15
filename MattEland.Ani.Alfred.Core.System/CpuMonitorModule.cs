@@ -41,8 +41,8 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 
         [NotNull]
         [ItemNotNull]
-        private readonly List<AlfredProgressBarWidget> _cpuWidgets =
-            new List<AlfredProgressBarWidget>();
+        private readonly List<ProgressBarWidget> _cpuWidgets =
+            new List<ProgressBarWidget>();
 
         [NotNull]
         [ItemNotNull]
@@ -141,7 +141,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 
                 // Create a widget for the counter
                 // Store the counter as the widget's data context for easier updating later on
-                var widget = new AlfredProgressBarWidget(BuildWidgetParameters($"progProcessor{counter.Name}"))
+                var widget = new ProgressBarWidget(BuildWidgetParameters($"progProcessor{counter.Name}"))
                 {
                     DataContext = counter,
                     Minimum = 0,
@@ -204,7 +204,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <param name="counter"> The performance counter. </param>
         /// <param name="label"> The label to add before the counter value. </param>
         private static void UpdateCpuWidget(
-            [NotNull] AlfredProgressBarWidget widget,
+            [NotNull] ProgressBarWidget widget,
             [CanBeNull] MetricProviderBase counter,
             [CanBeNull] string label)
         {
