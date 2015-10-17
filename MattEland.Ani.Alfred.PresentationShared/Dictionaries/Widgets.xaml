@@ -6,7 +6,9 @@
                     xmlns:layout="clr-namespace:MattEland.Ani.Alfred.PresentationAvalon.Layout"
                     xmlns:definitions="clr-namespace:MattEland.Ani.Alfred.Core.Definitions;assembly=MattEland.Ani.Alfred.Core"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:widget="clr-namespace:MattEland.Presentation.Logical.Widgets;assembly=MattEland.Presentation.Logical"
+                    mc:Ignorable="d">
 
     <ResourceDictionary.MergedDictionaries>
         <helpers:SharedResourceDictionary Source="Miscellaneous.xaml"  />
@@ -160,7 +162,7 @@
     </DataTemplate>
 
     <!-- Fallback type of widget Template -->
-    <DataTemplate DataType="{x:Type definitions:IWidget}">
+    <DataTemplate DataType="{x:Type widget:IWidget}">
 
         <TextBlock Margin="0, 8, 8, 0"
             Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"

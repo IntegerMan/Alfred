@@ -231,6 +231,10 @@
       <Project>{514cb422-a6ef-4c75-b925-92ab599ba1be}</Project>
       <Name>MattEland.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MattEland.Common\MattEland.Presentation.Logical\MattEland.Presentation.Logical.csproj">
+      <Project>{a5d8ce53-4b76-469b-b75b-598f13270e35}</Project>
+      <Name>MattEland.Presentation.Logical</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Alfred.pfx" />

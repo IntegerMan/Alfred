@@ -13,6 +13,7 @@ using System.Diagnostics.CodeAnalysis;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Common.Testing;
+using MattEland.Presentation.Logical.Widgets;
 
 using NUnit.Framework;
 

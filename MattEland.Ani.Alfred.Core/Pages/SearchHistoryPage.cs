@@ -6,6 +6,7 @@ using System.Diagnostics.Contracts;
 using MattEland.Common.Annotations;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Common.Definitions.Search;
+using MattEland.Presentation.Logical.Widgets;
 
 namespace MattEland.Ani.Alfred.Core.Pages
 {

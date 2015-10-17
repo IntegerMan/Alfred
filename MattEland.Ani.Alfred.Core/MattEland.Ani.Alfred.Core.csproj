@@ -125,13 +125,10 @@
     <Compile Include="Console\IConsoleEvent.cs" />
     <Compile Include="Definitions\ICommandResult.cs" />
     <Compile Include="Definitions\IHasStatus.cs" />
-    <Compile Include="Definitions\IPropertyItem.cs" />
-    <Compile Include="Definitions\IPropertyProvider.cs" />
     <Compile Include="Definitions\IRegistrationProvider.cs" />
     <Compile Include="Definitions\IShellCommandRecipient.cs" />
     <Compile Include="Definitions\IStatusController.cs" />
     <Compile Include="Definitions\IChatProvider.cs" />
-    <Compile Include="Definitions\IWidget.cs" />
     <Compile Include="Definitions\LayoutType.cs" />
     <Compile Include="Definitions\ShellCommand.cs" />
     <Compile Include="Definitions\UserStatementResponse.cs" />
@@ -213,6 +210,10 @@
     <ProjectReference Include="..\MattEland.Common\MattEland.Common\MattEland.Common.csproj">
       <Project>{514cb422-a6ef-4c75-b925-92ab599ba1be}</Project>
       <Name>MattEland.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MattEland.Common\MattEland.Presentation.Logical\MattEland.Presentation.Logical.csproj">
+      <Project>{a5d8ce53-4b76-469b-b75b-598f13270e35}</Project>
+      <Name>MattEland.Presentation.Logical</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

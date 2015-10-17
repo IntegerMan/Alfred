@@ -15,6 +15,7 @@ using MattEland.Common;
 using MattEland.Common.Testing;
 
 using NUnit.Framework;
+using MattEland.Presentation.Logical.Widgets;
 
 namespace MattEland.Ani.Alfred.Tests.Controls
 {

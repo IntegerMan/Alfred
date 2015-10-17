@@ -10,8 +10,7 @@ using System;
 using System.Collections.Generic;
 
 using MattEland.Common.Annotations;
-
-using MattEland.Ani.Alfred.Core.Widgets;
+using MattEland.Presentation.Logical.Widgets;
 
 namespace MattEland.Ani.Alfred.Core.Definitions
 {

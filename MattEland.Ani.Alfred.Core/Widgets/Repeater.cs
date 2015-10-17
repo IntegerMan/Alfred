@@ -16,6 +16,8 @@ using MattEland.Common.Annotations;
 using MattEland.Ani.Alfred.Core.Definitions;
 using System;
 
+using MattEland.Presentation.Logical.Widgets;
+
 namespace MattEland.Ani.Alfred.Core.Widgets
 {
     /// <summary>
