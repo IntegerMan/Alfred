@@ -6,7 +6,7 @@
 
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Resources/MFDButtonStyling.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.MFDMockUp;component/Resources/MFDButtonStyling.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <Brush x:Key="DisabledTextBrush">#FF838383</Brush>
