@@ -3,18 +3,18 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:mfdMockUp="clr-namespace:MattEland.Ani.Alfred.MFDMockUp"
+        xmlns:controls="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.Controls"
         mc:Ignorable="d"
         Title="Alfred MFD Prototype" 
         Background="#2D2D30"
         Width="800" Height="600" 
-        Icon="alfred.ico">
+        Icon="Resources/alfred.ico">
     <WrapPanel>
-        <mfdMockUp:MultifunctionDisplayView />
-        <mfdMockUp:MultifunctionDisplayView />
-        <mfdMockUp:MultifunctionDisplayView />
-        <mfdMockUp:MultifunctionDisplayView />
-        <mfdMockUp:MultifunctionDisplayView />
-        <mfdMockUp:MultifunctionDisplayView />
+        <controls:MultifunctionDisplay />
+        <controls:MultifunctionDisplay />
+        <controls:MultifunctionDisplay />
+        <controls:MultifunctionDisplay />
+        <controls:MultifunctionDisplay />
+        <controls:MultifunctionDisplay />
     </WrapPanel>
 </Window>

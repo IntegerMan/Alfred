@@ -68,25 +68,25 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="MFDButtonStyling.xaml">
+    <Page Include="Resources\MFDButtonStyling.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MultifunctionButtonStrip.xaml">
+    <Page Include="Controls\MultifunctionButtonStrip.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MultifunctionDisplayView.xaml">
+    <Page Include="Controls\MultifunctionDisplay.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MultifunctionButtonStrip.xaml.cs">
+    <Compile Include="Controls\MultifunctionButtonStrip.xaml.cs">
       <DependentUpon>MultifunctionButtonStrip.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MultifunctionDisplayView.xaml.cs">
-      <DependentUpon>MultifunctionDisplayView.xaml</DependentUpon>
+    <Compile Include="Controls\MultifunctionDisplay.xaml.cs">
+      <DependentUpon>MultifunctionDisplay.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -161,7 +161,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="alfred.ico" />
+    <Resource Include="Resources\alfred.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

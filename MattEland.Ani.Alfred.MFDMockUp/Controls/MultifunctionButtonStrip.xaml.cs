@@ -14,10 +14,10 @@ using System.Windows.Controls;
 
 using MattEland.Common.Annotations;
 
-namespace MattEland.Ani.Alfred.MFDMockUp
+namespace MattEland.Ani.Alfred.MFDMockUp.Controls
 {
     /// <summary>
-    /// Interaction logic for MultifunctionButtonStrip.xaml
+    /// Represents a strip of buttons bordering a <see cref="MultifunctionDisplay"/>
     /// </summary>
     public sealed partial class MultifunctionButtonStrip : UserControl
     {
@@ -26,7 +26,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp
         ///     Defines the <see cref="Orientation"/> dependency property.
         /// </summary>
         /// <remarks>
-        ///		Defaults to null
+        ///		Defaults to Horizontal
         /// </remarks>
         [NotNull]
         public static readonly DependencyProperty OrientationProperty =
