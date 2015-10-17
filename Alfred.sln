@@ -60,6 +60,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MattEland.Common.Definition
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MattEland.Presentation.Logical", "MattEland.Common\MattEland.Presentation.Logical\MattEland.Presentation.Logical.csproj", "{A5D8CE53-4B76-469B-B75B-598F13270E35}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MattEland.Ani.Alfred.MFDMockUp", "MattEland.Ani.Alfred.MFDMockUp\MattEland.Ani.Alfred.MFDMockUp.csproj", "{2D19065F-416F-4138-9D6B-1DFD26FAFF8F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -332,6 +334,22 @@ Global
 		{A5D8CE53-4B76-469B-B75B-598F13270E35}.Release|x64.Build.0 = Release|Any CPU
 		{A5D8CE53-4B76-469B-B75B-598F13270E35}.Release|x86.ActiveCfg = Release|Any CPU
 		{A5D8CE53-4B76-469B-B75B-598F13270E35}.Release|x86.Build.0 = Release|Any CPU
+		{2D19065F-416F-4138-9D6B-1DFD26FAFF8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D19065F-416F-4138-9D6B-1DFD26FAFF8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D19065F-416F-4138-9D6B-1DFD26FAFF8F}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{2D19065F-416F-4138-9D6B-1DFD26FAFF8F}.Debug|ARM.Build.0 = Debug|Any CPU
+		{2D19065F-416F-4138-9D6B-1DFD26FAFF8F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2D19065F-416F-4138-9D6B-1DFD26FAFF8F}.Debug|x64.Build.0 = Debug|Any CPU
+		{2D19065F-416F-4138-9D6B-1DFD26FAFF8F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2D19065F-416F-4138-9D6B-1DFD26FAFF8F}.Debug|x86.Build.0 = Debug|Any CPU
+		{2D19065F-416F-4138-9D6B-1DFD26FAFF8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D19065F-416F-4138-9D6B-1DFD26FAFF8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D19065F-416F-4138-9D6B-1DFD26FAFF8F}.Release|ARM.ActiveCfg = Release|Any CPU
+		{2D19065F-416F-4138-9D6B-1DFD26FAFF8F}.Release|ARM.Build.0 = Release|Any CPU
+		{2D19065F-416F-4138-9D6B-1DFD26FAFF8F}.Release|x64.ActiveCfg = Release|Any CPU
+		{2D19065F-416F-4138-9D6B-1DFD26FAFF8F}.Release|x64.Build.0 = Release|Any CPU
+		{2D19065F-416F-4138-9D6B-1DFD26FAFF8F}.Release|x86.ActiveCfg = Release|Any CPU
+		{2D19065F-416F-4138-9D6B-1DFD26FAFF8F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -353,5 +371,6 @@ Global
 		{514CB422-A6EF-4C75-B925-92AB599BA1BE} = {98ED909D-DFC1-4754-939E-3C8E252EE791}
 		{AF66AFB8-9523-4211-8B68-88B8B6F6E6F4} = {98ED909D-DFC1-4754-939E-3C8E252EE791}
 		{A5D8CE53-4B76-469B-B75B-598F13270E35} = {56869A12-135A-436E-B03B-293E0454CBCE}
+		{2D19065F-416F-4138-9D6B-1DFD26FAFF8F} = {19C5600C-235A-4B95-B57D-8EC061FF44D7}
 	EndGlobalSection
 EndGlobal

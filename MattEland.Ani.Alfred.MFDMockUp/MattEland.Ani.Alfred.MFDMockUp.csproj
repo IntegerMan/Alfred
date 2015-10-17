@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2D19065F-416F-4138-9D6B-1DFD26FAFF8F}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MattEland.Ani.Alfred.MFDMockUp</RootNamespace>
+    <AssemblyName>MattEland.Ani.Alfred.MFDMockUp</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MattEland.Ani.Alfred.AIML\MattEland.Ani.Alfred.Chat.csproj">
+      <Project>{3a25074a-351a-471e-aaf8-171a0e66f83a}</Project>
+      <Name>MattEland.Ani.Alfred.Chat</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MattEland.Ani.Alfred.Chat.Aiml\MattEland.Ani.Alfred.Chat.Aiml.csproj">
+      <Project>{818801e4-7862-409a-8e92-4f66800324eb}</Project>
+      <Name>MattEland.Ani.Alfred.Chat.Aiml</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MattEland.Ani.Alfred.Core.Speech\MattEland.Ani.Alfred.Core.Speech.csproj">
+      <Project>{ab933947-863e-455f-aba9-a8866eac1894}</Project>
+      <Name>MattEland.Ani.Alfred.Core.Speech</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MattEland.Ani.Alfred.Core.System\MattEland.Ani.Alfred.Core.Modules.SysMonitor.csproj">
+      <Project>{85194081-752d-48fc-a240-82c9974353d4}</Project>
+      <Name>MattEland.Ani.Alfred.Core.Modules.SysMonitor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MattEland.Ani.Alfred.Core\MattEland.Ani.Alfred.Core.csproj">
+      <Project>{549f22e5-1f66-4420-89bf-9460603f9516}</Project>
+      <Name>MattEland.Ani.Alfred.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MattEland.Ani.Alfred.PresentationCommon\MattEland.Ani.Alfred.PresentationCommon.csproj">
+      <Project>{84a80aeb-adef-4490-93b1-5378f52094fa}</Project>
+      <Name>MattEland.Ani.Alfred.PresentationCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MattEland.Ani.Alfred.PresentationShared\MattEland.Ani.Alfred.PresentationAvalon.csproj">
+      <Project>{b4e5baae-27a8-456e-b0ac-3117e1e6eddf}</Project>
+      <Name>MattEland.Ani.Alfred.PresentationAvalon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MattEland.Ani.Alfred.Search.Bing\MattEland.Ani.Alfred.Search.csproj">
+      <Project>{383e44c8-1cc9-4793-8e88-f65cad4955cf}</Project>
+      <Name>MattEland.Ani.Alfred.Search</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MattEland.Common\MattEland.Common.Definitions\MattEland.Common.Definitions.csproj">
+      <Project>{af66afb8-9523-4211-8b68-88b8b6f6e6f4}</Project>
+      <Name>MattEland.Common.Definitions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MattEland.Common\MattEland.Common\MattEland.Common.csproj">
+      <Project>{514cb422-a6ef-4c75-b925-92ab599ba1be}</Project>
+      <Name>MattEland.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MattEland.Common\MattEland.Presentation.Logical\MattEland.Presentation.Logical.csproj">
+      <Project>{a5d8ce53-4b76-469b-b75b-598f13270e35}</Project>
+      <Name>MattEland.Presentation.Logical</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="alfred.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
