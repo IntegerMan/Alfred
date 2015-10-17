@@ -1,0 +1,64 @@
+﻿<UserControl x:Class="MattEland.Ani.Alfred.MFDMockUp.MultifunctionDisplayView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MattEland.Ani.Alfred.MFDMockUp"
+             mc:Ignorable="d" 
+             Width="250" Height="250">
+    <Viewbox StretchDirection="Both" Stretch="Uniform">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <local:MultifunctionButtonStrip Grid.Row="0" 
+                                        Grid.Column="1" 
+                                        Grid.ColumnSpan="5" 
+                                        Orientation="Horizontal"/>
+
+            <local:MultifunctionButtonStrip Grid.Row="7" 
+                                        Grid.Column="1" 
+                                        Grid.ColumnSpan="5" 
+                                        Orientation="Horizontal"/>
+
+            <local:MultifunctionButtonStrip Grid.Row="1" 
+                                        Grid.Column="0" 
+                                        Grid.RowSpan="5" 
+                                        Orientation="Vertical"/>
+
+            <local:MultifunctionButtonStrip Grid.Row="1" 
+                                        Grid.Column="7" 
+                                        Grid.RowSpan="5" 
+                                        Orientation="Vertical"/>
+
+            <Border Grid.Row="1" 
+                Grid.Column="1"
+                Grid.RowSpan="5"
+                Grid.ColumnSpan="5"
+                BorderBrush="#3F3F46"
+                BorderThickness="1"
+                Padding="8">
+                <Viewbox StretchDirection="Both" Stretch="Uniform">
+                    <ContentPresenter />
+                </Viewbox>
+            </Border>
+
+        </Grid>
+    </Viewbox>
+</UserControl>
