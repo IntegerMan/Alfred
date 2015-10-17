@@ -15,15 +15,15 @@
                                       ElementName=mfdButtonStrip, 
                                       FallbackValue=Horizontal}">
 
-        <Button Style="{StaticResource StyleMFDButton}" />
+        <Button Style="{StaticResource MFDButtonStyle}" />
 
-        <Button Style="{StaticResource StyleMFDButton}" />
+        <Button Style="{StaticResource MFDButtonStyle}" />
 
-        <Button Style="{StaticResource StyleMFDButton}" />
+        <Button Style="{StaticResource MFDButtonStyle}" />
 
-        <Button Style="{StaticResource StyleMFDButton}" />
+        <Button Style="{StaticResource MFDButtonStyle}" />
 
-        <Button Style="{StaticResource StyleMFDButton}" />
+        <Button Style="{StaticResource MFDButtonStyle}" />
         
     </StackPanel>
     
