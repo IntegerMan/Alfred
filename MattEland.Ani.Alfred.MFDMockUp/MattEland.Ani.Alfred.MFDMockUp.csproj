@@ -87,7 +87,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\MultifunctionButtonStripControl.xaml">
+    <Page Include="Controls\MFDButtonStripControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -97,8 +97,8 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\MultifunctionButtonStripControl.xaml.cs">
-      <DependentUpon>MultifunctionButtonStripControl.xaml</DependentUpon>
+    <Compile Include="Controls\MFDButtonStripControl.xaml.cs">
+      <DependentUpon>MFDButtonStripControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MFDControl.xaml.cs">
       <DependentUpon>MFDControl.xaml</DependentUpon>

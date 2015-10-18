@@ -27,22 +27,22 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
 
-            <controls:MultifunctionButtonStripControl Grid.Row="0" 
+            <controls:MFDButtonStripControl Grid.Row="0" 
                                         Grid.Column="1" 
                                         Grid.ColumnSpan="5" 
                                         Orientation="Horizontal"/>
 
-            <controls:MultifunctionButtonStripControl Grid.Row="7" 
+            <controls:MFDButtonStripControl Grid.Row="7" 
                                         Grid.Column="1" 
                                         Grid.ColumnSpan="5" 
                                         Orientation="Horizontal"/>
 
-            <controls:MultifunctionButtonStripControl Grid.Row="1" 
+            <controls:MFDButtonStripControl Grid.Row="1" 
                                         Grid.Column="0" 
                                         Grid.RowSpan="5" 
                                         Orientation="Vertical"/>
 
-            <controls:MultifunctionButtonStripControl Grid.Row="1" 
+            <controls:MFDButtonStripControl Grid.Row="1" 
                                         Grid.Column="7" 
                                         Grid.RowSpan="5" 
                                         Orientation="Vertical"/>

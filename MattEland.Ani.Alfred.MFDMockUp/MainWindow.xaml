@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="Alfred MFD Prototype" 
         DataContext="{Binding Path=Main, Source={StaticResource Locator}}"
+        d:DataContext="{Binding Path=Main, Source={StaticResource Locator}}"
         Background="{StaticResource AppBackgroundBrush}"
         Width="800" Height="600"
         Icon="{StaticResource AppIcon}">

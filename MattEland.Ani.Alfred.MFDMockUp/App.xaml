@@ -14,13 +14,15 @@
             <vm:ViewModelLocator x:Key="Locator"/>
             
             <Brush x:Key="DisabledTextBrush">#FF838383</Brush>
+            <Brush x:Key="AppBackgroundBrush">#2D2D30</Brush>
+
             <ImageSource x:Key="AppIcon">Resources/alfred.ico</ImageSource>
+            
             <DataTemplate x:Key="InteractiveMFDDataTemplate" DataType="viewModels:MFDViewModel">
                 <controls:MFDControl Width="512" 
                                      Height="512"
                                      Margin="8"/>
             </DataTemplate>
-            <Brush x:Key="AppBackgroundBrush">#2D2D30</Brush>
 
         </ResourceDictionary>
 

@@ -35,7 +35,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         ///     The main view model.
         /// </value>
         [NotNull]
-        public object Main
+        public MainViewModel Main
         {
             get { return ViewModel(() => new MainViewModel(_workspace)); }
         }
@@ -70,7 +70,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         /// <param name="index"> The zero-based index of the multifunction display. </param>
         private void ConfigureMFD([NotNull] MultifunctionDisplay mfd, int index)
         {
-            mfd.Name = string.Format("MFD {0}", index+1);
+            mfd.Name = string.Format("MFD {0}", index + 1);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         /// <param name="index"> The zero-based index of the multifunction display. </param>
         private void ConfigureDesignMFD([NotNull] MultifunctionDisplay mfd, int index)
         {
-            mfd.Name = string.Format("MFD {0}", index+1);
+            mfd.Name = string.Format("MFD {0}", index + 1);
         }
 
     }
