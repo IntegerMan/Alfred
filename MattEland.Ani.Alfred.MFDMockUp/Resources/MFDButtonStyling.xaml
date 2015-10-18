@@ -107,5 +107,9 @@
         <Setter Property="Content" Value=""/>
         <Setter Property="Cursor" Value="Hand"/>
     </Style>
+    <Brush x:Key="MFDScreenBackgroundBrush">#060105</Brush>
+    <Brush x:Key="MFDScreenBorderBrush">#3F3F46</Brush>
+    <Brush x:Key="MFDPanelBackgroundBrush">#27282A</Brush>
+    <Brush x:Key="MFDPanelBorderBrush">#1B1B1B</Brush>
 
 </ResourceDictionary>

@@ -16,6 +16,7 @@
             <Brush x:Key="AppForegroundBrush">#EFEEF3</Brush>
 
             <Brush x:Key="DisabledTextBrush">#FF838383</Brush>
+            <Thickness x:Key="StandardMargin">8</Thickness>
 
         </ResourceDictionary>
 

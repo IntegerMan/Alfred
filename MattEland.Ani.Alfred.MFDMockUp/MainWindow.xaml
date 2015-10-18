@@ -16,16 +16,7 @@
     <Window.Resources>
         
         <DataTemplate x:Key="InteractiveMFDDataTemplate" DataType="vm:MFDViewModel">
-            <DockPanel>
-                
-                <TextBlock Text="{Binding Path=Name}" 
-                           DockPanel.Dock="Top" 
-                           HorizontalAlignment="Center" />
-                
-                <controls:MFDControl Width="512" 
-                                     Height="512"
-                                     Margin="8"/>
-            </DockPanel>
+            <controls:MFDControl />
         </DataTemplate>
 
     </Window.Resources>
