@@ -7,6 +7,8 @@ using System.Windows.Input;
 using MattEland.Ani.Alfred.MFDMockUp.Models;
 using Assisticant;
 
+using MattEland.Common.Annotations;
+
 namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
 {
     public class MainViewModel
@@ -15,10 +17,34 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         private readonly MFDSelection _selection;
         private readonly Workspace _workspace;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MainViewModel"/> class.
+        /// </summary>
+        [UsedImplicitly]
+        public MainViewModel() : this(new Workspace())
+        {
+
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MainViewModel"/> class.
+        /// </summary>
+        /// <param name="workspace">The workspace.</param>
         public MainViewModel(Workspace workspace)
         {
             _workspace = workspace;
             _selection = workspace.MFDSelection;
+        }
+
+        /// <summary>
+        ///     Gets the title for the application
+        /// </summary>
+        /// <value>
+        ///     The application title.
+        /// </value>
+        public string AppTitle
+        {
+            get { return _workspace.Name; }
         }
 
         public IEnumerable<MFDViewModel> MultifunctionDisplays

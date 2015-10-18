@@ -23,19 +23,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Controls
     {
 
         /// <summary>
-        ///     Defines the <see cref="Orientation"/> dependency property.
-        /// </summary>
-        /// <remarks>
-        ///		Defaults to Horizontal
-        /// </remarks>
-        [NotNull]
-        public static readonly DependencyProperty OrientationProperty =
-            DependencyProperty.Register(nameof(Orientation),
-                                        typeof(Orientation),
-                                        typeof(MFDButtonStripControl),
-                                        new PropertyMetadata(Orientation.Horizontal));
-
-        /// <summary>
         ///     Initializes a new instance of the <see cref="MFDButtonStripControl" />
         ///     class.
         /// </summary>
@@ -44,14 +31,5 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Controls
             InitializeComponent();
         }
 
-        /// <summary>
-        ///     Gets or sets the Orientation property using <see cref="OrientationProperty"/>.
-        /// </summary>
-        /// <value>The Orientation.</value>
-        public Orientation Orientation
-        {
-            get { return (Orientation)GetValue(OrientationProperty); }
-            set { SetValue(OrientationProperty, value); }
-        }
     }
 }

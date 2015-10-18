@@ -11,7 +11,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// <summary>
         /// The default workspace name. 
         /// </summary>
-        private const string DefaultWorkspaceName = "Workspace";
+        private const string DefaultWorkspaceName = "Alfred MFD Prototype";
 
         private readonly ObservableList<MultifunctionDisplay> _mfds = new ObservableList<MultifunctionDisplay>();
 

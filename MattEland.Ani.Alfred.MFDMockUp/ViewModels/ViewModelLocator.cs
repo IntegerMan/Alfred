@@ -51,7 +51,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         [NotNull]
         private Workspace LoadWorkspace()
         {
-            // TODO: Load your document here.
             var workspace = new Workspace();
 
             for (int index = 0; index < DefaultMFDCount; index++)

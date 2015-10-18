@@ -15,7 +15,8 @@
 
         <DockPanel>
 
-            <Border Background="{StaticResource MFDScreenBorderBrush}" DockPanel.Dock="Top">
+            <Border Background="{StaticResource MFDScreenBorderBrush}"
+                    DockPanel.Dock="Top">
                 <TextBlock Margin="{StaticResource StandardMargin}"
                            HorizontalAlignment="Center"
                            Foreground="{StaticResource AppForegroundBrush}"
@@ -25,45 +26,46 @@
             <Grid Margin="{StaticResource StandardMargin}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
-                    <ColumnDefinition />
+                    <ColumnDefinition MinWidth="{Binding Path=ScreenWidth}" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition />
-                    <RowDefinition />
+                    <RowDefinition MinHeight="{Binding Path=ScreenHeight}" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
                 <controls:MFDButtonStripControl Grid.Row="0"
                                                 Grid.Column="1"
-                                                Orientation="Horizontal" />
+                                                DataContext="{Binding Path=TopButtons}" />
 
                 <controls:MFDButtonStripControl Grid.Row="1"
                                                 Grid.Column="0"
-                                                Orientation="Vertical" />
+                                                DataContext="{Binding Path=LeftButtons}" />
 
                 <Border x:Name="borderScreen"
                         Grid.Row="1"
                         Grid.Column="1"
+                        Width="{Binding Path=ScreenWidth}"
+                        Height="{Binding Path=ScreenHeight}"
+                        MinWidth="{Binding Path=ScreenWidth}"
+                        MinHeight="{Binding Path=ScreenHeight}"
+                        Margin="{StaticResource StandardMargin}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
                         Background="{StaticResource MFDScreenBackgroundBrush}"
                         BorderBrush="{StaticResource MFDScreenBorderBrush}"
-                        BorderThickness="1"
-                        Padding="{StaticResource StandardMargin}">
-                    <Viewbox Width="512"
-                             Height="512"
-                             Stretch="Uniform"
-                             StretchDirection="Both">
-                        <ContentPresenter />
-                    </Viewbox>
+                        BorderThickness="1">
+                    <ContentPresenter />
                 </Border>
 
                 <controls:MFDButtonStripControl Grid.Row="1"
                                                 Grid.Column="2"
-                                                Orientation="Vertical" />
+                                                DataContext="{Binding Path=RightButtons}" />
 
                 <controls:MFDButtonStripControl Grid.Row="2"
                                                 Grid.Column="1"
-                                                Orientation="Horizontal" />
+                                                DataContext="{Binding Path=BottomButtons}" />
 
 
             </Grid>

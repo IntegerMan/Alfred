@@ -65,10 +65,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\ButtonStripDock.cs" />
+    <Compile Include="Models\ButtonStripModel.cs" />
     <Compile Include="Models\MFDSelection.cs" />
     <Compile Include="Models\Workspace.cs" />
     <Compile Include="Models\MultifunctionDisplay.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\MFDButtonStripViewModel.cs" />
     <Compile Include="ViewModels\MFDViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Page Include="MainWindow.xaml">
