@@ -3,18 +3,23 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:controls="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.Controls"
+        xmlns:layout="clr-namespace:MattEland.Ani.Alfred.PresentationAvalon.Layout;assembly=MattEland.Ani.Alfred.PresentationAvalon"
         mc:Ignorable="d"
         Title="Alfred MFD Prototype" 
-        Background="#2D2D30"
+        DataContext="{Binding Path=Main, Source={StaticResource Locator}}"
+        Background="{StaticResource AppBackgroundBrush}"
         Width="800" Height="600"
-        Icon="Resources/alfred.ico">
-    <WrapPanel>
-        <controls:MultifunctionDisplay />
-        <controls:MultifunctionDisplay />
-        <controls:MultifunctionDisplay />
-        <controls:MultifunctionDisplay />
-        <controls:MultifunctionDisplay />
-        <controls:MultifunctionDisplay />
-    </WrapPanel>
+        Icon="{StaticResource AppIcon}">
+    
+    <ItemsControl ItemsSource="{Binding Path=MultifunctionDisplays}" 
+                  ItemTemplate="{StaticResource InteractiveMFDDataTemplate}">
+
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <layout:DynamicPanel LayoutType="HorizontalWrapPanel" />
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        
+    </ItemsControl>
+    
 </Window>

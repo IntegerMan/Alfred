@@ -1,10 +1,10 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
 
     <Brush x:Key="MFDBorderBrush">#404445</Brush>
     <Brush x:Key="MFDInnerBorderBrush">#DFE3E6</Brush>
     <Brush x:Key="MFDBackgroundBrush">#9A9FA2</Brush>
-    
+
     <Brush x:Key="MFDBorderPressedBrush">#313434</Brush>
     <Brush x:Key="MFDInnerBorderPressedBrush">#D1D5D8</Brush>
     <Brush x:Key="MFDBackgroundPressedBrush">#8B8F92</Brush>
@@ -12,80 +12,82 @@
     <Brush x:Key="MFDMouseOverBorderBrush">#4B4F51</Brush>
     <Brush x:Key="MFDMouseOverInnerBorderBrush">#EBEFF2</Brush>
     <Brush x:Key="MFDMouseOverBackgroundBrush">#A6ABAE</Brush>
-    
+
 
     <ControlTemplate x:Key="MFDButtonTemplate" TargetType="{x:Type Button}">
 
         <Border x:Name="outerBorder" 
-                BorderBrush="{TemplateBinding BorderBrush}" 
-                BorderThickness="{TemplateBinding BorderThickness}" 
-                Background="{TemplateBinding Background}" 
-                SnapsToDevicePixels="True">
+			BorderBrush="{TemplateBinding BorderBrush}" 
+			BorderThickness="{TemplateBinding BorderThickness}" 
+			Background="{TemplateBinding Background}" 
+			SnapsToDevicePixels="True" 
+            d:DesignWidth="35"
+            d:DesignHeight="35">
 
             <Border x:Name="innerBorder"
-                Margin="2" 
-                Padding="2" 
-                BorderBrush="{StaticResource MFDInnerBorderBrush}" 
-                BorderThickness="1" 
-                CornerRadius="2">
+				Margin="2" 
+				Padding="2" 
+				BorderBrush="{StaticResource MFDInnerBorderBrush}" 
+				BorderThickness="1" 
+				CornerRadius="2">
 
                 <ContentPresenter x:Name="contentPresenter"
-                              ContentTemplate="{TemplateBinding ContentTemplate}" 
-                              Content="{TemplateBinding Content}" 
-                              ContentStringFormat="{TemplateBinding ContentStringFormat}" 
-                              Focusable="False" 
-                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
-                              Margin="{TemplateBinding Padding}" 
-                              RecognizesAccessKey="True" 
-                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
-                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+					ContentTemplate="{TemplateBinding ContentTemplate}" 
+					Content="{TemplateBinding Content}" 
+					ContentStringFormat="{TemplateBinding ContentStringFormat}" 
+					Focusable="False" 
+					HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+					Margin="{TemplateBinding Padding}" 
+					RecognizesAccessKey="True" 
+					SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+					VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
             </Border>
         </Border>
         <ControlTemplate.Triggers>
 
             <Trigger Property="IsDefaulted" Value="True">
                 <Setter Property="BorderBrush" TargetName="outerBorder" 
-                    Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+					Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
             </Trigger>
 
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" TargetName="outerBorder" 
-                    Value="{StaticResource MFDMouseOverBackgroundBrush}"/>
+					Value="{StaticResource MFDMouseOverBackgroundBrush}"/>
                 <Setter Property="BorderBrush" TargetName="outerBorder" 
-                    Value="{StaticResource MFDMouseOverBorderBrush}"/>
+					Value="{StaticResource MFDMouseOverBorderBrush}"/>
                 <Setter Property="BorderBrush" TargetName="innerBorder" 
-                    Value="{StaticResource MFDMouseOverInnerBorderBrush}"/>
+					Value="{StaticResource MFDMouseOverInnerBorderBrush}"/>
             </Trigger>
 
             <Trigger Property="IsPressed" Value="True">
                 <Setter Property="Background" TargetName="outerBorder" 
-                    Value="{StaticResource MFDBackgroundPressedBrush}"/>
+					Value="{StaticResource MFDBackgroundPressedBrush}"/>
                 <Setter Property="BorderBrush" TargetName="outerBorder" 
-                    Value="{StaticResource MFDBorderPressedBrush}"/>
+					Value="{StaticResource MFDBorderPressedBrush}"/>
                 <Setter Property="BorderBrush" TargetName="innerBorder" 
-                    Value="{StaticResource MFDInnerBorderPressedBrush}"/>
+					Value="{StaticResource MFDInnerBorderPressedBrush}"/>
             </Trigger>
 
             <Trigger Property="ToggleButton.IsChecked" Value="True">
                 <Setter Property="Background" TargetName="outerBorder" 
-                    Value="{StaticResource MFDMouseOverBackgroundBrush}"/>
+					Value="{StaticResource MFDMouseOverBackgroundBrush}"/>
                 <Setter Property="BorderBrush" TargetName="outerBorder" 
-                        Value="{StaticResource MFDInnerBorderBrush}"/>
+					Value="{StaticResource MFDInnerBorderBrush}"/>
             </Trigger>
 
             <Trigger Property="IsEnabled" Value="False">
                 <Setter Property="Background" TargetName="outerBorder" 
-                    Value="{StaticResource MFDBackgroundBrush}"/>
+					Value="{StaticResource MFDBackgroundBrush}"/>
 
                 <Setter Property="BorderBrush" TargetName="outerBorder" 
-                    Value="{StaticResource MFDBorderBrush}"/>
+					Value="{StaticResource MFDBorderBrush}"/>
 
                 <Setter Property="BorderBrush" TargetName="innerBorder" 
-                    Value="{StaticResource DisabledTextBrush}"/>
+					Value="{StaticResource DisabledTextBrush}"/>
 
                 <Setter Property="TextElement.Foreground" 
-                        TargetName="contentPresenter" 
-                        Value="{StaticResource DisabledTextBrush}"/>
+					TargetName="contentPresenter" 
+					Value="{StaticResource DisabledTextBrush}"/>
             </Trigger>
 
         </ControlTemplate.Triggers>
@@ -100,6 +102,8 @@
         <Setter Property="BorderBrush" Value="{StaticResource MFDBorderBrush}" />
         <Setter Property="Template" Value="{StaticResource MFDButtonTemplate}" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Content" Value=""/>
+        <Setter Property="Cursor" Value="Hand"/>
     </Style>
 
 </ResourceDictionary>

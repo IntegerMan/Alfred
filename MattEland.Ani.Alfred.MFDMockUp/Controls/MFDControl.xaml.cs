@@ -7,12 +7,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Controls
     /// <summary>
     /// Represents a cockpit-style multifunction display with buttons bordering a central display.
     /// </summary>
-    public sealed partial class MultifunctionDisplay : UserControl
+    public sealed partial class MFDControl : UserControl
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MultifunctionDisplay"/> class.
+        /// Initializes a new instance of the <see cref="MFDControl"/> class.
         /// </summary>
-        public MultifunctionDisplay()
+        public MFDControl()
         {
             InitializeComponent();
         }

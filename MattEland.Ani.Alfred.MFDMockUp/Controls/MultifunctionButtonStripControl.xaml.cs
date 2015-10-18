@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------
-// MultifunctionButtonStrip.xaml.cs
+// MultifunctionButtonStripControl.xaml.cs
 // 
 // Created on:      10/17/2015 at 12:43 PM
 // Last Modified:   10/17/2015 at 12:53 PM
@@ -17,9 +17,9 @@ using MattEland.Common.Annotations;
 namespace MattEland.Ani.Alfred.MFDMockUp.Controls
 {
     /// <summary>
-    /// Represents a strip of buttons bordering a <see cref="MultifunctionDisplay"/>
+    /// Represents a strip of buttons bordering a <see cref="MFDControl"/>
     /// </summary>
-    public sealed partial class MultifunctionButtonStrip : UserControl
+    public sealed partial class MultifunctionButtonStripControl : UserControl
     {
 
         /// <summary>
@@ -32,14 +32,14 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Controls
         public static readonly DependencyProperty OrientationProperty =
             DependencyProperty.Register(nameof(Orientation),
                                         typeof(Orientation),
-                                        typeof(MultifunctionButtonStrip),
+                                        typeof(MultifunctionButtonStripControl),
                                         new PropertyMetadata(Orientation.Horizontal));
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="MultifunctionButtonStrip" />
+        ///     Initializes a new instance of the <see cref="MultifunctionButtonStripControl" />
         ///     class.
         /// </summary>
-        public MultifunctionButtonStrip()
+        public MultifunctionButtonStripControl()
         {
             InitializeComponent();
         }

@@ -36,8 +36,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Assisticant, Version=2.3.0.0, Culture=neutral, PublicKeyToken=19e83a8289e31a8f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Assisticant.1.1.4.4\lib\net45\Assisticant.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Assisticant.XAML, Version=2.3.0.0, Culture=neutral, PublicKeyToken=19e83a8289e31a8f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Assisticant.1.1.4.4\lib\net45\Assisticant.XAML.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -56,6 +65,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\MFDSelection.cs" />
+    <Compile Include="Models\Workspace.cs" />
+    <Compile Include="Models\MultifunctionDisplay.cs" />
+    <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\MFDViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -72,21 +87,21 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\MultifunctionButtonStrip.xaml">
+    <Page Include="Controls\MultifunctionButtonStripControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\MultifunctionDisplay.xaml">
+    <Page Include="Controls\MFDControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\MultifunctionButtonStrip.xaml.cs">
-      <DependentUpon>MultifunctionButtonStrip.xaml</DependentUpon>
+    <Compile Include="Controls\MultifunctionButtonStripControl.xaml.cs">
+      <DependentUpon>MultifunctionButtonStripControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MultifunctionDisplay.xaml.cs">
-      <DependentUpon>MultifunctionDisplay.xaml</DependentUpon>
+    <Compile Include="Controls\MFDControl.xaml.cs">
+      <DependentUpon>MFDControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -105,6 +120,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -162,6 +178,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\alfred.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Readme_Assisticant_Snippets.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
