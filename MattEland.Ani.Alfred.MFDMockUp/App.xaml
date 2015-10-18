@@ -7,16 +7,22 @@
 
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.MFDMockUp;component/Resources/MFDButtonStyling.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.MFDMockUp;component/Resources/MFDButtonStyling.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.MFDMockUp;component/Resources/MFDViewStyling.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <vm:ViewModelLocator x:Key="Locator"/>
-            
+            <vm:ViewModelLocator x:Key="Locator" />
+
             <Brush x:Key="AppBackgroundBrush">#2D2D30</Brush>
             <Brush x:Key="AppForegroundBrush">#EFEEF3</Brush>
 
             <Brush x:Key="DisabledTextBrush">#FF838383</Brush>
+
+            <Thickness x:Key="TinyMargin">2</Thickness>
+            <Thickness x:Key="HalfMargin">4</Thickness>
             <Thickness x:Key="StandardMargin">8</Thickness>
+
+            <Thickness x:Key="SpaceAbove">0,8,0,0</Thickness>
 
         </ResourceDictionary>
 

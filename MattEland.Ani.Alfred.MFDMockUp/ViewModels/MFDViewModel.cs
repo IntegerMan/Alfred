@@ -89,6 +89,11 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
             set { Model.ScreenHeight = value; }
         }
 
+        public object View
+        {
+            get { return Model.CurrentView; }
+        }
+
         /// <summary>
         ///     The MFD model backing store.
         /// </summary>

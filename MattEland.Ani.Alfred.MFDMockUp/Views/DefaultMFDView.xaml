@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="MattEland.Ani.Alfred.MFDMockUp.Views.DefaultMFDView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             Style="{StaticResource MFDViewStyle}"
+             d:DesignHeight="256"
+             d:DesignWidth="256"
+             mc:Ignorable="d">
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+        <TextBlock Style="{StaticResource MFDViewCenterTextStyle}">Alfred Framework</TextBlock>
+        <TextBlock Style="{StaticResource MFDViewCenterTextStyle}">Multifunctional Display (MFD)</TextBlock>
+        <TextBlock Margin="{StaticResource SpaceAbove}" Style="{StaticResource MFDViewCenterTextStyle}">Software Version 0.4</TextBlock>
+        <TextBlock Margin="{StaticResource SpaceAbove}" Style="{StaticResource MFDViewCenterTextStyle}">Developed by Matt Eland</TextBlock>
+    </StackPanel>
+</UserControl>

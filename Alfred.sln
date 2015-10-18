@@ -10,6 +10,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlfredTests", "MattELand.Ani.Alfred.Core.Tests\AlfredTests.csproj", "{1E642C50-D294-4003-80AC-3D92CA92DBE3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{19C5600C-235A-4B95-B57D-8EC061FF44D7}"
+	ProjectSection(SolutionItems) = preProject
+		MattEland.Ani.Alfred.MFDMockUp\Views\MainWindow.xaml = MattEland.Ani.Alfred.MFDMockUp\Views\MainWindow.xaml
+		MattEland.Ani.Alfred.MFDMockUp\Views\MainWindow.xaml.cs = MattEland.Ani.Alfred.MFDMockUp\Views\MainWindow.xaml.cs
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MattEland.Ani.Alfred.WPF", "MattEland.Ani.Alfred.WPF\MattEland.Ani.Alfred.WPF.csproj", "{E13E88B6-23C9-40EA-B10B-B8E52541B221}"
 EndProject

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Assisticant.Fields;
 
+using MattEland.Ani.Alfred.MFDMockUp.Views;
 using MattEland.Common.Annotations;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.Models
@@ -39,6 +40,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         public MultifunctionDisplay()
         {
             _name = new Observable<string>("<New MFD>");
+
+            // TODO: Don't do this. This is a Model creating a View.
+            _currentView = new Observable<object>(new DefaultMFDView());
 
             _screenWidth = new Observable<double>(DefaultScreenSize);
             _screenHeight = new Observable<double>(DefaultScreenSize);
@@ -125,6 +129,24 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         {
             get { return _topButtons; }
             set { _topButtons.Value = value; }
+        }
+
+        /// <summary>
+        ///     The current view.
+        /// </summary>
+        [NotNull]
+        private readonly Observable<Object> _currentView;
+
+        /// <summary>
+        ///     Gets or sets the current view.
+        /// </summary>
+        /// <value>
+        ///     The current view.
+        /// </value>
+        public object CurrentView
+        {
+            get { return _currentView; }
+            set { _currentView.Value = value; }
         }
     }
 }

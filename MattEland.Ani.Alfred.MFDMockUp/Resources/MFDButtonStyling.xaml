@@ -16,8 +16,7 @@
     <Brush x:Key="MFDMouseOverInnerBorderBrush">#EBEFF2</Brush>
     <Brush x:Key="MFDMouseOverBackgroundBrush">#A6ABAE</Brush>
 
-    <ControlTemplate x:Key="MFDButtonTemplate"
-                     TargetType="{x:Type Button}">
+    <ControlTemplate x:Key="MFDButtonTemplate" TargetType="{x:Type Button}">
 
         <Border x:Name="outerBorder"
                 Background="{TemplateBinding Background}"
@@ -82,8 +81,7 @@
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
-    <Style x:Key="MFDButtonStyle"
-           TargetType="{x:Type Button}">
+    <Style x:Key="MFDButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="Margin" Value="2" />
         <Setter Property="Width" Value="35" />
         <Setter Property="Height" Value="35" />
@@ -97,6 +95,8 @@
     </Style>
     <Brush x:Key="MFDScreenBackgroundBrush">#060105</Brush>
     <Brush x:Key="MFDScreenBorderBrush">#3F3F46</Brush>
+    <Brush x:Key="MFDScreenForegroundBrush">#2BDD3A</Brush>
+
     <Brush x:Key="MFDPanelBackgroundBrush">#27282A</Brush>
     <Brush x:Key="MFDPanelBorderBrush">#1B1B1B</Brush>
 

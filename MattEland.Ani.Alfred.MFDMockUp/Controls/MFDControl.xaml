@@ -4,8 +4,11 @@
              xmlns:controls="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.Controls"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:viewModels="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels"
-             d:DataContext="{d:DesignInstance viewModels:MFDViewModel}"
+             xmlns:views="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.Views"
+             xmlns:vm="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels"
+             d:DataContext="{d:DesignInstance vm:MFDViewModel}"
+             d:DesignHeight="500"
+             d:DesignWidth="500"
              mc:Ignorable="d">
 
     <Border x:Name="borderPanel"
@@ -15,8 +18,7 @@
 
         <DockPanel>
 
-            <Border Background="{StaticResource MFDScreenBorderBrush}"
-                    DockPanel.Dock="Top">
+            <Border Background="{StaticResource MFDScreenBorderBrush}" DockPanel.Dock="Top">
                 <TextBlock Margin="{StaticResource StandardMargin}"
                            HorizontalAlignment="Center"
                            Foreground="{StaticResource AppForegroundBrush}"
@@ -56,7 +58,18 @@
                         Background="{StaticResource MFDScreenBackgroundBrush}"
                         BorderBrush="{StaticResource MFDScreenBorderBrush}"
                         BorderThickness="1">
-                    <ContentPresenter />
+                    <!-- TODO: This is buggy. Make it happen.
+                    <ContentControl Width="{Binding Path=ScreenWidth}"
+                                    Height="{Binding Path=ScreenHeight}"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    HorizontalContentAlignment="Stretch"
+                                    VerticalContentAlignment="Stretch"
+                                    Content="{Binding Path=View,
+                                                      FallbackValue='No View Selected'}"
+                                    Foreground="{StaticResource MFDScreenForegroundBrush}" />
+                    -->
+                    <views:DefaultMFDView />
                 </Border>
 
                 <controls:MFDButtonStripControl Grid.Row="1"
