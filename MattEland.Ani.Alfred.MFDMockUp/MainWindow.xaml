@@ -4,14 +4,32 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:layout="clr-namespace:MattEland.Ani.Alfred.PresentationAvalon.Layout;assembly=MattEland.Ani.Alfred.PresentationAvalon"
+        xmlns:vm="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels"
+        xmlns:controls="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.Controls"
         mc:Ignorable="d"
         Title="Alfred MFD Prototype" 
         DataContext="{Binding Path=Main, Source={StaticResource Locator}}"
-        d:DataContext="{Binding Path=Main, Source={StaticResource Locator}}"
         Background="{StaticResource AppBackgroundBrush}"
-        Width="800" Height="600"
-        Icon="{StaticResource AppIcon}">
-    
+        Foreground="{StaticResource AppForegroundBrush}"
+        Width="800" Height="600">
+
+    <Window.Resources>
+        
+        <DataTemplate x:Key="InteractiveMFDDataTemplate" DataType="vm:MFDViewModel">
+            <DockPanel>
+                
+                <TextBlock Text="{Binding Path=Name}" 
+                           DockPanel.Dock="Top" 
+                           HorizontalAlignment="Center" />
+                
+                <controls:MFDControl Width="512" 
+                                     Height="512"
+                                     Margin="8"/>
+            </DockPanel>
+        </DataTemplate>
+
+    </Window.Resources>
+
     <ItemsControl ItemsSource="{Binding Path=MultifunctionDisplays}" 
                   ItemTemplate="{StaticResource InteractiveMFDDataTemplate}">
 
@@ -20,7 +38,7 @@
                 <layout:DynamicPanel LayoutType="HorizontalWrapPanel" />
             </ItemsPanelTemplate>
         </ItemsControl.ItemsPanel>
-        
+
     </ItemsControl>
-    
+
 </Window>

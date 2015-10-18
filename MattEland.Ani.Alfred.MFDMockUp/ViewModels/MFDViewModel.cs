@@ -15,7 +15,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
     ///     A ViewModel for a <see cref="MultifunctionDisplay"/>.
     /// </summary>
     [PublicAPI]
-    public class MFDViewModel
+    public sealed class MFDViewModel
     {
         /// <summary>
         ///     Gets the <see cref="MultifunctionDisplay"/> model backing this view model.
@@ -30,6 +30,21 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
             {
                 return _mfd;
             }
+        }
+
+        /// <summary>
+        ///     Gets the name of the MFD.
+        /// </summary>
+        /// <remarks>
+        ///     This is the name of the physical MFD, not its current View.
+        /// </remarks>
+        /// <value>
+        ///     The name of the MFD.
+        /// </value>
+        [NotNull]
+        public string Name
+        {
+            get { return Model.Name; }
         }
 
         /// <summary>

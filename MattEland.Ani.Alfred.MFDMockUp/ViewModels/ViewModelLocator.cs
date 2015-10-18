@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Assisticant;
+using Assisticant.Descriptors;
+
 using MattEland.Ani.Alfred.MFDMockUp.Models;
 using MattEland.Common.Annotations;
 
@@ -10,7 +12,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
     /// <summary>
     ///     The view model locator that helps views find appropriate view models.
     /// </summary>
-    public class ViewModelLocator : ViewModelLocatorBase
+    public sealed class ViewModelLocator : ViewModelLocatorBase
     {
         /// <summary>
         ///     The default number of MFDs present.
@@ -23,6 +25,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewModelLocator"/> class.
         /// </summary>
+        [UsedImplicitly]
         public ViewModelLocator()
         {
             _workspace = LoadWorkspace();
@@ -35,9 +38,14 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         ///     The main view model.
         /// </value>
         [NotNull]
-        public MainViewModel Main
+        public object Main
         {
-            get { return ViewModel(() => new MainViewModel(_workspace)); }
+            get
+            {
+                var vm = ViewModel(() => new MainViewModel(_workspace));
+
+                return vm;
+            }
         }
 
         [NotNull]
@@ -80,7 +88,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         /// <param name="index"> The zero-based index of the multifunction display. </param>
         private void ConfigureDesignMFD([NotNull] MultifunctionDisplay mfd, int index)
         {
-            mfd.Name = string.Format("MFD {0}", index + 1);
+            mfd.Name = string.Format("Design MFD {0}", index + 1);
         }
 
     }
