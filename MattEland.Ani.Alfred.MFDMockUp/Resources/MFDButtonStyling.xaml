@@ -6,14 +6,14 @@
                     mc:Ignorable="d">
 
     <Brush x:Key="MFDButtonLineBrush">#FDFDFD</Brush>
-    <RadialGradientBrush x:Key="ShadedButtonBackgroundBrush" Center="0.75,0.25" GradientOrigin="0.75,0.25" RadiusX="0.6" RadiusY="0.6">
+    <RadialGradientBrush x:Key="MFDButtonShadedBackgroundBrush" Center="0.75,0.25" GradientOrigin="0.75,0.25" RadiusX="0.6" RadiusY="0.6">
         <GradientStop Offset="0" Color="#FF83888C" />
         <GradientStop Offset="1" Color="#FFACB6B7" />
     </RadialGradientBrush>
 
-    <Brush x:Key="MFDBorderBrush">#404445</Brush>
-    <Brush x:Key="MFDInnerBorderBrush">#DFE3E6</Brush>
-    <Brush x:Key="MFDBackgroundBrush">#9A9FA2</Brush>
+    <Brush x:Key="MFDButtonBorderBrush">#404445</Brush>
+    <Brush x:Key="MFDButtonInnerBorderBrush">#DFE3E6</Brush>
+    <Brush x:Key="MFDButtonBackgroundBrush">#9A9FA2</Brush>
 
     <Brush x:Key="MFDBorderPressedBrush">#313434</Brush>
     <Brush x:Key="MFDInnerBorderPressedBrush">#D1D5D8</Brush>
@@ -24,7 +24,7 @@
     <Brush x:Key="MFDMouseOverBackgroundBrush">#A6ABAE</Brush>
 
     <Style x:Key="MFDButtonSeparatorStyle" TargetType="Border">
-        <Setter Property="BorderBrush" Value="{StaticResource MFDBorderBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource MFDButtonBorderBrush}" />
         <Setter Property="BorderThickness" Value="1,0,0,0" />
         <Setter Property="Margin" Value="0,2" />
     </Style>
@@ -44,14 +44,14 @@
             <Border x:Name="outerBorder"
                     Width="35"
                     Height="35"
-                    Background="{StaticResource ShadedButtonBackgroundBrush}"
-                    BorderBrush="{DynamicResource MFDBorderBrush}"
+                    Background="{StaticResource MFDButtonBackgroundBrush}"
+                    BorderBrush="{DynamicResource MFDButtonBorderBrush}"
                     BorderThickness="{TemplateBinding BorderThickness}"
                     SnapsToDevicePixels="True">
 
                 <Border x:Name="innerBorder"
                         Margin="2"
-                        BorderBrush="{StaticResource MFDInnerBorderBrush}"
+                        BorderBrush="{StaticResource MFDButtonInnerBorderBrush}"
                         BorderThickness="1"
                         CornerRadius="2"
                         Padding="2">
@@ -76,9 +76,11 @@
 
         <ControlTemplate.Triggers>
 
+            <!--
             <Trigger Property="IsDefaulted" Value="True">
                 <Setter TargetName="outerBorder" Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
             </Trigger>
+            -->
 
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter TargetName="outerBorder" Property="Background" Value="{StaticResource MFDMouseOverBackgroundBrush}" />
@@ -94,13 +96,13 @@
 
             <Trigger Property="ToggleButton.IsChecked" Value="True">
                 <Setter TargetName="outerBorder" Property="Background" Value="{StaticResource MFDMouseOverBackgroundBrush}" />
-                <Setter TargetName="outerBorder" Property="BorderBrush" Value="{StaticResource MFDInnerBorderBrush}" />
+                <Setter TargetName="outerBorder" Property="BorderBrush" Value="{StaticResource MFDButtonInnerBorderBrush}" />
             </Trigger>
 
             <Trigger Property="IsEnabled" Value="False">
-                <Setter TargetName="outerBorder" Property="Background" Value="{StaticResource MFDBackgroundBrush}" />
+                <Setter TargetName="outerBorder" Property="Background" Value="{StaticResource MFDButtonBackgroundBrush}" />
 
-                <Setter TargetName="outerBorder" Property="BorderBrush" Value="{StaticResource MFDBorderBrush}" />
+                <Setter TargetName="outerBorder" Property="BorderBrush" Value="{StaticResource MFDButtonBorderBrush}" />
 
                 <Setter TargetName="innerBorder" Property="BorderBrush" Value="{StaticResource DisabledTextBrush}" />
 
@@ -114,9 +116,9 @@
         <Setter Property="Margin" Value="2" />
         <Setter Property="Width" Value="35" />
         <Setter Property="Height" Value="35" />
-        <Setter Property="Foreground" Value="{StaticResource MFDInnerBorderBrush}" />
-        <Setter Property="Background" Value="{StaticResource MFDBackgroundBrush}" />
-        <Setter Property="BorderBrush" Value="{StaticResource MFDBorderBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource MFDButtonInnerBorderBrush}" />
+        <Setter Property="Background" Value="{StaticResource MFDButtonBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource MFDButtonBorderBrush}" />
         <Setter Property="Template" Value="{StaticResource MFDButtonTemplate}" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Content" Value="" />
