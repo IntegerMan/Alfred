@@ -51,7 +51,7 @@
                                                 DockDirection="Left" />
 
                 <controls:MFDButtonStripControl Grid.Row="1"
-                                                Grid.RowSpan="3"
+                                                Grid.RowSpan="2"
                                                 Grid.Column="1"
                                                 Panel.ZIndex="1"
                                                 DataContext="{Binding Path=BottomButtons}"

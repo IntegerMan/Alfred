@@ -23,35 +23,57 @@
     <Brush x:Key="MFDMouseOverInnerBorderBrush">#EBEFF2</Brush>
     <Brush x:Key="MFDMouseOverBackgroundBrush">#A6ABAE</Brush>
 
+    <Style x:Key="MFDButtonSeparatorStyle" TargetType="Border">
+        <Setter Property="BorderBrush" Value="{StaticResource MFDBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1,0,0,0" />
+        <Setter Property="Margin" Value="0,2" />
+    </Style>
+
+    <Style x:Key="MFDButtonIndicatorStyle" TargetType="Border">
+        <Setter Property="Height" Value="8" />
+        <Setter Property="Margin" Value="0,0,0,-10" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Bottom" />
+        <Setter Property="BorderBrush" Value="{StaticResource MFDButtonLineBrush}" />
+        <Setter Property="BorderThickness" Value="1,0,0,0" />
+    </Style>
+
     <ControlTemplate x:Key="MFDButtonTemplate" TargetType="{x:Type Button}">
 
-        <Border x:Name="outerBorder"
-                Width="35"
-                Height="35"
-                Background="{StaticResource ShadedButtonBackgroundBrush}"
-                BorderBrush="{DynamicResource MFDBorderBrush}"
-                BorderThickness="{TemplateBinding BorderThickness}"
-                SnapsToDevicePixels="True">
+        <Grid>
+            <Border x:Name="outerBorder"
+                    Width="35"
+                    Height="35"
+                    Background="{StaticResource ShadedButtonBackgroundBrush}"
+                    BorderBrush="{DynamicResource MFDBorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    SnapsToDevicePixels="True">
 
-            <Border x:Name="innerBorder"
-                    Margin="2"
-                    BorderBrush="{StaticResource MFDInnerBorderBrush}"
-                    BorderThickness="1"
-                    CornerRadius="2"
-                    Padding="2">
+                <Border x:Name="innerBorder"
+                        Margin="2"
+                        BorderBrush="{StaticResource MFDInnerBorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="2"
+                        Padding="2">
 
-                <ContentPresenter x:Name="contentPresenter"
-                                  Margin="{TemplateBinding Padding}"
-                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                  Content="{TemplateBinding Content}"
-                                  ContentStringFormat="{TemplateBinding ContentStringFormat}"
-                                  ContentTemplate="{TemplateBinding ContentTemplate}"
-                                  Focusable="False"
-                                  RecognizesAccessKey="True"
-                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                    <ContentPresenter x:Name="contentPresenter"
+                                      Margin="{TemplateBinding Padding}"
+                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                      Content="{TemplateBinding Content}"
+                                      ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      Focusable="False"
+                                      RecognizesAccessKey="True"
+                                      SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                </Border>
             </Border>
-        </Border>
+
+            <Border Style="{StaticResource MFDButtonIndicatorStyle}" />
+
+            <!--  TODO: Eventually render content over here?  -->
+        </Grid>
+
         <ControlTemplate.Triggers>
 
             <Trigger Property="IsDefaulted" Value="True">
@@ -101,21 +123,6 @@
         <Setter Property="Cursor" Value="Hand" />
     </Style>
 
-    <Style x:Key="MFDButtonSeparatorStyle" TargetType="Border">
-        <Setter Property="BorderBrush" Value="{StaticResource MFDBorderBrush}" />
-        <Setter Property="BorderThickness" Value="1,0,0,0" />
-        <Setter Property="Margin" Value="0,2" />
-    </Style>
-
-    <Style x:Key="MFDButtonIndicatorStyle" TargetType="Border">
-        <Setter Property="Height" Value="8" />
-        <Setter Property="Margin" Value="0,0,0,-10" />
-        <Setter Property="HorizontalAlignment" Value="Center" />
-        <Setter Property="VerticalAlignment" Value="Bottom" />
-        <Setter Property="BorderBrush" Value="{StaticResource MFDButtonLineBrush}" />
-        <Setter Property="BorderThickness" Value="1,0,0,0" />
-    </Style>
-
     <!--  Control Template for each MFDButtonStripControl  -->
     <ControlTemplate x:Key="ButtonStripControlTemplate" TargetType="{x:Type controls:MFDButtonStripControl}">
 
@@ -125,38 +132,23 @@
                     VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                     Orientation="Horizontal">
 
-            <Grid>
-                <Button Style="{StaticResource MFDButtonStyle}" />
-                <Border Style="{StaticResource MFDButtonIndicatorStyle}" />
-            </Grid>
+            <Button Style="{StaticResource MFDButtonStyle}" />
 
             <Border Style="{StaticResource MFDButtonSeparatorStyle}" />
 
-            <Grid>
-                <Button Style="{StaticResource MFDButtonStyle}" />
-                <Border Style="{StaticResource MFDButtonIndicatorStyle}" />
-            </Grid>
+            <Button Style="{StaticResource MFDButtonStyle}" />
 
             <Border Style="{StaticResource MFDButtonSeparatorStyle}" />
 
-            <Grid>
-                <Button Style="{StaticResource MFDButtonStyle}" />
-                <Border Style="{StaticResource MFDButtonIndicatorStyle}" />
-            </Grid>
+            <Button Style="{StaticResource MFDButtonStyle}" />
 
             <Border Style="{StaticResource MFDButtonSeparatorStyle}" />
 
-            <Grid>
-                <Button Style="{StaticResource MFDButtonStyle}" />
-                <Border Style="{StaticResource MFDButtonIndicatorStyle}" />
-            </Grid>
+            <Button Style="{StaticResource MFDButtonStyle}" />
 
             <Border Style="{StaticResource MFDButtonSeparatorStyle}" />
 
-            <Grid>
-                <Button Style="{StaticResource MFDButtonStyle}" />
-                <Border Style="{StaticResource MFDButtonIndicatorStyle}" />
-            </Grid>
+            <Button Style="{StaticResource MFDButtonStyle}" />
 
         </StackPanel>
 
