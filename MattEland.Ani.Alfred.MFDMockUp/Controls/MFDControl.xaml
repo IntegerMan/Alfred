@@ -7,8 +7,8 @@
              xmlns:views="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.Views"
              xmlns:vm="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels"
              d:DataContext="{d:DesignInstance vm:MFDViewModel}"
-             d:DesignHeight="500"
-             d:DesignWidth="500"
+             d:DesignHeight="565.15"
+             d:DesignWidth="420"
              mc:Ignorable="d">
 
     <Border x:Name="borderPanel"
@@ -18,7 +18,9 @@
 
         <DockPanel>
 
-            <Border Background="{StaticResource MFDScreenBorderBrush}" DockPanel.Dock="Top">
+            <Border Background="{StaticResource MFDScreenBorderBrush}"
+                    BorderBrush="{DynamicResource MFDMouseOverBorderBrush}"
+                    DockPanel.Dock="Top">
                 <TextBlock Margin="{StaticResource StandardMargin}"
                            HorizontalAlignment="Center"
                            Foreground="{StaticResource AppForegroundBrush}"
@@ -27,23 +29,25 @@
 
             <Grid Margin="{StaticResource StandardMargin}">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition MinWidth="{Binding Path=ScreenWidth}" />
-                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="{Binding Path=ScreenWidth}" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition MinHeight="{Binding Path=ScreenHeight}" />
-                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="{Binding Path=ScreenHeight}" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <controls:MFDButtonStripControl Grid.Row="0"
                                                 Grid.Column="1"
-                                                DataContext="{Binding Path=TopButtons}" />
+                                                DataContext="{Binding Path=TopButtons}"
+                                                DockDirection="Top" />
 
                 <controls:MFDButtonStripControl Grid.Row="1"
                                                 Grid.Column="0"
-                                                DataContext="{Binding Path=LeftButtons}" />
+                                                DataContext="{Binding Path=LeftButtons}"
+                                                DockDirection="Left" />
 
                 <Border x:Name="borderScreen"
                         Grid.Row="1"
@@ -53,8 +57,6 @@
                         MinWidth="{Binding Path=ScreenWidth}"
                         MinHeight="{Binding Path=ScreenHeight}"
                         Margin="{StaticResource StandardMargin}"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
                         Background="{StaticResource MFDScreenBackgroundBrush}"
                         BorderBrush="{StaticResource MFDScreenBorderBrush}"
                         BorderThickness="1">
@@ -74,11 +76,13 @@
 
                 <controls:MFDButtonStripControl Grid.Row="1"
                                                 Grid.Column="2"
-                                                DataContext="{Binding Path=RightButtons}" />
+                                                DataContext="{Binding Path=RightButtons}"
+                                                DockDirection="Right" />
 
                 <controls:MFDButtonStripControl Grid.Row="2"
                                                 Grid.Column="1"
-                                                DataContext="{Binding Path=BottomButtons}" />
+                                                DataContext="{Binding Path=BottomButtons}"
+                                                DockDirection="Bottom" />
 
 
             </Grid>

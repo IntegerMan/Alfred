@@ -65,6 +65,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\MFDButtonStripControl.cs" />
     <Compile Include="Models\ButtonStripDock.cs" />
     <Compile Include="Models\ButtonStripModel.cs" />
     <Compile Include="Models\MFDSelection.cs" />
@@ -101,19 +102,12 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\MFDButtonStripControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\MFDControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\MFDButtonStripControl.xaml.cs">
-      <DependentUpon>MFDButtonStripControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\MFDControl.xaml.cs">
       <DependentUpon>MFDControl.xaml</DependentUpon>
     </Compile>

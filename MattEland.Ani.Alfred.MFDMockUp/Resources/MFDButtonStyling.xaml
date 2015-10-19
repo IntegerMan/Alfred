@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.Controls"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                     mc:Ignorable="d">
@@ -93,10 +94,91 @@
         <Setter Property="Content" Value="" />
         <Setter Property="Cursor" Value="Hand" />
     </Style>
+
+    <Style x:Key="MFDButtonSeparatorStyle" TargetType="Border">
+        <Setter Property="BorderBrush" Value="{StaticResource MFDBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1,0,0,0" />
+        <Setter Property="Margin" Value="0,2" />
+    </Style>
+
+    <!--  Control Template for each MFDButtonStripControl  -->
+    <ControlTemplate x:Key="ButtonStripControlTemplate" TargetType="{x:Type controls:MFDButtonStripControl}">
+
+        <!--  Assume Top orientation for template. This entire panel will be rotated as needed in Triggers.  -->
+        <StackPanel x:Name="pnlButtons"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+
+            <Button Style="{StaticResource MFDButtonStyle}" />
+
+            <Border Style="{StaticResource MFDButtonSeparatorStyle}" />
+
+            <Button Style="{StaticResource MFDButtonStyle}" />
+
+            <Border Style="{StaticResource MFDButtonSeparatorStyle}" />
+
+            <Button Style="{StaticResource MFDButtonStyle}" />
+
+            <Border Style="{StaticResource MFDButtonSeparatorStyle}" />
+
+            <Button Style="{StaticResource MFDButtonStyle}" />
+
+            <Border Style="{StaticResource MFDButtonSeparatorStyle}" />
+
+            <Button Style="{StaticResource MFDButtonStyle}" />
+
+        </StackPanel>
+
+        <ControlTemplate.Triggers>
+
+            <!--  By default we assume that DockDirection is top and use that template by default  -->
+            <Trigger Property="DockDirection" Value="Top">
+                <Setter TargetName="pnlButtons" Property="LayoutTransform" Value="{x:Null}" />
+            </Trigger>
+
+            <!--  Based on DockDirection, we'll need to rotate accordingly  -->
+            <Trigger Property="DockDirection" Value="Left">
+                <Setter TargetName="pnlButtons" Property="LayoutTransform">
+                    <Setter.Value>
+                        <RotateTransform Angle="270" />
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+            <Trigger Property="DockDirection" Value="Right">
+                <Setter TargetName="pnlButtons" Property="LayoutTransform">
+                    <Setter.Value>
+                        <RotateTransform Angle="90" />
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+            <Trigger Property="DockDirection" Value="Bottom">
+                <Setter TargetName="pnlButtons" Property="LayoutTransform">
+                    <Setter.Value>
+                        <RotateTransform Angle="180" />
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+
+        </ControlTemplate.Triggers>
+
+    </ControlTemplate>
+
+    <!--  Give the Button Strip Control a default template and property values  -->
+    <Style TargetType="{x:Type controls:MFDButtonStripControl}">
+        <Setter Property="Template" Value="{StaticResource ButtonStripControlTemplate}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+    </Style>
+
+    <!--  Common Brushes for rendering the screen in a designer. The actual views should override these  -->
     <Brush x:Key="MFDScreenBackgroundBrush">#060105</Brush>
     <Brush x:Key="MFDScreenBorderBrush">#3F3F46</Brush>
     <Brush x:Key="MFDScreenForegroundBrush">#2BDD3A</Brush>
 
+    <!--  Brushes for the background of the MFD panel  -->
     <Brush x:Key="MFDPanelBackgroundBrush">#27282A</Brush>
     <Brush x:Key="MFDPanelBorderBrush">#1B1B1B</Brush>
 
