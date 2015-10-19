@@ -89,8 +89,10 @@
                 </Border>
 
                 <controls:MFDButtonStripControl Grid.Row="1"
-                                                Grid.Column="2"
-                                                HorizontalContentAlignment="Center"
+                                                Grid.Column="1"
+                                                Grid.ColumnSpan="2"
+                                                HorizontalContentAlignment="Right"
+                                                VerticalContentAlignment="Center"
                                                 Panel.ZIndex="1"
                                                 DataContext="{Binding Path=RightButtons}"
                                                 DockDirection="Right" />

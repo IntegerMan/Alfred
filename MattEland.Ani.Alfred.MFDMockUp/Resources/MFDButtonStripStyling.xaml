@@ -2,6 +2,14 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:controls="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.Controls">
 
+
+    <Style x:Key="MFDButtonSeparatorStyle" TargetType="Border">
+        <Setter Property="BorderBrush" Value="{StaticResource MFDButtonBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1,0,0,0" />
+        <Setter Property="Margin" Value="8,2" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+    </Style>
+
     <!--  Control Template for each MFDButtonStripControl  -->
     <ControlTemplate x:Key="ButtonStripControlTemplate" TargetType="{x:Type controls:MFDButtonStripControl}">
 
@@ -12,21 +20,13 @@
                     Orientation="Horizontal">
 
             <Button Style="{StaticResource MFDButtonStyle}" />
-
             <Border Style="{StaticResource MFDButtonSeparatorStyle}" />
-
             <Button Style="{StaticResource MFDButtonStyle}" />
-
             <Border Style="{StaticResource MFDButtonSeparatorStyle}" />
-
             <Button Style="{StaticResource MFDButtonStyle}" />
-
             <Border Style="{StaticResource MFDButtonSeparatorStyle}" />
-
             <Button Style="{StaticResource MFDButtonStyle}" />
-
             <Border Style="{StaticResource MFDButtonSeparatorStyle}" />
-
             <Button Style="{StaticResource MFDButtonStyle}" />
 
         </StackPanel>
