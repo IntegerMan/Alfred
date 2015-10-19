@@ -8,6 +8,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.MFDMockUp;component/Resources/MFDButtonStyling.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.MFDMockUp;component/Resources/MFDButtonStripStyling.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.MFDMockUp;component/Resources/MFDViewStyling.xaml" />
             </ResourceDictionary.MergedDictionaries>
 

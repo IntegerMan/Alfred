@@ -75,6 +75,10 @@
     <Compile Include="ViewModels\MFDButtonStripViewModel.cs" />
     <Compile Include="ViewModels\MFDViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
+    <Page Include="Resources\MFDButtonStripStyling.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\MFDViewStyling.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
