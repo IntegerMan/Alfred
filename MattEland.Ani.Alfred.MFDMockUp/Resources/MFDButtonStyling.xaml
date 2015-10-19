@@ -5,6 +5,12 @@
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                     mc:Ignorable="d">
 
+    <Brush x:Key="MFDButtonLineBrush">#FDFDFD</Brush>
+    <RadialGradientBrush x:Key="ShadedButtonBackgroundBrush" Center="0.75,0.25" GradientOrigin="0.75,0.25" RadiusX="0.6" RadiusY="0.6">
+        <GradientStop Offset="0" Color="#FF83888C" />
+        <GradientStop Offset="1" Color="#FFACB6B7" />
+    </RadialGradientBrush>
+
     <Brush x:Key="MFDBorderBrush">#404445</Brush>
     <Brush x:Key="MFDInnerBorderBrush">#DFE3E6</Brush>
     <Brush x:Key="MFDBackgroundBrush">#9A9FA2</Brush>
@@ -20,12 +26,12 @@
     <ControlTemplate x:Key="MFDButtonTemplate" TargetType="{x:Type Button}">
 
         <Border x:Name="outerBorder"
-                Background="{TemplateBinding Background}"
-                BorderBrush="{TemplateBinding BorderBrush}"
+                Width="35"
+                Height="35"
+                Background="{StaticResource ShadedButtonBackgroundBrush}"
+                BorderBrush="{DynamicResource MFDBorderBrush}"
                 BorderThickness="{TemplateBinding BorderThickness}"
-                SnapsToDevicePixels="True"
-                d:DesignHeight="35"
-                d:DesignWidth="35">
+                SnapsToDevicePixels="True">
 
             <Border x:Name="innerBorder"
                     Margin="2"
@@ -101,32 +107,56 @@
         <Setter Property="Margin" Value="0,2" />
     </Style>
 
+    <Style x:Key="MFDButtonIndicatorStyle" TargetType="Border">
+        <Setter Property="Height" Value="8" />
+        <Setter Property="Margin" Value="0,0,0,-10" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Bottom" />
+        <Setter Property="BorderBrush" Value="{StaticResource MFDButtonLineBrush}" />
+        <Setter Property="BorderThickness" Value="1,0,0,0" />
+    </Style>
+
     <!--  Control Template for each MFDButtonStripControl  -->
     <ControlTemplate x:Key="ButtonStripControlTemplate" TargetType="{x:Type controls:MFDButtonStripControl}">
 
         <!--  Assume Top orientation for template. This entire panel will be rotated as needed in Triggers.  -->
         <StackPanel x:Name="pnlButtons"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
+                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                     Orientation="Horizontal">
 
-            <Button Style="{StaticResource MFDButtonStyle}" />
+            <Grid>
+                <Button Style="{StaticResource MFDButtonStyle}" />
+                <Border Style="{StaticResource MFDButtonIndicatorStyle}" />
+            </Grid>
 
             <Border Style="{StaticResource MFDButtonSeparatorStyle}" />
 
-            <Button Style="{StaticResource MFDButtonStyle}" />
+            <Grid>
+                <Button Style="{StaticResource MFDButtonStyle}" />
+                <Border Style="{StaticResource MFDButtonIndicatorStyle}" />
+            </Grid>
 
             <Border Style="{StaticResource MFDButtonSeparatorStyle}" />
 
-            <Button Style="{StaticResource MFDButtonStyle}" />
+            <Grid>
+                <Button Style="{StaticResource MFDButtonStyle}" />
+                <Border Style="{StaticResource MFDButtonIndicatorStyle}" />
+            </Grid>
 
             <Border Style="{StaticResource MFDButtonSeparatorStyle}" />
 
-            <Button Style="{StaticResource MFDButtonStyle}" />
+            <Grid>
+                <Button Style="{StaticResource MFDButtonStyle}" />
+                <Border Style="{StaticResource MFDButtonIndicatorStyle}" />
+            </Grid>
 
             <Border Style="{StaticResource MFDButtonSeparatorStyle}" />
 
-            <Button Style="{StaticResource MFDButtonStyle}" />
+            <Grid>
+                <Button Style="{StaticResource MFDButtonStyle}" />
+                <Border Style="{StaticResource MFDButtonIndicatorStyle}" />
+            </Grid>
 
         </StackPanel>
 
@@ -135,6 +165,8 @@
             <!--  By default we assume that DockDirection is top and use that template by default  -->
             <Trigger Property="DockDirection" Value="Top">
                 <Setter TargetName="pnlButtons" Property="LayoutTransform" Value="{x:Null}" />
+                <Setter TargetName="pnlButtons" Property="HorizontalAlignment" Value="Center" />
+                <Setter TargetName="pnlButtons" Property="VerticalAlignment" Value="Top" />
             </Trigger>
 
             <!--  Based on DockDirection, we'll need to rotate accordingly  -->
@@ -144,20 +176,28 @@
                         <RotateTransform Angle="270" />
                     </Setter.Value>
                 </Setter>
+                <Setter TargetName="pnlButtons" Property="HorizontalAlignment" Value="Left" />
+                <Setter TargetName="pnlButtons" Property="VerticalAlignment" Value="Center" />
             </Trigger>
+
             <Trigger Property="DockDirection" Value="Right">
                 <Setter TargetName="pnlButtons" Property="LayoutTransform">
                     <Setter.Value>
                         <RotateTransform Angle="90" />
                     </Setter.Value>
                 </Setter>
+                <Setter TargetName="pnlButtons" Property="HorizontalAlignment" Value="Right" />
+                <Setter TargetName="pnlButtons" Property="VerticalAlignment" Value="Center" />
             </Trigger>
+
             <Trigger Property="DockDirection" Value="Bottom">
                 <Setter TargetName="pnlButtons" Property="LayoutTransform">
                     <Setter.Value>
                         <RotateTransform Angle="180" />
                     </Setter.Value>
                 </Setter>
+                <Setter TargetName="pnlButtons" Property="HorizontalAlignment" Value="Center" />
+                <Setter TargetName="pnlButtons" Property="VerticalAlignment" Value="Bottom" />
             </Trigger>
 
         </ControlTemplate.Triggers>
@@ -168,7 +208,7 @@
     <Style TargetType="{x:Type controls:MFDButtonStripControl}">
         <Setter Property="Template" Value="{StaticResource ButtonStripControlTemplate}" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
-        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Stretch" />
         <Setter Property="VerticalContentAlignment" Value="Stretch" />
     </Style>

@@ -28,7 +28,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         {
             get
             {
-                return _mfd;
+                return _model;
             }
         }
 
@@ -98,7 +98,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         ///     The MFD model backing store.
         /// </summary>
         [NotNull]
-        private readonly MultifunctionDisplay _mfd;
+        private readonly MultifunctionDisplay _model;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MFDViewModel"/> class.
@@ -106,7 +106,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         /// <param name="mfd">The multifunction display.</param>
         public MFDViewModel([NotNull] MultifunctionDisplay mfd)
         {
-            _mfd = mfd;
+            _model = mfd;
         }
 
         /// <summary>

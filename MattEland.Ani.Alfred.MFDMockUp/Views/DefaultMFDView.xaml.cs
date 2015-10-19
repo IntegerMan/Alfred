@@ -20,6 +20,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Views
     /// </summary>
     public partial class DefaultMFDView : UserControl
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultMFDView"/> class.
+        /// </summary>
         public DefaultMFDView()
         {
             InitializeComponent();

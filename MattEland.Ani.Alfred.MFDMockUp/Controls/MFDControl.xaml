@@ -7,8 +7,6 @@
              xmlns:views="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.Views"
              xmlns:vm="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels"
              d:DataContext="{d:DesignInstance vm:MFDViewModel}"
-             d:DesignHeight="565.15"
-             d:DesignWidth="420"
              mc:Ignorable="d">
 
     <Border x:Name="borderPanel"
@@ -29,34 +27,50 @@
 
             <Grid Margin="{StaticResource StandardMargin}">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="{Binding Path=ScreenWidth}" />
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition MinWidth="{Binding Path=ScreenWidth}" />
+                    <ColumnDefinition Width="40" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="{Binding Path=ScreenHeight}" />
-                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="40" />
+                    <RowDefinition MinHeight="{Binding Path=ScreenHeight}" />
+                    <RowDefinition Height="40" />
                 </Grid.RowDefinitions>
 
                 <controls:MFDButtonStripControl Grid.Row="0"
                                                 Grid.Column="1"
+                                                Panel.ZIndex="1"
                                                 DataContext="{Binding Path=TopButtons}"
                                                 DockDirection="Top" />
 
                 <controls:MFDButtonStripControl Grid.Row="1"
                                                 Grid.Column="0"
+                                                Grid.ColumnSpan="2"
+                                                Panel.ZIndex="1"
                                                 DataContext="{Binding Path=LeftButtons}"
                                                 DockDirection="Left" />
 
-                <Border x:Name="borderScreen"
-                        Grid.Row="1"
+                <controls:MFDButtonStripControl Grid.Row="1"
+                                                Grid.RowSpan="3"
+                                                Grid.Column="1"
+                                                Panel.ZIndex="1"
+                                                DataContext="{Binding Path=BottomButtons}"
+                                                DockDirection="Bottom" />
+
+                <Border Grid.Row="1"
+                        Grid.RowSpan="1"
                         Grid.Column="1"
-                        Width="{Binding Path=ScreenWidth}"
-                        Height="{Binding Path=ScreenHeight}"
-                        MinWidth="{Binding Path=ScreenWidth}"
-                        MinHeight="{Binding Path=ScreenHeight}"
+                        Grid.ColumnSpan="1"
+                        Width="{Binding Path=ScreenWidth,
+                                        FallbackValue=256}"
+                        Height="{Binding Path=ScreenHeight,
+                                         FallbackValue=256}"
+                        MinWidth="{Binding Path=ScreenWidth,
+                                           FallbackValue=256}"
+                        MinHeight="{Binding Path=ScreenHeight,
+                                            FallbackValue=256}"
                         Margin="{StaticResource StandardMargin}"
+                        Panel.ZIndex="0"
                         Background="{StaticResource MFDScreenBackgroundBrush}"
                         BorderBrush="{StaticResource MFDScreenBorderBrush}"
                         BorderThickness="1">
@@ -76,13 +90,10 @@
 
                 <controls:MFDButtonStripControl Grid.Row="1"
                                                 Grid.Column="2"
+                                                HorizontalContentAlignment="Center"
+                                                Panel.ZIndex="1"
                                                 DataContext="{Binding Path=RightButtons}"
                                                 DockDirection="Right" />
-
-                <controls:MFDButtonStripControl Grid.Row="2"
-                                                Grid.Column="1"
-                                                DataContext="{Binding Path=BottomButtons}"
-                                                DockDirection="Bottom" />
 
 
             </Grid>
