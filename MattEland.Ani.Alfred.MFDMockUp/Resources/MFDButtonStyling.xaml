@@ -45,7 +45,7 @@
                         CornerRadius="0">
 
                     <Border x:Name="innerBorder"
-                            Margin="2"
+                            Margin="3"
                             BorderBrush="{StaticResource MFDButtonInnerBorderBrush}"
                             BorderThickness="1"
                             CornerRadius="2"
