@@ -91,12 +91,14 @@
 
                         <Grid x:Name="pnlOverlays" Panel.ZIndex="1">
                             <controls:MFDButtonLabelStripControl x:Name="labelsTop"
+                                                                 Margin="0,2"
                                                                  HorizontalAlignment="Stretch"
                                                                  VerticalAlignment="Top" />
 
                             <controls:MFDButtonLabelStripControl x:Name="labelsBottom"
+                                                                 Margin="0,2"
                                                                  HorizontalAlignment="Stretch"
-                                                                 VerticalAlignment="Top" />
+                                                                 VerticalAlignment="Bottom" />
                         </Grid>
 
                     </Grid>
