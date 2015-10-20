@@ -11,7 +11,7 @@
     </Style>
 
     <!--  Control Template for each MFDButtonStripControl  -->
-    <ControlTemplate x:Key="ButtonStripControlTemplate" TargetType="{x:Type controls:MFDButtonStripControl}">
+    <ControlTemplate x:Key="ButtonStripControlTemplate" TargetType="{x:Type controls:MFDButtonStrip}">
 
         <!--  Assume Top orientation for template. This entire panel will be rotated as needed in Triggers.  -->
         <StackPanel x:Name="pnlButtons"
@@ -76,7 +76,7 @@
     </ControlTemplate>
 
     <!--  Give the Button Strip Control a default template and property values  -->
-    <Style TargetType="{x:Type controls:MFDButtonStripControl}">
+    <Style TargetType="{x:Type controls:MFDButtonStrip}">
         <Setter Property="Template" Value="{StaticResource ButtonStripControlTemplate}" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />

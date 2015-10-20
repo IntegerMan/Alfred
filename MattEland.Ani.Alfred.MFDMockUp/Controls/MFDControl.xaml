@@ -37,20 +37,20 @@
                     <RowDefinition Height="40" />
                 </Grid.RowDefinitions>
 
-                <controls:MFDButtonStripControl Grid.Row="0"
+                <controls:MFDButtonStrip Grid.Row="0"
                                                 Grid.Column="1"
                                                 Panel.ZIndex="1"
                                                 DataContext="{Binding Path=TopButtons}"
                                                 DockDirection="Top" />
 
-                <controls:MFDButtonStripControl Grid.Row="1"
+                <controls:MFDButtonStrip Grid.Row="1"
                                                 Grid.Column="0"
                                                 Grid.ColumnSpan="2"
                                                 Panel.ZIndex="1"
                                                 DataContext="{Binding Path=LeftButtons}"
                                                 DockDirection="Left" />
 
-                <controls:MFDButtonStripControl Grid.Row="1"
+                <controls:MFDButtonStrip Grid.Row="1"
                                                 Grid.RowSpan="2"
                                                 Grid.Column="1"
                                                 Panel.ZIndex="1"
@@ -104,7 +104,7 @@
                     </Grid>
                 </Border>
 
-                <controls:MFDButtonStripControl Grid.Row="1"
+                <controls:MFDButtonStrip Grid.Row="1"
                                                 Grid.Column="1"
                                                 Grid.ColumnSpan="2"
                                                 HorizontalContentAlignment="Right"

@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------
-// MFDButtonStripControl.xaml.cs
+// MFDButtonStrip.xaml.cs
 // 
 // Created on:      10/17/2015 at 12:43 PM
 // Last Modified:   10/17/2015 at 12:53 PM
@@ -20,16 +20,16 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Controls
     /// <summary>
     /// Represents a strip of buttons bordering a <see cref="MFDControl"/>
     /// </summary>
-    public sealed class MFDButtonStripControl : Control
+    public sealed class MFDButtonStrip : Control
     {
 
         /// <summary>
-        /// Initializes static members of the <see cref="MFDButtonStripControl"/> class.
+        /// Initializes static members of the <see cref="MFDButtonStrip"/> class.
         /// </summary>
-        static MFDButtonStripControl()
+        static MFDButtonStrip()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(MFDButtonStripControl),
-                new FrameworkPropertyMetadata(typeof(MFDButtonStripControl)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(MFDButtonStrip),
+                new FrameworkPropertyMetadata(typeof(MFDButtonStrip)));
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Controls
         public static readonly DependencyProperty DockDirectionProperty =
             DependencyProperty.Register(nameof(DockDirection),
                                         typeof(ButtonStripDock),
-                                        typeof(MFDButtonStripControl),
+                                        typeof(MFDButtonStrip),
                                         new PropertyMetadata(ButtonStripDock.Top));
 
         /// <summary>

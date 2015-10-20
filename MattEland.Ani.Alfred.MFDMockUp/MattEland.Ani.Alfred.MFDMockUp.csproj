@@ -69,7 +69,7 @@
     <Compile Include="Controls\MFDButtonLabelStripControl.xaml.cs">
       <DependentUpon>MFDButtonLabelStripControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MFDButtonStripControl.cs" />
+    <Compile Include="Controls\MFDButtonStrip.cs" />
     <Compile Include="Models\ButtonModel.cs" />
     <Compile Include="Models\ButtonStripDock.cs" />
     <Compile Include="Models\ButtonStripModel.cs" />
