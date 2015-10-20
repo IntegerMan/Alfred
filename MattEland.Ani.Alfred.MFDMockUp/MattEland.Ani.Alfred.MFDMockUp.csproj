@@ -70,11 +70,13 @@
       <DependentUpon>MFDButtonLabelStripControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MFDButtonStripControl.cs" />
+    <Compile Include="Models\ButtonModel.cs" />
     <Compile Include="Models\ButtonStripDock.cs" />
     <Compile Include="Models\ButtonStripModel.cs" />
     <Compile Include="Models\MFDSelection.cs" />
     <Compile Include="Models\Workspace.cs" />
     <Compile Include="Models\MultifunctionDisplay.cs" />
+    <Compile Include="ViewModels\ButtonViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\MFDButtonStripViewModel.cs" />
     <Compile Include="ViewModels\MFDViewModel.cs" />
