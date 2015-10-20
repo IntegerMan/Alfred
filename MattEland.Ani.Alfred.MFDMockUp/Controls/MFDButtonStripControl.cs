@@ -24,6 +24,15 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Controls
     {
 
         /// <summary>
+        /// Initializes static members of the <see cref="MFDButtonStripControl"/> class.
+        /// </summary>
+        static MFDButtonStripControl()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(MFDButtonStripControl),
+                new FrameworkPropertyMetadata(typeof(MFDButtonStripControl)));
+        }
+
+        /// <summary>
         ///     Defines the <see cref="Orientation"/> dependency property.
         /// </summary>
         /// <remarks>

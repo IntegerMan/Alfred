@@ -1,4 +1,6 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
 
     <Brush x:Key="MFDViewBackgroundBrush">#060105</Brush>
     <Brush x:Key="MFDViewForegroundBrush">#2BDD3A</Brush>
@@ -10,7 +12,7 @@
 
     <Style x:Key="MFDViewTextStyle" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{StaticResource MFDViewForegroundBrush}" />
-        <Setter Property="FontFamily" Value="Terminus, Lucida Console" />
+        <Setter Property="FontFamily" Value="{StaticResource ConsoleFontFamily}" />
         <Setter Property="FontSize" Value="8pt" />
         <Setter Property="Typography.Capitals" Value="SmallCaps" />
     </Style>

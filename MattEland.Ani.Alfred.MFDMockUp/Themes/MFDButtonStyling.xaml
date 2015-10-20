@@ -19,6 +19,15 @@
     <Brush x:Key="MFDMouseOverInnerBorderBrush">#EBEFF2</Brush>
     <Brush x:Key="MFDMouseOverBackgroundBrush">#A6ABAE</Brush>
 
+    <!--  Common Brushes for rendering the screen in a designer. The actual views should override these  -->
+    <Brush x:Key="MFDScreenBackgroundBrush">#060105</Brush>
+    <Brush x:Key="MFDScreenBorderBrush">#3F3F46</Brush>
+    <Brush x:Key="MFDScreenForegroundBrush">#2BDD3A</Brush>
+
+    <!--  Brushes for the background of the MFD panel  -->
+    <Brush x:Key="MFDPanelBackgroundBrush">#27282A</Brush>
+    <Brush x:Key="MFDPanelBorderBrush">#1B1B1B</Brush>
+
     <Style x:Key="MFDButtonIndicatorStyle" TargetType="Border">
         <Setter Property="Height" Value="8" />
         <Setter Property="Margin" Value="0,0,0,-10" />
@@ -114,15 +123,5 @@
         <Setter Property="Content" Value="" />
         <Setter Property="Cursor" Value="Hand" />
     </Style>
-
-
-    <!--  Common Brushes for rendering the screen in a designer. The actual views should override these  -->
-    <Brush x:Key="MFDScreenBackgroundBrush">#060105</Brush>
-    <Brush x:Key="MFDScreenBorderBrush">#3F3F46</Brush>
-    <Brush x:Key="MFDScreenForegroundBrush">#2BDD3A</Brush>
-
-    <!--  Brushes for the background of the MFD panel  -->
-    <Brush x:Key="MFDPanelBackgroundBrush">#27282A</Brush>
-    <Brush x:Key="MFDPanelBorderBrush">#1B1B1B</Brush>
 
 </ResourceDictionary>
