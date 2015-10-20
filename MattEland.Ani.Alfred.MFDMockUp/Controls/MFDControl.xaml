@@ -58,9 +58,7 @@
                                                 DockDirection="Bottom" />
 
                 <Border Grid.Row="1"
-                        Grid.RowSpan="1"
                         Grid.Column="1"
-                        Grid.ColumnSpan="1"
                         Width="{Binding Path=ScreenWidth,
                                         FallbackValue=256}"
                         Height="{Binding Path=ScreenHeight,
@@ -74,18 +72,34 @@
                         Background="{StaticResource MFDScreenBackgroundBrush}"
                         BorderBrush="{StaticResource MFDScreenBorderBrush}"
                         BorderThickness="1">
-                    <!-- TODO: This is buggy. Make it happen.
-                    <ContentControl Width="{Binding Path=ScreenWidth}"
-                                    Height="{Binding Path=ScreenHeight}"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Stretch"
-                                    HorizontalContentAlignment="Stretch"
-                                    VerticalContentAlignment="Stretch"
-                                    Content="{Binding Path=View,
-                                                      FallbackValue='No View Selected'}"
-                                    Foreground="{StaticResource MFDScreenForegroundBrush}" />
-                    -->
-                    <views:DefaultMFDView />
+                    <Grid>
+
+                        <Grid x:Name="pnlView" Panel.ZIndex="0">
+                            <views:DefaultMFDView />
+                            <!-- TODO: This is buggy. Make it happen.
+                        <ContentControl Width="{Binding Path=ScreenWidth}"
+                                        Height="{Binding Path=ScreenHeight}"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Stretch"
+                                        HorizontalContentAlignment="Stretch"
+                                        VerticalContentAlignment="Stretch"
+                                        Content="{Binding Path=View,
+                                                          FallbackValue='No View Selected'}"
+                                        Foreground="{StaticResource MFDScreenForegroundBrush}" />
+                            -->
+                        </Grid>
+
+                        <Grid x:Name="pnlOverlays" Panel.ZIndex="1">
+                            <controls:MFDButtonLabelStripControl x:Name="labelsTop"
+                                                                 HorizontalAlignment="Stretch"
+                                                                 VerticalAlignment="Top" />
+
+                            <controls:MFDButtonLabelStripControl x:Name="labelsBottom"
+                                                                 HorizontalAlignment="Stretch"
+                                                                 VerticalAlignment="Top" />
+                        </Grid>
+
+                    </Grid>
                 </Border>
 
                 <controls:MFDButtonStripControl Grid.Row="1"
