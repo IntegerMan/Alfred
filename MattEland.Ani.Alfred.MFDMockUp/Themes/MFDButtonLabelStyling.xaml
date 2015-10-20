@@ -5,19 +5,52 @@
     <Style TargetType="{x:Type controls:MFDButtonLabel}">
         <Setter Property="Background" Value="{StaticResource MFDScreenBackgroundBrush}" />
         <Setter Property="Foreground" Value="{StaticResource MFDScreenForegroundBrush}" />
+
+        <!--  This padding is necessary to make the border extend out to the sides of the label and make it look correct  -->
+        <Setter Property="Padding" Value="2,0" />
+
+        <!--  Smaller font size to conserve screen real-estate  -->
         <Setter Property="FontSize" Value="6pt" />
 
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type controls:MFDButtonLabel}">
 
-                    <Border Background="{TemplateBinding Background}"
+                    <!--  This border is used for highlighting  -->
+                    <Border x:Name="LabelBorder"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}">
 
-                        <ContentControl Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" />
+                        <!--  Actual content goes here  -->
+                        <TextBlock x:Name="LabelContent"
+                                   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                   Foreground="{TemplateBinding Foreground}"
+                                   Text="{TemplateBinding Text}"
+                                   TextAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                   TextWrapping="NoWrap" />
 
                     </Border>
+
+                    <ControlTemplate.Triggers>
+
+                        <!--  When selected, invert the styling  -->
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="LabelBorder" Property="Background" Value="{Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}" />
+                            <Setter TargetName="LabelContent" Property="Foreground" Value="{Binding Background, RelativeSource={RelativeSource TemplatedParent}}" />
+                        </Trigger>
+
+                        <!--  When not selected, use standard styling  -->
+                        <Trigger Property="IsSelected" Value="False">
+                            <Setter TargetName="LabelBorder" Property="Background" Value="{Binding Background, RelativeSource={RelativeSource TemplatedParent}}" />
+                            <Setter TargetName="LabelContent" Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}" />
+                        </Trigger>
+
+                    </ControlTemplate.Triggers>
 
                 </ControlTemplate>
             </Setter.Value>

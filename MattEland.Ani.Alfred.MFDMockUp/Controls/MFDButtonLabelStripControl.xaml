@@ -26,19 +26,20 @@
         </Grid.ColumnDefinitions>
 
         <local:MFDButtonLabel Grid.Column="0"
-                              Content="TEST"
-                              Style="{StaticResource ButtonLabelGridStyle}" />
+                              IsSelected="True"
+                              Style="{StaticResource ButtonLabelGridStyle}"
+                              Text="TEST" />
         <local:MFDButtonLabel Grid.Column="1"
-                              Content="TEST"
-                              Style="{StaticResource ButtonLabelGridStyle}" />
+                              Style="{StaticResource ButtonLabelGridStyle}"
+                              Text="TEST" />
         <local:MFDButtonLabel Grid.Column="2"
-                              Content="TEST"
-                              Style="{StaticResource ButtonLabelGridStyle}" />
+                              Style="{StaticResource ButtonLabelGridStyle}"
+                              Text="TEST" />
         <local:MFDButtonLabel Grid.Column="3"
-                              Content="TEST"
-                              Style="{StaticResource ButtonLabelGridStyle}" />
+                              Style="{StaticResource ButtonLabelGridStyle}"
+                              Text="TEST" />
         <local:MFDButtonLabel Grid.Column="4"
-                              Content="TEST"
-                              Style="{StaticResource ButtonLabelGridStyle}" />
+                              Style="{StaticResource ButtonLabelGridStyle}"
+                              Text="TEST" />
     </Grid>
 </UserControl>
