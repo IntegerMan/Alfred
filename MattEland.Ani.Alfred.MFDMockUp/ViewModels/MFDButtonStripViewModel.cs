@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Controls;
 
 using MattEland.Ani.Alfred.MFDMockUp.Models;
@@ -36,28 +39,14 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         }
 
         /// <summary>
-        ///     Gets the orientation of the arrangement panel.
+        ///     Gets the button view models associated with each button in the button strip.
         /// </summary>
         /// <value>
-        ///     The orientation.
+        ///     The buttons.
         /// </value>
-        public Orientation Orientation
+        public IEnumerable<ButtonViewModel> Buttons
         {
-            get
-            {
-                switch (Dock)
-                {
-                    case ButtonStripDock.Top:
-                    case ButtonStripDock.Bottom:
-                        return Orientation.Horizontal;
-
-                    case ButtonStripDock.Left:
-                    case ButtonStripDock.Right:
-                    default:
-                        return Orientation.Vertical;
-                }
-
-            }
+            get { return _model.Buttons.Select(b => new ButtonViewModel(b)); }
         }
     }
 }

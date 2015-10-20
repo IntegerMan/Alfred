@@ -38,24 +38,24 @@
                 </Grid.RowDefinitions>
 
                 <controls:MFDButtonStrip Grid.Row="0"
-                                                Grid.Column="1"
-                                                Panel.ZIndex="1"
-                                                DataContext="{Binding Path=TopButtons}"
-                                                DockDirection="Top" />
+                                         Grid.Column="1"
+                                         Panel.ZIndex="1"
+                                         DataContext="{Binding Path=TopButtons}"
+                                         DockDirection="Top" />
 
                 <controls:MFDButtonStrip Grid.Row="1"
-                                                Grid.Column="0"
-                                                Grid.ColumnSpan="2"
-                                                Panel.ZIndex="1"
-                                                DataContext="{Binding Path=LeftButtons}"
-                                                DockDirection="Left" />
+                                         Grid.Column="0"
+                                         Grid.ColumnSpan="2"
+                                         Panel.ZIndex="1"
+                                         DataContext="{Binding Path=LeftButtons}"
+                                         DockDirection="Left" />
 
                 <controls:MFDButtonStrip Grid.Row="1"
-                                                Grid.RowSpan="2"
-                                                Grid.Column="1"
-                                                Panel.ZIndex="1"
-                                                DataContext="{Binding Path=BottomButtons}"
-                                                DockDirection="Bottom" />
+                                         Grid.RowSpan="2"
+                                         Grid.Column="1"
+                                         Panel.ZIndex="1"
+                                         DataContext="{Binding Path=BottomButtons}"
+                                         DockDirection="Bottom" />
 
                 <Border Grid.Row="1"
                         Grid.Column="1"
@@ -105,13 +105,13 @@
                 </Border>
 
                 <controls:MFDButtonStrip Grid.Row="1"
-                                                Grid.Column="1"
-                                                Grid.ColumnSpan="2"
-                                                HorizontalContentAlignment="Right"
-                                                VerticalContentAlignment="Center"
-                                                Panel.ZIndex="1"
-                                                DataContext="{Binding Path=RightButtons}"
-                                                DockDirection="Right" />
+                                         Grid.Column="1"
+                                         Grid.ColumnSpan="2"
+                                         HorizontalContentAlignment="Right"
+                                         VerticalContentAlignment="Center"
+                                         Panel.ZIndex="1"
+                                         DataContext="{Binding Path=RightButtons}"
+                                         DockDirection="Right" />
 
 
             </Grid>
