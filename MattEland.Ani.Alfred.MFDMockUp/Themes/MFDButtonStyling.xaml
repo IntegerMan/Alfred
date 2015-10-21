@@ -77,9 +77,8 @@
                 </Border>
             </Border>
 
-            <Border Style="{StaticResource MFDButtonIndicatorStyle}" />
+            <Border x:Name="BorderIndicator" Style="{StaticResource MFDButtonIndicatorStyle}" />
 
-            <!--  TODO: Eventually render content over here?  -->
         </Grid>
 
         <ControlTemplate.Triggers>

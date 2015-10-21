@@ -17,7 +17,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         /// <summary>
         ///     The default number of MFDs present.
         /// </summary>
-        private const int DefaultMFDCount = 4;
+        private const int DefaultMFDCount = 6;
 
         [NotNull]
         private readonly Workspace _workspace;

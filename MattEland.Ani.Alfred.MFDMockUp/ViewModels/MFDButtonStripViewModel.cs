@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 
 using MattEland.Ani.Alfred.MFDMockUp.Models;
@@ -33,6 +34,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         /// <value>
         ///     The docked state of the button strip.
         /// </value>
+        [UsedImplicitly]
         public ButtonStripDock Dock
         {
             get { return _model.Dock; }
@@ -44,9 +46,33 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         /// <value>
         ///     The buttons.
         /// </value>
+        [NotNull, ItemNotNull]
         public IEnumerable<ButtonViewModel> Buttons
         {
             get { return _model.Buttons.Select(b => new ButtonViewModel(b, this)); }
+        }
+
+        /// <summary>
+        ///     Gets a collection of buttons and the separators that should be rendered for those buttons.
+        /// </summary>
+        /// <value>
+        ///     The buttons and separators.
+        /// </value>
+        [NotNull, ItemNotNull]
+        public IEnumerable ButtonsAndSeparators
+        {
+            get
+            {
+                foreach (var button in Buttons)
+                {
+                    yield return button;
+
+                    if (button.SeparatorVisibility == Visibility.Visible)
+                    {
+                        yield return new SeparatorViewModel(new SeparatorModel(true));
+                    }
+                }
+            }
         }
     }
 }
