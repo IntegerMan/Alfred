@@ -7,13 +7,12 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
-
 using MattEland.Common.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.PresentationCommon.Layout;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows.Controls;
 using System.Windows;
 using System.Linq;
@@ -35,10 +34,10 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Layout
         ///		Defaults to LayoutType.VerticalStackPanel
         /// </remarks>
         [NotNull]
-        public static readonly DependencyProperty LayoutTypeProperty = DependencyProperty.Register("LayoutType",
+        public static readonly DependencyProperty LayoutTypeProperty = DependencyProperty.Register(nameof(LayoutType),
                                                                          typeof(LayoutType),
                                                                          typeof(DynamicPanel),
-                                                                         new PropertyMetadata(Core.Definitions.LayoutType.VerticalStackPanel, OnLayoutTypeChanged));
+                                                                         new PropertyMetadata(LayoutType.VerticalStackPanel, OnLayoutTypeChanged));
         /// <summary>
         /// Initializes a new instance of the <see cref="DynamicPanel"/> class.
         /// </summary>
@@ -46,6 +45,7 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Layout
         {
             StackLayoutHelper = new StackPanelLayoutHelper();
             WrapLayoutHelper = new WrapPanelLayoutHelper();
+            AutoLayoutHelper = new AutoSpaceLayoutHelper();
         }
 
         /// <summary>
@@ -73,6 +73,13 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Layout
         private WrapPanelLayoutHelper WrapLayoutHelper { get; }
 
         /// <summary>
+        /// Gets the layout helper for auto space layouts.
+        /// </summary>
+        /// <value>The layout helper.</value>
+        [NotNull]
+        private AutoSpaceLayoutHelper AutoLayoutHelper { get; }
+
+        /// <summary>
         ///     When overridden in a derived class, positions child elements and determines a size for a
         ///     <see cref="T:FrameworkElement"/> derived class.
         /// </summary>
@@ -87,9 +94,9 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Layout
         {
             IList<UIElement> children = InternalChildren.Cast<UIElement>().ToList();
 
-            LayoutSize layoutSize = finalSize.ToLayoutSize();
+            var layoutSize = finalSize.ToLayoutSize();
 
-            LayoutSize result = new LayoutSize();
+            var result = new LayoutSize();
 
             switch (LayoutType)
             {
@@ -107,6 +114,14 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Layout
 
                 case LayoutType.HorizontalWrapPanel:
                     result = WrapLayoutHelper.Arrange(layoutSize, true, children);
+                    break;
+
+                case LayoutType.VerticalAutoSpacePanel:
+                    result = AutoLayoutHelper.Arrange(layoutSize, false, children);
+                    break;
+
+                case LayoutType.HorizontalAutoSpacePanel:
+                    result = AutoLayoutHelper.Arrange(layoutSize, true, children);
                     break;
             }
 
@@ -132,9 +147,9 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Layout
         {
             IList<UIElement> children = InternalChildren.Cast<UIElement>().ToList();
 
-            LayoutSize layoutSize = availableSize.ToLayoutSize();
+            var layoutSize = availableSize.ToLayoutSize();
 
-            LayoutSize result = new LayoutSize();
+            var result = new LayoutSize();
 
             switch (LayoutType)
             {
@@ -153,16 +168,26 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Layout
                 case LayoutType.HorizontalWrapPanel:
                     result = WrapLayoutHelper.Measure(layoutSize, true, children);
                     break;
+
+                case LayoutType.VerticalAutoSpacePanel:
+                    result = AutoLayoutHelper.Measure(layoutSize, false, children);
+                    break;
+
+                case LayoutType.HorizontalAutoSpacePanel:
+                    result = AutoLayoutHelper.Measure(layoutSize, true, children);
+                    break;
             }
 
             return result.ToSize();
         }
+
 
         /// <summary>
         ///     Handles the dependency property changed event for <see cref="LayoutTypeProperty"/>.
         /// </summary>
         /// <param name="panel"> The panel. </param>
         /// <param name="e"> Event information. </param>
+        [SuppressMessage("Usage", "CC0057", Justification = "Event handler")]
         private static void OnLayoutTypeChanged(DependencyObject panel, DependencyPropertyChangedEventArgs e)
         {
             var dynamicPanel = (DynamicPanel)panel;

@@ -24,6 +24,16 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <summary>
         ///     Represents a layout similar to WrapPanel in Horizontal orientation
         /// </summary>
-        HorizontalWrapPanel
+        HorizontalWrapPanel,
+
+        /// <summary>
+        ///     Represents a layout that automatically spaces out elements vertically.
+        /// </summary>
+        VerticalAutoSpacePanel,
+
+        /// <summary>
+        ///     Represents a layout that automatically spaces out elements horizontally.
+        /// </summary>
+        HorizontalAutoSpacePanel
     }
 }

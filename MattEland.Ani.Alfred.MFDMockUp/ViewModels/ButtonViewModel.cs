@@ -79,7 +79,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         }
 
         /// <summary>
-        ///     Gets the Visibility of the separator between buttons. This separator should not be rendered between items.
+        ///     Gets the Visibility of the separator between buttons. This separator should not be
+        ///     rendered between items.
         /// </summary>
         /// <value>
         ///     The separator visibility.
@@ -88,7 +89,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         {
             get
             {
-                if (_model.Index + 1 < _parent.Buttons.Count())
+                if (Index + 1 < _parent.Buttons.Count())
                 {
                     return Visibility.Visible;
                 }
@@ -97,6 +98,17 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
                     return Visibility.Collapsed;
                 }
             }
+        }
+
+        /// <summary>
+        ///     Gets the zero-based index of this button within a button strip.
+        /// </summary>
+        /// <value>
+        ///     The index.
+        /// </value>
+        public int Index
+        {
+            get { return _model.Index; }
         }
     }
 }

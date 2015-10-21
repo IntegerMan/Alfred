@@ -2,8 +2,11 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:layout="clr-namespace:MattEland.Ani.Alfred.PresentationAvalon.Layout;assembly=MattEland.Ani.Alfred.PresentationAvalon"
              xmlns:local="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.Controls"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels"
+             d:DataContext="{d:DesignInstance viewModels:MFDButtonStripViewModel}"
              d:DesignHeight="30"
              d:DesignWidth="256"
              mc:Ignorable="d">
@@ -17,29 +20,27 @@
         </Style>
     </UserControl.Resources>
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
 
-        <local:MFDButtonLabel Grid.Column="0"
-                              IsSelected="True"
-                              Style="{StaticResource ButtonLabelGridStyle}"
-                              Text="TEST" />
-        <local:MFDButtonLabel Grid.Column="1"
-                              Style="{StaticResource ButtonLabelGridStyle}"
-                              Text="TEST" />
-        <local:MFDButtonLabel Grid.Column="2"
-                              Style="{StaticResource ButtonLabelGridStyle}"
-                              Text="TEST" />
-        <local:MFDButtonLabel Grid.Column="3"
-                              Style="{StaticResource ButtonLabelGridStyle}"
-                              Text="TEST" />
-        <local:MFDButtonLabel Grid.Column="4"
-                              Style="{StaticResource ButtonLabelGridStyle}"
-                              Text="TEST" />
+        <ItemsControl ItemsSource="{Binding Path=Buttons}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <layout:DynamicPanel LayoutType="HorizontalAutoSpacePanel" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+
+                        <local:MFDButtonLabel IsSelected="{Binding Path=IsSelected}"
+                                              Style="{StaticResource ButtonLabelGridStyle}"
+                                              Text="{Binding Path=Text}" />
+
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+
+
+        </ItemsControl>
     </Grid>
 </UserControl>
