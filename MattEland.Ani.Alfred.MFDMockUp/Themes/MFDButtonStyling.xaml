@@ -7,6 +7,8 @@
                     mc:Ignorable="d">
 
     <system:Double x:Key="MFDButtonSize">20</system:Double>
+    <GridLength x:Key="MFDFrameSize">35</GridLength>
+
     <Brush x:Key="MFDButtonOuterBorderBrush">#3F4447</Brush>
     <Brush x:Key="MFDButtonLineBrush">#FDFDFD</Brush>
 
@@ -125,6 +127,5 @@
         <Setter Property="Content" Value="" />
         <Setter Property="Cursor" Value="Hand" />
     </Style>
-    <GridLength x:Key="MFDFrameSize">30</GridLength>
 
 </ResourceDictionary>

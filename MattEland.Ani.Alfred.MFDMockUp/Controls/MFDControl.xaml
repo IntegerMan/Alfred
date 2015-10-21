@@ -28,16 +28,17 @@
             <Grid Margin="{StaticResource StandardMargin}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="{StaticResource MFDFrameSize}" />
-                    <ColumnDefinition MinWidth="{Binding Path=ScreenWidth}" />
+                    <ColumnDefinition Width="{Binding Path=ScreenWidth}" />
                     <ColumnDefinition Width="{StaticResource MFDFrameSize}" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="{StaticResource MFDFrameSize}" />
-                    <RowDefinition MinHeight="{Binding Path=ScreenHeight}" />
+                    <RowDefinition Height="{Binding Path=ScreenHeight}" />
                     <RowDefinition Height="{StaticResource MFDFrameSize}" />
                 </Grid.RowDefinitions>
 
                 <controls:MFDButtonStrip Grid.Row="0"
+                                         Grid.RowSpan="2"
                                          Grid.Column="1"
                                          HorizontalAlignment="Stretch"
                                          HorizontalContentAlignment="Stretch"
@@ -65,7 +66,7 @@
                         Height="{Binding Path=ScreenHeight}"
                         MinWidth="{Binding Path=ScreenWidth}"
                         MinHeight="{Binding Path=ScreenHeight}"
-                        Margin="{StaticResource StandardMargin}"
+                        Margin="0"
                         Panel.ZIndex="0"
                         Background="{StaticResource MFDScreenBackgroundBrush}"
                         BorderBrush="{StaticResource MFDScreenBorderBrush}"

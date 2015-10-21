@@ -9,8 +9,8 @@
                     mc:Ignorable="d">
 
 
-    <Thickness x:Key="ButtonStripVerticalMargin">0,22</Thickness>
-    <Thickness x:Key="ButtonStripHorizontalMargin">22,0</Thickness>
+    <Thickness x:Key="ButtonStripVerticalMargin">0,14</Thickness>
+    <Thickness x:Key="ButtonStripHorizontalMargin">14,0</Thickness>
 
     <Style x:Key="MFDButtonSeparatorStyle" TargetType="Border">
         <Setter Property="BorderBrush" Value="{StaticResource MFDButtonBorderBrush}" />
