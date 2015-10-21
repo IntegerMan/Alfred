@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 using Assisticant.Collections;
 using Assisticant.Fields;
@@ -23,23 +24,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// <summary>
         ///     Initializes a new instance of the ButtonStripModel class.
         /// </summary>
-        public ButtonStripModel() : this(ButtonStripDock.Top) { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ButtonStripModel"/> class.
-        /// </summary>
         [UsedImplicitly]
-        public ButtonStripModel(ButtonStripDock dock)
-            : this(
-                dock,
-                new List<ButtonModel>
-                {
-                    new ButtonModel("BTN1", true),
-                    new ButtonModel("BTN2"),
-                    new ButtonModel("BTN3"),
-                    new ButtonModel("BTN4"),
-                    new ButtonModel("BTN5")
-                })
+        public ButtonStripModel() : this(ButtonStripDock.Top)
         {
 
         }
@@ -49,22 +35,33 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         ///     docked state.
         /// </summary>
         /// <param name="dock"> The docked state. </param>
-        public ButtonStripModel(ButtonStripDock dock, [CanBeNull] IEnumerable<ButtonModel> buttons = null)
+        public ButtonStripModel(ButtonStripDock dock, [CanBeNull] params ButtonModel[] buttons)
         {
             _dock = new Observable<ButtonStripDock>(dock);
             _buttons = new ObservableList<ButtonModel>();
 
-            if (buttons != null)
+            SetButtons(buttons?.ToArray());
+        }
+
+        /// <summary>
+        ///     Sets the buttons to the specified set of buttons.
+        /// </summary>
+        /// <param name="buttons"> The buttons. </param>
+        public void SetButtons([CanBeNull, ItemNotNull] params ButtonModel[] buttons)
+        {
+            // Ensure we don't get too many buttons
+            _buttons.Clear();
+
+            if (buttons == null) return;
+
+            var index = 0;
+
+            foreach (var button in buttons)
             {
-                var index = 0;
+                // Set it to the appropriate index
+                button.Index = index++;
 
-                foreach (var button in buttons)
-                {
-                    // Set it to the appropriate index
-                    button.Index = index++;
-
-                    _buttons.Add(button);
-                }
+                _buttons.Add(button);
             }
         }
 
@@ -80,6 +77,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             set { _dock.Value = value; }
         }
 
+        /// <summary>
+        ///     The buttons.
+        /// </summary>
         [NotNull]
         private readonly ObservableList<ButtonModel> _buttons;
 

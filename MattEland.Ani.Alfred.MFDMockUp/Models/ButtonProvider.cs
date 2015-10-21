@@ -46,17 +46,61 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             _leftButtons = new Observable<ButtonStripModel>(new ButtonStripModel(ButtonStripDock.Left));
             _rightButtons = new Observable<ButtonStripModel>(new ButtonStripModel(ButtonStripDock.Right));
 
+            // Ensure buttons are up to date
+            UpdateButtons();
         }
 
+        /// <summary>
+        ///     Updates the buttons.
+        /// </summary>
+        public void UpdateButtons()
+        {
+            TopButtons.SetButtons(new ButtonModel("SYS", true),
+                                  new ButtonModel("LOG"),
+                                  new ButtonModel("PERF"),
+                                  new ButtonModel("ALFR"),
+                                  new ButtonModel("OPTS"));
+
+            BottomButtons.SetButtons(new ButtonModel("WTHR"),
+                                     new ButtonModel("SRCH"),
+                                     new ButtonModel("MAP"),
+                                     new ButtonModel("TRFC"),
+                                     new ButtonModel("NEWS"));
+        }
+
+        /// <summary>
+        ///     Gets the left buttons.
+        /// </summary>
+        /// <value>
+        ///     The left buttons.
+        /// </value>
         [NotNull]
         public ButtonStripModel LeftButtons { get { return _leftButtons; } }
 
+        /// <summary>
+        ///     Gets the right buttons.
+        /// </summary>
+        /// <value>
+        ///     The right buttons.
+        /// </value>
         [NotNull]
         public ButtonStripModel RightButtons { get { return _rightButtons; } }
 
+        /// <summary>
+        ///     Gets the top buttons.
+        /// </summary>
+        /// <value>
+        ///     The top buttons.
+        /// </value>
         [NotNull]
         public ButtonStripModel TopButtons { get { return _topButtons; } }
 
+        /// <summary>
+        ///     Gets the bottom buttons.
+        /// </summary>
+        /// <value>
+        ///     The bottom buttons.
+        /// </value>
         [NotNull]
         public ButtonStripModel BottomButtons { get { return _bottomButtons; } }
     }
