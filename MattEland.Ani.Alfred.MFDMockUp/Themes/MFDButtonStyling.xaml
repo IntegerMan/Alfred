@@ -3,8 +3,10 @@
                     xmlns:controls="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.Controls"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib"
                     mc:Ignorable="d">
 
+    <system:Double x:Key="MFDButtonSize">20</system:Double>
     <Brush x:Key="MFDButtonOuterBorderBrush">#3F4447</Brush>
     <Brush x:Key="MFDButtonLineBrush">#FDFDFD</Brush>
 
@@ -42,8 +44,8 @@
 
         <Grid SnapsToDevicePixels="True">
             <Border x:Name="outerBorder"
-                    Width="35"
-                    Height="35"
+                    Width="{StaticResource MFDButtonSize}"
+                    Height="{StaticResource MFDButtonSize}"
                     BorderBrush="{StaticResource MFDButtonOuterBorderBrush}"
                     BorderThickness="0.5"
                     CornerRadius="1">
@@ -114,8 +116,8 @@
 
     <Style x:Key="MFDButtonStyle" TargetType="{x:Type controls:MFDButton}">
         <Setter Property="Margin" Value="2" />
-        <Setter Property="Width" Value="35" />
-        <Setter Property="Height" Value="35" />
+        <Setter Property="Width" Value="{StaticResource MFDButtonSize}" />
+        <Setter Property="Height" Value="{StaticResource MFDButtonSize}" />
         <Setter Property="Foreground" Value="{StaticResource MFDButtonInnerBorderBrush}" />
         <Setter Property="Background" Value="{StaticResource MFDButtonBackgroundBrush}" />
         <Setter Property="BorderBrush" Value="{StaticResource MFDButtonBorderBrush}" />
@@ -124,5 +126,6 @@
         <Setter Property="Content" Value="" />
         <Setter Property="Cursor" Value="Hand" />
     </Style>
+    <GridLength x:Key="MFDFrameSize">30</GridLength>
 
 </ResourceDictionary>

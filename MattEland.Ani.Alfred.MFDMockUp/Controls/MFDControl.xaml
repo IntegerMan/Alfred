@@ -27,18 +27,20 @@
 
             <Grid Margin="{StaticResource StandardMargin}">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="{StaticResource MFDFrameSize}" />
                     <ColumnDefinition MinWidth="{Binding Path=ScreenWidth}" />
-                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="{StaticResource MFDFrameSize}" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="40" />
+                    <RowDefinition Height="{StaticResource MFDFrameSize}" />
                     <RowDefinition MinHeight="{Binding Path=ScreenHeight}" />
-                    <RowDefinition Height="40" />
+                    <RowDefinition Height="{StaticResource MFDFrameSize}" />
                 </Grid.RowDefinitions>
 
                 <controls:MFDButtonStrip Grid.Row="0"
                                          Grid.Column="1"
+                                         HorizontalAlignment="Stretch"
+                                         HorizontalContentAlignment="Stretch"
                                          Panel.ZIndex="1"
                                          DataContext="{Binding Path=TopButtons}"
                                          DockDirection="Top" />
@@ -59,14 +61,10 @@
 
                 <Border Grid.Row="1"
                         Grid.Column="1"
-                        Width="{Binding Path=ScreenWidth,
-                                        FallbackValue=256}"
-                        Height="{Binding Path=ScreenHeight,
-                                         FallbackValue=256}"
-                        MinWidth="{Binding Path=ScreenWidth,
-                                           FallbackValue=256}"
-                        MinHeight="{Binding Path=ScreenHeight,
-                                            FallbackValue=256}"
+                        Width="{Binding Path=ScreenWidth}"
+                        Height="{Binding Path=ScreenHeight}"
+                        MinWidth="{Binding Path=ScreenWidth}"
+                        MinHeight="{Binding Path=ScreenHeight}"
                         Margin="{StaticResource StandardMargin}"
                         Panel.ZIndex="0"
                         Background="{StaticResource MFDScreenBackgroundBrush}"

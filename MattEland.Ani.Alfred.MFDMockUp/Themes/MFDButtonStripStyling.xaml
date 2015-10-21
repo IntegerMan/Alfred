@@ -2,6 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:controls="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.Controls"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:layout="clr-namespace:MattEland.Ani.Alfred.PresentationAvalon.Layout;assembly=MattEland.Ani.Alfred.PresentationAvalon"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                     xmlns:viewModels="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels"
                     mc:Ignorable="d">
@@ -18,42 +19,40 @@
     <ControlTemplate x:Key="ButtonStripControlTemplate" TargetType="{x:Type controls:MFDButtonStrip}">
 
         <!--  Assume Top orientation for template. This entire panel will be rotated as needed in Triggers.  -->
-        <StackPanel x:Name="pnlButtons"
-                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                    Orientation="Horizontal"
-                    d:DataContext="{d:DesignInstance viewModels:MFDButtonStripViewModel}">
+        <Grid x:Name="pnlButtons"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch"
+              d:DataContext="{d:DesignInstance viewModels:MFDButtonStripViewModel}">
 
             <ItemsControl ItemsSource="{Binding Buttons}">
 
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal" />
+                        <layout:DynamicPanel LayoutType="HorizontalAutoSpacePanel" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
 
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
+                        <controls:MFDButton Style="{StaticResource MFDButtonStyle}" ToolTip="{Binding Path=ToolTipText}" />
 
-                            <controls:MFDButton Style="{StaticResource MFDButtonStyle}" ToolTip="{Binding Path=ToolTipText}" />
+                        <!--
+                        <Border Style="{StaticResource MFDButtonSeparatorStyle}" Visibility="{Binding Path=SeparatorVisibility}" />
+                        -->
 
-                            <Border Style="{StaticResource MFDButtonSeparatorStyle}" Visibility="{Binding Path=SeparatorVisibility}" />
-
-                        </StackPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
 
             </ItemsControl>
 
-        </StackPanel>
+        </Grid>
 
         <ControlTemplate.Triggers>
 
             <!--  By default we assume that DockDirection is top and use that template by default  -->
             <Trigger Property="DockDirection" Value="Top">
                 <Setter TargetName="pnlButtons" Property="LayoutTransform" Value="{x:Null}" />
-                <Setter TargetName="pnlButtons" Property="HorizontalAlignment" Value="Center" />
+                <Setter TargetName="pnlButtons" Property="HorizontalAlignment" Value="Stretch" />
                 <Setter TargetName="pnlButtons" Property="VerticalAlignment" Value="Top" />
             </Trigger>
 
@@ -65,7 +64,7 @@
                     </Setter.Value>
                 </Setter>
                 <Setter TargetName="pnlButtons" Property="HorizontalAlignment" Value="Left" />
-                <Setter TargetName="pnlButtons" Property="VerticalAlignment" Value="Center" />
+                <Setter TargetName="pnlButtons" Property="VerticalAlignment" Value="Stretch" />
             </Trigger>
 
             <Trigger Property="DockDirection" Value="Right">
@@ -75,7 +74,7 @@
                     </Setter.Value>
                 </Setter>
                 <Setter TargetName="pnlButtons" Property="HorizontalAlignment" Value="Right" />
-                <Setter TargetName="pnlButtons" Property="VerticalAlignment" Value="Center" />
+                <Setter TargetName="pnlButtons" Property="VerticalAlignment" Value="Stretch" />
             </Trigger>
 
             <Trigger Property="DockDirection" Value="Bottom">
@@ -84,7 +83,7 @@
                         <RotateTransform Angle="180" />
                     </Setter.Value>
                 </Setter>
-                <Setter TargetName="pnlButtons" Property="HorizontalAlignment" Value="Center" />
+                <Setter TargetName="pnlButtons" Property="HorizontalAlignment" Value="Stretch" />
                 <Setter TargetName="pnlButtons" Property="VerticalAlignment" Value="Bottom" />
             </Trigger>
 
@@ -96,7 +95,7 @@
     <Style TargetType="{x:Type controls:MFDButtonStrip}">
         <Setter Property="Template" Value="{StaticResource ButtonStripControlTemplate}" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
-        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Stretch" />
         <Setter Property="VerticalContentAlignment" Value="Stretch" />
     </Style>
