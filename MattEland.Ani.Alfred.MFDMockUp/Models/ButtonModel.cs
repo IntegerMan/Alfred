@@ -7,7 +7,6 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
 using System.Diagnostics;
 
 using Assisticant.Fields;
@@ -19,11 +18,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
     /// <summary>
     ///     A model for buttons.
     /// </summary>
-    public class ButtonModel
+    public sealed class ButtonModel
     {
         /// <summary>
         ///     Initializes a new instance of the ButtonModel class without a label.
         /// </summary>
+        [UsedImplicitly]
         public ButtonModel() : this(string.Empty)
         {
 
@@ -33,7 +33,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         ///     Initializes a new instance of the ButtonModel class.
         /// </summary>
         /// <param name="text"> The text. </param>
-        public ButtonModel(string text) : this(text, false)
+        public ButtonModel(string text) : this(text, false, 0)
         {
         }
 
@@ -42,10 +42,21 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// </summary>
         /// <param name="text"> The text. </param>
         /// <param name="isSelected"> true if this instance is selected. </param>
-        public ButtonModel([CanBeNull] string text, bool isSelected)
+        public ButtonModel(string text, bool isSelected) : this(text, isSelected, 0)
+        {
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the ButtonModel class.
+        /// </summary>
+        /// <param name="text"> The text. </param>
+        /// <param name="isSelected"> true if this instance is selected. </param>
+        /// <param name="index"> The button's index. </param>
+        public ButtonModel([CanBeNull] string text, bool isSelected, int index)
         {
             _text = new Observable<string>(text);
             _isSelected = new Observable<bool>(isSelected);
+            _index = new Observable<int>(index);
         }
 
         [NotNull]
@@ -53,6 +64,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
 
         [NotNull]
         private readonly Observable<bool> _isSelected;
+
+        [NotNull]
+        private readonly Observable<int> _index;
 
         /// <summary>
         ///     Sets the text of the button
@@ -82,6 +96,18 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             get
             { return _isSelected; }
             set { _isSelected.Value = value; }
+        }
+
+        /// <summary>
+        ///     Gets or sets the zero-based index of this button within a button strip.
+        /// </summary>
+        /// <value>
+        ///     The button's index.
+        /// </value>
+        public int Index
+        {
+            get { return _index; }
+            set { _index.Value = value; }
         }
     }
 }

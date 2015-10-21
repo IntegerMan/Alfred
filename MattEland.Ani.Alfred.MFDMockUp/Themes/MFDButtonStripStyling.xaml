@@ -35,11 +35,12 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
+
                             <Button Style="{StaticResource MFDButtonStyle}" ToolTip="{Binding Path=Text}" />
 
-                            <!-- TODO: Add separator
-                        <Button Style="{StaticResource MFDButtonStyle}" />
-                            -->
+
+                            <Border Style="{StaticResource MFDButtonSeparatorStyle}" Visibility="{Binding Path=SeparatorVisibility}" />
+
                         </StackPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

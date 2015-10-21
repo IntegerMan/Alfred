@@ -7,6 +7,9 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System.Linq;
+using System.Windows;
+
 using MattEland.Ani.Alfred.MFDMockUp.Models;
 using MattEland.Common.Annotations;
 
@@ -16,18 +19,22 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
     ///     A view model for the <see cref="ButtonModel"/> model used for presenting a MFD button and
     ///     its associated label.
     /// </summary>
-    public class ButtonViewModel
+    public sealed class ButtonViewModel
     {
         [NotNull]
         private readonly ButtonModel _model;
+
+        [NotNull]
+        private readonly MFDButtonStripViewModel _parent;
 
         /// <summary>
         ///     Initializes a new instance of the ButtonViewModel class.
         /// </summary>
         /// <param name="model"> The model. </param>
-        public ButtonViewModel([NotNull] ButtonModel model)
+        public ButtonViewModel([NotNull] ButtonModel model, [NotNull] MFDButtonStripViewModel parent)
         {
             _model = model;
+            _parent = parent;
         }
 
         /// <summary>
@@ -57,6 +64,21 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
             set
             {
                 _model.IsSelected = value;
+            }
+        }
+
+        public Visibility SeparatorVisibility
+        {
+            get
+            {
+                if (_model.Index + 1 < _parent.Buttons.Count())
+                {
+                    return Visibility.Visible;
+                }
+                else
+                {
+                    return Visibility.Collapsed;
+                }
             }
         }
     }

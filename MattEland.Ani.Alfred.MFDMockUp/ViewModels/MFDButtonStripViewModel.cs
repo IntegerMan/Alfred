@@ -46,7 +46,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         /// </value>
         public IEnumerable<ButtonViewModel> Buttons
         {
-            get { return _model.Buttons.Select(b => new ButtonViewModel(b)); }
+            get { return _model.Buttons.Select(b => new ButtonViewModel(b, this)); }
         }
     }
 }

@@ -34,7 +34,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
                 dock,
                 new List<ButtonModel>
                 {
-                    new ButtonModel("BTN1"),
+                    new ButtonModel("BTN1", true),
                     new ButtonModel("BTN2"),
                     new ButtonModel("BTN3"),
                     new ButtonModel("BTN4"),
@@ -56,8 +56,13 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
 
             if (buttons != null)
             {
+                var index = 0;
+
                 foreach (var button in buttons)
                 {
+                    // Set it to the appropriate index
+                    button.Index = index++;
+
                     _buttons.Add(button);
                 }
             }
@@ -78,6 +83,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         [NotNull]
         private readonly ObservableList<ButtonModel> _buttons;
 
+        /// <summary>
+        ///     Gets the buttons within this button strip.
+        /// </summary>
+        /// <value>
+        ///     The buttons.
+        /// </value>
         public IEnumerable<ButtonModel> Buttons
         {
             get { return _buttons; }
