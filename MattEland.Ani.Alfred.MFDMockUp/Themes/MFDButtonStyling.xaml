@@ -59,10 +59,10 @@
                         CornerRadius="0">
 
                     <Border x:Name="innerBorder"
-                            Margin="3"
+                            Margin="2"
                             BorderBrush="{StaticResource MFDButtonInnerBorderBrush}"
                             BorderThickness="1"
-                            CornerRadius="2"
+                            CornerRadius="1"
                             Padding="2">
 
                         <ContentPresenter x:Name="contentPresenter"
