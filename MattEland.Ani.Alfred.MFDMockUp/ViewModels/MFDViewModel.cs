@@ -18,6 +18,46 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
     public sealed class MFDViewModel
     {
         /// <summary>
+        ///     The MFD model backing store.
+        /// </summary>
+        [NotNull]
+        private readonly MultifunctionDisplay _model;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MFDViewModel"/> class.
+        /// </summary>
+        /// <param name="mfd">The multifunction display.</param>
+        public MFDViewModel([NotNull] MultifunctionDisplay mfd)
+        {
+            _model = mfd;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// </summary>
+        public MFDViewModel() : this(new MultifunctionDisplay())
+        {
+        }
+
+        /// <summary>
+        ///     Gets the bottom buttons.
+        /// </summary>
+        /// <value>
+        ///     The bottom buttons.
+        /// </value>
+        [NotNull]
+        public MFDButtonStripViewModel BottomButtons
+        {
+            get { return new MFDButtonStripViewModel(ButtonProvider.BottomButtons); }
+        }
+
+        [NotNull]
+        public MFDButtonStripViewModel LeftButtons
+        {
+            get { return new MFDButtonStripViewModel(ButtonProvider.LeftButtons); }
+        }
+
+        /// <summary>
         ///     Gets the <see cref="MultifunctionDisplay"/> model backing this view model.
         /// </summary>
         /// <value>
@@ -46,29 +86,28 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         {
             get { return Model.Name; }
         }
-
-        [NotNull]
-        public MFDButtonStripViewModel LeftButtons
-        {
-            get { return new MFDButtonStripViewModel(Model.LeftButtons); }
-        }
-
+        /// <summary>
+        ///     Gets the right buttons.
+        /// </summary>
+        /// <value>
+        ///     The right buttons.
+        /// </value>
         [NotNull]
         public MFDButtonStripViewModel RightButtons
         {
-            get { return new MFDButtonStripViewModel(Model.RightButtons); }
+            get { return new MFDButtonStripViewModel(ButtonProvider.RightButtons); }
         }
 
-        [NotNull]
-        public MFDButtonStripViewModel TopButtons
+        /// <summary>
+        ///     Gets or sets the height of the screen.
+        /// </summary>
+        /// <value>
+        ///     The height of the screen.
+        /// </value>
+        public double ScreenHeight
         {
-            get { return new MFDButtonStripViewModel(Model.TopButtons); }
-        }
-
-        [NotNull]
-        public MFDButtonStripViewModel BottomButtons
-        {
-            get { return new MFDButtonStripViewModel(Model.BottomButtons); }
+            get { return Model.ScreenHeight; }
+            set { Model.ScreenHeight = value; }
         }
 
         /// <summary>
@@ -83,37 +122,39 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
             set { Model.ScreenWidth = value; }
         }
 
-        public double ScreenHeight
+        /// <summary>
+        ///     Gets the top buttons.
+        /// </summary>
+        /// <value>
+        ///     The top buttons.
+        /// </value>
+        [NotNull]
+        public MFDButtonStripViewModel TopButtons
         {
-            get { return Model.ScreenHeight; }
-            set { Model.ScreenHeight = value; }
+            get { return new MFDButtonStripViewModel(ButtonProvider.TopButtons); }
         }
 
+        /// <summary>
+        ///     Gets the current view.
+        /// </summary>
+        /// <value>
+        ///     The view.
+        /// </value>
         public object View
         {
             get { return Model.CurrentView; }
         }
 
         /// <summary>
-        ///     The MFD model backing store.
+        ///     Gets the button provider.
         /// </summary>
+        /// <value>
+        ///     The button provider.
+        /// </value>
         [NotNull]
-        private readonly MultifunctionDisplay _model;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MFDViewModel"/> class.
-        /// </summary>
-        /// <param name="mfd">The multifunction display.</param>
-        public MFDViewModel([NotNull] MultifunctionDisplay mfd)
+        private ButtonProvider ButtonProvider
         {
-            _model = mfd;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
-        /// </summary>
-        public MFDViewModel() : this(new MultifunctionDisplay())
-        {
+            get { return Model.ButtonProvider; }
         }
     }
 

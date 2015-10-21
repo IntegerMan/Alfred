@@ -16,26 +16,26 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// </summary>
         public const double DefaultScreenSize = 256;
 
+        /// <summary>
+        ///     The button provider.
+        /// </summary>
         [NotNull]
-        private readonly Observable<ButtonStripModel> _bottomButtons;
+        private readonly Observable<ButtonProvider> _buttonProvider;
 
+        /// <summary>
+        ///     The current view.
+        /// </summary>
         [NotNull]
-        private readonly Observable<ButtonStripModel> _leftButtons;
+        private readonly Observable<Object> _currentView;
 
         [NotNull]
         private readonly Observable<string> _name;
-
-        [NotNull]
-        private readonly Observable<ButtonStripModel> _rightButtons;
 
         [NotNull]
         private readonly Observable<double> _screenHeight;
 
         [NotNull]
         private readonly Observable<double> _screenWidth;
-
-        [NotNull]
-        private readonly Observable<ButtonStripModel> _topButtons;
 
         public MultifunctionDisplay()
         {
@@ -47,36 +47,29 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             _screenWidth = new Observable<double>(DefaultScreenSize);
             _screenHeight = new Observable<double>(DefaultScreenSize);
 
-            _topButtons = new Observable<ButtonStripModel>(new ButtonStripModel(ButtonStripDock.Top));
-            _bottomButtons = new Observable<ButtonStripModel>(new ButtonStripModel(ButtonStripDock.Bottom));
-            _leftButtons = new Observable<ButtonStripModel>(new ButtonStripModel(ButtonStripDock.Left));
-            _rightButtons = new Observable<ButtonStripModel>(new ButtonStripModel(ButtonStripDock.Right));
+            _buttonProvider = new Observable<ButtonProvider>(new ButtonProvider(this));
+
         }
 
         /// <summary>
-        ///     Gets or sets the bottom buttons.
+        ///     Gets the button provider associated with this display.
         /// </summary>
         /// <value>
-        ///     The bottom buttons.
+        ///     The button provider.
         /// </value>
         [NotNull]
-        public ButtonStripModel BottomButtons
-        {
-            get { return _bottomButtons; }
-            set { _bottomButtons.Value = value; }
-        }
+        public ButtonProvider ButtonProvider { get { return _buttonProvider; } }
 
         /// <summary>
-        ///     Gets or sets the left buttons.
+        ///     Gets or sets the current view.
         /// </summary>
         /// <value>
-        ///     The left buttons.
+        ///     The current view.
         /// </value>
-        [NotNull]
-        public ButtonStripModel LeftButtons
+        public object CurrentView
         {
-            get { return _leftButtons; }
-            set { _leftButtons.Value = value; }
+            get { return _currentView; }
+            set { _currentView.Value = value; }
         }
 
         /// <summary>
@@ -91,13 +84,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         {
             get { return _name; }
             set { _name.Value = value; }
-        }
-
-        [NotNull]
-        public ButtonStripModel RightButtons
-        {
-            get { return _rightButtons; }
-            set { _rightButtons.Value = value; }
         }
 
         /// <summary>
@@ -124,29 +110,5 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             set { _screenWidth.Value = value; }
         }
 
-        [NotNull]
-        public ButtonStripModel TopButtons
-        {
-            get { return _topButtons; }
-            set { _topButtons.Value = value; }
-        }
-
-        /// <summary>
-        ///     The current view.
-        /// </summary>
-        [NotNull]
-        private readonly Observable<Object> _currentView;
-
-        /// <summary>
-        ///     Gets or sets the current view.
-        /// </summary>
-        /// <value>
-        ///     The current view.
-        /// </value>
-        public object CurrentView
-        {
-            get { return _currentView; }
-            set { _currentView.Value = value; }
-        }
     }
 }

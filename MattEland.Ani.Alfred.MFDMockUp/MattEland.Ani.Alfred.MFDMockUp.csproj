@@ -72,6 +72,7 @@
     </Compile>
     <Compile Include="Controls\MFDButtonStrip.cs" />
     <Compile Include="Models\ButtonModel.cs" />
+    <Compile Include="Models\ButtonProvider.cs" />
     <Compile Include="Models\ButtonStripDock.cs" />
     <Compile Include="Models\ButtonStripModel.cs" />
     <Compile Include="Models\MFDSelection.cs" />
