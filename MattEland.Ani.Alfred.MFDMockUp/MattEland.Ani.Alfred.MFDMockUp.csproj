@@ -65,6 +65,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\MFDButton.cs" />
     <Compile Include="Controls\MFDButtonLabel.cs" />
     <Compile Include="Controls\MFDButtonLabelStripControl.xaml.cs">
       <DependentUpon>MFDButtonLabelStripControl.xaml</DependentUpon>
