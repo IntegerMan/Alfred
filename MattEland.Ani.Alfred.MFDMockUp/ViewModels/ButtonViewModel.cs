@@ -50,6 +50,17 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         }
 
         /// <summary>
+        ///     Gets the tool tip text to display when the mouse is over the button.
+        /// </summary>
+        /// <value>
+        ///     The tool tip text.
+        /// </value>
+        public string ToolTipText
+        {
+            get { return _model.Text; }
+        }
+
+        /// <summary>
         ///     Gets or sets a value indicating whether this button is selected.
         /// </summary>
         /// <value>
@@ -67,6 +78,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
             }
         }
 
+        /// <summary>
+        ///     Gets the Visibility of the separator between buttons. This separator should not be rendered between items.
+        /// </summary>
+        /// <value>
+        ///     The separator visibility.
+        /// </value>
         public Visibility SeparatorVisibility
         {
             get

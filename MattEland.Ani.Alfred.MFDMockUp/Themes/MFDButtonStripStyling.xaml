@@ -36,8 +36,7 @@
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
 
-                            <Button Style="{StaticResource MFDButtonStyle}" ToolTip="{Binding Path=Text}" />
-
+                            <Button Style="{StaticResource MFDButtonStyle}" ToolTip="{Binding Path=ToolTipText}" />
 
                             <Border Style="{StaticResource MFDButtonSeparatorStyle}" Visibility="{Binding Path=SeparatorVisibility}" />
 
