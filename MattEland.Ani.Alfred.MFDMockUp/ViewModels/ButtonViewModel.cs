@@ -11,6 +11,7 @@ using System.Linq;
 using System.Windows;
 
 using MattEland.Ani.Alfred.MFDMockUp.Models;
+using MattEland.Common;
 using MattEland.Common.Annotations;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
@@ -57,7 +58,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         /// </value>
         public string ToolTipText
         {
-            get { return _model.Text; }
+            get { return _model.Text.HasText() ? _model.Text : "[No Action]"; }
         }
 
         /// <summary>
