@@ -11,7 +11,7 @@ using MattEland.Common.Annotations;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
 {
-    public class MainViewModel
+    public sealed class MainViewModel
     {
 
         private readonly MFDSelection _selection;

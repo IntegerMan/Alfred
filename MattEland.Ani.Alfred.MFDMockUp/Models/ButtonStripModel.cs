@@ -93,5 +93,21 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         {
             get { return _buttons; }
         }
+
+        /// <summary>
+        ///     Sets the collection to a group of empty buttons.
+        /// </summary>
+        /// <param name="numButtons"> The number of buttons to populate. </param>
+        public void SetEmptyButtons(int numButtons)
+        {
+            var list = new List<ButtonModel>(numButtons);
+
+            for (int i = 0; i < numButtons; i++)
+            {
+                list.Add(new ButtonModel());
+            }
+
+            SetButtons(list.ToArray());
+        }
     }
 }

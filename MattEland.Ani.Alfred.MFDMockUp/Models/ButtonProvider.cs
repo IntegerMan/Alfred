@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls.Primitives;
 
 using Assisticant.Fields;
 
@@ -55,17 +56,24 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// </summary>
         public void UpdateButtons()
         {
+            // Top and bottom buttons relate to views
+
             TopButtons.SetButtons(new ButtonModel("SYS", true),
+                                  new ButtonModel("ALFR"),
                                   new ButtonModel("LOG"),
                                   new ButtonModel("PERF"),
-                                  new ButtonModel("ALFR"),
-                                  new ButtonModel("OPTS"));
+                                  new ButtonModel("NET"));
 
             BottomButtons.SetButtons(new ButtonModel("WTHR"),
                                      new ButtonModel("SRCH"),
                                      new ButtonModel("MAP"),
-                                     new ButtonModel("TRFC"),
-                                     new ButtonModel("NEWS"));
+                                     new ButtonModel("FEED"),
+                                     new ButtonModel("OPTS"));
+
+            // Left and right buttons will be based off of the current view
+
+            LeftButtons.SetEmptyButtons(5);
+            RightButtons.SetEmptyButtons(5);
         }
 
         /// <summary>
