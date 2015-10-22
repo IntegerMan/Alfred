@@ -10,6 +10,7 @@
 using System.Windows;
 
 using MattEland.Ani.Alfred.MFDMockUp.Models;
+using MattEland.Ani.Alfred.PresentationCommon.Helpers;
 using MattEland.Common.Annotations;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
@@ -17,6 +18,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
     /// <summary>
     ///     A separator view model representing a separator in the button list
     /// </summary>
+    [ViewModelFor(typeof(SeparatorModel))]
     public class SeparatorViewModel
     {
         /// <summary>

@@ -11,6 +11,7 @@ using System.Linq;
 using System.Windows;
 
 using MattEland.Ani.Alfred.MFDMockUp.Models;
+using MattEland.Ani.Alfred.PresentationCommon.Helpers;
 using MattEland.Common;
 using MattEland.Common.Annotations;
 
@@ -20,6 +21,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
     ///     A view model for the <see cref="ButtonModel"/> model used for presenting a MFD button and
     ///     its associated label.
     /// </summary>
+    [ViewModelFor(typeof(ButtonModel))]
     public sealed class ButtonViewModel
     {
         [NotNull]

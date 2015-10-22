@@ -76,7 +76,7 @@
                     <Grid>
 
                         <Grid x:Name="pnlView" Panel.ZIndex="0">
-                            <views:DefaultMFDView />
+                            <views:MFDBootupScreenView />
                             <!-- TODO: This is buggy. Make it happen.
                         <ContentControl Width="{Binding Path=ScreenWidth}"
                                         Height="{Binding Path=ScreenHeight}"

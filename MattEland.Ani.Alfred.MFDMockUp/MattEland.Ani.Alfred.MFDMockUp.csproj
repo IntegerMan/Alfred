@@ -71,10 +71,12 @@
       <DependentUpon>MFDButtonLabelStripControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MFDButtonStrip.cs" />
+    <Compile Include="Models\BootupScreenModel.cs" />
     <Compile Include="Models\ButtonModel.cs" />
     <Compile Include="Models\ButtonProvider.cs" />
     <Compile Include="Models\ButtonStripDock.cs" />
     <Compile Include="Models\ButtonStripModel.cs" />
+    <Compile Include="Models\ScreenModel.cs" />
     <Compile Include="Models\MFDSelection.cs" />
     <Compile Include="Models\SeparatorModel.cs" />
     <Compile Include="Models\Workspace.cs" />
@@ -85,6 +87,9 @@
     <Compile Include="ViewModels\MFDViewModel.cs" />
     <Compile Include="ViewModels\SeparatorViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
+    <Compile Include="Views\MFDBootupScreenView.xaml.cs">
+      <DependentUpon>MFDBootupScreenView.xaml</DependentUpon>
+    </Compile>
     <Page Include="Controls\MFDButtonLabelStripControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -97,6 +102,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Themes\MFDCommonResources.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Themes\MFDViewStyling.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -105,7 +114,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\DefaultMFDView.xaml">
+    <Page Include="Views\MFDVersionInfoScreenView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -117,8 +126,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Views\DefaultMFDView.xaml.cs">
-      <DependentUpon>DefaultMFDView.xaml</DependentUpon>
+    <Compile Include="Views\MFDVersionInfoScreenView.xaml.cs">
+      <DependentUpon>MFDVersionInfoScreenView.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -131,6 +140,10 @@
     <Page Include="Controls\MFDControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MFDBootupScreenView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>

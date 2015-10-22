@@ -9,12 +9,17 @@
 using MattEland.Ani.Alfred.MFDMockUp.Models;
 using MattEland.Common.Annotations;
 using System;
+using System.Diagnostics;
+
+using MattEland.Ani.Alfred.PresentationCommon.Helpers;
+
 namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
 {
     /// <summary>
     ///     A ViewModel for a <see cref="MultifunctionDisplay"/>.
     /// </summary>
     [PublicAPI]
+    [ViewModelFor(typeof(MultifunctionDisplay))]
     public sealed class MFDViewModel
     {
         /// <summary>
@@ -24,19 +29,20 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         private readonly MultifunctionDisplay _model;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MFDViewModel"/> class.
+        ///     The view model locator.
         /// </summary>
-        /// <param name="mfd">The multifunction display.</param>
-        public MFDViewModel([NotNull] MultifunctionDisplay mfd)
-        {
-            _model = mfd;
-        }
+        [NotNull]
+        private readonly ViewModelLocator _locator;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        ///     Initializes a new instance of the <see cref="MFDViewModel"/> class.
         /// </summary>
-        public MFDViewModel() : this(new MultifunctionDisplay())
+        /// <param name="locator"> The view model locator. </param>
+        /// <param name="mfd"> The multifunction display. </param>
+        public MFDViewModel([NotNull] ViewModelLocator locator, [NotNull] MultifunctionDisplay mfd)
         {
+            _model = mfd;
+            _locator = locator;
         }
 
         /// <summary>
@@ -142,7 +148,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         /// </value>
         public object View
         {
-            get { return Model.CurrentView; }
+            get { return Locator.ViewFor(Model.CurrentScreen); }
         }
 
         /// <summary>
@@ -156,6 +162,18 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         {
             get { return Model.ButtonProvider; }
         }
+
+        /// <summary>
+        ///     The view model locator.
+        /// </summary>
+        [NotNull]
+        public ViewModelLocator Locator
+        {
+            [DebuggerStepThrough]
+            get
+            { return _locator; }
+        }
+
     }
 
 }

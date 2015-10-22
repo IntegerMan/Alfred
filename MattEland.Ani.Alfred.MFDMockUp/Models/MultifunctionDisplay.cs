@@ -26,7 +26,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         ///     The current view.
         /// </summary>
         [NotNull]
-        private readonly Observable<Object> _currentView;
+        private readonly Observable<ScreenModel> _currentScreen;
 
         [NotNull]
         private readonly Observable<string> _name;
@@ -42,7 +42,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             _name = new Observable<string>("<New MFD>");
 
             // TODO: Don't do this. This is a Model creating a View.
-            _currentView = new Observable<object>(new DefaultMFDView());
+            _currentScreen = new Observable<ScreenModel>(new BootupScreenModel());
 
             _screenWidth = new Observable<double>(DefaultScreenSize);
             _screenHeight = new Observable<double>(DefaultScreenSize);
@@ -61,15 +61,15 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         public ButtonProvider ButtonProvider { get { return _buttonProvider; } }
 
         /// <summary>
-        ///     Gets or sets the current view.
+        ///     Gets or sets the current screen.
         /// </summary>
         /// <value>
-        ///     The current view.
+        ///     The current screen.
         /// </value>
-        public object CurrentView
+        public ScreenModel CurrentScreen
         {
-            get { return _currentView; }
-            set { _currentView.Value = value; }
+            get { return _currentScreen; }
+            set { _currentScreen.Value = value; }
         }
 
         /// <summary>
@@ -111,4 +111,5 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         }
 
     }
+
 }

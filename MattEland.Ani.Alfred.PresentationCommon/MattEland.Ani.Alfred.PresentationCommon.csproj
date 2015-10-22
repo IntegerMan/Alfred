@@ -102,6 +102,7 @@
     <Compile Include="Layout\StackPanelLayoutHelperBase.cs" />
     <Compile Include="Layout\WrapPanelLayoutHelperBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Helpers\ViewModelForAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MattEland.Ani.Alfred.Core\MattEland.Ani.Alfred.Core.csproj">

@@ -6,9 +6,6 @@
                     xmlns:system="clr-namespace:System;assembly=mscorlib"
                     mc:Ignorable="d">
 
-    <system:Double x:Key="MFDButtonSize">20</system:Double>
-    <GridLength x:Key="MFDFrameSize">35</GridLength>
-
     <Brush x:Key="MFDButtonOuterBorderBrush">#3F4447</Brush>
     <Brush x:Key="MFDButtonLineBrush">#FDFDFD</Brush>
 
@@ -24,10 +21,6 @@
     <Brush x:Key="MFDMouseOverInnerBorderBrush">#EBEFF2</Brush>
     <Brush x:Key="MFDMouseOverBackgroundBrush">#A6ABAE</Brush>
 
-    <!--  Common Brushes for rendering the screen in a designer. The actual views should override these  -->
-    <Brush x:Key="MFDScreenBackgroundBrush">#060105</Brush>
-    <Brush x:Key="MFDScreenBorderBrush">#3F3F46</Brush>
-    <Brush x:Key="MFDScreenForegroundBrush">#2BDD3A</Brush>
 
     <!--  Brushes for the background of the MFD panel  -->
     <Brush x:Key="MFDPanelBackgroundBrush">#27282A</Brush>

@@ -1,0 +1,13 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <!--  Common Brushes for rendering the screen in a designer. The actual views should override these  -->
+    <Brush x:Key="MFDScreenBackgroundBrush">#060105</Brush>
+    <Brush x:Key="MFDScreenBorderBrush">#3F3F46</Brush>
+    <Brush x:Key="MFDScreenForegroundBrush">#2BDD3A</Brush>
+
+    <system:Double x:Key="MFDButtonSize">20</system:Double>
+    <GridLength x:Key="MFDFrameSize">35</GridLength>
+
+</ResourceDictionary>

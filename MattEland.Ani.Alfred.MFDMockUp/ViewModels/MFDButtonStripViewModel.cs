@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 
 using MattEland.Ani.Alfred.MFDMockUp.Models;
+using MattEland.Ani.Alfred.PresentationCommon.Helpers;
 using MattEland.Common.Annotations;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
@@ -14,6 +15,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
     ///     A ViewModel for a multifunction display's button strip bordering one side of the screen.
     ///     This class cannot be inherited.
     /// </summary>
+    [ViewModelFor(typeof(SeparatorModel))]
     public sealed class MFDButtonStripViewModel
     {
         [NotNull]

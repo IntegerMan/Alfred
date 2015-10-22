@@ -7,6 +7,7 @@ using System.Windows.Input;
 using MattEland.Ani.Alfred.MFDMockUp.Models;
 using Assisticant;
 
+using MattEland.Ani.Alfred.PresentationCommon.Helpers;
 using MattEland.Common.Annotations;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
@@ -15,25 +16,22 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
     {
 
         private readonly MFDSelection _selection;
+
+        [NotNull]
         private readonly Workspace _workspace;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MainViewModel"/> class.
-        /// </summary>
-        [UsedImplicitly]
-        public MainViewModel() : this(new Workspace())
-        {
-
-        }
+        [NotNull]
+        private readonly ViewModelLocator _locator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainViewModel"/> class.
         /// </summary>
         /// <param name="workspace">The workspace.</param>
-        public MainViewModel(Workspace workspace)
+        public MainViewModel([NotNull] ViewModelLocator locator, [NotNull] Workspace workspace)
         {
             _workspace = workspace;
             _selection = workspace.MFDSelection;
+            _locator = locator;
         }
 
         /// <summary>
@@ -53,7 +51,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
             {
                 return
                     from item in _workspace.MFDs
-                    select new MFDViewModel(item);
+                    select new MFDViewModel(_locator, item);
             }
         }
 
@@ -63,7 +61,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
             {
                 return _selection.SelectedMFD == null
                     ? null
-                    : new MFDViewModel(_selection.SelectedMFD);
+                    : new MFDViewModel(_locator, _selection.SelectedMFD);
             }
             set
             {
@@ -78,7 +76,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
             {
                 return _selection.SelectedMFD == null
                     ? null
-                    : new MFDViewModel(_selection.SelectedMFD);
+                    : new MFDViewModel(_locator, _selection.SelectedMFD);
             }
         }
 

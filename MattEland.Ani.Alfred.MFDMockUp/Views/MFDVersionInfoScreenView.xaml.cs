@@ -16,14 +16,14 @@ using System.Windows.Shapes;
 namespace MattEland.Ani.Alfred.MFDMockUp.Views
 {
     /// <summary>
-    /// Interaction logic for DefaultMFDView.xaml
+    /// The version information MFD screen.
     /// </summary>
-    public partial class DefaultMFDView : UserControl
+    public partial class MFDVersionInfoScreenView : UserControl
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultMFDView"/> class.
+        /// Initializes a new instance of the <see cref="MFDVersionInfoScreenView"/> class.
         /// </summary>
-        public DefaultMFDView()
+        public MFDVersionInfoScreenView()
         {
             InitializeComponent();
         }
