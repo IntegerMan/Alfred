@@ -2,10 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Windows.Media.Media3D;
 
 using Assisticant;
-using Assisticant.Descriptors;
 
 using MattEland.Ani.Alfred.MFDMockUp.Models;
 using MattEland.Common;
@@ -112,9 +110,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         }
 
         [NotNull]
-        public object ViewFor(ScreenModel screenModel)
+        internal object ViewFor(ScreenModel screenModel)
         {
-            return ViewModel(() => this.BuildViewModelForModel(screenModel)); ;
+            return ViewModel(() => BuildViewModelForModel(screenModel)); ;
         }
 
         /// <summary>

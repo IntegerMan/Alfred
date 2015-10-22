@@ -14,16 +14,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
     /// <summary>
     ///     A model that provides buttons based on the current state of a <see cref="MultifunctionDisplay"/>.
     /// </summary>
-    public sealed class ButtonProvider
+    internal sealed class ButtonProvider
     {
-        /// <summary>
-        ///     The owner.
-        /// </summary>
-        [NotNull]
-        private readonly MultifunctionDisplay _owner;
-
-        [NotNull]
-        private readonly Observable<ButtonStripModel> _topButtons;
 
         [NotNull]
         private readonly Observable<ButtonStripModel> _bottomButtons;
@@ -31,8 +23,20 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         [NotNull]
         private readonly Observable<ButtonStripModel> _leftButtons;
 
+        /// <summary>
+        ///     The owner.
+        /// </summary>
+        /// <remarks>
+        /// TODO: Use this field
+        /// </remarks>
+        [NotNull]
+        private readonly MultifunctionDisplay _owner;
+
         [NotNull]
         private readonly Observable<ButtonStripModel> _rightButtons;
+
+        [NotNull]
+        private readonly Observable<ButtonStripModel> _topButtons;
 
         /// <summary>
         ///     Initializes a new instance of the ButtonProvider class.
@@ -42,6 +46,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         {
             _owner = owner;
 
+            //- Create Observables
             _topButtons = new Observable<ButtonStripModel>(new ButtonStripModel(ButtonStripDock.Top));
             _bottomButtons = new Observable<ButtonStripModel>(new ButtonStripModel(ButtonStripDock.Bottom));
             _leftButtons = new Observable<ButtonStripModel>(new ButtonStripModel(ButtonStripDock.Left));
@@ -52,29 +57,13 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         }
 
         /// <summary>
-        ///     Updates the buttons.
+        ///     Gets the bottom buttons.
         /// </summary>
-        public void UpdateButtons()
-        {
-            // Top and bottom buttons relate to views
-
-            TopButtons.SetButtons(new ButtonModel("SYS", true),
-                                  new ButtonModel("ALFR"),
-                                  new ButtonModel("LOG"),
-                                  new ButtonModel("PERF"),
-                                  new ButtonModel("NET"));
-
-            BottomButtons.SetButtons(new ButtonModel("WTHR"),
-                                     new ButtonModel("SRCH"),
-                                     new ButtonModel("MAP"),
-                                     new ButtonModel("FEED"),
-                                     new ButtonModel("OPTS"));
-
-            // Left and right buttons will be based off of the current view
-
-            LeftButtons.SetEmptyButtons(5);
-            RightButtons.SetEmptyButtons(5);
-        }
+        /// <value>
+        ///     The bottom buttons.
+        /// </value>
+        [NotNull]
+        public ButtonStripModel BottomButtons { get { return _bottomButtons; } }
 
         /// <summary>
         ///     Gets the left buttons.
@@ -104,12 +93,29 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         public ButtonStripModel TopButtons { get { return _topButtons; } }
 
         /// <summary>
-        ///     Gets the bottom buttons.
+        ///     Updates the buttons.
         /// </summary>
-        /// <value>
-        ///     The bottom buttons.
-        /// </value>
-        [NotNull]
-        public ButtonStripModel BottomButtons { get { return _bottomButtons; } }
+        private void UpdateButtons()
+        {
+            // Top and bottom buttons relate to views
+            // TODO: Populate these items more based on the current view
+
+            TopButtons.SetButtons(new ButtonModel("SYS", true),
+                                  new ButtonModel("ALFR"),
+                                  new ButtonModel("LOG"),
+                                  new ButtonModel("PERF"),
+                                  new ButtonModel("MODE"));
+
+            BottomButtons.SetButtons(new ButtonModel("WTHR"),
+                                     new ButtonModel("SRCH"),
+                                     new ButtonModel("MAP"),
+                                     new ButtonModel("FEED"),
+                                     new ButtonModel("OPTS"));
+
+            // TODO: Left and right buttons will be based off of the current view
+
+            LeftButtons.SetEmptyButtons(5);
+            RightButtons.SetEmptyButtons(5);
+        }
     }
 }

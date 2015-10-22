@@ -41,7 +41,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         {
             _name = new Observable<string>("<New MFD>");
 
-            // TODO: Don't do this. This is a Model creating a View.
             _currentScreen = new Observable<ScreenModel>(new BootupScreenModel());
 
             _screenWidth = new Observable<double>(DefaultScreenSize);
@@ -50,15 +49,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             _buttonProvider = new Observable<ButtonProvider>(new ButtonProvider(this));
 
         }
-
-        /// <summary>
-        ///     Gets the button provider associated with this display.
-        /// </summary>
-        /// <value>
-        ///     The button provider.
-        /// </value>
-        [NotNull]
-        public ButtonProvider ButtonProvider { get { return _buttonProvider; } }
 
         /// <summary>
         ///     Gets or sets the current screen.
@@ -109,6 +99,15 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             get { return _screenWidth; }
             set { _screenWidth.Value = value; }
         }
+
+        /// <summary>
+        ///     Gets the button provider associated with this display.
+        /// </summary>
+        /// <value>
+        ///     The button provider.
+        /// </value>
+        [NotNull]
+        internal ButtonProvider ButtonProvider { get { return _buttonProvider; } }
 
     }
 
