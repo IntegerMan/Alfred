@@ -110,7 +110,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         }
 
         [NotNull]
-        internal object ViewFor(ScreenModel screenModel)
+        internal object ViewModelFor(ScreenModel screenModel)
         {
             return ViewModel(() => BuildViewModelForModel(screenModel)); ;
         }
@@ -141,7 +141,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
                 throw new NotSupportedException(message);
             }
 
-            return Container.CreateInstance(vmType);
+            //! Create the instance passing in the model to its constructor
+            return Container.CreateInstance(vmType, model);
         }
 
         /// <summary>

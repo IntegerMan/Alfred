@@ -36,17 +36,13 @@
               VerticalAlignment="Stretch"
               d:DataContext="{d:DesignInstance viewModels:MFDButtonStripViewModel}">
 
-            <ItemsControl ItemsSource="{Binding ButtonsAndSeparators}">
+            <ItemsControl ItemTemplateSelector="{StaticResource AssisticantTemplateSelector}" ItemsSource="{Binding ButtonsAndSeparators}">
 
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <layout:DynamicPanel LayoutType="HorizontalAutoSpacePanel" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
-
-                <ItemsControl.ItemTemplateSelector>
-                    <assisticant:ViewSelector />
-                </ItemsControl.ItemTemplateSelector>
 
             </ItemsControl>
 

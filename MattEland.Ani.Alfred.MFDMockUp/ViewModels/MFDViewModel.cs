@@ -148,7 +148,16 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         /// </value>
         public object View
         {
-            get { return Locator.ViewFor(Model.CurrentScreen); }
+            get
+            {
+                var currentScreen = Model.CurrentScreen;
+
+                var vm = Locator.ViewModelFor(currentScreen);
+
+                // TODO: When this is null, use another view model
+
+                return vm;
+            }
         }
 
         /// <summary>

@@ -86,6 +86,8 @@
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\MFDButtonStripViewModel.cs" />
     <Compile Include="ViewModels\MFDViewModel.cs" />
+    <Compile Include="ViewModels\Screens\BootupScreenViewModel.cs" />
+    <Compile Include="ViewModels\Screens\VersionInfoScreenViewModel.cs" />
     <Compile Include="ViewModels\SeparatorViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="Views\MFDBootupScreenView.xaml.cs">

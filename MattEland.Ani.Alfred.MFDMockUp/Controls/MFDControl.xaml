@@ -76,18 +76,17 @@
                     <Grid>
 
                         <Grid x:Name="pnlView" Panel.ZIndex="0">
-                            <views:MFDBootupScreenView />
-                            <!-- TODO: This is buggy. Make it happen.
-                        <ContentControl Width="{Binding Path=ScreenWidth}"
-                                        Height="{Binding Path=ScreenHeight}"
-                                        HorizontalAlignment="Stretch"
-                                        VerticalAlignment="Stretch"
-                                        HorizontalContentAlignment="Stretch"
-                                        VerticalContentAlignment="Stretch"
-                                        Content="{Binding Path=View,
-                                                          FallbackValue='No View Selected'}"
-                                        Foreground="{StaticResource MFDScreenForegroundBrush}" />
-                            -->
+                            <ContentControl Width="{Binding Path=ScreenWidth}"
+                                            Height="{Binding Path=ScreenHeight}"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Stretch"
+                                            HorizontalContentAlignment="Stretch"
+                                            VerticalContentAlignment="Stretch"
+                                            Background="{StaticResource MFDScreenBackgroundBrush}"
+                                            BorderBrush="{StaticResource MFDScreenBorderBrush}"
+                                            Content="{Binding Path=View}"
+                                            ContentTemplateSelector="{StaticResource AssisticantTemplateSelector}"
+                                            Foreground="{StaticResource MFDScreenForegroundBrush}" />
                         </Grid>
 
                         <Grid x:Name="pnlOverlays" Panel.ZIndex="1">
