@@ -1,3 +1,5 @@
+using System;
+
 using Assisticant.Collections;
 using Assisticant.Fields;
 using MattEland.Common.Annotations;
@@ -5,22 +7,57 @@ using System.Collections.Generic;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.Models
 {
+    /// <summary>
+    ///     A workspace containing multiple MFDs. This class cannot be inherited.
+    /// </summary>
     [PublicAPI]
     public sealed class Workspace
     {
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// </summary>
+        public Workspace()
+        {
+            _mfds = new ObservableList<MultifunctionDisplay>();
+            _mfdSelection = new Observable<MFDSelection>();
+            _name = new Observable<string>(DefaultWorkspaceName);
+
+            _updatePump = new DispatcherUpdatePump(TimeSpan.FromSeconds(0.1), () => Update());
+        }
+
+        /// <summary>
+        ///     Updates the workspace's contents.
+        /// </summary>
+        private void Update()
+        {
+            // Update each MFD
+            foreach (var mfd in _mfds)
+            {
+                mfd.Update();
+            }
+        }
+
         /// <summary>
         /// The default workspace name. 
         /// </summary>
+        [NotNull]
         private const string DefaultWorkspaceName = "Alfred MFD Prototype";
 
-        private readonly ObservableList<MultifunctionDisplay> _mfds = new ObservableList<MultifunctionDisplay>();
+        [NotNull]
+        private readonly ObservableList<MultifunctionDisplay> _mfds;
 
-        private readonly Observable<MFDSelection> _mfdSelection = new Observable<MFDSelection>();
+        [NotNull]
+        private readonly Observable<MFDSelection> _mfdSelection;
 
         /// <summary>
         /// The name's observable backing store. 
         /// </summary>
-        private readonly Observable<string> _name = new Observable<string>(DefaultWorkspaceName);
+        [NotNull]
+        private readonly Observable<string> _name;
+
+        [NotNull]
+        private readonly DispatcherUpdatePump _updatePump;
 
         /// <summary>
         /// Gets the multifunction displays (MFDs). 
@@ -115,6 +152,11 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             var item = new MultifunctionDisplay();
             _mfds.Add(item);
             return item;
+        }
+
+        public void Start()
+        {
+            _updatePump.Start();
         }
     }
 }

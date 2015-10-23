@@ -42,11 +42,10 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             _name = new Observable<string>("<New MFD>");
 
             _currentScreen = new Observable<ScreenModel>(new BootupScreenModel());
+            _buttonProvider = new Observable<ButtonProvider>(new ButtonProvider(this));
 
             _screenWidth = new Observable<double>(DefaultScreenSize);
             _screenHeight = new Observable<double>(DefaultScreenSize);
-
-            _buttonProvider = new Observable<ButtonProvider>(new ButtonProvider(this));
 
         }
 
@@ -109,6 +108,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         [NotNull]
         internal ButtonProvider ButtonProvider { get { return _buttonProvider; } }
 
+        /// <summary>
+        ///     Updates this instance.
+        /// </summary>
+        public void Update()
+        {
+        }
     }
 
 }

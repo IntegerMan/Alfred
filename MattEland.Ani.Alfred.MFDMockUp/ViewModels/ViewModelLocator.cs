@@ -47,6 +47,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
             Container = container ?? CommonProvider.Container;
         }
 
+        /// <summary>
+        ///     Gets the container.
+        /// </summary>
+        /// <value>
+        ///     The container.
+        /// </value>
         [NotNull]
         public IObjectContainer Container { get; }
 
@@ -67,11 +73,19 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
             }
         }
 
+        /// <summary>
+        ///     Loads the workspace.
+        /// </summary>
+        /// <returns>
+        ///     The workspace.
+        /// </returns>
         [NotNull]
         private Workspace LoadWorkspace()
         {
+            // Create the workspace
             var workspace = new Workspace();
 
+            // Add all MFDs to the workspace
             for (int index = 0; index < DefaultMFDCount; index++)
             {
                 var mfd = workspace.NewMFD();

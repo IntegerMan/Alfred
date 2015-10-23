@@ -135,5 +135,10 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
                     });
             }
         }
+
+        public void StartApplication()
+        {
+            _workspace.Start();
+        }
     }
 }

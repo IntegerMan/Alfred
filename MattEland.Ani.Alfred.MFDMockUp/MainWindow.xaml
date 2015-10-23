@@ -15,6 +15,7 @@
         DataContext="{Binding Path=Main,
                               Source={StaticResource Locator}}"
         Foreground="{StaticResource AppForegroundBrush}"
+        Loaded="MainWindow_OnLoaded"
         mc:Ignorable="d">
 
     <Window.Resources>

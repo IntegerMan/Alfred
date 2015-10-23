@@ -93,6 +93,7 @@
     <Compile Include="Views\MFDBootupScreenView.xaml.cs">
       <DependentUpon>MFDBootupScreenView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\DispatcherUpdatePump.cs" />
     <Page Include="Controls\MFDButtonLabelStripControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
