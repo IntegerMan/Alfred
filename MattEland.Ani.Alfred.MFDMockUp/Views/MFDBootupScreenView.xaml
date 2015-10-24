@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:screens="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens"
              Style="{StaticResource MFDViewStyle}"
+             d:DataContext="{d:DesignInstance screens:BootupScreenViewModel}"
              d:DesignHeight="256"
              d:DesignWidth="256"
              mc:Ignorable="d">
@@ -19,8 +21,9 @@
                      Background="Transparent"
                      BorderBrush="{StaticResource MFDViewBorderBrush}"
                      Foreground="{StaticResource MFDViewForegroundBrush}"
-                     Maximum="100"
-                     Minimum="0"
-                     Value="42" />
+                     Maximum="1.0"
+                     Minimum="0.0"
+                     Value="{Binding Path=Progress,
+                                     Mode=OneWay}" />
     </StackPanel>
 </UserControl>

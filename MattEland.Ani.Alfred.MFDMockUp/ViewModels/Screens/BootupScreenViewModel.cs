@@ -31,6 +31,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
             _model = model;
         }
 
+        /// <summary>
+        ///     Gets the progress.
+        /// </summary>
+        /// <value>
+        ///     The progress.
+        /// </value>
         public double Progress { get { return _model.Progress; } }
     }
 

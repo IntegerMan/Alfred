@@ -25,7 +25,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug2\MattEland.Ani.Alfred.MFDMockUp.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug2\MattEland.Ani.Alfred.MFDMockUp.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -77,6 +77,8 @@
     <Compile Include="Models\ButtonProvider.cs" />
     <Compile Include="Models\ButtonStripDock.cs" />
     <Compile Include="Models\ButtonStripModel.cs" />
+    <Compile Include="Models\MFDProcessor.cs" />
+    <Compile Include="Models\MFDProcessorResult.cs" />
     <Compile Include="Models\ScreenModel.cs" />
     <Compile Include="Models\MFDSelection.cs" />
     <Compile Include="Models\SeparatorModel.cs" />

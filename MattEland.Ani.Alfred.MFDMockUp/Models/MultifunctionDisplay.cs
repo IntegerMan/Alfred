@@ -37,16 +37,23 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         [NotNull]
         private readonly Observable<double> _screenWidth;
 
+        [NotNull]
+        private readonly MFDProcessor _processor;
+
+        /// <summary>
+        ///     Initializes a new instance of the MultifunctionDisplay class.
+        /// </summary>
         public MultifunctionDisplay()
         {
             _name = new Observable<string>("<New MFD>");
+
+            _processor = new MFDProcessor(this);
 
             _currentScreen = new Observable<ScreenModel>(new BootupScreenModel());
             _buttonProvider = new Observable<ButtonProvider>(new ButtonProvider(this));
 
             _screenWidth = new Observable<double>(DefaultScreenSize);
             _screenHeight = new Observable<double>(DefaultScreenSize);
-
         }
 
         /// <summary>
@@ -113,6 +120,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// </summary>
         public void Update()
         {
+            _processor.Update();
         }
     }
 

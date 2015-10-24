@@ -35,5 +35,19 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             get { return _progress; }
             set { _progress.Value = value; }
         }
+
+        /// <summary>
+        ///     Process the screen state and outputs any resulting information to the processorResult.
+        /// </summary>
+        /// <param name="processor"> The processor. </param>
+        /// <param name="processorResult"> The processor result. </param>
+        protected override void ProcessScreenState([NotNull] MFDProcessor processor,
+            [NotNull] MFDProcessorResult processorResult)
+        {
+            // Just grab a random value
+            Progress = processor.Randomizer.NextDouble();
+
+            // TODO: Actually boot up at finalize
+        }
     }
 }
