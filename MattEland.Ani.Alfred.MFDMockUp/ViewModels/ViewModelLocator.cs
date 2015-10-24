@@ -41,10 +41,13 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         [UsedImplicitly]
         public ViewModelLocator([CanBeNull] IObjectContainer container)
         {
+            Container = container ?? CommonProvider.Container;
+
+            // Register a single random number generator for any interested parties
+            Container.RegisterProvidedInstance(typeof(Random), new Random());
+
             _modelToViewModelMapping = new Dictionary<Type, Type>();
             _workspace = LoadWorkspace();
-
-            Container = container ?? CommonProvider.Container;
         }
 
         /// <summary>
@@ -83,7 +86,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         private Workspace LoadWorkspace()
         {
             // Create the workspace
-            var workspace = new Workspace();
+            var workspace = new Workspace(Container);
 
             // Add all MFDs to the workspace
             for (int index = 0; index < DefaultMFDCount; index++)

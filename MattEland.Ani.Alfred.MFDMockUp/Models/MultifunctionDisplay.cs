@@ -5,10 +5,14 @@ using Assisticant.Fields;
 
 using MattEland.Ani.Alfred.MFDMockUp.Views;
 using MattEland.Common.Annotations;
+using MattEland.Common.Providers;
+using System.Diagnostics.Contracts;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.Models
 {
-
+    /// <summary>
+    ///     A multifunction display. This class cannot be inherited.
+    /// </summary>
     public sealed class MultifunctionDisplay
     {
         /// <summary>
@@ -43,11 +47,13 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// <summary>
         ///     Initializes a new instance of the MultifunctionDisplay class.
         /// </summary>
-        public MultifunctionDisplay()
+        public MultifunctionDisplay([NotNull] IObjectContainer container)
         {
+            Contract.Requires(container != null);
+
             _name = new Observable<string>("<New MFD>");
 
-            _processor = new MFDProcessor(this);
+            _processor = new MFDProcessor(container, this);
 
             // We're going to start on a bootup mode and move on to the home screen
             var homeScreen = new HomeScreenModel();

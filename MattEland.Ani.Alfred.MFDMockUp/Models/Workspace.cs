@@ -4,6 +4,8 @@ using Assisticant.Collections;
 using Assisticant.Fields;
 using MattEland.Common.Annotations;
 using System.Collections.Generic;
+using MattEland.Common.Providers;
+using System.Diagnostics.Contracts;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.Models
 {
@@ -13,16 +15,23 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
     [PublicAPI]
     public sealed class Workspace
     {
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        ///     Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public Workspace()
+        /// <param name="container"> The container. </param>
+        public Workspace([NotNull] IObjectContainer container)
         {
+            Contract.Requires(container != null);
+
+            // Set the container before any other properties are set
+            Container = container;
+
+            //- Create Observables
             _mfds = new ObservableList<MultifunctionDisplay>();
             _mfdSelection = new Observable<MFDSelection>();
             _name = new Observable<string>(DefaultWorkspaceName);
 
+            // Build the main update pump
             _updatePump = new DispatcherUpdatePump(TimeSpan.FromSeconds(0.1), () => Update());
         }
 
@@ -98,6 +107,15 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         }
 
         /// <summary>
+        ///     Gets the container.
+        /// </summary>
+        /// <value>
+        ///     The container.
+        /// </value>
+        [NotNull]
+        public IObjectContainer Container { get; }
+
+        /// <summary>
         /// Determine if the <paramref name="mfd"/> can move down. 
         /// </summary>
         /// <param name="mfd"> The mfd. </param>
@@ -149,7 +167,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         [NotNull]
         public MultifunctionDisplay NewMFD()
         {
-            var item = new MultifunctionDisplay();
+            var item = new MultifunctionDisplay(Container);
             _mfds.Add(item);
             return item;
         }

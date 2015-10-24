@@ -1,28 +1,36 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Diagnostics.Contracts;
 
 using MattEland.Common.Annotations;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.Models
 {
     /// <summary>
     ///     A multifunction display processor. This class cannot be inherited.
     /// </summary>
-    public sealed class MFDProcessor
+    public sealed class MFDProcessor : IHasContainer<IObjectContainer>
     {
         [NotNull]
         private readonly MultifunctionDisplay _mfd;
 
         [CanBeNull]
-        private static Random _randomizer;
+        private Random _randomizer;
 
         /// <summary>
         ///     Initializes a new instance of the MFDProcessor class.
         /// </summary>
+        /// <param name="container"> The container. </param>
         /// <param name="multifunctionDisplay"> The multifunction display. </param>
-        public MFDProcessor([NotNull] MultifunctionDisplay multifunctionDisplay)
+        public MFDProcessor([NotNull] IObjectContainer container,
+            [NotNull] MultifunctionDisplay multifunctionDisplay)
         {
+            Contract.Requires(container != null);
+
             _mfd = multifunctionDisplay;
+
+            Container = container;
         }
 
         /// <summary>
@@ -59,12 +67,20 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             {
                 if (_randomizer == null)
                 {
-                    _randomizer = new Random();
+                    _randomizer = Container.Provide<Random>();
                 }
 
                 return _randomizer;
             }
         }
+
+        /// <summary>
+        ///     Gets the container.
+        /// </summary>
+        /// <value>
+        ///     The container.
+        /// </value>
+        public IObjectContainer Container { get; }
 
         /// <summary>
         ///     Updates the MFD's state
@@ -76,6 +92,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             _mfd.CurrentScreen.ProcessCurrentState(this, processorResult);
 
             CurrentMode = processorResult.RequestedMode;
+
+            // Set the current screen to the new screen
+            if (processorResult.RequestedScreen != null)
+            {
+                _mfd.CurrentScreen = processorResult.RequestedScreen;
+            }
         }
     }
 
