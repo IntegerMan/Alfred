@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 using MattEland.Common.Annotations;
 
@@ -13,21 +14,37 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         private readonly MultifunctionDisplay _mfd;
 
         [CanBeNull]
-        private Random _randomizer;
+        private static Random _randomizer;
 
+        /// <summary>
+        ///     Initializes a new instance of the MFDProcessor class.
+        /// </summary>
+        /// <param name="multifunctionDisplay"> The multifunction display. </param>
         public MFDProcessor([NotNull] MultifunctionDisplay multifunctionDisplay)
         {
             _mfd = multifunctionDisplay;
         }
 
         /// <summary>
-        ///     Updates the MFD's state
+        ///     Gets the current mode.
         /// </summary>
-        public void Update()
-        {
-            var processorResult = new MFDProcessorResult(this);
+        /// <value>
+        ///     The current mode.
+        /// </value>
+        public MFDMode CurrentMode { get; private set; }
 
-            _mfd.CurrentScreen.ProcessCurrentState(this, processorResult);
+        /// <summary>
+        ///     Gets the multifunction display.
+        /// </summary>
+        /// <value>
+        ///     The multifunction display.
+        /// </value>
+        [NotNull]
+        public MultifunctionDisplay MFD
+        {
+            [DebuggerStepThrough]
+            get
+            { return _mfd; }
         }
 
         /// <summary>
@@ -47,6 +64,18 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
 
                 return _randomizer;
             }
+        }
+
+        /// <summary>
+        ///     Updates the MFD's state
+        /// </summary>
+        public void Update()
+        {
+            var processorResult = new MFDProcessorResult(this);
+
+            _mfd.CurrentScreen.ProcessCurrentState(this, processorResult);
+
+            CurrentMode = processorResult.RequestedMode;
         }
     }
 

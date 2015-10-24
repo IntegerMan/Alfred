@@ -77,6 +77,8 @@
     <Compile Include="Models\ButtonProvider.cs" />
     <Compile Include="Models\ButtonStripDock.cs" />
     <Compile Include="Models\ButtonStripModel.cs" />
+    <Compile Include="Models\HomeScreenModel.cs" />
+    <Compile Include="Models\MFDMode.cs" />
     <Compile Include="Models\MFDProcessor.cs" />
     <Compile Include="Models\MFDProcessorResult.cs" />
     <Compile Include="Models\ScreenModel.cs" />
@@ -89,7 +91,7 @@
     <Compile Include="ViewModels\MFDButtonStripViewModel.cs" />
     <Compile Include="ViewModels\MFDViewModel.cs" />
     <Compile Include="ViewModels\Screens\BootupScreenViewModel.cs" />
-    <Compile Include="ViewModels\Screens\VersionInfoScreenViewModel.cs" />
+    <Compile Include="ViewModels\Screens\HomeScreenViewModel.cs" />
     <Compile Include="ViewModels\SeparatorViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="Views\MFDBootupScreenView.xaml.cs">
@@ -120,7 +122,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\MFDVersionInfoScreenView.xaml">
+    <Page Include="Views\MFDHomeScreenView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -132,8 +134,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Views\MFDVersionInfoScreenView.xaml.cs">
-      <DependentUpon>MFDVersionInfoScreenView.xaml</DependentUpon>
+    <Compile Include="Views\MFDHomeScreenView.xaml.cs">
+      <DependentUpon>MFDHomeScreenView.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

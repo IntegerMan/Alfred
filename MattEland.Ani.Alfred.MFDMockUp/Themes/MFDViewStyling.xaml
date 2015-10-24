@@ -30,8 +30,8 @@
         <views:MFDBootupScreenView />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type screens:VersionInfoScreenViewModel}">
-        <views:MFDVersionInfoScreenView />
+    <DataTemplate DataType="{x:Type screens:HomeScreenViewModel}">
+        <views:MFDHomeScreenView />
     </DataTemplate>
 
 </ResourceDictionary>

@@ -17,11 +17,28 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         private readonly Observable<double> _progress;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        ///     Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public BootupScreenModel() : base("BTUP")
+        /// <param name="nextScreen"> The next screen. </param>
+        public BootupScreenModel([CanBeNull] ScreenModel nextScreen) : base("BTUP")
         {
             _progress = new Observable<double>(0.0);
+            _nextScreen = new Observable<ScreenModel>(nextScreen);
+        }
+
+        private readonly Observable<ScreenModel> _nextScreen;
+
+        /// <summary>
+        ///     Gets or sets the screen to navigate to after the load operation is completed.
+        /// </summary>
+        /// <value>
+        ///     The next screen.
+        /// </value>
+        [CanBeNull]
+        public ScreenModel NextScreen
+        {
+            get { return _nextScreen; }
+            set { _nextScreen.Value = value; }
         }
 
         /// <summary>
@@ -44,10 +61,24 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         protected override void ProcessScreenState([NotNull] MFDProcessor processor,
             [NotNull] MFDProcessorResult processorResult)
         {
-            // Just grab a random value
-            Progress = processor.Randomizer.NextDouble();
 
-            // TODO: Actually boot up at finalize
+            if (processor.Randomizer.Next(5) == 0)
+            {
+                var incrementAmount = processor.Randomizer.NextDouble() * 0.05;
+                Progress += incrementAmount;
+            }
+
+            // If we've completed, tell the application we're ready to move on.
+            if (Progress >= 1.0)
+            {
+                processorResult.RequestedMode = MFDMode.Default;
+
+                if (NextScreen != null)
+                {
+                    processorResult.RequestedScreen = NextScreen;
+                }
+            }
         }
     }
+
 }

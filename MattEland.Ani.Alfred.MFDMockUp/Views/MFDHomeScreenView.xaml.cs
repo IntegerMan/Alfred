@@ -18,12 +18,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Views
     /// <summary>
     /// The version information MFD screen.
     /// </summary>
-    public partial class MFDVersionInfoScreenView : UserControl
+    public partial class MFDHomeScreenView : UserControl
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MFDVersionInfoScreenView"/> class.
+        /// Initializes a new instance of the <see cref="MFDHomeScreenView"/> class.
         /// </summary>
-        public MFDVersionInfoScreenView()
+        public MFDHomeScreenView()
         {
             InitializeComponent();
         }

@@ -49,7 +49,11 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
 
             _processor = new MFDProcessor(this);
 
-            _currentScreen = new Observable<ScreenModel>(new BootupScreenModel());
+            // We're going to start on a bootup mode and move on to the home screen
+            var homeScreen = new HomeScreenModel();
+            var bootScreen = new BootupScreenModel(homeScreen);
+
+            _currentScreen = new Observable<ScreenModel>(bootScreen);
             _buttonProvider = new Observable<ButtonProvider>(new ButtonProvider(this));
 
             _screenWidth = new Observable<double>(DefaultScreenSize);
