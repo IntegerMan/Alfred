@@ -9,6 +9,13 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
     /// </summary>
     public sealed class BootupScreenModel : ScreenModel
     {
+        private static int _instances;
+
+        [NotNull]
+        private readonly Observable<string> _loadingMessage;
+
+        [NotNull]
+        private readonly Observable<ScreenModel> _nextScreen;
 
         /// <summary>
         ///     The loading progress.
@@ -24,9 +31,20 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         {
             _progress = new Observable<double>(0.0);
             _nextScreen = new Observable<ScreenModel>(nextScreen);
+            _loadingMessage = new Observable<string>("Loading Model " + (++_instances));
         }
 
-        private readonly Observable<ScreenModel> _nextScreen;
+        /// <summary>
+        ///     Gets or sets a message describing the loading.
+        /// </summary>
+        /// <value>
+        ///     A message describing the loading.
+        /// </value>
+        public string LoadingMessage
+        {
+            get { return _loadingMessage; }
+            set { _loadingMessage.Value = value; }
+        }
 
         /// <summary>
         ///     Gets or sets the screen to navigate to after the load operation is completed.

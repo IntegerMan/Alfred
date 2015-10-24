@@ -10,11 +10,10 @@
              d:DesignWidth="256"
              mc:Ignorable="d">
     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-        <TextBlock HorizontalAlignment="Center"
-                   Foreground="{DynamicResource MFDScreenForegroundBrush}"
-                   Style="{StaticResource MFDViewCenterTextStyle}">
-            Loading...
-        </TextBlock>
+        <TextBlock Foreground="{DynamicResource MFDScreenForegroundBrush}"
+                   Style="{StaticResource MFDViewCenterTextStyle}"
+                   Text="{Binding LoadingMessage}" />
+
         <ProgressBar Width="100"
                      Height="8"
                      Margin="{StaticResource StandardMargin}"

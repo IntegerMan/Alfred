@@ -38,6 +38,14 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         ///     The progress.
         /// </value>
         public double Progress { get { return _model.Progress; } }
+
+        /// <summary>
+        ///     Gets a message to display while loading.
+        /// </summary>
+        /// <value>
+        ///     A message to display while loading.
+        /// </value>
+        public string LoadingMessage { get { return _model.LoadingMessage; } }
     }
 
 }
