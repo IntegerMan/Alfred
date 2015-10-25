@@ -55,13 +55,14 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
 
             _processor = new MFDProcessor(container, this);
 
-            // We're going to start on a bootup mode and move on to the home screen
+            // We're going to start on a bootup mode and move on to the home screen after that loads
             var homeScreen = new HomeScreenModel();
             var bootScreen = new BootupScreenModel(homeScreen);
 
+            //- Create Observable Properties
             _currentScreen = new Observable<ScreenModel>(bootScreen);
             _buttonProvider = new Observable<ButtonProvider>(new ButtonProvider(this));
-
+            _isSensorOfInterest = new Observable<bool>(false);
             _screenWidth = new Observable<double>(DefaultScreenSize);
             _screenHeight = new Observable<double>(DefaultScreenSize);
         }
@@ -124,6 +125,24 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// </value>
         [NotNull]
         internal ButtonProvider ButtonProvider { get { return _buttonProvider; } }
+
+        /// <summary>
+        ///     Whether or not this is the sensor of interest.
+        /// </summary>
+        [NotNull]
+        private readonly Observable<bool> _isSensorOfInterest;
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether this instance is the sensor of interest.
+        /// </summary>
+        /// <value>
+        ///     true if this instance is the sensor of interest, false if not.
+        /// </value>
+        public bool IsSensorOfInterest
+        {
+            get { return _isSensorOfInterest; }
+            set { _isSensorOfInterest.Value = value; }
+        }
 
         /// <summary>
         ///     Updates this instance.

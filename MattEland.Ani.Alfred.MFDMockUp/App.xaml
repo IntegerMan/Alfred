@@ -13,6 +13,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.MFDMockUp;component/Themes/MFDButtonStripStyling.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.MFDMockUp;component/Themes/MFDButtonLabelStyling.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.MFDMockUp;component/Themes/MFDViewStyling.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.MFDMockUp;component/Themes/SensorOfInterestIndicator.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
         </ResourceDictionary>

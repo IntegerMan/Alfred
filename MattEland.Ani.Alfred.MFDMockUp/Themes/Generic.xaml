@@ -1,9 +1,11 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:assisticant="clr-namespace:Assisticant;assembly=Assisticant.XAML"
+                    xmlns:converters="clr-namespace:MattEland.Ani.Alfred.PresentationAvalon.Converters;assembly=MattEland.Ani.Alfred.PresentationAvalon"
                     xmlns:vm="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels">
 
     <vm:ViewModelLocator x:Key="Locator" />
+    <assisticant:ViewSelector x:Key="AssisticantTemplateSelector" />
 
     <Brush x:Key="AppBackgroundBrush">#2D2D30</Brush>
     <Brush x:Key="AppForegroundBrush">#EFEEF3</Brush>
@@ -16,6 +18,9 @@
 
     <Thickness x:Key="SpaceAbove">0,8,0,0</Thickness>
     <FontFamily x:Key="ConsoleFontFamily">Terminus, Lucida Console</FontFamily>
-    <assisticant:ViewSelector x:Key="AssisticantTemplateSelector" />
+
+    <!--  Converters  -->
+    <converters:VisibilityConverter x:Key="ShowIfTrueConverter" Invert="False" />
+    <converters:VisibilityConverter x:Key="ShowIfFalseConverter" Invert="True" />
 
 </ResourceDictionary>

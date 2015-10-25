@@ -72,6 +72,7 @@
       <DependentUpon>MFDButtonLabelStripControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MFDButtonStrip.cs" />
+    <Compile Include="Controls\SensorOfInterestIndicator.cs" />
     <Compile Include="Models\BootupScreenModel.cs" />
     <Compile Include="Models\ButtonModel.cs" />
     <Compile Include="Models\ButtonProvider.cs" />
@@ -121,6 +122,10 @@
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\SensorOfInterestIndicator.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MFDHomeScreenView.xaml">
       <SubType>Designer</SubType>

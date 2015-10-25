@@ -90,6 +90,12 @@
                         </Grid>
 
                         <Grid x:Name="pnlOverlays" Panel.ZIndex="1">
+                            
+                            <!-- Sensor of Interest brackets -->
+                            <controls:SensorOfInterestIndicator x:Name="soiIndicator"
+                                                                IsSensorOfInterest="{Binding Path=IsSensorOfInterest}"/>
+                            
+                            <!-- Button Labels -->
                             <controls:MFDButtonLabelStripControl x:Name="labelsTop"
                                                                  Margin="0,3"
                                                                  HorizontalAlignment="Stretch"
@@ -101,6 +107,7 @@
                                                                  HorizontalAlignment="Stretch"
                                                                  VerticalAlignment="Bottom"
                                                                  DataContext="{Binding Path=BottomButtons}" />
+
                         </Grid>
 
                     </Grid>

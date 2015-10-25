@@ -1,0 +1,42 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.Controls">
+
+    <ControlTemplate x:Key="SensorOfInterestTemplate" TargetType="controls:SensorOfInterestIndicator">
+        <Grid>
+
+            <!--  Bordered highlight for indicating SOI  -->
+            <Border Margin="8"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    BorderBrush="{StaticResource MFDScreenBackgroundBrush}"
+                    BorderThickness="0.5"
+                    Visibility="{TemplateBinding IsSensorOfInterest,
+                                                 Converter={StaticResource ShowIfTrueConverter}}">
+                <Border BorderBrush="{StaticResource MFDScreenForegroundBrush}" BorderThickness="1">
+                    <Border BorderBrush="{StaticResource MFDScreenBackgroundBrush}" BorderThickness="0.5" />
+                </Border>
+            </Border>
+
+            <!--  Not SOI indicator text  -->
+            <TextBlock Margin="0,0,0,28"
+                       VerticalAlignment="Bottom"
+                       Background="{StaticResource MFDScreenBackgroundBrush}"
+                       FontSize="6pt"
+                       Foreground="{StaticResource MFDScreenInfoForegroundBrush}"
+                       Style="{StaticResource MFDViewCenterTextStyle}"
+                       Text="Not SOI"
+                       Visibility="{TemplateBinding IsSensorOfInterest,
+                                                    Converter={StaticResource ShowIfFalseConverter}}" />
+
+        </Grid>
+    </ControlTemplate>
+
+    <Style TargetType="controls:SensorOfInterestIndicator">
+        <Setter Property="Template" Value="{StaticResource SensorOfInterestTemplate}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+    </Style>
+
+</ResourceDictionary>

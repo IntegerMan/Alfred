@@ -183,6 +183,18 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
             { return _locator; }
         }
 
+        /// <summary>
+        ///     Gets or sets a value indicating whether this instance is the sensor of interest.
+        /// </summary>
+        /// <value>
+        ///     true if this instance is the sensor of interest, false if not.
+        /// </value>
+        public bool IsSensorOfInterest
+        {
+            get { return _model.IsSensorOfInterest; }
+            set { _model.IsSensorOfInterest = value; }
+        }
+
     }
 
 }
