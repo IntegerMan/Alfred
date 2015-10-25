@@ -28,7 +28,7 @@
 
             <!--  Version  -->
             <TextBlock Margin="{StaticResource SpaceAbove}"
-                       Foreground="{StaticResource MFDScreenInfoBrush}"
+                       Foreground="{StaticResource MFDScreenForegroundBrush}"
                        Style="{StaticResource MFDViewCenterTextStyle}"
                        Text="{Binding Path=VersionString}" />
 

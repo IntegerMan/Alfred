@@ -39,9 +39,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         {
             get
             {
-                var versionInfo = GetEntryAssemblyFileVersionInfo();
+                var assembly = GetEntryAssembly();
 
-                var version = versionInfo.FileVersion;
+                var version = assembly.GetName().Version;
 
                 return string.Format("Version {0}", version);
             }
