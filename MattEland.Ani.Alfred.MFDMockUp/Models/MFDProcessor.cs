@@ -61,6 +61,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// <value>
         ///     The randomizer.
         /// </value>
+        [NotNull]
         public Random Randomizer
         {
             get

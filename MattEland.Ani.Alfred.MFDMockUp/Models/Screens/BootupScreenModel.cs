@@ -9,6 +9,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
     /// </summary>
     public sealed class BootupScreenModel : ScreenModel
     {
+        private const double MaxProgressIncrement = 0.075;
+        private const int DifficultyToIncrement = 2;
+
         [NotNull]
         private readonly Observable<string> _loadingMessage;
 
@@ -78,9 +81,10 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
             [NotNull] MFDProcessorResult processorResult)
         {
 
-            if (processor.Randomizer.Next(5) == 0)
+            // Only update the progress some update cycles to give it the appearance of realism / noise
+            if (processor.Randomizer.Next(DifficultyToIncrement) == 0)
             {
-                var incrementAmount = processor.Randomizer.NextDouble() * 0.05;
+                var incrementAmount = processor.Randomizer.NextDouble() * MaxProgressIncrement;
                 Progress += incrementAmount;
             }
 
