@@ -15,6 +15,8 @@
     <Thickness x:Key="TinyMargin">2</Thickness>
     <Thickness x:Key="HalfMargin">4</Thickness>
     <Thickness x:Key="StandardMargin">8</Thickness>
+    <Thickness x:Key="DoubleMargin">16</Thickness>
+    <Thickness x:Key="BottomMargin">0, 8, 0, 18</Thickness>
 
     <Thickness x:Key="SpaceAbove">0,8,0,0</Thickness>
     <Thickness x:Key="DoubleSpaceAbove">0,16,0,0</Thickness>

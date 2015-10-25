@@ -9,30 +9,35 @@
              d:DesignHeight="256"
              d:DesignWidth="256"
              mc:Ignorable="d">
-    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-
-        <!--  Product Name (wrap as needed)  -->
-        <TextBlock Margin="32,0"
-                   Style="{StaticResource MFDViewCenterTextStyle}"
-                   Text="{Binding Path=ApplicationNameString}"
-                   TextWrapping="Wrap" />
-
-        <!--  Version  -->
-        <TextBlock Margin="{StaticResource SpaceAbove}"
-                   Foreground="{StaticResource MFDScreenInfoBrush}"
-                   Style="{StaticResource MFDViewSmallCenterTextStyle}"
-                   Text="{Binding Path=VersionString}" />
-
-        <!--  Authorship  -->
-        <TextBlock Margin="{StaticResource DoubleSpaceAbove}"
-                   Foreground="{StaticResource MFDScreenInfoBrush}"
-                   Style="{StaticResource MFDViewSmallCenterTextStyle}"
-                   Text="{Binding Path=AuthorString}" />
-
-        <!--  Copyright  -->
-        <TextBlock Margin="{StaticResource SpaceAbove}"
+    <DockPanel>
+        <!--  Copyright goes across the bottom  -->
+        <TextBlock Margin="{StaticResource BottomMargin}"
+                   DockPanel.Dock="Bottom"
                    Foreground="{StaticResource MFDScreenInfoBrush}"
                    Style="{StaticResource MFDViewSmallCenterTextStyle}"
                    Text="{Binding Path=CopyrightString}" />
-    </StackPanel>
+
+        <!--  Main Product info goes here  -->
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+
+            <!--  Product Name (wrap as needed)  -->
+            <TextBlock Margin="32,0"
+                       Style="{StaticResource MFDViewCenterTextStyle}"
+                       Text="{Binding Path=ApplicationNameString}"
+                       TextWrapping="Wrap" />
+
+            <!--  Version  -->
+            <TextBlock Margin="{StaticResource SpaceAbove}"
+                       Foreground="{StaticResource MFDScreenInfoBrush}"
+                       Style="{StaticResource MFDViewCenterTextStyle}"
+                       Text="{Binding Path=VersionString}" />
+
+            <!--  Authorship  -->
+            <TextBlock Margin="{StaticResource DoubleSpaceAbove}"
+                       Foreground="{StaticResource MFDScreenInfoBrush}"
+                       Style="{StaticResource MFDViewCenterTextStyle}"
+                       Text="{Binding Path=AuthorString}" />
+
+        </StackPanel>
+    </DockPanel>
 </UserControl>
