@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +15,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
     ///     A ViewModel for the bootup screen.
     /// </summary>
     [ViewModelFor(typeof(BootupScreenModel))]
-    public class BootupScreenViewModel
+    [UsedImplicitly]
+    public sealed class BootupScreenViewModel
     {
         /// <summary>
         ///     The model.
@@ -46,6 +48,46 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         ///     A message to display while loading.
         /// </value>
         public string LoadingMessage { get { return _model.LoadingMessage; } }
+
+        /// <summary>
+        ///     Determines whether the specified object is equal to the current object.
+        /// </summary>
+        /// <param name="other"> The view model to compare to this instance. </param>
+        /// <returns>
+        ///     true if the specified object is equal to the current object; otherwise, false.
+        /// </returns>
+        private bool Equals([NotNull] BootupScreenViewModel other)
+        {
+            Contract.Requires(other != null);
+
+            return _model.Equals(other._model);
+        }
+
+        /// <summary>
+        /// Determines whether the specified object is equal to the current object.
+        /// </summary>
+        /// <returns>
+        /// true if the specified object  is equal to the current object; otherwise, false.
+        /// </returns>
+        /// <param name="obj">The object to compare with the current object. </param>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+
+            return obj is BootupScreenViewModel && Equals((BootupScreenViewModel)obj);
+        }
+
+        /// <summary>
+        /// Serves as the default hash function. 
+        /// </summary>
+        /// <returns>
+        /// A hash code for the current object.
+        /// </returns>
+        public override int GetHashCode()
+        {
+            return _model.GetHashCode();
+        }
     }
 
 }

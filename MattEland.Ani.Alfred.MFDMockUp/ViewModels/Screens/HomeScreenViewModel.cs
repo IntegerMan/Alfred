@@ -1,3 +1,6 @@
+using System;
+using System.Diagnostics.Contracts;
+
 using MattEland.Ani.Alfred.MFDMockUp.Models;
 using MattEland.Ani.Alfred.PresentationCommon.Helpers;
 using MattEland.Common.Annotations;
@@ -8,7 +11,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
     ///     A ViewModel for the home screen.
     /// </summary>
     [ViewModelFor(typeof(HomeScreenModel))]
-    public class HomeScreenViewModel
+    [UsedImplicitly]
+    public sealed class HomeScreenViewModel
     {
         /// <summary>
         ///     The model.
@@ -25,5 +29,44 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
             _model = model;
         }
 
+        /// <summary>
+        ///     Determines whether the specified object is equal to the current object.
+        /// </summary>
+        /// <param name="other"> The view model to compare to this instance. </param>
+        /// <returns>
+        ///     true if the specified object  is equal to the current object; otherwise, false.
+        /// </returns>
+        private bool Equals([NotNull] HomeScreenViewModel other)
+        {
+            Contract.Requires(other != null);
+
+            return _model.Equals(other._model);
+        }
+
+        /// <summary>
+        /// Determines whether the specified object is equal to the current object.
+        /// </summary>
+        /// <returns>
+        /// true if the specified object  is equal to the current object; otherwise, false.
+        /// </returns>
+        /// <param name="obj">The object to compare with the current object. </param>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+
+            return obj is HomeScreenViewModel && Equals((HomeScreenViewModel)obj);
+        }
+
+        /// <summary>
+        /// Serves as the default hash function. 
+        /// </summary>
+        /// <returns>
+        /// A hash code for the current object.
+        /// </returns>
+        public override int GetHashCode()
+        {
+            return _model.GetHashCode();
+        }
     }
 }
