@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 
@@ -44,10 +45,10 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         {
             Container = container ?? CommonProvider.Container;
 
-            // Register a single random number generator for any interested parties
-            Container.RegisterProvidedInstance(typeof(Random), new Random());
-
+            // Set up mappings for automatic creation of view models.
             _modelToViewModelMapping = new Dictionary<Type, Type>();
+            BuildViewModelMappings();
+
             _workspace = LoadWorkspace();
         }
 
@@ -132,9 +133,15 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         }
 
         [NotNull]
-        internal object ViewModelFor(ScreenModel screenModel)
+        internal object ViewModelFor([NotNull] object model)
         {
-            return ViewModel(() => BuildViewModelForModel(screenModel)); ;
+            Contract.Requires(model != null);
+
+            // Use attribute-based lookup to create the view model
+            var vm = BuildViewModelForModel(model);
+
+            // Wrap it into an Assisticant wrapper
+            return ForView.Wrap(vm);
         }
 
         /// <summary>
@@ -152,7 +159,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         /// </returns>
         private object BuildViewModelForModel([NotNull] object model)
         {
-            BuildViewModelMappingsAsNeeded();
 
             var modelType = model.GetType();
             var vmType = _modelToViewModelMapping[modelType];
@@ -170,7 +176,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         /// <summary>
         ///     Builds view model mappings as needed.
         /// </summary>
-        private void BuildViewModelMappingsAsNeeded()
+        private void BuildViewModelMappings()
         {
             //- Early exit if we've been here before
             if (_modelToViewModelMapping.Any()) return;

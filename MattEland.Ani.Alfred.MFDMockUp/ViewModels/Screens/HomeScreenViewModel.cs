@@ -17,13 +17,13 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         ///     The model.
         /// </summary>
         [NotNull]
-        private readonly HomeScreenViewModel _model;
+        private readonly HomeScreenModel _model;
 
         /// <summary>
         ///     Initializes a new instance of the BootupScreenViewModel class.
         /// </summary>
         /// <param name="model"> The model. </param>
-        public HomeScreenViewModel([NotNull] HomeScreenViewModel model)
+        public HomeScreenViewModel([NotNull] HomeScreenModel model)
         {
             _model = model;
         }
