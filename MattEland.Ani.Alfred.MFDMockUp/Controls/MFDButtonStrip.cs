@@ -20,6 +20,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Controls
     /// <summary>
     /// Represents a strip of buttons bordering a <see cref="MFDControl"/>
     /// </summary>
+    [PublicAPI]
     public sealed class MFDButtonStrip : Control
     {
 
