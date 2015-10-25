@@ -68,6 +68,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
                 if (_randomizer == null)
                 {
                     _randomizer = Container.Provide<Random>();
+                    _randomizer.RegisterAsProvidedInstance(typeof(Random), Container);
                 }
 
                 return _randomizer;
