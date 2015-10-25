@@ -16,5 +16,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Controls
             DefaultStyleKeyProperty.OverrideMetadata(typeof(MFDButton),
                 new FrameworkPropertyMetadata(typeof(MFDButton)));
         }
+
     }
 }

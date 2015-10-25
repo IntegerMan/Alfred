@@ -4,7 +4,6 @@
              xmlns:controls="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.Controls"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:views="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.Views"
              xmlns:vm="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels"
              d:DataContext="{d:DesignInstance vm:MFDViewModel}"
              mc:Ignorable="d">
@@ -90,12 +89,11 @@
                         </Grid>
 
                         <Grid x:Name="pnlOverlays" Panel.ZIndex="1">
-                            
-                            <!-- Sensor of Interest brackets -->
-                            <controls:SensorOfInterestIndicator x:Name="soiIndicator"
-                                                                IsSensorOfInterest="{Binding Path=IsSensorOfInterest}"/>
-                            
-                            <!-- Button Labels -->
+
+                            <!--  Sensor of Interest brackets  -->
+                            <controls:SensorOfInterestIndicator x:Name="soiIndicator" IsSensorOfInterest="{Binding Path=IsSensorOfInterest}" />
+
+                            <!--  Button Labels  -->
                             <controls:MFDButtonLabelStripControl x:Name="labelsTop"
                                                                  Margin="0,3"
                                                                  HorizontalAlignment="Stretch"
