@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 
 using MattEland.Ani.Alfred.MFDMockUp.Models;
 using MattEland.Ani.Alfred.PresentationCommon.Helpers;
 using MattEland.Common.Annotations;
 
-namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
+namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Buttons
 {
     /// <summary>
     ///     A ViewModel for a multifunction display's button strip bordering one side of the screen.

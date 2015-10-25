@@ -13,7 +13,7 @@ using MattEland.Ani.Alfred.MFDMockUp.Models;
 using MattEland.Ani.Alfred.PresentationCommon.Helpers;
 using MattEland.Common.Annotations;
 
-namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
+namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Buttons
 {
     /// <summary>
     ///     A separator view model representing a separator in the button list

@@ -11,6 +11,7 @@ using MattEland.Common.Annotations;
 using System;
 using System.Diagnostics;
 
+using MattEland.Ani.Alfred.MFDMockUp.ViewModels.Buttons;
 using MattEland.Ani.Alfred.PresentationCommon.Helpers;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels

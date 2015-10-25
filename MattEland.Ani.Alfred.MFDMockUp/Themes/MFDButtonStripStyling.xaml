@@ -5,6 +5,7 @@
                     xmlns:layout="clr-namespace:MattEland.Ani.Alfred.PresentationAvalon.Layout;assembly=MattEland.Ani.Alfred.PresentationAvalon"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                     xmlns:viewModels="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels"
+                    xmlns:buttons="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels.Buttons"
                     mc:Ignorable="d">
 
 
@@ -18,13 +19,13 @@
         <Setter Property="SnapsToDevicePixels" Value="True" />
     </Style>
 
-    <DataTemplate DataType="{x:Type viewModels:ButtonViewModel}">
+    <DataTemplate DataType="{x:Type buttons:ButtonViewModel}">
         <controls:MFDButton Command="{Binding Path=ClickCommand}"
                             Style="{StaticResource MFDButtonStyle}"
                             ToolTip="{Binding Path=ToolTipText}" />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type viewModels:SeparatorViewModel}">
+    <DataTemplate DataType="{x:Type buttons:SeparatorViewModel}">
         <Border Style="{StaticResource MFDButtonSeparatorStyle}" />
     </DataTemplate>
 
@@ -35,7 +36,7 @@
         <Grid x:Name="pnlButtons"
               HorizontalAlignment="Stretch"
               VerticalAlignment="Stretch"
-              d:DataContext="{d:DesignInstance viewModels:MFDButtonStripViewModel}">
+              d:DataContext="{d:DesignInstance buttons:MFDButtonStripViewModel}">
 
             <ItemsControl ItemTemplateSelector="{StaticResource AssisticantTemplateSelector}" ItemsSource="{Binding ButtonsAndSeparators}">
 

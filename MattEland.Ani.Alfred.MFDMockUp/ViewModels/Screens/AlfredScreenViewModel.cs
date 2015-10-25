@@ -28,7 +28,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
             _model = model;
         }
 
-
         /// <summary>
         ///     Determines whether the specified object is equal to the current object.
         /// </summary>

@@ -6,7 +6,8 @@
              xmlns:local="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.Controls"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels"
-             d:DataContext="{d:DesignInstance viewModels:MFDButtonStripViewModel}"
+             xmlns:buttons="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels.Buttons"
+             d:DataContext="{d:DesignInstance buttons:MFDButtonStripViewModel}"
              d:DesignHeight="30"
              d:DesignWidth="256"
              mc:Ignorable="d">

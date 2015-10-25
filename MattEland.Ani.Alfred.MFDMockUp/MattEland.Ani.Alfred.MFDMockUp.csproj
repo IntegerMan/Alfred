@@ -87,14 +87,14 @@
     <Compile Include="Models\SeparatorModel.cs" />
     <Compile Include="Models\Workspace.cs" />
     <Compile Include="Models\MultifunctionDisplay.cs" />
-    <Compile Include="ViewModels\ButtonViewModel.cs" />
+    <Compile Include="ViewModels\Buttons\ButtonViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
-    <Compile Include="ViewModels\MFDButtonStripViewModel.cs" />
+    <Compile Include="ViewModels\Buttons\MFDButtonStripViewModel.cs" />
     <Compile Include="ViewModels\MFDViewModel.cs" />
     <Compile Include="ViewModels\Screens\BootupScreenViewModel.cs" />
     <Compile Include="ViewModels\Screens\AlfredScreenViewModel.cs" />
     <Compile Include="ViewModels\Screens\HomeScreenViewModel.cs" />
-    <Compile Include="ViewModels\SeparatorViewModel.cs" />
+    <Compile Include="ViewModels\Buttons\SeparatorViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="Views\MFDBootupScreenView.xaml.cs">
       <DependentUpon>MFDBootupScreenView.xaml</DependentUpon>

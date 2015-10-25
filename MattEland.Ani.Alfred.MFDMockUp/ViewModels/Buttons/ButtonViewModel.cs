@@ -18,7 +18,7 @@ using MattEland.Ani.Alfred.PresentationCommon.Helpers;
 using MattEland.Common;
 using MattEland.Common.Annotations;
 
-namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
+namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Buttons
 {
     /// <summary>
     ///     A view model for the <see cref="ButtonModel"/> model used for presenting a MFD button and
