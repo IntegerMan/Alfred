@@ -3,14 +3,36 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:screens="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens"
              Style="{StaticResource MFDViewStyle}"
+             d:DataContext="{d:DesignInstance screens:HomeScreenViewModel}"
              d:DesignHeight="256"
              d:DesignWidth="256"
              mc:Ignorable="d">
     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-        <TextBlock Style="{StaticResource MFDViewCenterTextStyle}">Alfred Framework</TextBlock>
-        <TextBlock Style="{StaticResource MFDViewCenterTextStyle}">Multifunctional Display (MFD)</TextBlock>
-        <TextBlock Margin="{StaticResource SpaceAbove}" Style="{StaticResource MFDViewCenterTextStyle}">Software Version 0.4</TextBlock>
-        <TextBlock Margin="{StaticResource SpaceAbove}" Style="{StaticResource MFDViewCenterTextStyle}">Developed by Matt Eland</TextBlock>
+
+        <!--  Product Name (wrap as needed)  -->
+        <TextBlock Margin="32,0"
+                   Style="{StaticResource MFDViewCenterTextStyle}"
+                   Text="{Binding Path=ApplicationNameString}"
+                   TextWrapping="Wrap" />
+
+        <!--  Version  -->
+        <TextBlock Margin="{StaticResource SpaceAbove}"
+                   Foreground="{StaticResource MFDScreenInfoBrush}"
+                   Style="{StaticResource MFDViewSmallCenterTextStyle}"
+                   Text="{Binding Path=VersionString}" />
+
+        <!--  Authorship  -->
+        <TextBlock Margin="{StaticResource DoubleSpaceAbove}"
+                   Foreground="{StaticResource MFDScreenInfoBrush}"
+                   Style="{StaticResource MFDViewSmallCenterTextStyle}"
+                   Text="{Binding Path=AuthorString}" />
+
+        <!--  Copyright  -->
+        <TextBlock Margin="{StaticResource SpaceAbove}"
+                   Foreground="{StaticResource MFDScreenInfoBrush}"
+                   Style="{StaticResource MFDViewSmallCenterTextStyle}"
+                   Text="{Binding Path=CopyrightString}" />
     </StackPanel>
 </UserControl>

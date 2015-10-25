@@ -20,10 +20,22 @@
         <Setter Property="Typography.Capitals" Value="SmallCaps" />
     </Style>
 
+    <Style x:Key="MFDViewSmallTextStyle"
+           BasedOn="{StaticResource MFDViewTextStyle}"
+           TargetType="TextBlock">
+        <Setter Property="FontSize" Value="6pt" />
+    </Style>
+
     <Style x:Key="MFDViewCenterTextStyle"
            BasedOn="{StaticResource MFDViewTextStyle}"
            TargetType="TextBlock">
         <Setter Property="HorizontalAlignment" Value="Center" />
+    </Style>
+
+    <Style x:Key="MFDViewSmallCenterTextStyle"
+           BasedOn="{StaticResource MFDViewCenterTextStyle}"
+           TargetType="TextBlock">
+        <Setter Property="FontSize" Value="6pt" />
     </Style>
 
     <DataTemplate DataType="{x:Type screens:BootupScreenViewModel}">

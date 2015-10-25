@@ -17,6 +17,8 @@
     <Thickness x:Key="StandardMargin">8</Thickness>
 
     <Thickness x:Key="SpaceAbove">0,8,0,0</Thickness>
+    <Thickness x:Key="DoubleSpaceAbove">0,16,0,0</Thickness>
+
     <FontFamily x:Key="ConsoleFontFamily">Terminus, Lucida Console</FontFamily>
 
     <!--  Converters  -->

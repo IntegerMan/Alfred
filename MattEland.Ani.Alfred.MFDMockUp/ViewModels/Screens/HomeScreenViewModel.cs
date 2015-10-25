@@ -29,6 +29,50 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         }
 
         /// <summary>
+        ///     Gets the version display string for the entry assembly.
+        /// </summary>
+        /// <value>
+        ///     The version display string.
+        /// </value>
+        public string VersionString
+        {
+            get { return _model.VersionString; }
+        }
+
+        /// <summary>
+        ///     Gets the application author string for display purposes.
+        /// </summary>
+        /// <value>
+        ///     The author string.
+        /// </value>
+        public string AuthorString
+        {
+            get { return _model.AuthorString; }
+        }
+
+        /// <summary>
+        ///     Gets the application name display string.
+        /// </summary>
+        /// <value>
+        ///     The application name string.
+        /// </value>
+        public string ApplicationNameString
+        {
+            get { return _model.ApplicationNameString; }
+        }
+
+        /// <summary>
+        ///     Gets the application copyright string.
+        /// </summary>
+        /// <value>
+        ///     The application copyright string.
+        /// </value>
+        public string CopyrightString
+        {
+            get { return _model.CopyrightString; }
+        }
+
+        /// <summary>
         ///     Determines whether the specified object is equal to the current object.
         /// </summary>
         /// <param name="other"> The view model to compare to this instance. </param>
