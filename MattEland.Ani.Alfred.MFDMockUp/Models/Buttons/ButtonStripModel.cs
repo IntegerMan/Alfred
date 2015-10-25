@@ -110,12 +110,31 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         /// <param name="buttons"> The buttons. </param>
         internal void SetButtons([CanBeNull, ItemNotNull] params ButtonModel[] buttons)
         {
+            var index = 0;
+
+            // Check to see if the contents of buttons matches _buttons
+            if (buttons != null && buttons.Length == _buttons.Count)
+            {
+                var isMatch = true;
+
+                foreach (var button in buttons)
+                {
+                    if (button != _buttons[index++])
+                    {
+                        isMatch = false;
+                    }
+                }
+
+                // Do nothing if this is the same list as we're using now
+                if (isMatch) return;
+            }
+
             // Ensure we don't get too many buttons
             _buttons.Clear();
 
             if (buttons == null) return;
 
-            var index = 0;
+            index = 0;
 
             foreach (var button in buttons)
             {
