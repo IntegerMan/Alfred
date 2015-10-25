@@ -16,27 +16,29 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
     public sealed class ButtonStripModel
     {
         /// <summary>
+        ///     The button provider.
+        /// </summary>
+        [NotNull]
+        private readonly ButtonProvider _provider;
+
+        /// <summary>
         ///     The docked state of the button strip model.
         /// </summary>
         [NotNull]
         private readonly Observable<ButtonStripDock> _dock;
 
         /// <summary>
-        ///     Initializes a new instance of the ButtonStripModel class.
-        /// </summary>
-        [UsedImplicitly]
-        public ButtonStripModel() : this(ButtonStripDock.Top)
-        {
-
-        }
-
-        /// <summary>
         ///     Initializes a new instance of the <see cref="ButtonStripModel"/> class with the specified
         ///     docked state.
         /// </summary>
+        /// <param name="provider"> The button provider. </param>
         /// <param name="dock"> The docked state. </param>
-        public ButtonStripModel(ButtonStripDock dock, [CanBeNull] params ButtonModel[] buttons)
+        /// <param name="buttons"> The buttons. </param>
+        public ButtonStripModel([NotNull] ButtonProvider provider,
+            ButtonStripDock dock,
+            [CanBeNull] params ButtonModel[] buttons)
         {
+            _provider = provider;
             _dock = new Observable<ButtonStripDock>(dock);
             _buttons = new ObservableList<ButtonModel>();
 
@@ -104,7 +106,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
 
             for (int i = 0; i < numButtons; i++)
             {
-                list.Add(new ButtonModel());
+                list.Add(new ButtonModel(string.Empty, _provider, false, i));
             }
 
             SetButtons(list.ToArray());

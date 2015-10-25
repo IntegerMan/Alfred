@@ -153,6 +153,10 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         {
             _processor.Update();
         }
+
+        internal void OnButtonClicked(ButtonModel button)
+        {
+        }
     }
 
 }

@@ -7,6 +7,7 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
+using System;
 using System.Diagnostics;
 
 using Assisticant.Fields;
@@ -21,42 +22,29 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
     public sealed class ButtonModel
     {
         /// <summary>
-        ///     Initializes a new instance of the ButtonModel class without a label.
-        /// </summary>
-        [UsedImplicitly]
-        public ButtonModel() : this(string.Empty)
-        {
-
-        }
-
-        /// <summary>
         ///     Initializes a new instance of the ButtonModel class.
         /// </summary>
         /// <param name="text"> The text. </param>
-        public ButtonModel(string text) : this(text, false, 0)
-        {
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the ButtonModel class.
-        /// </summary>
-        /// <param name="text"> The text. </param>
-        /// <param name="isSelected"> true if this instance is selected. </param>
-        public ButtonModel(string text, bool isSelected) : this(text, isSelected, 0)
-        {
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the ButtonModel class.
-        /// </summary>
-        /// <param name="text"> The text. </param>
+        /// <param name="provider"> The button provider. </param>
         /// <param name="isSelected"> true if this instance is selected. </param>
         /// <param name="index"> The button's index. </param>
-        public ButtonModel([CanBeNull] string text, bool isSelected, int index)
+        public ButtonModel([CanBeNull] string text,
+            [NotNull] ButtonProvider provider,
+            bool isSelected = false,
+            int index = -1)
         {
             _text = new Observable<string>(text);
             _isSelected = new Observable<bool>(isSelected);
             _index = new Observable<int>(index);
+            _provider = provider;
+        }
+
+        /// <summary>
+        ///     Invoked when the button is clicked
+        /// </summary>
+        private void OnClicked()
+        {
+            _provider.OnButtonClicked(this);
         }
 
         [NotNull]
@@ -67,6 +55,20 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
 
         [NotNull]
         private readonly Observable<int> _index;
+
+        [NotNull]
+        private readonly ButtonProvider _provider;
+
+        /// <summary>
+        ///     Gets the action to take when the button is clicked.
+        /// </summary>
+        /// <value>
+        ///     The click action.
+        /// </value>
+        public Action ClickAction
+        {
+            get { return OnClicked; }
+        }
 
         /// <summary>
         ///     Sets the text of the button

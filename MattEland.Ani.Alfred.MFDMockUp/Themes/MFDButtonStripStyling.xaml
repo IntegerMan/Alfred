@@ -19,7 +19,9 @@
     </Style>
 
     <DataTemplate DataType="{x:Type viewModels:ButtonViewModel}">
-        <controls:MFDButton Style="{StaticResource MFDButtonStyle}" ToolTip="{Binding Path=ToolTipText}" />
+        <controls:MFDButton Command="{Binding Path=ClickCommand}"
+                            Style="{StaticResource MFDButtonStyle}"
+                            ToolTip="{Binding Path=ToolTipText}" />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type viewModels:SeparatorViewModel}">

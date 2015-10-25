@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls.Primitives;
 
 using Assisticant.Fields;
 
@@ -14,7 +10,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
     /// <summary>
     ///     A model that provides buttons based on the current state of a <see cref="MultifunctionDisplay"/>.
     /// </summary>
-    internal sealed class ButtonProvider
+    public sealed class ButtonProvider
     {
 
         [NotNull]
@@ -26,9 +22,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// <summary>
         ///     The owner.
         /// </summary>
-        /// <remarks>
-        /// TODO: Use this field
-        /// </remarks>
         [NotNull]
         private readonly MultifunctionDisplay _owner;
 
@@ -47,10 +40,10 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             _owner = owner;
 
             //- Create Observables
-            _topButtons = new Observable<ButtonStripModel>(new ButtonStripModel(ButtonStripDock.Top));
-            _bottomButtons = new Observable<ButtonStripModel>(new ButtonStripModel(ButtonStripDock.Bottom));
-            _leftButtons = new Observable<ButtonStripModel>(new ButtonStripModel(ButtonStripDock.Left));
-            _rightButtons = new Observable<ButtonStripModel>(new ButtonStripModel(ButtonStripDock.Right));
+            _topButtons = new Observable<ButtonStripModel>(new ButtonStripModel(this, ButtonStripDock.Top));
+            _bottomButtons = new Observable<ButtonStripModel>(new ButtonStripModel(this, ButtonStripDock.Bottom));
+            _leftButtons = new Observable<ButtonStripModel>(new ButtonStripModel(this, ButtonStripDock.Left));
+            _rightButtons = new Observable<ButtonStripModel>(new ButtonStripModel(this, ButtonStripDock.Right));
 
             // Ensure buttons are up to date
             UpdateButtons();
@@ -100,22 +93,31 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             // Top and bottom buttons relate to views
             // TODO: Populate these items more based on the current view
 
-            TopButtons.SetButtons(new ButtonModel("SYS", true),
-                                  new ButtonModel("ALFR"),
-                                  new ButtonModel("LOG"),
-                                  new ButtonModel("PERF"),
-                                  new ButtonModel("MODE"));
+            TopButtons.SetButtons(new ButtonModel("SYS", this, true),
+                                  new ButtonModel("ALFR", this),
+                                  new ButtonModel("LOG", this),
+                                  new ButtonModel("PERF", this),
+                                  new ButtonModel("MODE", this));
 
-            BottomButtons.SetButtons(new ButtonModel("WTHR"),
-                                     new ButtonModel("SRCH"),
-                                     new ButtonModel("MAP"),
-                                     new ButtonModel("FEED"),
-                                     new ButtonModel("OPTS"));
+            BottomButtons.SetButtons(new ButtonModel("WTHR", this),
+                                     new ButtonModel("SRCH", this),
+                                     new ButtonModel("MAP", this),
+                                     new ButtonModel("FEED", this),
+                                     new ButtonModel("OPTS", this));
 
             // TODO: Left and right buttons will be based off of the current view
 
             LeftButtons.SetEmptyButtons(5);
             RightButtons.SetEmptyButtons(5);
+        }
+
+        /// <summary>
+        ///     Executes when a button is clicked.
+        /// </summary>
+        /// <param name="button"> The button. </param>
+        internal void OnButtonClicked([NotNull] ButtonModel button)
+        {
+            _owner.OnButtonClicked(button);
         }
     }
 }

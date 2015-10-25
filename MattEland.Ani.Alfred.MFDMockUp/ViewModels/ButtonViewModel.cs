@@ -9,6 +9,9 @@
 
 using System.Linq;
 using System.Windows;
+using System.Windows.Input;
+
+using Assisticant;
 
 using MattEland.Ani.Alfred.MFDMockUp.Models;
 using MattEland.Ani.Alfred.PresentationCommon.Helpers;
@@ -112,6 +115,17 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         public int Index
         {
             get { return _model.Index; }
+        }
+
+        /// <summary>
+        ///     Gets the command to execute when the button is clicked.
+        /// </summary>
+        /// <value>
+        ///     The click command.
+        /// </value>
+        public ICommand ClickCommand
+        {
+            get { return MakeCommand.Do(_model.ClickAction); }
         }
     }
 }
