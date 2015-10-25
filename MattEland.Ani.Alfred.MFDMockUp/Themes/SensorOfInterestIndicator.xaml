@@ -21,11 +21,11 @@
             <!--  Not SOI indicator text  -->
             <TextBlock Margin="0,0,0,28"
                        VerticalAlignment="Bottom"
-                       Background="{StaticResource MFDScreenBackgroundBrush}"
-                       FontSize="6pt"
-                       Foreground="{StaticResource MFDScreenInfoForegroundBrush}"
+                       Background="{StaticResource MFDScreenInfoBrush}"
+                       Foreground="{StaticResource MFDScreenBackgroundBrush}"
+                       Padding="2"
                        Style="{StaticResource MFDViewCenterTextStyle}"
-                       Text="Not SOI"
+                       Text="NOT SOI"
                        Visibility="{TemplateBinding IsSensorOfInterest,
                                                     Converter={StaticResource ShowIfFalseConverter}}" />
 
