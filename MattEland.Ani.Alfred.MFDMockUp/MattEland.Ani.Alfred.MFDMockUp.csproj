@@ -83,7 +83,6 @@
     <Compile Include="Models\MFDProcessor.cs" />
     <Compile Include="Models\MFDProcessorResult.cs" />
     <Compile Include="Models\Screens\ScreenModel.cs" />
-    <Compile Include="Models\MFDSelection.cs" />
     <Compile Include="Models\SeparatorModel.cs" />
     <Compile Include="Models\Workspace.cs" />
     <Compile Include="Models\MultifunctionDisplay.cs" />

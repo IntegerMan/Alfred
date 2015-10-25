@@ -105,6 +105,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
                 }
             }
 
+            // Automatically make the first MFD the sensor of interest.
+            workspace.SelectedMFD = workspace.MFDs.First();
+
             return workspace;
         }
 
@@ -116,8 +119,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         private static void ConfigureMFD([NotNull] MultifunctionDisplay mfd, int index)
         {
             mfd.Name = string.Format("MFD {0}", index + 1);
-
-            mfd.IsSensorOfInterest = index == 0;
         }
 
         /// <summary>
@@ -128,8 +129,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         private static void ConfigureDesignMFD([NotNull] MultifunctionDisplay mfd, int index)
         {
             mfd.Name = string.Format("Design MFD {0}", index + 1);
-
-            mfd.IsSensorOfInterest = index == 0;
         }
 
         [NotNull]

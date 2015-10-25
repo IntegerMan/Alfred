@@ -18,6 +18,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
     public sealed class MultifunctionDisplay
     {
         /// <summary>
+        ///     The workspace.
+        /// </summary>
+        [NotNull]
+        private readonly Workspace _workspace;
+
+        /// <summary>
         ///     The default screen size.
         /// </summary>
         public const double DefaultScreenSize = 256;
@@ -49,9 +55,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// <summary>
         ///     Initializes a new instance of the MultifunctionDisplay class.
         /// </summary>
-        public MultifunctionDisplay([NotNull] IObjectContainer container)
+        public MultifunctionDisplay([NotNull] IObjectContainer container, [NotNull] Workspace workspace)
         {
             Contract.Requires(container != null);
+            Contract.Requires(workspace != null);
+
+            _workspace = workspace;
 
             _name = new Observable<string>("<New MFD>");
 
@@ -64,7 +73,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             //- Create Observable Properties
             _currentScreen = new Observable<ScreenModel>(bootScreen);
             _buttonProvider = new Observable<ButtonProvider>(new ButtonProvider(this));
-            _isSensorOfInterest = new Observable<bool>(false);
+            _isSensorOfInterest = new Computed<bool>(() => _workspace.SelectedMFD == this);
             _screenWidth = new Observable<double>(DefaultScreenSize);
             _screenHeight = new Observable<double>(DefaultScreenSize);
         }
@@ -132,7 +141,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         ///     Whether or not this is the sensor of interest.
         /// </summary>
         [NotNull]
-        private readonly Observable<bool> _isSensorOfInterest;
+        private readonly Computed<bool> _isSensorOfInterest;
 
         /// <summary>
         ///     Gets or sets a value indicating whether this instance is the sensor of interest.
@@ -143,7 +152,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         public bool IsSensorOfInterest
         {
             get { return _isSensorOfInterest; }
-            set { _isSensorOfInterest.Value = value; }
         }
 
         /// <summary>
@@ -154,8 +162,13 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             _processor.Update();
         }
 
-        internal void OnButtonClicked(ButtonModel button)
+        /// <summary>
+        ///     Responds to the action of a button associated with this MFD being clicked.
+        /// </summary>
+        /// <param name="button"> The button. </param>
+        internal void OnButtonClicked([NotNull] ButtonModel button)
         {
+            _workspace.SelectedMFD = this;
         }
     }
 

@@ -152,9 +152,11 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
             {
                 var currentScreen = Model.CurrentScreen;
 
-                var vm = Locator.ViewModelFor(currentScreen);
+                //- Safely handle a null screen
+                if (currentScreen == null) return null;
 
-                // TODO: When this is null, use another view model
+                // Build out a view model and return it
+                var vm = Locator.ViewModelFor(currentScreen);
 
                 return vm;
             }
@@ -192,7 +194,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         public bool IsSensorOfInterest
         {
             get { return _model.IsSensorOfInterest; }
-            set { _model.IsSensorOfInterest = value; }
         }
 
     }

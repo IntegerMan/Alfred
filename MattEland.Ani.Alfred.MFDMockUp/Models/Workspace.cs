@@ -27,12 +27,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             Container = container;
 
             //- Create Observables
-            _mfds = new ObservableList<MultifunctionDisplay>();
-            _mfdSelection = new Observable<MFDSelection>();
             _name = new Observable<string>(DefaultWorkspaceName);
+            _mfds = new ObservableList<MultifunctionDisplay>();
+            _selectedMFD = new Observable<MultifunctionDisplay>();
 
             // Build the main update pump
-            _updatePump = new DispatcherUpdatePump(TimeSpan.FromSeconds(0.1), () => Update());
+            _updatePump = new DispatcherUpdatePump(TimeSpan.FromSeconds(0.1), Update);
         }
 
         /// <summary>
@@ -56,9 +56,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         [NotNull]
         private readonly ObservableList<MultifunctionDisplay> _mfds;
 
-        [NotNull]
-        private readonly Observable<MFDSelection> _mfdSelection;
-
         /// <summary>
         /// The name's observable backing store. 
         /// </summary>
@@ -76,23 +73,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         public IEnumerable<MultifunctionDisplay> MFDs
         {
             get { return _mfds; }
-        }
-
-        /// <summary>
-        /// Gets or sets the MFD selection governing which display is selected. 
-        /// </summary>
-        /// <value> The mfd selection. </value>
-        [NotNull]
-        public MFDSelection MFDSelection
-        {
-            get
-            {
-                return _mfdSelection;
-            }
-            set
-            {
-                _mfdSelection.Value = value;
-            }
         }
 
         /// <summary>
@@ -114,6 +94,22 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// </value>
         [NotNull]
         public IObjectContainer Container { get; }
+
+        [NotNull]
+        private readonly Observable<MultifunctionDisplay> _selectedMFD;
+
+        /// <summary>
+        ///     Gets or sets the selected multifunction display.
+        /// </summary>
+        /// <value>
+        ///     The selected multifunction display.
+        /// </value>
+        [CanBeNull]
+        public MultifunctionDisplay SelectedMFD
+        {
+            get { return _selectedMFD; }
+            set { _selectedMFD.Value = value; }
+        }
 
         /// <summary>
         /// Determine if the <paramref name="mfd"/> can move down. 
@@ -167,11 +163,14 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         [NotNull]
         public MultifunctionDisplay NewMFD()
         {
-            var item = new MultifunctionDisplay(Container);
+            var item = new MultifunctionDisplay(Container, this);
             _mfds.Add(item);
             return item;
         }
 
+        /// <summary>
+        ///     Starts the main update pump that runs the Multifunction Displays.
+        /// </summary>
         public void Start()
         {
             _updatePump.Start();
