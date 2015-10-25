@@ -91,7 +91,11 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         {
             var processorResult = new MFDProcessorResult(this);
 
+            // Allow the screen to interact with the result
             _mfd.CurrentScreen.ProcessCurrentState(this, processorResult);
+
+            // Update the buttons based on the current state
+            _mfd.ButtonProvider.ProcessCurrentState(this, processorResult);
 
             CurrentMode = processorResult.RequestedMode;
 

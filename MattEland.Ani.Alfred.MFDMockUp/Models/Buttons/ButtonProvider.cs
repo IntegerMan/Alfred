@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 
 using Assisticant.Fields;
@@ -31,6 +33,18 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         [NotNull]
         private readonly Observable<ButtonStripModel> _topButtons;
 
+        private readonly ButtonModel _systemButton;
+        private readonly ButtonModel _alfredButton;
+        private readonly ButtonModel _logButton;
+        private readonly ButtonModel _performanceButton;
+        private readonly ButtonModel _modeButton;
+        private readonly IEnumerable<ButtonModel> _emptyButtons;
+        private readonly ButtonModel _weatherButton;
+        private readonly ButtonModel _searchButton;
+        private readonly ButtonModel _mapButton;
+        private readonly ButtonModel _feedButton;
+        private readonly ButtonModel _optionsButton;
+
         /// <summary>
         ///     Initializes a new instance of the ButtonProvider class.
         /// </summary>
@@ -45,8 +59,20 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
             _leftButtons = new Observable<ButtonStripModel>(new ButtonStripModel(this, ButtonStripDock.Left));
             _rightButtons = new Observable<ButtonStripModel>(new ButtonStripModel(this, ButtonStripDock.Right));
 
-            // Ensure buttons are up to date
-            UpdateButtons();
+            // Set up buttons
+            _systemButton = new ButtonModel("SYS", this, true);
+            _alfredButton = new ButtonModel("ALFR", this);
+            _logButton = new ButtonModel("LOG", this);
+            _performanceButton = new ButtonModel("PERF", this);
+            _modeButton = new ButtonModel("MODE", this);
+            _weatherButton = new ButtonModel("WTHR", this);
+            _searchButton = new ButtonModel("SRCH", this);
+            _mapButton = new ButtonModel("MAP", this);
+            _feedButton = new ButtonModel("FEED", this);
+            _optionsButton = new ButtonModel("OPTS", this);
+
+            // Set up placeholder button list
+            _emptyButtons = ButtonStripModel.CreateEmptyButtons(this, 5);
         }
 
         /// <summary>
@@ -86,29 +112,80 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         public ButtonStripModel TopButtons { get { return _topButtons; } }
 
         /// <summary>
-        ///     Updates the buttons.
+        ///     Gets bottom buttons.
         /// </summary>
-        private void UpdateButtons()
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     Thrown when one or more arguments are outside the required range.
+        /// </exception>
+        /// <param name="mode"> The mode. </param>
+        /// <returns>
+        ///     An array of button model.
+        /// </returns>
+        private ButtonModel[] GetBottomButtons([NotNull] MFDMode mode)
         {
-            // Top and bottom buttons relate to views
-            // TODO: Populate these items more based on the current view
+            IEnumerable<ButtonModel> buttons;
 
-            TopButtons.SetButtons(new ButtonModel("SYS", this, true),
-                                  new ButtonModel("ALFR", this),
-                                  new ButtonModel("LOG", this),
-                                  new ButtonModel("PERF", this),
-                                  new ButtonModel("MODE", this));
+            switch (mode)
+            {
+                case MFDMode.Default:
+                    buttons = new[]
+                              {
+                                _weatherButton,
+                                _searchButton,
+                                _mapButton,
+                                _feedButton,
+                                _optionsButton
+                              };
+                    break;
 
-            BottomButtons.SetButtons(new ButtonModel("WTHR", this),
-                                     new ButtonModel("SRCH", this),
-                                     new ButtonModel("MAP", this),
-                                     new ButtonModel("FEED", this),
-                                     new ButtonModel("OPTS", this));
+                case MFDMode.Bootup:
+                    buttons = _emptyButtons;
+                    break;
 
-            // TODO: Left and right buttons will be based off of the current view
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
+            }
 
-            LeftButtons.SetEmptyButtons(5);
-            RightButtons.SetEmptyButtons(5);
+            return buttons.ToArray();
+
+        }
+
+        /// <summary>
+        ///     Gets the buttons.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     Thrown when one or more arguments are outside the required range.
+        /// </exception>
+        /// <param name="mode"> The mode. </param>
+        /// <returns>
+        ///     An array of button model.
+        /// </returns>
+        private ButtonModel[] GetTopButtons(MFDMode mode)
+        {
+            IEnumerable<ButtonModel> buttons;
+
+            switch (mode)
+            {
+                case MFDMode.Default:
+                    buttons = new[]
+                              {
+                                  _systemButton,
+                                  _alfredButton,
+                                  _logButton,
+                                  _performanceButton,
+                                  _modeButton
+                              };
+                    break;
+
+                case MFDMode.Bootup:
+                    buttons = _emptyButtons;
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
+            }
+
+            return buttons.ToArray();
         }
 
         /// <summary>
@@ -118,6 +195,31 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         internal void OnButtonClicked([NotNull] ButtonModel button)
         {
             _owner.OnButtonClicked(button);
+        }
+
+        /// <summary>
+        ///     Processes the current state by updating the buttons accordingly.
+        /// </summary>
+        /// <param name="processor"> The processor. </param>
+        /// <param name="result"> The result. </param>
+        internal void ProcessCurrentState([NotNull] MFDProcessor processor, [NotNull] MFDProcessorResult result)
+        {
+            //- Contract Validate
+            Contract.Requires(processor != null);
+            Contract.Requires(result != null);
+
+            var mode = processor.CurrentMode;
+
+            // Top and bottom buttons relate to views
+            TopButtons.SetButtons(GetTopButtons(mode));
+            BottomButtons.SetButtons(GetBottomButtons(mode));
+
+            // TODO: Left and right buttons will be based off of the current view
+
+            LeftButtons.SetEmptyButtons(5);
+            RightButtons.SetEmptyButtons(5);
+
+            // Any interaction with result should go here, but realistically, that's not going to happen.
         }
     }
 }

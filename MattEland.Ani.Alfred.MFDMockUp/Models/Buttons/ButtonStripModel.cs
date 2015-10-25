@@ -14,17 +14,23 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
     /// </summary>
     public sealed class ButtonStripModel
     {
+
         /// <summary>
-        ///     The button provider.
+        ///     The buttons.
         /// </summary>
         [NotNull]
-        private readonly ButtonProvider _provider;
+        private readonly ObservableList<ButtonModel> _buttons;
 
         /// <summary>
         ///     The docked state of the button strip model.
         /// </summary>
         [NotNull]
         private readonly Observable<ButtonStripDock> _dock;
+        /// <summary>
+        ///     The button provider.
+        /// </summary>
+        [NotNull]
+        private readonly ButtonProvider _provider;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ButtonStripModel"/> class with the specified
@@ -45,25 +51,14 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         }
 
         /// <summary>
-        ///     Sets the buttons to the specified set of buttons.
+        ///     Gets the buttons within this button strip.
         /// </summary>
-        /// <param name="buttons"> The buttons. </param>
-        public void SetButtons([CanBeNull, ItemNotNull] params ButtonModel[] buttons)
+        /// <value>
+        ///     The buttons.
+        /// </value>
+        public IEnumerable<ButtonModel> Buttons
         {
-            // Ensure we don't get too many buttons
-            _buttons.Clear();
-
-            if (buttons == null) return;
-
-            var index = 0;
-
-            foreach (var button in buttons)
-            {
-                // Set it to the appropriate index
-                button.Index = index++;
-
-                _buttons.Add(button);
-            }
+            get { return _buttons; }
         }
 
         /// <summary>
@@ -79,36 +74,56 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         }
 
         /// <summary>
-        ///     The buttons.
-        /// </summary>
-        [NotNull]
-        private readonly ObservableList<ButtonModel> _buttons;
-
-        /// <summary>
-        ///     Gets the buttons within this button strip.
-        /// </summary>
-        /// <value>
-        ///     The buttons.
-        /// </value>
-        public IEnumerable<ButtonModel> Buttons
-        {
-            get { return _buttons; }
-        }
-
-        /// <summary>
         ///     Sets the collection to a group of empty buttons.
         /// </summary>
         /// <param name="numButtons"> The number of buttons to populate. </param>
         public void SetEmptyButtons(int numButtons)
         {
+            var list = CreateEmptyButtons(_provider, numButtons);
+
+            SetButtons(list.ToArray());
+        }
+
+        /// <summary>
+        ///     Creates an empty buttons collection.
+        /// </summary>
+        /// <param name="provider"> The button provider. </param>
+        /// <param name="numButtons"> The number of buttons to populate. </param>
+        /// <returns>
+        ///     The new collection of empty buttons.
+        /// </returns>
+        [NotNull, ItemNotNull]
+        internal static IEnumerable<ButtonModel> CreateEmptyButtons([NotNull] ButtonProvider provider, int numButtons)
+        {
             var list = new List<ButtonModel>(numButtons);
 
             for (int i = 0; i < numButtons; i++)
             {
-                list.Add(new ButtonModel(string.Empty, _provider, false, i));
+                list.Add(new ButtonModel(string.Empty, provider, false, i));
             }
+            return list;
+        }
 
-            SetButtons(list.ToArray());
+        /// <summary>
+        ///     Sets the buttons to the specified set of buttons.
+        /// </summary>
+        /// <param name="buttons"> The buttons. </param>
+        internal void SetButtons([CanBeNull, ItemNotNull] params ButtonModel[] buttons)
+        {
+            // Ensure we don't get too many buttons
+            _buttons.Clear();
+
+            if (buttons == null) return;
+
+            var index = 0;
+
+            foreach (var button in buttons)
+            {
+                // Set it to the appropriate index
+                button.Index = index++;
+
+                _buttons.Add(button);
+            }
         }
     }
 }

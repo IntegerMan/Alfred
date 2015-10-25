@@ -1,4 +1,6 @@
-﻿using MattEland.Ani.Alfred.MFDMockUp.Models.Screens;
+﻿using System.Diagnostics.Contracts;
+
+using MattEland.Ani.Alfred.MFDMockUp.Models.Screens;
 using MattEland.Common.Annotations;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.Models
@@ -18,11 +20,17 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         ///     Initializes a new instance of the MFDProcessorResult class.
         /// </summary>
         /// <param name="processor"> The processor. </param>
-        public MFDProcessorResult(MFDProcessor processor)
+        public MFDProcessorResult([NotNull] MFDProcessor processor)
         {
+            Contract.Requires(processor != null);
+
             _processor = processor;
+
             CurrentMode = processor.CurrentMode;
+            RequestedMode = processor.CurrentMode;
+
             CurrentScreen = processor.MFD.CurrentScreen;
+            RequestedScreen = processor.MFD.CurrentScreen;
         }
 
         /// <summary>
