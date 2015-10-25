@@ -14,6 +14,7 @@ using System.Windows.Input;
 using Assisticant;
 
 using MattEland.Ani.Alfred.MFDMockUp.Models;
+using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
 using MattEland.Ani.Alfred.PresentationCommon.Helpers;
 using MattEland.Common;
 using MattEland.Common.Annotations;

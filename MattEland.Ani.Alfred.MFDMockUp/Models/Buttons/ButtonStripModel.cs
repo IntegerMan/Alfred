@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,7 +6,7 @@ using Assisticant.Fields;
 
 using MattEland.Common.Annotations;
 
-namespace MattEland.Ani.Alfred.MFDMockUp.Models
+namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
 {
     /// <summary>
     ///     A data model for a button strip on the side of a multifunction display. This class cannot

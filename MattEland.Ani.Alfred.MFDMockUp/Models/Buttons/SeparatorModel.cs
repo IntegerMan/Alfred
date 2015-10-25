@@ -11,7 +11,7 @@ using Assisticant.Fields;
 
 using MattEland.Common.Annotations;
 
-namespace MattEland.Ani.Alfred.MFDMockUp.Models
+namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
 {
     /// <summary>
     ///     A data model for a MFD button strip separator.

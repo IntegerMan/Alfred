@@ -7,7 +7,7 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-namespace MattEland.Ani.Alfred.MFDMockUp.Models
+namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
 {
     /// <summary>
     /// Specifies the docking position of a button strip outside of a multifunction display.

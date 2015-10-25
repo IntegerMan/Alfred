@@ -5,7 +5,7 @@ using Assisticant.Fields;
 
 using MattEland.Common.Annotations;
 
-namespace MattEland.Ani.Alfred.MFDMockUp.Models
+namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
 {
     /// <summary>
     ///     A model that provides buttons based on the current state of a <see cref="MultifunctionDisplay"/>.
