@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MattEland.Ani.Alfred.MFDMockUp.Models
+namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
 {
     /// <summary>
     ///     A data model for the home screen. This class cannot be inherited.

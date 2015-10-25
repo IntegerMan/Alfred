@@ -2,7 +2,7 @@ using Assisticant.Fields;
 
 using MattEland.Common.Annotations;
 
-namespace MattEland.Ani.Alfred.MFDMockUp.Models
+namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
 {
     /// <summary>
     ///     A data Model for the bootup screen.

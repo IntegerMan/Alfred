@@ -6,6 +6,7 @@ using System.Reflection;
 using Assisticant;
 
 using MattEland.Ani.Alfred.MFDMockUp.Models;
+using MattEland.Ani.Alfred.MFDMockUp.Models.Screens;
 using MattEland.Common;
 using MattEland.Common.Annotations;
 using MattEland.Ani.Alfred.PresentationCommon.Helpers;

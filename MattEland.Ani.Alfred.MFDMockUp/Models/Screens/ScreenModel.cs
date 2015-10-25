@@ -1,9 +1,8 @@
-using System;
 using Assisticant.Fields;
 
 using MattEland.Common.Annotations;
 
-namespace MattEland.Ani.Alfred.MFDMockUp.Models
+namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
 {
     /// <summary>
     ///     A model for a multifunction display screen.

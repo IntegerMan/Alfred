@@ -8,6 +8,8 @@ using MattEland.Common.Annotations;
 using MattEland.Common.Providers;
 using System.Diagnostics.Contracts;
 
+using MattEland.Ani.Alfred.MFDMockUp.Models.Screens;
+
 namespace MattEland.Ani.Alfred.MFDMockUp.Models
 {
     /// <summary>
