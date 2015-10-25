@@ -9,8 +9,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
     /// </summary>
     public sealed class BootupScreenModel : ScreenModel
     {
-        private const double MaxProgressIncrement = 0.075;
-        private const int DifficultyToIncrement = 2;
+        private const double MaxProgressIncrement = 0.125;
+        private const int DifficultyToIncrement = 3;
 
         [NotNull]
         private readonly Observable<string> _loadingMessage;
