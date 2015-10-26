@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
+using System.Linq;
 
 using MattEland.Common.Annotations;
 using MattEland.Common.Providers;
@@ -89,6 +90,11 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// </summary>
         public void Update()
         {
+
+            // Handle all button presses that have occurred since the last update
+            ProcessButtonPresses();
+
+            // Build the result object that will be used to update the application
             var processorResult = new MFDProcessorResult(this);
 
             // Allow the screen to interact with the result
@@ -97,12 +103,39 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             // Update the buttons based on the current state
             _mfd.ButtonProvider.ProcessCurrentState(this, processorResult);
 
+            HandleProcessorFrameResults(processorResult);
+        }
+
+        private void HandleProcessorFrameResults([NotNull] MFDProcessorResult processorResult)
+        {
+            // Update the mode
             CurrentMode = processorResult.RequestedMode;
 
             // Set the current screen to the new screen
             if (processorResult.RequestedScreen != null)
             {
                 _mfd.CurrentScreen = processorResult.RequestedScreen;
+            }
+        }
+
+        /// <summary>
+        ///     Process the button presses.
+        /// </summary>
+        private void ProcessButtonPresses()
+        {
+            if (_mfd.ButtonPresses.Any())
+            {
+                // If any button was pressed, it's now the SOI
+                _mfd.IsSensorOfInterest = true;
+
+                // Handle each button press
+                foreach (var buttonPress in _mfd.ButtonPresses)
+                {
+                    // TODO: Handle the button press
+                }
+
+                // We've now processed all button presses. Clear the queue.
+                _mfd.ButtonPresses.Clear();
             }
         }
     }

@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using Assisticant.Fields;
 
@@ -53,6 +55,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         [NotNull]
         private readonly MFDProcessor _processor;
 
+        [NotNull, ItemNotNull]
+        private readonly ObservableCollection<ButtonModel> _buttonPresses;
+
         /// <summary>
         ///     Initializes a new instance of the MultifunctionDisplay class.
         /// </summary>
@@ -77,6 +82,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             _isSensorOfInterest = new Computed<bool>(() => _workspace.SelectedMFD == this);
             _screenWidth = new Observable<double>(DefaultScreenSize);
             _screenHeight = new Observable<double>(DefaultScreenSize);
+            _buttonPresses = new ObservableCollection<ButtonModel>();
         }
 
         /// <summary>
@@ -85,6 +91,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// <value>
         ///     The current screen.
         /// </value>
+        [NotNull]
         public ScreenModel CurrentScreen
         {
             get { return _currentScreen; }
@@ -153,6 +160,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         public bool IsSensorOfInterest
         {
             get { return _isSensorOfInterest; }
+            set { _workspace.SelectedMFD = this; }
         }
 
         /// <summary>
@@ -169,7 +177,23 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// <param name="button"> The button. </param>
         internal void OnButtonClicked([NotNull] ButtonModel button)
         {
-            _workspace.SelectedMFD = this;
+            Contract.Requires(button != null);
+
+            _buttonPresses.Add(button);
+        }
+
+        /// <summary>
+        ///     Gets the button presses pending processing.
+        /// </summary>
+        /// <value>
+        ///     The button presses pending processing.
+        /// </value>
+        [NotNull, ItemNotNull]
+        internal ObservableCollection<ButtonModel> ButtonPresses
+        {
+            [DebuggerStepThrough]
+            get
+            { return _buttonPresses; }
         }
     }
 
