@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
 
+using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
 using MattEland.Common.Annotations;
 using MattEland.Common.Providers;
 
@@ -19,6 +22,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         [CanBeNull]
         private Random _randomizer;
 
+        [NotNull, ItemNotNull]
+        private readonly Queue<ButtonModel> _buttonPresses;
+
         /// <summary>
         ///     Initializes a new instance of the MFDProcessor class.
         /// </summary>
@@ -32,6 +38,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             _mfd = multifunctionDisplay;
 
             Container = container;
+            _buttonPresses = new Queue<ButtonModel>();
         }
 
         /// <summary>
@@ -123,20 +130,31 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// </summary>
         private void ProcessButtonPresses()
         {
-            if (_mfd.ButtonPresses.Any())
+            const int MaxPressesPerFrame = 5;
+
+            if (!_buttonPresses.Any()) return;
+
+            // If any button was pressed, it's now the SOI
+            _mfd.IsSensorOfInterest = true;
+
+            // Handle each button press
+            var pressesHandled = 0;
+
+            // Keep handling until we've hit our frame limit or run out of items in the queue
+            do
             {
-                // If any button was pressed, it's now the SOI
-                _mfd.IsSensorOfInterest = true;
+                var button = _buttonPresses.Dequeue();
 
-                // Handle each button press
-                foreach (var buttonPress in _mfd.ButtonPresses)
-                {
-                    // TODO: Handle the button press
-                }
+                // TODO: Process the button
 
-                // We've now processed all button presses. Clear the queue.
-                _mfd.ButtonPresses.Clear();
-            }
+                pressesHandled += 1;
+
+            } while (_buttonPresses.Any() && pressesHandled <= MaxPressesPerFrame);
+        }
+
+        internal void EnqueueButtonPress(ButtonModel button)
+        {
+            _buttonPresses.Enqueue(button);
         }
     }
 
