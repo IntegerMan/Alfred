@@ -154,6 +154,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
             var allAssemblies = AppDomain.CurrentDomain.GetAssemblies();
             foreach (var assembly in allAssemblies)
             {
+                //- Shouldn't have to, but guard anyway.
+                if (assembly == null) continue;
+
                 // Grab types with the mapping attribute
                 var types = assembly.GetTypesInAssemblyWithAttribute(attributeType, true);
 

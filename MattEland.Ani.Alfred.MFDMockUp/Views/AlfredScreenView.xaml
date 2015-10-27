@@ -21,7 +21,7 @@
         <TextBlock Margin="{StaticResource DoubleSpaceAbove}"
                    Foreground="{StaticResource MFDScreenInfoBrush}"
                    Style="{StaticResource MFDViewCenterTextStyle}"
-                   Text="Current Status: Offline" />
+                   Text="{Binding Path=StatusMessage}" />
 
     </StackPanel>
 </UserControl>

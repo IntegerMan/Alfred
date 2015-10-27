@@ -46,13 +46,17 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         private readonly ButtonModel _feedButton;
         private readonly ButtonModel _optionsButton;
 
+        [NotNull]
+        private readonly Workspace _workspace;
+
         /// <summary>
         ///     Initializes a new instance of the ButtonProvider class.
         /// </summary>
         /// <param name="owner"> The owner. </param>
-        public ButtonProvider([NotNull] MultifunctionDisplay owner)
+        public ButtonProvider([NotNull] MultifunctionDisplay owner, [NotNull] Workspace workspace)
         {
             _owner = owner;
+            _workspace = workspace;
 
             //- Create Observables
             _topButtons = new Observable<ButtonStripModel>(new ButtonStripModel(this, ButtonStripDock.Top));
@@ -63,7 +67,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
             // Set up buttons
             // TODO: Get these screen models from somewhere else
             _systemButton = new NavigationButtonModel(new HomeScreenModel(), "SYS", this, true);
-            _alfredButton = new NavigationButtonModel(new AlfredScreenModel(), "ALFR", this);
+            _alfredButton = new NavigationButtonModel(new AlfredScreenModel(workspace.AlfredApplication), "ALFR", this);
 
             _logButton = new ButtonModel("LOG", this);
             _performanceButton = new ButtonModel("PERF", this);

@@ -1,5 +1,7 @@
 using System.Diagnostics.Contracts;
 
+using Assisticant.Fields;
+
 using MattEland.Ani.Alfred.MFDMockUp.Models.Screens;
 using MattEland.Ani.Alfred.PresentationCommon.Helpers;
 using MattEland.Common.Annotations;
@@ -19,6 +21,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         [NotNull]
         private readonly AlfredScreenModel _model;
 
+        [NotNull]
+        private readonly Computed<string> _status;
+
         /// <summary>
         ///     Initializes a new instance of the AlfredScreenViewModel class.
         /// </summary>
@@ -26,6 +31,10 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         public AlfredScreenViewModel([NotNull] AlfredScreenModel model)
         {
             _model = model;
+
+            _status = new Computed<string>(
+                    () => string.Format("Current Status: {0}", _model.AlfredApplication.Status)
+        );
         }
 
         /// <summary>
@@ -40,6 +49,18 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
             Contract.Requires(other != null);
 
             return _model.Equals(other._model);
+        }
+
+        /// <summary>
+        ///     Gets a message describing the status of the Alfred system.
+        /// </summary>
+        /// <value>
+        ///     A message describing the Alfred system status.
+        /// </value>
+        [NotNull]
+        public string StatusMessage
+        {
+            get { return _status; }
         }
 
         /// <summary>

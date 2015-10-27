@@ -75,7 +75,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
 
             //- Create Observable Properties
             _currentScreen = new Observable<ScreenModel>(bootScreen);
-            _buttonProvider = new Observable<ButtonProvider>(new ButtonProvider(this));
+            _buttonProvider = new Observable<ButtonProvider>(new ButtonProvider(this, workspace));
             _isSensorOfInterest = new Computed<bool>(() => _workspace.SelectedMFD == this);
             _screenWidth = new Observable<double>(DefaultScreenSize);
             _screenHeight = new Observable<double>(DefaultScreenSize);

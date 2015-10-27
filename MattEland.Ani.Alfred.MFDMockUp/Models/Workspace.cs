@@ -34,7 +34,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             _mfds = new ObservableList<MultifunctionDisplay>();
             _selectedMFD = new Observable<MultifunctionDisplay>();
 
-            _alfred = new AlfredApplication(container);
+            // Set up Alfred. This will not start Alfred
+            AlfredApplication = new AlfredApplication(container);
 
             // Build the main update pump
             _updatePump = new DispatcherUpdatePump(TimeSpan.FromSeconds(0.1), Update);
@@ -104,12 +105,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         private readonly Observable<MultifunctionDisplay> _selectedMFD;
 
         /// <summary>
-        ///     The Alfred implementation.
-        /// </summary>
-        [NotNull]
-        private AlfredApplication _alfred;
-
-        /// <summary>
         ///     Gets or sets the selected multifunction display.
         /// </summary>
         /// <value>
@@ -121,6 +116,15 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             get { return _selectedMFD; }
             set { _selectedMFD.Value = value; }
         }
+
+        /// <summary>
+        ///     Gets the alfred application.
+        /// </summary>
+        /// <value>
+        ///     The alfred application.
+        /// </value>
+        [NotNull]
+        public AlfredApplication AlfredApplication { get; }
 
         /// <summary>
         /// Creates a new multifunction display (MFD). 

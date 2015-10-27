@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using MattEland.Ani.Alfred.Core;
+using MattEland.Common.Annotations;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
 {
@@ -14,8 +18,11 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         /// <summary>
         ///     Initializes a new instance of the AlfredScreenModel class.
         /// </summary>
-        public AlfredScreenModel() : base("ALF")
+        public AlfredScreenModel([NotNull] AlfredApplication alfredApplication) : base("ALF")
         {
+            Contract.Requires(alfredApplication != null);
+
+            AlfredApplication = alfredApplication;
         }
 
         /// <summary>
@@ -26,6 +33,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         protected override void ProcessScreenState(MFDProcessor processor, MFDProcessorResult processorResult)
         {
             // No operation (yet)
+        }
+
+        [NotNull]
+        public AlfredApplication AlfredApplication
+        {
+            get;
         }
     }
 }
