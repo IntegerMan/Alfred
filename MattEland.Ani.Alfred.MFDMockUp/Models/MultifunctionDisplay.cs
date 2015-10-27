@@ -1,11 +1,7 @@
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using Assisticant.Fields;
 
-using MattEland.Ani.Alfred.MFDMockUp.Views;
 using MattEland.Common.Annotations;
 using MattEland.Common.Providers;
 using System.Diagnostics.Contracts;
