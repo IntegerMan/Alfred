@@ -13,7 +13,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
     /// <summary>
     ///     A model that provides buttons based on the current state of a <see cref="MultifunctionDisplay"/>.
     /// </summary>
-    public sealed class ButtonProvider
+    public sealed class ButtonProvider : IButtonClickListener
     {
 
         [NotNull]
@@ -77,7 +77,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
             _optionsButton = new ButtonModel("OPTS", this);
 
             // Set up placeholder button list
-            _emptyButtons = ButtonStripModel.CreateEmptyButtons(this, 5);
+            _emptyButtons = ButtonStripModel.BuildEmptyButtons(5);
         }
 
         /// <summary>
@@ -197,7 +197,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         ///     Executes when a button is clicked.
         /// </summary>
         /// <param name="button"> The button. </param>
-        internal void OnButtonClicked([NotNull] ButtonModel button)
+        public void OnButtonClicked([NotNull] ButtonModel button)
         {
             _owner.OnButtonClicked(button);
         }
@@ -207,13 +207,14 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         /// </summary>
         /// <param name="processor"> The processor. </param>
         /// <param name="result"> The result. </param>
-        internal void ProcessCurrentState([NotNull] MFDProcessor processor, [NotNull] MFDProcessorResult result)
+        internal void ProcessCurrentState([NotNull] MFDProcessor processor,
+            [NotNull] MFDProcessorResult result)
         {
             //- Contract Validate
             Contract.Requires(processor != null);
             Contract.Requires(result != null);
 
-            var mode = processor.CurrentMode;
+            var mode = result.CurrentMode;
 
             // Top and bottom buttons relate to views
             TopButtons.SetButtons(GetTopButtons(mode));
@@ -221,8 +222,10 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
 
             // TODO: Left and right buttons will be based off of the current view
 
-            LeftButtons.SetEmptyButtons(5);
-            RightButtons.SetEmptyButtons(5);
+            var screen = result.CurrentScreen;
+
+            LeftButtons.SetButtons(screen.GetButtons(result, ButtonStripDock.Left));
+            RightButtons.SetButtons(screen.GetButtons(result, ButtonStripDock.Right));
 
             // Any interaction with result should go here, but realistically, that's not going to happen.
         }

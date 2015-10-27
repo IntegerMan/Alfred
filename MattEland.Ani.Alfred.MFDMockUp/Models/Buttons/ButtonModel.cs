@@ -21,43 +21,32 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
     /// </summary>
     public class ButtonModel
     {
+
+        [NotNull]
+        private readonly Observable<int> _index;
+
+        [NotNull]
+        private readonly Observable<bool> _isSelected;
+
+        [NotNull]
+        private readonly Observable<string> _text;
         /// <summary>
         ///     Initializes a new instance of the ButtonModel class.
         /// </summary>
         /// <param name="text"> The text. </param>
-        /// <param name="provider"> The button provider. </param>
+        /// <param name="listener"> The button provider. </param>
         /// <param name="isSelected"> true if this instance is selected. </param>
         /// <param name="index"> The button's index. </param>
-        public ButtonModel([CanBeNull] string text,
-            [NotNull] ButtonProvider provider,
+        public ButtonModel([CanBeNull] string text = null,
+            [CanBeNull] IButtonClickListener listener = null,
             bool isSelected = false,
             int index = -1)
         {
             _text = new Observable<string>(text);
             _isSelected = new Observable<bool>(isSelected);
             _index = new Observable<int>(index);
-            _provider = provider;
+            ClickListener = listener;
         }
-
-        /// <summary>
-        ///     Invoked when the button is clicked
-        /// </summary>
-        private void OnClicked()
-        {
-            _provider.OnButtonClicked(this);
-        }
-
-        [NotNull]
-        private readonly Observable<string> _text;
-
-        [NotNull]
-        private readonly Observable<bool> _isSelected;
-
-        [NotNull]
-        private readonly Observable<int> _index;
-
-        [NotNull]
-        private readonly ButtonProvider _provider;
 
         /// <summary>
         ///     Gets the action to take when the button is clicked.
@@ -71,18 +60,15 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         }
 
         /// <summary>
-        ///     Sets the text of the button
+        ///     Gets or sets the zero-based index of this button within a button strip.
         /// </summary>
         /// <value>
-        ///     The text.
+        ///     The button's index.
         /// </value>
-        [NotNull]
-        public string Text
+        public int Index
         {
-            [DebuggerStepThrough]
-            get
-            { return _text; }
-            set { _text.Value = value; }
+            get { return _index; }
+            set { _index.Value = value; }
         }
 
         /// <summary>
@@ -101,16 +87,28 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         }
 
         /// <summary>
-        ///     Gets or sets the zero-based index of this button within a button strip.
+        ///     Sets the text of the button
         /// </summary>
         /// <value>
-        ///     The button's index.
+        ///     The text.
         /// </value>
-        public int Index
+        [NotNull]
+        public string Text
         {
-            get { return _index; }
-            set { _index.Value = value; }
+            [DebuggerStepThrough]
+            get
+            { return _text; }
+            set { _text.Value = value; }
         }
+
+        /// <summary>
+        ///     Gets or sets the button click listener.
+        /// </summary>
+        /// <value>
+        ///     The click listener.
+        /// </value>
+        [CanBeNull]
+        public IButtonClickListener ClickListener { get; set; }
 
         /// <summary>
         ///     Process the command by interacting with the current processor frame.
@@ -121,6 +119,14 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
             [NotNull] MFDProcessorResult result)
         {
             // Do nothing by default. Inheriting classes can provide specific implementations
+        }
+
+        /// <summary>
+        ///     Invoked when the button is clicked
+        /// </summary>
+        private void OnClicked()
+        {
+            ClickListener?.OnButtonClicked(this);
         }
     }
 }

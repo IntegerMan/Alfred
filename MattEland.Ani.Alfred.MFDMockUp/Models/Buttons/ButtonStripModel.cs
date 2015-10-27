@@ -26,6 +26,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         /// </summary>
         [NotNull]
         private readonly Observable<ButtonStripDock> _dock;
+
+        [NotNull]
+        private readonly Observable<int> _expectedButtons = new Observable<int>(5);
         /// <summary>
         ///     The button provider.
         /// </summary>
@@ -74,12 +77,24 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         }
 
         /// <summary>
+        ///     Gets or sets the expected buttons.
+        /// </summary>
+        /// <value>
+        ///     The expected buttons.
+        /// </value>
+        public int ExpectedButtons
+        {
+            get { return _expectedButtons; }
+            set { _expectedButtons.Value = value; }
+        }
+
+        /// <summary>
         ///     Sets the collection to a group of empty buttons.
         /// </summary>
         /// <param name="numButtons"> The number of buttons to populate. </param>
         public void SetEmptyButtons(int numButtons)
         {
-            var list = CreateEmptyButtons(_provider, numButtons);
+            var list = BuildEmptyButtons(numButtons);
 
             SetButtons(list.ToArray());
         }
@@ -87,21 +102,29 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         /// <summary>
         ///     Creates an empty buttons collection.
         /// </summary>
-        /// <param name="provider"> The button provider. </param>
         /// <param name="numButtons"> The number of buttons to populate. </param>
         /// <returns>
         ///     The new collection of empty buttons.
         /// </returns>
         [NotNull, ItemNotNull]
-        internal static IEnumerable<ButtonModel> CreateEmptyButtons([NotNull] ButtonProvider provider, int numButtons)
+        internal static IEnumerable<ButtonModel> BuildEmptyButtons(int numButtons)
         {
             var list = new List<ButtonModel>(numButtons);
 
             for (int i = 0; i < numButtons; i++)
             {
-                list.Add(new ButtonModel(string.Empty, provider, false, i));
+                list.Add(BuildEmptyButton(i));
             }
             return list;
+        }
+
+        /// <summary>
+        ///     Sets the buttons to the specified set of buttons.
+        /// </summary>
+        /// <param name="buttons"> The buttons. </param>
+        internal void SetButtons([CanBeNull, ItemNotNull] IEnumerable<ButtonModel> buttons)
+        {
+            SetButtons(buttons?.ToArray());
         }
 
         /// <summary>
@@ -132,17 +155,46 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
             // Ensure we don't get too many buttons
             _buttons.Clear();
 
-            if (buttons == null) return;
+            if (buttons == null)
+            {
+                buttons = BuildEmptyButtons(ExpectedButtons).ToArray();
+            }
 
             index = 0;
 
-            foreach (var button in buttons)
+            var toAdd = buttons.ToList();
+
+            if (toAdd.Count < ExpectedButtons)
+            {
+                for (int i = toAdd.Count; i < ExpectedButtons; i++)
+                {
+                    toAdd.Add(BuildEmptyButton(i));
+                }
+            }
+
+            foreach (var button in toAdd)
             {
                 // Set it to the appropriate index
                 button.Index = index++;
+                button.ClickListener = _provider;
 
                 _buttons.Add(button);
             }
+
+        }
+
+        /// <summary>
+        ///     Builds an empty button.
+        /// </summary>
+        /// <param name="index"> Zero-based index of the. </param>
+        /// <returns>
+        ///     A ButtonModel.
+        /// </returns>
+        [NotNull]
+        private static ButtonModel BuildEmptyButton(int index = 0)
+        {
+            // The ClickListener will be added later
+            return new ButtonModel(string.Empty, null, false, index);
         }
     }
 }

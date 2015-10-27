@@ -37,14 +37,14 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         /// </summary>
         /// <param name="target"> Target for the navigation. </param>
         /// <param name="text"> The text. </param>
-        /// <param name="provider"> The button provider. </param>
+        /// <param name="listener"> The button provider. </param>
         /// <param name="isSelected"> true if this instance is selected. </param>
         /// <param name="index"> The button's index. </param>
         public NavigationButtonModel([NotNull] ScreenModel target,
             [CanBeNull] string text,
-            [NotNull] ButtonProvider provider,
+            [NotNull] ButtonProvider listener,
             bool isSelected = false,
-            int index = -1) : base(text, provider, isSelected, index)
+            int index = -1) : base(text, listener, isSelected, index)
         {
             _target = target;
         }

@@ -1,5 +1,9 @@
+using System.Collections;
+using System.Collections.Generic;
+
 using Assisticant.Fields;
 
+using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
 using MattEland.Common.Annotations;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
@@ -56,5 +60,22 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         /// <param name="processorResult"> The processor result. </param>
         protected abstract void ProcessScreenState([NotNull] MFDProcessor processor,
             [NotNull] MFDProcessorResult processorResult);
+
+        /// <summary>
+        ///     Gets the buttons to appear along an <paramref name="edge"/>.
+        /// </summary>
+        /// <param name="result"> The result. </param>
+        /// <param name="edge"> The docking edge for the buttons to appear along. </param>
+        /// <returns>
+        ///     An enumerator that allows foreach to be used to process the buttons in this collection.
+        /// </returns>
+        [CanBeNull, ItemNotNull]
+        internal virtual IEnumerable<ButtonModel> GetButtons([NotNull] MFDProcessorResult result,
+            ButtonStripDock edge)
+        {
+
+            // Default implementation is no custom buttons but individual screens can customize this
+            return null;
+        }
     }
 }
