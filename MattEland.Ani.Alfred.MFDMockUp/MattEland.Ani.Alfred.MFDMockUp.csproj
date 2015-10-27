@@ -73,6 +73,7 @@
     </Compile>
     <Compile Include="Controls\MFDButtonStrip.cs" />
     <Compile Include="Controls\SensorOfInterestIndicator.cs" />
+    <Compile Include="Models\Buttons\NavigationButtonModel.cs" />
     <Compile Include="Models\Screens\AlfredScreenModel.cs" />
     <Compile Include="Models\Screens\BootupScreenModel.cs" />
     <Compile Include="Models\Buttons\ButtonModel.cs" />
@@ -128,6 +129,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\AlfredScreenView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\MFDHomeScreenView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -139,6 +144,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Views\AlfredScreenView.xaml.cs">
+      <DependentUpon>AlfredScreenView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MFDHomeScreenView.xaml.cs">
       <DependentUpon>MFDHomeScreenView.xaml</DependentUpon>

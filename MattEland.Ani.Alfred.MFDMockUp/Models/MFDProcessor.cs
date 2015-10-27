@@ -95,14 +95,14 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// <summary>
         ///     Updates the MFD's state
         /// </summary>
-        public void Update()
+        internal void Update()
         {
-
-            // Handle all button presses that have occurred since the last update
-            ProcessButtonPresses();
 
             // Build the result object that will be used to update the application
             var processorResult = new MFDProcessorResult(this);
+
+            // Handle all button presses that have occurred since the last update
+            ProcessButtonPresses(processorResult);
 
             // Allow the screen to interact with the result
             _mfd.CurrentScreen.ProcessCurrentState(this, processorResult);
@@ -128,13 +128,14 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// <summary>
         ///     Process the button presses.
         /// </summary>
-        private void ProcessButtonPresses()
+        /// <param name="processorResult"> The processor result. </param>
+        private void ProcessButtonPresses([NotNull] MFDProcessorResult processorResult)
         {
             const int MaxPressesPerFrame = 5;
 
             if (!_buttonPresses.Any()) return;
 
-            // If any button was pressed, it's now the SOI
+            // If any button was pressed, the MFD is now the SOI
             _mfd.IsSensorOfInterest = true;
 
             // Handle each button press
@@ -145,7 +146,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             {
                 var button = _buttonPresses.Dequeue();
 
-                // TODO: Process the button
+                // Allow the button to influence the result of this processor frame
+                button.ProcessCommand(this, processorResult);
 
                 pressesHandled += 1;
 

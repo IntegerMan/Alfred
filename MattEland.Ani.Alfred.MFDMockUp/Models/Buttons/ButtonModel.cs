@@ -19,7 +19,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
     /// <summary>
     ///     A model for buttons.
     /// </summary>
-    public sealed class ButtonModel
+    public class ButtonModel
     {
         /// <summary>
         ///     Initializes a new instance of the ButtonModel class.
@@ -110,6 +110,17 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         {
             get { return _index; }
             set { _index.Value = value; }
+        }
+
+        /// <summary>
+        ///     Process the command by interacting with the current processor frame.
+        /// </summary>
+        /// <param name="processor"> The processor. </param>
+        /// <param name="result"> The result. </param>
+        internal virtual void ProcessCommand([NotNull] MFDProcessor processor,
+            [NotNull] MFDProcessorResult result)
+        {
+            // Do nothing by default. Inheriting classes can provide specific implementations
         }
     }
 }

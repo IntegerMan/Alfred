@@ -38,12 +38,18 @@
         <Setter Property="FontSize" Value="6pt" />
     </Style>
 
+    <!--  View Mappings  -->
+
     <DataTemplate DataType="{x:Type screens:BootupScreenViewModel}">
         <views:MFDBootupScreenView />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type screens:HomeScreenViewModel}">
         <views:MFDHomeScreenView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type screens:AlfredScreenViewModel}">
+        <views:AlfredScreenView />
     </DataTemplate>
 
 </ResourceDictionary>

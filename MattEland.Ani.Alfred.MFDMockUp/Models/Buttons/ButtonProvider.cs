@@ -5,6 +5,7 @@ using System.Linq;
 
 using Assisticant.Fields;
 
+using MattEland.Ani.Alfred.MFDMockUp.Models.Screens;
 using MattEland.Common.Annotations;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
@@ -60,8 +61,10 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
             _rightButtons = new Observable<ButtonStripModel>(new ButtonStripModel(this, ButtonStripDock.Right));
 
             // Set up buttons
-            _systemButton = new ButtonModel("SYS", this, true);
-            _alfredButton = new ButtonModel("ALFR", this);
+            // TODO: Get these screen models from somewhere else
+            _systemButton = new NavigationButtonModel(new HomeScreenModel(), "SYS", this, true);
+            _alfredButton = new NavigationButtonModel(new AlfredScreenModel(), "ALFR", this);
+
             _logButton = new ButtonModel("LOG", this);
             _performanceButton = new ButtonModel("PERF", this);
             _modeButton = new ButtonModel("MODE", this);
