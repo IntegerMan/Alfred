@@ -24,7 +24,8 @@
     <FontFamily x:Key="ConsoleFontFamily">Terminus, Lucida Console</FontFamily>
 
     <!--  Converters  -->
-    <converters:VisibilityConverter x:Key="ShowIfTrueConverter" Invert="False" />
-    <converters:VisibilityConverter x:Key="ShowIfFalseConverter" Invert="True" />
+    <converters:VisibilityConverter x:Key="ShowIfTrue" Invert="False" />
+    <converters:VisibilityConverter x:Key="ShowIfFalse" Invert="True" />
+    <converters:HideIfNoTextConverter x:Key="HideIfNoText" />
 
 </ResourceDictionary>

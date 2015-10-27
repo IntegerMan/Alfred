@@ -23,7 +23,9 @@
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            Padding="{TemplateBinding Padding}">
+                            Padding="{TemplateBinding Padding}"
+                            Visibility="{TemplateBinding Text,
+                                                         Converter={StaticResource HideIfNoText}}">
 
                         <!--  Actual content goes here  -->
                         <TextBlock x:Name="LabelContent"

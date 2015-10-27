@@ -12,7 +12,7 @@
                     BorderBrush="{StaticResource MFDScreenBackgroundBrush}"
                     BorderThickness="0.5"
                     Visibility="{TemplateBinding IsSensorOfInterest,
-                                                 Converter={StaticResource ShowIfTrueConverter}}">
+                                                 Converter={StaticResource ShowIfTrue}}">
                 <Border BorderBrush="{StaticResource MFDScreenForegroundBrush}" BorderThickness="1">
                     <Border BorderBrush="{StaticResource MFDScreenBackgroundBrush}" BorderThickness="0.5" />
                 </Border>
@@ -27,7 +27,7 @@
                        Style="{StaticResource MFDViewCenterTextStyle}"
                        Text="NOT SOI"
                        Visibility="{TemplateBinding IsSensorOfInterest,
-                                                    Converter={StaticResource ShowIfFalseConverter}}" />
+                                                    Converter={StaticResource ShowIfFalse}}" />
 
         </Grid>
     </ControlTemplate>
