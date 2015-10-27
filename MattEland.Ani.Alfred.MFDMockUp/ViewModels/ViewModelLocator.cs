@@ -6,8 +6,8 @@ using System.Reflection;
 
 using Assisticant;
 
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.MFDMockUp.Models;
-using MattEland.Ani.Alfred.MFDMockUp.Models.Screens;
 using MattEland.Common;
 using MattEland.Common.Annotations;
 using MattEland.Ani.Alfred.PresentationCommon.Helpers;
@@ -18,12 +18,18 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
     /// <summary>
     ///     The view model locator that helps views find appropriate view models.
     /// </summary>
-    public sealed class ViewModelLocator : ViewModelLocatorBase, IHasContainer<IObjectContainer>
+    public sealed class ViewModelLocator : ViewModelLocatorBase
     {
         /// <summary>
         ///     The default number of MFDs present.
         /// </summary>
         private const int DefaultMFDCount = 6;
+
+        /// <summary>
+        ///     A mapping of model types to its view model.
+        /// </summary>
+        [NotNull, ItemNotNull]
+        private readonly Dictionary<Type, Type> _modelToViewModelMapping;
 
         [NotNull]
         private readonly Workspace _workspace;
@@ -41,9 +47,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         /// </summary>
         /// <param name="container"> The container. </param>
         [UsedImplicitly]
-        public ViewModelLocator([CanBeNull] IObjectContainer container)
+        public ViewModelLocator([CanBeNull] IAlfredContainer container)
         {
-            Container = container ?? CommonProvider.Container;
+            Container = container ?? new AlfredContainer(CommonProvider.Container);
 
             // Set up mappings for automatic creation of view models.
             _modelToViewModelMapping = new Dictionary<Type, Type>();
@@ -59,7 +65,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         ///     The container.
         /// </value>
         [NotNull]
-        public IObjectContainer Container { get; }
+        public IAlfredContainer Container { get; }
 
         /// <summary>
         ///     Gets the main view model.
@@ -78,59 +84,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
             }
         }
 
-        /// <summary>
-        ///     Loads the workspace.
-        /// </summary>
-        /// <returns>
-        ///     The workspace.
-        /// </returns>
-        [NotNull]
-        private Workspace LoadWorkspace()
-        {
-            // Create the workspace
-            var workspace = new Workspace(Container);
-
-            // Add all MFDs to the workspace
-            for (int index = 0; index < DefaultMFDCount; index++)
-            {
-                var mfd = workspace.NewMFD();
-
-                if (DesignMode)
-                {
-                    ConfigureDesignMFD(mfd, index);
-                }
-                else
-                {
-                    ConfigureMFD(mfd, index);
-                }
-            }
-
-            // Automatically make the first MFD the sensor of interest.
-            workspace.SelectedMFD = workspace.MFDs.First();
-
-            return workspace;
-        }
-
-        /// <summary>
-        ///     Configures a multifunction display.
-        /// </summary>
-        /// <param name="mfd"> The mfd. </param>
-        /// <param name="index"> The zero-based index of the multifunction display. </param>
-        private static void ConfigureMFD([NotNull] MultifunctionDisplay mfd, int index)
-        {
-            mfd.Name = string.Format("MFD {0}", index + 1);
-        }
-
-        /// <summary>
-        ///     Configures a multifunction display.
-        /// </summary>
-        /// <param name="mfd"> The mfd. </param>
-        /// <param name="index"> The zero-based index of the multifunction display. </param>
-        private static void ConfigureDesignMFD([NotNull] MultifunctionDisplay mfd, int index)
-        {
-            mfd.Name = string.Format("Design MFD {0}", index + 1);
-        }
-
         [NotNull]
         internal object ViewModelFor([NotNull] object model)
         {
@@ -144,10 +97,24 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         }
 
         /// <summary>
-        ///     A mapping of model types to its view model.
+        ///     Configures a multifunction display.
         /// </summary>
-        [NotNull, ItemNotNull]
-        private readonly Dictionary<Type, Type> _modelToViewModelMapping;
+        /// <param name="mfd"> The mfd. </param>
+        /// <param name="index"> The zero-based index of the multifunction display. </param>
+        private static void ConfigureDesignMFD([NotNull] MultifunctionDisplay mfd, int index)
+        {
+            mfd.Name = string.Format("Design MFD {0}", index + 1);
+        }
+
+        /// <summary>
+        ///     Configures a multifunction display.
+        /// </summary>
+        /// <param name="mfd"> The mfd. </param>
+        /// <param name="index"> The zero-based index of the multifunction display. </param>
+        private static void ConfigureMFD([NotNull] MultifunctionDisplay mfd, int index)
+        {
+            mfd.Name = string.Format("MFD {0}", index + 1);
+        }
 
         /// <summary>
         ///     Builds a view model for the specified model.
@@ -201,6 +168,39 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
                     _modelToViewModelMapping[atr.Model] = type;
                 }
             }
+        }
+
+        /// <summary>
+        ///     Loads the workspace.
+        /// </summary>
+        /// <returns>
+        ///     The workspace.
+        /// </returns>
+        [NotNull]
+        private Workspace LoadWorkspace()
+        {
+            // Create the workspace
+            var workspace = new Workspace(Container);
+
+            // Add all MFDs to the workspace
+            for (int index = 0; index < DefaultMFDCount; index++)
+            {
+                var mfd = workspace.NewMFD();
+
+                if (DesignMode)
+                {
+                    ConfigureDesignMFD(mfd, index);
+                }
+                else
+                {
+                    ConfigureMFD(mfd, index);
+                }
+            }
+
+            // Automatically make the first MFD the sensor of interest.
+            workspace.SelectedMFD = workspace.MFDs.First();
+
+            return workspace;
         }
     }
 

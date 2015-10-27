@@ -7,6 +7,9 @@ using System.Collections.Generic;
 using MattEland.Common.Providers;
 using System.Diagnostics.Contracts;
 
+using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.Core.Definitions;
+
 namespace MattEland.Ani.Alfred.MFDMockUp.Models
 {
     /// <summary>
@@ -19,7 +22,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         ///     Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
         /// <param name="container"> The container. </param>
-        public Workspace([NotNull] IObjectContainer container)
+        public Workspace([NotNull] IAlfredContainer container)
         {
             Contract.Requires(container != null);
 
@@ -30,6 +33,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             _name = new Observable<string>(DefaultWorkspaceName);
             _mfds = new ObservableList<MultifunctionDisplay>();
             _selectedMFD = new Observable<MultifunctionDisplay>();
+
+            _alfred = new AlfredApplication(container);
 
             // Build the main update pump
             _updatePump = new DispatcherUpdatePump(TimeSpan.FromSeconds(0.1), Update);
@@ -53,7 +58,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         [NotNull]
         private const string DefaultWorkspaceName = "Alfred MFD Prototype";
 
-        [NotNull]
+        [NotNull, ItemNotNull]
         private readonly ObservableList<MultifunctionDisplay> _mfds;
 
         /// <summary>
@@ -99,6 +104,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         private readonly Observable<MultifunctionDisplay> _selectedMFD;
 
         /// <summary>
+        ///     The Alfred implementation.
+        /// </summary>
+        [NotNull]
+        private AlfredApplication _alfred;
+
+        /// <summary>
         ///     Gets or sets the selected multifunction display.
         /// </summary>
         /// <value>
@@ -109,51 +120,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         {
             get { return _selectedMFD; }
             set { _selectedMFD.Value = value; }
-        }
-
-        /// <summary>
-        /// Determine if the <paramref name="mfd"/> can move down. 
-        /// </summary>
-        /// <param name="mfd"> The mfd. </param>
-        /// <returns> <c> True </c> if the mfd can move down, <c> False </c> if not. </returns>
-        public bool CanMoveDown([NotNull] MultifunctionDisplay mfd)
-        {
-            return _mfds.IndexOf(mfd) < _mfds.Count - 1;
-        }
-
-        /// <summary>
-        /// Determine if the <paramref name="mfd"/> can move up. 
-        /// </summary>
-        /// <param name="mfd"> The mfd. </param>
-        /// <returns> <c> True </c> if the mfd can move up, <c> False </c> if not. </returns>
-        public bool CanMoveUp([NotNull] MultifunctionDisplay mfd)
-        {
-            return _mfds.IndexOf(mfd) > 0;
-        }
-
-        /// <summary>
-        /// Deletes the specified <paramref name="mfd"/>. 
-        /// </summary>
-        /// <param name="mfd"> The mfd. </param>
-        public void DeleteMFD([NotNull] MultifunctionDisplay mfd)
-        {
-            _mfds.Remove(mfd);
-        }
-
-        public void MoveDown([NotNull] MultifunctionDisplay mfd)
-        {
-            var index = _mfds.IndexOf(mfd);
-
-            _mfds.RemoveAt(index);
-            _mfds.Insert(index + 1, mfd);
-        }
-
-        public void MoveUp([NotNull] MultifunctionDisplay mfd)
-        {
-            var index = _mfds.IndexOf(mfd);
-
-            _mfds.RemoveAt(index);
-            _mfds.Insert(index - 1, mfd);
         }
 
         /// <summary>

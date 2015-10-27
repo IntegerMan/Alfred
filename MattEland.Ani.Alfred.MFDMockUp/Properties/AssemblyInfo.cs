@@ -8,7 +8,7 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyCompany("Matt Eland")]
-[assembly: AssemblyTitle("MattEland.Ani.Alfred.MFDMockUp")]
+[assembly: AssemblyTitle("Alfred MFD Interface")]
 [assembly: AssemblyProduct("Alfred MFD Interface")]
 [assembly: AssemblyCopyright("Copyright © Matt Eland 2015")]
 [assembly: AssemblyDescription("")]
@@ -54,4 +54,4 @@ using System.Windows;
 [assembly: AssemblyVersion("0.4.*")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
-[assembly: CLSCompliant(true)]
+[assembly: CLSCompliant(false)]
