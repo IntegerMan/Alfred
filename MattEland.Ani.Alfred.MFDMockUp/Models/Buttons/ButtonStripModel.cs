@@ -134,24 +134,11 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         /// <param name="buttons"> The buttons. </param>
         internal void SetButtons([CanBeNull, ItemCanBeNull] params ButtonModel[] buttons)
         {
-            var index = 0;
+            // Do nothing if this is the same list as we're using now
+            var isMatch = AreButtonCollectionsIdentical(buttons);
+            if (isMatch) return;
 
-            // Check to see if the contents of buttons matches _buttons
-            if (buttons != null && buttons.Length == _buttons.Count)
-            {
-                var isMatch = true;
-
-                foreach (var button in buttons)
-                {
-                    if (button != _buttons[index++])
-                    {
-                        isMatch = false;
-                    }
-                }
-
-                // Do nothing if this is the same list as we're using now
-                if (isMatch) return;
-            }
+            // TODO: Avoid clearing the buttons list every enumeration as this causes binding issues
 
             // Ensure we don't get too many buttons
             _buttons.Clear();
@@ -160,8 +147,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
             {
                 buttons = BuildEmptyButtons(ExpectedButtons).ToArray();
             }
-
-            index = 0;
 
             var toAdd = buttons.ToList();
 
@@ -172,6 +157,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
                     toAdd.Add(BuildEmptyButton(i));
                 }
             }
+
+            var index = 0;
 
             foreach (var button in toAdd)
             {
@@ -188,6 +175,39 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         }
 
         /// <summary>
+        ///     Determine if the button collection is identical to the one currently being used.
+        /// </summary>
+        /// <param name="buttons"> The buttons. </param>
+        /// <returns>
+        ///     true if the button collections are identical, false if not.
+        /// </returns>
+        private bool AreButtonCollectionsIdentical([CanBeNull] IEnumerable<ButtonModel> buttons)
+        {
+            // Prevent multiple enumerations of list
+            buttons = buttons?.ToList();
+
+            // Check to see if the contents of buttons matches _buttons
+            if (buttons == null || (buttons.Count() != _buttons.Count))
+            {
+                return false;
+            }
+
+            var index = 0;
+
+            foreach (var button in buttons)
+            {
+                var matchButton = _buttons[index++];
+
+                if (button != matchButton)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
         ///     Builds an empty button.
         /// </summary>
         /// <param name="index"> Zero-based index of the. </param>
@@ -195,7 +215,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         ///     A ButtonModel.
         /// </returns>
         [NotNull]
-        private static ButtonModel BuildEmptyButton(int index = 0)
+        public static ButtonModel BuildEmptyButton(int index = 0)
         {
             // The ClickListener will be added later
             return new ButtonModel(string.Empty, null, index);

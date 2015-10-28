@@ -25,6 +25,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         [NotNull]
         private readonly Observable<string> _statusText;
 
+        [NotNull, ItemCanBeNull]
+        private readonly IEnumerable<ButtonModel> _rightButtons;
+
         /// <summary>
         ///     Initializes a new instance of the AlfredScreenModel class.
         /// </summary>
@@ -41,6 +44,16 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
 
             // Create buttons
             _powerButton = new ActionButtonModel("PWR", ToggleAlfredPower);
+
+            // Build out the right button strip with some spacer items
+            _rightButtons = new List<ButtonModel>
+                            {
+                                ButtonStripModel.BuildEmptyButton(0),
+                                ButtonStripModel.BuildEmptyButton(1),
+                                ButtonStripModel.BuildEmptyButton(2),
+                                _powerButton,
+                                ButtonStripModel.BuildEmptyButton(4)
+                            };
         }
 
         /// <summary>
@@ -90,14 +103,10 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         {
             if (edge == ButtonStripDock.Right)
             {
-                // Spacers
-                yield return null;
-                yield return null;
-                yield return null;
-
-                // Activate / Deactivate
-                yield return _powerButton;
+                return _rightButtons;
             }
+
+            return null;
         }
 
         /// <summary>
