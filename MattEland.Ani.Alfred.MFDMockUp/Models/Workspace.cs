@@ -4,11 +4,12 @@ using Assisticant.Collections;
 using Assisticant.Fields;
 using MattEland.Common.Annotations;
 using System.Collections.Generic;
-using MattEland.Common.Providers;
 using System.Diagnostics.Contracts;
 
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.PresentationAvalon.Commands;
+using MattEland.Ani.Alfred.PresentationCommon.Commands;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.Models
 {
@@ -35,11 +36,28 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             _selectedMFD = new Observable<MultifunctionDisplay>();
 
             // Set up Alfred. This will not start Alfred
-            AlfredApplication = new AlfredApplication(container);
+            var options = new ApplicationManagerOptions
+            {
+                IsSpeechEnabled = true,
+                StackOverflowApiKey = "42", // TODO obviously
+                BingApiKey = "42" // TODO obviously
+            };
+
+            ApplicationManager = new ApplicationManager(container, options);
+            AlfredApplication = ApplicationManager.Alfred;
 
             // Build the main update pump
             _updatePump = new DispatcherUpdatePump(TimeSpan.FromSeconds(0.1), Update);
         }
+
+        /// <summary>
+        ///     Gets the manager for application.
+        /// </summary>
+        /// <value>
+        ///     The application manager.
+        /// </value>
+        [NotNull]
+        public ApplicationManager ApplicationManager { get; }
 
         /// <summary>
         ///     Updates the workspace's contents.
