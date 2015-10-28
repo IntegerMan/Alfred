@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
@@ -44,6 +40,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
             // No operation (yet)
         }
 
+        /// <summary>
+        ///     Gets the alfred application.
+        /// </summary>
+        /// <value>
+        ///     The alfred application.
+        /// </value>
         [NotNull]
         public AlfredApplication AlfredApplication
         {
@@ -60,7 +62,10 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         /// </returns>
         internal override IEnumerable<ButtonModel> GetButtons(MFDProcessorResult result, ButtonStripDock edge)
         {
-            yield return _powerButton;
+            if (edge == ButtonStripDock.Right)
+            {
+                yield return _powerButton;
+            }
         }
     }
 }

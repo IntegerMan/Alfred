@@ -75,6 +75,7 @@
     <Compile Include="Controls\SensorOfInterestIndicator.cs" />
     <Compile Include="Models\Buttons\IButtonClickListener.cs" />
     <Compile Include="Models\Buttons\NavigationButtonModel.cs" />
+    <Compile Include="Models\ScreenProvider.cs" />
     <Compile Include="Models\Screens\AlfredScreenModel.cs" />
     <Compile Include="Models\Screens\BootupScreenModel.cs" />
     <Compile Include="Models\Buttons\ButtonModel.cs" />

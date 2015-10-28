@@ -50,6 +50,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         ///     Initializes a new instance of the ButtonProvider class.
         /// </summary>
         /// <param name="owner"> The owner. </param>
+        /// <param name="workspace"> The workspace. </param>
         public ButtonProvider([NotNull] MultifunctionDisplay owner, [NotNull] Workspace workspace)
         {
             _owner = owner;
@@ -61,11 +62,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
             _rightButtons = new Observable<ButtonStripModel>(new ButtonStripModel(this, ButtonStripDock.Right));
 
             // Set up buttons
-            // TODO: Get these screen models from somewhere else
-            _systemButton = new NavigationButtonModel(new HomeScreenModel(), "SYS", this, true);
-
-            var alfredScreen = new AlfredScreenModel(workspace.AlfredApplication);
-            _alfredButton = new NavigationButtonModel(alfredScreen, "ALFR", this);
+            var screens = owner.ScreenProvider;
+            _systemButton = new NavigationButtonModel(screens.HomeScreen, "SYS", this);
+            _alfredButton = new NavigationButtonModel(screens.AlfredScreen, "ALFR", this);
 
             _logButton = new ButtonModel("LOG", this);
             _performanceButton = new ButtonModel("PERF", this);
@@ -227,7 +226,40 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
             LeftButtons.SetButtons(screen.GetButtons(result, ButtonStripDock.Left));
             RightButtons.SetButtons(screen.GetButtons(result, ButtonStripDock.Right));
 
-            // Any interaction with result should go here, but realistically, that's not going to happen.
+            foreach (var button in Buttons)
+            {
+                button.ProcessCurrentState(processor, result);
+            }
+        }
+
+        /// <summary>
+        ///     Gets the buttons in all of the button strips.
+        /// </summary>
+        /// <value>
+        ///     The buttons.
+        /// </value>
+        [NotNull, ItemNotNull]
+        internal IEnumerable<ButtonModel> Buttons
+        {
+            get
+            {
+                foreach (var button in TopButtons.Buttons)
+                {
+                    yield return button;
+                }
+                foreach (var button in RightButtons.Buttons)
+                {
+                    yield return button;
+                }
+                foreach (var button in BottomButtons.Buttons)
+                {
+                    yield return button;
+                }
+                foreach (var button in LeftButtons.Buttons)
+                {
+                    yield return button;
+                }
+            }
         }
     }
 }

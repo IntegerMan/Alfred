@@ -59,6 +59,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         /// <value>
         ///     The buttons.
         /// </value>
+        [NotNull, ItemNotNull]
         public IEnumerable<ButtonModel> Buttons
         {
             get { return _buttons; }
@@ -194,7 +195,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         private static ButtonModel BuildEmptyButton(int index = 0)
         {
             // The ClickListener will be added later
-            return new ButtonModel(string.Empty, null, false, index);
+            return new ButtonModel(string.Empty, null, index);
         }
     }
 }

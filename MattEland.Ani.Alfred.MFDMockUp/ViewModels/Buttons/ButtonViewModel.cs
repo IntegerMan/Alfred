@@ -68,7 +68,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Buttons
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether this button is selected.
+        ///     Gets a value indicating whether this button is selected.
         /// </summary>
         /// <value>
         ///     true if this button is selected, false if not.
@@ -78,10 +78,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Buttons
             get
             {
                 return _model.IsSelected;
-            }
-            set
-            {
-                _model.IsSelected = value;
             }
         }
 

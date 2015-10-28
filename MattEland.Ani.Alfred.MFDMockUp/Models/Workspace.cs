@@ -99,7 +99,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         ///     The container.
         /// </value>
         [NotNull]
-        public IObjectContainer Container { get; }
+        public IAlfredContainer Container { get; }
 
         [NotNull]
         private readonly Observable<MultifunctionDisplay> _selectedMFD;

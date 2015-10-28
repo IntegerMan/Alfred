@@ -6,6 +6,7 @@ using MattEland.Common.Annotations;
 using MattEland.Common.Providers;
 using System.Diagnostics.Contracts;
 
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
 using MattEland.Ani.Alfred.MFDMockUp.Models.Screens;
 
@@ -16,11 +17,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
     /// </summary>
     public sealed class MultifunctionDisplay
     {
-        /// <summary>
-        ///     The workspace.
-        /// </summary>
-        [NotNull]
-        private readonly Workspace _workspace;
 
         /// <summary>
         ///     The default screen size.
@@ -28,53 +24,58 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         public const double DefaultScreenSize = 256;
 
         /// <summary>
-        ///     The button provider.
-        /// </summary>
-        [NotNull]
-        private readonly Observable<ButtonProvider> _buttonProvider;
-
-        /// <summary>
         ///     The current view.
         /// </summary>
         [NotNull]
         private readonly Observable<ScreenModel> _currentScreen;
 
+        /// <summary>
+        ///     Whether or not this is the sensor of interest.
+        /// </summary>
+        [NotNull]
+        private readonly Computed<bool> _isSensorOfInterest;
+
         [NotNull]
         private readonly Observable<string> _name;
+
+        [NotNull]
+        private readonly MFDProcessor _processor;
 
         [NotNull]
         private readonly Observable<double> _screenHeight;
 
         [NotNull]
         private readonly Observable<double> _screenWidth;
-
+        /// <summary>
+        ///     The workspace.
+        /// </summary>
         [NotNull]
-        private readonly MFDProcessor _processor;
+        private readonly Workspace _workspace;
 
         /// <summary>
         ///     Initializes a new instance of the MultifunctionDisplay class.
         /// </summary>
-        public MultifunctionDisplay([NotNull] IObjectContainer container, [NotNull] Workspace workspace)
+        public MultifunctionDisplay([NotNull] IAlfredContainer container, [NotNull] Workspace workspace)
         {
             Contract.Requires(container != null);
             Contract.Requires(workspace != null);
 
             _workspace = workspace;
 
-            _name = new Observable<string>("<New MFD>");
-
             _processor = new MFDProcessor(container, this);
 
-            // We're going to start on a bootup mode and move on to the home screen after that loads
-            var homeScreen = new HomeScreenModel();
-            var bootScreen = new BootupScreenModel(homeScreen);
+            // Create the provider objects
+            ScreenProvider = new ScreenProvider(this, workspace);
+            ButtonProvider = new ButtonProvider(this, workspace);
 
             //- Create Observable Properties
-            _currentScreen = new Observable<ScreenModel>(bootScreen);
-            _buttonProvider = new Observable<ButtonProvider>(new ButtonProvider(this, workspace));
+            _name = new Observable<string>("<New MFD>");
             _isSensorOfInterest = new Computed<bool>(() => _workspace.SelectedMFD == this);
             _screenWidth = new Observable<double>(DefaultScreenSize);
             _screenHeight = new Observable<double>(DefaultScreenSize);
+
+            // Set up the current screen as the boot screen
+            _currentScreen = new Observable<ScreenModel>(ScreenProvider.BootScreen);
         }
 
         /// <summary>
@@ -88,6 +89,18 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         {
             get { return _currentScreen; }
             set { _currentScreen.Value = value; }
+        }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether this instance is the sensor of interest.
+        /// </summary>
+        /// <value>
+        ///     true if this instance is the sensor of interest, false if not.
+        /// </value>
+        public bool IsSensorOfInterest
+        {
+            get { return _isSensorOfInterest; }
+            set { _workspace.SelectedMFD = this; }
         }
 
         /// <summary>
@@ -135,33 +148,16 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         ///     The button provider.
         /// </value>
         [NotNull]
-        internal ButtonProvider ButtonProvider { get { return _buttonProvider; } }
+        internal ButtonProvider ButtonProvider { get; }
 
         /// <summary>
-        ///     Whether or not this is the sensor of interest.
-        /// </summary>
-        [NotNull]
-        private readonly Computed<bool> _isSensorOfInterest;
-
-        /// <summary>
-        ///     Gets or sets a value indicating whether this instance is the sensor of interest.
+        ///     Gets the screen provider.
         /// </summary>
         /// <value>
-        ///     true if this instance is the sensor of interest, false if not.
+        ///     The screen provider.
         /// </value>
-        public bool IsSensorOfInterest
-        {
-            get { return _isSensorOfInterest; }
-            set { _workspace.SelectedMFD = this; }
-        }
-
-        /// <summary>
-        ///     Updates this instance.
-        /// </summary>
-        public void Update()
-        {
-            _processor.Update();
-        }
+        [NotNull]
+        internal ScreenProvider ScreenProvider { get; }
 
         /// <summary>
         ///     Responds to the action of a button associated with this MFD being clicked.
@@ -172,6 +168,14 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             Contract.Requires(button != null);
 
             _processor.EnqueueButtonPress(button);
+        }
+
+        /// <summary>
+        ///     Updates this instance.
+        /// </summary>
+        internal void Update()
+        {
+            _processor.Update();
         }
 
     }

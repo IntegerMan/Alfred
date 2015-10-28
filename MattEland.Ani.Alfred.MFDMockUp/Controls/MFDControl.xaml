@@ -106,6 +106,18 @@
                                                                  VerticalAlignment="Bottom"
                                                                  DataContext="{Binding Path=BottomButtons}" />
 
+                            <controls:MFDButtonLabelStripControl x:Name="labelsLeft"
+                                                                 Margin="3,0"
+                                                                 HorizontalAlignment="Left"
+                                                                 VerticalAlignment="Stretch"
+                                                                 DataContext="{Binding Path=LeftButtons}" />
+
+                            <controls:MFDButtonLabelStripControl x:Name="labelsRight"
+                                                                 Margin="3,0"
+                                                                 HorizontalAlignment="Right"
+                                                                 VerticalAlignment="Stretch"
+                                                                 DataContext="{Binding Path=RightButtons}" />
+
                         </Grid>
 
                     </Grid>

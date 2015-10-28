@@ -26,24 +26,19 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         private readonly Observable<int> _index;
 
         [NotNull]
-        private readonly Observable<bool> _isSelected;
-
-        [NotNull]
         private readonly Observable<string> _text;
+
         /// <summary>
         ///     Initializes a new instance of the ButtonModel class.
         /// </summary>
         /// <param name="text"> The text. </param>
         /// <param name="listener"> The button provider. </param>
-        /// <param name="isSelected"> true if this instance is selected. </param>
         /// <param name="index"> The button's index. </param>
         public ButtonModel([CanBeNull] string text = null,
             [CanBeNull] IButtonClickListener listener = null,
-            bool isSelected = false,
             int index = -1)
         {
             _text = new Observable<string>(text);
-            _isSelected = new Observable<bool>(isSelected);
             _index = new Observable<int>(index);
             ClickListener = listener;
         }
@@ -72,18 +67,14 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         }
 
         /// <summary>
-        ///     Sets a value indicating whether this button's label should appear as selected.
+        ///     Gets a value indicating whether this instance is selected.
         /// </summary>
         /// <value>
-        ///     <c>true</c> if this instance is selected, <c>false</c> if not.
+        ///     true if this instance is selected, false if not.
         /// </value>
-        [NotNull]
-        public bool IsSelected
+        public virtual bool IsSelected
         {
-            [DebuggerStepThrough]
-            get
-            { return _isSelected; }
-            set { _isSelected.Value = value; }
+            get { return false; }
         }
 
         /// <summary>
@@ -127,6 +118,17 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         private void OnClicked()
         {
             ClickListener?.OnButtonClicked(this);
+        }
+
+        /// <summary>
+        ///     Processes the current state.
+        /// </summary>
+        /// <param name="processor"> The processor. </param>
+        /// <param name="result"> The result. </param>
+        public virtual void ProcessCurrentState([NotNull] MFDProcessor processor,
+            [NotNull] MFDProcessorResult result)
+        {
+            // Do nothing. Inheriting classes can do something here
         }
     }
 }
