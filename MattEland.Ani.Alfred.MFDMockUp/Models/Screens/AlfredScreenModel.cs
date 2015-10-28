@@ -64,6 +64,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         {
             if (edge == ButtonStripDock.Right)
             {
+                // Spacers
+                yield return null;
+                yield return null;
+                yield return null;
+
+                // Activate / Deactivate
                 yield return _powerButton;
             }
         }

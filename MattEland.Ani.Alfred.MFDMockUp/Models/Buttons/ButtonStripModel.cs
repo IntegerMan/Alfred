@@ -123,7 +123,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         ///     Sets the buttons to the specified set of buttons.
         /// </summary>
         /// <param name="buttons"> The buttons. </param>
-        internal void SetButtons([CanBeNull, ItemNotNull] IEnumerable<ButtonModel> buttons)
+        internal void SetButtons([CanBeNull, ItemCanBeNull] IEnumerable<ButtonModel> buttons)
         {
             SetButtons(buttons?.ToArray());
         }
@@ -132,7 +132,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         ///     Sets the buttons to the specified set of buttons.
         /// </summary>
         /// <param name="buttons"> The buttons. </param>
-        internal void SetButtons([CanBeNull, ItemNotNull] params ButtonModel[] buttons)
+        internal void SetButtons([CanBeNull, ItemCanBeNull] params ButtonModel[] buttons)
         {
             var index = 0;
 
@@ -175,11 +175,14 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
 
             foreach (var button in toAdd)
             {
-                // Set it to the appropriate index
-                button.Index = index++;
-                button.ClickListener = _provider;
+                // Allow for null buttons to be passed in. These represent spacers
+                var addButton = button ?? BuildEmptyButton();
 
-                _buttons.Add(button);
+                // Set it to the appropriate index
+                addButton.Index = index++;
+                addButton.ClickListener = _provider;
+
+                _buttons.Add(addButton);
             }
 
         }
