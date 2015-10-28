@@ -110,13 +110,15 @@
                                                                  Margin="3,0"
                                                                  HorizontalAlignment="Left"
                                                                  VerticalAlignment="Stretch"
-                                                                 DataContext="{Binding Path=LeftButtons}" />
+                                                                 DataContext="{Binding Path=LeftButtons}"
+                                                                 LayoutType="VerticalAutoSpacePanel" />
 
                             <controls:MFDButtonLabelStripControl x:Name="labelsRight"
                                                                  Margin="3,0"
                                                                  HorizontalAlignment="Right"
                                                                  VerticalAlignment="Stretch"
-                                                                 DataContext="{Binding Path=RightButtons}" />
+                                                                 DataContext="{Binding Path=RightButtons}"
+                                                                 LayoutType="VerticalAutoSpacePanel" />
 
                         </Grid>
 

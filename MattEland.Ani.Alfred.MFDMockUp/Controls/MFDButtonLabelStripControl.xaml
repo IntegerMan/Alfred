@@ -1,12 +1,12 @@
 ﻿<UserControl x:Class="MattEland.Ani.Alfred.MFDMockUp.Controls.MFDButtonLabelStripControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:buttons="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels.Buttons"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:layout="clr-namespace:MattEland.Ani.Alfred.PresentationAvalon.Layout;assembly=MattEland.Ani.Alfred.PresentationAvalon"
              xmlns:local="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.Controls"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:viewModels="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels"
-             xmlns:buttons="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels.Buttons"
+             x:Name="labelStripControl"
              d:DataContext="{d:DesignInstance buttons:MFDButtonStripViewModel}"
              d:DesignHeight="30"
              d:DesignWidth="256"
@@ -25,19 +25,16 @@
         <ItemsControl ItemsSource="{Binding Path=Buttons}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <layout:DynamicPanel LayoutType="HorizontalAutoSpacePanel" />
+                    <layout:DynamicPanel LayoutType="{Binding Path=LayoutType, ElementName=labelStripControl}" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
 
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
+                    <local:MFDButtonLabel IsSelected="{Binding Path=IsSelected}"
+                                          Style="{StaticResource ButtonLabelGridStyle}"
+                                          Text="{Binding Path=Text}" />
 
-                        <local:MFDButtonLabel IsSelected="{Binding Path=IsSelected}"
-                                              Style="{StaticResource ButtonLabelGridStyle}"
-                                              Text="{Binding Path=Text}" />
-
-                    </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
 
