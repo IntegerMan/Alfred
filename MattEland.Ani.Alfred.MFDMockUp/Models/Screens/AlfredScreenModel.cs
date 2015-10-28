@@ -1,8 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.Contracts;
+
+using Assisticant.Fields;
 
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
+using MattEland.Common;
 using MattEland.Common.Annotations;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
@@ -18,6 +22,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         [NotNull]
         private readonly ButtonModel _powerButton;
 
+        [NotNull]
+        private readonly Observable<string> _statusText;
+
         /// <summary>
         ///     Initializes a new instance of the AlfredScreenModel class.
         /// </summary>
@@ -25,9 +32,29 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         {
             Contract.Requires(alfredApplication != null);
 
+            // Hook up to Alfred's property changed notifications since Alfred doesn't use Assisticant
             AlfredApplication = alfredApplication;
+            AlfredApplication.PropertyChanged += OnAlfredPropertyChanged;
 
+            // Create observables
+            _statusText = new Observable<string>(AlfredApplication.Status.ToString());
+
+            // Create buttons
             _powerButton = new ActionButtonModel("PWR", ToggleAlfredPower);
+        }
+
+        /// <summary>
+        ///     Responds to property change notifications within the Alfred application.
+        /// </summary>
+        /// <param name="sender"> Source of the event. </param>
+        /// <param name="e"> Event information to send to registered event handlers. </param>
+        private void OnAlfredPropertyChanged([CanBeNull] object sender, [NotNull] PropertyChangedEventArgs e)
+        {
+            // If it's a property we care about, update our Assisticant fields
+            if (e.PropertyName.Matches("Status") || e.PropertyName.IsEmpty())
+            {
+                _statusText.Value = AlfredApplication.Status.ToString();
+            }
         }
 
         /// <summary>
@@ -41,6 +68,15 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         {
             get;
         }
+
+        /// <summary>
+        ///     Gets a Alfred's status in textual form.
+        /// </summary>
+        /// <value>
+        ///     A message describing Alfred's status.
+        /// </value>
+        [NotNull]
+        public string StatusText { get { return _statusText.Value.NonNull(); } }
 
         /// <summary>
         ///     Gets the buttons to appear along an <paramref name="edge"/>.

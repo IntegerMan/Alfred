@@ -22,7 +22,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         private readonly AlfredScreenModel _model;
 
         [NotNull]
-        private readonly Computed<string> _status;
+        private readonly Computed<string> _statusMessage;
 
         /// <summary>
         ///     Initializes a new instance of the AlfredScreenViewModel class.
@@ -32,8 +32,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         {
             _model = model;
 
-            _status = new Computed<string>(
-                    () => string.Format("Current Status: {0}", _model.AlfredApplication.Status)
+            _statusMessage = new Computed<string>(
+                    () => string.Format("Current Status: {0}", _model.StatusText)
         );
         }
 
@@ -60,7 +60,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         [NotNull]
         public string StatusMessage
         {
-            get { return _status; }
+            get { return _statusMessage; }
         }
 
         /// <summary>
