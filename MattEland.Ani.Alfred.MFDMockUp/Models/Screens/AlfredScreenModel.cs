@@ -27,17 +27,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
 
             AlfredApplication = alfredApplication;
 
-            _powerButton = new ButtonModel("PWR", null);
-        }
-
-        /// <summary>
-        ///     Process the screen state and outputs any resulting information to the processorResult.
-        /// </summary>
-        /// <param name="processor"> The processor. </param>
-        /// <param name="processorResult"> The processor result. </param>
-        protected override void ProcessScreenState(MFDProcessor processor, MFDProcessorResult processorResult)
-        {
-            // No operation (yet)
+            _powerButton = new ActionButtonModel("PWR", ToggleAlfredPower);
         }
 
         /// <summary>
@@ -73,5 +63,31 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
                 yield return _powerButton;
             }
         }
+
+        /// <summary>
+        ///     Process the screen state and outputs any resulting information to the processorResult.
+        /// </summary>
+        /// <param name="processor"> The processor. </param>
+        /// <param name="processorResult"> The processor result. </param>
+        protected override void ProcessScreenState(MFDProcessor processor, MFDProcessorResult processorResult)
+        {
+            // No operation (yet)
+        }
+
+        /// <summary>
+        ///     Toggles Alfred's power.
+        /// </summary>
+        private void ToggleAlfredPower()
+        {
+            if (AlfredApplication.IsOnline)
+            {
+                AlfredApplication.Shutdown();
+            }
+            else
+            {
+                AlfredApplication.Initialize();
+            }
+        }
     }
+
 }

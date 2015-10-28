@@ -73,6 +73,7 @@
     </Compile>
     <Compile Include="Controls\MFDButtonStrip.cs" />
     <Compile Include="Controls\SensorOfInterestIndicator.cs" />
+    <Compile Include="Models\Buttons\ActionButtonModel.cs" />
     <Compile Include="Models\Buttons\IButtonClickListener.cs" />
     <Compile Include="Models\Buttons\NavigationButtonModel.cs" />
     <Compile Include="Models\ScreenProvider.cs" />

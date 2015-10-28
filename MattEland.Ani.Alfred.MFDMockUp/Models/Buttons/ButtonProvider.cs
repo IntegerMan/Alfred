@@ -5,7 +5,6 @@ using System.Linq;
 
 using Assisticant.Fields;
 
-using MattEland.Ani.Alfred.MFDMockUp.Models.Screens;
 using MattEland.Common.Annotations;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons

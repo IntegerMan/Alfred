@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Root CoveredStatements="7685" TotalStatements="11409" CoveragePercent="67" ReportType="NDependXML" DotCoverVersion="3.2">
+<Root CoveredStatements="7964" TotalStatements="11998" CoveragePercent="66" ReportType="NDependXML" DotCoverVersion="3.2">
   <Assembly Name="MattEland.Ani.Alfred.Chat" CoveredStatements="470" TotalStatements="592" CoveragePercent="79">
     <Namespace Name="MattEland.Ani.Alfred.Chat" CoveredStatements="470" TotalStatements="592" CoveragePercent="79">
       <Type Name="AimlExplorerNode" CoveredStatements="37" TotalStatements="44" CoveragePercent="84">
@@ -1501,6 +1501,181 @@
       </Type>
     </Namespace>
   </Assembly>
+  <Assembly Name="MattEland.Ani.Alfred.PresentationAvalon" CoveredStatements="279" TotalStatements="589" CoveragePercent="47">
+    <Namespace Name="MattEland.Ani.Alfred.PresentationAvalon.Commands" CoveredStatements="36" TotalStatements="56" CoveragePercent="64">
+      <Type Name="ApplicationManager" CoveredStatements="33" TotalStatements="50" CoveragePercent="66">
+        <Method Name=".ctor(IAlfredContainer,ApplicationManagerOptions,IUserInterfaceDirector)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="52" />
+        <Method Name="&lt;InitializeUpdatePump&gt;b__6_0(Object,EventArgs)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="146" />
+        <Method Name="ConfigureContainer()" CoveredStatements="8" TotalStatements="8" CoveragePercent="100" FirstStatementLine="61" />
+        <Method Name="InitializeConsole()" CoveredStatements="5" TotalStatements="9" CoveragePercent="56" FirstStatementLine="79" />
+        <Method Name="InitializeSystemMonitoringSubsystem()" CoveredStatements="5" TotalStatements="15" CoveragePercent="33" FirstStatementLine="111" />
+        <Method Name="InitializeUpdatePump()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="141" />
+        <Method Name="RegisterSubsystems()" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="98" />
+      </Type>
+      <Type Name="XamlClientCommand" CoveredStatements="3" TotalStatements="6" CoveragePercent="50">
+        <Method Name=".ctor()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="29" />
+        <Method Name=".ctor(Action,IAlfredContainer)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="37" />
+      </Type>
+    </Namespace>
+    <Namespace Name="MattEland.Ani.Alfred.PresentationAvalon.Controls" CoveredStatements="95" TotalStatements="196" CoveragePercent="48">
+      <Type Name="BrowserControl" CoveredStatements="0" TotalStatements="40" CoveragePercent="0">
+        <Method Name=".cctor()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="37" />
+        <Method Name=".ctor()" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="19" />
+        <Method Name="get_Widget()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="32" />
+        <Method Name="InitializeComponent()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="1" />
+        <Method Name="OnNavigationRequested(Object,EventArgs)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="61" />
+        <Method Name="OnWidgetChanged(DependencyObject,DependencyPropertyChangedEventArgs)" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="95" />
+        <Method Name="set_Widget(WebBrowserWidget)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="33" />
+        <Method Name="UpdateBrowser()" CoveredStatements="0" TotalStatements="10" CoveragePercent="0" FirstStatementLine="44" />
+        <Method Name="UpdateWidgetBindings(WebBrowserWidget,WebBrowserWidget)" CoveredStatements="0" TotalStatements="11" CoveragePercent="0" FirstStatementLine="72" />
+      </Type>
+      <Type Name="ChatPane" CoveredStatements="34" TotalStatements="44" CoveragePercent="77">
+        <Method Name=".ctor()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="33" />
+        <Method Name=".ctor(IAlfredContainer)" CoveredStatements="6" TotalStatements="8" CoveragePercent="75" FirstStatementLine="44" />
+        <Method Name="get_Container()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="59" />
+        <Method Name="HandleSubmitClicked()" CoveredStatements="7" TotalStatements="11" CoveragePercent="64" FirstStatementLine="83" />
+        <Method Name="InitializeComponent()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="1" />
+        <Method Name="OnSubmitClicked(Object,RoutedEventArgs)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="75" />
+        <Method Name="SendChatMessage(IChatProvider,String)" CoveredStatements="14" TotalStatements="14" CoveragePercent="100" FirstStatementLine="108" />
+        <Method Name="SimulateLoadedEvent()" CoveredStatements="2" TotalStatements="2" CoveragePercent="100" FirstStatementLine="65" />
+        <Method Name="System.Windows.Markup.IComponentConnector.Connect(Int32,Object)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="39" />
+      </Type>
+      <Type Name="ExplorerControl" CoveredStatements="26" TotalStatements="26" CoveragePercent="100">
+        <Method Name=".cctor()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="51" />
+        <Method Name=".ctor()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="31" />
+        <Method Name=".ctor(IEnumerable&lt;IPropertyProvider&gt;)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="40" />
+        <Method Name="get_RootNodes()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="84" />
+        <Method Name="HandleRootNodesChanged()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="92" />
+        <Method Name="InitializeComponent()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="1" />
+        <Method Name="OnRootNodesChanged(DependencyObject,DependencyPropertyChangedEventArgs)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="70" />
+        <Method Name="set_RootNodes(IEnumerable&lt;IPropertyProvider&gt;)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="85" />
+        <Method Name="SimulateLoadedEvent()" CoveredStatements="2" TotalStatements="2" CoveragePercent="100" FirstStatementLine="101" />
+      </Type>
+      <Type Name="HyperlinkControl" CoveredStatements="0" TotalStatements="26" CoveragePercent="0">
+        <Method Name=".cctor()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="36" />
+        <Method Name=".ctor()" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="18" />
+        <Method Name="get_Text()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="48" />
+        <Method Name="get_Url()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="67" />
+        <Method Name="get_Widget()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="29" />
+        <Method Name="InitializeComponent()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="1" />
+        <Method Name="set_Text(String)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="49" />
+        <Method Name="set_Url(String)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="68" />
+        <Method Name="set_Widget(LinkWidget)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="30" />
+      </Type>
+      <Type Name="RootPagesControl" CoveredStatements="35" TotalStatements="40" CoveragePercent="88">
+        <Method Name=".ctor()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="33" />
+        <Method Name=".ctor(ApplicationManager)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="42" />
+        <Method Name="get_AppManager()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="59" />
+        <Method Name="HandleControlLoaded(Object,RoutedEventArgs)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="99" />
+        <Method Name="HandlePageNavigationCommand(ShellCommand)" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="109" />
+        <Method Name="InitializeComponent()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="1" />
+        <Method Name="SelectFirstTab()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="87" />
+        <Method Name="set_AppManager(ApplicationManager)" CoveredStatements="11" TotalStatements="11" CoveragePercent="100" FirstStatementLine="61" />
+        <Method Name="SimulateLoadedEvent()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="122" />
+        <Method Name="System.Windows.Markup.IComponentConnector.Connect(Int32,Object)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="7" />
+      </Type>
+      <Type Name="SearchResultControl" CoveredStatements="0" TotalStatements="20" CoveragePercent="0">
+        <Method Name=".cctor()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="63" />
+        <Method Name=".ctor()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="20" />
+        <Method Name=".ctor(IAlfredContainer,ISearchResult)" CoveredStatements="0" TotalStatements="8" CoveragePercent="0" FirstStatementLine="29" />
+        <Method Name="get_Container()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="48" />
+        <Method Name="get_Result()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="56" />
+        <Method Name="InitializeComponent()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="1" />
+        <Method Name="set_Result(ISearchResult)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="57" />
+      </Type>
+    </Namespace>
+    <Namespace Name="MattEland.Ani.Alfred.PresentationAvalon.Converters" CoveredStatements="84" TotalStatements="104" CoveragePercent="81">
+      <Type Name="HideIfNoTextConverter" CoveredStatements="0" TotalStatements="5" CoveragePercent="0">
+        <Method Name="Convert(Object,Type,Object,CultureInfo)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="35" />
+        <Method Name="ConvertBack(Object,Type,Object,CultureInfo)" CoveredStatements="0" TotalStatements="2" CoveragePercent="0" FirstStatementLine="55" />
+      </Type>
+      <Type Name="LogLevelToBrushConverter" CoveredStatements="79" TotalStatements="94" CoveragePercent="84">
+        <Method Name=".cctor()" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="32" />
+        <Method Name="Convert(Object,Type,Object,CultureInfo)" CoveredStatements="12" TotalStatements="12" CoveragePercent="100" FirstStatementLine="280" />
+        <Method Name="ConvertBack(Object,Type,Object,CultureInfo)" CoveredStatements="2" TotalStatements="2" CoveragePercent="100" FirstStatementLine="318" />
+        <Method Name="get_ChatResponseBrush()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="252" />
+        <Method Name="get_DefaultBrush()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="156" />
+        <Method Name="get_ErrorBrush()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="132" />
+        <Method Name="get_InfoBrush()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="204" />
+        <Method Name="get_UserInputBrush()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="228" />
+        <Method Name="get_VerboseBrush()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="110" />
+        <Method Name="get_WarningBrush()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="180" />
+        <Method Name="GetBrushForLevel(LogLevel)" CoveredStatements="9" TotalStatements="10" CoveragePercent="90" FirstStatementLine="329" />
+        <Method Name="set_ChatResponseBrush(Brush)" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="254" />
+        <Method Name="set_DefaultBrush(Brush)" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="158" />
+        <Method Name="set_ErrorBrush(Brush)" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="134" />
+        <Method Name="set_InfoBrush(Brush)" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="206" />
+        <Method Name="set_UserInputBrush(Brush)" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="230" />
+        <Method Name="set_VerboseBrush(Brush)" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="112" />
+        <Method Name="set_WarningBrush(Brush)" CoveredStatements="4" TotalStatements="6" CoveragePercent="67" FirstStatementLine="182" />
+      </Type>
+      <Type Name="VisibilityConverter" CoveredStatements="5" TotalStatements="5" CoveragePercent="100">
+        <Method Name="Convert(Object,Type,Object,CultureInfo)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="42" />
+        <Method Name="ConvertBack(Object,Type,Object,CultureInfo)" CoveredStatements="2" TotalStatements="2" CoveragePercent="100" FirstStatementLine="68" />
+      </Type>
+    </Namespace>
+    <Namespace Name="MattEland.Ani.Alfred.PresentationAvalon.Helpers" CoveredStatements="64" TotalStatements="127" CoveragePercent="50">
+      <Type Name="AvalonMessageBoxProvider" CoveredStatements="0" TotalStatements="11" CoveragePercent="0">
+        <Method Name="Show(String,String,MessageBoxType)" CoveredStatements="0" TotalStatements="11" CoveragePercent="0" FirstStatementLine="32" />
+      </Type>
+      <Type Name="SafeObservableCollection&lt;T&gt;" CoveredStatements="31" TotalStatements="76" CoveragePercent="41">
+        <Method Name=".ctor()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="30" />
+        <Method Name="AddItems(IEnumerable&lt;T&gt;)" CoveredStatements="0" TotalStatements="14" CoveragePercent="0" FirstStatementLine="58" />
+        <Method Name="NotifyChanges()" CoveredStatements="0" TotalStatements="5" CoveragePercent="0" FirstStatementLine="76" />
+        <Method Name="OnCollectionChanged(NotifyCollectionChangedEventArgs)" CoveredStatements="26" TotalStatements="32" CoveragePercent="81" FirstStatementLine="119" />
+        <Method Name="RemoveItems(IList&lt;T&gt;)" CoveredStatements="0" TotalStatements="14" CoveragePercent="0" FirstStatementLine="89" />
+        <Method Name="ResumeCollectionChangeNotification()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="102" />
+        <Method Name="SuspendCollectionChangeNotification()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="110" />
+      </Type>
+      <Type Name="SelectionHelper" CoveredStatements="19" TotalStatements="21" CoveragePercent="90">
+        <Type Name="&lt;&gt;c__DisplayClass0_0" CoveredStatements="1" TotalStatements="1" CoveragePercent="100">
+          <Method Name="&lt;SelectItemById&gt;b__0(IHasIdentifier)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="48" />
+        </Type>
+        <Method Name="SelectFirstItem(Selector)" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="66" />
+        <Method Name="SelectItemById(Selector,String)" CoveredStatements="12" TotalStatements="14" CoveragePercent="86" FirstStatementLine="35" />
+      </Type>
+      <Type Name="SharedResourceDictionary" CoveredStatements="14" TotalStatements="19" CoveragePercent="74">
+        <Method Name=".cctor()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="31" />
+        <Method Name="get_Source()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="50" />
+        <Method Name="set_Source(Uri)" CoveredStatements="13" TotalStatements="15" CoveragePercent="87" FirstStatementLine="53" />
+      </Type>
+    </Namespace>
+    <Namespace Name="MattEland.Ani.Alfred.PresentationAvalon.Layout" CoveredStatements="0" TotalStatements="106" CoveragePercent="0">
+      <Type Name="AutoSpaceLayoutHelper" CoveredStatements="0" TotalStatements="12" CoveragePercent="0">
+        <Method Name="ArrangeChild(UIElement,LayoutSize)" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="18" />
+        <Method Name="GetChildDesiredSize(UIElement)" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="30" />
+        <Method Name="MeasureChild(LayoutSize,UIElement)" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="42" />
+      </Type>
+      <Type Name="DynamicPanel" CoveredStatements="0" TotalStatements="58" CoveragePercent="0">
+        <Method Name=".cctor()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="37" />
+        <Method Name=".ctor()" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="44" />
+        <Method Name="ArrangeOverride(Size)" CoveredStatements="0" TotalStatements="19" CoveragePercent="0" FirstStatementLine="94" />
+        <Method Name="get_AutoLayoutHelper()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="80" />
+        <Method Name="get_LayoutType()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="57" />
+        <Method Name="get_StackLayoutHelper()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="66" />
+        <Method Name="get_WrapLayoutHelper()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="73" />
+        <Method Name="MeasureOverride(Size)" CoveredStatements="0" TotalStatements="19" CoveragePercent="0" FirstStatementLine="147" />
+        <Method Name="OnLayoutTypeChanged(DependencyObject,DependencyPropertyChangedEventArgs)" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="192" />
+        <Method Name="set_LayoutType(LayoutType)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="58" />
+      </Type>
+      <Type Name="StackPanelLayoutHelper" CoveredStatements="0" TotalStatements="12" CoveragePercent="0">
+        <Method Name="ArrangeChild(UIElement,LayoutSize)" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="18" />
+        <Method Name="GetChildDesiredSize(UIElement)" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="30" />
+        <Method Name="MeasureChild(LayoutSize,UIElement)" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="42" />
+      </Type>
+      <Type Name="UniversalExtensions" CoveredStatements="0" TotalStatements="12" CoveragePercent="0">
+        <Method Name="ToLayoutSize(Size)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="48" />
+        <Method Name="ToRect(LayoutSize)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="17" />
+        <Method Name="ToSize(LayoutSize)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="27" />
+        <Method Name="ToSize(Rect)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="37" />
+      </Type>
+      <Type Name="WrapPanelLayoutHelper" CoveredStatements="0" TotalStatements="12" CoveragePercent="0">
+        <Method Name="ArrangeChild(UIElement,LayoutSize)" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="18" />
+        <Method Name="GetChildDesiredSize(UIElement)" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="30" />
+        <Method Name="MeasureChild(LayoutSize,UIElement)" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="42" />
+      </Type>
+    </Namespace>
+  </Assembly>
   <Assembly Name="MattEland.Ani.Alfred.PresentationCommon" CoveredStatements="107" TotalStatements="435" CoveragePercent="25">
     <Namespace Name="MattEland.Ani.Alfred.PresentationCommon.Commands" CoveredStatements="90" TotalStatements="139" CoveragePercent="65">
       <Type Name="ApplicationManagerBase" CoveredStatements="66" TotalStatements="89" CoveragePercent="74">
@@ -1569,8 +1744,8 @@
     </Namespace>
     <Namespace Name="MattEland.Ani.Alfred.PresentationCommon.Layout" CoveredStatements="0" TotalStatements="268" CoveragePercent="0">
       <Type Name="AutoSpaceLayoutHelperBase&lt;TChild&gt;" CoveredStatements="0" TotalStatements="82" CoveragePercent="0">
-        <Method Name="Arrange(LayoutSize,Boolean,IList&lt;TChild&gt;)" CoveredStatements="0" TotalStatements="36" CoveragePercent="0" FirstStatementLine="35" />
-        <Method Name="Measure(LayoutSize,Boolean,IList&lt;TChild&gt;)" CoveredStatements="0" TotalStatements="46" CoveragePercent="0" FirstStatementLine="103" />
+        <Method Name="Arrange(LayoutSize,Boolean,IList&lt;TChild&gt;)" CoveredStatements="0" TotalStatements="36" CoveragePercent="0" FirstStatementLine="33" />
+        <Method Name="Measure(LayoutSize,Boolean,IList&lt;TChild&gt;)" CoveredStatements="0" TotalStatements="46" CoveragePercent="0" FirstStatementLine="101" />
       </Type>
       <Type Name="LayoutHelperBase&lt;TChild&gt;" CoveredStatements="0" TotalStatements="0" CoveragePercent="0" />
       <Type Name="LayoutSize" CoveredStatements="0" TotalStatements="20" CoveragePercent="0">
