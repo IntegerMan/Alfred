@@ -2,8 +2,6 @@ using MattEland.Common.Annotations;
 using System;
 using System.Collections.Generic;
 
-using MattEland.Ani.Alfred.Core.Definitions;
-
 namespace MattEland.Ani.Alfred.PresentationCommon.Layout
 {
     /// <summary>
@@ -68,7 +66,7 @@ namespace MattEland.Ani.Alfred.PresentationCommon.Layout
                 else
                 {
                     var diffBetweenAvailableSize = ((sizePerChild - desiredSize.Height) / 2.0);
-                    childRect.X = sizePerChild * i + diffBetweenAvailableSize;
+                    childRect.Y = sizePerChild * i + diffBetweenAvailableSize;
 
                     childRect.Height = desiredSize.Height;
 

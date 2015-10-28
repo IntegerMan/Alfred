@@ -11,6 +11,7 @@
              d:DesignHeight="30"
              d:DesignWidth="256"
              mc:Ignorable="d">
+
     <UserControl.Resources>
         <Style x:Key="ButtonLabelGridStyle"
                BasedOn="{StaticResource {x:Type local:MFDButtonLabel}}"
@@ -20,9 +21,15 @@
             <Setter Property="HorizontalContentAlignment" Value="Center" />
         </Style>
     </UserControl.Resources>
+
     <Grid>
 
-        <ItemsControl ItemsSource="{Binding Path=Buttons}">
+        <ItemsControl HorizontalContentAlignment="{Binding Path=HorizontalContentAlignment,
+                                                           ElementName=labelStripControl}"
+                      VerticalContentAlignment="{Binding Path=VerticalContentAlignment,
+                                                         ElementName=labelStripControl}"
+                      ItemsSource="{Binding Path=Buttons}">
+
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <layout:DynamicPanel LayoutType="{Binding Path=LayoutType, ElementName=labelStripControl}" />

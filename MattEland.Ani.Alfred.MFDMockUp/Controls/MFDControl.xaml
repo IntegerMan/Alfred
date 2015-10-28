@@ -110,6 +110,7 @@
                                                                  Margin="3,0"
                                                                  HorizontalAlignment="Left"
                                                                  VerticalAlignment="Stretch"
+                                                                 HorizontalContentAlignment="Left"
                                                                  DataContext="{Binding Path=LeftButtons}"
                                                                  LayoutType="VerticalAutoSpacePanel" />
 
@@ -117,6 +118,7 @@
                                                                  Margin="3,0"
                                                                  HorizontalAlignment="Right"
                                                                  VerticalAlignment="Stretch"
+                                                                 HorizontalContentAlignment="Right"
                                                                  DataContext="{Binding Path=RightButtons}"
                                                                  LayoutType="VerticalAutoSpacePanel" />
 

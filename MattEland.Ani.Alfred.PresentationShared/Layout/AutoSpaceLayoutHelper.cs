@@ -7,7 +7,7 @@ namespace MattEland.Ani.Alfred.PresentationAvalon.Layout
     /// <summary>
     /// A layout helper for Stack Panel arrangements
     /// </summary>
-    internal class AutoSpaceLayoutHelper : AutoSpaceLayoutHelperBase<UIElement>
+    internal sealed class AutoSpaceLayoutHelper : AutoSpaceLayoutHelperBase<UIElement>
     {
         /// <summary>
         /// Arranges the child at the given dimensions.
