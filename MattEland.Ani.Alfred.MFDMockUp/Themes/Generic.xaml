@@ -18,6 +18,7 @@
     <Thickness x:Key="DoubleMargin">16</Thickness>
     <Thickness x:Key="BottomMargin">0, 8, 0, 18</Thickness>
 
+    <Thickness x:Key="SpaceRight">0,0,8,0</Thickness>
     <Thickness x:Key="SpaceAbove">0,8,0,0</Thickness>
     <Thickness x:Key="DoubleSpaceAbove">0,16,0,0</Thickness>
 
@@ -27,5 +28,9 @@
     <converters:VisibilityConverter x:Key="ShowIfTrue" Invert="False" />
     <converters:VisibilityConverter x:Key="ShowIfFalse" Invert="True" />
     <converters:HideIfNoTextConverter x:Key="HideIfNoText" />
+    <converters:BooleanToBrushConverter x:Key="BrushFromBoolean"
+                                        FalseBrush="{StaticResource MFDScreenRedBrush}"
+                                        IndeterminateBrush="{StaticResource MFDScreenYellowBrush}"
+                                        TrueBrush="{StaticResource MFDScreenGreenBrush}" />
 
 </ResourceDictionary>

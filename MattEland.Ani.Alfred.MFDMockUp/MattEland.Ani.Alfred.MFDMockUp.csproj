@@ -73,6 +73,7 @@
     </Compile>
     <Compile Include="Controls\MFDButtonStrip.cs" />
     <Compile Include="Controls\SensorOfInterestIndicator.cs" />
+    <Compile Include="Controls\StatusLabel.cs" />
     <Compile Include="Models\Buttons\ActionButtonModel.cs" />
     <Compile Include="Models\Buttons\IButtonClickListener.cs" />
     <Compile Include="Models\Buttons\NavigationButtonModel.cs" />
@@ -129,6 +130,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Themes\SensorOfInterestIndicator.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\StatusLabel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

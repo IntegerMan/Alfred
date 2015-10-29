@@ -25,6 +25,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         [NotNull]
         private readonly Observable<string> _statusText;
 
+        [NotNull]
+        private readonly Observable<bool> _isOnline;
+
         [NotNull, ItemCanBeNull]
         private readonly IEnumerable<ButtonModel> _rightButtons;
 
@@ -41,6 +44,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
 
             // Create observables
             _statusText = new Observable<string>(AlfredApplication.Status.ToString());
+            _isOnline = new Observable<bool>(AlfredApplication.IsOnline);
 
             // Create buttons
             _powerButton = new ActionButtonModel("PWR", ToggleAlfredPower, () => AlfredApplication.IsOnline);
@@ -63,18 +67,22 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         /// <param name="e"> Event information to send to registered event handlers. </param>
         private void OnAlfredPropertyChanged([CanBeNull] object sender, [NotNull] PropertyChangedEventArgs e)
         {
+            // Empty string / null notifications relate to all properties
+            var allProps = e.PropertyName.IsEmpty();
+
             // If it's a property we care about, update our Assisticant fields
-            if (e.PropertyName.Matches("Status") || e.PropertyName.IsEmpty())
+            if (allProps || e.PropertyName.Matches("Status") || e.PropertyName.Matches("IsOnline"))
             {
                 _statusText.Value = AlfredApplication.Status.ToString();
+                _isOnline.Value = AlfredApplication.IsOnline;
             }
         }
 
         /// <summary>
-        ///     Gets the alfred application.
+        ///     Gets the Alfred application.
         /// </summary>
         /// <value>
-        ///     The alfred application.
+        ///     The Alfred application.
         /// </value>
         [NotNull]
         public AlfredApplication AlfredApplication
@@ -90,6 +98,14 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         /// </value>
         [NotNull]
         public string StatusText { get { return _statusText.Value.NonNull(); } }
+
+        /// <summary>
+        ///     Gets a value indicating whether Alfred is online.
+        /// </summary>
+        /// <value>
+        ///     true if Alfred is online, false if not.
+        /// </value>
+        public bool IsOnline { get { return _isOnline; } }
 
         /// <summary>
         ///     Gets the buttons to appear along an <paramref name="edge"/>.

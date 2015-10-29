@@ -1,6 +1,8 @@
 ﻿<UserControl x:Class="MattEland.Ani.Alfred.MFDMockUp.Views.AlfredScreenView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.Controls"
+             xmlns:converters="clr-namespace:MattEland.Ani.Alfred.PresentationAvalon.Converters;assembly=MattEland.Ani.Alfred.PresentationAvalon"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:screens="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens"
@@ -9,6 +11,18 @@
              d:DesignHeight="256"
              d:DesignWidth="256"
              mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="\Themes\Generic.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+
+        </ResourceDictionary>
+
+    </UserControl.Resources>
     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
 
         <!--  Module Title  -->
@@ -18,10 +32,12 @@
                    TextWrapping="Wrap" />
 
         <!--  Alfred Status Label  -->
-        <TextBlock Margin="{StaticResource DoubleSpaceAbove}"
-                   Foreground="{StaticResource MFDScreenInfoBrush}"
-                   Style="{StaticResource MFDViewCenterTextStyle}"
-                   Text="{Binding Path=StatusMessage}" />
+        <controls:StatusLabel Margin="{StaticResource DoubleSpaceAbove}"
+                              HorizontalAlignment="Center"
+                              Content="{Binding Path=StatusText}"
+                              Header="Alfred Status:"
+                              StatusForeground="{Binding Path=IsOnline,
+                                                         Converter={StaticResource BrushFromBoolean}}" />
 
     </StackPanel>
 </UserControl>

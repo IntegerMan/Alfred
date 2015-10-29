@@ -64,6 +64,23 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         }
 
         /// <summary>
+        ///     Gets the status text.
+        /// </summary>
+        /// <value>
+        ///     The status text.
+        /// </value>
+        [NotNull]
+        public string StatusText
+        {
+            get { return _model.StatusText; }
+        }
+
+        public bool IsOnline
+        {
+            get { return _model.IsOnline; }
+        }
+
+        /// <summary>
         /// Determines whether the specified object is equal to the current object.
         /// </summary>
         /// <returns>

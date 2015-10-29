@@ -118,6 +118,7 @@
     <Compile Include="Controls\SearchResultControl.xaml.cs">
       <DependentUpon>SearchResultControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\BooleanToBrushConverter.cs" />
     <Compile Include="Converters\HideIfNoTextConverter.cs" />
     <Compile Include="Converters\LogLevelToBrushConverter.cs" />
     <Compile Include="Converters\VisibilityConverter.cs" />

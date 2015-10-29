@@ -7,13 +7,14 @@
 
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.MFDMockUp;component/Themes/Generic.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.MFDMockUp;component/Themes/MFDCommonResources.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.MFDMockUp;component/Themes/MFDButtonStyling.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.MFDMockUp;component/Themes/MFDButtonStripStyling.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.MFDMockUp;component/Themes/MFDButtonLabelStyling.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.MFDMockUp;component/Themes/MFDViewStyling.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MattEland.Ani.Alfred.MFDMockUp;component/Themes/SensorOfInterestIndicator.xaml" />
+                <ResourceDictionary Source="Themes/Generic.xaml" />
+                <ResourceDictionary Source="Themes/MFDCommonResources.xaml" />
+                <ResourceDictionary Source="Themes/MFDButtonStyling.xaml" />
+                <ResourceDictionary Source="Themes/MFDButtonStripStyling.xaml" />
+                <ResourceDictionary Source="Themes/MFDButtonLabelStyling.xaml" />
+                <ResourceDictionary Source="Themes/MFDViewStyling.xaml" />
+                <ResourceDictionary Source="Themes/SensorOfInterestIndicator.xaml" />
+                <ResourceDictionary Source="Themes/StatusLabel.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
         </ResourceDictionary>
