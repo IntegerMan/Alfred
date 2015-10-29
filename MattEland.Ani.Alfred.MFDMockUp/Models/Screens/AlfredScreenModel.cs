@@ -43,7 +43,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
             _statusText = new Observable<string>(AlfredApplication.Status.ToString());
 
             // Create buttons
-            _powerButton = new ActionButtonModel("PWR", ToggleAlfredPower);
+            _powerButton = new ActionButtonModel("PWR", ToggleAlfredPower, () => AlfredApplication.IsOnline);
 
             // Build out the right button strip with some spacer items
             _rightButtons = new List<ButtonModel>
@@ -114,7 +114,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         /// </summary>
         /// <param name="processor"> The processor. </param>
         /// <param name="processorResult"> The processor result. </param>
-        protected override void ProcessScreenState(MFDProcessor processor, MFDProcessorResult processorResult)
+        protected override void ProcessScreenState(MFDProcessor processor,
+            MFDProcessorResult processorResult)
         {
             // No operation (yet)
         }
