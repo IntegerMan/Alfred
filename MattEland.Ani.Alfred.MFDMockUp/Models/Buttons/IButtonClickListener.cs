@@ -2,6 +2,9 @@
 
 namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
 {
+    /// <summary>
+    ///     Interface for a button click listener.
+    /// </summary>
     public interface IButtonClickListener
     {
         /// <summary>

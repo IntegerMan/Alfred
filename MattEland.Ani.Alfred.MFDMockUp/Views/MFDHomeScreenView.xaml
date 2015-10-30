@@ -2,23 +2,22 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:layout="clr-namespace:MattEland.Ani.Alfred.PresentationAvalon.Layout;assembly=MattEland.Ani.Alfred.PresentationAvalon"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:screens="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens"
+             xmlns:vm="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels"
              Style="{StaticResource MFDViewStyle}"
              d:DataContext="{d:DesignInstance screens:HomeScreenViewModel}"
              d:DesignHeight="256"
              d:DesignWidth="256"
              mc:Ignorable="d">
     <DockPanel>
-        <!--  Copyright goes across the bottom  -->
-        <TextBlock Margin="{StaticResource BottomMargin}"
-                   DockPanel.Dock="Bottom"
-                   Foreground="{StaticResource MFDScreenInfoBrush}"
-                   Style="{StaticResource MFDViewSmallCenterTextStyle}"
-                   Text="{Binding Path=CopyrightString}" />
 
-        <!--  Main Product info goes here  -->
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+        <!--  Main Product info is docked to the top  -->
+        <StackPanel Margin="{StaticResource TopMargin}"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    DockPanel.Dock="Top">
 
             <!--  Product Name (wrap as needed)  -->
             <TextBlock Margin="32,0"
@@ -28,16 +27,49 @@
 
             <!--  Version  -->
             <TextBlock Margin="{StaticResource SpaceAbove}"
-                       Foreground="{StaticResource MFDScreenForegroundBrush}"
+                       Foreground="{StaticResource MFDScreenInfoBrush}"
                        Style="{StaticResource MFDViewCenterTextStyle}"
                        Text="{Binding Path=VersionString}" />
 
-            <!--  Authorship  -->
-            <TextBlock Margin="{StaticResource DoubleSpaceAbove}"
-                       Foreground="{StaticResource MFDScreenInfoBrush}"
-                       Style="{StaticResource MFDViewCenterTextStyle}"
-                       Text="{Binding Path=AuthorString}" />
-
         </StackPanel>
+
+        <!--  Copyright goes across the bottom  -->
+        <TextBlock Margin="{StaticResource BottomMargin}"
+                   DockPanel.Dock="Bottom"
+                   Foreground="{StaticResource MFDScreenInfoBrush}"
+                   Style="{StaticResource MFDViewSmallCenterTextStyle}"
+                   Text="{Binding Path=CopyrightString}" />
+
+        <ItemsControl Margin="{StaticResource SpaceLeftAndRight}" ItemsSource="{Binding Path=FaultIndicators}">
+
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <layout:DynamicPanel LayoutType="HorizontalWrapPanel" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="vm:FaultIndicatorViewModel">
+                    <Grid Width="45"
+                          Margin="1"
+                          Background="{StaticResource MFDScreenRedBrush}"
+                          Opacity="{Binding Path=IndicatorOpacity,
+                                            FallbackValue=1}">
+                        <Border BorderBrush="{StaticResource BlackSemiTransparentBrush}"
+                                BorderThickness="1"
+                                Padding="2">
+                            <TextBlock HorizontalAlignment="Stretch"
+                                       FontFamily="{StaticResource ConsoleFontFamily}"
+                                       FontSize="6pt"
+                                       Foreground="{StaticResource BlackSemiTransparentBrush}"
+                                       Text="{Binding Path=IndicatorLabel}"
+                                       TextAlignment="Center" />
+                        </Border>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+
+        </ItemsControl>
+
     </DockPanel>
 </UserControl>

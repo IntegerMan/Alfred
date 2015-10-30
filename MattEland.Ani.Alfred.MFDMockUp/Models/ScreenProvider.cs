@@ -29,7 +29,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             _screens = new Dictionary<Type, Lazy<ScreenModel>>
             {
                 [typeof(HomeScreenModel)] =
-                    new Lazy<ScreenModel>(() => new HomeScreenModel()),
+                    new Lazy<ScreenModel>(() => new HomeScreenModel(workspace.FaultManager)),
 
                 [typeof(BootupScreenModel)] =
                     new Lazy<ScreenModel>(() => new BootupScreenModel(HomeScreen)),
@@ -106,7 +106,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             }
 
             // Grab the initializer
-            Lazy<ScreenModel> lazyScreen = _screens[type];
+            var lazyScreen = _screens[type];
 
             // Sanity check to ensure the initializer was found
             if (lazyScreen == null)
@@ -116,7 +116,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             }
 
             //! Grab the screen from the lazy initializer, creating it as needed
-            ScreenModel screenModel = lazyScreen.Value;
+            var screenModel = lazyScreen.Value;
 
             // Validate that we're returning something
             if (screenModel == null)

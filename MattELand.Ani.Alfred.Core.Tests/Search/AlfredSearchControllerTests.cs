@@ -344,7 +344,7 @@ namespace MattEland.Ani.Alfred.Tests.Search
         ///     A <see cref="SimpleConsole"/>.
         /// </returns>
         [NotNull]
-        protected SimpleConsole BuildConsole()
+        private SimpleConsole BuildConsole()
         {
             // Build the console
             var console = new SimpleConsole(AlfredContainer);

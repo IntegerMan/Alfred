@@ -16,11 +16,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
     /// </summary>
     public sealed class AlfredScreenModel : ScreenModel
     {
-        /// <summary>
-        ///     The power button.
-        /// </summary>
-        [NotNull]
-        private readonly ButtonModel _powerButton;
 
         [NotNull]
         private readonly Observable<string> _statusText;
@@ -47,7 +42,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
             _isOnline = new Observable<bool>(AlfredApplication.IsOnline);
 
             // Create buttons
-            _powerButton = new ActionButtonModel("PWR", ToggleAlfredPower, () => AlfredApplication.IsOnline);
+            var powerButton = new ActionButtonModel("PWR", ToggleAlfredPower, () => AlfredApplication.IsOnline);
 
             // Build out the right button strip with some spacer items
             _rightButtons = new List<ButtonModel>
@@ -55,7 +50,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
                                 ButtonStripModel.BuildEmptyButton(0),
                                 ButtonStripModel.BuildEmptyButton(1),
                                 ButtonStripModel.BuildEmptyButton(2),
-                                _powerButton,
+                                powerButton,
                                 ButtonStripModel.BuildEmptyButton(4)
                             };
         }
@@ -71,7 +66,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
             var allProps = e.PropertyName.IsEmpty();
 
             // If it's a property we care about, update our Assisticant fields
-            if (allProps || e.PropertyName.Matches("Status") || e.PropertyName.Matches("IsOnline"))
+            if (allProps || e.PropertyName.Matches(nameof(AlfredApplication.Status)) ||
+                e.PropertyName.Matches(nameof(AlfredApplication.IsOnline)))
             {
                 _statusText.Value = AlfredApplication.Status.ToString();
                 _isOnline.Value = AlfredApplication.IsOnline;

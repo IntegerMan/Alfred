@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 
@@ -12,13 +13,26 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
     /// </summary>
     public sealed class HomeScreenModel : ScreenModel
     {
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// </summary>
+        /// <param name="faultManager"> The faultIndicator manager. </param>
+        public HomeScreenModel([NotNull] FaultManager faultManager) : base("HOME")
+        {
+            Contract.Requires(faultManager != null);
+
+            FaultManager = faultManager;
+        }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        ///     Gets the manager for faultIndicator indicators.
         /// </summary>
-        public HomeScreenModel() : base("HOME")
-        {
-        }
+        /// <value>
+        ///     The faultIndicator manager.
+        /// </value>
+        [NotNull]
+        public FaultManager FaultManager { get; }
+
         /// <summary>
         ///     Process the screen state and outputs any resulting information to the processorResult.
         /// </summary>
@@ -96,6 +110,18 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         }
 
         /// <summary>
+        ///     Gets the faultIndicator indicators.
+        /// </summary>
+        /// <value>
+        ///     The faultIndicator indicators.
+        /// </value>
+        [NotNull, ItemNotNull]
+        public IEnumerable<FaultIndicatorModel> FaultIndicators
+        {
+            get { return FaultManager.FaultIndicators; }
+        }
+
+        /// <summary>
         ///     Gets entry assembly's file version information.
         /// </summary>
         /// <returns>
@@ -110,6 +136,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
             return versionInfo;
         }
 
+        /// <summary>
+        ///     Gets entry assembly.
+        /// </summary>
+        /// <returns>
+        ///     The entry assembly.
+        /// </returns>
         [NotNull]
         private static Assembly GetEntryAssembly()
         {

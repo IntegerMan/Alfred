@@ -14,9 +14,21 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
     /// </summary>
     public enum ButtonStripDock
     {
+        /// <summary>
+        ///     Buttons on the left side of a display
+        /// </summary>
         Left,
+        /// <summary>
+        ///     Buttons on the top side of a display
+        /// </summary>
         Top,
+        /// <summary>
+        ///     Buttons on the right side of a display
+        /// </summary>
         Right,
+        /// <summary>
+        ///     Buttons on the bottom side of a display
+        /// </summary>
         Bottom
     }
 

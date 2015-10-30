@@ -20,7 +20,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Buttons
     ///     A separator view model representing a separator in the button list
     /// </summary>
     [ViewModelFor(typeof(SeparatorModel))]
-    public class SeparatorViewModel
+    [PublicAPI]
+    public sealed class SeparatorViewModel
     {
         /// <summary>
         ///     The model.
@@ -37,16 +38,17 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Buttons
             _model = model;
         }
 
+        /// <summary>
+        ///     Gets the visibility of the separator
+        /// </summary>
+        /// <value>
+        ///     The visibility.
+        /// </value>
         public Visibility Visibility
         {
             get
             {
-                if (_model.IsVisible)
-                {
-                    return Visibility.Visible;
-                }
-
-                return Visibility.Collapsed;
+                return _model.IsVisible ? Visibility.Visible : Visibility.Collapsed;
             }
         }
     }

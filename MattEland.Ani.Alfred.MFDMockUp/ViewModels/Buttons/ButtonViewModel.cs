@@ -38,6 +38,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Buttons
         ///     Initializes a new instance of the ButtonViewModel class.
         /// </summary>
         /// <param name="model"> The model. </param>
+        /// <param name="parent"> The parent. </param>
         public ButtonViewModel([NotNull] ButtonModel model, [NotNull] MFDButtonStripViewModel parent)
         {
             _model = model;

@@ -75,6 +75,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
             get { return _model.StatusText; }
         }
 
+        /// <summary>
+        ///     Gets a value indicating whether Alfred is online.
+        /// </summary>
+        /// <value>
+        ///     true if Alfred is online, false if not.
+        /// </value>
         public bool IsOnline
         {
             get { return _model.IsOnline; }

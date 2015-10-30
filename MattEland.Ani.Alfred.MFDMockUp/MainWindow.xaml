@@ -16,6 +16,7 @@
                               Source={StaticResource Locator}}"
         Foreground="{StaticResource AppForegroundBrush}"
         Loaded="MainWindow_OnLoaded"
+        d:DataContext="{d:DesignInstance vm:MainViewModel}"
         mc:Ignorable="d">
 
     <Window.Resources>

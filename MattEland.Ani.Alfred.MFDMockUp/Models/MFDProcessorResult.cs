@@ -23,6 +23,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         public MFDProcessorResult([NotNull] MFDProcessor processor)
         {
             Contract.Requires(processor != null);
+            Contract.Requires(processor.MFD != null);
 
             _processor = processor;
 

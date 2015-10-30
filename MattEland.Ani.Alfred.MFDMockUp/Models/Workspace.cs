@@ -4,6 +4,7 @@ using Assisticant.Collections;
 using Assisticant.Fields;
 using MattEland.Common.Annotations;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.Contracts;
 
 using MattEland.Ani.Alfred.Core;
@@ -32,8 +33,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
 
             //- Create Observables
             _name = new Observable<string>(DefaultWorkspaceName);
-            _mfds = new ObservableList<MultifunctionDisplay>();
             _selectedMFD = new Observable<MultifunctionDisplay>();
+            _mfds = new ObservableList<MultifunctionDisplay>();
 
             // Set up Alfred. This will not start Alfred
             var options = new ApplicationManagerOptions
@@ -43,8 +44,13 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
                 BingApiKey = "42" // TODO obviously
             };
 
+            // Create Alfred instance
             ApplicationManager = new ApplicationManager(container, options);
             AlfredApplication = ApplicationManager.Alfred;
+
+            // Add a faultIndicator indicator manager
+            _faultManager = new FaultManager();
+            _faultManager.Register(new FaultIndicatorModel("ALF-PWR", () => !AlfredApplication.IsOnline));
 
             // Build the main update pump
             _updatePump = new DispatcherUpdatePump(TimeSpan.FromSeconds(0.1), Update);
@@ -69,6 +75,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             {
                 mfd.Update();
             }
+
+            // Update the indicators
+            _faultManager.Update();
         }
 
         /// <summary>
@@ -119,8 +128,17 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         [NotNull]
         public IAlfredContainer Container { get; }
 
+        /// <summary>
+        ///     The selected multifunction display.
+        /// </summary>
         [NotNull]
         private readonly Observable<MultifunctionDisplay> _selectedMFD;
+
+        /// <summary>
+        ///     Manager for faultIndicator indicators.
+        /// </summary>
+        [NotNull]
+        private readonly FaultManager _faultManager;
 
         /// <summary>
         ///     Gets or sets the selected multifunction display.
@@ -143,6 +161,17 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// </value>
         [NotNull]
         public AlfredApplication AlfredApplication { get; }
+
+        /// <summary>
+        ///     The manager for faultIndicator indicators.
+        /// </summary>
+        [NotNull]
+        public FaultManager FaultManager
+        {
+            [DebuggerStepThrough]
+            get
+            { return _faultManager; }
+        }
 
         /// <summary>
         /// Creates a new multifunction display (MFD). 

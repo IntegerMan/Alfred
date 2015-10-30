@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Root CoveredStatements="7942" TotalStatements="11998" CoveragePercent="66" ReportType="NDependXML" DotCoverVersion="3.2">
+<Root CoveredStatements="7964" TotalStatements="12020" CoveragePercent="66" ReportType="NDependXML" DotCoverVersion="3.2">
   <Assembly Name="MattEland.Ani.Alfred.Chat" CoveredStatements="470" TotalStatements="592" CoveragePercent="79">
     <Namespace Name="MattEland.Ani.Alfred.Chat" CoveredStatements="470" TotalStatements="592" CoveragePercent="79">
       <Type Name="AimlExplorerNode" CoveredStatements="37" TotalStatements="44" CoveragePercent="84">
@@ -1501,7 +1501,7 @@
       </Type>
     </Namespace>
   </Assembly>
-  <Assembly Name="MattEland.Ani.Alfred.PresentationAvalon" CoveredStatements="279" TotalStatements="589" CoveragePercent="47">
+  <Assembly Name="MattEland.Ani.Alfred.PresentationAvalon" CoveredStatements="279" TotalStatements="611" CoveragePercent="46">
     <Namespace Name="MattEland.Ani.Alfred.PresentationAvalon.Commands" CoveredStatements="36" TotalStatements="56" CoveragePercent="64">
       <Type Name="ApplicationManager" CoveredStatements="33" TotalStatements="50" CoveragePercent="66">
         <Method Name=".ctor(IAlfredContainer,ApplicationManagerOptions,IUserInterfaceDirector)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="52" />
@@ -1584,7 +1584,18 @@
         <Method Name="set_Result(ISearchResult)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="57" />
       </Type>
     </Namespace>
-    <Namespace Name="MattEland.Ani.Alfred.PresentationAvalon.Converters" CoveredStatements="84" TotalStatements="104" CoveragePercent="81">
+    <Namespace Name="MattEland.Ani.Alfred.PresentationAvalon.Converters" CoveredStatements="84" TotalStatements="126" CoveragePercent="67">
+      <Type Name="BooleanToBrushConverter" CoveredStatements="0" TotalStatements="22" CoveragePercent="0">
+        <Method Name=".ctor()" CoveredStatements="0" TotalStatements="6" CoveragePercent="0" FirstStatementLine="18" />
+        <Method Name="Convert(Object,Type,Object,CultureInfo)" CoveredStatements="0" TotalStatements="8" CoveragePercent="0" FirstStatementLine="60" />
+        <Method Name="ConvertBack(Object,Type,Object,CultureInfo)" CoveredStatements="0" TotalStatements="2" CoveragePercent="0" FirstStatementLine="83" />
+        <Method Name="get_FalseBrush()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="32" />
+        <Method Name="get_IndeterminateBrush()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="41" />
+        <Method Name="get_TrueBrush()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="50" />
+        <Method Name="set_FalseBrush(Brush)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="32" />
+        <Method Name="set_IndeterminateBrush(Brush)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="41" />
+        <Method Name="set_TrueBrush(Brush)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="50" />
+      </Type>
       <Type Name="HideIfNoTextConverter" CoveredStatements="0" TotalStatements="5" CoveragePercent="0">
         <Method Name="Convert(Object,Type,Object,CultureInfo)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="35" />
         <Method Name="ConvertBack(Object,Type,Object,CultureInfo)" CoveredStatements="0" TotalStatements="2" CoveragePercent="0" FirstStatementLine="55" />
@@ -1772,7 +1783,7 @@
       </Type>
     </Namespace>
   </Assembly>
-  <Assembly Name="MattEland.Ani.Alfred.Search" CoveredStatements="159" TotalStatements="902" CoveragePercent="18">
+  <Assembly Name="MattEland.Ani.Alfred.Search" CoveredStatements="181" TotalStatements="902" CoveragePercent="20">
     <Namespace Name="MattEland.Ani.Alfred.Search" CoveredStatements="17" TotalStatements="17" CoveragePercent="100">
       <Type Name="SearchSubsystem" CoveredStatements="17" TotalStatements="17" CoveragePercent="100">
         <Type Name="&lt;get_SearchProviders&gt;d__9" CoveredStatements="5" TotalStatements="5" CoveragePercent="100">
@@ -1982,11 +1993,11 @@
         <Method Name="PerformSearch(String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="74" />
       </Type>
     </Namespace>
-    <Namespace Name="MattEland.Ani.Alfred.Search.StackOverflow" CoveredStatements="36" TotalStatements="84" CoveragePercent="43">
+    <Namespace Name="MattEland.Ani.Alfred.Search.StackOverflow" CoveredStatements="58" TotalStatements="84" CoveragePercent="69">
       <Type Name="StackOverflowQuestionResult" CoveredStatements="0" TotalStatements="7" CoveragePercent="0">
         <Method Name=".ctor(IAlfredContainer,Question)" CoveredStatements="0" TotalStatements="7" CoveragePercent="0" FirstStatementLine="26" />
       </Type>
-      <Type Name="StackOverflowSearchOperation" CoveredStatements="23" TotalStatements="61" CoveragePercent="38">
+      <Type Name="StackOverflowSearchOperation" CoveredStatements="45" TotalStatements="61" CoveragePercent="74">
         <Method Name=".ctor(IAlfredContainer,String,String)" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="48" />
         <Method Name="Abort()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="138" />
         <Method Name="get_Container()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="74" />
@@ -1994,12 +2005,12 @@
         <Method Name="get_ErrorMessage()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="97" />
         <Method Name="get_IsSearchComplete()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="109" />
         <Method Name="get_Results()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="128" />
-        <Method Name="HandleQueryResult()" CoveredStatements="0" TotalStatements="26" CoveragePercent="0" FirstStatementLine="146" />
-        <Method Name="set_EncounteredError(Boolean)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="85" />
-        <Method Name="set_ErrorMessage(String)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="97" />
-        <Method Name="set_IsSearchComplete(Boolean)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="109" />
+        <Method Name="HandleQueryResult()" CoveredStatements="16" TotalStatements="26" CoveragePercent="62" FirstStatementLine="146" />
+        <Method Name="set_EncounteredError(Boolean)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="85" />
+        <Method Name="set_ErrorMessage(String)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="97" />
+        <Method Name="set_IsSearchComplete(Boolean)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="109" />
         <Method Name="StartSearch()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="185" />
-        <Method Name="Update()" CoveredStatements="8" TotalStatements="12" CoveragePercent="67" FirstStatementLine="200" />
+        <Method Name="Update()" CoveredStatements="11" TotalStatements="12" CoveragePercent="92" FirstStatementLine="200" />
       </Type>
       <Type Name="StackOverflowSearchProvider" CoveredStatements="13" TotalStatements="16" CoveragePercent="81">
         <Method Name=".ctor(IAlfredContainer,String)" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="25" />

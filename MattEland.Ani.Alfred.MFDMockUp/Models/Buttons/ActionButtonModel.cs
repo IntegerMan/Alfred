@@ -59,7 +59,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         /// <param name="result"> The result. </param>
         internal override void ProcessCommand(MFDProcessor processor, MFDProcessorResult result)
         {
-            // TODO: This should do some sort of exception handling / fault registration
+            // TODO: This should do some sort of exception handling / faultIndicator registration
 
             _action.Invoke();
         }
@@ -88,7 +88,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
 
             if (isSelectedFunction != null)
             {
-                // TODO: This should do some sort of exception handling / fault registration
+                // TODO: This should do some sort of exception handling / faultIndicator registration
 
                 _isSelected.Value = isSelectedFunction();
             }

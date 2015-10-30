@@ -1,17 +1,15 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using MattEland.Ani.Alfred.MFDMockUp.Models;
-using Assisticant;
 
-using MattEland.Ani.Alfred.PresentationCommon.Helpers;
+using MattEland.Ani.Alfred.MFDMockUp.Models;
 using MattEland.Common.Annotations;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
 {
+    /// <summary>
+    ///     The main application view model. This class cannot be inherited.
+    /// </summary>
+    [PublicAPI]
     public sealed class MainViewModel
     {
 
@@ -22,9 +20,10 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         private readonly ViewModelLocator _locator;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MainViewModel"/> class.
+        ///     Initializes a new instance of the <see cref="MainViewModel"/> class.
         /// </summary>
-        /// <param name="workspace">The workspace.</param>
+        /// <param name="locator"> The locator. </param>
+        /// <param name="workspace"> The workspace. </param>
         public MainViewModel([NotNull] ViewModelLocator locator, [NotNull] Workspace workspace)
         {
             _workspace = workspace;
@@ -42,6 +41,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
             get { return _workspace.Name; }
         }
 
+        /// <summary>
+        ///     Gets the multifunction displays.
+        /// </summary>
+        /// <value>
+        ///     The multifunction displays.
+        /// </value>
         public IEnumerable<MFDViewModel> MultifunctionDisplays
         {
             get

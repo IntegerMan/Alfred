@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Linq;
 
 using MattEland.Ani.Alfred.MFDMockUp.Models.Screens;
 using MattEland.Ani.Alfred.PresentationCommon.Helpers;
@@ -73,6 +75,18 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         }
 
         /// <summary>
+        ///     Gets the faultIndicator indicators.
+        /// </summary>
+        /// <value>
+        ///     The faultIndicator indicators.
+        /// </value>
+        [NotNull, ItemNotNull]
+        public IEnumerable<FaultIndicatorViewModel> FaultIndicators
+        {
+            get { return _model.FaultIndicators.Select((fault) => new FaultIndicatorViewModel(fault)); }
+        }
+
+        /// <summary>
         ///     Determines whether the specified object is equal to the current object.
         /// </summary>
         /// <param name="other"> The view model to compare to this instance. </param>
@@ -112,4 +126,5 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
             return _model.GetHashCode();
         }
     }
+
 }

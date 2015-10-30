@@ -59,6 +59,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
             get { return new MFDButtonStripViewModel(ButtonProvider.BottomButtons); }
         }
 
+        /// <summary>
+        ///     Gets the left buttons.
+        /// </summary>
+        /// <value>
+        ///     The left buttons.
+        /// </value>
         [NotNull]
         public MFDButtonStripViewModel LeftButtons
         {
@@ -89,7 +95,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         /// <value>
         ///     The name of the MFD.
         /// </value>
-        [NotNull]
+        [CanBeNull]
         public string Name
         {
             get { return Model.Name; }
