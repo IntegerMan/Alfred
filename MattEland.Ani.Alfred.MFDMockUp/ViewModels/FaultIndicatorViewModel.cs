@@ -23,18 +23,33 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         [NotNull]
         private readonly FaultIndicatorModel _model;
 
+        /// <summary>
+        ///     The offline indicator visibility.
+        /// </summary>
         [NotNull]
         private readonly Computed<Visibility> _offlineVisibility;
 
+        /// <summary>
+        ///     The availability indicator visibility.
+        /// </summary>
         [NotNull]
         private readonly Computed<Visibility> _availableVisibility;
 
+        /// <summary>
+        ///     The online indicator visibility.
+        /// </summary>
         [NotNull]
         private readonly Computed<Visibility> _onlineVisibility;
 
+        /// <summary>
+        ///     The fault indicator visibility.
+        /// </summary>
         [NotNull]
         private readonly Computed<Visibility> _faultVisibility;
 
+        /// <summary>
+        ///     The warning indicator visibility.
+        /// </summary>
         [NotNull]
         private readonly Computed<Visibility> _warningVisibility;
 
@@ -48,11 +63,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
             Contract.Ensures(_model != null);
 
             _model = faultIndicator;
-            _offlineVisibility =
-                new Computed<Visibility>(
-                    () =>
-                    VisibileIfStatus(FaultIndicatorStatus.DisplayOffline));
 
+            _offlineVisibility = new Computed<Visibility>(() => VisibileIfStatus(FaultIndicatorStatus.DisplayOffline));
             _availableVisibility = new Computed<Visibility>(() => VisibileIfStatus(FaultIndicatorStatus.Available));
             _onlineVisibility = new Computed<Visibility>(() => VisibileIfStatus(FaultIndicatorStatus.Online));
             _faultVisibility = new Computed<Visibility>(() => VisibileIfStatus(FaultIndicatorStatus.Fault));
@@ -73,6 +85,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
                        : Visibility.Collapsed;
         }
 
+        /// <summary>
+        ///     Gets the offline indicator's visibility.
+        /// </summary>
+        /// <value>
+        ///     The offline visibility.
+        /// </value>
         public Visibility OfflineVisibility
         {
             [DebuggerStepThrough]
@@ -80,6 +98,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
             { return _offlineVisibility; }
         }
 
+        /// <summary>
+        ///     Gets the online indicator's visibility.
+        /// </summary>
+        /// <value>
+        ///     The online visibility.
+        /// </value>
         public Visibility OnlineVisibility
         {
             [DebuggerStepThrough]
@@ -87,6 +111,25 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
             { return _onlineVisibility; }
         }
 
+        /// <summary>
+        ///     Gets the availability indicator's visibility.
+        /// </summary>
+        /// <value>
+        ///     The availability visibility.
+        /// </value>
+        public Visibility AvailabilityVisibility
+        {
+            [DebuggerStepThrough]
+            get
+            { return _availableVisibility; }
+        }
+
+        /// <summary>
+        ///     Gets the warning indicator's visibility.
+        /// </summary>
+        /// <value>
+        ///     The warning visibility.
+        /// </value>
         public Visibility WarningVisibility
         {
             [DebuggerStepThrough]
@@ -94,6 +137,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
             { return _warningVisibility; }
         }
 
+        /// <summary>
+        ///     Gets the fault indicator's visibility.
+        /// </summary>
+        /// <value>
+        ///     The fault visibility.
+        /// </value>
         public Visibility FaultVisibility
         {
             [DebuggerStepThrough]
