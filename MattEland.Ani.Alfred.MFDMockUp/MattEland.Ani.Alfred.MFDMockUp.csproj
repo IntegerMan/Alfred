@@ -110,6 +110,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\FaultIndicatorControl.xaml.cs">
+      <DependentUpon>FaultIndicatorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MFDButton.cs" />
     <Compile Include="Controls\MFDButtonLabel.cs" />
     <Compile Include="Controls\MFDButtonLabelStripControl.xaml.cs">
@@ -152,6 +155,10 @@
       <DependentUpon>MFDBootupScreenView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\DispatcherUpdatePump.cs" />
+    <Page Include="Controls\FaultIndicatorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\MFDButtonLabelStripControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

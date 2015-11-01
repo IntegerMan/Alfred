@@ -1,6 +1,7 @@
 ﻿<UserControl x:Class="MattEland.Ani.Alfred.MFDMockUp.Views.MFDHomeScreenView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.Controls"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:layout="clr-namespace:MattEland.Ani.Alfred.PresentationAvalon.Layout;assembly=MattEland.Ani.Alfred.PresentationAvalon"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -50,22 +51,7 @@
 
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="vm:FaultIndicatorViewModel">
-                    <Grid Width="45"
-                          Margin="1"
-                          Background="{StaticResource MFDScreenRedBrush}"
-                          Opacity="{Binding Path=IndicatorOpacity,
-                                            FallbackValue=1}">
-                        <Border BorderBrush="{StaticResource BlackSemiTransparentBrush}"
-                                BorderThickness="1"
-                                Padding="2">
-                            <TextBlock HorizontalAlignment="Stretch"
-                                       FontFamily="{StaticResource ConsoleFontFamily}"
-                                       FontSize="6pt"
-                                       Foreground="{StaticResource BlackSemiTransparentBrush}"
-                                       Text="{Binding Path=IndicatorLabel}"
-                                       TextAlignment="Center" />
-                        </Border>
-                    </Grid>
+                    <controls:FaultIndicatorControl />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
 
