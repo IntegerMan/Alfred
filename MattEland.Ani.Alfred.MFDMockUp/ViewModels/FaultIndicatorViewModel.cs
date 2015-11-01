@@ -1,4 +1,6 @@
+using System.Diagnostics;
 using System.Diagnostics.Contracts;
+using System.Windows;
 
 using MattEland.Ani.Alfred.MFDMockUp.Models;
 using MattEland.Ani.Alfred.PresentationCommon.Helpers;
@@ -15,20 +17,26 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
     public sealed class FaultIndicatorViewModel
     {
 
-        private const double ActiveOpacity = 1.0;
-        private const double InactiveOpacity = 0.5;
-
         /// <summary>
         ///     The model.
         /// </summary>
         [NotNull]
         private readonly FaultIndicatorModel _model;
 
-        /// <summary>
-        ///     The opacity.
-        /// </summary>
         [NotNull]
-        private readonly Computed<double> _opacity;
+        private readonly Computed<Visibility> _offlineVisibility;
+
+        [NotNull]
+        private readonly Computed<Visibility> _availableVisibility;
+
+        [NotNull]
+        private readonly Computed<Visibility> _onlineVisibility;
+
+        [NotNull]
+        private readonly Computed<Visibility> _faultVisibility;
+
+        [NotNull]
+        private readonly Computed<Visibility> _warningVisibility;
 
         /// <summary>
         ///     Initializes a new instance of the FaultIndicatorViewModel class.
@@ -37,11 +45,61 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         public FaultIndicatorViewModel([NotNull] FaultIndicatorModel faultIndicator)
         {
             Contract.Requires(faultIndicator != null);
+            Contract.Ensures(_model != null);
 
             _model = faultIndicator;
-            _opacity = new Computed<double>(() => IsActive ? ActiveOpacity : InactiveOpacity);
+            _offlineVisibility =
+                new Computed<Visibility>(
+                    () =>
+                    VisibileIfStatus(FaultIndicatorStatus.DisplayOffline));
+
+            _availableVisibility = new Computed<Visibility>(() => VisibileIfStatus(FaultIndicatorStatus.Available));
+            _onlineVisibility = new Computed<Visibility>(() => VisibileIfStatus(FaultIndicatorStatus.Online));
+            _faultVisibility = new Computed<Visibility>(() => VisibileIfStatus(FaultIndicatorStatus.Fault));
+            _warningVisibility = new Computed<Visibility>(() => VisibileIfStatus(FaultIndicatorStatus.Warning));
         }
 
+        /// <summary>
+        ///     Visibile if <see cref="Status"/> is the expected <paramref name="status"/>.
+        /// </summary>
+        /// <param name="status"> The indicator's status. </param>
+        /// <returns>
+        ///     A Visibility.
+        /// </returns>
+        private Visibility VisibileIfStatus(FaultIndicatorStatus status)
+        {
+            return Status == status
+                       ? Visibility.Visible
+                       : Visibility.Collapsed;
+        }
+
+        public Visibility OfflineVisibility
+        {
+            [DebuggerStepThrough]
+            get
+            { return _offlineVisibility; }
+        }
+
+        public Visibility OnlineVisibility
+        {
+            [DebuggerStepThrough]
+            get
+            { return _onlineVisibility; }
+        }
+
+        public Visibility WarningVisibility
+        {
+            [DebuggerStepThrough]
+            get
+            { return _warningVisibility; }
+        }
+
+        public Visibility FaultVisibility
+        {
+            [DebuggerStepThrough]
+            get
+            { return _faultVisibility; }
+        }
 
         /// <summary>
         ///     Gets the fault indicator label for use in the user interface.
@@ -56,26 +114,16 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         }
 
         /// <summary>
-        ///     Gets the indicator's opacity.
+        ///     Gets a value indicating the status of this indicator.
         /// </summary>
         /// <value>
-        ///     The indicator's opacity.
+        ///     The indicator's status.
         /// </value>
-        public double IndicatorOpacity
+        public FaultIndicatorStatus Status
         {
-            get { return _opacity; }
+            get { return _model.Status; }
         }
 
-        /// <summary>
-        ///     Gets a value indicating whether this instance is active.
-        /// </summary>
-        /// <value>
-        ///     true if this instance is active, false if not.
-        /// </value>
-        public bool IsActive
-        {
-            get { return _model.IsActive; }
-        }
     }
 
 }

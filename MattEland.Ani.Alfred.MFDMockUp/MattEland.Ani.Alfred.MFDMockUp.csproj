@@ -124,6 +124,7 @@
     <Compile Include="Models\Buttons\ActionButtonModel.cs" />
     <Compile Include="Models\Buttons\IButtonClickListener.cs" />
     <Compile Include="Models\Buttons\NavigationButtonModel.cs" />
+    <Compile Include="Models\FaultIndicatorStatus.cs" />
     <Compile Include="Models\FaultManager.cs" />
     <Compile Include="Models\FaultIndicatorModel.cs" />
     <Compile Include="Models\ScreenProvider.cs" />

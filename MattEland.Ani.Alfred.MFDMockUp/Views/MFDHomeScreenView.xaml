@@ -51,7 +51,7 @@
 
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="vm:FaultIndicatorViewModel">
-                    <controls:FaultIndicatorControl />
+                    <controls:FaultIndicatorControl Margin="1" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
 

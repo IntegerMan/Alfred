@@ -50,7 +50,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
 
             // Add a faultIndicator indicator manager
             _faultManager = new FaultManager();
-            _faultManager.Register(new FaultIndicatorModel("ALF-PWR", () => !AlfredApplication.IsOnline));
+            _faultManager.Register(new FaultIndicatorModel("ALF-PWR", () => AlfredApplication.IsOnline ? FaultIndicatorStatus.Online : FaultIndicatorStatus.Available));
 
             // Build the main update pump
             _updatePump = new DispatcherUpdatePump(TimeSpan.FromSeconds(0.1), Update);

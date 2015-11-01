@@ -20,12 +20,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         ///     Thrown when <paramref name="indicatorLabel"/> is not of the correct length.
         /// </exception>
         /// <param name="indicatorLabel"> The indicator label. </param>
-        /// <param name="isActiveFunction"> The is active monitoring function. </param>
+        /// <param name="statusFunction"> The status calculation function. </param>
         public FaultIndicatorModel([NotNull] string indicatorLabel,
-            [CanBeNull] Func<bool> isActiveFunction)
+            [CanBeNull] Func<FaultIndicatorStatus> statusFunction)
         {
             Contract.Requires(indicatorLabel != null);
-            Contract.Ensures(_isActive != null);
+            Contract.Ensures(_status != null);
             Contract.Ensures(IndicatorLabel != null);
 
             // Remove all spacing
@@ -45,8 +45,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
 
             IndicatorLabel = indicatorLabel;
 
-            _isActive = new Observable<bool>();
-            _isActiveFunction = isActiveFunction;
+            _statusFunction = statusFunction;
+            _status = new Observable<FaultIndicatorStatus>(FaultIndicatorStatus.Inactive);
         }
 
         /// <summary>
@@ -59,16 +59,16 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         public string IndicatorLabel { get; }
 
         /// <summary>
-        ///     Whether or not the indicator is active
-        /// </summary>
-        [NotNull]
-        private readonly Observable<bool> _isActive;
-
-        /// <summary>
         ///     The is active monitoring function.
         /// </summary>
         [CanBeNull]
-        private readonly Func<bool> _isActiveFunction;
+        private readonly Func<FaultIndicatorStatus> _statusFunction;
+
+        /// <summary>
+        ///     The current status of the indicator.
+        /// </summary>
+        [NotNull]
+        private readonly Observable<FaultIndicatorStatus> _status;
 
         /// <summary>
         ///     Gets or sets a value indicating whether this indicator is active.
@@ -76,23 +76,23 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// <value>
         ///     true if this indicator is active, false if not.
         /// </value>
-        public bool IsActive
+        public FaultIndicatorStatus Status
         {
-            get { return _isActive; }
-            set { _isActive.Value = value; }
+            get { return _status; }
+            set { _status.Value = value; }
         }
 
         /// <summary>
-        ///     Updates the <see cref="IsActive"/> status of the indicator based on the function provided
+        ///     Updates the <see cref="Status"/> status of the indicator based on the function provided
         ///     at instance creation.
         /// </summary>
         public void Update()
         {
-            var func = _isActiveFunction;
+            var func = _statusFunction;
 
             if (func != null)
             {
-                IsActive = func();
+                Status = func();
             }
         }
     }

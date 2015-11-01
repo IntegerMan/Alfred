@@ -5,20 +5,65 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels"
              Width="45"
-             Margin="1"
              d:DataContext="{d:DesignInstance viewModels:FaultIndicatorViewModel}"
              mc:Ignorable="d">
-    <Border VerticalAlignment="Center"
-            Background="#13171C"
-            BorderBrush="#212528"
-            BorderThickness="2"
-            Padding="2">
-        <TextBlock x:Name="lblIndicator"
-                   HorizontalAlignment="Stretch"
-                   FontFamily="{StaticResource ConsoleFontFamily}"
-                   FontSize="6pt"
-                   Foreground="#212528"
-                   Text="{Binding Path=IndicatorLabel}"
-                   TextAlignment="Center" />
-    </Border>
+    <UserControl.Resources>
+        <Brush x:Key="IndicatorBackgroundBrush">#13171C</Brush>
+        <Brush x:Key="IndicatorBorderBrush">#212528</Brush>
+        <Brush x:Key="IndicatorActiveTextBrush">#66706C</Brush>
+        <Brush x:Key="IndicatorOnBrush">#FEFCB8</Brush>
+
+        <Style x:Key="IndicatorButtonLabelStyle" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="FontFamily" Value="{StaticResource ConsoleFontFamily}" />
+            <Setter Property="FontSize" Value="6pt" />
+            <Setter Property="Foreground" Value="{StaticResource IndicatorBorderBrush}" />
+            <Setter Property="TextAlignment" Value="Center" />
+        </Style>
+
+        <Style x:Key="IndicatorBorderStyle" TargetType="Border">
+            <Setter Property="BorderBrush" Value="{StaticResource IndicatorBorderBrush}" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="Padding" Value="2" />
+        </Style>
+
+    </UserControl.Resources>
+    <DockPanel>
+        <TextBlock x:Name="lblIndicatorName"
+                   DockPanel.Dock="Top"
+                   Foreground="{StaticResource IndicatorActiveTextBrush}"
+                   Style="{StaticResource IndicatorButtonLabelStyle}"
+                   Text="{Binding Path=IndicatorLabel}" />
+
+        <Border x:Name="borderOuter"
+                Width="45"
+                Height="33"
+                VerticalAlignment="Center"
+                Background="{StaticResource IndicatorBackgroundBrush}"
+                BorderBrush="{StaticResource IndicatorBorderBrush}"
+                BorderThickness="2"
+                Padding="2">
+            <Grid>
+
+                <!--  The Online indicator  -->
+                <TextBlock x:Name="lblOn"
+                           Foreground="{StaticResource IndicatorOnBrush}"
+                           Style="{StaticResource IndicatorButtonLabelStyle}"
+                           Text="ON"
+                           Visibility="{Binding Path=OnlineVisibility}" />
+
+                <!--  The Offline indicator  -->
+                <Border x:Name="borderInner"
+                        Height="16"
+                        VerticalAlignment="Bottom"
+                        Style="{StaticResource IndicatorBorderStyle}">
+
+                    <TextBlock x:Name="lblOff"
+                               Style="{StaticResource IndicatorButtonLabelStyle}"
+                               Text="OFF"
+                               Visibility="{Binding Path=OfflineVisibility}" />
+                </Border>
+            </Grid>
+        </Border>
+    </DockPanel>
 </UserControl>
