@@ -34,7 +34,9 @@
     </UserControl.Resources>
     <DockPanel>
         <TextBlock x:Name="lblIndicatorName"
+                   Margin="0,0,0,2"
                    DockPanel.Dock="Top"
+                   FontSize="8pt"
                    Foreground="{StaticResource IndicatorActiveTextBrush}"
                    Style="{StaticResource IndicatorButtonLabelStyle}"
                    Text="{Binding Path=IndicatorLabel}" />
