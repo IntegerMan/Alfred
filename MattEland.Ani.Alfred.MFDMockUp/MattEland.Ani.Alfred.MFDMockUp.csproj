@@ -138,6 +138,7 @@
     <Compile Include="Models\MFDMode.cs" />
     <Compile Include="Models\MFDProcessor.cs" />
     <Compile Include="Models\MFDProcessorResult.cs" />
+    <Compile Include="Models\Screens\LogScreenModel.cs" />
     <Compile Include="Models\Screens\ScreenModel.cs" />
     <Compile Include="Models\Buttons\SeparatorModel.cs" />
     <Compile Include="Models\Workspace.cs" />
@@ -151,7 +152,12 @@
     <Compile Include="ViewModels\Screens\AlfredScreenViewModel.cs" />
     <Compile Include="ViewModels\Screens\HomeScreenViewModel.cs" />
     <Compile Include="ViewModels\Buttons\SeparatorViewModel.cs" />
+    <Compile Include="ViewModels\Screens\LogEntryViewModel.cs" />
+    <Compile Include="ViewModels\Screens\LogScreenViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
+    <Compile Include="Views\LogScreenView.xaml.cs">
+      <DependentUpon>LogScreenView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MFDBootupScreenView.xaml.cs">
       <DependentUpon>MFDBootupScreenView.xaml</DependentUpon>
     </Compile>
@@ -195,6 +201,10 @@
     <Page Include="Views\AlfredScreenView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\LogScreenView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MFDHomeScreenView.xaml">
       <SubType>Designer</SubType>

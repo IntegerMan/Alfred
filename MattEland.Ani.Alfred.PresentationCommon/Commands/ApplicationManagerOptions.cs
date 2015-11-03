@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Common.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
@@ -59,5 +60,14 @@ namespace MattEland.Ani.Alfred.PresentationCommon.Commands
         /// </summary>
         /// <value>Whether or not to include the search module on the search page.</value>
         public bool IncludeSearchModuleOnSearchPage { get; set; } = true;
+
+        /// <summary>
+        ///     Gets or sets the console.
+        /// </summary>
+        /// <value>
+        ///     The console.
+        /// </value>
+        [CanBeNull]
+        public IConsole Console { get; set; }
     }
 }

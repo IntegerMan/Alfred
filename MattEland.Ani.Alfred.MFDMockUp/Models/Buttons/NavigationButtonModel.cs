@@ -28,13 +28,11 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         ///     Initializes a new instance of the ButtonModel class.
         /// </summary>
         /// <param name="target"> Target for the navigation. </param>
-        /// <param name="text"> The text. </param>
         /// <param name="listener"> The button provider. </param>
         /// <param name="index"> The button's index. </param>
         public NavigationButtonModel([NotNull] ScreenModel target,
-            [CanBeNull] string text,
             [NotNull] IButtonClickListener listener,
-            int index = -1) : base(text, listener, index)
+            int index = -1) : base(target.ButtonText, listener, index)
         {
             _target = target;
 

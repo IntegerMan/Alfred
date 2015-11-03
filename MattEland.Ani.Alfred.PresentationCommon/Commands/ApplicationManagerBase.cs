@@ -77,7 +77,7 @@ namespace MattEland.Ani.Alfred.PresentationCommon.Commands
 
             // Give Alfred a way to talk to the user and the client a way to log events that are
             // separate from Alfred
-            Console = InitializeConsole();
+            Console = options.Console ?? InitializeConsole();
 
             // Set the director. This will, in turn, set the shell 
             UserInterfaceDirector = director;

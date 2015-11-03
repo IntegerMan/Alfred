@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 
 using MattEland.Ani.Alfred.MFDMockUp.Models.Screens;
 using MattEland.Common.Annotations;
@@ -25,6 +26,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// <param name="workspace"> The workspace. </param>
         public ScreenProvider([NotNull] MultifunctionDisplay mfd, [NotNull] Workspace workspace)
         {
+            Contract.Requires(mfd != null);
+            Contract.Ensures(_screens != null);
 
             _screens = new Dictionary<Type, Lazy<ScreenModel>>
             {
@@ -35,7 +38,10 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
                     new Lazy<ScreenModel>(() => new BootupScreenModel(HomeScreen)),
 
                 [typeof(AlfredScreenModel)] =
-                    new Lazy<ScreenModel>(() => new AlfredScreenModel(workspace.AlfredApplication))
+                    new Lazy<ScreenModel>(() => new AlfredScreenModel(workspace.AlfredApplication)),
+
+                [typeof(LogScreenModel)] =
+                    new Lazy<ScreenModel>(() => new LogScreenModel(workspace.LoggingConsole, mfd))
             };
 
         }
@@ -77,6 +83,18 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         public ScreenModel AlfredScreen
         {
             get { return GetScreen(typeof(AlfredScreenModel)); }
+        }
+
+        /// <summary>
+        ///     Gets the log screen.
+        /// </summary>
+        /// <value>
+        ///     The log screen.
+        /// </value>
+        [NotNull]
+        public ScreenModel LogScreen
+        {
+            get { return GetScreen(typeof(LogScreenModel)); }
         }
 
         /// <summary>

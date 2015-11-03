@@ -52,4 +52,8 @@
         <views:AlfredScreenView />
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type screens:LogScreenViewModel}">
+        <views:LogScreenView />
+    </DataTemplate>
+
 </ResourceDictionary>

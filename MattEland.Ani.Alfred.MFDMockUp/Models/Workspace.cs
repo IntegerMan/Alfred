@@ -8,7 +8,9 @@ using System.Diagnostics;
 using System.Diagnostics.Contracts;
 
 using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.Core.Speech;
 using MattEland.Ani.Alfred.PresentationAvalon.Commands;
 using MattEland.Ani.Alfred.PresentationCommon.Commands;
 
@@ -26,7 +28,15 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// <param name="container"> The container. </param>
         public Workspace([NotNull] IAlfredContainer container)
         {
+            //- Contracts
             Contract.Requires(container != null);
+            Contract.Ensures(AlfredApplication != null);
+            Contract.Ensures(_name != null);
+            Contract.Ensures(_selectedMFD != null);
+            Contract.Ensures(_mfds != null);
+            Contract.Ensures(Console != null);
+            Contract.Ensures(_faultManager != null);
+            Contract.Ensures(_updatePump != null);
 
             // Set the container before any other properties are set
             Container = container;
@@ -44,8 +54,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
                 BingApiKey = "42" // TODO obviously
             };
 
+
             // Create Alfred instance
             ApplicationManager = new ApplicationManager(container, options);
+
+            Console = ApplicationManager.Console ?? new SimpleConsole(container);
+
             AlfredApplication = ApplicationManager.Alfred;
 
             // Add a faultIndicator indicator manager
@@ -59,6 +73,15 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             // Build the main update pump
             _updatePump = new DispatcherUpdatePump(TimeSpan.FromSeconds(0.1), Update);
         }
+
+        /// <summary>
+        ///     Gets or sets the console.
+        /// </summary>
+        /// <value>
+        ///     The console.
+        /// </value>
+        [NotNull]
+        public IConsole Console { get; }
 
         /// <summary>
         ///     Gets the manager for application.
@@ -175,6 +198,23 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             [DebuggerStepThrough]
             get
             { return _faultManager; }
+        }
+
+        /// <summary>
+        ///     Gets the console.
+        /// </summary>
+        /// <value>
+        ///     The console.
+        /// </value>
+        [NotNull]
+        public IConsole LoggingConsole
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<IConsole>() != null);
+
+                return Console;
+            }
         }
 
         /// <summary>

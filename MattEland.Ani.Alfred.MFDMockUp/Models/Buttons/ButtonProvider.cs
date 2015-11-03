@@ -62,10 +62,11 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
 
             // Set up buttons
             var screens = owner.ScreenProvider;
-            _systemButton = new NavigationButtonModel(screens.HomeScreen, "SYS", this);
-            _alfredButton = new NavigationButtonModel(screens.AlfredScreen, "ALFR", this);
 
-            _logButton = new ButtonModel("LOG", this);
+            _systemButton = new NavigationButtonModel(screens.HomeScreen, this);
+            _alfredButton = new NavigationButtonModel(screens.AlfredScreen, this);
+            _logButton = new NavigationButtonModel(screens.LogScreen, this);
+
             _performanceButton = new ButtonModel("PERF", this);
             _modeButton = new ButtonModel("MODE", this);
             _weatherButton = new ButtonModel("WTHR", this);
