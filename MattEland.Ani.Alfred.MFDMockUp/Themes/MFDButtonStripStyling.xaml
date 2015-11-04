@@ -1,11 +1,11 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:buttons="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels.Buttons"
                     xmlns:controls="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.Controls"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:layout="clr-namespace:MattEland.Ani.Alfred.PresentationAvalon.Layout;assembly=MattEland.Ani.Alfred.PresentationAvalon"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                     xmlns:viewModels="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels"
-                    xmlns:buttons="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels.Buttons"
                     mc:Ignorable="d">
 
 
@@ -64,7 +64,10 @@
             <Trigger Property="DockDirection" Value="Left">
                 <Setter TargetName="pnlButtons" Property="LayoutTransform">
                     <Setter.Value>
-                        <RotateTransform Angle="270" />
+                        <TransformGroup>
+                            <RotateTransform Angle="90" />
+                            <ScaleTransform ScaleX="-1" ScaleY="1" />
+                        </TransformGroup>
                     </Setter.Value>
                 </Setter>
                 <Setter TargetName="pnlButtons" Property="HorizontalAlignment" Value="Left" />
@@ -75,7 +78,9 @@
             <Trigger Property="DockDirection" Value="Right">
                 <Setter TargetName="pnlButtons" Property="LayoutTransform">
                     <Setter.Value>
-                        <RotateTransform Angle="90" />
+                        <TransformGroup>
+                            <RotateTransform Angle="90" />
+                        </TransformGroup>
                     </Setter.Value>
                 </Setter>
                 <Setter TargetName="pnlButtons" Property="HorizontalAlignment" Value="Right" />
@@ -86,7 +91,10 @@
             <Trigger Property="DockDirection" Value="Bottom">
                 <Setter TargetName="pnlButtons" Property="LayoutTransform">
                     <Setter.Value>
-                        <RotateTransform Angle="180" />
+                        <TransformGroup>
+                            <RotateTransform Angle="180" />
+                            <ScaleTransform ScaleX="-1" ScaleY="1" />
+                        </TransformGroup>
                     </Setter.Value>
                 </Setter>
                 <Setter TargetName="pnlButtons" Property="HorizontalAlignment" Value="Stretch" />

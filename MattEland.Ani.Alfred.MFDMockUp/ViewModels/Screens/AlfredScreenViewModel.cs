@@ -1,7 +1,20 @@
+// ---------------------------------------------------------
+// AlfredScreenViewModel.cs
+// 
+// Created on:      10/25/2015 at 3:44 PM
+// Last Modified:   11/03/2015 at 2:15 PM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 
 using Assisticant.Fields;
 
+using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.MFDMockUp.Models;
+using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
 using MattEland.Ani.Alfred.MFDMockUp.Models.Screens;
 using MattEland.Ani.Alfred.PresentationCommon.Helpers;
 using MattEland.Common.Annotations;
@@ -13,7 +26,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
     /// </summary>
     [ViewModelFor(typeof(AlfredScreenModel))]
     [UsedImplicitly]
-    public sealed class AlfredScreenViewModel
+    public sealed class AlfredScreenViewModel : ScreenViewModel
     {
         /// <summary>
         ///     The model.
@@ -24,31 +37,32 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         [NotNull]
         private readonly Computed<string> _statusMessage;
 
+        [NotNull, ItemNotNull]
+        private readonly List<ButtonModel> _rightButtons;
+
         /// <summary>
         ///     Initializes a new instance of the AlfredScreenViewModel class.
         /// </summary>
         /// <param name="model"> The model. </param>
-        public AlfredScreenViewModel([NotNull] AlfredScreenModel model)
+        public AlfredScreenViewModel([NotNull] AlfredScreenModel model) : base(model)
         {
             _model = model;
 
-            _statusMessage = new Computed<string>(
-                    () => string.Format("Current Status: {0}", _model.StatusText)
-        );
-        }
+            _statusMessage =
+                new Computed<string>(() => string.Format("Current Status: {0}", _model.StatusText));
 
-        /// <summary>
-        ///     Determines whether the specified object is equal to the current object.
-        /// </summary>
-        /// <param name="other"> The view model to compare to this instance. </param>
-        /// <returns>
-        ///     true if the specified object  is equal to the current object; otherwise, false.
-        /// </returns>
-        private bool Equals([NotNull] AlfredScreenViewModel other)
-        {
-            Contract.Requires(other != null);
+            var powerButton = new ActionButtonModel("PWR", _model.ToggleAlfredPower, () => IsOnline);
 
-            return _model.Equals(other._model);
+            // Build out the right button strip with some spacer items
+            _rightButtons = new List<ButtonModel>
+                            {
+                                ButtonStripModel.BuildEmptyButton(0),
+                                ButtonStripModel.BuildEmptyButton(1),
+                                ButtonStripModel.BuildEmptyButton(2),
+                                powerButton,
+                                ButtonStripModel.BuildEmptyButton(4)
+                            };
+
         }
 
         /// <summary>
@@ -87,6 +101,20 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         }
 
         /// <summary>
+        ///     Determines whether the specified object is equal to the current object.
+        /// </summary>
+        /// <param name="other"> The view model to compare to this instance. </param>
+        /// <returns>
+        ///     true if the specified object  is equal to the current object; otherwise, false.
+        /// </returns>
+        private bool Equals([NotNull] AlfredScreenViewModel other)
+        {
+            Contract.Requires(other != null);
+
+            return _model.Equals(other._model);
+        }
+
+        /// <summary>
         /// Determines whether the specified object is equal to the current object.
         /// </summary>
         /// <returns>
@@ -111,5 +139,24 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         {
             return _model.GetHashCode();
         }
+
+        /// <summary>
+        ///     Gets the buttons to appear along an <paramref name="edge"/>.
+        /// </summary>
+        /// <param name="result"> The result. </param>
+        /// <param name="edge"> The docking edge for the buttons to appear along. </param>
+        /// <returns>
+        ///     An enumerator that allows foreach to be used to process the buttons in this collection.
+        /// </returns>
+        internal override IEnumerable<ButtonModel> GetButtons(MFDProcessorResult result, ButtonStripDock edge)
+        {
+            if (edge == ButtonStripDock.Right)
+            {
+                return _rightButtons;
+            }
+
+            return null;
+        }
+
     }
 }

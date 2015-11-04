@@ -26,6 +26,12 @@
         <Setter Property="FontSize" Value="6pt" />
     </Style>
 
+    <Style x:Key="MFDViewTinyTextStyle"
+           BasedOn="{StaticResource MFDViewTextStyle}"
+           TargetType="TextBlock">
+        <Setter Property="FontSize" Value="4.5pt" />
+    </Style>
+
     <Style x:Key="MFDViewCenterTextStyle"
            BasedOn="{StaticResource MFDViewTextStyle}"
            TargetType="TextBlock">

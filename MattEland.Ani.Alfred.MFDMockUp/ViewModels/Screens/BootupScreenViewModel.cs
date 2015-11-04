@@ -3,6 +3,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 
 using MattEland.Ani.Alfred.MFDMockUp.Models.Screens;
+using MattEland.Ani.Alfred.MFDMockUp.Views;
 using MattEland.Ani.Alfred.PresentationCommon.Helpers;
 using MattEland.Common.Annotations;
 
@@ -13,7 +14,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
     /// </summary>
     [ViewModelFor(typeof(BootupScreenModel))]
     [UsedImplicitly]
-    public sealed class BootupScreenViewModel
+    public sealed class BootupScreenViewModel : ScreenViewModel
     {
         /// <summary>
         ///     The model.
@@ -25,7 +26,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         ///     Initializes a new instance of the BootupScreenViewModel class.
         /// </summary>
         /// <param name="model"> The model. </param>
-        public BootupScreenViewModel([NotNull] BootupScreenModel model)
+        public BootupScreenViewModel([NotNull] BootupScreenModel model) : base(model)
         {
             _model = model;
         }

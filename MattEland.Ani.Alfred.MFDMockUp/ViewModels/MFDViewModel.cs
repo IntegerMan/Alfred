@@ -12,7 +12,9 @@ using System;
 using System.Diagnostics;
 
 using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
+using MattEland.Ani.Alfred.MFDMockUp.Models.Screens;
 using MattEland.Ani.Alfred.MFDMockUp.ViewModels.Buttons;
+using MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens;
 using MattEland.Ani.Alfred.PresentationCommon.Helpers;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
@@ -158,14 +160,24 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         {
             get
             {
+                // Grab the screen we need a view for
                 var currentScreen = Model.CurrentScreen;
 
                 //- Safely handle a null screen
                 if (currentScreen == null) return null;
 
-                // Build out a view model and return it
-                var vm = Locator.ViewModelFor(currentScreen);
+                // If we've already created a VM, don't recreate one
+                object vm = currentScreen.GetViewModelFor(_model);
+                if (vm != null) return vm;
 
+                // Build a view model
+                vm = Locator.ViewModelFor(currentScreen, _model);
+
+                // Set the screen view model into the view
+                var screenVM = vm as ScreenViewModel;
+                if (screenVM != null) currentScreen.SetViewModelFor(this, screenVM);
+
+                // Return the value provided
                 return vm;
             }
         }

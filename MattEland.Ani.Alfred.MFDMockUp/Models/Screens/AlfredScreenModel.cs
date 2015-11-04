@@ -23,9 +23,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         [NotNull]
         private readonly Observable<bool> _isOnline;
 
-        [NotNull, ItemCanBeNull]
-        private readonly IEnumerable<ButtonModel> _rightButtons;
-
         /// <summary>
         ///     Initializes a new instance of the AlfredScreenModel class.
         /// </summary>
@@ -40,19 +37,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
             // Create observables
             _statusText = new Observable<string>(AlfredApplication.Status.ToString());
             _isOnline = new Observable<bool>(AlfredApplication.IsOnline);
-
-            // Create buttons
-            var powerButton = new ActionButtonModel("PWR", ToggleAlfredPower, () => AlfredApplication.IsOnline);
-
-            // Build out the right button strip with some spacer items
-            _rightButtons = new List<ButtonModel>
-                            {
-                                ButtonStripModel.BuildEmptyButton(0),
-                                ButtonStripModel.BuildEmptyButton(1),
-                                ButtonStripModel.BuildEmptyButton(2),
-                                powerButton,
-                                ButtonStripModel.BuildEmptyButton(4)
-                            };
         }
 
         /// <summary>
@@ -104,24 +88,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         public bool IsOnline { get { return _isOnline; } }
 
         /// <summary>
-        ///     Gets the buttons to appear along an <paramref name="edge"/>.
-        /// </summary>
-        /// <param name="result"> The result. </param>
-        /// <param name="edge"> The docking edge for the buttons to appear along. </param>
-        /// <returns>
-        ///     An enumerator that allows foreach to be used to process the buttons in this collection.
-        /// </returns>
-        internal override IEnumerable<ButtonModel> GetButtons(MFDProcessorResult result, ButtonStripDock edge)
-        {
-            if (edge == ButtonStripDock.Right)
-            {
-                return _rightButtons;
-            }
-
-            return null;
-        }
-
-        /// <summary>
         ///     Process the screen state and outputs any resulting information to the processorResult.
         /// </summary>
         /// <param name="processor"> The processor. </param>
@@ -135,7 +101,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         /// <summary>
         ///     Toggles Alfred's power.
         /// </summary>
-        private void ToggleAlfredPower()
+        public void ToggleAlfredPower()
         {
             if (AlfredApplication.IsOnline)
             {

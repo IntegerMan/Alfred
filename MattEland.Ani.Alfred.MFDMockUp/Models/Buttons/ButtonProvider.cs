@@ -219,12 +219,20 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
             TopButtons.SetButtons(GetTopButtons(mode));
             BottomButtons.SetButtons(GetBottomButtons(mode));
 
-            // TODO: Left and right buttons will be based off of the current view
+            // Left and right buttons are based off of the current view
 
-            var screen = result.CurrentScreen;
+            var screen = result.CurrentScreenViewModel;
 
-            LeftButtons.SetButtons(screen.GetButtons(result, ButtonStripDock.Left));
-            RightButtons.SetButtons(screen.GetButtons(result, ButtonStripDock.Right));
+            if (screen != null)
+            {
+                LeftButtons.SetButtons(screen.GetButtons(result, ButtonStripDock.Left));
+                RightButtons.SetButtons(screen.GetButtons(result, ButtonStripDock.Right));
+            }
+            else
+            {
+                LeftButtons.SetEmptyButtons(5);
+                RightButtons.SetEmptyButtons(5);
+            }
 
             foreach (var button in Buttons)
             {

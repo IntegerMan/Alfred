@@ -15,6 +15,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 
 using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
 using MattEland.Common.Annotations;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
@@ -51,12 +52,21 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         {
             Contract.Requires(console != null);
             Contract.Requires(mfd != null);
-            Contract.Ensures(_console != null);
-            Contract.Ensures(_mfd != null);
 
             _console = console;
             _loggedEvents = new ObservableCollection<IConsoleEvent>();
             _mfd = mfd;
+        }
+
+        /// <summary>
+        ///     Contains invariants related to this class.
+        /// </summary>
+        [ContractInvariantMethod]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(_mfd != null);
+            Contract.Invariant(_console != null);
+            Contract.Invariant(_loggedEvents != null);
         }
 
         /// <summary>
@@ -82,7 +92,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         /// <value>
         ///     The logged events.
         /// </value>
-        [NotNull]
+        [NotNull, ItemNotNull]
         public IEnumerable<IConsoleEvent> LoggedEvents
         {
             [DebuggerStepThrough]

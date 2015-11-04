@@ -38,7 +38,9 @@
 
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <local:MFDButtonLabel IsSelected="{Binding Path=IsSelected}"
+                    <local:MFDButtonLabel HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          IsSelected="{Binding Path=IsSelected}"
                                           Style="{StaticResource ButtonLabelGridStyle}"
                                           Text="{Binding Path=Text}" />
 

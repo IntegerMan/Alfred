@@ -145,6 +145,7 @@
     <Compile Include="Models\MultifunctionDisplay.cs" />
     <Compile Include="ViewModels\Buttons\ButtonViewModel.cs" />
     <Compile Include="ViewModels\FaultIndicatorViewModel.cs" />
+    <Compile Include="ViewModels\IHasDisplay.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\Buttons\MFDButtonStripViewModel.cs" />
     <Compile Include="ViewModels\MFDViewModel.cs" />
@@ -152,8 +153,9 @@
     <Compile Include="ViewModels\Screens\AlfredScreenViewModel.cs" />
     <Compile Include="ViewModels\Screens\HomeScreenViewModel.cs" />
     <Compile Include="ViewModels\Buttons\SeparatorViewModel.cs" />
-    <Compile Include="ViewModels\Screens\LogEntryViewModel.cs" />
+    <Compile Include="ViewModels\LogEntryViewModel.cs" />
     <Compile Include="ViewModels\Screens\LogScreenViewModel.cs" />
+    <Compile Include="ViewModels\Screens\ScreenViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="Views\LogScreenView.xaml.cs">
       <DependentUpon>LogScreenView.xaml</DependentUpon>

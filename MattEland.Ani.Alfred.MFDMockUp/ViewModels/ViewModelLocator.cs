@@ -85,12 +85,19 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         }
 
         [NotNull]
-        internal object ViewModelFor([NotNull] object model)
+        internal object ViewModelFor([NotNull] object model, MultifunctionDisplay currentDisplay)
         {
             Contract.Requires(model != null);
 
             // Use attribute-based lookup to create the view model
             var vm = BuildViewModelForModel(model);
+
+            // Set the view model's display if it can have one
+            var hasDisplay = vm as IHasDisplay;
+            if (hasDisplay != null)
+            {
+                hasDisplay.Display = currentDisplay;
+            }
 
             // Wrap it into an Assisticant wrapper
             return ForView.Wrap(vm);

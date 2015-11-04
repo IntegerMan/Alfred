@@ -13,7 +13,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
     /// </summary>
     [ViewModelFor(typeof(HomeScreenModel))]
     [UsedImplicitly]
-    public sealed class HomeScreenViewModel
+    public sealed class HomeScreenViewModel : ScreenViewModel
     {
         /// <summary>
         ///     The model.
@@ -25,7 +25,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         ///     Initializes a new instance of the BootupScreenViewModel class.
         /// </summary>
         /// <param name="model"> The model. </param>
-        public HomeScreenViewModel([NotNull] HomeScreenModel model)
+        public HomeScreenViewModel([NotNull] HomeScreenModel model) : base(model)
         {
             _model = model;
         }

@@ -4,8 +4,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:screens="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens"
+             xmlns:viewModels="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels"
              Style="{StaticResource MFDViewStyle}"
-             d:DataContext="{d:DesignInstance screens:AlfredScreenViewModel}"
+             d:DataContext="{d:DesignInstance screens:LogScreenViewModel}"
              d:DesignHeight="256"
              d:DesignWidth="256"
              mc:Ignorable="d">
@@ -17,18 +18,46 @@
                 <ResourceDictionary Source="\Themes\Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
+            <!--  Template for individual log entries  -->
+            <DataTemplate x:Key="LogEntryTemplate" DataType="viewModels:LogEntryViewModel">
+                <HeaderedContentControl Margin="{StaticResource HalfSpaceAbove}">
+                    <HeaderedContentControl.Header>
+                        <TextBlock Foreground="{StaticResource MFDScreenInfoBrush}"
+                                   Style="{StaticResource MFDViewTinyTextStyle}"
+                                   Text="{Binding Path=HeaderString}" />
+                    </HeaderedContentControl.Header>
+                    <HeaderedContentControl.Content>
+                        <TextBlock Margin="{StaticResource SpaceLeft}"
+                                   Foreground="{StaticResource MFDScreenInfoBrush}"
+                                   Style="{StaticResource MFDViewTinyTextStyle}"
+                                   Text="{Binding Path=Message}" />
+                    </HeaderedContentControl.Content>
+                </HeaderedContentControl>
+            </DataTemplate>
+
         </ResourceDictionary>
 
     </UserControl.Resources>
-    <DockPanel>
+
+    <!--  The region inside of the screen's button region  -->
+    <DockPanel Margin="{StaticResource ScreenMargin}" ClipToBounds="True">
+
         <!--  Module Title  -->
-        <TextBlock Margin="{StaticResource TopMargin}"
+        <TextBlock Margin="{StaticResource SpaceBelow}"
                    DockPanel.Dock="Top"
                    Style="{StaticResource MFDViewCenterTextStyle}"
                    Text="Alfred Event Log"
                    TextWrapping="Wrap" />
 
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <!--  Log Entries  -->
+        <ItemsControl Margin="{StaticResource SpaceLeftAndRight}"
+                      Background="Transparent"
+                      BorderBrush="Transparent"
+                      BorderThickness="0"
+                      ItemTemplate="{StaticResource LogEntryTemplate}"
+                      ItemsSource="{Binding Path=LogEntries}"
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                      ScrollViewer.VerticalScrollBarVisibility="Disabled" />
 
     </DockPanel>
 </UserControl>

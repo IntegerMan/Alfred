@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.Contracts;
 
 using MattEland.Ani.Alfred.MFDMockUp.Models.Screens;
+using MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens;
 using MattEland.Common.Annotations;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.Models
@@ -52,7 +53,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         public MFDMode RequestedMode { get; set; }
 
         /// <summary>
-        ///     Gets the current screen.
+        ///     Gets the current screen model.
         /// </summary>
         /// <value>
         ///     The current screen.
@@ -68,6 +69,17 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// </value>
         [CanBeNull]
         public ScreenModel RequestedScreen { get; set; }
+
+        /// <summary>
+        ///     Gets the current screen view model.
+        /// </summary>
+        /// <value>
+        ///     The current screen view model.
+        /// </value>
+        public ScreenViewModel CurrentScreenViewModel
+        {
+            get { return CurrentScreen.GetViewModelFor(_processor.MFD); }
+        }
 
     }
 }

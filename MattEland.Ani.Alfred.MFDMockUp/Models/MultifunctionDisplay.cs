@@ -5,10 +5,12 @@ using Assisticant.Fields;
 using MattEland.Common.Annotations;
 using MattEland.Common.Providers;
 using System.Diagnostics.Contracts;
+using System.Globalization;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
 using MattEland.Ani.Alfred.MFDMockUp.Models.Screens;
+using MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.Models
 {
@@ -178,6 +180,27 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             _processor.Update();
         }
 
+        /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>
+        /// A string that represents the current object.
+        /// </returns>
+        public override string ToString()
+        {
+            return string.Format(Culture, "Display {0}", Name);
+        }
+
+        /// <summary>
+        ///     Gets the user interface culture associated with this display.
+        /// </summary>
+        /// <value>
+        ///     The culture.
+        /// </value>
+        public CultureInfo Culture
+        {
+            get { return CultureInfo.CurrentCulture; }
+        }
     }
 
 }
