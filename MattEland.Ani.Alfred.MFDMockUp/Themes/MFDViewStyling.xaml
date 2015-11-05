@@ -62,4 +62,8 @@
         <views:LogScreenView />
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type screens:SystemPerformanceScreenViewModel}">
+        <views:SystemPerformanceScreenView />
+    </DataTemplate>
+
 </ResourceDictionary>

@@ -166,6 +166,9 @@
       <DependentUpon>MFDBootupScreenView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\DispatcherUpdatePump.cs" />
+    <Compile Include="Views\SystemPerformanceScreenView.xaml.cs">
+      <DependentUpon>SystemPerformanceScreenView.xaml</DependentUpon>
+    </Compile>
     <Page Include="Controls\FaultIndicatorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -243,6 +246,10 @@
     <Page Include="Views\MFDBootupScreenView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SystemPerformanceScreenView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
