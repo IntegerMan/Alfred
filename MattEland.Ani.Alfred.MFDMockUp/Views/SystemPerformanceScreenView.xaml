@@ -5,6 +5,7 @@
              xmlns:layout="clr-namespace:MattEland.Ani.Alfred.PresentationAvalon.Layout;assembly=MattEland.Ani.Alfred.PresentationAvalon"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:screens="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens"
+             xmlns:widgets="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets"
              d:DataContext="{d:DesignInstance screens:SystemPerformanceScreenViewModel}"
              d:DesignHeight="300"
              d:DesignWidth="300"
@@ -33,10 +34,11 @@
         <!--  Main Content  -->
         <Grid>
 
-            <!-- Standby Label (for when subsystem is offline) -->
+            <!--  Standby Label (for when subsystem is offline)  -->
             <TextBlock Style="{StaticResource MFDViewStandbyLabelStyle}"
                        Text="Standby"
-                       Visibility="{Binding Path=ShowStandbyLabel, Converter={StaticResource ShowIfTrue}}" />
+                       Visibility="{Binding Path=ShowStandbyLabel,
+                                            Converter={StaticResource ShowIfTrue}}" />
 
             <!--  Log Entries  -->
             <ItemsControl Margin="{StaticResource SpaceLeftAndRight}"
@@ -46,13 +48,59 @@
                           ItemsSource="{Binding Path=PerformanceWidgets}"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                           ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                          Visibility="{Binding Path=ShowStandbyLabel, Converter={StaticResource ShowIfFalse}}">
+                          Visibility="{Binding Path=ShowStandbyLabel,
+                                               Converter={StaticResource ShowIfFalse}}">
 
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
+                        <!--  TODO: This will need to page after 12 items (UI fits 3 rows of 4)  -->
                         <layout:DynamicPanel LayoutType="HorizontalWrapPanel" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+
+                    <!--  TODO: This is obviously its own style of headered content control  -->
+                    <DataTemplate DataType="widgets:WidgetViewModel">
+                        <Border Width="49"
+                                Height="49"
+                                Margin="1"
+                                BorderBrush="{StaticResource MFDScreenForegroundBrush}"
+                                BorderThickness="1"
+                                ClipToBounds="True">
+                            <DockPanel>
+
+                                <!--  Header (on bottom with inverted background)  -->
+                                <Border Background="{StaticResource MFDScreenSubtleForegroundBrush}"
+                                        BorderBrush="{StaticResource MFDScreenForegroundBrush}"
+                                        BorderThickness="0,1"
+                                        DockPanel.Dock="Bottom"
+                                        Padding="1">
+
+                                    <!--  TODO: Widget.Text is cheating. Use proper VMs  -->
+                                    <TextBlock HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               FontFamily="{StaticResource ConsoleFontFamily}"
+                                               FontSize="6pt"
+                                               Foreground="{StaticResource MFDScreenForegroundBrush}"
+                                               Text="{Binding Path=Widget.Text}" />
+                                </Border>
+
+                                <!--  Content  -->
+                                <!--  TODO: This doesn't center and isn't a bar graph anyway  -->
+                                <ContentControl HorizontalAlignment="Stretch"
+                                                VerticalAlignment="Stretch"
+                                                HorizontalContentAlignment="Center"
+                                                VerticalContentAlignment="Center"
+                                                Content="{Binding Path=Widget.ItemTypeName}"
+                                                FontFamily="{StaticResource ConsoleFontFamily}"
+                                                FontSize="6pt"
+                                                Foreground="{StaticResource MFDScreenInfoBrush}" />
+
+                            </DockPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
 
             </ItemsControl>
         </Grid>

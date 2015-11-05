@@ -6,6 +6,7 @@
     <Brush x:Key="MFDScreenBackgroundBrush">#060105</Brush>
     <Brush x:Key="MFDScreenBorderBrush">#3F3F46</Brush>
     <Brush x:Key="MFDScreenForegroundBrush">#2BDD3A</Brush>
+    <Brush x:Key="MFDScreenSubtleForegroundBrush">#13641B</Brush>
     <Brush x:Key="MFDScreenInfoBrush">#FEFDFE</Brush>
 
     <Brush x:Key="MFDScreenGreenBrush">#2BDD3A</Brush>
