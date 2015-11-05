@@ -66,8 +66,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
             _systemButton = new NavigationButtonModel(screens.HomeScreen, this);
             _alfredButton = new NavigationButtonModel(screens.AlfredScreen, this);
             _logButton = new NavigationButtonModel(screens.LogScreen, this);
+            _performanceButton = new NavigationButtonModel(screens.PerformanceScreen, this);
 
-            _performanceButton = new ButtonModel("PERF", this);
             _modeButton = new ButtonModel("MODE", this);
             _weatherButton = new ButtonModel("WTHR", this);
             _searchButton = new ButtonModel("SRCH", this);

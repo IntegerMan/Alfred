@@ -40,6 +40,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
                 [typeof(AlfredScreenModel)] =
                     new Lazy<ScreenModel>(() => new AlfredScreenModel(workspace.AlfredApplication)),
 
+                [typeof(SystemPerformanceScreenModel)] =
+                    new Lazy<ScreenModel>(() => new SystemPerformanceScreenModel()),
+
                 [typeof(LogScreenModel)] =
                     new Lazy<ScreenModel>(() => new LogScreenModel(workspace.LoggingConsole, mfd))
             };
@@ -95,6 +98,18 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         public ScreenModel LogScreen
         {
             get { return GetScreen(typeof(LogScreenModel)); }
+        }
+
+        /// <summary>
+        ///     Gets the performance screen.
+        /// </summary>
+        /// <value>
+        ///     The performance screen.
+        /// </value>
+        [NotNull]
+        public ScreenModel PerformanceScreen
+        {
+            get { return GetScreen(typeof(SystemPerformanceScreenModel)); }
         }
 
         /// <summary>

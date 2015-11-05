@@ -141,6 +141,7 @@
     <Compile Include="Models\Screens\LogScreenModel.cs" />
     <Compile Include="Models\Screens\ScreenModel.cs" />
     <Compile Include="Models\Buttons\SeparatorModel.cs" />
+    <Compile Include="Models\Screens\SystemPerformanceScreenModel.cs" />
     <Compile Include="Models\Workspace.cs" />
     <Compile Include="Models\MultifunctionDisplay.cs" />
     <Compile Include="ViewModels\Buttons\ButtonViewModel.cs" />
@@ -156,6 +157,7 @@
     <Compile Include="ViewModels\LogEntryViewModel.cs" />
     <Compile Include="ViewModels\Screens\LogScreenViewModel.cs" />
     <Compile Include="ViewModels\Screens\ScreenViewModel.cs" />
+    <Compile Include="ViewModels\Screens\SystemPerformanceScreenViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="Views\LogScreenView.xaml.cs">
       <DependentUpon>LogScreenView.xaml</DependentUpon>
