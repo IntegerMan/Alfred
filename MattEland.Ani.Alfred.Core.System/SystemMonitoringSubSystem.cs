@@ -2,7 +2,7 @@
 // SystemMonitoringSubSystem.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   09/03/2015 at 1:57 AM
+// Last Modified:   11/05/2015 at 1:56 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
@@ -12,13 +12,11 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 
-using MattEland.Common.Annotations;
-
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Pages;
 using MattEland.Ani.Alfred.Core.Subsystems;
 using MattEland.Common;
-using MattEland.Common.Providers;
+using MattEland.Common.Annotations;
 
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
@@ -28,6 +26,12 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
     /// </summary>
     public sealed class SystemMonitoringSubsystem : AlfredSubsystem, IDisposable
     {
+        /// <summary>
+        ///     The identifier for the subsystem. This value will be set for the instance's
+        ///     <see cref="Id"/>.
+        /// </summary>
+        [NotNull]
+        public const string InstanceId = "Perf";
 
         [NotNull]
         private readonly CpuMonitorModule _cpuModule;
@@ -50,7 +54,10 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// </exception>
         public SystemMonitoringSubsystem([NotNull] IAlfredContainer container) : base(container)
         {
-            if (container == null) { throw new ArgumentNullException(nameof(container)); }
+            if (container == null)
+            {
+                throw new ArgumentNullException(nameof(container));
+            }
 
             // Grab a factory from the container. This can be counter-based or a test factory.
             var factory = Container.Provide<IMetricProviderFactory>();
@@ -62,8 +69,8 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 
             // Set up the containing page
             _page = new ModuleListPage(container,
-                                             Resources.SystemMonitoringSystem_Name.NonNull(),
-                                             "Sys");
+                                       Resources.SystemMonitoringSystem_Name.NonNull(),
+                                       InstanceId);
         }
 
         /// <summary>
@@ -125,11 +132,13 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <returns>
         ///     <c>True</c> if the <paramref name="command" /> was handled; otherwise false.
         /// </returns>
-        public override bool ProcessAlfredCommand(
-            ChatCommand command,
-            [CanBeNull] ICommandResult result)
+        public override bool ProcessAlfredCommand(ChatCommand command,
+                                                  [CanBeNull] ICommandResult result)
         {
-            if (result == null) { return false; }
+            if (result == null)
+            {
+                return false;
+            }
 
             if (command.IsFor(this) && command.Name.Matches("Status"))
             {

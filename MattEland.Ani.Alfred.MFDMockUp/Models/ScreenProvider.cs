@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Linq;
 
+using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Ani.Alfred.MFDMockUp.Models.Screens;
+using MattEland.Common;
 using MattEland.Common.Annotations;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.Models
@@ -27,7 +30,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         public ScreenProvider([NotNull] MultifunctionDisplay mfd, [NotNull] Workspace workspace)
         {
             Contract.Requires(mfd != null);
-            Contract.Ensures(_screens != null);
+            Contract.Requires(workspace != null);
+
+            var alfred = workspace.AlfredApplication;
 
             _screens = new Dictionary<Type, Lazy<ScreenModel>>
             {
@@ -41,13 +46,30 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
                     new Lazy<ScreenModel>(() => new AlfredScreenModel(workspace.AlfredApplication)),
 
                 [typeof(SystemPerformanceScreenModel)] =
-                    new Lazy<ScreenModel>(() => new SystemPerformanceScreenModel()),
+                    new Lazy<ScreenModel>(() =>
+                    {
+                        var perfSys = alfred.Subsystems.FirstOfType<SystemMonitoringSubsystem>();
+                        return new SystemPerformanceScreenModel(perfSys);
+                    }),
 
                 [typeof(LogScreenModel)] =
                     new Lazy<ScreenModel>(() => new LogScreenModel(workspace.LoggingConsole, mfd))
             };
 
         }
+
+        /// <summary>
+        ///     Contains code contract invariants that describe facts about this class that will be true
+        ///     after any public method in this class is called.
+        /// </summary>
+        [ContractInvariantMethod]
+        private void ClassInvariants()
+        {
+            Contract.Invariant(_screens != null);
+            Contract.Invariant(_screens.All(s => s.Key != null));
+            Contract.Invariant(_screens.All(s => s.Value != null));
+        }
+
 
         /// <summary>
         ///     Gets the boot screen.
