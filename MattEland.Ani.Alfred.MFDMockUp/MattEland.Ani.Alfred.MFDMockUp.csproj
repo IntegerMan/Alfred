@@ -159,6 +159,7 @@
     <Compile Include="ViewModels\Screens\ScreenViewModel.cs" />
     <Compile Include="ViewModels\Screens\SystemPerformanceScreenViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
+    <Compile Include="ViewModels\Widgets\WidgetViewModel.cs" />
     <Compile Include="Views\LogScreenView.xaml.cs">
       <DependentUpon>LogScreenView.xaml</DependentUpon>
     </Compile>

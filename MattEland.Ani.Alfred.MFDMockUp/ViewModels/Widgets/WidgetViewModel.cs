@@ -1,0 +1,61 @@
+// ---------------------------------------------------------
+// WidgetViewModel.cs
+// 
+// Created on:      11/05/2015 at 2:56 PM
+// Last Modified:   11/05/2015 at 4:24 PM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using System.Diagnostics.Contracts;
+
+using MattEland.Common.Annotations;
+using MattEland.Presentation.Logical.Widgets;
+
+namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets
+{
+    /// <summary>
+    ///     A ViewModel for widgets.
+    /// </summary>
+    public class WidgetViewModel
+    {
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// </summary>
+        public WidgetViewModel([NotNull] IWidget widget)
+        {
+            Widget = widget;
+        }
+
+        /// <summary>
+        ///     Gets the widget.
+        /// </summary>
+        /// <value>
+        ///     The widget.
+        /// </value>
+        [NotNull]
+        public IWidget Widget { get; }
+
+        /// <summary>
+        ///     Gets the name of the widget for displaying in the user interface.
+        /// </summary>
+        /// <value>
+        ///     The display name of the widget.
+        /// </value>
+        public string DisplayName
+        {
+            get { return Widget.DisplayName; }
+        }
+
+        /// <summary>
+        ///     Contains code contract invariants that describe facts about this class that will be true
+        ///     after any public method in this class is called.
+        /// </summary>
+        [ContractInvariantMethod]
+        private void ClassInvariants()
+        {
+            Contract.Invariant(Widget != null);
+        }
+    }
+}

@@ -38,6 +38,14 @@
         <Setter Property="HorizontalAlignment" Value="Center" />
     </Style>
 
+    <Style x:Key="MFDViewStandbyLabelStyle"
+           BasedOn="{StaticResource MFDViewTextStyle}"
+           TargetType="TextBlock">
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Foreground" Value="{StaticResource MFDScreenInfoBrush}" />
+    </Style>
+
     <Style x:Key="MFDViewSmallCenterTextStyle"
            BasedOn="{StaticResource MFDViewCenterTextStyle}"
            TargetType="TextBlock">
@@ -45,6 +53,7 @@
     </Style>
 
     <!--  View Mappings  -->
+    <!--  TODO: Move into a separate ResourceDictionary  -->
 
     <DataTemplate DataType="{x:Type screens:BootupScreenViewModel}">
         <views:MFDBootupScreenView />

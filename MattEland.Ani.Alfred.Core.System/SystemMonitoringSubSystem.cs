@@ -2,12 +2,14 @@
 // SystemMonitoringSubSystem.cs
 // 
 // Created on:      08/19/2015 at 9:31 PM
-// Last Modified:   11/05/2015 at 1:56 PM
+// Last Modified:   11/05/2015 at 4:12 PM
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -71,6 +73,71 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             _page = new ModuleListPage(container,
                                        Resources.SystemMonitoringSystem_Name.NonNull(),
                                        InstanceId);
+        }
+
+        /// <summary>
+        ///     Gets the CPU monitoring module.
+        /// </summary>
+        /// <value>
+        ///     The CPU monitoring module.
+        /// </value>
+        [NotNull]
+        public CpuMonitorModule CpuModule
+        {
+            [DebuggerStepThrough]
+            get
+            {
+                return _cpuModule;
+            }
+        }
+
+        /// <summary>
+        ///     Gets the disk monitoring module.
+        /// </summary>
+        /// <value>
+        ///     The disk module.
+        /// </value>
+        [NotNull]
+        public DiskMonitorModule DiskModule
+        {
+            [DebuggerStepThrough]
+            get
+            {
+                return _diskModule;
+            }
+        }
+
+        /// <summary>
+        ///     Gets the memory monitoring module.
+        /// </summary>
+        /// <value>
+        ///     The memory module.
+        /// </value>
+        [NotNull]
+        public MemoryMonitorModule MemoryModule
+        {
+            [DebuggerStepThrough]
+            get
+            {
+                return _memoryModule;
+            }
+        }
+
+        /// <summary>
+        ///     Gets the system modules associated with this subsystem.
+        /// </summary>
+        /// <value>
+        ///     The system modules.
+        /// </value>
+        [NotNull, ItemNotNull]
+        public IEnumerable<SystemMonitorModule> SystemModules
+        {
+            get
+            {
+                yield return MemoryModule;
+                yield return CpuModule;
+                yield return DiskModule;
+            }
         }
 
         /// <summary>

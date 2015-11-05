@@ -30,22 +30,32 @@
                    Text="System Performance"
                    TextWrapping="Wrap" />
 
-        <!--  Log Entries  -->
-        <ItemsControl Margin="{StaticResource SpaceLeftAndRight}"
-                      Background="Transparent"
-                      BorderBrush="Transparent"
-                      BorderThickness="0"
-                      ItemsSource="{Binding Path=PerformanceWidgets}"
-                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                      ScrollViewer.VerticalScrollBarVisibility="Disabled">
+        <!--  Main Content  -->
+        <Grid>
 
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <layout:DynamicPanel LayoutType="HorizontalWrapPanel" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
+            <!-- Standby Label (for when subsystem is offline) -->
+            <TextBlock Style="{StaticResource MFDViewStandbyLabelStyle}"
+                       Text="Standby"
+                       Visibility="{Binding Path=ShowStandbyLabel, Converter={StaticResource ShowIfTrue}}" />
 
-        </ItemsControl>
+            <!--  Log Entries  -->
+            <ItemsControl Margin="{StaticResource SpaceLeftAndRight}"
+                          Background="Transparent"
+                          BorderBrush="Transparent"
+                          BorderThickness="0"
+                          ItemsSource="{Binding Path=PerformanceWidgets}"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                          Visibility="{Binding Path=ShowStandbyLabel, Converter={StaticResource ShowIfFalse}}">
+
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <layout:DynamicPanel LayoutType="HorizontalWrapPanel" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+            </ItemsControl>
+        </Grid>
 
     </DockPanel>
 
