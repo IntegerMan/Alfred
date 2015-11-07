@@ -1,0 +1,52 @@
+﻿<HeaderedContentControl x:Class="MattEland.Ani.Alfred.MFDMockUp.Controls.StatusTile"
+                        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                        x:Name="userControl"
+                        Width="49"
+                        Height="49"
+                        Margin="1"
+                        ClipToBounds="True"
+                        mc:Ignorable="d">
+    <HeaderedContentControl.Template>
+        <ControlTemplate TargetType="HeaderedContentControl">
+            <Border BorderBrush="{StaticResource MFDScreenForegroundBrush}"
+                    BorderThickness="1">
+                <DockPanel>
+
+                    <!--  Header (on bottom with inverted background)  -->
+                    <Border DockPanel.Dock="Bottom"
+                            Background="{StaticResource MFDScreenSubtleForegroundBrush}"
+                            BorderBrush="{StaticResource MFDScreenForegroundBrush}"
+                            BorderThickness="0,1,0,0">
+                        <ContentControl HorizontalContentAlignment="Center"
+                                        VerticalContentAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Content="{Binding Path=Header,
+                                                          ElementName=userControl,
+                                                          FallbackValue=Header}"
+                                        FontFamily="{StaticResource ConsoleFontFamily}"
+                                        FontSize="6pt"
+                                        Foreground="{StaticResource MFDScreenForegroundBrush}"
+                                        Padding="1" />
+                    </Border>
+
+                    <!--  Content  -->
+                    <ContentControl HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    HorizontalContentAlignment="Center"
+                                    VerticalContentAlignment="Center"
+                                    Content="{Binding Path=Content,
+                                                      ElementName=userControl,
+                                                      FallbackValue=Content}"
+                                    FontFamily="{StaticResource ConsoleFontFamily}"
+                                    FontSize="6pt"
+                                    Foreground="{StaticResource MFDScreenInfoBrush}" />
+
+                </DockPanel>
+            </Border>
+        </ControlTemplate>
+    </HeaderedContentControl.Template>
+</HeaderedContentControl>

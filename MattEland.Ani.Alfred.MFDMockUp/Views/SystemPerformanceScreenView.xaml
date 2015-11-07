@@ -1,6 +1,7 @@
 ﻿<UserControl x:Class="MattEland.Ani.Alfred.MFDMockUp.Views.SystemPerformanceScreenView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.Controls"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:layout="clr-namespace:MattEland.Ani.Alfred.PresentationAvalon.Layout;assembly=MattEland.Ani.Alfred.PresentationAvalon"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -22,7 +23,8 @@
     </UserControl.Resources>
 
     <!--  The region inside of the screen's button region  -->
-    <DockPanel Margin="{StaticResource ScreenMargin}" ClipToBounds="True">
+    <DockPanel Margin="{StaticResource ScreenMargin}"
+               ClipToBounds="True">
 
         <!--  Module Title  -->
         <TextBlock Margin="{StaticResource SpaceBelow}"
@@ -53,52 +55,17 @@
 
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <!--  TODO: This will need to page after 12 items (UI fits 3 rows of 4)  -->
+                        <!--  TODO: This will need to page when > 12 items (UI fits 3 rows of 4)  -->
                         <layout:DynamicPanel LayoutType="HorizontalWrapPanel" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
 
                 <ItemsControl.ItemTemplate>
-
-                    <!--  TODO: This is obviously its own style of headered content control  -->
                     <DataTemplate DataType="widgets:WidgetViewModel">
-                        <Border Width="49"
-                                Height="49"
-                                Margin="1"
-                                BorderBrush="{StaticResource MFDScreenForegroundBrush}"
-                                BorderThickness="1"
-                                ClipToBounds="True">
-                            <DockPanel>
 
-                                <!--  Header (on bottom with inverted background)  -->
-                                <Border Background="{StaticResource MFDScreenSubtleForegroundBrush}"
-                                        BorderBrush="{StaticResource MFDScreenForegroundBrush}"
-                                        BorderThickness="0,1"
-                                        DockPanel.Dock="Bottom"
-                                        Padding="1">
-
-                                    <!--  TODO: Widget.Text is cheating. Use proper VMs  -->
-                                    <TextBlock HorizontalAlignment="Center"
-                                               VerticalAlignment="Center"
-                                               FontFamily="{StaticResource ConsoleFontFamily}"
-                                               FontSize="6pt"
-                                               Foreground="{StaticResource MFDScreenForegroundBrush}"
-                                               Text="{Binding Path=Widget.Text}" />
-                                </Border>
-
-                                <!--  Content  -->
-                                <!--  TODO: This doesn't center and isn't a bar graph anyway  -->
-                                <ContentControl HorizontalAlignment="Stretch"
-                                                VerticalAlignment="Stretch"
-                                                HorizontalContentAlignment="Center"
-                                                VerticalContentAlignment="Center"
-                                                Content="{Binding Path=Widget.ItemTypeName}"
-                                                FontFamily="{StaticResource ConsoleFontFamily}"
-                                                FontSize="6pt"
-                                                Foreground="{StaticResource MFDScreenInfoBrush}" />
-
-                            </DockPanel>
-                        </Border>
+                        <!--  TODO: This isn't a bar graph  -->
+                        <controls:StatusTile Content="{Binding Path=Widget.ItemTypeName}"
+                                             Header="{Binding Path=Widget.Text}" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
 

@@ -3,19 +3,39 @@
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
     <!--  Common Brushes for MFD Screens  -->
-    <Brush x:Key="MFDScreenBackgroundBrush">#060105</Brush>
-    <Brush x:Key="MFDScreenBorderBrush">#3F3F46</Brush>
-    <Brush x:Key="MFDScreenForegroundBrush">#2BDD3A</Brush>
-    <Brush x:Key="MFDScreenSubtleForegroundBrush">#13641B</Brush>
-    <Brush x:Key="MFDScreenInfoBrush">#FEFDFE</Brush>
+    <Brush x:Key="MFDScreenBackgroundBrush">
+        #060105
+    </Brush>
+    <Brush x:Key="MFDScreenBorderBrush">
+        #3F3F46
+    </Brush>
+    <Brush x:Key="MFDScreenForegroundBrush">
+        #2BDD3A
+    </Brush>
+    <Brush x:Key="MFDScreenSubtleForegroundBrush">
+        #13641B
+    </Brush>
+    <Brush x:Key="MFDScreenInfoBrush">
+        #FEFDFE
+    </Brush>
 
-    <Brush x:Key="MFDScreenGreenBrush">#2BDD3A</Brush>
+    <Brush x:Key="MFDScreenGreenBrush">
+        #2BDD3A
+    </Brush>
 
     <!--  TODO: Color Match these from fault notifications  -->
-    <Brush x:Key="MFDScreenRedBrush">#DD2B2B</Brush>
-    <Brush x:Key="MFDScreenYellowBrush">#D2DD2B</Brush>
+    <Brush x:Key="MFDScreenRedBrush">
+        #DD2B2B
+    </Brush>
+    <Brush x:Key="MFDScreenYellowBrush">
+        #D2DD2B
+    </Brush>
 
-    <system:Double x:Key="MFDButtonSize">20</system:Double>
-    <GridLength x:Key="MFDFrameSize">35</GridLength>
+    <system:Double x:Key="MFDButtonSize">
+        20
+    </system:Double>
+    <GridLength x:Key="MFDFrameSize">
+        35
+    </GridLength>
 
 </ResourceDictionary>

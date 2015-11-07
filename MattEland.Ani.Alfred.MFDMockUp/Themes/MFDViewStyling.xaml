@@ -3,20 +3,30 @@
                     xmlns:screens="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens"
                     xmlns:views="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.Views">
 
-    <Brush x:Key="MFDViewBackgroundBrush">#060105</Brush>
-    <Brush x:Key="MFDViewForegroundBrush">#2BDD3A</Brush>
-    <Brush x:Key="MFDViewBorderBrush">#187A20</Brush>
-    <Brush x:Key="MFDViewSubtleBrush">#3E3E42</Brush>
+    <Brush x:Key="MFDViewBackgroundBrush">
+        #060105
+    </Brush>
+    <Brush x:Key="MFDViewForegroundBrush">
+        #2BDD3A
+    </Brush>
+    <Brush x:Key="MFDViewBorderBrush">
+        #187A20
+    </Brush>
+    <Brush x:Key="MFDViewSubtleBrush">
+        #3E3E42
+    </Brush>
 
-    <Style x:Key="MFDViewStyle" TargetType="UserControl">
+    <Style x:Key="MFDViewStyle"
+           TargetType="UserControl">
         <Setter Property="Background" Value="{StaticResource MFDViewBackgroundBrush}" />
         <Setter Property="Foreground" Value="{StaticResource MFDViewForegroundBrush}" />
     </Style>
 
-    <Style x:Key="MFDViewTextStyle" TargetType="TextBlock">
-        <Setter Property="Foreground" Value="{StaticResource MFDViewForegroundBrush}" />
+    <Style x:Key="MFDViewTextStyle"
+           TargetType="TextBlock">
         <Setter Property="FontFamily" Value="{StaticResource ConsoleFontFamily}" />
         <Setter Property="FontSize" Value="8pt" />
+        <Setter Property="Foreground" Value="{StaticResource MFDViewForegroundBrush}" />
         <Setter Property="Typography.Capitals" Value="SmallCaps" />
     </Style>
 
@@ -41,9 +51,9 @@
     <Style x:Key="MFDViewStandbyLabelStyle"
            BasedOn="{StaticResource MFDViewTextStyle}"
            TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource MFDScreenInfoBrush}" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
-        <Setter Property="Foreground" Value="{StaticResource MFDScreenInfoBrush}" />
     </Style>
 
     <Style x:Key="MFDViewSmallCenterTextStyle"
