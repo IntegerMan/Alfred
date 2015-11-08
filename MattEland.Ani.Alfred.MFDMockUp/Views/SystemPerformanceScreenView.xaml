@@ -16,6 +16,7 @@
 
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="\Themes\Generic.xaml" />
+                <ResourceDictionary Source="\Themes\Widgets.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
         </ResourceDictionary>
@@ -48,6 +49,7 @@
                           BorderBrush="Transparent"
                           BorderThickness="0"
                           ItemsSource="{Binding Path=PerformanceWidgets}"
+                          ItemTemplateSelector="{StaticResource AssisticantTemplateSelector}"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                           ScrollViewer.VerticalScrollBarVisibility="Disabled"
                           Visibility="{Binding Path=ShowStandbyLabel,
@@ -59,15 +61,6 @@
                         <layout:DynamicPanel LayoutType="HorizontalWrapPanel" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
-
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="widgets:WidgetViewModel">
-
-                        <!--  TODO: This isn't a bar graph  -->
-                        <controls:StatusTile Content="{Binding Path=Widget.ItemTypeName}"
-                                             Header="{Binding Path=Widget.Text}" />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
 
             </ItemsControl>
         </Grid>

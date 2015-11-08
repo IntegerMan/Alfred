@@ -4,28 +4,27 @@
                     xmlns:controls="clr-namespace:MattEland.Ani.Alfred.PresentationAvalon.Controls"
                     xmlns:helpers="clr-namespace:MattEland.Ani.Alfred.PresentationAvalon.Helpers"
                     xmlns:layout="clr-namespace:MattEland.Ani.Alfred.PresentationAvalon.Layout"
-                    xmlns:definitions="clr-namespace:MattEland.Ani.Alfred.Core.Definitions;assembly=MattEland.Ani.Alfred.Core"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                     xmlns:widget="clr-namespace:MattEland.Presentation.Logical.Widgets;assembly=MattEland.Presentation.Logical"
                     mc:Ignorable="d">
 
     <ResourceDictionary.MergedDictionaries>
-        <helpers:SharedResourceDictionary Source="Miscellaneous.xaml"  />
+        <helpers:SharedResourceDictionary Source="Miscellaneous.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <!-- Widget DataTemplates -->
+    <!--  Widget DataTemplates  -->
 
-    <!-- TextWidget Template -->
+    <!--  TextWidget Template  -->
     <DataTemplate DataType="{x:Type widgets:TextWidget}">
-        <TextBlock
-            Margin="0, 8, 8, 0"
-            Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
-            Text="{Binding Text}"
-            ToolTip="{Binding Text}" />
+        <TextBlock Margin="0, 8, 8, 0"
+                   Visibility="{Binding IsVisible,
+                                        Converter={StaticResource BooleanToVisibilityConverter}}"
+                   Text="{Binding Text}"
+                   ToolTip="{Binding Text}" />
     </DataTemplate>
 
-    <!-- AlertWidget Template -->
+    <!--  AlertWidget Template  -->
     <DataTemplate DataType="{x:Type widgets:WarningWidget}">
         <Border Margin="0, 8, 8, 0"
                 Padding="8"
@@ -33,7 +32,8 @@
                 Background="{DynamicResource CautionBackgroundBrush}"
                 BorderBrush="{DynamicResource CautionBorderBrush}"
                 BorderThickness="1"
-                Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                Visibility="{Binding IsVisible,
+                                     Converter={StaticResource BooleanToVisibilityConverter}}">
 
             <TextBlock Text="{Binding Text}"
                        Foreground="{DynamicResource CautionForegroundBrush}"
@@ -42,10 +42,11 @@
         </Border>
     </DataTemplate>
 
-    <!-- ButtonWidget Template -->
+    <!--  ButtonWidget Template  -->
     <DataTemplate DataType="{x:Type widgets:ButtonWidget}">
         <Button Margin="0, 8, 8, 0"
-                Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                Visibility="{Binding IsVisible,
+                                     Converter={StaticResource BooleanToVisibilityConverter}}"
                 MinWidth="120"
                 HorizontalAlignment="Left"
                 HorizontalContentAlignment="Center"
@@ -54,33 +55,37 @@
                 ToolTip="{Binding Text}" />
     </DataTemplate>
 
-    <!-- LinkWidget Template -->
+    <!--  LinkWidget Template  -->
     <DataTemplate DataType="{x:Type widgets:LinkWidget}">
-        <controls:HyperlinkControl Text="{Binding Text}" Url="{Binding Url}"
-                Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        <controls:HyperlinkControl Text="{Binding Text}"
+                                   Url="{Binding Url}"
+                                   Visibility="{Binding IsVisible,
+                                                        Converter={StaticResource BooleanToVisibilityConverter}}" />
     </DataTemplate>
 
-    <!-- TextBox Template -->
+    <!--  TextBox Template  -->
     <DataTemplate DataType="{x:Type widgets:TextBoxWidget}">
         <TextBox Margin="0, 8, 8, 0"
-                Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
-                MinWidth="200"
-                HorizontalAlignment="Left"
-                Text="{Binding Text}"
-                ToolTip="{Binding Text}" />
+                 Visibility="{Binding IsVisible,
+                                      Converter={StaticResource BooleanToVisibilityConverter}}"
+                 MinWidth="200"
+                 HorizontalAlignment="Left"
+                 Text="{Binding Text}"
+                 ToolTip="{Binding Text}" />
     </DataTemplate>
 
-    <!-- AlfredProgressBarWidget Template -->
+    <!--  AlfredProgressBarWidget Template  -->
     <DataTemplate DataType="{x:Type widgets:ProgressBarWidget}">
         <Grid Margin="0, 8, 0, 0"
-              Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" >
+              Visibility="{Binding IsVisible,
+                                   Converter={StaticResource BooleanToVisibilityConverter}}">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="80" />
                 <ColumnDefinition Width="170" />
             </Grid.ColumnDefinitions>
 
-            <!-- Show the full value in the ToolTip with a label -->
+            <!--  Show the full value in the ToolTip with a label  -->
             <Grid.ToolTip>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding Text}" />
@@ -90,84 +95,86 @@
             </Grid.ToolTip>
 
             <TextBlock Text="{Binding Text}"
-                    MinWidth="75"
-                    HorizontalAlignment="Right"
-                    TextAlignment="Right"
-                    Margin="0,0,8,0"
-                    VerticalAlignment="Center" />
+                       MinWidth="75"
+                       HorizontalAlignment="Right"
+                       TextAlignment="Right"
+                       Margin="0,0,8,0"
+                       VerticalAlignment="Center" />
 
             <ProgressBar Grid.Column="1"
-                    Foreground="{DynamicResource ProgressBarNormalForegroundBrush}"
-                    Background="{DynamicResource LightBackgroundBrush}"
-                    BorderBrush="{DynamicResource AppBorderBrush}"
-                    Minimum="{Binding Minimum}"
-                    Maximum="{Binding Maximum}"
-                    Value="{Binding Value}"
-                    HorizontalContentAlignment="Center" />
+                         Foreground="{DynamicResource ProgressBarNormalForegroundBrush}"
+                         Background="{DynamicResource LightBackgroundBrush}"
+                         BorderBrush="{DynamicResource AppBorderBrush}"
+                         Minimum="{Binding Minimum}"
+                         Maximum="{Binding Maximum}"
+                         Value="{Binding Value}"
+                         HorizontalContentAlignment="Center" />
 
         </Grid>
     </DataTemplate>
 
-    <!-- Dynamic layout panel used for repeaters -->
+    <!--  Dynamic layout panel used for repeaters  -->
     <ItemsPanelTemplate x:Key="RepeaterItemsPanelTemplate">
         <layout:DynamicPanel LayoutType="{Binding LayoutType}"
-                              HorizontalAlignment="Left" 
-                              VerticalAlignment="Top" 
-                              d:DataContext="{d:DesignInstance widgets:Repeater}" />
+                             HorizontalAlignment="Left"
+                             VerticalAlignment="Top"
+                             d:DataContext="{d:DesignInstance widgets:Repeater}" />
     </ItemsPanelTemplate>
 
-    <!-- Search Result Items -->
+    <!--  Search Result Items  -->
     <DataTemplate DataType="{x:Type widgets:SearchResultWidget}">
 
-        <Border Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+        <Border Visibility="{Binding IsVisible,
+                                     Converter={StaticResource BooleanToVisibilityConverter}}"
                 BorderThickness="1"
                 Margin="0, 8, 8, 0"
                 BorderBrush="{DynamicResource AppBorderBrush}">
-            
+
             <StackPanel Margin="24,8,8,8">
 
-                <TextBlock Text="{Binding Title}" 
+                <TextBlock Text="{Binding Title}"
                            Foreground="{DynamicResource AccentForegroundBrush}"
                            TextWrapping="Wrap"
-                           Margin="0, 0, 8, 0"/>
+                           Margin="0, 0, 8, 0" />
 
-                <TextBlock Text="{Binding Description}" 
+                <TextBlock Text="{Binding Description}"
                            Foreground="{DynamicResource ForegroundBrush}"
                            TextWrapping="Wrap"
-                           Margin="0, 8, 8, 0"/>
+                           Margin="0, 8, 8, 0" />
 
                 <TextBlock Text="{Binding Location}"
                            Foreground="{DynamicResource ForegroundBrush}"
                            TextWrapping="Wrap"
-                           Margin="0, 8, 8, 0"/>
+                           Margin="0, 8, 8, 0" />
 
-                <!-- Rely on the nested LinkWidget for rendering hyperlinks -->
+                <!--  Rely on the nested LinkWidget for rendering hyperlinks  -->
                 <controls:HyperlinkControl DataContext="{Binding LinkWidget}" />
 
             </StackPanel>
-            
+
         </Border>
 
     </DataTemplate>
 
-    <!-- Repeater Template -->
+    <!--  Repeater Template  -->
     <DataTemplate DataType="{x:Type widgets:Repeater}">
 
-        <ItemsControl 
-            Margin="0,0,8,0"
-            Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
-            ItemsSource="{Binding Items}"
-            ItemsPanel="{StaticResource RepeaterItemsPanelTemplate}"/>
+        <ItemsControl Margin="0,0,8,0"
+                      Visibility="{Binding IsVisible,
+                                           Converter={StaticResource BooleanToVisibilityConverter}}"
+                      ItemsSource="{Binding Items}"
+                      ItemsPanel="{StaticResource RepeaterItemsPanelTemplate}" />
 
     </DataTemplate>
 
-    <!-- Fallback type of widget Template -->
+    <!--  Fallback type of widget Template  -->
     <DataTemplate DataType="{x:Type widget:IWidget}">
 
         <TextBlock Margin="0, 8, 8, 0"
-            Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
-            Text="This is an unknown type of Widget" />
+                   Visibility="{Binding IsVisible,
+                                        Converter={StaticResource BooleanToVisibilityConverter}}"
+                   Text="This is an unknown type of Widget" />
 
     </DataTemplate>
-    
+
 </ResourceDictionary>

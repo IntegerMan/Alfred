@@ -8,6 +8,7 @@
 // ---------------------------------------------------------
 
 using System.Diagnostics.Contracts;
+using System.Windows.Controls;
 
 using MattEland.Common.Annotations;
 using MattEland.Presentation.Logical.Widgets;
@@ -19,10 +20,10 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets
     /// </summary>
     public class WidgetViewModel
     {
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        ///     Initializes a new instance of the WidgetViewModel class.
         /// </summary>
+        /// <param name="widget"> The widget. </param>
         public WidgetViewModel([NotNull] IWidget widget)
         {
             Widget = widget;
@@ -57,5 +58,17 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets
         {
             Contract.Invariant(Widget != null);
         }
+
+        /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>
+        /// A string that represents the current object.
+        /// </returns>
+        public override string ToString()
+        {
+            return "{" + GetType().Name + "}";
+        }
     }
+
 }

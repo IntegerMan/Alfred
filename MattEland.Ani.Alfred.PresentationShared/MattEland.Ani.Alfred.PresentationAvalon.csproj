@@ -126,6 +126,7 @@
     <Compile Include="Helpers\SelectionHelper.cs" />
     <Compile Include="Helpers\SharedResourceDictionary.cs" />
     <Compile Include="Helpers\AvalonMessageBoxProvider.cs" />
+    <Compile Include="Helpers\TypeDataTemplateSelector.cs" />
     <Compile Include="Layout\DynamicPanel.cs" />
     <Compile Include="Layout\AutoSpaceLayoutHelper.cs" />
     <Compile Include="Layout\StackPanelLayoutHelper.cs" />

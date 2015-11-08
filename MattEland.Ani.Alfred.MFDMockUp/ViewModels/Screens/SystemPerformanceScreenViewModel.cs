@@ -59,7 +59,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         [NotNull, ItemNotNull]
         public IEnumerable<WidgetViewModel> PerformanceWidgets
         {
-            get { return _model.Widgets.Select(w => new WidgetViewModel(w)); }
+            get { return _model.Widgets.Select(WidgetViewModelFactory.ViewModelFor); }
         }
 
         /// <summary>

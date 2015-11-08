@@ -1,0 +1,32 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.Controls"
+                    xmlns:widgets="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets"
+                    xmlns:helpers="clr-namespace:MattEland.Ani.Alfred.PresentationAvalon.Helpers;assembly=MattEland.Ani.Alfred.PresentationAvalon"
+                    xmlns:assisticant="clr-namespace:Assisticant;assembly=Assisticant.XAML">
+
+    <DataTemplate DataType="{x:Type widgets:ProgressBarWidgetViewModel}">
+
+        <controls:StatusTile Header="{Binding Path=Widget.Text}">
+            <ProgressBar Minimum="0"
+                         Maximum="100"
+                         Value="42"
+                         HorizontalAlignment="Center"
+                         Margin="{StaticResource StandardMargin}"
+                         BorderBrush="{StaticResource MFDViewBorderBrush}"
+                         Background="{StaticResource MFDViewBackgroundBrush}"
+                         Foreground="{StaticResource MFDViewForegroundBrush}"
+                         Orientation="Vertical" />
+        </controls:StatusTile>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type widgets:WidgetViewModel}">
+
+        <controls:StatusTile Content="{Binding Path=Widget.ItemTypeName}"
+                             Header="{Binding Path=Widget.Text}" />
+    </DataTemplate>
+
+    <helpers:TypeDataTemplateSelector x:Key="TypeTemplateSelector" />
+    <assisticant:ViewSelector x:Key="AssisticantTemplateSelector" />
+
+</ResourceDictionary>

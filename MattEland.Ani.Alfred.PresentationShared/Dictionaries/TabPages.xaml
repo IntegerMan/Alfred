@@ -4,45 +4,46 @@
                     xmlns:controls="clr-namespace:MattEland.Ani.Alfred.PresentationAvalon.Controls"
                     xmlns:layout="clr-namespace:MattEland.Ani.Alfred.PresentationAvalon.Layout"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    mc:Ignorable="d">
 
-    <!-- Dynamic layout panel used in most pages -->
+    <!--  Dynamic layout panel used in most pages  -->
     <ItemsPanelTemplate x:Key="DynamicItemsPanelTemplate">
         <layout:DynamicPanel LayoutType="{Binding LayoutType}"
-                              HorizontalAlignment="Left" 
-                              VerticalAlignment="Top" 
-                              d:DataContext="{d:DesignInstance pages:AlfredPage}" />
+                             HorizontalAlignment="Left"
+                             VerticalAlignment="Top"
+                             d:DataContext="{d:DesignInstance pages:AlfredPage}" />
     </ItemsPanelTemplate>
 
-    <!-- Explorer Page -->
+    <!--  Explorer Page  -->
     <DataTemplate DataType="{x:Type pages:ExplorerPage}">
         <controls:ExplorerControl RootNodes="{Binding RootNodes}" />
     </DataTemplate>
 
-    <!-- Event Log Page -->
+    <!--  Event Log Page  -->
     <DataTemplate DataType="{x:Type pages:EventLogPage}">
-        <ItemsControl ItemsSource="{Binding Path=Events}"                      
-                      BorderThickness="0" 
+        <ItemsControl ItemsSource="{Binding Path=Events}"
+                      BorderThickness="0"
                       ItemsPanel="{StaticResource DynamicItemsPanelTemplate}" />
     </DataTemplate>
 
-    <!-- Web Browser Page -->
+    <!--  Web Browser Page  -->
     <DataTemplate DataType="{x:Type pages:WebBrowserPage}">
         <controls:BrowserControl Widget="{Binding Browser}" />
     </DataTemplate>
 
-    <!-- Search History Page -->
+    <!--  Search History Page  -->
     <DataTemplate DataType="{x:Type pages:SearchHistoryPage}">
-        <ItemsControl ItemsSource="{Binding Path=Widgets}"                      
-                      BorderThickness="0" 
+        <ItemsControl ItemsSource="{Binding Path=Widgets}"
+                      BorderThickness="0"
                       ItemsPanel="{StaticResource DynamicItemsPanelTemplate}" />
     </DataTemplate>
 
-    <!-- Handles most pages -->
+    <!--  Handles most pages  -->
     <DataTemplate DataType="{x:Type pages:AlfredPage}">
-        <ItemsControl ItemsSource="{Binding Path=Children}"                      
-                      BorderThickness="0" 
+        <ItemsControl ItemsSource="{Binding Path=Children}"
+                      BorderThickness="0"
                       ItemsPanel="{StaticResource DynamicItemsPanelTemplate}" />
     </DataTemplate>
-    
+
 </ResourceDictionary>

@@ -9,29 +9,31 @@
                     mc:Ignorable="d">
 
     <ResourceDictionary.MergedDictionaries>
-        <helpers:SharedResourceDictionary Source="Miscellaneous.xaml"  />
+        <helpers:SharedResourceDictionary Source="Miscellaneous.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
 
-    <!-- Dynamic layout panel used for flexible arrangement -->
+    <!--  Dynamic layout panel used for flexible arrangement  -->
     <ItemsPanelTemplate x:Key="ModuleDynamicItemsPanelTemplate">
         <layout:DynamicPanel LayoutType="{Binding LayoutType}"
-                              HorizontalAlignment="Left" 
-                              VerticalAlignment="Top" d:DataContext="{d:DesignInstance definitions:IAlfredModule}" />
+                             HorizontalAlignment="Left"
+                             VerticalAlignment="Top"
+                             d:DataContext="{d:DesignInstance definitions:IAlfredModule}" />
     </ItemsPanelTemplate>
 
-    <!-- Module DataTemplates -->
+    <!--  Module DataTemplates  -->
 
     <DataTemplate DataType="{x:Type modules:AlfredModule}">
 
-        <!-- TODO: The expand / collapse glyph sucks by default. Customize it -->
+        <!--  TODO: The expand / collapse glyph sucks by default. Customize it  -->
         <Expander Header="{Binding Path=Name}"
                   Width="{Binding Width}"
                   IsExpanded="True"
                   Foreground="{DynamicResource AccentForegroundBrush}"
-                  Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                  Visibility="{Binding IsVisible,
+                                       Converter={StaticResource BooleanToVisibilityConverter}}">
 
-            <ItemsControl ItemsSource="{Binding Widgets}"                        
+            <ItemsControl ItemsSource="{Binding Widgets}"
                           ItemsPanel="{StaticResource ModuleDynamicItemsPanelTemplate}"
                           Foreground="{DynamicResource AppForegroundBrush}"
                           Margin="24, 0, 0, 8" />

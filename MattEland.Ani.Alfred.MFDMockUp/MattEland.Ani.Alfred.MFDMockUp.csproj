@@ -162,7 +162,9 @@
     <Compile Include="ViewModels\Screens\ScreenViewModel.cs" />
     <Compile Include="ViewModels\Screens\SystemPerformanceScreenViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
+    <Compile Include="ViewModels\Widgets\ProgressBarWidgetViewModel.cs" />
     <Compile Include="ViewModels\Widgets\WidgetViewModel.cs" />
+    <Compile Include="ViewModels\Widgets\WidgetViewModelFactory.cs" />
     <Compile Include="Views\LogScreenView.xaml.cs">
       <DependentUpon>LogScreenView.xaml</DependentUpon>
     </Compile>
@@ -210,6 +212,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Themes\StatusLabel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Widgets.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

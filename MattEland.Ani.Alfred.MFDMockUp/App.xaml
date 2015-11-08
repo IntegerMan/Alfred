@@ -1,6 +1,7 @@
 ﻿<Application x:Class="MattEland.Ani.Alfred.MFDMockUp.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:widgets="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets"
              DispatcherUnhandledException="App_OnDispatcherUnhandledException"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
@@ -8,6 +9,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Themes/Generic.xaml" />
+                <ResourceDictionary Source="Themes/Widgets.xaml" />
                 <ResourceDictionary Source="Themes/MFDCommonResources.xaml" />
                 <ResourceDictionary Source="Themes/MFDButtonStyling.xaml" />
                 <ResourceDictionary Source="Themes/MFDButtonStripStyling.xaml" />
@@ -16,6 +18,9 @@
                 <ResourceDictionary Source="Themes/SensorOfInterestIndicator.xaml" />
                 <ResourceDictionary Source="Themes/StatusLabel.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <DataTemplate DataType="{x:Type widgets:ProgressBarWidgetViewModel}">
+                <Button>Hey</Button>
+            </DataTemplate>
 
         </ResourceDictionary>
 

@@ -41,7 +41,8 @@
                    Style="{StaticResource MFDViewSmallCenterTextStyle}"
                    Text="{Binding Path=CopyrightString}" />
 
-        <ItemsControl Margin="{StaticResource SpaceLeftAndRight}" ItemsSource="{Binding Path=FaultIndicators}">
+        <ItemsControl Margin="{StaticResource SpaceLeftAndRight}"
+                      ItemsSource="{Binding Path=FaultIndicators}">
 
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
