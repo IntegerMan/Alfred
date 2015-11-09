@@ -1,9 +1,22 @@
-﻿using System.Collections.Generic;
+﻿// ---------------------------------------------------------
+// BootupScreenViewModel.cs
+// 
+// Created on:      10/22/2015 at 1:25 PM
+// Last Modified:   11/08/2015 at 9:19 PM
+// 
+// Last Modified by: Matt Eland
+// ---------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Windows;
 
+using Assisticant.Fields;
+
+using MattEland.Ani.Alfred.MFDMockUp.Models;
 using MattEland.Ani.Alfred.MFDMockUp.Models.Screens;
-using MattEland.Ani.Alfred.MFDMockUp.Views;
 using MattEland.Ani.Alfred.PresentationCommon.Helpers;
 using MattEland.Common.Annotations;
 
@@ -16,6 +29,10 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
     [UsedImplicitly]
     public sealed class BootupScreenViewModel : ScreenViewModel
     {
+
+        [NotNull]
+        private readonly Observable<Visibility> _loadingVisibility;
+
         /// <summary>
         ///     The model.
         /// </summary>
@@ -29,6 +46,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         public BootupScreenViewModel([NotNull] BootupScreenModel model) : base(model)
         {
             _model = model;
+            _loadingVisibility = new Observable<Visibility>();
         }
 
         /// <summary>
@@ -37,7 +55,10 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         /// <value>
         ///     The progress.
         /// </value>
-        public double Progress { get { return _model.Progress; } }
+        public double Progress
+        {
+            get { return _model.Progress; }
+        }
 
         /// <summary>
         ///     Gets a message to display while loading.
@@ -45,7 +66,22 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         /// <value>
         ///     A message to display while loading.
         /// </value>
-        public string LoadingMessage { get { return _model.LoadingMessage; } }
+        public string LoadingMessage
+        {
+            get { return _model.LoadingMessage; }
+        }
+
+        /// <summary>
+        ///     Gets the loading message's visibility.
+        /// </summary>
+        /// <value>
+        ///     The loading message visibility.
+        /// </value>
+        public Visibility LoadingMessageVisibility
+        {
+            get { return _loadingVisibility; }
+            private set { _loadingVisibility.Value = value; }
+        }
 
         /// <summary>
         ///     Determines whether the specified object is equal to the current object.
@@ -85,6 +121,20 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         public override int GetHashCode()
         {
             return _model.GetHashCode();
+        }
+
+        /// <summary>
+        ///     Process the screen state and outputs any resulting information to the processorResult.
+        /// </summary>
+        /// <param name="processor"> The processor. </param>
+        /// <param name="processorResult"> The processor result. </param>
+        protected override void ProcessScreenState(MFDProcessor processor,
+                                                   MFDProcessorResult processorResult)
+        {
+            // Blink on and off once a second
+            LoadingMessageVisibility = DateTime.Now.Second % 2 == 0
+                                           ? Visibility.Visible
+                                           : Visibility.Collapsed;
         }
     }
 

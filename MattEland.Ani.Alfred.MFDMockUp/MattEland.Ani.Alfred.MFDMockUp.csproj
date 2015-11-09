@@ -168,6 +168,9 @@
     <Compile Include="Views\LogScreenView.xaml.cs">
       <DependentUpon>LogScreenView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\StandbyScreenView.xaml.cs">
+      <DependentUpon>StandbyScreenView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MFDBootupScreenView.xaml.cs">
       <DependentUpon>MFDBootupScreenView.xaml</DependentUpon>
     </Compile>
@@ -226,6 +229,10 @@
     <Page Include="Views\LogScreenView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\StandbyScreenView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\MFDHomeScreenView.xaml">
       <SubType>Designer</SubType>

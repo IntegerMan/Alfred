@@ -9,7 +9,8 @@
              d:DesignHeight="256"
              d:DesignWidth="256"
              mc:Ignorable="d">
-    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+    <StackPanel HorizontalAlignment="Center"
+                VerticalAlignment="Center">
         <TextBlock Foreground="{DynamicResource MFDScreenForegroundBrush}"
                    Style="{StaticResource MFDViewCenterTextStyle}"
                    Text="{Binding LoadingMessage}" />

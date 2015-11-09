@@ -32,7 +32,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         {
             _progress = new Observable<double>(0.0);
             _nextScreen = new Observable<ScreenModel>(nextScreen);
-            _loadingMessage = new Observable<string>("Loading...");
+            _loadingMessage = new Observable<string>("Standby");
         }
 
         /// <summary>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Root CoveredStatements="7951" TotalStatements="12081" CoveragePercent="66" ReportType="NDependXML" DotCoverVersion="3.2">
+<Root CoveredStatements="7951" TotalStatements="12118" CoveragePercent="66" ReportType="NDependXML" DotCoverVersion="3.2">
   <Assembly Name="MattEland.Ani.Alfred.Chat" CoveredStatements="470" TotalStatements="592" CoveragePercent="79">
     <Namespace Name="MattEland.Ani.Alfred.Chat" CoveredStatements="470" TotalStatements="592" CoveragePercent="79">
       <Type Name="AimlExplorerNode" CoveredStatements="37" TotalStatements="44" CoveragePercent="84">
@@ -1507,7 +1507,7 @@
       </Type>
     </Namespace>
   </Assembly>
-  <Assembly Name="MattEland.Ani.Alfred.PresentationAvalon" CoveredStatements="279" TotalStatements="626" CoveragePercent="45">
+  <Assembly Name="MattEland.Ani.Alfred.PresentationAvalon" CoveredStatements="279" TotalStatements="663" CoveragePercent="42">
     <Namespace Name="MattEland.Ani.Alfred.PresentationAvalon.Commands" CoveredStatements="36" TotalStatements="56" CoveragePercent="64">
       <Type Name="ApplicationManager" CoveredStatements="33" TotalStatements="50" CoveragePercent="66">
         <Method Name=".ctor(IAlfredContainer,ApplicationManagerOptions,IUserInterfaceDirector)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="52" />
@@ -1631,7 +1631,7 @@
         <Method Name="ConvertBack(Object,Type,Object,CultureInfo)" CoveredStatements="2" TotalStatements="2" CoveragePercent="100" FirstStatementLine="68" />
       </Type>
     </Namespace>
-    <Namespace Name="MattEland.Ani.Alfred.PresentationAvalon.Helpers" CoveredStatements="64" TotalStatements="127" CoveragePercent="50">
+    <Namespace Name="MattEland.Ani.Alfred.PresentationAvalon.Helpers" CoveredStatements="64" TotalStatements="164" CoveragePercent="39">
       <Type Name="AvalonMessageBoxProvider" CoveredStatements="0" TotalStatements="11" CoveragePercent="0">
         <Method Name="Show(String,String,MessageBoxType)" CoveredStatements="0" TotalStatements="11" CoveragePercent="0" FirstStatementLine="32" />
       </Type>
@@ -1655,6 +1655,11 @@
         <Method Name=".cctor()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="31" />
         <Method Name="get_Source()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="50" />
         <Method Name="set_Source(Uri)" CoveredStatements="13" TotalStatements="15" CoveragePercent="87" FirstStatementLine="53" />
+      </Type>
+      <Type Name="TypeDataTemplateSelector" CoveredStatements="0" TotalStatements="37" CoveragePercent="0">
+        <Method Name=".ctor()" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="22" />
+        <Method Name="GetTemplateForType(Type)" CoveredStatements="0" TotalStatements="28" CoveragePercent="0" FirstStatementLine="32" />
+        <Method Name="SelectTemplate(Object,DependencyObject)" CoveredStatements="0" TotalStatements="5" CoveragePercent="0" FirstStatementLine="74" />
       </Type>
     </Namespace>
     <Namespace Name="MattEland.Ani.Alfred.PresentationAvalon.Layout" CoveredStatements="0" TotalStatements="106" CoveragePercent="0">
