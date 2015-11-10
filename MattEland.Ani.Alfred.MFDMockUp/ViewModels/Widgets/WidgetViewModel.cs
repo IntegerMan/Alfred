@@ -8,8 +8,6 @@
 // ---------------------------------------------------------
 
 using System.Diagnostics.Contracts;
-using System.Windows.Controls;
-
 using MattEland.Common.Annotations;
 using MattEland.Presentation.Logical.Widgets;
 
@@ -70,8 +68,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets
             return "{" + GetType().Name + "}";
         }
 
+        /// <summary>
+        ///     Updates the values from the widget.
+        /// </summary>
         public virtual void UpdateValues()
         {
+            // To be implemented by overriding classes
         }
     }
 

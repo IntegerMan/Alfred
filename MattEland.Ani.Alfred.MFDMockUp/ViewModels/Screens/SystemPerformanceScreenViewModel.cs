@@ -37,6 +37,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         [NotNull]
         private readonly Computed<bool> _showStandbyLabel;
 
+        [NotNull, ItemNotNull]
+        private IEnumerable<WidgetViewModel> _currentWidgets;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
@@ -48,6 +51,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
 
             _model = screenModel;
             _showStandbyLabel = new Computed<bool>(() => !_model.IsSubsystemOnline);
+
+            // This will be updated later on, but for now, we'll start it at an empty collection to protect against null
+            _currentWidgets = new List<WidgetViewModel>();
         }
 
         /// <summary>
@@ -59,7 +65,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         [NotNull, ItemNotNull]
         public IEnumerable<WidgetViewModel> PerformanceWidgets
         {
-            get { return _model.Widgets.Select(WidgetViewModelFactory.ViewModelFor); }
+            get
+            {
+                _currentWidgets = _model.Widgets.Select(WidgetViewModelFactory.ViewModelFor);
+
+                return _currentWidgets;
+            }
         }
 
         /// <summary>
@@ -81,6 +92,11 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         protected override void ProcessScreenState(MFDProcessor processor,
                                                    MFDProcessorResult processorResult)
         {
+            // Update the current widgets to the current values from the widget model
+            foreach (var widgetViewModel in _currentWidgets)
+            {
+                widgetViewModel.UpdateValues();
+            }
         }
     }
 

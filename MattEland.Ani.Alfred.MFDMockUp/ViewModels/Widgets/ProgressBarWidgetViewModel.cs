@@ -39,11 +39,16 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets
         {
             Contract.Requires(widget != null);
 
+            //- Set up the concrete model
             ProgressBar = widget;
 
+            //- Set up observables
             _minValue = new Observable<double>(0);
             _maxValue = new Observable<double>(100);
             _currentValue = new Observable<double>(0);
+
+            // Grab values from the current state of the progress bar
+            UpdateValues();
         }
 
         /// <summary>
@@ -53,11 +58,13 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets
         [ContractInvariantMethod]
         private void ClassInvariants()
         {
+            //- Not null invariants
             Contract.Invariant(_minValue != null);
             Contract.Invariant(_maxValue != null);
             Contract.Invariant(_currentValue != null);
-
             Contract.Invariant(ProgressBar != null);
+
+            // Ensure that MinValue <= CurrentValue <= MaxValue
             Contract.Invariant(MinValue <= MaxValue);
             Contract.Invariant(CurrentValue >= MinValue);
             Contract.Invariant(CurrentValue <= MaxValue);

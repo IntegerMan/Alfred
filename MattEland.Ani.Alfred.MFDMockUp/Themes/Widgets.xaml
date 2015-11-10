@@ -8,9 +8,9 @@
     <DataTemplate DataType="{x:Type widgets:ProgressBarWidgetViewModel}">
 
         <controls:StatusTile Header="{Binding Path=Widget.Text}">
-            <ProgressBar Minimum="0"
-                         Maximum="100"
-                         Value="42"
+            <ProgressBar Minimum="{Binding Path=MinValue}"
+                         Maximum="{Binding Path=MaxValue}"
+                         Value="{Binding Path=CurrentValue}"
                          MinWidth="16"
                          HorizontalAlignment="Center"
                          Margin="{StaticResource StandardMargin}"
