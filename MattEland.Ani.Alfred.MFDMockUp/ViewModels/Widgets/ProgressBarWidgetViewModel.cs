@@ -90,7 +90,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets
             [DebuggerStepThrough]
             get
             { return _minValue; }
-            set { _minValue.Value = value; }
+            private set { _minValue.Value = value; }
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets
             [DebuggerStepThrough]
             get
             { return _maxValue; }
-            set { _maxValue.Value = value; }
+            private set { _maxValue.Value = value; }
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets
             [DebuggerStepThrough]
             get
             { return _currentValue; }
-            set { _currentValue.Value = value; }
+            private set { _currentValue.Value = value; }
         }
 
         /// <summary>
@@ -126,6 +126,10 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets
         /// </summary>
         public override void UpdateValues()
         {
+            /* Note that if these setters would ever be public we could get invariants violated midway 
+               through this method. (e.g. CurrentValue is now > MaxValue). This is most likely during
+               the first startup where Min / Max values are not yet set. */
+
             MinValue = ProgressBar.Minimum;
             CurrentValue = ProgressBar.Value;
             MaxValue = ProgressBar.Maximum;

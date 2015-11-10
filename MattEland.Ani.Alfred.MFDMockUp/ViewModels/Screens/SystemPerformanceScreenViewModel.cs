@@ -12,13 +12,16 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Windows;
 
+using Assisticant.Collections;
 using Assisticant.Fields;
 
 using MattEland.Ani.Alfred.MFDMockUp.Models;
 using MattEland.Ani.Alfred.MFDMockUp.Models.Screens;
 using MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets;
 using MattEland.Ani.Alfred.PresentationCommon.Helpers;
+using MattEland.Common;
 using MattEland.Common.Annotations;
+using MattEland.Presentation.Logical.Widgets;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
 {
@@ -38,7 +41,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         private readonly Computed<bool> _showStandbyLabel;
 
         [NotNull, ItemNotNull]
-        private IEnumerable<WidgetViewModel> _currentWidgets;
+        private readonly ObservableList<WidgetViewModel> _currentWidgets;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:System.Object"/> class.
@@ -53,7 +56,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
             _showStandbyLabel = new Computed<bool>(() => !_model.IsSubsystemOnline);
 
             // This will be updated later on, but for now, we'll start it at an empty collection to protect against null
-            _currentWidgets = new List<WidgetViewModel>();
+            _currentWidgets = new ObservableList<WidgetViewModel>();
+            _widgetCache = new Dictionary<string, WidgetViewModel>();
         }
 
         /// <summary>
@@ -67,10 +71,67 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         {
             get
             {
-                _currentWidgets = _model.Widgets.Select(WidgetViewModelFactory.ViewModelFor);
+                if (!_currentWidgets.Any()) UpdateWidgetsCollection();
 
+                // Always return the observable collection
                 return _currentWidgets;
             }
+        }
+
+        private void UpdateWidgetsCollection()
+        {
+            // Clear out the collection
+            _currentWidgets.Clear();
+
+            // Generate the new collection of widgets
+            var widgets = _model.Widgets.Select(w => GetOrCreateViewModelFor(w, w.Name)).ToList();
+
+            foreach (var widgetViewModel in widgets)
+            {
+                _currentWidgets.Add(widgetViewModel);
+            }
+        }
+
+        [NotNull, ItemNotNull]
+        private readonly IDictionary<string, WidgetViewModel> _widgetCache;
+
+        /// <summary>
+        ///     Gets a cached view model or creates a new view model for the specified
+        ///     <paramref name="widget"/>.
+        /// </summary>
+        /// <remarks>
+        ///     We could use widget.Name instead of <paramref name="id"/>, but this way lets us use
+        ///     contract assertions and provides some better flexibility should the identifying function
+        ///     change.
+        /// </remarks>
+        /// <param name="widget"> The widget. </param>
+        /// <param name="id"> The identifier. </param>
+        /// <returns>
+        ///     The view model.
+        /// </returns>
+        [NotNull]
+        private WidgetViewModel GetOrCreateViewModelFor([NotNull] IWidget widget, [NotNull] string id)
+        {
+            Contract.Requires(widget != null);
+            Contract.Requires(id.HasText());
+            Contract.Ensures(_widgetCache.ContainsKey(id));
+            Contract.Ensures(Contract.Result<WidgetViewModel>() != null);
+
+            WidgetViewModel widgetVM = null;
+
+            if (_widgetCache.ContainsKey(id))
+            {
+                widgetVM = _widgetCache[id];
+            }
+
+            if (widgetVM == null)
+            {
+                widgetVM = WidgetViewModelFactory.ViewModelFor(widget);
+
+                _widgetCache[id] = widgetVM;
+            }
+
+            return widgetVM;
         }
 
         /// <summary>
@@ -92,6 +153,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         protected override void ProcessScreenState(MFDProcessor processor,
                                                    MFDProcessorResult processorResult)
         {
+            // We might not need to do this, but from what I've seen we do
+            UpdateWidgetsCollection();
+
             // Update the current widgets to the current values from the widget model
             foreach (var widgetViewModel in _currentWidgets)
             {
