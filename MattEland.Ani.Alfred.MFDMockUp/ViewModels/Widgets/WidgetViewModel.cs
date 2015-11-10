@@ -69,6 +69,10 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets
         {
             return "{" + GetType().Name + "}";
         }
+
+        public virtual void UpdateValues()
+        {
+        }
     }
 
 }
