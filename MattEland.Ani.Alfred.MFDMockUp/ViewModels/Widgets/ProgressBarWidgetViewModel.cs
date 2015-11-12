@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 
 using Assisticant.Fields;
@@ -56,6 +57,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets
         ///     after any public method in this class is called.
         /// </summary>
         [ContractInvariantMethod]
+        [SuppressMessage("Usage", "CC0068:Unused Method", Justification = "Faulty analysis")]
+        [SuppressMessage("Style", "CC0048:Use string interpolation instead of String.Format", Justification = "Faulty analysis")]
+        [SuppressMessage("ReSharper", "RedundantAssignment")]
         private void ClassInvariants()
         {
             //- Not null invariants
@@ -65,10 +69,15 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets
             Contract.Invariant(ProgressBar != null);
 
             // Ensure that MinValue <= CurrentValue <= MaxValue
-            Contract.Invariant(MinValue <= MaxValue);
-            Contract.Invariant(CurrentValue >= MinValue);
-            Contract.Invariant(CurrentValue <= MaxValue,
-                               string.Format("Current = {0}, Max = {1}", CurrentValue, MaxValue));
+            string debugMessage;
+            debugMessage = string.Format("Current = {0}, Min = {2}, Max = {1}",
+                                         CurrentValue,
+                                         MaxValue,
+                                         MinValue);
+
+            Contract.Invariant(MinValue <= MaxValue, debugMessage);
+            Contract.Invariant(CurrentValue >= MinValue, debugMessage);
+            Contract.Invariant(CurrentValue <= MaxValue, debugMessage);
         }
 
         /// <summary>

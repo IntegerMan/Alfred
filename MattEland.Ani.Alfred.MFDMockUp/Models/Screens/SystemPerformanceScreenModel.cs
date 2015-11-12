@@ -68,6 +68,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
             [DebuggerStepThrough]
             get
             {
+                Contract.Ensures(Contract.Result<ObservableList<IWidget>>() != null);
+
                 return _widgets;
             }
         }

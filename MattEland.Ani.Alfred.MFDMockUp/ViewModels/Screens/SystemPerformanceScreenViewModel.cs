@@ -71,17 +71,19 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         {
             get
             {
-                if (!_currentWidgets.Any()) UpdateWidgetsCollection();
+                Contract.Ensures(_currentWidgets.Count > 0);
+
+                if (!_currentWidgets.Any()) InitializePerformanceCounterWidgets();
 
                 // Always return the observable collection
                 return _currentWidgets;
             }
         }
 
-        private void UpdateWidgetsCollection()
+        private void InitializePerformanceCounterWidgets()
         {
-            // Clear out the collection
-            _currentWidgets.Clear();
+            // We don't want to be clearing things out, but also assume that if this is called all items are gone
+            Contract.Requires(_currentWidgets.Count == 0);
 
             // Generate the new collection of widgets
             var widgets = _model.Widgets.Select(w => GetOrCreateViewModelFor(w, w.Name)).ToList();
@@ -153,9 +155,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         protected override void ProcessScreenState(MFDProcessor processor,
                                                    MFDProcessorResult processorResult)
         {
-            // We might not need to do this, but from what I've seen we do
-            UpdateWidgetsCollection();
-
             // Update the current widgets to the current values from the widget model
             foreach (var widgetViewModel in _currentWidgets)
             {

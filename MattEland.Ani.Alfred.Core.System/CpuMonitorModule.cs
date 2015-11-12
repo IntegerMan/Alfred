@@ -10,6 +10,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
 
@@ -118,7 +119,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             foreach (var counter in _processorCounters) { counter.TryDispose(); }
             _processorCounters.Clear();
 
-            _cpuWidgets.Clear();
+            // The widgets no longer need to be disposed, and not doing so helps the UI with bindings and whatnot.
         }
 
         /// <summary>
@@ -129,8 +130,6 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         {
             BuildCounters();
 
-            _cpuWidgets.Clear();
-
             var core = 1;
 
             foreach (var counter in _processorCounters.OrderBy(c => c.Name))
@@ -139,25 +138,50 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
                 Debug.Assert(counter != null);
                 if (counter.Name == TotalInstanceName) { continue; }
 
-                // Create a widget for the counter
-                // Store the counter as the widget's data context for easier updating later on
-                var widget = new ProgressBarWidget(BuildWidgetParameters($"progProcessor{counter.Name}"))
-                {
-                    DataContext = counter,
-                    Minimum = 0,
-                    Maximum = 100
-                };
+                var widgetName = string.Format(CultureInfo.CurrentCulture, "progProcessor{0}", counter.Name);
+
+                // Create a widget for the counter or recycle an old one.
+                var widget = CreateOrRecycleCounterWidget(widgetName);
+
+                // If it was from before (if Alfred has previously been online) update the context
+                widget.DataContext = counter;
 
                 // Get the first value of the widget and have the label applied to the widget
                 var label = string.Format(CultureInfo.CurrentCulture, _cpuMonitorLabel, core);
                 UpdateCpuWidget(widget, counter, label);
 
-                _cpuWidgets.Add(widget);
+                if (!_cpuWidgets.Contains(widget))
+                {
+                    _cpuWidgets.Add(widget);
+                }
 
                 Register(widget);
 
                 core++;
             }
+        }
+
+        /// <summary>
+        ///     Creates or recycles a widget for a performance counter.
+        /// </summary>
+        /// <param name="widgetName"> The name of the widget. </param>
+        /// <returns>
+        ///     The newly created or recycled widget.
+        /// </returns>
+        [NotNull]
+        private ProgressBarWidget CreateOrRecycleCounterWidget([NotNull] string widgetName)
+        {
+            Contract.Requires(widgetName != null);
+            Contract.Requires(widgetName.HasText());
+            Contract.Ensures(Contract.Result<ProgressBarWidget>() != null);
+            Contract.Ensures(Contract.Result<ProgressBarWidget>().Name == widgetName);
+
+            return _cpuWidgets.FirstOrDefault(w => w.Name.Matches(widgetName))
+                   ?? new ProgressBarWidget(BuildWidgetParameters(widgetName))
+                   {
+                       Minimum = 0,
+                       Maximum = 100
+                   };
         }
 
         /// <summary>
