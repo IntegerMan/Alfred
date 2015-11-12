@@ -61,6 +61,17 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         }
 
         /// <summary>
+        ///     Gets a value indicating whether the sensor of interest indicator is shown.
+        /// </summary>
+        /// <value>
+        ///     true if the screen shows the sensor of interest indicator, false if not.
+        /// </value>
+        public virtual bool ShowSensorOfInterestIndicator
+        {
+            get { return true; }
+        }
+
+        /// <summary>
         ///     Process the current state and outputs any resulting information to the processorResult.
         /// </summary>
         /// <param name="processor"> The processor. </param>

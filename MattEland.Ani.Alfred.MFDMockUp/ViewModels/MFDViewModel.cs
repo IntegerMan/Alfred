@@ -216,6 +216,18 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
             get { return _model.IsSensorOfInterest; }
         }
 
+        /// <summary>
+        ///     Gets a value indicating whether the sensor of interest control should be shown (this
+        ///     includes visual states for when a MFD is SOI and when it is not SOI).
+        /// </summary>
+        /// <value>
+        ///     true if the SOI / not SOI control should be shown, false if not.
+        /// </value>
+        public bool IsSensorOfInterestIndicatorVisible
+        {
+            get { return _model.IsSensorOfInterestVisible; }
+        }
+
     }
 
 }

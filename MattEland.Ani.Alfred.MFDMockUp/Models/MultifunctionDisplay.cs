@@ -37,6 +37,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         [NotNull]
         private readonly Computed<bool> _isSensorOfInterest;
 
+        /// <summary>
+        ///     Whether or not to show the SOI / Not SOI control for this screen.
+        /// </summary>
+        [NotNull]
+        private readonly Computed<bool> _isSensorOfInterestVisible;
+
         [NotNull]
         private readonly Observable<string> _name;
 
@@ -73,6 +79,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             //- Create Observable Properties
             _name = new Observable<string>("<New MFD>");
             _isSensorOfInterest = new Computed<bool>(() => _workspace.SelectedMFD == this);
+            _isSensorOfInterestVisible = new Computed<bool>(() => CurrentScreen.ShowSensorOfInterestIndicator);
             _screenWidth = new Observable<double>(DefaultScreenSize);
             _screenHeight = new Observable<double>(DefaultScreenSize);
 
@@ -200,6 +207,11 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         public CultureInfo Culture
         {
             get { return CultureInfo.CurrentCulture; }
+        }
+
+        public bool IsSensorOfInterestVisible
+        {
+            get { return _isSensorOfInterestVisible.Value; }
         }
     }
 

@@ -99,6 +99,14 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
                 }
             }
         }
+
+        /// <summary>
+        ///     Gets a value indicating whether the sensor of interest indicator is shown.
+        /// </summary>
+        /// <value>
+        ///     true if the screen shows the sensor of interest indicator, false if not.
+        /// </value>
+        public override bool ShowSensorOfInterestIndicator { get { return false; } }
     }
 
 }

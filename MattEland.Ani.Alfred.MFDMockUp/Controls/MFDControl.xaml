@@ -72,7 +72,8 @@
                         BorderThickness="1">
                     <Grid>
 
-                        <Grid x:Name="pnlView" Panel.ZIndex="0">
+                        <Grid x:Name="pnlView"
+                              Panel.ZIndex="0">
                             <ContentControl Width="{Binding Path=ScreenWidth}"
                                             Height="{Binding Path=ScreenHeight}"
                                             HorizontalAlignment="Stretch"
@@ -86,10 +87,14 @@
                                             Foreground="{StaticResource MFDScreenForegroundBrush}" />
                         </Grid>
 
-                        <Grid x:Name="pnlOverlays" Panel.ZIndex="1">
+                        <Grid x:Name="pnlOverlays"
+                              Panel.ZIndex="1">
 
                             <!--  Sensor of Interest brackets  -->
-                            <controls:SensorOfInterestIndicator x:Name="soiIndicator" IsSensorOfInterest="{Binding Path=IsSensorOfInterest}" />
+                            <controls:SensorOfInterestIndicator x:Name="soiIndicator"
+                                                                IsSensorOfInterest="{Binding Path=IsSensorOfInterest}"
+                                                                Visibility="{Binding Path=IsSensorOfInterestIndicatorVisible,
+                                                                                     Converter={StaticResource ShowIfTrue}}" />
 
                             <!--  Button Labels  -->
                             <controls:MFDButtonLabelStripControl x:Name="labelsTop"
