@@ -67,7 +67,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets
             // Ensure that MinValue <= CurrentValue <= MaxValue
             Contract.Invariant(MinValue <= MaxValue);
             Contract.Invariant(CurrentValue >= MinValue);
-            Contract.Invariant(CurrentValue <= MaxValue);
+            Contract.Invariant(CurrentValue <= MaxValue,
+                               string.Format("Current = {0}, Max = {1}", CurrentValue, MaxValue));
         }
 
         /// <summary>
