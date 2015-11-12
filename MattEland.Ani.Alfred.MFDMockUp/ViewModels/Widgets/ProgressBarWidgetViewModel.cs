@@ -90,7 +90,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets
             [DebuggerStepThrough]
             get
             { return _minValue; }
-            private set { _minValue.Value = value; }
+            set { _minValue.Value = value; }
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets
             [DebuggerStepThrough]
             get
             { return _maxValue; }
-            private set { _maxValue.Value = value; }
+            set { _maxValue.Value = value; }
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets
             [DebuggerStepThrough]
             get
             { return _currentValue; }
-            private set { _currentValue.Value = value; }
+            set { _currentValue.Value = value; }
         }
 
         /// <summary>
@@ -126,13 +126,10 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets
         /// </summary>
         public override void UpdateValues()
         {
-            /* Note that if these setters would ever be public we could get invariants violated midway 
-               through this method. (e.g. CurrentValue is now > MaxValue). This is most likely during
-               the first startup where Min / Max values are not yet set. */
-
-            MinValue = ProgressBar.Minimum;
-            CurrentValue = ProgressBar.Value;
-            MaxValue = ProgressBar.Maximum;
+            // Use members so that invariants aren't evaluated until end of method
+            _minValue.Value = ProgressBar.Minimum;
+            _maxValue.Value = ProgressBar.Maximum;
+            _currentValue.Value = ProgressBar.Value;
         }
     }
 }
