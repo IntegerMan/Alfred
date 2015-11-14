@@ -2,7 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:controls="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.Controls">
 
-    <ControlTemplate x:Key="SensorOfInterestTemplate" TargetType="controls:SensorOfInterestIndicator">
+    <ControlTemplate x:Key="BracketedSensorOfInterestTemplate"
+                     TargetType="controls:SensorOfInterestIndicator">
         <Grid>
 
             <!--  Bordered highlight for indicating SOI  -->
@@ -13,8 +14,10 @@
                     BorderThickness="0.5"
                     Visibility="{TemplateBinding IsSensorOfInterest,
                                                  Converter={StaticResource ShowIfTrue}}">
-                <Border BorderBrush="{StaticResource MFDScreenForegroundBrush}" BorderThickness="1">
-                    <Border BorderBrush="{StaticResource MFDScreenBackgroundBrush}" BorderThickness="0.5" />
+                <Border BorderBrush="{StaticResource MFDScreenForegroundBrush}"
+                        BorderThickness="1">
+                    <Border BorderBrush="{StaticResource MFDScreenBackgroundBrush}"
+                            BorderThickness="0.5" />
                 </Border>
             </Border>
 
@@ -32,11 +35,31 @@
         </Grid>
     </ControlTemplate>
 
+    <ControlTemplate TargetType="{x:Type controls:SensorOfInterestIndicator}"
+                     x:Key="DiamondSensorOfInterestTemplate">
+        <Border HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                BorderThickness="1"
+                Margin="2"
+                BorderBrush="{StaticResource MFDScreenForegroundBrush}"
+                Visibility="{TemplateBinding IsSensorOfInterest,
+                                             Converter={StaticResource ShowIfTrue}}">
+            <Border.LayoutTransform>
+                <RotateTransform Angle="45" />
+            </Border.LayoutTransform>
+
+            <Border Margin="1"
+                    Width="3"
+                    Height="3"
+                    Background="{StaticResource MFDScreenForegroundBrush}" />
+        </Border>
+    </ControlTemplate>
+
     <Style TargetType="controls:SensorOfInterestIndicator">
-        <Setter Property="Template" Value="{StaticResource SensorOfInterestTemplate}" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
-        <Setter Property="VerticalAlignment" Value="Stretch" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template" Value="{StaticResource DiamondSensorOfInterestTemplate}" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
     </Style>
 
 </ResourceDictionary>
