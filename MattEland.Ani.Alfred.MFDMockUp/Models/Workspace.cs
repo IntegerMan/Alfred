@@ -13,6 +13,7 @@ using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Speech;
 using MattEland.Ani.Alfred.PresentationAvalon.Commands;
 using MattEland.Ani.Alfred.PresentationCommon.Commands;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.Models
 {
@@ -218,14 +219,22 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         }
 
         /// <summary>
-        /// Creates a new multifunction display (MFD). 
+        /// Creates and returns a new multifunction display (MFD). This display is added to the displays collection. 
         /// </summary>
+        /// <param name="name"> The name of the display </param>
         /// <returns> A new display. </returns>
         [NotNull]
-        public MultifunctionDisplay NewMFD()
+        public MultifunctionDisplay AddNewMultifunctionDisplay([NotNull] string name)
         {
-            var item = new MultifunctionDisplay(Container, this);
+            Contract.Requires(name != null);
+            Contract.Requires(name.HasText());
+            Contract.Ensures(Contract.Result<MultifunctionDisplay>() != null);
+            Contract.Ensures(Contract.Result<MultifunctionDisplay>().Name == name);
+
+            var item = new MultifunctionDisplay(Container, this, name);
+
             _mfds.Add(item);
+
             return item;
         }
 

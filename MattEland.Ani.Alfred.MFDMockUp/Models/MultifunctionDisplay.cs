@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Assisticant.Fields;
 
@@ -11,6 +12,7 @@ using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
 using MattEland.Ani.Alfred.MFDMockUp.Models.Screens;
 using MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens;
+using MattEland.Common;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.Models
 {
@@ -44,47 +46,79 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         private readonly Computed<bool> _isSensorOfInterestVisible;
 
         [NotNull]
-        private readonly Observable<string> _name;
-
-        [NotNull]
-        private readonly MFDProcessor _processor;
-
-        [NotNull]
         private readonly Observable<double> _screenHeight;
 
         [NotNull]
         private readonly Observable<double> _screenWidth;
-        /// <summary>
-        ///     The workspace.
-        /// </summary>
-        [NotNull]
-        private readonly Workspace _workspace;
 
         /// <summary>
         ///     Initializes a new instance of the MultifunctionDisplay class.
         /// </summary>
-        public MultifunctionDisplay([NotNull] IAlfredContainer container, [NotNull] Workspace workspace)
+        public MultifunctionDisplay([NotNull] IAlfredContainer container,
+            [NotNull] Workspace workspace,
+            [NotNull] string name)
         {
             Contract.Requires(container != null);
             Contract.Requires(workspace != null);
+            Contract.Requires(name != null);
+            Contract.Requires(name.HasText());
+            Contract.Ensures(Name == name);
+            Contract.Ensures(Workspace == workspace);
 
-            _workspace = workspace;
-
-            _processor = new MFDProcessor(container, this);
+            // Set Simple Properties
+            Workspace = workspace;
+            Name = name;
+            Processor = new MFDProcessor(container, this);
 
             // Create the provider objects
             ScreenProvider = new ScreenProvider(this, workspace);
             ButtonProvider = new ButtonProvider(this, workspace);
 
             //- Create Observable Properties
-            _name = new Observable<string>("<New MFD>");
-            _isSensorOfInterest = new Computed<bool>(() => _workspace.SelectedMFD == this);
+            _isSensorOfInterest = new Computed<bool>(() => Workspace.SelectedMFD == this);
             _isSensorOfInterestVisible = new Computed<bool>(() => CurrentScreen.ShowSensorOfInterestIndicator);
             _screenWidth = new Observable<double>(DefaultScreenSize);
             _screenHeight = new Observable<double>(DefaultScreenSize);
 
             // Set up the current screen as the boot screen
             _currentScreen = new Observable<ScreenModel>(ScreenProvider.BootScreen);
+        }
+
+        /// <summary>
+        ///     Contains code contract invariants that describe facts about this class that will be true
+        ///     after any public method in this class is called.
+        /// </summary>
+        [ContractInvariantMethod]
+        private void ClassInvariants()
+        {
+            Contract.Invariant(Workspace != null);
+            Contract.Invariant(Name != null);
+            Contract.Invariant(Name.HasText());
+            Contract.Invariant(Processor != null);
+            Contract.Invariant(CurrentScreen != null);
+        }
+
+        /// <summary>
+        ///     Gets the processor associated with this display.
+        /// </summary>
+        /// <value>
+        ///     The processor.
+        /// </value>
+        [NotNull]
+        public MFDProcessor Processor
+        {
+            [DebuggerStepThrough]
+            get;
+        }
+
+        /// <summary>
+        ///     The workspace.
+        /// </summary>
+        [NotNull]
+        public Workspace Workspace
+        {
+            [DebuggerStepThrough]
+            get;
         }
 
         /// <summary>
@@ -109,22 +143,18 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         public bool IsSensorOfInterest
         {
             get { return _isSensorOfInterest; }
-            set { _workspace.SelectedMFD = this; }
+            set { Workspace.SelectedMFD = this; }
         }
 
         /// <summary>
-        ///     Gets or sets the name of the multifunction display. This is different than the name of
+        ///     Gets the name of the multifunction display. This is different than the name of
         ///     its current view.
         /// </summary>
         /// <value>
         ///     The name of the MFD.
         /// </value>
-        [CanBeNull]
-        public string Name
-        {
-            get { return _name; }
-            set { _name.Value = value; }
-        }
+        [NotNull]
+        public string Name { get; }
 
         /// <summary>
         ///     Gets or sets the height of the screen.
@@ -176,7 +206,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         {
             Contract.Requires(button != null);
 
-            _processor.EnqueueButtonPress(button);
+            Processor.EnqueueButtonPress(button);
         }
 
         /// <summary>
@@ -184,7 +214,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// </summary>
         internal void Update()
         {
-            _processor.Update();
+            Processor.Update();
         }
 
         /// <summary>
@@ -193,6 +223,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// <returns>
         /// A string that represents the current object.
         /// </returns>
+        [NotNull]
         public override string ToString()
         {
             return string.Format(Culture, "Display {0}", Name);
@@ -204,11 +235,18 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// <value>
         ///     The culture.
         /// </value>
+        [NotNull]
         public CultureInfo Culture
         {
             get { return CultureInfo.CurrentCulture; }
         }
 
+        /// <summary>
+        ///     Gets a value indicating whether the sensor of interest is visible.
+        /// </summary>
+        /// <value>
+        ///     true if the sensor of interest is visible, false if not.
+        /// </value>
         public bool IsSensorOfInterestVisible
         {
             get { return _isSensorOfInterestVisible.Value; }

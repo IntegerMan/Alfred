@@ -23,7 +23,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         /// <summary>
         ///     The default number of MFDs present.
         /// </summary>
-        private const int DefaultMFDCount = 6;
+        private const int DefaultMFDCount = 2;
 
         /// <summary>
         ///     A mapping of model types to its view model.
@@ -104,26 +104,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         }
 
         /// <summary>
-        ///     Configures a multifunction display.
-        /// </summary>
-        /// <param name="mfd"> The mfd. </param>
-        /// <param name="index"> The zero-based index of the multifunction display. </param>
-        private static void ConfigureDesignMFD([NotNull] MultifunctionDisplay mfd, int index)
-        {
-            mfd.Name = string.Format("Design MFD {0}", index + 1);
-        }
-
-        /// <summary>
-        ///     Configures a multifunction display.
-        /// </summary>
-        /// <param name="mfd"> The mfd. </param>
-        /// <param name="index"> The zero-based index of the multifunction display. </param>
-        private static void ConfigureMFD([NotNull] MultifunctionDisplay mfd, int index)
-        {
-            mfd.Name = string.Format("MFD {0}", index + 1);
-        }
-
-        /// <summary>
         ///     Builds a view model for the specified model.
         /// </summary>
         /// <param name="model"> The model. </param>
@@ -195,16 +175,10 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
             // Add all MFDs to the workspace
             for (int index = 0; index < DefaultMFDCount; index++)
             {
-                var mfd = workspace.NewMFD();
+                var name = string.Format(DesignMode ? "Design MFD {0}" : "MFD {0}", index + 1);
 
-                if (DesignMode)
-                {
-                    ConfigureDesignMFD(mfd, index);
-                }
-                else
-                {
-                    ConfigureMFD(mfd, index);
-                }
+                workspace.AddNewMultifunctionDisplay(name);
+
             }
 
             // Automatically make the first MFD the sensor of interest.
