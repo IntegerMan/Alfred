@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Root CoveredStatements="7951" TotalStatements="12118" CoveragePercent="66" ReportType="NDependXML" DotCoverVersion="3.2">
+<Root CoveredStatements="7980" TotalStatements="12125" CoveragePercent="66" ReportType="NDependXML" DotCoverVersion="3.2">
   <Assembly Name="MattEland.Ani.Alfred.Chat" CoveredStatements="470" TotalStatements="592" CoveragePercent="79">
     <Namespace Name="MattEland.Ani.Alfred.Chat" CoveredStatements="470" TotalStatements="592" CoveragePercent="79">
       <Type Name="AimlExplorerNode" CoveredStatements="37" TotalStatements="44" CoveragePercent="84">
@@ -1367,8 +1367,8 @@
       </Type>
     </Namespace>
   </Assembly>
-  <Assembly Name="MattEland.Ani.Alfred.Core.Modules.SysMonitor" CoveredStatements="291" TotalStatements="362" CoveragePercent="80">
-    <Namespace Name="MattEland.Ani.Alfred.Core.Modules.SysMonitor" CoveredStatements="291" TotalStatements="362" CoveragePercent="80">
+  <Assembly Name="MattEland.Ani.Alfred.Core.Modules.SysMonitor" CoveredStatements="298" TotalStatements="369" CoveragePercent="81">
+    <Namespace Name="MattEland.Ani.Alfred.Core.Modules.SysMonitor" CoveredStatements="298" TotalStatements="369" CoveragePercent="81">
       <Type Name="CounterMetricProvider" CoveredStatements="8" TotalStatements="11" CoveragePercent="73">
         <Method Name=".ctor(String,String,String)" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="41" />
         <Method Name="Dispose()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="69" />
@@ -1378,22 +1378,26 @@
         <Method Name="Build(String,String,String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="46" />
         <Method Name="GetCategoryInstanceNames(String)" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="61" />
       </Type>
-      <Type Name="CpuMonitorModule" CoveredStatements="74" TotalStatements="89" CoveragePercent="83">
+      <Type Name="CpuMonitorModule" CoveredStatements="81" TotalStatements="96" CoveragePercent="84">
         <Type Name="&lt;&gt;c" CoveredStatements="3" TotalStatements="3" CoveragePercent="100">
-          <Method Name="&lt;get_AverageProcessorUtilization&gt;b__11_0(MetricProviderBase)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="98" />
-          <Method Name="&lt;get_NumberOfCores&gt;b__9_0(MetricProviderBase)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="84" />
-          <Method Name="&lt;InitializeProtected&gt;b__14_0(MetricProviderBase)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="136" />
+          <Method Name="&lt;get_AverageProcessorUtilization&gt;b__11_0(MetricProviderBase)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="99" />
+          <Method Name="&lt;get_NumberOfCores&gt;b__9_0(MetricProviderBase)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="85" />
+          <Method Name="&lt;InitializeProtected&gt;b__14_0(MetricProviderBase)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="135" />
         </Type>
-        <Method Name=".ctor(IAlfredContainer,IMetricProviderFactory)" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="40" />
-        <Method Name="BuildCounters()" CoveredStatements="11" TotalStatements="11" CoveragePercent="100" FirstStatementLine="167" />
-        <Method Name="Dispose()" CoveredStatements="5" TotalStatements="9" CoveragePercent="56" FirstStatementLine="108" />
-        <Method Name="get_AverageProcessorUtilization()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="95" />
-        <Method Name="get_Name()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="72" />
-        <Method Name="get_NumberOfCores()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="82" />
-        <Method Name="InitializeProtected(IAlfred)" CoveredStatements="21" TotalStatements="21" CoveragePercent="100" FirstStatementLine="129" />
-        <Method Name="ShutdownProtected()" CoveredStatements="7" TotalStatements="11" CoveragePercent="64" FirstStatementLine="116" />
-        <Method Name="UpdateCpuWidget(ProgressBarWidget,MetricProviderBase,String)" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="210" />
-        <Method Name="UpdateProtected()" CoveredStatements="6" TotalStatements="13" CoveragePercent="46" FirstStatementLine="184" />
+        <Type Name="&lt;&gt;c__DisplayClass15_0" CoveredStatements="1" TotalStatements="1" CoveragePercent="100">
+          <Method Name="&lt;CreateOrRecycleCounterWidget&gt;b__0(ProgressBarWidget)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="179" />
+        </Type>
+        <Method Name=".ctor(IAlfredContainer,IMetricProviderFactory)" CoveredStatements="6" TotalStatements="6" CoveragePercent="100" FirstStatementLine="41" />
+        <Method Name="BuildCounters()" CoveredStatements="11" TotalStatements="11" CoveragePercent="100" FirstStatementLine="191" />
+        <Method Name="CreateOrRecycleCounterWidget(String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="173" />
+        <Method Name="Dispose()" CoveredStatements="5" TotalStatements="9" CoveragePercent="56" FirstStatementLine="109" />
+        <Method Name="get_AverageProcessorUtilization()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="96" />
+        <Method Name="get_Name()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="73" />
+        <Method Name="get_NumberOfCores()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="83" />
+        <Method Name="InitializeProtected(IAlfred)" CoveredStatements="25" TotalStatements="25" CoveragePercent="100" FirstStatementLine="130" />
+        <Method Name="ShutdownProtected()" CoveredStatements="6" TotalStatements="10" CoveragePercent="60" FirstStatementLine="117" />
+        <Method Name="UpdateCpuWidget(ProgressBarWidget,MetricProviderBase,String)" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="234" />
+        <Method Name="UpdateProtected()" CoveredStatements="6" TotalStatements="13" CoveragePercent="46" FirstStatementLine="208" />
       </Type>
       <Type Name="DiskMonitorModule" CoveredStatements="40" TotalStatements="40" CoveragePercent="100">
         <Method Name=".ctor(IAlfredContainer,IMetricProviderFactory)" CoveredStatements="9" TotalStatements="9" CoveragePercent="100" FirstStatementLine="46" />
@@ -1805,7 +1809,7 @@
       </Type>
     </Namespace>
   </Assembly>
-  <Assembly Name="MattEland.Ani.Alfred.Search" CoveredStatements="159" TotalStatements="902" CoveragePercent="18">
+  <Assembly Name="MattEland.Ani.Alfred.Search" CoveredStatements="181" TotalStatements="902" CoveragePercent="20">
     <Namespace Name="MattEland.Ani.Alfred.Search" CoveredStatements="17" TotalStatements="17" CoveragePercent="100">
       <Type Name="SearchSubsystem" CoveredStatements="17" TotalStatements="17" CoveragePercent="100">
         <Type Name="&lt;get_SearchProviders&gt;d__9" CoveredStatements="5" TotalStatements="5" CoveragePercent="100">
@@ -2015,11 +2019,11 @@
         <Method Name="PerformSearch(String)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="74" />
       </Type>
     </Namespace>
-    <Namespace Name="MattEland.Ani.Alfred.Search.StackOverflow" CoveredStatements="36" TotalStatements="84" CoveragePercent="43">
+    <Namespace Name="MattEland.Ani.Alfred.Search.StackOverflow" CoveredStatements="58" TotalStatements="84" CoveragePercent="69">
       <Type Name="StackOverflowQuestionResult" CoveredStatements="0" TotalStatements="7" CoveragePercent="0">
         <Method Name=".ctor(IAlfredContainer,Question)" CoveredStatements="0" TotalStatements="7" CoveragePercent="0" FirstStatementLine="26" />
       </Type>
-      <Type Name="StackOverflowSearchOperation" CoveredStatements="23" TotalStatements="61" CoveragePercent="38">
+      <Type Name="StackOverflowSearchOperation" CoveredStatements="45" TotalStatements="61" CoveragePercent="74">
         <Method Name=".ctor(IAlfredContainer,String,String)" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="48" />
         <Method Name="Abort()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="138" />
         <Method Name="get_Container()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="74" />
@@ -2027,12 +2031,12 @@
         <Method Name="get_ErrorMessage()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="97" />
         <Method Name="get_IsSearchComplete()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="109" />
         <Method Name="get_Results()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="128" />
-        <Method Name="HandleQueryResult()" CoveredStatements="0" TotalStatements="26" CoveragePercent="0" FirstStatementLine="146" />
-        <Method Name="set_EncounteredError(Boolean)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="85" />
-        <Method Name="set_ErrorMessage(String)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="97" />
-        <Method Name="set_IsSearchComplete(Boolean)" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="109" />
+        <Method Name="HandleQueryResult()" CoveredStatements="16" TotalStatements="26" CoveragePercent="62" FirstStatementLine="146" />
+        <Method Name="set_EncounteredError(Boolean)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="85" />
+        <Method Name="set_ErrorMessage(String)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="97" />
+        <Method Name="set_IsSearchComplete(Boolean)" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="109" />
         <Method Name="StartSearch()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="185" />
-        <Method Name="Update()" CoveredStatements="8" TotalStatements="12" CoveragePercent="67" FirstStatementLine="200" />
+        <Method Name="Update()" CoveredStatements="11" TotalStatements="12" CoveragePercent="92" FirstStatementLine="200" />
       </Type>
       <Type Name="StackOverflowSearchProvider" CoveredStatements="13" TotalStatements="16" CoveragePercent="81">
         <Method Name=".ctor(IAlfredContainer,String)" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="25" />

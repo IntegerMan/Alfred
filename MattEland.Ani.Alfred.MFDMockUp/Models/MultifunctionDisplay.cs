@@ -54,25 +54,33 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// <summary>
         ///     Initializes a new instance of the MultifunctionDisplay class.
         /// </summary>
+        /// <param name="container"> The container. </param>
+        /// <param name="workspace"> The workspace. </param>
+        /// <param name="mode"> The master mode. </param>
+        /// <param name="name"> The name of the MFD. </param>
         public MultifunctionDisplay([NotNull] IAlfredContainer container,
             [NotNull] Workspace workspace,
+            [NotNull] MasterMode mode,
             [NotNull] string name)
         {
             Contract.Requires(container != null);
             Contract.Requires(workspace != null);
+            Contract.Requires(mode != null);
             Contract.Requires(name != null);
             Contract.Requires(name.HasText());
             Contract.Ensures(Name == name);
             Contract.Ensures(Workspace == workspace);
+            Contract.Ensures(MasterMode == mode);
 
             // Set Simple Properties
             Workspace = workspace;
             Name = name;
+            _masterMode = mode;
             Processor = new MFDProcessor(container, this);
 
             // Create the provider objects
             ScreenProvider = new ScreenProvider(this, workspace);
-            ButtonProvider = new ButtonProvider(this, workspace);
+            ButtonProvider = new ButtonProvider(this, workspace, this.MasterMode);
 
             //- Create Observable Properties
             _isSensorOfInterest = new Computed<bool>(() => Workspace.SelectedMFD == this);
@@ -82,6 +90,20 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
 
             // Set up the current screen as the boot screen
             _currentScreen = new Observable<ScreenModel>(ScreenProvider.BootScreen);
+        }
+
+        [NotNull]
+        private MasterMode _masterMode;
+
+        [NotNull]
+        public MasterMode MasterMode
+        {
+            get { return _masterMode; }
+            set
+            {
+                _masterMode = value;
+                ButtonProvider.MasterMode = value;
+            }
         }
 
         /// <summary>

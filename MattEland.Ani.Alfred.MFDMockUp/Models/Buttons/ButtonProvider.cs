@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
 
@@ -44,15 +45,41 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         private readonly ButtonModel _mapButton;
         private readonly ButtonModel _feedButton;
         private readonly ButtonModel _optionsButton;
+        [NotNull]
+        private MasterMode _masterMode;
+
+        /// <summary>
+        ///     Gets or sets the master mode.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when the value is null.
+        /// </exception>
+        /// <value>
+        ///     The master mode.
+        /// </value>
+        [NotNull]
+        public MasterMode MasterMode
+        {
+            [DebuggerStepThrough]
+            get
+            { return _masterMode; }
+            [DebuggerStepThrough]
+            set
+            {
+                if (value == null) throw new ArgumentNullException(nameof(value));
+                _masterMode = value;
+            }
+        }
 
         /// <summary>
         ///     Initializes a new instance of the ButtonProvider class.
         /// </summary>
         /// <param name="owner"> The owner. </param>
         /// <param name="workspace"> The workspace. </param>
-        public ButtonProvider([NotNull] MultifunctionDisplay owner, [NotNull] Workspace workspace)
+        public ButtonProvider([NotNull] MultifunctionDisplay owner, [NotNull] Workspace workspace, [NotNull] MasterMode mode)
         {
             _owner = owner;
+            _masterMode = mode;
 
             //- Create Observables
             _topButtons = new Observable<ButtonStripModel>(new ButtonStripModel(this, ButtonStripDock.Top));
@@ -269,5 +296,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
                 }
             }
         }
+    }
+
+    public class MasterMode
+    {
     }
 }

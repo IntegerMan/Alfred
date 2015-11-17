@@ -8,6 +8,7 @@ using Assisticant;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.MFDMockUp.Models;
+using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
 using MattEland.Common;
 using MattEland.Common.Annotations;
 using MattEland.Ani.Alfred.PresentationCommon.Helpers;
@@ -171,14 +172,14 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         {
             // Create the workspace
             var workspace = new Workspace(Container);
+            var masterMode = new MasterMode();
 
             // Add all MFDs to the workspace
             for (int index = 0; index < DefaultMFDCount; index++)
             {
                 var name = string.Format(DesignMode ? "Design MFD {0}" : "MFD {0}", index + 1);
 
-                workspace.AddNewMultifunctionDisplay(name);
-
+                workspace.AddNewMultifunctionDisplay(name, masterMode);
             }
 
             // Automatically make the first MFD the sensor of interest.

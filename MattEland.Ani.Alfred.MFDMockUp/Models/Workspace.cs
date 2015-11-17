@@ -11,6 +11,7 @@ using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Speech;
+using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
 using MattEland.Ani.Alfred.PresentationAvalon.Commands;
 using MattEland.Ani.Alfred.PresentationCommon.Commands;
 using MattEland.Common;
@@ -219,19 +220,24 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         }
 
         /// <summary>
-        /// Creates and returns a new multifunction display (MFD). This display is added to the displays collection. 
+        ///     Creates and returns a new multifunction display (MFD). This display is added to the
+        ///     displays collection.
         /// </summary>
-        /// <param name="name"> The name of the display </param>
-        /// <returns> A new display. </returns>
+        /// <param name="name"> The name of the display. </param>
+        /// <param name="mode"> The mode. </param>
+        /// <returns>
+        ///     A new display.
+        /// </returns>
         [NotNull]
-        public MultifunctionDisplay AddNewMultifunctionDisplay([NotNull] string name)
+        public MultifunctionDisplay AddNewMultifunctionDisplay([NotNull] string name,
+            [NotNull] MasterMode mode)
         {
             Contract.Requires(name != null);
             Contract.Requires(name.HasText());
             Contract.Ensures(Contract.Result<MultifunctionDisplay>() != null);
             Contract.Ensures(Contract.Result<MultifunctionDisplay>().Name == name);
 
-            var item = new MultifunctionDisplay(Container, this, name);
+            var item = new MultifunctionDisplay(Container, this, mode, name);
 
             _mfds.Add(item);
 
