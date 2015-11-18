@@ -50,6 +50,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         [UsedImplicitly]
         public ViewModelLocator([CanBeNull] IAlfredContainer container)
         {
+            //- Lazy Initialize container
             Container = container ?? new AlfredContainer(CommonProvider.Container);
 
             // Set up mappings for automatic creation of view models.

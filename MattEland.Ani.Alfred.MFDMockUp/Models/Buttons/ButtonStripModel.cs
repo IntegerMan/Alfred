@@ -136,7 +136,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         {
             // Do nothing if this is the same list as we're using now
             var isMatch = AreButtonCollectionsIdentical(buttons);
-            if (isMatch) return;
+            if (isMatch && _buttons.Any()) return;
 
             // TODO: Avoid clearing the buttons list every enumeration as this causes binding issues
 

@@ -15,10 +15,15 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
     /// </summary>
     public sealed class ButtonProvider : IButtonClickListener
     {
-
+        /// <summary>
+        ///     The bottom button strip.
+        /// </summary>
         [NotNull]
         private readonly Observable<ButtonStripModel> _bottomButtons;
 
+        /// <summary>
+        ///     The left button strip.
+        /// </summary>
         [NotNull]
         private readonly Observable<ButtonStripModel> _leftButtons;
 
@@ -28,9 +33,15 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         [NotNull]
         private readonly MultifunctionDisplay _owner;
 
+        /// <summary>
+        ///     The right button strip.
+        /// </summary>
         [NotNull]
         private readonly Observable<ButtonStripModel> _rightButtons;
 
+        /// <summary>
+        ///     The top button strip.
+        /// </summary>
         [NotNull]
         private readonly Observable<ButtonStripModel> _topButtons;
 
@@ -76,7 +87,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         /// </summary>
         /// <param name="owner"> The owner. </param>
         /// <param name="workspace"> The workspace. </param>
-        public ButtonProvider([NotNull] MultifunctionDisplay owner, [NotNull] Workspace workspace, [NotNull] MasterMode mode)
+        public ButtonProvider([NotNull] MultifunctionDisplay owner,
+            [NotNull] Workspace workspace,
+            [NotNull] MasterMode mode)
         {
             _owner = owner;
             _masterMode = mode;
@@ -187,36 +200,15 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         /// <exception cref="ArgumentOutOfRangeException">
         ///     Thrown when one or more arguments are outside the required range.
         /// </exception>
-        /// <param name="mode"> The mode. </param>
+        /// <param name="mode"> The display master mode. </param>
         /// <returns>
         ///     An array of button model.
         /// </returns>
-        private ButtonModel[] GetTopButtons(MFDMode mode)
+        private ButtonModel[] GetScreenChangeButtons([NotNull] MasterMode mode)
         {
-            IEnumerable<ButtonModel> buttons;
+            Contract.Requires(mode != null);
 
-            switch (mode)
-            {
-                case MFDMode.Default:
-                    buttons = new[]
-                              {
-                                  _systemButton,
-                                  _alfredButton,
-                                  _logButton,
-                                  _performanceButton,
-                                  _modeButton
-                              };
-                    break;
-
-                case MFDMode.Bootup:
-                    buttons = _emptyButtons;
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
-            }
-
-            return buttons.ToArray();
+            return mode.GetScreenChangeButtons(this, _owner).ToArray();
         }
 
         /// <summary>
@@ -243,7 +235,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
             var mode = result.CurrentMode;
 
             // Top and bottom buttons relate to views
-            TopButtons.SetButtons(GetTopButtons(mode));
+            TopButtons.SetButtons(GetScreenChangeButtons(MasterMode));
             BottomButtons.SetButtons(GetBottomButtons(mode));
 
             // Left and right buttons are based off of the current view
@@ -298,7 +290,4 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         }
     }
 
-    public class MasterMode
-    {
-    }
 }
