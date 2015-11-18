@@ -45,11 +45,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         [NotNull]
         private readonly Observable<ButtonStripModel> _topButtons;
 
-        private readonly ButtonModel _systemButton;
-        private readonly ButtonModel _alfredButton;
-        private readonly ButtonModel _logButton;
-        private readonly ButtonModel _performanceButton;
-        private readonly ButtonModel _modeButton;
         private readonly IEnumerable<ButtonModel> _emptyButtons;
         private readonly ButtonModel _weatherButton;
         private readonly ButtonModel _searchButton;
@@ -87,6 +82,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         /// </summary>
         /// <param name="owner"> The owner. </param>
         /// <param name="workspace"> The workspace. </param>
+        /// <param name="mode"> The display master mode. </param>
         public ButtonProvider([NotNull] MultifunctionDisplay owner,
             [NotNull] Workspace workspace,
             [NotNull] MasterMode mode)
@@ -100,15 +96,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
             _leftButtons = new Observable<ButtonStripModel>(new ButtonStripModel(this, ButtonStripDock.Left));
             _rightButtons = new Observable<ButtonStripModel>(new ButtonStripModel(this, ButtonStripDock.Right));
 
-            // Set up buttons
-            var screens = owner.ScreenProvider;
-
-            _systemButton = new NavigationButtonModel(screens.HomeScreen, this);
-            _alfredButton = new NavigationButtonModel(screens.AlfredScreen, this);
-            _logButton = new NavigationButtonModel(screens.LogScreen, this);
-            _performanceButton = new NavigationButtonModel(screens.PerformanceScreen, this);
-
-            _modeButton = new ButtonModel("MODE", this);
             _weatherButton = new ButtonModel("WTHR", this);
             _searchButton = new ButtonModel("SRCH", this);
             _mapButton = new ButtonModel("MAP", this);

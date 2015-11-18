@@ -224,20 +224,18 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         ///     displays collection.
         /// </summary>
         /// <param name="name"> The name of the display. </param>
-        /// <param name="mode"> The mode. </param>
         /// <returns>
         ///     A new display.
         /// </returns>
         [NotNull]
-        public MultifunctionDisplay AddNewMultifunctionDisplay([NotNull] string name,
-            [NotNull] MasterMode mode)
+        public MultifunctionDisplay AddNewMultifunctionDisplay([NotNull] string name)
         {
             Contract.Requires(name != null);
             Contract.Requires(name.HasText());
             Contract.Ensures(Contract.Result<MultifunctionDisplay>() != null);
             Contract.Ensures(Contract.Result<MultifunctionDisplay>().Name == name);
 
-            var item = new MultifunctionDisplay(Container, this, mode, name);
+            var item = new MultifunctionDisplay(Container, this, name);
 
             _mfds.Add(item);
 

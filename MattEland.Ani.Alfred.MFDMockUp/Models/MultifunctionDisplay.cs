@@ -60,26 +60,23 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// <param name="name"> The name of the MFD. </param>
         public MultifunctionDisplay([NotNull] IAlfredContainer container,
             [NotNull] Workspace workspace,
-            [NotNull] MasterMode mode,
             [NotNull] string name)
         {
             Contract.Requires(container != null);
             Contract.Requires(workspace != null);
-            Contract.Requires(mode != null);
             Contract.Requires(name != null);
             Contract.Requires(name.HasText());
             Contract.Ensures(Name == name);
             Contract.Ensures(Workspace == workspace);
-            Contract.Ensures(MasterMode == mode);
 
             // Set Simple Properties
             Workspace = workspace;
             Name = name;
-            _masterMode = mode;
             Processor = new MFDProcessor(container, this);
 
             // Create the provider objects
             ScreenProvider = new ScreenProvider(this, workspace);
+            _masterMode = new MasterMode(this);
             ButtonProvider = new ButtonProvider(this, workspace, this.MasterMode);
 
             //- Create Observable Properties

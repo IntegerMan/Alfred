@@ -173,14 +173,13 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         {
             // Create the workspace
             var workspace = new Workspace(Container);
-            var masterMode = new MasterMode();
 
             // Add all MFDs to the workspace
             for (int index = 0; index < DefaultMFDCount; index++)
             {
                 var name = string.Format(DesignMode ? "Design MFD {0}" : "MFD {0}", index + 1);
 
-                workspace.AddNewMultifunctionDisplay(name, masterMode);
+                workspace.AddNewMultifunctionDisplay(name);
             }
 
             // Automatically make the first MFD the sensor of interest.
