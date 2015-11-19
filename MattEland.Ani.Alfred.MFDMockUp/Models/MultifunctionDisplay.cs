@@ -76,7 +76,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             // Create the provider objects
             ScreenProvider = new ScreenProvider(this, workspace);
             _masterMode = new SystemMasterMode(this);
-            ButtonProvider = new ButtonProvider(this, workspace, this.MasterMode);
+            ButtonProvider = new ButtonProvider(this, this.MasterMode);
 
             //- Create Observable Properties
             _isSensorOfInterest = new Computed<bool>(() => Workspace.SelectedMFD == this);

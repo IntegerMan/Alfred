@@ -45,12 +45,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         [NotNull]
         private readonly Observable<ButtonStripModel> _topButtons;
 
-        private readonly IEnumerable<ButtonModel> _emptyButtons;
-        private readonly ButtonModel _weatherButton;
-        private readonly ButtonModel _searchButton;
-        private readonly ButtonModel _mapButton;
-        private readonly ButtonModel _feedButton;
-        private readonly ButtonModel _optionsButton;
         [NotNull]
         private MasterModeBase _masterMode;
 
@@ -81,10 +75,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         ///     Initializes a new instance of the ButtonProvider class.
         /// </summary>
         /// <param name="owner"> The owner. </param>
-        /// <param name="workspace"> The workspace. </param>
         /// <param name="mode"> The display master mode. </param>
         public ButtonProvider([NotNull] MultifunctionDisplay owner,
-            [NotNull] Workspace workspace,
             [NotNull] MasterModeBase mode)
         {
             _owner = owner;
@@ -95,15 +87,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
             _bottomButtons = new Observable<ButtonStripModel>(new ButtonStripModel(this, ButtonStripDock.Bottom));
             _leftButtons = new Observable<ButtonStripModel>(new ButtonStripModel(this, ButtonStripDock.Left));
             _rightButtons = new Observable<ButtonStripModel>(new ButtonStripModel(this, ButtonStripDock.Right));
-
-            _weatherButton = new ButtonModel("WTHR", this);
-            _searchButton = new ButtonModel("SRCH", this);
-            _mapButton = new ButtonModel("MAP", this);
-            _feedButton = new ButtonModel("FEED", this);
-            _optionsButton = new ButtonModel("OPTS", this);
-
-            // Set up placeholder button list
-            _emptyButtons = ButtonStripModel.BuildEmptyButtons(5);
         }
 
         /// <summary>
@@ -143,59 +126,25 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         public ButtonStripModel TopButtons { get { return _topButtons; } }
 
         /// <summary>
-        ///     Gets bottom buttons.
+        ///     Gets screen change buttons.
         /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///     Thrown when one or more arguments are outside the required range.
-        /// </exception>
-        /// <param name="mode"> The mode. </param>
         /// <returns>
-        ///     An array of button model.
+        ///     An array of buttons.
         /// </returns>
-        private ButtonModel[] GetBottomButtons([NotNull] MFDMode mode)
+        private ButtonModel[] GetScreenChangeButtons()
         {
-            IEnumerable<ButtonModel> buttons;
-
-            switch (mode)
-            {
-                case MFDMode.Default:
-                    buttons = new[]
-                              {
-                                _weatherButton,
-                                _searchButton,
-                                _mapButton,
-                                _feedButton,
-                                _optionsButton
-                              };
-                    break;
-
-                case MFDMode.Bootup:
-                    buttons = _emptyButtons;
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
-            }
-
-            return buttons.ToArray();
-
+            return MasterMode.GetScreenChangeButtons().ToArray();
         }
 
         /// <summary>
-        ///     Gets the buttons.
+        ///     Gets screen command buttons.
         /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///     Thrown when one or more arguments are outside the required range.
-        /// </exception>
-        /// <param name="mode"> The display master mode. </param>
         /// <returns>
-        ///     An array of button model.
+        ///     An array of buttons.
         /// </returns>
-        private ButtonModel[] GetScreenChangeButtons([NotNull] MasterModeBase mode)
+        private ButtonModel[] GetScreenCommandButtons()
         {
-            Contract.Requires(mode != null);
-
-            return mode.GetScreenChangeButtons().ToArray();
+            return MasterMode.GetScreenCommandButtons().ToArray();
         }
 
         /// <summary>
@@ -219,11 +168,11 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
             Contract.Requires(processor != null);
             Contract.Requires(result != null);
 
-            var mode = result.CurrentMode;
+            var mode = result.CurrentMasterMode;
 
             // Top and bottom buttons relate to views
-            TopButtons.SetButtons(GetScreenChangeButtons(MasterMode));
-            BottomButtons.SetButtons(GetBottomButtons(mode));
+            TopButtons.SetButtons(GetScreenChangeButtons());
+            BottomButtons.SetButtons(GetScreenCommandButtons());
 
             // Left and right buttons are based off of the current view
 

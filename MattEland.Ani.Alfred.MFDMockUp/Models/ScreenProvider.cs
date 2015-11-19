@@ -40,7 +40,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
                     new Lazy<ScreenModel>(() => new HomeScreenModel(workspace.FaultManager)),
 
                 [typeof(BootupScreenModel)] =
-                    new Lazy<ScreenModel>(() => new BootupScreenModel(HomeScreen)),
+                    new Lazy<ScreenModel>(() => new BootupScreenModel(mfd.MasterMode.NextMasterMode)),
 
                 [typeof(AlfredScreenModel)] =
                     new Lazy<ScreenModel>(() => new AlfredScreenModel(alfred)),

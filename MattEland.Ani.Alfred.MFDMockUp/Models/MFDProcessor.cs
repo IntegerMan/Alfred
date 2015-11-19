@@ -42,12 +42,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         }
 
         /// <summary>
-        ///     Gets the current mode.
+        ///     Gets the current master mode.
         /// </summary>
         /// <value>
         ///     The current mode.
         /// </value>
-        public MFDMode CurrentMode { get; private set; }
+        public MasterModeBase CurrentMasterMode { get; private set; }
 
         /// <summary>
         ///     Gets the multifunction display.
@@ -116,7 +116,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         private void HandleProcessorFrameResults([NotNull] MFDProcessorResult processorResult)
         {
             // Update the mode
-            CurrentMode = processorResult.RequestedMode;
+            CurrentMasterMode = processorResult.RequestedMasterMode;
 
             // Set the current screen to the new screen
             if (processorResult.RequestedScreen != null)

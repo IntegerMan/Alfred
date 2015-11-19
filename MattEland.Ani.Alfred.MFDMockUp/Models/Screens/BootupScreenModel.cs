@@ -1,5 +1,6 @@
 using Assisticant.Fields;
 
+using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
 using MattEland.Common.Annotations;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
@@ -16,7 +17,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         private readonly Observable<string> _loadingMessage;
 
         [NotNull]
-        private readonly Observable<ScreenModel> _nextScreen;
+        private readonly Observable<MasterModeBase> _nextMode;
 
         /// <summary>
         ///     The loading progress.
@@ -27,11 +28,11 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        /// <param name="nextScreen"> The next screen. </param>
-        public BootupScreenModel([CanBeNull] ScreenModel nextScreen) : base("BTUP")
+        /// <param name="nextMode"> The next master mode. </param>
+        public BootupScreenModel([CanBeNull] MasterModeBase nextMode) : base("BTUP")
         {
             _progress = new Observable<double>(0.0);
-            _nextScreen = new Observable<ScreenModel>(nextScreen);
+            _nextMode = new Observable<MasterModeBase>(nextMode);
             _loadingMessage = new Observable<string>("Standby");
         }
 
@@ -48,16 +49,16 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         }
 
         /// <summary>
-        ///     Gets or sets the screen to navigate to after the load operation is completed.
+        ///     Gets or sets the master mode to activate after the load operation is completed.
         /// </summary>
         /// <value>
-        ///     The next screen.
+        ///     The next master mode.
         /// </value>
         [CanBeNull]
-        public ScreenModel NextScreen
+        public MasterModeBase NextMode
         {
-            get { return _nextScreen; }
-            set { _nextScreen.Value = value; }
+            get { return _nextMode; }
+            set { _nextMode.Value = value; }
         }
 
         /// <summary>
@@ -91,11 +92,11 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
             // If we've completed, tell the application we're ready to move on.
             if (Progress >= 1.0)
             {
-                processorResult.RequestedMode = MFDMode.Default;
+                processorResult.RequestedMasterMode = NextMode;
 
-                if (NextScreen != null)
+                if (NextMode != null)
                 {
-                    processorResult.RequestedScreen = NextScreen;
+                    processorResult.RequestedScreen = NextMode.DefaultScreen;
                 }
             }
         }

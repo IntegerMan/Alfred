@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.Contracts;
 
+using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
 using MattEland.Ani.Alfred.MFDMockUp.Models.Screens;
 using MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens;
 using MattEland.Common.Annotations;
@@ -28,8 +29,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
 
             _processor = processor;
 
-            CurrentMode = processor.CurrentMode;
-            RequestedMode = processor.CurrentMode;
+            CurrentMasterMode = processor.CurrentMasterMode;
+            RequestedMasterMode = processor.CurrentMasterMode;
 
             CurrentScreen = processor.MFD.CurrentScreen;
             RequestedScreen = processor.MFD.CurrentScreen;
@@ -41,7 +42,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// <value>
         ///     The current mode.
         /// </value>
-        public MFDMode CurrentMode { get; }
+        public MasterModeBase CurrentMasterMode { get; }
 
         /// <summary>
         ///     Gets or sets the requested mode. The <see cref="MFDProcessor"/> will attempt to
@@ -50,7 +51,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// <value>
         ///     The requested mode.
         /// </value>
-        public MFDMode RequestedMode { get; set; }
+        public MasterModeBase RequestedMasterMode { get; set; }
 
         /// <summary>
         ///     Gets the current screen model.

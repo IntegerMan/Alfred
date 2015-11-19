@@ -2,6 +2,9 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 
+using Assisticant.Fields;
+
+using MattEland.Ani.Alfred.MFDMockUp.Models.Screens;
 using MattEland.Common.Annotations;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
@@ -12,9 +15,11 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
     /// </summary>
     public abstract class MasterModeBase : IButtonClickListener
     {
-
+        /// <summary>
+        ///     The mode switch button.
+        /// </summary>
         [NotNull]
-        private readonly ButtonModel _modeButton;
+        private readonly ButtonModel _modeSwitchButton;
 
         /// <summary>
         ///     Gets or sets the button click listener.
@@ -34,7 +39,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         [NotNull]
         protected ButtonModel ModeSwitchButton
         {
-            get { return _modeButton; }
+            get { return _modeSwitchButton; }
         }
 
         /// <summary>
@@ -47,9 +52,10 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
 
             IButtonClickListener listener = this;
             ScreenProvider = display.ScreenProvider;
+            _nextMasterMode = new Observable<MasterModeBase>();
 
             // TODO: This will need to move to the next available mode
-            _modeButton = new ButtonModel("MODE", listener);
+            _modeSwitchButton = new ButtonModel("MODE", listener);
 
         }
 
@@ -63,6 +69,34 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         protected ScreenProvider ScreenProvider { get; }
 
         /// <summary>
+        ///     Gets the default screen when this master mode is switched to.
+        /// </summary>
+        /// <value>
+        ///     The default screen.
+        /// </value>
+        [NotNull]
+        public abstract ScreenModel DefaultScreen
+        {
+            get;
+        }
+
+        [NotNull]
+        private readonly Observable<MasterModeBase> _nextMasterMode;
+
+        /// <summary>
+        ///     Gets or sets the next master mode.
+        /// </summary>
+        /// <value>
+        ///     The next master mode.
+        /// </value>
+        [CanBeNull]
+        public MasterModeBase NextMasterMode
+        {
+            get { return _nextMasterMode; }
+            set { _nextMasterMode.Value = value; }
+        }
+
+        /// <summary>
         ///     Contains code contract invariants that describe facts about this class that will be true
         ///     after any public method in this class is called.
         /// </summary>
@@ -71,6 +105,11 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         {
             Contract.Invariant(ModeSwitchButton != null);
             Contract.Invariant(ScreenProvider != null);
+            Contract.Invariant(DefaultScreen != null);
+            Contract.Invariant(GetScreenChangeButtons() != null);
+            Contract.Invariant(GetScreenChangeButtons().All(b => b != null));
+            Contract.Invariant(GetScreenCommandButtons() != null);
+            Contract.Invariant(GetScreenCommandButtons().All(b => b != null));
         }
 
         /// <summary>
@@ -89,11 +128,20 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         /// <summary>
         ///     Gets screen change buttons.
         /// </summary>
-        /// 
         /// <returns>
-        ///     An enumerable of screen changebuttons.
+        ///     An enumerable of screen change buttons.
         /// </returns>
+        [NotNull, ItemNotNull]
         public abstract IEnumerable<ButtonModel> GetScreenChangeButtons();
+
+        /// <summary>
+        ///     Gets the screen command buttons related to the current screen.
+        /// </summary>
+        /// <returns>
+        /// An enumerable of screen command buttons.
+        /// </returns>
+        [NotNull, ItemNotNull]
+        public abstract IEnumerable<ButtonModel> GetScreenCommandButtons();
     }
 
 }
