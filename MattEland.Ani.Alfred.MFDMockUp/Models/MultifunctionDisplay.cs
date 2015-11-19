@@ -73,26 +73,36 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             Name = name;
             Processor = new MFDProcessor(container, this);
 
-            // Create the provider objects
+            // Set up the master modes
             ScreenProvider = new ScreenProvider(this, workspace);
-            _masterMode = new SystemMasterMode(this);
-            ButtonProvider = new ButtonProvider(this, this.MasterMode);
+            _systemMasterMode = new SystemMasterMode(this);
+            _bootupMasterMode = new BootupMasterMode(this, _systemMasterMode);
+            _currentMasterMode = new Observable<MasterModeBase>(_bootupMasterMode);
+
+            // Now that we have the master modes, set up the provider
+            ButtonProvider = new ButtonProvider(this, MasterMode);
+
+            // Set up the current screen as the default screen of the first mode
+            _currentScreen = new Observable<ScreenModel>(MasterMode.DefaultScreen);
 
             //- Create Observable Properties
             _isSensorOfInterest = new Computed<bool>(() => Workspace.SelectedMFD == this);
             _isSensorOfInterestVisible = new Computed<bool>(() => CurrentScreen.ShowSensorOfInterestIndicator);
             _screenWidth = new Observable<double>(DefaultScreenSize);
             _screenHeight = new Observable<double>(DefaultScreenSize);
-
-            // Set up the current screen as the boot screen
-            _currentScreen = new Observable<ScreenModel>(ScreenProvider.BootScreen);
         }
 
         [NotNull]
-        private MasterModeBase _masterMode;
+        private readonly MasterModeBase _bootupMasterMode;
+
+        [NotNull]
+        private readonly SystemMasterMode _systemMasterMode;
+
+        [NotNull]
+        private readonly Observable<MasterModeBase> _currentMasterMode;
 
         /// <summary>
-        ///     Gets or sets the master mode.
+        ///     Gets or sets the current master mode.
         /// </summary>
         /// <value>
         ///     The master mode.
@@ -100,10 +110,10 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         [NotNull]
         public MasterModeBase MasterMode
         {
-            get { return _masterMode; }
+            get { return _currentMasterMode; }
             set
             {
-                _masterMode = value;
+                _currentMasterMode.Value = value;
                 ButtonProvider.MasterMode = value;
             }
         }
@@ -275,6 +285,70 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         {
             get { return _isSensorOfInterestVisible.Value; }
         }
+    }
+
+    /// <summary>
+    ///     The bootup master mode. This class cannot be inherited.
+    /// </summary>
+    public sealed class BootupMasterMode : MasterModeBase
+    {
+        [NotNull]
+        private readonly BootupScreenModel _bootScreen;
+
+        /// <summary>
+        ///     Initializes a new instance of the BootupMasterMode class.
+        /// </summary>
+        /// <param name="display"> The display. </param>
+        /// <param name="nextMasterMode"> The next master mode. </param>
+        public BootupMasterMode([NotNull] MultifunctionDisplay display,
+            [NotNull] MasterModeBase nextMasterMode) : base(display, nextMasterMode)
+        {
+            Contract.Requires(display != null);
+            Contract.Requires(nextMasterMode != null);
+
+            _bootScreen = new BootupScreenModel(nextMasterMode);
+        }
+
+        /// <summary>
+        ///     Gets the default screen when this master mode is switched to.
+        /// </summary>
+        /// <value>
+        ///     The default screen.
+        /// </value>
+        public override ScreenModel DefaultScreen { get { return _bootScreen; } }
+
+        /// <summary>
+        ///     Gets screen change buttons.
+        /// </summary>
+        /// <returns>
+        ///     An enumerable of screen change buttons.
+        /// </returns>
+        public override IEnumerable<ButtonModel> GetScreenChangeButtons()
+        {
+            yield break;
+        }
+
+        /// <summary>
+        ///     Gets the screen command buttons related to the current screen.
+        /// </summary>
+        /// <returns>
+        /// An enumerable of screen command buttons.
+        /// </returns>
+        public override IEnumerable<ButtonModel> GetScreenCommandButtons()
+        {
+            yield break;
+        }
+
+        /// <summary>
+        ///     Contains code contract invariants that describe facts about this class that will be true
+        ///     after any public method in this class is called.
+        /// </summary>
+        [ContractInvariantMethod]
+        private void ClassInvariants()
+        {
+            Contract.Invariant(_bootScreen != null);
+        }
+
     }
 
 }

@@ -39,9 +39,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
                 [typeof(HomeScreenModel)] =
                     new Lazy<ScreenModel>(() => new HomeScreenModel(workspace.FaultManager)),
 
-                [typeof(BootupScreenModel)] =
-                    new Lazy<ScreenModel>(() => new BootupScreenModel(mfd.MasterMode.NextMasterMode)),
-
                 [typeof(AlfredScreenModel)] =
                     new Lazy<ScreenModel>(() => new AlfredScreenModel(alfred)),
 
@@ -68,19 +65,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             Contract.Invariant(_screens != null);
             Contract.Invariant(_screens.All(s => s.Key != null));
             Contract.Invariant(_screens.All(s => s.Value != null));
-        }
-
-
-        /// <summary>
-        ///     Gets the boot screen.
-        /// </summary>
-        /// <value>
-        ///     The boot screen.
-        /// </value>
-        [NotNull]
-        public ScreenModel BootScreen
-        {
-            get { return GetScreen(typeof(BootupScreenModel)); }
         }
 
         /// <summary>
