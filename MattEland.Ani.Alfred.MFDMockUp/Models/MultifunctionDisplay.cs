@@ -56,7 +56,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// </summary>
         /// <param name="container"> The container. </param>
         /// <param name="workspace"> The workspace. </param>
-        /// <param name="mode"> The master mode. </param>
         /// <param name="name"> The name of the MFD. </param>
         public MultifunctionDisplay([NotNull] IAlfredContainer container,
             [NotNull] Workspace workspace,
@@ -76,7 +75,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
 
             // Create the provider objects
             ScreenProvider = new ScreenProvider(this, workspace);
-            _masterMode = new MasterMode(this);
+            _masterMode = new SystemMasterMode(this);
             ButtonProvider = new ButtonProvider(this, workspace, this.MasterMode);
 
             //- Create Observable Properties
@@ -90,10 +89,16 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         }
 
         [NotNull]
-        private MasterMode _masterMode;
+        private MasterModeBase _masterMode;
 
+        /// <summary>
+        ///     Gets or sets the master mode.
+        /// </summary>
+        /// <value>
+        ///     The master mode.
+        /// </value>
         [NotNull]
-        public MasterMode MasterMode
+        public MasterModeBase MasterMode
         {
             get { return _masterMode; }
             set

@@ -52,7 +52,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         private readonly ButtonModel _feedButton;
         private readonly ButtonModel _optionsButton;
         [NotNull]
-        private MasterMode _masterMode;
+        private MasterModeBase _masterMode;
 
         /// <summary>
         ///     Gets or sets the master mode.
@@ -64,7 +64,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         ///     The master mode.
         /// </value>
         [NotNull]
-        public MasterMode MasterMode
+        public MasterModeBase MasterMode
         {
             [DebuggerStepThrough]
             get
@@ -85,7 +85,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         /// <param name="mode"> The display master mode. </param>
         public ButtonProvider([NotNull] MultifunctionDisplay owner,
             [NotNull] Workspace workspace,
-            [NotNull] MasterMode mode)
+            [NotNull] MasterModeBase mode)
         {
             _owner = owner;
             _masterMode = mode;
@@ -191,11 +191,11 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         /// <returns>
         ///     An array of button model.
         /// </returns>
-        private ButtonModel[] GetScreenChangeButtons([NotNull] MasterMode mode)
+        private ButtonModel[] GetScreenChangeButtons([NotNull] MasterModeBase mode)
         {
             Contract.Requires(mode != null);
 
-            return mode.GetScreenChangeButtons(this, _owner).ToArray();
+            return mode.GetScreenChangeButtons().ToArray();
         }
 
         /// <summary>
