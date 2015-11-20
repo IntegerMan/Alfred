@@ -22,11 +22,11 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug2\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug2\MattEland.Ani.Alfred.MFDMockUp.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\MattEland.Ani.Alfred.MFDMockUp.xml</DocumentationFile>
     <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
     <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
     <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
@@ -173,7 +173,6 @@
     <Compile Include="Models\Buttons\ButtonStripDock.cs" />
     <Compile Include="Models\Buttons\ButtonStripModel.cs" />
     <Compile Include="Models\Screens\HomeScreenModel.cs" />
-    <Compile Include="Models\MFDMode.cs" />
     <Compile Include="Models\MFDProcessor.cs" />
     <Compile Include="Models\MFDProcessorResult.cs" />
     <Compile Include="Models\Screens\LogScreenModel.cs" />

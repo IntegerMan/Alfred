@@ -45,15 +45,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         [NotNull]
         private readonly Observable<ButtonStripModel> _topButtons;
 
-        [NotNull]
-        private MasterModeBase _masterMode;
-
         /// <summary>
-        ///     Gets or sets the master mode.
+        ///     Gets the master mode.
         /// </summary>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown when the value is null.
-        /// </exception>
         /// <value>
         ///     The master mode.
         /// </value>
@@ -62,25 +56,16 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         {
             [DebuggerStepThrough]
             get
-            { return _masterMode; }
-            [DebuggerStepThrough]
-            set
-            {
-                if (value == null) throw new ArgumentNullException(nameof(value));
-                _masterMode = value;
-            }
+            { return _owner.MasterMode; }
         }
 
         /// <summary>
         ///     Initializes a new instance of the ButtonProvider class.
         /// </summary>
         /// <param name="owner"> The owner. </param>
-        /// <param name="mode"> The display master mode. </param>
-        public ButtonProvider([NotNull] MultifunctionDisplay owner,
-            [NotNull] MasterModeBase mode)
+        public ButtonProvider([NotNull] MultifunctionDisplay owner)
         {
             _owner = owner;
-            _masterMode = mode;
 
             //- Create Observables
             _topButtons = new Observable<ButtonStripModel>(new ButtonStripModel(this, ButtonStripDock.Top));
@@ -171,8 +156,11 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
             var mode = result.CurrentMasterMode;
 
             // Top and bottom buttons relate to views
-            TopButtons.SetButtons(GetScreenChangeButtons());
-            BottomButtons.SetButtons(GetScreenCommandButtons());
+            var screenChangeButtons = GetScreenChangeButtons();
+            TopButtons.SetButtons(screenChangeButtons);
+
+            var screenCommandButtons = GetScreenCommandButtons();
+            BottomButtons.SetButtons(screenCommandButtons);
 
             // Left and right buttons are based off of the current view
 

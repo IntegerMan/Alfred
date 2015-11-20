@@ -34,6 +34,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             [NotNull] MultifunctionDisplay multifunctionDisplay)
         {
             Contract.Requires(container != null);
+            Contract.Requires(multifunctionDisplay != null);
+            Contract.Requires(multifunctionDisplay.MasterMode != null);
 
             _mfd = multifunctionDisplay;
 
@@ -47,7 +49,32 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// <value>
         ///     The current mode.
         /// </value>
-        public MasterModeBase CurrentMasterMode { get; private set; }
+        public MasterModeBase CurrentMasterMode
+        {
+            get { return _mfd.MasterMode; }
+            set
+            {
+                Contract.Requires(value != null);
+
+                if (value == null) throw new ArgumentNullException(nameof(value));
+
+                _mfd.MasterMode = value;
+            }
+        }
+
+        /// <summary>
+        ///     Contains code contract invariants that describe facts about this class that will be true
+        ///     after any public method in this class is called.
+        /// </summary>
+        [ContractInvariantMethod]
+        private void ClassInvariants()
+        {
+            Contract.Invariant(MFD != null);
+            Contract.Invariant(CurrentMasterMode != null);
+            Contract.Invariant(Container != null);
+            Contract.Invariant(Randomizer != null);
+        }
+
 
         /// <summary>
         ///     Gets the multifunction display.
@@ -115,8 +142,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
 
         private void HandleProcessorFrameResults([NotNull] MFDProcessorResult processorResult)
         {
-            // Update the mode
-            CurrentMasterMode = processorResult.RequestedMasterMode;
+            // Update the mode - defaulting to current mode if null is requested
+            var effectiveRequestedMode = (processorResult.RequestedMasterMode ?? processorResult.CurrentMasterMode);
+            if (processorResult.CurrentMasterMode != effectiveRequestedMode)
+            {
+                CurrentMasterMode = processorResult.RequestedMasterMode;
+            }
 
             // Set the current screen to the new screen
             if (processorResult.RequestedScreen != null)

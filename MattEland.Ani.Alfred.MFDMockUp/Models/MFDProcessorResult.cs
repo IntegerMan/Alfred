@@ -26,6 +26,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         {
             Contract.Requires(processor != null);
             Contract.Requires(processor.MFD != null);
+            Contract.Requires(processor.CurrentMasterMode != null);
 
             _processor = processor;
 
@@ -35,6 +36,18 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             CurrentScreen = processor.MFD.CurrentScreen;
             RequestedScreen = processor.MFD.CurrentScreen;
         }
+
+        /// <summary>
+        ///     Contains code contract invariants that describe facts about this class that will be true
+        ///     after any public method in this class is called.
+        /// </summary>
+        [ContractInvariantMethod]
+        private void ClassInvariants()
+        {
+            Contract.Invariant(CurrentMasterMode != null);
+            Contract.Invariant(CurrentScreen != null);
+        }
+
 
         /// <summary>
         ///     Gets the current mode.

@@ -68,28 +68,31 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             Contract.Ensures(Name == name);
             Contract.Ensures(Workspace == workspace);
 
-            // Set Simple Properties
-            Workspace = workspace;
-            Name = name;
-            Processor = new MFDProcessor(container, this);
-
-            // Set up the master modes
-            ScreenProvider = new ScreenProvider(this, workspace);
-            _systemMasterMode = new SystemMasterMode(this);
-            _bootupMasterMode = new BootupMasterMode(this, _systemMasterMode);
-            _currentMasterMode = new Observable<MasterModeBase>(_bootupMasterMode);
-
-            // Now that we have the master modes, set up the provider
-            ButtonProvider = new ButtonProvider(this, MasterMode);
-
-            // Set up the current screen as the default screen of the first mode
-            _currentScreen = new Observable<ScreenModel>(MasterMode.DefaultScreen);
-
             //- Create Observable Properties
             _isSensorOfInterest = new Computed<bool>(() => Workspace.SelectedMFD == this);
             _isSensorOfInterestVisible = new Computed<bool>(() => CurrentScreen.ShowSensorOfInterestIndicator);
             _screenWidth = new Observable<double>(DefaultScreenSize);
             _screenHeight = new Observable<double>(DefaultScreenSize);
+            _currentMasterMode = new Observable<MasterModeBase>();
+
+            // Set Simple Properties
+            Workspace = workspace;
+            Name = name;
+
+            // Set up the master modes
+            ScreenProvider = new ScreenProvider(this, workspace);
+            _systemMasterMode = new SystemMasterMode(this);
+            _bootupMasterMode = new BootupMasterMode(this, _systemMasterMode);
+            _currentMasterMode.Value = _bootupMasterMode;
+
+            // Build the processor. This requires that Master Mode be set.
+            Processor = new MFDProcessor(container, this);
+
+            // Now that we have the master modes, set up the provider
+            ButtonProvider = new ButtonProvider(this);
+
+            // Set up the current screen as the default screen of the first mode
+            _currentScreen = new Observable<ScreenModel>(MasterMode.DefaultScreen);
         }
 
         [NotNull]
@@ -114,7 +117,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             set
             {
                 _currentMasterMode.Value = value;
-                ButtonProvider.MasterMode = value;
             }
         }
 
