@@ -176,6 +176,7 @@
     <Compile Include="Models\MFDProcessor.cs" />
     <Compile Include="Models\MFDProcessorResult.cs" />
     <Compile Include="Models\Screens\LogScreenModel.cs" />
+    <Compile Include="Models\Screens\MasterModeCycler.cs" />
     <Compile Include="Models\Screens\ScreenModel.cs" />
     <Compile Include="Models\Buttons\SeparatorModel.cs" />
     <Compile Include="Models\Screens\SystemPerformanceScreenModel.cs" />
