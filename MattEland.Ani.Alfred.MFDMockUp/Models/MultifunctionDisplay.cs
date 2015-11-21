@@ -74,7 +74,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             _isSensorOfInterestVisible = new Computed<bool>(() => CurrentScreen.ShowSensorOfInterestIndicator);
             _screenWidth = new Observable<double>(DefaultScreenSize);
             _screenHeight = new Observable<double>(DefaultScreenSize);
-            _currentMasterMode = new Observable<MasterModeBase>();
 
             // Set Simple Properties
             Workspace = workspace;
@@ -82,9 +81,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
 
             // Set up the master modes
             ScreenProvider = new ScreenProvider(this, workspace);
-            _systemMasterMode = new SystemMasterMode(this);
-            _bootupMasterMode = new BootupMasterMode(this, _systemMasterMode);
-            _currentMasterMode.Value = _bootupMasterMode;
+
+            _masterModeController = new MasterModeController(this);
 
             // Build the processor. This requires that Master Mode be set.
             Processor = new MFDProcessor(container, this);
@@ -97,13 +95,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         }
 
         [NotNull]
-        private readonly MasterModeBase _bootupMasterMode;
-
-        [NotNull]
-        private readonly SystemMasterMode _systemMasterMode;
-
-        [NotNull]
-        private readonly Observable<MasterModeBase> _currentMasterMode;
+        private readonly MasterModeController _masterModeController;
 
         /// <summary>
         ///     Gets or sets the current master mode.
@@ -114,11 +106,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         [NotNull]
         public MasterModeBase MasterMode
         {
-            get { return _currentMasterMode; }
-            set
-            {
-                _currentMasterMode.Value = value;
-            }
+            get { return _masterModeController.CurrentMasterMode; }
+            set { _masterModeController.CurrentMasterMode = value; }
         }
 
         /// <summary>
