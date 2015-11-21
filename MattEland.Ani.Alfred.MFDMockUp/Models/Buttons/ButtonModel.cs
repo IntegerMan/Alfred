@@ -102,11 +102,13 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         [CanBeNull]
         public IButtonClickListener ClickListener { get; set; }
 
+
         /// <summary>
         ///     Process the command by interacting with the current processor frame.
         /// </summary>
         /// <param name="processor"> The processor. </param>
         /// <param name="result"> The result. </param>
+        [SuppressMessage("Usage", "CC0057:Unused parameters", Justification = "Intended to be overridden")]
         internal virtual void ProcessCommand([NotNull] MFDProcessor processor,
             [NotNull] MFDProcessorResult result)
         {
@@ -126,6 +128,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         /// </summary>
         /// <param name="processor"> The processor. </param>
         /// <param name="result"> The result. </param>
+        [SuppressMessage("Usage", "CC0057:Unused parameters", Justification = "Intended to be overridden")]
         public virtual void ProcessCurrentState([NotNull] MFDProcessor processor,
             [NotNull] MFDProcessorResult result)
         {
