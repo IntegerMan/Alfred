@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.Contracts;
 
 using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
+using MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes;
 using MattEland.Ani.Alfred.MFDMockUp.Models.Screens;
 using MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens;
 using MattEland.Common.Annotations;

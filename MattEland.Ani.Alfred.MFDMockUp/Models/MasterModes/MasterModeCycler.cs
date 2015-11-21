@@ -15,7 +15,7 @@ using Assisticant.Fields;
 
 using MattEland.Common.Annotations;
 
-namespace MattEland.Ani.Alfred.MFDMockUp.Models
+namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
 {
     /// <summary>
     ///     A utility class that cycles through master modes

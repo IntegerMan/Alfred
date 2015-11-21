@@ -1,6 +1,7 @@
 using Assisticant.Fields;
 
 using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
+using MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes;
 using MattEland.Common.Annotations;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens

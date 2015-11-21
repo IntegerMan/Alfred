@@ -9,7 +9,7 @@ using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
 using MattEland.Ani.Alfred.MFDMockUp.Models.Screens;
 using MattEland.Common.Annotations;
 
-namespace MattEland.Ani.Alfred.MFDMockUp.Models
+namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
 {
     /// <summary>
     ///     A master mode. This represents the context for a multifunction display and governs the

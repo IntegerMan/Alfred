@@ -6,6 +6,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 
 using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
+using MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes;
 using MattEland.Common.Annotations;
 using MattEland.Common.Providers;
 

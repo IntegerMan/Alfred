@@ -157,11 +157,12 @@
     <Compile Include="Controls\StatusTile.xaml.cs">
       <DependentUpon>StatusTile.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\MasterModes\BootupMasterMode.cs" />
     <Compile Include="Models\Buttons\ActionButtonModel.cs" />
     <Compile Include="Models\Buttons\IButtonClickListener.cs" />
-    <Compile Include="Models\MasterModeBase.cs" />
+    <Compile Include="Models\MasterModes\MasterModeBase.cs" />
     <Compile Include="Models\Buttons\NavigationButtonModel.cs" />
-    <Compile Include="Models\Buttons\SystemMasterMode.cs" />
+    <Compile Include="Models\MasterModes\SystemMasterMode.cs" />
     <Compile Include="Models\FaultIndicatorStatus.cs" />
     <Compile Include="Models\FaultManager.cs" />
     <Compile Include="Models\FaultIndicatorModel.cs" />
@@ -176,7 +177,7 @@
     <Compile Include="Models\MFDProcessor.cs" />
     <Compile Include="Models\MFDProcessorResult.cs" />
     <Compile Include="Models\Screens\LogScreenModel.cs" />
-    <Compile Include="Models\MasterModeCycler.cs" />
+    <Compile Include="Models\MasterModes\MasterModeCycler.cs" />
     <Compile Include="Models\Screens\ScreenModel.cs" />
     <Compile Include="Models\Buttons\SeparatorModel.cs" />
     <Compile Include="Models\Screens\SystemPerformanceScreenModel.cs" />
