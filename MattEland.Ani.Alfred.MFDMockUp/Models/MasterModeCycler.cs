@@ -13,15 +13,14 @@ using System.Linq;
 
 using Assisticant.Fields;
 
-using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
 using MattEland.Common.Annotations;
 
-namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
+namespace MattEland.Ani.Alfred.MFDMockUp.Models
 {
     /// <summary>
     ///     A utility class that cycles through master modes
     /// </summary>
-    public class MasterModeCycler
+    public sealed class MasterModeCycler
     {
         [NotNull]
         private readonly MultifunctionDisplay _display;

@@ -159,7 +159,7 @@
     </Compile>
     <Compile Include="Models\Buttons\ActionButtonModel.cs" />
     <Compile Include="Models\Buttons\IButtonClickListener.cs" />
-    <Compile Include="Models\Buttons\MasterModeBase.cs" />
+    <Compile Include="Models\MasterModeBase.cs" />
     <Compile Include="Models\Buttons\NavigationButtonModel.cs" />
     <Compile Include="Models\Buttons\SystemMasterMode.cs" />
     <Compile Include="Models\FaultIndicatorStatus.cs" />
@@ -176,7 +176,7 @@
     <Compile Include="Models\MFDProcessor.cs" />
     <Compile Include="Models\MFDProcessorResult.cs" />
     <Compile Include="Models\Screens\LogScreenModel.cs" />
-    <Compile Include="Models\Screens\MasterModeCycler.cs" />
+    <Compile Include="Models\MasterModeCycler.cs" />
     <Compile Include="Models\Screens\ScreenModel.cs" />
     <Compile Include="Models\Buttons\SeparatorModel.cs" />
     <Compile Include="Models\Screens\SystemPerformanceScreenModel.cs" />
