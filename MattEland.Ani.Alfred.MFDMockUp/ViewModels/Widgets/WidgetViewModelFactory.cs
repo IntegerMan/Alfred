@@ -66,6 +66,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets
                 catch (Exception)
                 {
                     // It's cool. We'll just default it.
+                    return null;
                 }
 
             }
