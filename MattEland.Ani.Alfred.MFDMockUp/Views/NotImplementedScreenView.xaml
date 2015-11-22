@@ -10,17 +10,6 @@
              d:DesignWidth="256"
              mc:Ignorable="d">
 
-    <UserControl.Resources>
-        <ResourceDictionary>
-
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/MattEland.Ani.Alfred.MFDMockUp/Themes/Generic.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
-
-        </ResourceDictionary>
-
-    </UserControl.Resources>
     <StackPanel HorizontalAlignment="Center"
                 VerticalAlignment="Center">
 

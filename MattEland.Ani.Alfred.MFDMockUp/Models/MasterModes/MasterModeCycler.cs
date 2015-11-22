@@ -134,8 +134,11 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
         /// <returns>
         ///     The newly selected mode.
         /// </returns>
+        [NotNull]
         public MasterModeBase MoveToNextMode()
         {
+            Contract.Ensures(Contract.Result<MasterModeBase>() != null);
+
             var next = NextNode;
             _currentListNode = next;
 

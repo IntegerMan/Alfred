@@ -47,7 +47,10 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         {
             if (MasterModeCycler != null)
             {
-                result.RequestedMasterMode = MasterModeCycler.MoveToNextMode();
+                var newMode = MasterModeCycler.MoveToNextMode();
+
+                result.RequestedMasterMode = newMode;
+                result.RequestedScreen = newMode.DefaultScreen;
             }
         }
 

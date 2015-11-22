@@ -145,9 +145,11 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         {
             // Update the mode - defaulting to current mode if null is requested
             var effectiveRequestedMode = (processorResult.RequestedMasterMode ?? processorResult.CurrentMasterMode);
-            if (processorResult.CurrentMasterMode != effectiveRequestedMode)
+            if (processorResult.CurrentMasterMode != effectiveRequestedMode && effectiveRequestedMode != null)
             {
-                CurrentMasterMode = processorResult.RequestedMasterMode;
+                CurrentMasterMode = effectiveRequestedMode;
+
+                _mfd.CurrentScreen = effectiveRequestedMode.DefaultScreen;
             }
 
             // Set the current screen to the new screen
