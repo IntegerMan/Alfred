@@ -30,15 +30,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         }
 
         /// <summary>
-        ///     Gets or sets the next master mode. This master mode will be requested on button click.
-        /// </summary>
-        /// <value>
-        ///     The next master mode.
-        /// </value>
-        [CanBeNull]
-        public MasterModeBase NextMasterMode { get; set; }
-
-        /// <summary>
         ///     Gets or sets the master mode cycler that controls which mode comes next.
         /// </summary>
         /// <value>
@@ -54,24 +45,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         /// <param name="result"> The result. </param>
         internal override void ProcessCommand(MFDProcessor processor, MFDProcessorResult result)
         {
-            // Because we're using ProcessCurrentState to read in MasterModeCycler's value, this is safe
-            if (NextMasterMode != null)
-            {
-                result.RequestedMasterMode = NextMasterMode;
-            }
-        }
-
-        /// <summary>
-        ///     Processes the current state.
-        /// </summary>
-        /// <param name="processor"> The processor. </param>
-        /// <param name="result"> The result. </param>
-        public override void ProcessCurrentState(MFDProcessor processor, MFDProcessorResult result)
-        {
-            // When we have a cycler, use that to populate the Next Master Mode property
             if (MasterModeCycler != null)
             {
-                NextMasterMode = MasterModeCycler.NextMode;
+                result.RequestedMasterMode = MasterModeCycler.MoveToNextMode();
             }
         }
 
