@@ -42,6 +42,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
                 [typeof(AlfredScreenModel)] =
                     new Lazy<ScreenModel>(() => new AlfredScreenModel(alfred)),
 
+                [typeof(NotImplementedScreenModel)] =
+                    new Lazy<ScreenModel>(() => new NotImplementedScreenModel()),
+
                 [typeof(SystemPerformanceScreenModel)] =
                     new Lazy<ScreenModel>(() =>
                     {
