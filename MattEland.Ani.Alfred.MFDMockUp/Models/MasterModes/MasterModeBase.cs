@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
@@ -45,17 +44,15 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// Initializes a new instance of the <see cref="MasterModeBase"/> class.
         /// </summary>
-        protected MasterModeBase([NotNull] MultifunctionDisplay display,
-            [CanBeNull] MasterModeBase nextMasterMode)
+        protected MasterModeBase([NotNull] MultifunctionDisplay display)
         {
             Contract.Requires(display != null);
             Contract.Requires(display.ScreenProvider != null);
 
             IButtonClickListener listener = this;
             ScreenProvider = display.ScreenProvider;
-            _nextMasterMode = new Observable<MasterModeBase>(nextMasterMode ?? this);
 
             // TODO: This will need to move to the next available mode
             _modeSwitchButton = new ButtonModel("MODE", listener);
@@ -81,26 +78,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
         public abstract ScreenModel DefaultScreen
         {
             get;
-        }
-
-        [NotNull]
-        private readonly Observable<MasterModeBase> _nextMasterMode;
-
-        /// <summary>
-        ///     Gets or sets the next master mode.
-        /// </summary>
-        /// <value>
-        ///     The next master mode.
-        /// </value>
-        [NotNull]
-        public MasterModeBase NextMasterMode
-        {
-            get { return _nextMasterMode; }
-            set
-            {
-                if (value == null) throw new ArgumentNullException(nameof(value));
-                _nextMasterMode.Value = value;
-            }
         }
 
         /// <summary>

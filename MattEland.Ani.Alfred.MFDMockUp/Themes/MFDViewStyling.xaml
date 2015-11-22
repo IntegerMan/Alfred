@@ -86,4 +86,8 @@
         <views:SystemPerformanceScreenView />
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type screens:NotImplementedScreenViewModel}">
+        <views:NotImplementedScreenView />
+    </DataTemplate>
+
 </ResourceDictionary>

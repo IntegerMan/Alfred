@@ -28,7 +28,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public MasterModeCycler([NotNull] MultifunctionDisplay display, [NotNull, ItemNotNull] IEnumerable<MasterModeBase> availableModes)
+        public MasterModeCycler([NotNull] MultifunctionDisplay display, [NotNull, ItemNotNull] params MasterModeBase[] availableModes)
         {
             Contract.Requires(display != null);
             Contract.Requires(availableModes != null);

@@ -160,9 +160,11 @@
     <Compile Include="Models\MasterModes\BootupMasterMode.cs" />
     <Compile Include="Models\Buttons\ActionButtonModel.cs" />
     <Compile Include="Models\Buttons\IButtonClickListener.cs" />
+    <Compile Include="Models\MasterModes\ProgrammingMasterMode.cs" />
     <Compile Include="Models\MasterModes\MasterModeBase.cs" />
     <Compile Include="Models\Buttons\NavigationButtonModel.cs" />
     <Compile Include="Models\MasterModes\MasterModeController.cs" />
+    <Compile Include="Models\MasterModes\OrganizerMasterMode.cs" />
     <Compile Include="Models\MasterModes\SystemMasterMode.cs" />
     <Compile Include="Models\FaultIndicatorStatus.cs" />
     <Compile Include="Models\FaultManager.cs" />
@@ -179,6 +181,7 @@
     <Compile Include="Models\MFDProcessorResult.cs" />
     <Compile Include="Models\Screens\LogScreenModel.cs" />
     <Compile Include="Models\MasterModes\MasterModeCycler.cs" />
+    <Compile Include="Models\Screens\NotImplementedScreenModel.cs" />
     <Compile Include="Models\Screens\ScreenModel.cs" />
     <Compile Include="Models\Buttons\SeparatorModel.cs" />
     <Compile Include="Models\Screens\SystemPerformanceScreenModel.cs" />
@@ -196,12 +199,16 @@
     <Compile Include="ViewModels\Buttons\SeparatorViewModel.cs" />
     <Compile Include="ViewModels\LogEntryViewModel.cs" />
     <Compile Include="ViewModels\Screens\LogScreenViewModel.cs" />
+    <Compile Include="ViewModels\Screens\NotImplementedScreenViewModel.cs" />
     <Compile Include="ViewModels\Screens\ScreenViewModel.cs" />
     <Compile Include="ViewModels\Screens\SystemPerformanceScreenViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="ViewModels\Widgets\ProgressBarWidgetViewModel.cs" />
     <Compile Include="ViewModels\Widgets\WidgetViewModel.cs" />
     <Compile Include="ViewModels\Widgets\WidgetViewModelFactory.cs" />
+    <Compile Include="Views\NotImplementedScreenView.xaml.cs">
+      <DependentUpon>NotImplementedScreenView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\LogScreenView.xaml.cs">
       <DependentUpon>LogScreenView.xaml</DependentUpon>
     </Compile>
@@ -258,6 +265,10 @@
     <Page Include="Themes\Widgets.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\NotImplementedScreenView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\AlfredScreenView.xaml">
       <Generator>MSBuild:Compile</Generator>

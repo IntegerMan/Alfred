@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
-using System.Linq;
 
 using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
 using MattEland.Ani.Alfred.MFDMockUp.Models.Screens;
@@ -10,26 +8,32 @@ using MattEland.Common.Annotations;
 namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
 {
     /// <summary>
-    ///     The system MFD master mode. This class cannot be inherited.
+    ///     An organizer master mode.
     /// </summary>
-    public sealed class SystemMasterMode : MasterModeBase
+    public class OrganizerMasterMode : MasterModeBase
     {
+        [NotNull]
+        private readonly NavigationButtonModel _calendarButton;
+        [NotNull]
+        private readonly NavigationButtonModel _documentsButton;
+        [NotNull]
+        private readonly NavigationButtonModel _mailButton;
+        [NotNull]
+        private readonly NavigationButtonModel _notesButton;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
         /// <param name="display"> The display. </param>
-        public SystemMasterMode([NotNull] MultifunctionDisplay display)
-            : base(display)
+        public OrganizerMasterMode([NotNull] MultifunctionDisplay display) : base(display)
         {
             var screens = ScreenProvider;
 
             // Set up buttons
-            SystemButton = new NavigationButtonModel(screens.HomeScreen, this);
-            AlfredButton = new NavigationButtonModel(screens.AlfredScreen, this);
-            LogButton = new NavigationButtonModel(screens.LogScreen, this);
-            PerformanceButton = new NavigationButtonModel(screens.PerformanceScreen, this);
-
+            _calendarButton = new NavigationButtonModel(screens.NotImplementedScreen, this, buttonText: "CAL");
+            _mailButton = new NavigationButtonModel(screens.NotImplementedScreen, this, buttonText: "MAIL");
+            _notesButton = new NavigationButtonModel(screens.NotImplementedScreen, this, buttonText: "NOTE");
+            _documentsButton = new NavigationButtonModel(screens.NotImplementedScreen, this, buttonText: "DOCS");
         }
 
         /// <summary>
@@ -38,30 +42,21 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
         /// <value>
         ///     The default screen.
         /// </value>
-        [NotNull]
-        public override ScreenModel DefaultScreen
-        {
-            get { return ScreenProvider.HomeScreen; }
-        }
+        public override ScreenModel DefaultScreen { get { return MailButton.Target; } }
 
         /// <summary>
         ///     Gets screen change buttons.
         /// </summary>
-        /// 
         /// <returns>
-        ///     An enumerable of screen changebuttons.
+        ///     An enumerable of screen change buttons.
         /// </returns>
-        [NotNull, ItemNotNull]
         public override IEnumerable<ButtonModel> GetScreenChangeButtons()
         {
-            Contract.Ensures(Contract.Result<IEnumerable<ButtonModel>>() != null);
-            Contract.Ensures(Contract.Result<IEnumerable<ButtonModel>>().All(b => b != null));
-
-            yield return SystemButton;
-            yield return AlfredButton;
+            yield return MailButton;
+            yield return CalendarButton;
             yield return ModeSwitchButton;
-            yield return PerformanceButton;
-            yield return LogButton;
+            yield return NotesButton;
+            yield return DocumentsButton;
         }
 
         /// <summary>
@@ -70,62 +65,65 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
         /// <returns>
         /// An enumerable of screen command buttons.
         /// </returns>
-        [NotNull, ItemNotNull]
         public override IEnumerable<ButtonModel> GetScreenCommandButtons()
         {
             yield break;
         }
 
         /// <summary>
-        ///     Gets the system button.
+        ///     Gets the calendar button.
         /// </summary>
         /// <value>
-        ///     The system button.
+        ///     The calendar button.
         /// </value>
         [NotNull]
-        public ButtonModel SystemButton
+        public NavigationButtonModel CalendarButton
         {
             [DebuggerStepThrough]
-            get;
+            get
+            { return _calendarButton; }
         }
 
         /// <summary>
-        ///     Gets the alfred button.
+        ///     Gets the documents button.
         /// </summary>
         /// <value>
-        ///     The alfred button.
+        ///     The documents button.
         /// </value>
         [NotNull]
-        public ButtonModel AlfredButton
+        public NavigationButtonModel DocumentsButton
         {
             [DebuggerStepThrough]
-            get;
+            get
+            { return _documentsButton; }
         }
 
         /// <summary>
-        ///     Gets the log button.
+        ///     Gets the mail button.
         /// </summary>
         /// <value>
-        ///     The log button.
+        ///     The mail button.
         /// </value>
         [NotNull]
-        public ButtonModel LogButton
+        public NavigationButtonModel MailButton
         {
             [DebuggerStepThrough]
-            get;
+            get
+            { return _mailButton; }
         }
 
         /// <summary>
-        ///     Gets the performance button.
+        ///     Gets the notes button.
         /// </summary>
         /// <value>
-        ///     The performance button.
+        ///     The notes button.
         /// </value>
         [NotNull]
-        public ButtonModel PerformanceButton
+        public NavigationButtonModel NotesButton
         {
             [DebuggerStepThrough]
-            get;
+            get
+            { return _notesButton; }
         }
     }
 }

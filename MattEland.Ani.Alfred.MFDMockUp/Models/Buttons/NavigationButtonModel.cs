@@ -30,9 +30,10 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         /// <param name="target"> Target for the navigation. </param>
         /// <param name="listener"> The button provider. </param>
         /// <param name="index"> The button's index. </param>
+        /// <param name="buttonText"> The button text. </param>
         public NavigationButtonModel([NotNull] ScreenModel target,
             [NotNull] IButtonClickListener listener,
-            int index = -1) : base(target.ButtonText, listener, index)
+            int index = -1, string buttonText = null) : base(buttonText ?? target.ButtonText, listener, index)
         {
             _target = target;
 

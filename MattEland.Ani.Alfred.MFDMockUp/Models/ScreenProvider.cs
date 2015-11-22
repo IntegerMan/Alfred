@@ -119,6 +119,21 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         }
 
         /// <summary>
+        ///     Gets the not implemented screen used for screens that are planned but not yet supported.
+        /// </summary>
+        /// <value>
+        ///     The not implemented screen.
+        /// </value>
+        [NotNull]
+        public ScreenModel NotImplementedScreen
+        {
+            get
+            {
+                return GetScreen(typeof(NotImplementedScreenModel));
+            }
+        }
+
+        /// <summary>
         ///     Gets a screen from the internal store and instantiates it as needed.
         /// </summary>
         /// <exception cref="KeyNotFoundException">

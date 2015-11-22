@@ -21,7 +21,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
         /// <param name="display"> The display. </param>
         /// <param name="nextMasterMode"> The next master mode. </param>
         public BootupMasterMode([NotNull] MultifunctionDisplay display,
-                                [NotNull] MasterModeBase nextMasterMode) : base(display, nextMasterMode)
+                                [NotNull] MasterModeBase nextMasterMode) : base(display)
         {
             Contract.Requires(display != null);
             Contract.Requires(nextMasterMode != null);
