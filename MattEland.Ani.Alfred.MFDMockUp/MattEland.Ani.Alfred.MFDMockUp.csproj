@@ -157,6 +157,7 @@
     <Compile Include="Controls\StatusTile.xaml.cs">
       <DependentUpon>StatusTile.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\Buttons\ModeSwitchButtonModel.cs" />
     <Compile Include="Models\MasterModes\BootupMasterMode.cs" />
     <Compile Include="Models\Buttons\ActionButtonModel.cs" />
     <Compile Include="Models\Buttons\IButtonClickListener.cs" />

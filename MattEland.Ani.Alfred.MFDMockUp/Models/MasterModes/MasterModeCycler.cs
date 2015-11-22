@@ -8,11 +8,13 @@
 // ---------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Linq;
 
 using Assisticant.Fields;
 
+using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
 using MattEland.Common.Annotations;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
@@ -20,6 +22,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
     /// <summary>
     ///     A utility class that cycles through master modes
     /// </summary>
+    [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute", Justification = "False Positives on First / Next")]
+    [SuppressMessage("ReSharper", "PossibleNullReferenceException", Justification = "False Positives on First / Next")]
     public sealed class MasterModeCycler
     {
         [NotNull]
@@ -46,14 +50,19 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
             foreach (var mode in availableModes)
             {
                 _modes.AddLast(mode);
+
+                // For all mode switch buttons, set their cycler to this instance.
+                foreach (var modeSwitcher in mode.GetScreenChangeButtons().OfType<ModeSwitchButtonModel>())
+                {
+                    modeSwitcher.MasterModeCycler = this;
+                }
             }
 
             _currentListNode = _modes.First;
 
             _currentMode = new Observable<MasterModeBase>(_currentListNode.Value);
 
-            var nextNode = GetNextNode();
-            _nextMode = new Observable<MasterModeBase>(nextNode.Value);
+            _nextMode = new Observable<MasterModeBase>(NextNode.Value);
 
         }
 
@@ -68,17 +77,20 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
             Contract.Invariant(_modes.All(n => n != null));
             Contract.Invariant(CurrentMode != null);
             Contract.Invariant(CurrentMode == _currentListNode.Value);
-            Contract.Invariant(GetNextNode() != null);
-            Contract.Invariant(NextMode == GetNextNode().Value);
+            Contract.Invariant(NextNode != null);
+            Contract.Invariant(NextMode == NextNode.Value);
         }
 
 
         [NotNull]
-        private LinkedListNode<MasterModeBase> GetNextNode()
+        private LinkedListNode<MasterModeBase> NextNode
         {
-            Contract.Ensures(Contract.Result<LinkedListNode<MasterModeBase>>() != null);
+            get
+            {
+                Contract.Ensures(Contract.Result<LinkedListNode<MasterModeBase>>() != null);
 
-            return _currentListNode.Next ?? _modes.First;
+                return _currentListNode.Next ?? _modes.First;
+            }
         }
 
         [NotNull]
@@ -124,16 +136,16 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
         /// </returns>
         public MasterModeBase MoveToNextMode()
         {
-            var nextNode = GetNextNode();
-            _currentListNode = nextNode;
+            var next = NextNode;
+            _currentListNode = next;
 
-            _currentMode.Value = nextNode.Value;
+            _currentMode.Value = next.Value;
 
-            _currentListNode = nextNode;
+            _currentListNode = next;
 
-            _nextMode.Value = GetNextNode().Value;
+            _nextMode.Value = NextNode.Value;
 
-            return nextNode.Value;
+            return next.Value;
         }
 
     }

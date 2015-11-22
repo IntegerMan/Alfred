@@ -55,7 +55,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
             ScreenProvider = display.ScreenProvider;
 
             // TODO: This will need to move to the next available mode
-            _modeSwitchButton = new ButtonModel("MODE", listener);
+            _modeSwitchButton = new ModeSwitchButtonModel("MODE", listener);
 
         }
 
