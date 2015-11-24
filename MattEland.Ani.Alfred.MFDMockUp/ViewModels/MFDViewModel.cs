@@ -12,6 +12,7 @@ using System;
 using System.Diagnostics;
 
 using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
+using MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes;
 using MattEland.Ani.Alfred.MFDMockUp.Models.Screens;
 using MattEland.Ani.Alfred.MFDMockUp.ViewModels.Buttons;
 using MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens;
@@ -226,6 +227,18 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         public bool IsSensorOfInterestIndicatorVisible
         {
             get { return _model.IsSensorOfInterestVisible; }
+        }
+
+        /// <summary>
+        ///     Gets the current master mode.
+        /// </summary>
+        /// <value>
+        ///     The current master mode.
+        /// </value>
+        [NotNull]
+        public MasterModeBase CurrentMode
+        {
+            get { return _model.MasterMode; }
         }
 
     }

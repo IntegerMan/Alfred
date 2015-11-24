@@ -125,5 +125,13 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
             get
             { return _notesButton; }
         }
+
+        /// <summary>
+        ///     Gets the text to display on the screen identifying the current mdoe.
+        /// </summary>
+        /// <value>
+        ///     The screen identification text.
+        /// </value>
+        public override string ScreenIdentificationText { get { return "ORG"; } }
     }
 }

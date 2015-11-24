@@ -5,6 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels"
+             d:DesignWidth="344"
+             d:DesignHeight="376"
              d:DataContext="{d:DesignInstance vm:MFDViewModel}"
              mc:Ignorable="d">
 
@@ -27,12 +29,14 @@
             <Grid Margin="{StaticResource StandardMargin}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="{StaticResource MFDFrameSize}" />
-                    <ColumnDefinition Width="{Binding Path=ScreenWidth}" />
+                    <ColumnDefinition Width="{Binding Path=ScreenWidth,
+                                                      FallbackValue=256}" />
                     <ColumnDefinition Width="{StaticResource MFDFrameSize}" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="{StaticResource MFDFrameSize}" />
-                    <RowDefinition Height="{Binding Path=ScreenHeight}" />
+                    <RowDefinition Height="{Binding Path=ScreenHeight,
+                                                    FallbackValue=256}" />
                     <RowDefinition Height="{StaticResource MFDFrameSize}" />
                 </Grid.RowDefinitions>
 
@@ -89,6 +93,22 @@
 
                         <Grid x:Name="pnlOverlays"
                               Panel.ZIndex="1">
+
+                            <Border VerticalAlignment="Bottom"
+                                    BorderThickness="1"
+                                    DataContext="{Binding Path=CurrentMode}"
+                                    Visibility="{Binding Visibility,
+                                                         ElementName=lblMode}"
+                                    BorderBrush="{Binding Foreground,
+                                                          ElementName=lblMode}"
+                                    HorizontalAlignment="Center">
+                                <TextBlock x:Name="lblMode"
+                                           Visibility="{Binding Path=ScreenIdentificationText,
+                                                                Converter={StaticResource HideIfNoText}}"
+                                           Text="{Binding Path=ScreenIdentificationText}"
+                                           Style="{StaticResource MFDViewCenterTextStyle}"
+                                           Foreground="{StaticResource AppForegroundBrush}" />
+                            </Border>
 
                             <!--  Sensor of Interest brackets  -->
                             <controls:SensorOfInterestIndicator x:Name="soiIndicator"

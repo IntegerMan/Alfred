@@ -127,5 +127,13 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
             [DebuggerStepThrough]
             get;
         }
+
+        /// <summary>
+        ///     Gets the text to display on the screen identifying the current mdoe.
+        /// </summary>
+        /// <value>
+        ///     The screen identification text.
+        /// </value>
+        public override string ScreenIdentificationText { get { return "SYS"; } }
     }
 }

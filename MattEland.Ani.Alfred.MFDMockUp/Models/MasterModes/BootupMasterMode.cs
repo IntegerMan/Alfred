@@ -30,6 +30,14 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
         }
 
         /// <summary>
+        ///     Gets the text to display on the screen identifying the current mdoe.
+        /// </summary>
+        /// <value>
+        ///     The screen identification text.
+        /// </value>
+        public override string ScreenIdentificationText { get { return string.Empty; } }
+
+        /// <summary>
         ///     Gets the default screen when this master mode is switched to.
         /// </summary>
         /// <value>

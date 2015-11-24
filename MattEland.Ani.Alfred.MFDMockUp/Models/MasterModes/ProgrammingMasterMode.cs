@@ -142,5 +142,13 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
         {
             yield break;
         }
+
+        /// <summary>
+        ///     Gets the text to display on the screen identifying the current mdoe.
+        /// </summary>
+        /// <value>
+        ///     The screen identification text.
+        /// </value>
+        public override string ScreenIdentificationText { get { return "CODE"; } }
     }
 }

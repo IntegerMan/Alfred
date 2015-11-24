@@ -81,6 +81,14 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
         }
 
         /// <summary>
+        ///     Gets the text to display on the screen identifying the current mdoe.
+        /// </summary>
+        /// <value>
+        ///     The screen identification text.
+        /// </value>
+        public abstract string ScreenIdentificationText { get; }
+
+        /// <summary>
         ///     Contains code contract invariants that describe facts about this class that will be true
         ///     after any public method in this class is called.
         /// </summary>
