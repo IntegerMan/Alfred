@@ -50,6 +50,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
 
             mfd.MasterMode = new SystemMasterMode(MultifunctionDisplay);
 
+            // Build out some basic data
+            mfd.Update();
+
             return mfd;
         }
 

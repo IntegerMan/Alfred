@@ -25,6 +25,14 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
     public sealed class Workspace
     {
         /// <summary>
+        ///     Initializes a new instance of the <see cref="T:System.Object"/> class intended for design-time consumption.
+        /// </summary>
+        [UsedImplicitly]
+        public Workspace() : this(new AlfredContainer())
+        {
+        }
+
+        /// <summary>
         ///     Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
         /// <param name="container"> The container. </param>
