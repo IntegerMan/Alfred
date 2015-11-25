@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 
+using MattEland.Ani.Alfred.MFDMockUp.Models;
 using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
 using MattEland.Ani.Alfred.PresentationCommon.Helpers;
 using MattEland.Common.Annotations;
@@ -18,6 +19,15 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Buttons
     {
         [NotNull]
         private readonly ButtonStripModel _model;
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="MFDButtonStripViewModel"/> class.
+        /// </summary>
+        [UsedImplicitly]
+        public MFDButtonStripViewModel()
+            : this(DesignDataProvider.Instance.CreateButtonStripViewModel(ButtonStripDock.Bottom))
+        {
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="MFDButtonStripViewModel"/> class.

@@ -10,9 +10,11 @@
 using System.Linq;
 
 using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
 using MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes;
 using MattEland.Ani.Alfred.MFDMockUp.ViewModels;
 using MattEland.Common.Annotations;
+using MattEland.Ani.Alfred.MFDMockUp.Models.Screens;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.Models
 {
@@ -26,14 +28,17 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public DesignDataProvider()
+        private DesignDataProvider()
         {
+            _instance = this;
+
             Container = new AlfredContainer();
             var locator = new ViewModelLocator(Container);
             ViewModelLocator = locator;
 
             Workspace = locator.Workspace;
             MultifunctionDisplay = InitializeMFD();
+            _buttonProvider = new ButtonProvider(MultifunctionDisplay);
         }
 
         /// <summary>
@@ -48,7 +53,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             var mfd = Workspace.MFDs.FirstOrDefault()
                                    ?? new MultifunctionDisplay(Container, Workspace, "Design MFD");
 
-            mfd.MasterMode = new SystemMasterMode(MultifunctionDisplay);
+            // Start somewhere nice
+            mfd.MasterMode = new SystemMasterMode(mfd);
+            mfd.CurrentScreen = mfd.ScreenProvider.HomeScreen;
 
             // Build out some basic data
             mfd.Update();
@@ -91,5 +98,31 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// </value>
         [NotNull]
         public Workspace Workspace { get; }
+
+        [CanBeNull]
+        private static DesignDataProvider _instance;
+
+        [NotNull]
+        private readonly ButtonProvider _buttonProvider;
+
+        /// <summary>
+        ///     Gets the design time instance provider.
+        /// </summary>
+        /// <value>
+        ///     The instance.
+        /// </value>
+        [NotNull]
+        public static DesignDataProvider Instance
+        {
+            get { return _instance ?? (_instance = new DesignDataProvider()); }
+        }
+
+        [NotNull]
+        public ButtonStripModel CreateButtonStripViewModel(ButtonStripDock dock)
+        {
+            var buttonStripModel = new ButtonStripModel(_buttonProvider, dock);
+
+            return buttonStripModel;
+        }
     }
 }

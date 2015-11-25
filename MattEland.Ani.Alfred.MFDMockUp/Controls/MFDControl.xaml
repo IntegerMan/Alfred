@@ -7,9 +7,8 @@
              xmlns:vm="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels"
              d:DesignWidth="344"
              d:DesignHeight="376"
-             d:DataContext="{d:DesignInstance vm:MFDViewModel, IsDesignTimeCreatable=True}"
-             mc:Ignorable="d">
-
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type={x:Type vm:MFDViewModel}, IsDesignTimeCreatable=True}">
     <Border x:Name="borderPanel"
             Background="{StaticResource MFDPanelBackgroundBrush}"
             BorderBrush="{StaticResource MFDPanelBorderBrush}"
@@ -96,6 +95,7 @@
 
                             <Border VerticalAlignment="Bottom"
                                     BorderThickness="1"
+                                    Margin="0,0,0,32"
                                     DataContext="{Binding Path=CurrentMode}"
                                     Visibility="{Binding Visibility,
                                                          ElementName=lblMode}"

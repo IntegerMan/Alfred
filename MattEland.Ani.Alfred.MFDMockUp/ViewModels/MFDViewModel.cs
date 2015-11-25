@@ -47,7 +47,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         [UsedImplicitly]
         public MFDViewModel()
         {
-            var dataProvider = new DesignDataProvider();
+            var dataProvider = DesignDataProvider.Instance;
             _locator = dataProvider.ViewModelLocator;
             _model = dataProvider.MultifunctionDisplay;
         }

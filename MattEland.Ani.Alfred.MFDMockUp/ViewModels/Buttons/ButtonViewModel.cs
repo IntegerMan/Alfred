@@ -35,6 +35,15 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Buttons
         private readonly MFDButtonStripViewModel _parent;
 
         /// <summary>
+        ///     Initializes a new instance of the ButtonViewModel class intended for design-time purposes.
+        /// </summary>
+        [UsedImplicitly]
+        public ButtonViewModel() : this(new ButtonModel("DSGN"), new MFDButtonStripViewModel())
+        {
+
+        }
+
+        /// <summary>
         ///     Initializes a new instance of the ButtonViewModel class.
         /// </summary>
         /// <param name="model"> The model. </param>
