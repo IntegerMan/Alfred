@@ -17,6 +17,8 @@ using MattEland.Ani.Alfred.MFDMockUp.Models.Screens;
 using MattEland.Ani.Alfred.MFDMockUp.ViewModels.Buttons;
 using MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens;
 using MattEland.Ani.Alfred.PresentationCommon.Helpers;
+using System.Linq;
+using System.Windows.Media.Media3D;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
 {
@@ -38,6 +40,17 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         /// </summary>
         [NotNull]
         private readonly ViewModelLocator _locator;
+
+        /// <summary>
+        /// Creates a new instance of this class for design-time purposes.
+        /// </summary>
+        [UsedImplicitly]
+        public MFDViewModel()
+        {
+            var dataProvider = new DesignDataProvider();
+            _locator = dataProvider.ViewModelLocator;
+            _model = dataProvider.MultifunctionDisplay;
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="MFDViewModel"/> class.

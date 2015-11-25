@@ -7,7 +7,7 @@
              xmlns:vm="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels"
              d:DesignWidth="344"
              d:DesignHeight="376"
-             d:DataContext="{d:DesignInstance vm:MFDViewModel}"
+             d:DataContext="{d:DesignInstance vm:MFDViewModel, IsDesignTimeCreatable=True}"
              mc:Ignorable="d">
 
     <Border x:Name="borderPanel"

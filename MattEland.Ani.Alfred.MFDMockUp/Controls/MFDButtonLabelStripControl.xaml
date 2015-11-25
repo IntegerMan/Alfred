@@ -8,7 +8,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              x:Name="labelStripControl"
              d:DataContext="{d:DesignInstance buttons:MFDButtonStripViewModel}"
-             d:DesignHeight="30"
+             d:DesignHeight="256"
              d:DesignWidth="256"
              mc:Ignorable="d">
 

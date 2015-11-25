@@ -86,6 +86,20 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets the primary workspace.
+        /// </summary>
+        [NotNull]
+        public Workspace Workspace
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<Workspace>() != null);
+
+                return _workspace;
+            }
+        }
+
         [NotNull]
         internal object ViewModelFor([NotNull] object model, MultifunctionDisplay currentDisplay)
         {
