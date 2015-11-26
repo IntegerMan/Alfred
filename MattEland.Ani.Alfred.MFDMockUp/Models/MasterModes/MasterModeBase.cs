@@ -23,6 +23,40 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
         private readonly ButtonModel _modeSwitchButton;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="MasterModeBase"/> class.
+        /// </summary>
+        protected MasterModeBase([NotNull] MultifunctionDisplay display)
+        {
+            Contract.Requires(display != null);
+            Contract.Requires(display.ScreenProvider != null);
+
+            IButtonClickListener listener = this;
+            ScreenProvider = display.ScreenProvider;
+
+            // TODO: This will need to move to the next available mode
+            _modeSwitchButton = new ModeSwitchButtonModel("MODE", listener);
+
+            EmptyButton = new ButtonModel();
+
+        }
+
+        /// <summary>
+        ///     Contains code contract invariants that describe facts about this class that will be true
+        ///     after any public method in this class is called.
+        /// </summary>
+        [ContractInvariantMethod]
+        private void ClassInvariants()
+        {
+            Contract.Invariant(ModeSwitchButton != null);
+            Contract.Invariant(ScreenProvider != null);
+            Contract.Invariant(DefaultScreen != null);
+            Contract.Invariant(GetScreenChangeButtons() != null);
+            Contract.Invariant(GetScreenChangeButtons().All(b => b != null));
+            Contract.Invariant(GetScreenCommandButtons() != null);
+            Contract.Invariant(GetScreenCommandButtons().All(b => b != null));
+        }
+
+        /// <summary>
         ///     Gets or sets the button click listener.
         /// </summary>
         /// <value>
@@ -41,22 +75,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
         protected ButtonModel ModeSwitchButton
         {
             get { return _modeSwitchButton; }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MasterModeBase"/> class.
-        /// </summary>
-        protected MasterModeBase([NotNull] MultifunctionDisplay display)
-        {
-            Contract.Requires(display != null);
-            Contract.Requires(display.ScreenProvider != null);
-
-            IButtonClickListener listener = this;
-            ScreenProvider = display.ScreenProvider;
-
-            // TODO: This will need to move to the next available mode
-            _modeSwitchButton = new ModeSwitchButtonModel("MODE", listener);
-
         }
 
         /// <summary>
@@ -89,20 +107,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
         public abstract string ScreenIdentificationText { get; }
 
         /// <summary>
-        ///     Contains code contract invariants that describe facts about this class that will be true
-        ///     after any public method in this class is called.
+        ///     Gets an empty button useful as a placeholder.
         /// </summary>
-        [ContractInvariantMethod]
-        private void ClassInvariants()
-        {
-            Contract.Invariant(ModeSwitchButton != null);
-            Contract.Invariant(ScreenProvider != null);
-            Contract.Invariant(DefaultScreen != null);
-            Contract.Invariant(GetScreenChangeButtons() != null);
-            Contract.Invariant(GetScreenChangeButtons().All(b => b != null));
-            Contract.Invariant(GetScreenCommandButtons() != null);
-            Contract.Invariant(GetScreenCommandButtons().All(b => b != null));
-        }
+        /// <value>
+        ///     The empty button.
+        /// </value>
+        public ButtonModel EmptyButton { get; }
 
         /// <summary>
         ///     Executes when a button is clicked.

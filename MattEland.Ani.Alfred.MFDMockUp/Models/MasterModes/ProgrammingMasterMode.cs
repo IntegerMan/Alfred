@@ -127,9 +127,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
         {
             yield return ContextButton;
             yield return CommandsButton;
-            yield return ModeSwitchButton;
             yield return MessagesButton;
             yield return ClipboardButton;
+            yield return EmptyButton;
         }
 
         /// <summary>
@@ -140,7 +140,11 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
         /// </returns>
         public override IEnumerable<ButtonModel> GetScreenCommandButtons()
         {
-            yield break;
+            yield return EmptyButton;
+            yield return EmptyButton;
+            yield return ModeSwitchButton;
+            yield return EmptyButton;
+            yield return EmptyButton;
         }
 
         /// <summary>

@@ -59,9 +59,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
 
             yield return SystemButton;
             yield return AlfredButton;
-            yield return ModeSwitchButton;
             yield return PerformanceButton;
             yield return LogButton;
+            yield return EmptyButton;
         }
 
         /// <summary>
@@ -73,7 +73,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
         [NotNull, ItemNotNull]
         public override IEnumerable<ButtonModel> GetScreenCommandButtons()
         {
-            yield break;
+            yield return EmptyButton;
+            yield return EmptyButton;
+            yield return ModeSwitchButton;
+            yield return EmptyButton;
+            yield return EmptyButton;
+
         }
 
         /// <summary>
