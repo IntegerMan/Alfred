@@ -2,8 +2,6 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 
-using Assisticant.Fields;
-
 using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
 using MattEland.Ani.Alfred.MFDMockUp.Models.Screens;
 using MattEland.Common.Annotations;
@@ -36,8 +34,19 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
             // TODO: This will need to move to the next available mode
             _modeSwitchButton = new ModeSwitchButtonModel("MODE", listener);
 
-            EmptyButton = new ButtonModel();
+        }
 
+        /// <summary>
+        /// Builds a placeholder button suitable for rendering an empty space.
+        /// </summary>
+        /// <param name="buttonText">The text to use in the button. This defaults to empty.</param>
+        /// <returns>The button.</returns>
+        [NotNull]
+        protected static ButtonModel BuildPlaceholderButton(string buttonText = "")
+        {
+            Contract.Ensures(Contract.Result<ButtonModel>() != null);
+
+            return new ButtonModel(buttonText);
         }
 
         /// <summary>
@@ -105,14 +114,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
         ///     The screen identification text.
         /// </value>
         public abstract string ScreenIdentificationText { get; }
-
-        /// <summary>
-        ///     Gets an empty button useful as a placeholder.
-        /// </summary>
-        /// <value>
-        ///     The empty button.
-        /// </value>
-        public ButtonModel EmptyButton { get; }
 
         /// <summary>
         ///     Executes when a button is clicked.
