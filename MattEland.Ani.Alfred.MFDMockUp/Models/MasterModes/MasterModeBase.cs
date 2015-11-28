@@ -178,6 +178,15 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
         }
 
         /// <summary>
+        ///     Gets or sets the master mode cycler.
+        /// </summary>
+        /// <value>
+        ///     The master mode cycler.
+        /// </value>
+        [CanBeNull]
+        public MasterModeCycler MasterModeCycler { get; set; }
+
+        /// <summary>
         ///     Executes when a button is clicked.
         /// </summary>
         /// <remarks>

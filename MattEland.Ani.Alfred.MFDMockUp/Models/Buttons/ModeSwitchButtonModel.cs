@@ -45,9 +45,11 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
         /// <param name="result"> The result. </param>
         internal override void ProcessCommand(MFDProcessor processor, MFDProcessorResult result)
         {
-            if (MasterModeCycler != null)
+            var cycler = MasterModeCycler ?? processor.CurrentMasterMode.MasterModeCycler;
+
+            if (cycler != null)
             {
-                var newMode = MasterModeCycler.MoveToNextMode();
+                var newMode = cycler.MoveToNextMode();
 
                 result.RequestedMasterMode = newMode;
                 result.RequestedScreen = newMode.DefaultScreen;

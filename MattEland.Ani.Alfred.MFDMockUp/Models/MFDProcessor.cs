@@ -50,12 +50,14 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// <value>
         ///     The current mode.
         /// </value>
+        [NotNull]
         public MasterModeBase CurrentMasterMode
         {
             get { return _mfd.MasterMode; }
             set
             {
                 Contract.Requires(value != null);
+                Contract.Ensures(CurrentMasterMode != null);
 
                 if (value == null) throw new ArgumentNullException(nameof(value));
 

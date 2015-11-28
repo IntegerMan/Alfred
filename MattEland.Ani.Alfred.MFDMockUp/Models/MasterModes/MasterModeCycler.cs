@@ -51,6 +51,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
             {
                 _modes.AddLast(mode);
 
+                // Give it a trackback. This is useful to mode switch buttons.
+                mode.MasterModeCycler = this;
+
                 // For all mode switch buttons, set their cycler to this instance.
                 foreach (var modeSwitcher in mode.GetScreenChangeButtons().OfType<ModeSwitchButtonModel>())
                 {
