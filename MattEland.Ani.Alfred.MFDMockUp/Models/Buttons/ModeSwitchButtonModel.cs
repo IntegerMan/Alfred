@@ -15,7 +15,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
     /// <summary>
     ///     A data model for a mode switch button that moves to or cycles between other Master Modes.
     /// </summary>
-    public class ModeSwitchButtonModel : ButtonModel
+    public sealed class ModeSwitchButtonModel : ButtonModel
     {
         /// <summary>
         ///     Initializes a new instance of the ModeSwitchButtonModel class.
