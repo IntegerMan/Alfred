@@ -34,6 +34,35 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
             _mailButton = new NavigationButtonModel(screens.NotImplementedScreen, this, buttonText: "MAIL");
             _notesButton = new NavigationButtonModel(screens.NotImplementedScreen, this, buttonText: "NOTE");
             _documentsButton = new NavigationButtonModel(screens.NotImplementedScreen, this, buttonText: "DOCS");
+
+            InitializeButtonCollections();
+
+        }
+
+        /// <summary>
+        ///     Initializes the button collections.
+        /// </summary>
+        private void InitializeButtonCollections()
+        {
+            // Build the command list. Yielding produces bad results, so just handle it here.
+            CommandButtons = new List<ButtonModel>
+                             {
+                                 BuildEmptyButton(),
+                                 BuildEmptyButton(),
+                                 ModeSwitchButton,
+                                 BuildEmptyButton(),
+                                 BuildEmptyButton()
+                             };
+
+            // Build navigation list.
+            NavButtons = new List<ButtonModel>
+                         {
+                             MailButton,
+                             CalendarButton,
+                             NotesButton,
+                             DocumentsButton,
+                             BuildEmptyButton()
+                         };
         }
 
         /// <summary>
@@ -43,36 +72,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
         ///     The default screen.
         /// </value>
         public override ScreenModel DefaultScreen { get { return MailButton.Target; } }
-
-        /// <summary>
-        ///     Gets screen change buttons.
-        /// </summary>
-        /// <returns>
-        ///     An enumerable of screen change buttons.
-        /// </returns>
-        public override IEnumerable<ButtonModel> GetScreenChangeButtons()
-        {
-            yield return MailButton;
-            yield return CalendarButton;
-            yield return NotesButton;
-            yield return DocumentsButton;
-            yield return BuildPlaceholderButton();
-        }
-
-        /// <summary>
-        ///     Gets the screen command buttons related to the current screen.
-        /// </summary>
-        /// <returns>
-        /// An enumerable of screen command buttons.
-        /// </returns>
-        public override IEnumerable<ButtonModel> GetScreenCommandButtons()
-        {
-            yield return BuildPlaceholderButton();
-            yield return BuildPlaceholderButton();
-            yield return ModeSwitchButton;
-            yield return BuildPlaceholderButton();
-            yield return BuildPlaceholderButton();
-        }
 
         /// <summary>
         ///     Gets the calendar button.

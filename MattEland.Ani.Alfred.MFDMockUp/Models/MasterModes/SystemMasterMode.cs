@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using System.Linq;
 
 using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
@@ -30,6 +29,33 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
             LogButton = new NavigationButtonModel(screens.LogScreen, this);
             PerformanceButton = new NavigationButtonModel(screens.PerformanceScreen, this);
 
+            InitializeButtonCollections();
+        }
+
+        /// <summary>
+        ///     Initializes the button collections.
+        /// </summary>
+        private void InitializeButtonCollections()
+        {
+            // Build the command list. Yielding produces bad results, so just handle it here.
+            CommandButtons = new List<ButtonModel>
+                             {
+                                 BuildEmptyButton(),
+                                 BuildEmptyButton(),
+                                 ModeSwitchButton,
+                                 BuildEmptyButton(),
+                                 BuildEmptyButton()
+                             };
+
+            // Build navigation list.
+            NavButtons = new List<ButtonModel>
+                         {
+                             SystemButton,
+                             AlfredButton,
+                             PerformanceButton,
+                             LogButton,
+                             BuildEmptyButton()
+                         };
         }
 
         /// <summary>
@@ -42,43 +68,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
         public override ScreenModel DefaultScreen
         {
             get { return ScreenProvider.HomeScreen; }
-        }
-
-        /// <summary>
-        ///     Gets screen change buttons.
-        /// </summary>
-        /// 
-        /// <returns>
-        ///     An enumerable of screen changebuttons.
-        /// </returns>
-        [NotNull, ItemNotNull]
-        public override IEnumerable<ButtonModel> GetScreenChangeButtons()
-        {
-            Contract.Ensures(Contract.Result<IEnumerable<ButtonModel>>() != null);
-            Contract.Ensures(Contract.Result<IEnumerable<ButtonModel>>().All(b => b != null));
-
-            yield return SystemButton;
-            yield return AlfredButton;
-            yield return PerformanceButton;
-            yield return LogButton;
-            yield return BuildPlaceholderButton();
-        }
-
-        /// <summary>
-        ///     Gets the screen command buttons related to the current screen.
-        /// </summary>
-        /// <returns>
-        /// An enumerable of screen command buttons.
-        /// </returns>
-        [NotNull, ItemNotNull]
-        public override IEnumerable<ButtonModel> GetScreenCommandButtons()
-        {
-            yield return BuildPlaceholderButton();
-            yield return BuildPlaceholderButton();
-            yield return ModeSwitchButton;
-            yield return BuildPlaceholderButton();
-            yield return BuildPlaceholderButton();
-
         }
 
         /// <summary>
@@ -140,5 +129,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
         ///     The screen identification text.
         /// </value>
         public override string ScreenIdentificationText { get { return "SYS"; } }
+
     }
 }

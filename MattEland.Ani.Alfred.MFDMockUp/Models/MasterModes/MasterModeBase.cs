@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 
+using Assisticant.Collections;
+
 using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
 using MattEland.Ani.Alfred.MFDMockUp.Models.Screens;
 using MattEland.Common.Annotations;
@@ -20,6 +22,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
         [NotNull]
         private readonly ButtonModel _modeSwitchButton;
 
+        [CanBeNull]
+        private ICollection<ButtonModel> _commandButtons;
+
+        [CanBeNull]
+        private ICollection<ButtonModel> _navButtons;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MasterModeBase"/> class.
         /// </summary>
@@ -34,19 +42,53 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
             // TODO: This will need to move to the next available mode
             _modeSwitchButton = new ModeSwitchButtonModel("MODE", listener);
 
+            CommandButtons = new ObservableList<ButtonModel>();
+            NavButtons = new ObservableList<ButtonModel>();
+
         }
 
         /// <summary>
-        /// Builds a placeholder button suitable for rendering an empty space.
+        ///     Builds a placeholder button suitable for rendering an empty space of feature not yet
+        ///     implemented.
         /// </summary>
-        /// <param name="buttonText">The text to use in the button. This defaults to empty.</param>
-        /// <returns>The button.</returns>
+        /// <param name="buttonText"> The text to use in the button. </param>
+        /// <returns>
+        ///     The button.
+        /// </returns>
         [NotNull]
-        protected static ButtonModel BuildPlaceholderButton(string buttonText = "")
+        protected static ButtonModel BuildPlaceholderButton(string buttonText)
         {
             Contract.Ensures(Contract.Result<ButtonModel>() != null);
 
-            return new ButtonModel(buttonText);
+            return new ButtonModel(buttonText ?? string.Empty);
+        }
+
+        protected static ButtonModel BuildEmptyButton()
+        {
+            Contract.Ensures(Contract.Result<ButtonModel>() != null);
+
+            return BuildPlaceholderButton(string.Empty);
+        }
+
+        /// <summary>
+        ///     Creates an empty button list.
+        /// </summary>
+        /// <returns>
+        ///     The new empty button list.
+        /// </returns>
+        [NotNull]
+        protected static ICollection<ButtonModel> BuildEmptyButtonList()
+        {
+            Contract.Ensures(Contract.Result<IEnumerable<ButtonModel>>() != null);
+
+            return new ObservableList<ButtonModel>
+                   {
+                       BuildEmptyButton(),
+                       BuildEmptyButton(),
+                       BuildEmptyButton(),
+                       BuildEmptyButton(),
+                       BuildEmptyButton()
+                   };
         }
 
         /// <summary>
@@ -57,6 +99,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
         private void ClassInvariants()
         {
             Contract.Invariant(ModeSwitchButton != null);
+            Contract.Invariant(CommandButtons != null);
+            Contract.Invariant(NavButtons != null);
             Contract.Invariant(ScreenProvider != null);
             Contract.Invariant(DefaultScreen != null);
             Contract.Invariant(GetScreenChangeButtons() != null);
@@ -116,6 +160,24 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
         public abstract string ScreenIdentificationText { get; }
 
         /// <summary>
+        ///     Gets or sets the command buttons.
+        /// </summary>
+        /// <value>
+        ///     The command buttons.
+        /// </value>
+        protected ICollection<ButtonModel> CommandButtons
+        {
+            get { return _commandButtons; }
+            set { _commandButtons = value ?? BuildEmptyButtonList(); }
+        }
+
+        protected ICollection<ButtonModel> NavButtons
+        {
+            get { return _navButtons; }
+            set { _navButtons = value ?? BuildEmptyButtonList(); }
+        }
+
+        /// <summary>
         ///     Executes when a button is clicked.
         /// </summary>
         /// <remarks>
@@ -129,22 +191,53 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
         }
 
         /// <summary>
-        ///     Gets screen change buttons.
-        /// </summary>
-        /// <returns>
-        ///     An enumerable of screen change buttons.
-        /// </returns>
-        [NotNull, ItemNotNull]
-        public abstract IEnumerable<ButtonModel> GetScreenChangeButtons();
-
-        /// <summary>
         ///     Gets the screen command buttons related to the current screen.
         /// </summary>
         /// <returns>
         /// An enumerable of screen command buttons.
         /// </returns>
         [NotNull, ItemNotNull]
-        public abstract IEnumerable<ButtonModel> GetScreenCommandButtons();
+        public virtual IEnumerable<ButtonModel> GetScreenCommandButtons()
+        {
+            Contract.Ensures(Contract.Result<IEnumerable<ButtonModel>>() != null);
+            Contract.Ensures(Contract.Result<IEnumerable<ButtonModel>>().All(b => b != null));
+            Contract.Ensures(CommandButtons != null);
+
+            if (CommandButtons == null)
+            {
+                CommandButtons = BuildEmptyButtonList();
+            }
+
+            /* Using yield here will build different collections each go
+               resulting in binding not functioning. */
+
+            return CommandButtons;
+        }
+
+        /// <summary>
+        ///     Gets screen change buttons.
+        /// </summary>
+        /// 
+        /// <returns>
+        ///     An enumerable of screen changebuttons.
+        /// </returns>
+        [NotNull, ItemNotNull]
+        public virtual IEnumerable<ButtonModel> GetScreenChangeButtons()
+        {
+            Contract.Ensures(Contract.Result<IEnumerable<ButtonModel>>() != null);
+            Contract.Ensures(Contract.Result<IEnumerable<ButtonModel>>().All(b => b != null));
+            Contract.Ensures(NavButtons != null);
+
+            if (NavButtons == null)
+            {
+                NavButtons = BuildEmptyButtonList();
+            }
+
+            /* Using yield here will build different collections each go
+               resulting in binding not functioning. */
+
+            return NavButtons;
+        }
     }
 
 }

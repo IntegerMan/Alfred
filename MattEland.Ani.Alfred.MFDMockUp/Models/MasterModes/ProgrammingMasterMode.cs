@@ -107,6 +107,34 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
             _messagesButton = new NavigationButtonModel(screens.NotImplementedScreen, this, buttonText: "MSGS");
             _commandsButton = new NavigationButtonModel(screens.NotImplementedScreen, this, buttonText: "CMDS");
 
+            InitializeButtonCollections();
+
+        }
+
+        /// <summary>
+        ///     Initializes the button collections.
+        /// </summary>
+        private void InitializeButtonCollections()
+        {
+            // Build the command list. Yielding produces bad results, so just handle it here.
+            CommandButtons = new List<ButtonModel>
+                             {
+                                 BuildEmptyButton(),
+                                 BuildEmptyButton(),
+                                 ModeSwitchButton,
+                                 BuildEmptyButton(),
+                                 BuildEmptyButton()
+                             };
+
+            // Build navigation list.
+            NavButtons = new List<ButtonModel>
+                         {
+                            ContextButton,
+                            CommandsButton,
+                            MessagesButton,
+                            ClipboardButton,
+                            BuildEmptyButton()
+                        };
         }
 
         /// <summary>
@@ -116,36 +144,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
         ///     The default screen.
         /// </value>
         public override ScreenModel DefaultScreen { get { return _contextButton.Target; } }
-
-        /// <summary>
-        ///     Gets screen change buttons.
-        /// </summary>
-        /// <returns>
-        ///     An enumerable of screen change buttons.
-        /// </returns>
-        public override IEnumerable<ButtonModel> GetScreenChangeButtons()
-        {
-            yield return ContextButton;
-            yield return CommandsButton;
-            yield return MessagesButton;
-            yield return ClipboardButton;
-            yield return BuildPlaceholderButton();
-        }
-
-        /// <summary>
-        ///     Gets the screen command buttons related to the current screen.
-        /// </summary>
-        /// <returns>
-        /// An enumerable of screen command buttons.
-        /// </returns>
-        public override IEnumerable<ButtonModel> GetScreenCommandButtons()
-        {
-            yield return BuildPlaceholderButton();
-            yield return BuildPlaceholderButton();
-            yield return ModeSwitchButton;
-            yield return BuildPlaceholderButton();
-            yield return BuildPlaceholderButton();
-        }
 
         /// <summary>
         ///     Gets the text to display on the screen identifying the current mdoe.
