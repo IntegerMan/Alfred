@@ -1,0 +1,140 @@
+﻿<ViewModels:MFDViewModel xmlns:ViewModels="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels" xmlns:Buttons="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels.Buttons" 
+                         xmlns:MasterModes="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes" xmlns:Screens="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.Models.Screens" 
+                         xmlns:Models="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.Models" xmlns:Core="clr-namespace:MattEland.Ani.Alfred.Core;assembly=MattEland.Ani.Alfred.Core" 
+                         xmlns:Commands="clr-namespace:MattEland.Ani.Alfred.PresentationAvalon.Commands;assembly=MattEland.Ani.Alfred.PresentationAvalon" xmlns:System="clr-namespace:System;assembly=mscorlib" 
+                         IsSensorOfInterestIndicatorVisible="True" IsSensorOfInterest="True" Name="Design Time MFD" ScreenWidth="256" ScreenHeight="256">
+    <ViewModels:MFDViewModel.BottomButtons>
+        <Buttons:MFDButtonStripViewModel Dock="Bottom">
+            <Buttons:MFDButtonStripViewModel.Buttons>
+                <Buttons:ButtonViewModel Index="0" IsSelected="True" SeparatorVisibility="Visible" Text="TEST" ToolTipText="#FF8DD3C7"/>
+                <Buttons:ButtonViewModel Index="1" IsSelected="False" SeparatorVisibility="Visible" Text="TEST" ToolTipText="#FFFFFFB3"/>
+                <Buttons:ButtonViewModel Index="2" IsSelected="False" SeparatorVisibility="Visible" Text="TEST" ToolTipText="#FFBEBADA"/>
+                <Buttons:ButtonViewModel Index="3" IsSelected="False" SeparatorVisibility="Visible" Text="TEST" ToolTipText="#FFFB8072"/>
+                <Buttons:ButtonViewModel Index="4" IsSelected="False" SeparatorVisibility="Hidden" Text="TEST" ToolTipText="#FFFDB462"/>
+            </Buttons:MFDButtonStripViewModel.Buttons>
+            <Buttons:MFDButtonStripViewModel.ButtonsAndSeparators>
+                <Buttons:ButtonViewModel Index="0" IsSelected="True" SeparatorVisibility="Visible" Text="TEST" ToolTipText="#FF8DD3C7"/>
+                <Buttons:ButtonViewModel Index="1" IsSelected="False" SeparatorVisibility="Visible" Text="TEST" ToolTipText="#FFFFFFB3"/>
+                <Buttons:ButtonViewModel Index="2" IsSelected="False" SeparatorVisibility="Visible" Text="TEST" ToolTipText="#FFBEBADA"/>
+                <Buttons:ButtonViewModel Index="3" IsSelected="False" SeparatorVisibility="Visible" Text="TEST" ToolTipText="#FFFB8072"/>
+                <Buttons:ButtonViewModel Index="4" IsSelected="False" SeparatorVisibility="Hidden" Text="TEST" ToolTipText="#FFFDB462"/>
+            </Buttons:MFDButtonStripViewModel.ButtonsAndSeparators>
+        </Buttons:MFDButtonStripViewModel>
+    </ViewModels:MFDViewModel.BottomButtons>
+    <ViewModels:MFDViewModel.CurrentMode>
+        <MasterModes:MasterModeBase ScreenIdentificationText="MODE">
+            <MasterModes:MasterModeBase.DefaultScreen>
+                <Screens:ScreenModel ButtonText="Sociis euismod vestibulum amet" ShowSensorOfInterestIndicator="False"/>
+            </MasterModes:MasterModeBase.DefaultScreen>
+        </MasterModes:MasterModeBase>
+    </ViewModels:MFDViewModel.CurrentMode>
+    <ViewModels:MFDViewModel.LeftButtons>
+        <Buttons:MFDButtonStripViewModel Dock="Top">
+            <Buttons:MFDButtonStripViewModel.Buttons>
+                <Buttons:ButtonViewModel Index="28" IsSelected="True" SeparatorVisibility="Hidden" Text="#FFB3DE69" ToolTipText="#FFB3DE69"/>
+                <Buttons:ButtonViewModel Index="82" IsSelected="False" SeparatorVisibility="Visible" Text="#FFFCCDE5" ToolTipText="#FFFCCDE5"/>
+                <Buttons:ButtonViewModel Index="18" IsSelected="True" SeparatorVisibility="Visible" Text="#FFD9D9D9" ToolTipText="#FFD9D9D9"/>
+                <Buttons:ButtonViewModel Index="87" IsSelected="False" SeparatorVisibility="Visible" Text="#FFBC80BD" ToolTipText="#FFBC80BD"/>
+                <Buttons:ButtonViewModel Index="96" IsSelected="True" SeparatorVisibility="Visible" Text="#FFCCEBC5" ToolTipText="#FFCCEBC5"/>
+                <Buttons:ButtonViewModel Index="69" IsSelected="False" SeparatorVisibility="Hidden" Text="#FFFFED6F" ToolTipText="#FFFFED6F"/>
+                <Buttons:ButtonViewModel Index="40" IsSelected="True" SeparatorVisibility="Collapsed" Text="#FF8DD3C7" ToolTipText="#FF8DD3C7"/>
+                <Buttons:ButtonViewModel Index="27" IsSelected="False" SeparatorVisibility="Hidden" Text="#FFFFFFB3" ToolTipText="#FFFFFFB3"/>
+                <Buttons:ButtonViewModel Index="32" IsSelected="True" SeparatorVisibility="Collapsed" Text="#FFBEBADA" ToolTipText="#FFBEBADA"/>
+                <Buttons:ButtonViewModel Index="63" IsSelected="False" SeparatorVisibility="Visible" Text="#FFFB8072" ToolTipText="#FFFB8072"/>
+            </Buttons:MFDButtonStripViewModel.Buttons>
+        </Buttons:MFDButtonStripViewModel>
+    </ViewModels:MFDViewModel.LeftButtons>
+    <ViewModels:MFDViewModel.Locator>
+        <ViewModels:ViewModelLocator DesignMode="True">
+            <ViewModels:ViewModelLocator.Workspace>
+                <Models:Workspace Name="Urna conubia porta">
+                    <Models:Workspace.AlfredApplication>
+                        <Core:AlfredApplication DisplayName="Pulvinar purus" ItemTypeName="Mus dapibus venenatis risus nec" IsOnline="False" NameAndVersion="Nunc leo" Name="Egestas sagittis" Status="Online" Version="Ultricies vestibulum"/>
+                    </Models:Workspace.AlfredApplication>
+                    <Models:Workspace.ApplicationManager>
+                        <Commands:ApplicationManager/>
+                    </Models:Workspace.ApplicationManager>
+                    <Models:Workspace.FaultManager>
+                        <Models:FaultManager/>
+                    </Models:Workspace.FaultManager>
+                    <Models:Workspace.MFDs>
+                        <Models:MultifunctionDisplay IsSensorOfInterestVisible="True" IsSensorOfInterest="False" Name="Magna interdum" ScreenWidth="684.5" ScreenHeight="636.63"/>
+                        <Models:MultifunctionDisplay IsSensorOfInterestVisible="True" IsSensorOfInterest="False" Name="Massa vel" ScreenWidth="668.3" ScreenHeight="473.4"/>
+                    </Models:Workspace.MFDs>
+                    <Models:Workspace.SelectedMFD>
+                        <Models:MultifunctionDisplay IsSensorOfInterestVisible="True" IsSensorOfInterest="False" Name="Tristique cubilia cras duis parturient" ScreenWidth="197.51" ScreenHeight="768.08"/>
+                    </Models:Workspace.SelectedMFD>
+                </Models:Workspace>
+            </ViewModels:ViewModelLocator.Workspace>
+        </ViewModels:ViewModelLocator>
+    </ViewModels:MFDViewModel.Locator>
+    <ViewModels:MFDViewModel.Model>
+        <Models:MultifunctionDisplay IsSensorOfInterestVisible="True" IsSensorOfInterest="False" Name="Aenean tristique" ScreenWidth="256" ScreenHeight="256">
+            <Models:MultifunctionDisplay.CurrentScreen>
+                <Screens:ScreenModel ButtonText="Natoque per" ShowSensorOfInterestIndicator="True"/>
+            </Models:MultifunctionDisplay.CurrentScreen>
+            <Models:MultifunctionDisplay.MasterMode>
+                <MasterModes:MasterModeBase ScreenIdentificationText="Adams, Ellen">
+                    <MasterModes:MasterModeBase.DefaultScreen>
+                        <Screens:ScreenModel ButtonText="Parturient lorem taciti orci sed" ShowSensorOfInterestIndicator="True"/>
+                    </MasterModes:MasterModeBase.DefaultScreen>
+                </MasterModes:MasterModeBase>
+            </Models:MultifunctionDisplay.MasterMode>
+            <Models:MultifunctionDisplay.Processor>
+                <Models:MFDProcessor>
+                    <Models:MFDProcessor.CurrentMasterMode>
+                        <MasterModes:MasterModeBase ScreenIdentificationText="Adams, Terry"/>
+                    </Models:MFDProcessor.CurrentMasterMode>
+                    <Models:MFDProcessor.MFD>
+                        <Models:MultifunctionDisplay IsSensorOfInterestVisible="True" IsSensorOfInterest="False" Name="Dis adipiscing parturient" ScreenWidth="834.74" ScreenHeight="113.05"/>
+                    </Models:MFDProcessor.MFD>
+                    <Models:MFDProcessor.Randomizer>
+                        <System:Random/>
+                    </Models:MFDProcessor.Randomizer>
+                </Models:MFDProcessor>
+            </Models:MultifunctionDisplay.Processor>
+            <Models:MultifunctionDisplay.Workspace>
+                <Models:Workspace Name="Interdum cras">
+                    <Models:Workspace.AlfredApplication>
+                        <Core:AlfredApplication DisplayName="Malesuada penatibus netus turpis lacinia" ItemTypeName="Varius laoreet porttitor non nunc" IsOnline="False" NameAndVersion="Himenaeos vestibulum nascetur" Name="Tincidunt amet adipiscing parturient" Status="Terminating" Version="Imperdiet duis"/>
+                    </Models:Workspace.AlfredApplication>
+                    <Models:Workspace.ApplicationManager>
+                        <Commands:ApplicationManager/>
+                    </Models:Workspace.ApplicationManager>
+                    <Models:Workspace.FaultManager>
+                        <Models:FaultManager/>
+                    </Models:Workspace.FaultManager>
+                    <Models:Workspace.MFDs>
+                        <Models:MultifunctionDisplay IsSensorOfInterestVisible="True" IsSensorOfInterest="False" Name="Tellus bibendum" ScreenWidth="477.78" ScreenHeight="756.9"/>
+                        <Models:MultifunctionDisplay IsSensorOfInterestVisible="True" IsSensorOfInterest="False" Name="Dictumst eleifend" ScreenWidth="695.93" ScreenHeight="759.98"/>
+                    </Models:Workspace.MFDs>
+                    <Models:Workspace.SelectedMFD>
+                        <Models:MultifunctionDisplay IsSensorOfInterestVisible="True" IsSensorOfInterest="False" Name="Hendrerit lobortis" ScreenWidth="888.62" ScreenHeight="693.59"/>
+                    </Models:Workspace.SelectedMFD>
+                </Models:Workspace>
+            </Models:MultifunctionDisplay.Workspace>
+        </Models:MultifunctionDisplay>
+    </ViewModels:MFDViewModel.Model>
+    <ViewModels:MFDViewModel.RightButtons>
+        <Buttons:MFDButtonStripViewModel Dock="Top">
+            <Buttons:MFDButtonStripViewModel.Buttons>
+                <Buttons:ButtonViewModel Index="81" IsSelected="False" SeparatorVisibility="Hidden" Text="#FFFDB462" ToolTipText="#FFFDB462"/>
+                <Buttons:ButtonViewModel Index="37" IsSelected="True" SeparatorVisibility="Collapsed" Text="#FFB3DE69" ToolTipText="#FFB3DE69"/>
+                <Buttons:ButtonViewModel Index="49" IsSelected="False" SeparatorVisibility="Visible" Text="#FFFCCDE5" ToolTipText="#FFFCCDE5"/>
+                <Buttons:ButtonViewModel Index="58" IsSelected="True" SeparatorVisibility="Visible" Text="#FFD9D9D9" ToolTipText="#FFD9D9D9"/>
+                <Buttons:ButtonViewModel Index="26" IsSelected="False" SeparatorVisibility="Visible" Text="#FFBC80BD" ToolTipText="#FFBC80BD"/>
+            </Buttons:MFDButtonStripViewModel.Buttons>
+        </Buttons:MFDButtonStripViewModel>
+    </ViewModels:MFDViewModel.RightButtons>
+    <ViewModels:MFDViewModel.TopButtons>
+        <Buttons:MFDButtonStripViewModel Dock="Bottom">
+            <Buttons:MFDButtonStripViewModel.Buttons>
+                <Buttons:ButtonViewModel Index="78" IsSelected="False" SeparatorVisibility="Hidden" Text="#FFCCEBC5" ToolTipText="#FFCCEBC5"/>
+                <Buttons:ButtonViewModel Index="67" IsSelected="True" SeparatorVisibility="Collapsed" Text="#FFFFED6F" ToolTipText="#FFFFED6F"/>
+                <Buttons:ButtonViewModel Index="92" IsSelected="False" SeparatorVisibility="Visible" Text="#FF8DD3C7" ToolTipText="#FF8DD3C7"/>
+                <Buttons:ButtonViewModel Index="13" IsSelected="True" SeparatorVisibility="Hidden" Text="#FFFFFFB3" ToolTipText="#FFFFFFB3"/>
+                <Buttons:ButtonViewModel Index="11" IsSelected="False" SeparatorVisibility="Hidden" Text="#FFBEBADA" ToolTipText="#FFBEBADA"/>
+            </Buttons:MFDButtonStripViewModel.Buttons>
+        </Buttons:MFDButtonStripViewModel>
+    </ViewModels:MFDViewModel.TopButtons>
+</ViewModels:MFDViewModel>
