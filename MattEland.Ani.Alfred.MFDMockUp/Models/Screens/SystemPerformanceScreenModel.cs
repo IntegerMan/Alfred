@@ -16,6 +16,7 @@ using Assisticant.Collections;
 using Assisticant.Fields;
 
 using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
+using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
 using MattEland.Common.Annotations;
 using MattEland.Presentation.Logical.Widgets;
 
@@ -39,6 +40,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         [NotNull, ItemNotNull]
         private readonly ObservableList<IWidget> _widgets;
 
+        private readonly List<ButtonModel> _commandButtons;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
@@ -51,6 +54,17 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
             Subsystem = subsystem;
             _widgets = new ObservableList<IWidget>();
             _isOnline = new Observable<bool>();
+
+            // Set up the mode switch buttons specific to this page
+            // TODO: Render selected when visible
+            _commandButtons = new List<ButtonModel>
+            {
+                new ButtonModel("MEM"),
+                new ButtonModel("CPU"),
+                new ModeSwitchButtonModel("MODE"),
+                new ButtonModel("DSKR"),
+                new ButtonModel("DSKW")
+            };
         }
 
         /// <summary>
@@ -141,6 +155,20 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
             foreach (var widget in Subsystem.SystemModules.SelectMany(module => module.Widgets))
             {
                 _widgets.Add(widget);
+            }
+        }
+
+        /// <summary>
+        ///     Gets the command buttons associated with this screen. Return null for default commands.
+        /// </summary>
+        /// <value>
+        ///     The command buttons.
+        /// </value>
+        public override IList<ButtonModel> CommandButtons
+        {
+            get
+            {
+                return _commandButtons;
             }
         }
     }

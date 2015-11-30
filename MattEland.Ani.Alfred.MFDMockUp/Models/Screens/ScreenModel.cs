@@ -79,7 +79,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         ///     The command buttons.
         /// </value>
         [CanBeNull]
-        public virtual ICollection<ButtonModel> CommandButtons
+        public virtual IList<ButtonModel> CommandButtons
         {
             get { return null; }
         }
