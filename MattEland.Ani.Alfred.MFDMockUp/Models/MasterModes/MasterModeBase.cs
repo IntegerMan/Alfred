@@ -42,8 +42,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
             // TODO: This will need to move to the next available mode
             _modeSwitchButton = new ModeSwitchButtonModel("MODE", listener);
 
-            CommandButtons = new ObservableList<ButtonModel>();
             NavButtons = new ObservableList<ButtonModel>();
+            CommandButtons = BuildDefaultCommandButtons();
 
         }
 
@@ -63,6 +63,13 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
             return new ButtonModel(buttonText ?? string.Empty);
         }
 
+        /// <summary>
+        ///     Builds an empty button.
+        /// </summary>
+        /// <returns>
+        ///     A ButtonModel.
+        /// </returns>
+        [NotNull]
         protected static ButtonModel BuildEmptyButton()
         {
             Contract.Ensures(Contract.Result<ButtonModel>() != null);
@@ -246,6 +253,28 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
                resulting in binding not functioning. */
 
             return NavButtons;
+        }
+
+        /// <summary>
+        ///     Builds a default command buttons with 4 empty buttons with a mode switch button in the center.
+        /// </summary>
+        /// <returns>
+        ///     The command buttons
+        /// </returns>
+        [NotNull]
+        protected IList<ButtonModel> BuildDefaultCommandButtons()
+        {
+            Contract.Ensures(Contract.Result<IList<ButtonModel>>() != null);
+            Contract.Ensures(Contract.Result<IList<ButtonModel>>().All(b => b != null));
+
+            return new ObservableList<ButtonModel>
+                   {
+                       BuildEmptyButton(),
+                       BuildEmptyButton(),
+                       ModeSwitchButton,
+                       BuildEmptyButton(),
+                       BuildEmptyButton()
+                   };
         }
     }
 

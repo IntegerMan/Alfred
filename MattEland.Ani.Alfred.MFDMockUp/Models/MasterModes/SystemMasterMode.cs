@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Contracts;
 using System.Linq;
 
 using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
@@ -37,16 +38,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
         /// </summary>
         private void InitializeButtonCollections()
         {
-            // Build the command list. Yielding produces bad results, so just handle it here.
-            CommandButtons = new List<ButtonModel>
-                             {
-                                 BuildEmptyButton(),
-                                 BuildEmptyButton(),
-                                 ModeSwitchButton,
-                                 BuildEmptyButton(),
-                                 BuildEmptyButton()
-                             };
-
             // Build navigation list.
             NavButtons = new List<ButtonModel>
                          {

@@ -85,6 +85,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
             get { return _isOnline; }
         }
 
+
         /// <summary>
         ///     Contains code contract invariants that describe facts about this class that will be true
         ///     after any public method in this class is called.
