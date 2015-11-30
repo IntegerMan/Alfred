@@ -12,6 +12,7 @@ using System.Diagnostics.Contracts;
 
 using Assisticant.Fields;
 
+using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
 using MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens;
 using MattEland.Common;
 using MattEland.Common.Annotations;
@@ -69,6 +70,18 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         public virtual bool ShowSensorOfInterestIndicator
         {
             get { return true; }
+        }
+
+        /// <summary>
+        ///     Gets the command buttons associated with this screen. Return null for default commands.
+        /// </summary>
+        /// <value>
+        ///     The command buttons.
+        /// </value>
+        [CanBeNull]
+        public virtual ICollection<ButtonModel> CommandButtons
+        {
+            get { return null; }
         }
 
         /// <summary>

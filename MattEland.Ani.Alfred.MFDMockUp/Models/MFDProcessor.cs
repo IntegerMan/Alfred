@@ -143,21 +143,30 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             HandleProcessorFrameResults(processorResult);
         }
 
-        private void HandleProcessorFrameResults([NotNull] MFDProcessorResult processorResult)
+        private void HandleProcessorFrameResults([NotNull] MFDProcessorResult result)
         {
+            var requestedScreen = result.RequestedScreen;
+
             // Update the mode - defaulting to current mode if null is requested
-            var effectiveRequestedMode = (processorResult.RequestedMasterMode ?? processorResult.CurrentMasterMode);
-            if (processorResult.CurrentMasterMode != effectiveRequestedMode && effectiveRequestedMode != null)
+            var effectiveRequestedMode = (result.RequestedMasterMode ?? result.CurrentMasterMode);
+            if (result.CurrentMasterMode != effectiveRequestedMode && effectiveRequestedMode != null)
             {
                 CurrentMasterMode = effectiveRequestedMode;
 
-                _mfd.CurrentScreen = effectiveRequestedMode.DefaultScreen;
+                // If we're mode changing, request the default screen for the new mode
+                if (result.RequestedScreen != null
+                    && result.RequestedScreen == result.CurrentScreen)
+                {
+                    requestedScreen = effectiveRequestedMode.DefaultScreen;
+                }
             }
 
             // Set the current screen to the new screen
-            if (processorResult.RequestedScreen != null)
+            if (requestedScreen != null && _mfd.CurrentScreen != requestedScreen)
             {
-                _mfd.CurrentScreen = processorResult.RequestedScreen;
+                _mfd.CurrentScreen = requestedScreen;
+
+                CurrentMasterMode.OnScreenChanged(requestedScreen);
             }
         }
 

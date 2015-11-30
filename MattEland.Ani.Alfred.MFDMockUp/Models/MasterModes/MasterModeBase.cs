@@ -276,6 +276,19 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
                        BuildEmptyButton()
                    };
         }
+
+        /// <summary>
+        ///     Invoked to inform the master mode that the current screen has changed. 
+        ///     This will only be called when the master mode will be the current mode next 
+        ///     processor frame and is not called on the prior master mode when a master mode
+        ///     change occurs.
+        /// </summary>
+        /// <param name="screen"> The newly selected screen. </param>
+        public virtual void OnScreenChanged([NotNull] ScreenModel screen)
+        {
+            var buttons = screen.CommandButtons;
+            CommandButtons = buttons ?? BuildDefaultCommandButtons();
+        }
     }
 
 }
