@@ -42,6 +42,18 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
 
         private readonly List<ButtonModel> _commandButtons;
 
+        [NotNull]
+        private readonly ButtonModel _memButton;
+
+        [NotNull]
+        private readonly ButtonModel _cpuButton;
+
+        [NotNull]
+        private readonly ButtonModel _diskReadButton;
+
+        [NotNull]
+        private readonly ButtonModel _diskWriteButton;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
@@ -57,15 +69,53 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
 
             // Set up the mode switch buttons specific to this page
             // TODO: Render selected when visible
+            _memButton = new ActionButtonModel("MEM", () => ShowMemory = !ShowMemory, () => ShowMemory);
+            _cpuButton = new ActionButtonModel("CPU", () => ShowCPU = !ShowCPU, () => ShowCPU);
+            _diskReadButton = new ActionButtonModel("DSKR", () => ShowDiskRead = !ShowDiskRead, () => ShowDiskRead);
+            _diskWriteButton = new ActionButtonModel("DSKW", () => ShowDiskWrite = !ShowDiskWrite, () => ShowDiskWrite);
+
             _commandButtons = new List<ButtonModel>
             {
-                new ButtonModel("MEM"),
-                new ButtonModel("CPU"),
+                _memButton,
+                _cpuButton,
                 new ModeSwitchButtonModel("MODE"),
-                new ButtonModel("DSKR"),
-                new ButtonModel("DSKW")
+                _diskReadButton,
+                _diskWriteButton
             };
+
         }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether memory is shown.
+        /// </summary>
+        /// <value>
+        ///     true if memory usage is shown, false if not.
+        /// </value>
+        public bool ShowMemory { get; set; } = true;
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether CPU usage is shown.
+        /// </summary>
+        /// <value>
+        ///     true if CPU usage is shown, false if not.
+        /// </value>
+        public bool ShowCPU { get; set; } = true;
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether disk read usage is shown.
+        /// </summary>
+        /// <value>
+        ///     true if disk read usage is shown, false if not.
+        /// </value>
+        public bool ShowDiskRead { get; set; } = true;
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether disk write usage is shown.
+        /// </summary>
+        /// <value>
+        ///     true if disk write usage is shown, false if not.
+        /// </value>
+        public bool ShowDiskWrite { get; set; } = true;
 
         /// <summary>
         ///     The system monitoring subsystem.
@@ -171,5 +221,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
                 return _commandButtons;
             }
         }
+
+
     }
 }
