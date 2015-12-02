@@ -43,16 +43,13 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         private readonly List<ButtonModel> _commandButtons;
 
         [NotNull]
-        private readonly ButtonModel _memButton;
-
+        private readonly Observable<bool> _showMemory;
         [NotNull]
-        private readonly ButtonModel _cpuButton;
-
+        private readonly Observable<bool> _showCPU;
         [NotNull]
-        private readonly ButtonModel _diskReadButton;
-
+        private readonly Observable<bool> _showDiskRead;
         [NotNull]
-        private readonly ButtonModel _diskWriteButton;
+        private readonly Observable<bool> _showDiskWrite;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:System.Object"/> class.
@@ -64,23 +61,30 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
             Contract.Requires(subsystem != null);
 
             Subsystem = subsystem;
+
+            //- Set Up Observables
             _widgets = new ObservableList<IWidget>();
             _isOnline = new Observable<bool>();
+            _showMemory = new Observable<bool>(true);
+            _showCPU = new Observable<bool>(true);
+            _showDiskRead = new Observable<bool>(true);
+            _showDiskWrite = new Observable<bool>(true);
 
-            // Set up the mode switch buttons specific to this page
-            // TODO: Render selected when visible
-            _memButton = new ActionButtonModel("MEM", () => ShowMemory = !ShowMemory, () => ShowMemory);
-            _cpuButton = new ActionButtonModel("CPU", () => ShowCPU = !ShowCPU, () => ShowCPU);
-            _diskReadButton = new ActionButtonModel("DSKR", () => ShowDiskRead = !ShowDiskRead, () => ShowDiskRead);
-            _diskWriteButton = new ActionButtonModel("DSKW", () => ShowDiskWrite = !ShowDiskWrite, () => ShowDiskWrite);
 
+            // Set up the filtering buttons
+            var memButton = new ActionButtonModel("MEM", () => ShowMemory = !ShowMemory, () => ShowMemory);
+            var cpuButton = new ActionButtonModel("CPU", () => ShowCPU = !ShowCPU, () => ShowCPU);
+            var diskReadButton = new ActionButtonModel("DSKR", () => ShowDiskRead = !ShowDiskRead, () => ShowDiskRead);
+            var diskWriteButton = new ActionButtonModel("DSKW", () => ShowDiskWrite = !ShowDiskWrite, () => ShowDiskWrite);
+
+            // Build out the command list
             _commandButtons = new List<ButtonModel>
             {
-                _memButton,
-                _cpuButton,
-                new ModeSwitchButtonModel("MODE"),
-                _diskReadButton,
-                _diskWriteButton
+                memButton,
+                cpuButton,
+                BuildModeSwitchButton(),
+                diskReadButton,
+                diskWriteButton
             };
 
         }
@@ -91,7 +95,17 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         /// <value>
         ///     true if memory usage is shown, false if not.
         /// </value>
-        public bool ShowMemory { get; set; } = true;
+        public bool ShowMemory
+        {
+            get { return _showMemory; }
+            set
+            {
+                if (ShowMemory == value) return;
+
+                _showMemory.Value = value;
+                UpdateWidgetsCollection();
+            }
+        }
 
         /// <summary>
         ///     Gets or sets a value indicating whether CPU usage is shown.
@@ -99,7 +113,17 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         /// <value>
         ///     true if CPU usage is shown, false if not.
         /// </value>
-        public bool ShowCPU { get; set; } = true;
+        public bool ShowCPU
+        {
+            get { return _showCPU; }
+            set
+            {
+                if (ShowCPU == value) return;
+
+                _showCPU.Value = value;
+                UpdateWidgetsCollection();
+            }
+        }
 
         /// <summary>
         ///     Gets or sets a value indicating whether disk read usage is shown.
@@ -107,7 +131,17 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         /// <value>
         ///     true if disk read usage is shown, false if not.
         /// </value>
-        public bool ShowDiskRead { get; set; } = true;
+        public bool ShowDiskRead
+        {
+            get { return _showDiskRead; }
+            set
+            {
+                if (ShowDiskRead == value) return;
+
+                _showDiskRead.Value = value;
+                UpdateWidgetsCollection();
+            }
+        }
 
         /// <summary>
         ///     Gets or sets a value indicating whether disk write usage is shown.
@@ -115,7 +149,17 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         /// <value>
         ///     true if disk write usage is shown, false if not.
         /// </value>
-        public bool ShowDiskWrite { get; set; } = true;
+        public bool ShowDiskWrite
+        {
+            get { return _showDiskWrite; }
+            set
+            {
+                if (ShowDiskWrite == value) return;
+
+                _showDiskWrite.Value = value;
+                UpdateWidgetsCollection();
+            }
+        }
 
         /// <summary>
         ///     The system monitoring subsystem.
@@ -127,12 +171,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         ///     The performance widgets.
         /// </summary>
         [NotNull, ItemNotNull]
-        public ObservableList<IWidget> Widgets
+        public IEnumerable<IWidget> Widgets
         {
             [DebuggerStepThrough]
             get
             {
-                Contract.Ensures(Contract.Result<ObservableList<IWidget>>() != null);
+                Contract.Ensures(Contract.Result<IEnumerable<IWidget>>() != null);
 
                 return _widgets;
             }
@@ -178,33 +222,42 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
             _isOnline.Value = Subsystem.IsOnline;
 
             // Ensure we have widgets for everything present.
-            UpdateWidgetsCollection();
+            if (!_widgets.Any())
+            {
+                UpdateWidgetsCollection();
+            }
         }
 
         /// <summary>
-        ///     Updates the widgets collection by adding new widgets or removing old widgets when offline.
+        ///     Repopulates the widgets collection based on which widgets should be visible.
         /// </summary>
         private void UpdateWidgetsCollection()
         {
-            var numWidgetsInDisplay = _widgets.Count;
+            // Reset the collection
+            _widgets.Clear();
 
-            // If we're offline, make sure that we have all widgets cleared
-            if (!Subsystem.IsOnline)
+            // Add Widgets that are enabled
+            if (ShowMemory)
             {
-                if (numWidgetsInDisplay > 0)
+                foreach (var widget in Subsystem.MemoryModule.Widgets)
                 {
-                    _widgets.Clear();
+                    _widgets.Add(widget);
                 }
-                return;
             }
-
-            // If we've already populated widgets on the prior run, don't worry about it
-            if (numWidgetsInDisplay != 0) return;
-
-            // Copy all widgets from all modules into the widgets collection
-            foreach (var widget in Subsystem.SystemModules.SelectMany(module => module.Widgets))
+            if (ShowCPU)
             {
-                _widgets.Add(widget);
+                foreach (var widget in Subsystem.CpuModule.Widgets)
+                {
+                    _widgets.Add(widget);
+                }
+            }
+            if (ShowDiskRead)
+            {
+                _widgets.Add(Subsystem.DiskModule.ReadWidget);
+            }
+            if (ShowDiskWrite)
+            {
+                _widgets.Add(Subsystem.DiskModule.WriteWidget);
             }
         }
 

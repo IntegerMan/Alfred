@@ -7,12 +7,14 @@
 // ---------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 
 using MattEland.Common.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Common;
+using MattEland.Presentation.Logical.Widgets;
 
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
@@ -84,6 +86,30 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         internal float WriteUtilization
         {
             get { return _diskWriteCounter.NextValue(); }
+        }
+
+        /// <summary>
+        ///     Gets the disk read widget.
+        /// </summary>
+        /// <value>
+        ///     The disk read widget.
+        /// </value>
+        [NotNull]
+        public IWidget ReadWidget
+        {
+            get { return _diskReadWidget; }
+        }
+
+        /// <summary>
+        ///     Gets the disk write widget.
+        /// </summary>
+        /// <value>
+        ///     The disk write widget.
+        /// </value>
+        [NotNull]
+        public IWidget WriteWidget
+        {
+            get { return _diskWriteWidget; }
         }
 
         /// <summary>

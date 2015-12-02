@@ -141,5 +141,19 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
 
             _viewModels[display] = viewModel;
         }
+
+        /// <summary>
+        ///     Builds the mode switch button.
+        /// </summary>
+        /// <returns>
+        ///     A mode switch button.
+        /// </returns>
+        [NotNull]
+        protected static ModeSwitchButtonModel BuildModeSwitchButton()
+        {
+            Contract.Ensures(Contract.Result<ModeSwitchButtonModel>() != null);
+
+            return new ModeSwitchButtonModel("MODE");
+        }
     }
 }
