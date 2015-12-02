@@ -166,5 +166,16 @@ namespace MattEland.Ani.Alfred.Core.Widgets
         {
             get { return "Progress Bar"; }
         }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether the <see cref="Maximum"/> value can ever be
+        ///     exceeded. If this is set to <c>false</c>, self-referential integrity checks may be made
+        ///     that <see cref="Value"/> is between <see cref="Minimum"/> and <see cref="Maximum"/>.
+        /// </summary>
+        /// <value>
+        ///     true if this <see cref="Maximum"/> is as high as <see cref="Value"/> can ever concievably
+        ///     get, false if not.
+        /// </value>
+        public bool IsSoftMaximum { get; set; }
     }
 }

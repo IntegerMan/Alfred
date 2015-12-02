@@ -47,6 +47,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets
             _minValue = new Observable<double>(0);
             _maxValue = new Observable<double>(100);
             _currentValue = new Observable<double>(0);
+            IsSoftMaximum = widget.IsSoftMaximum;
 
             // Grab values from the current state of the progress bar
             UpdateValues();
@@ -68,17 +69,34 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets
             Contract.Invariant(_currentValue != null);
             Contract.Invariant(ProgressBar != null);
 
-            // Ensure that MinValue <= CurrentValue <= MaxValue
-            string debugMessage;
-            debugMessage = string.Format("Current = {0}, Min = {2}, Max = {1}",
-                                         CurrentValue,
-                                         MaxValue,
-                                         MinValue);
+            /* Build out a debugging message for failures. Note that if you pass in > 3 
+               arguments to string.Format, CodeContracts hates it. This works around 
+               that via a HACK */
 
+            string values = string.Format("Current = {0}, Min = {2}, Max = {1}",
+                                          CurrentValue,
+                                          MaxValue,
+                                          MinValue);
+
+            string debugMessage = string.Format("{0} on {1}",
+                                                values,
+                                                DisplayName);
+
+            // Ensure that MinValue <= CurrentValue <= MaxValue and whatnot
             Contract.Invariant(MinValue <= MaxValue, debugMessage);
             Contract.Invariant(CurrentValue >= MinValue, debugMessage);
-            Contract.Invariant(CurrentValue <= MaxValue, debugMessage);
+
+            // In some counters (e.g. Disk Read / Write) we may see values > Max on occasion
+            Contract.Invariant(CurrentValue <= MaxValue || IsSoftMaximum, debugMessage);
         }
+
+        /// <summary>
+        ///     Gets a value indicating whether the <see cref="MaxValue"/> can ever be exceeded.
+        /// </summary>
+        /// <value>
+        ///     true if the maximum value can be exceeded, false if not.
+        /// </value>
+        public bool IsSoftMaximum { get; }
 
         /// <summary>
         ///     Gets the progress bar widget.

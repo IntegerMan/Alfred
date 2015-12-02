@@ -107,6 +107,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             {
                 Minimum = 0,
                 Maximum = 100,
+                IsSoftMaximum = true,
                 ValueFormatString = @"{0:F2} %"
             };
 

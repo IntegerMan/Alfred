@@ -48,6 +48,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             {
                 Minimum = 0,
                 Maximum = 100,
+                IsSoftMaximum = true,
                 Text = Resources.MemoryMonitorModule_LabelName,
                 ValueFormatString = "{0:F2} %"
             };

@@ -180,7 +180,8 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
                    ?? new ProgressBarWidget(BuildWidgetParameters(widgetName))
                    {
                        Minimum = 0,
-                       Maximum = 100
+                       Maximum = 100,
+                       IsSoftMaximum = false
                    };
         }
 
