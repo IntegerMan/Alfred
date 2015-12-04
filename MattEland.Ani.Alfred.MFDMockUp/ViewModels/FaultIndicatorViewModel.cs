@@ -42,6 +42,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         private readonly Computed<Visibility> _onlineVisibility;
 
         /// <summary>
+        ///     The not online indicator visibility.
+        /// </summary>
+        [NotNull]
+        private readonly Computed<Visibility> _notOnlineVisibility;
+
+        /// <summary>
         ///     The fault indicator visibility.
         /// </summary>
         [NotNull]
@@ -67,6 +73,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
             _offlineVisibility = new Computed<Visibility>(() => VisibileIfStatus(FaultIndicatorStatus.DisplayOffline));
             _availableVisibility = new Computed<Visibility>(() => VisibileIfStatus(FaultIndicatorStatus.Available));
             _onlineVisibility = new Computed<Visibility>(() => VisibileIfStatus(FaultIndicatorStatus.Online));
+            _notOnlineVisibility = new Computed<Visibility>(() => CollapsedIfStatus(FaultIndicatorStatus.Online));
             _faultVisibility = new Computed<Visibility>(() => VisibileIfStatus(FaultIndicatorStatus.Fault));
             _warningVisibility = new Computed<Visibility>(() => VisibileIfStatus(FaultIndicatorStatus.Warning));
         }
@@ -81,6 +88,20 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         private Visibility VisibileIfStatus(FaultIndicatorStatus status)
         {
             return Status == status
+                       ? Visibility.Visible
+                       : Visibility.Collapsed;
+        }
+
+        /// <summary>
+        ///     Collapsed if <see cref="Status"/> is the expected <paramref name="status"/>.
+        /// </summary>
+        /// <param name="status"> The indicator's status. </param>
+        /// <returns>
+        ///     A Visibility.
+        /// </returns>
+        private Visibility CollapsedIfStatus(FaultIndicatorStatus status)
+        {
+            return Status != status
                        ? Visibility.Visible
                        : Visibility.Collapsed;
         }
@@ -109,6 +130,19 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
             [DebuggerStepThrough]
             get
             { return _onlineVisibility; }
+        }
+
+        /// <summary>
+        ///     Gets the visibility for a NOT Online indicator.
+        /// </summary>
+        /// <value>
+        ///     The not online visibility.
+        /// </value>
+        public Visibility NotOnlineVisibility
+        {
+            [DebuggerStepThrough]
+            get
+            { return _notOnlineVisibility; }
         }
 
         /// <summary>

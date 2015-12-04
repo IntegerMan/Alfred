@@ -4,116 +4,76 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels"
-             Width="45"
              d:DataContext="{d:DesignInstance viewModels:FaultIndicatorViewModel}"
              mc:Ignorable="d">
     <UserControl.Resources>
-        <Brush x:Key="IndicatorBackgroundBrush">#13171C</Brush>
-        <Brush x:Key="IndicatorBorderBrush">#212528</Brush>
-        <Brush x:Key="IndicatorActiveTextBrush">#66706C</Brush>
-        <Brush x:Key="IndicatorWarnBrush">#92560A</Brush>
-        <Brush x:Key="IndicatorOffBrush">#D7C79C</Brush>
-        <Brush x:Key="TemporarilyActiveBrush">#0EABF0</Brush>
-        <Brush x:Key="IndicatorAvailableBrush">#21D232</Brush>
-        <Brush x:Key="FaultIndicatorBrush">#F63C00</Brush>
 
-        <Style x:Key="IndicatorButtonLabelStyle" TargetType="TextBlock">
-            <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Brush x:Key="IndicatorBackgroundBrush">
+            #13171C
+        </Brush>
+        <Brush x:Key="IndicatorBorderBrush">
+            #212528
+        </Brush>
+
+        <SolidColorBrush x:Key="IndicatorLitWarn"
+                         Color="#FFE0A510" />
+        <SolidColorBrush x:Key="IndicatorLitFault"
+                         Color="#FFD44434" />
+        <SolidColorBrush x:Key="IndicatorLitOnline"
+                         Color="#FFB9E970" />
+        <SolidColorBrush x:Key="IndicatorUnlit"
+                         Color="#FF615A50" />
+
+        <Style x:Key="IndicatorButtonLabelStyle"
+               TargetType="TextBlock">
             <Setter Property="FontFamily" Value="{StaticResource ConsoleFontFamily}" />
             <Setter Property="FontSize" Value="6pt" />
             <Setter Property="Foreground" Value="{StaticResource IndicatorBorderBrush}" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="TextAlignment" Value="Center" />
         </Style>
 
-        <Style x:Key="IndicatorBorderStyle" TargetType="Border">
-            <Setter Property="BorderBrush" Value="{StaticResource IndicatorBorderBrush}" />
-            <Setter Property="BorderThickness" Value="2" />
-            <Setter Property="Padding" Value="2" />
-        </Style>
-
     </UserControl.Resources>
-    <DockPanel>
-        <TextBlock x:Name="lblIndicatorName"
-                   Margin="0,0,0,2"
-                   DockPanel.Dock="Top"
-                   FontSize="8pt"
-                   Foreground="{StaticResource IndicatorActiveTextBrush}"
-                   Style="{StaticResource IndicatorButtonLabelStyle}"
-                   Text="{Binding Path=IndicatorLabel}" />
 
-        <Border x:Name="borderOuter"
-                Width="45"
-                Height="45"
-                VerticalAlignment="Center"
-                Background="{StaticResource IndicatorBackgroundBrush}"
-                BorderBrush="{StaticResource IndicatorBorderBrush}"
-                BorderThickness="2"
-                Padding="2">
-            <Grid>
+    <!--  Metallic outer border  -->
+    <Border x:Name="borderOuter"
+            BorderBrush="{DynamicResource MFDScreenBorderBrush}"
+            BorderThickness="2"
+            d:LayoutOverrides="Width">
 
-                <Border x:Name="borderInnerUpper"
-                        Height="16"
-                        VerticalAlignment="Top"
-                        BorderBrush="Transparent"
-                        Style="{StaticResource IndicatorBorderStyle}">
+        <!--  Darker inner border with dark background  -->
+        <Border x:Name="borderInner"
+                BorderBrush="{DynamicResource IndicatorBorderBrush}"
+                Background="{DynamicResource IndicatorBackgroundBrush}"
+                BorderThickness="1">
+            <Grid Margin="2">
 
-                    <Grid>
-                        <!--  The Fault indicator  -->
-                        <TextBlock x:Name="lblWarning"
-                                   Foreground="{StaticResource IndicatorWarnBrush}"
-                                   Style="{StaticResource IndicatorButtonLabelStyle}"
-                                   Text="WARN"
-                                   Visibility="{Binding Path=WarningVisibility}" />
+                <!--  Label for when the indicator is off  -->
+                <TextBlock x:Name="lblIndicatorOff"
+                           Style="{StaticResource IndicatorButtonLabelStyle}"
+                           Visibility="{Binding NotOnlineVisibility}"
+                           Text="{Binding IndicatorLabel}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Foreground="{DynamicResource IndicatorUnlit}"
+                           d:IsHidden="True" />
 
-                        <!--  The Fault indicator  -->
-                        <TextBlock x:Name="lblFault"
-                                   Foreground="{StaticResource FaultIndicatorBrush}"
-                                   Style="{StaticResource IndicatorButtonLabelStyle}"
-                                   Text="FAULT"
-                                   Visibility="{Binding Path=FaultVisibility}" />
-
-                        <!--  The Available indicator  -->
-                        <TextBlock x:Name="lblAvailable"
-                                   Foreground="{StaticResource IndicatorAvailableBrush}"
-                                   Style="{StaticResource IndicatorButtonLabelStyle}"
-                                   Text="AVAIL"
-                                   Visibility="{Binding Path=AvailabilityVisibility}" />
-                    </Grid>
-                </Border>
-
-                <!--  Display an outline for the lower area if neither offline or on are on  -->
-                <Border x:Name="borderInnerPlaceHolder"
-                        Height="16"
-                        VerticalAlignment="Bottom"
-                        Style="{StaticResource IndicatorBorderStyle}" />
-
-                <!--  The Offline indicator  -->
-                <Border x:Name="borderInnerOff"
-                        Height="16"
-                        VerticalAlignment="Bottom"
-                        BorderBrush="{StaticResource IndicatorOffBrush}"
-                        Style="{StaticResource IndicatorBorderStyle}"
-                        Visibility="{Binding Path=OfflineVisibility}">
-                    <TextBlock x:Name="lblOff"
-                               Foreground="{StaticResource IndicatorOffBrush}"
-                               Style="{StaticResource IndicatorButtonLabelStyle}"
-                               Text="OFF" />
-                </Border>
-
-                <!--  Temporarily online indicator  -->
-                <Border x:Name="borderInnerOn"
-                        Height="16"
-                        VerticalAlignment="Bottom"
-                        BorderBrush="{StaticResource TemporarilyActiveBrush}"
-                        Style="{StaticResource IndicatorBorderStyle}"
-                        Visibility="{Binding Path=OnlineVisibility}">
-                    <TextBlock x:Name="lblOn"
-                               Foreground="{StaticResource TemporarilyActiveBrush}"
-                               Style="{StaticResource IndicatorButtonLabelStyle}"
-                               Text="ON" />
-                </Border>
+                <!--  Label for when the indicator is on  -->
+                <TextBlock x:Name="lblIndicatorOn"
+                           Style="{StaticResource IndicatorButtonLabelStyle}"
+                           Visibility="{Binding OnlineVisibility}"
+                           Text="{Binding IndicatorLabel}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Foreground="{DynamicResource IndicatorLitOnline}">
+                    <!-- TODO: Come up with an outer shadow Effect
+                    <TextBlock.Effect>
+                        <DropShadowEffect />
+                    </TextBlock.Effect>
+                    -->
+                </TextBlock>
 
             </Grid>
         </Border>
-    </DockPanel>
+    </Border>
 </UserControl>
