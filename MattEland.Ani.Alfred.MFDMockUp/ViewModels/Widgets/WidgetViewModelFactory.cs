@@ -15,6 +15,11 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets
     internal static class WidgetViewModelFactory
     {
         /// <summary>
+        ///     Occurs when a widget view model is created.
+        /// </summary>
+        public static event EventHandler<WidgetViewModel> WidgetViewModelCreated;
+
+        /// <summary>
         ///     Creates a view model for the specified widget.
         /// </summary>
         /// <param name="widget"> The widget. </param>
@@ -31,10 +36,18 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets
 
             // TODO: Refactor this as new widget types are supported
 
+            // Build a VM or return a cached VM
             output = TryCreateViewModel<ProgressBarWidget, ProgressBarWidgetViewModel>(widget);
-            if (output != null) return output;
+            if (output == null)
+            {
+                // Build a default VM
+                output = new WidgetViewModel(widget);
+            }
 
-            return new WidgetViewModel(widget);
+            // Tell any observer that we have a new instance.
+            RaiseWidgetCreated(output);
+
+            return output;
         }
 
         /// <summary>
@@ -72,6 +85,17 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets
             }
 
             return null;
+        }
+
+        /// <summary>
+        ///     Raises the widget created event.
+        /// </summary>
+        /// <param name="e"> The widget that was created. </param>
+        private static void RaiseWidgetCreated([NotNull] WidgetViewModel e)
+        {
+            Contract.Requires(e != null);
+
+            WidgetViewModelCreated?.Invoke(null, e);
         }
     }
 }
