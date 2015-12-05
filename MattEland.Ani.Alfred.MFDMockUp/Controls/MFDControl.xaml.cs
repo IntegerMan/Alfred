@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows.Controls;
 
+using MattEland.Ani.Alfred.MFDMockUp.Models;
 using MattEland.Common.Annotations;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.Controls
@@ -18,6 +19,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Controls
         public MFDControl()
         {
             InitializeComponent();
+
+            // Register with instantiation monitor
+            InstantiationMonitor.Instance.NotifyItemCreated(this);
         }
     }
 }

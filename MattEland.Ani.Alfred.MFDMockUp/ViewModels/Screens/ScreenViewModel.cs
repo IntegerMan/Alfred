@@ -28,6 +28,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
             Contract.Ensures(_screenModel != null);
 
             _screenModel = screenModel;
+
+            // Register with instantiation monitor
+            InstantiationMonitor.Instance.NotifyItemCreated(this);
         }
 
         /// <summary>

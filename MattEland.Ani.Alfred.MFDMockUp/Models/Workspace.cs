@@ -83,7 +83,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
                                                                : FaultIndicatorStatus.Available));
 
             // Alert when too many items are being instantiated
-            _instantiationMonitor = new InstantiationMonitor();
+            _instantiationMonitor = InstantiationMonitor.Instance;
             _faultManager.Register(new FaultIndicatorModel("HI-INST",
                                                            GetHighInstantiationIndicatorStatus));
 

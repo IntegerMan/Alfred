@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
+using MattEland.Ani.Alfred.MFDMockUp.Models;
 using MattEland.Common.Annotations;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.Controls
@@ -29,8 +30,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Controls
         /// </remarks>
         [NotNull]
         public static readonly DependencyProperty IsSensorOfInterestProperty = DependencyProperty.Register(nameof(IsSensorOfInterest),
-                                                                         typeof (bool),
-                                                                         typeof (SensorOfInterestIndicator),
+                                                                         typeof(bool),
+                                                                         typeof(SensorOfInterestIndicator),
                                                                          new PropertyMetadata(false));
 
         /// <summary>
@@ -39,8 +40,17 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Controls
         /// <value>The IsSensorOfInterest.</value>
         public bool IsSensorOfInterest
         {
-            get { return (bool) GetValue(IsSensorOfInterestProperty); }
+            get { return (bool)GetValue(IsSensorOfInterestProperty); }
             set { SetValue(IsSensorOfInterestProperty, value); }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Windows.Controls.Control"/> class. 
+        /// </summary>
+        public SensorOfInterestIndicator()
+        {
+            // Register with instantiation monitor
+            InstantiationMonitor.Instance.NotifyItemCreated(this);
         }
     }
 }

@@ -8,6 +8,8 @@
 // ---------------------------------------------------------
 
 using System.Diagnostics.Contracts;
+
+using MattEland.Ani.Alfred.MFDMockUp.Models;
 using MattEland.Common.Annotations;
 using MattEland.Presentation.Logical.Widgets;
 
@@ -25,6 +27,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets
         public WidgetViewModel([NotNull] IWidget widget)
         {
             Widget = widget;
+
+            // Register with instantiation monitor
+            InstantiationMonitor.Instance.NotifyItemCreated(this);
         }
 
         /// <summary>

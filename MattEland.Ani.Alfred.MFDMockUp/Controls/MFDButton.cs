@@ -1,6 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
+using MattEland.Ani.Alfred.MFDMockUp.Models;
+
 namespace MattEland.Ani.Alfred.MFDMockUp.Controls
 {
     /// <summary>
@@ -17,5 +19,13 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Controls
                 new FrameworkPropertyMetadata(typeof(MFDButton)));
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:MFDButton"/> class.
+        /// </summary>
+        public MFDButton()
+        {
+            // Register with instantiation monitor
+            InstantiationMonitor.Instance.NotifyItemCreated(this);
+        }
     }
 }

@@ -46,6 +46,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
 
             _buttonText = new Observable<string>(buttonText);
             _viewModels = new Dictionary<object, ScreenViewModel>();
+
+            // Register with instantiation monitor
+            InstantiationMonitor.Instance.NotifyItemCreated(this);
         }
 
         /// <summary>

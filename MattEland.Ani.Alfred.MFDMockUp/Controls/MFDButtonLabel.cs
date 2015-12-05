@@ -3,6 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
 
+using MattEland.Ani.Alfred.MFDMockUp.Models;
+
 namespace MattEland.Ani.Alfred.MFDMockUp.Controls
 {
     /// <summary>
@@ -29,6 +31,15 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Controls
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(MFDButtonLabel),
                 new FrameworkPropertyMetadata(typeof(MFDButtonLabel)));
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Windows.Controls.Control"/> class. 
+        /// </summary>
+        public MFDButtonLabel()
+        {
+            // Register with instantiation monitor
+            InstantiationMonitor.Instance.NotifyItemCreated(this);
         }
 
         /// <summary>

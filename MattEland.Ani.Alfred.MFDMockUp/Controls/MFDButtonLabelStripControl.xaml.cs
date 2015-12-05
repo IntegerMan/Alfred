@@ -3,6 +3,8 @@ using MattEland.Common.Annotations;
 using System.Windows;
 using System.Windows.Controls;
 
+using MattEland.Ani.Alfred.MFDMockUp.Models;
+
 namespace MattEland.Ani.Alfred.MFDMockUp.Controls
 {
     /// <summary>
@@ -17,6 +19,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Controls
         public MFDButtonLabelStripControl()
         {
             InitializeComponent();
+
+            // Register with instantiation monitor
+            InstantiationMonitor.Instance.NotifyItemCreated(this);
         }
 
         /// <summary>

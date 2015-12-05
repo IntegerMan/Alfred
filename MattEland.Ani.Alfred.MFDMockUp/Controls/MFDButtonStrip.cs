@@ -56,5 +56,14 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Controls
             get { return (ButtonStripDock)GetValue(DockDirectionProperty); }
             set { SetValue(DockDirectionProperty, value); }
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Windows.Controls.Control"/> class. 
+        /// </summary>
+        public MFDButtonStrip()
+        {
+            // Register with instantiation monitor
+            InstantiationMonitor.Instance.NotifyItemCreated(this);
+        }
     }
 }

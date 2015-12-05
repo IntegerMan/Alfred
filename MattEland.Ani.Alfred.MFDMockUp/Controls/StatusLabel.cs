@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Media;
 
+using MattEland.Ani.Alfred.MFDMockUp.Models;
 using MattEland.Common.Annotations;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.Controls
@@ -42,6 +43,15 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Controls
         {
             get { return (Brush)GetValue(StatusForegroundProperty); }
             set { SetValue(StatusForegroundProperty, value); }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Windows.Controls.HeaderedContentControl"/> class. 
+        /// </summary>
+        public StatusLabel()
+        {
+            // Register with instantiation monitor
+            InstantiationMonitor.Instance.NotifyItemCreated(this);
         }
 
     }

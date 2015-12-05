@@ -45,6 +45,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
             NavButtons = new ObservableList<ButtonModel>();
             CommandButtons = BuildDefaultCommandButtons();
 
+            // Register with instantiation monitor
+            InstantiationMonitor.Instance.NotifyItemCreated(this);
         }
 
         /// <summary>

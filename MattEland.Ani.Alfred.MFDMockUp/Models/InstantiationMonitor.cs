@@ -27,25 +27,14 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         [NotNull]
         private readonly Observable<int> _newItemsLastMeasurement;
 
+        private static InstantiationMonitor _instance;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="T:InstantiationMonitor"/> class.
         /// </summary>
-        public InstantiationMonitor()
+        private InstantiationMonitor()
         {
             _newItemsLastMeasurement = new Observable<int>(0);
-
-            WidgetViewModelFactory.WidgetViewModelCreated += OnWidgetViewModelCreated;
-        }
-
-        /// <summary>
-        ///     Responds to the creation of new widget view models.
-        /// </summary>
-        /// <param name="sender"> Source of the event. </param>
-        /// <param name="widgetViewModel"> The widget view model. </param>
-        private void OnWidgetViewModelCreated([CanBeNull] object sender,
-            [NotNull] WidgetViewModel widgetViewModel)
-        {
-            NotifyItemCreated(widgetViewModel);
         }
 
         /// <summary>
@@ -81,6 +70,25 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         {
             get { return _newItemsLastMeasurement.Value; }
             set { _newItemsLastMeasurement.Value = value; }
+        }
+
+        /// <summary>
+        ///     Gets the instantiation monitor instance.
+        /// </summary>
+        /// <value>
+        ///     The instantiation monitor instance.
+        /// </value>
+        [NotNull]
+        public static InstantiationMonitor Instance
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<InstantiationMonitor>() != null);
+                Contract.Ensures(_instance != null);
+
+                // Lazy load instance as needed
+                return _instance ?? (_instance = new InstantiationMonitor());
+            }
         }
 
     }

@@ -52,6 +52,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Buttons
         {
             _model = model;
             _parent = parent;
+
+            // Register with instantiation monitor
+            InstantiationMonitor.Instance.NotifyItemCreated(this);
         }
 
         /// <summary>

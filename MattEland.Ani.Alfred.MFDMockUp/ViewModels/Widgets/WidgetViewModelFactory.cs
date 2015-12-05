@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Linq;
 
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Common.Annotations;
@@ -14,11 +12,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets
     /// </summary>
     internal static class WidgetViewModelFactory
     {
-        /// <summary>
-        ///     Occurs when a widget view model is created.
-        /// </summary>
-        public static event EventHandler<WidgetViewModel> WidgetViewModelCreated;
-
         /// <summary>
         ///     Creates a view model for the specified widget.
         /// </summary>
@@ -43,9 +36,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets
                 // Build a default VM
                 output = new WidgetViewModel(widget);
             }
-
-            // Tell any observer that we have a new instance.
-            RaiseWidgetCreated(output);
 
             return output;
         }
@@ -85,17 +75,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets
             }
 
             return null;
-        }
-
-        /// <summary>
-        ///     Raises the widget created event.
-        /// </summary>
-        /// <param name="e"> The widget that was created. </param>
-        private static void RaiseWidgetCreated([NotNull] WidgetViewModel e)
-        {
-            Contract.Requires(e != null);
-
-            WidgetViewModelCreated?.Invoke(null, e);
         }
     }
 }

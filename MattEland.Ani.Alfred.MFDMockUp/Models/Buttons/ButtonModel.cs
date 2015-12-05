@@ -42,6 +42,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Buttons
             _text = new Observable<string>(text);
             _index = new Observable<int>(index);
             ClickListener = listener;
+
+            InstantiationMonitor.Instance.NotifyItemCreated(this);
         }
 
         /// <summary>
