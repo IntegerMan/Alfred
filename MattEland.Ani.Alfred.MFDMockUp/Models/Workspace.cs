@@ -32,6 +32,44 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// </summary>
         [NotNull]
         private const string DefaultWorkspaceName = "Alfred MFD Prototype";
+
+        [NotNull, ItemNotNull]
+        private readonly ObservableList<MultifunctionDisplay> _mfds;
+
+        [NotNull]
+        private readonly DispatcherUpdatePump _updatePump;
+
+        /// <summary>
+        /// The name's observable backing store. 
+        /// </summary>
+        [NotNull]
+        private readonly Observable<string> _name;
+
+        private DateTime _lastUpdateTime;
+
+        [NotNull]
+        private readonly InstantiationMonitor _instantiationMonitor;
+
+        /// <summary>
+        ///     The selected multifunction display.
+        /// </summary>
+        [NotNull]
+        private readonly Observable<MultifunctionDisplay> _selectedMFD;
+
+        /// <summary>
+        ///     Manager for faultIndicator indicators.
+        /// </summary>
+        [NotNull]
+        private readonly FaultManager _faultManager;
+
+        /// <summary>
+        ///     Gets the container.
+        /// </summary>
+        /// <value>
+        ///     The container.
+        /// </value>
+        [NotNull]
+        public IAlfredContainer Container { get; }
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:Workspace"/> class intended for design-time consumption.
         /// </summary>
@@ -112,6 +150,29 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             }
         }
 
+        /// <summary>
+        ///     Creates and returns a new multifunction display (MFD). This display is added to the
+        ///     displays collection.
+        /// </summary>
+        /// <param name="name"> The name of the display. </param>
+        /// <returns>
+        ///     A new display.
+        /// </returns>
+        [NotNull]
+        public MultifunctionDisplay AddNewMultifunctionDisplay([NotNull] string name)
+        {
+            Contract.Requires(name != null);
+            Contract.Requires(name.HasText());
+            Contract.Ensures(Contract.Result<MultifunctionDisplay>() != null);
+            Contract.Ensures(Contract.Result<MultifunctionDisplay>().Name == name);
+
+            var item = new MultifunctionDisplay(Container, this, name);
+
+            _mfds.Add(item);
+
+            return item;
+        }
+
         private FaultIndicatorStatus GetSubsystemStatus([CanBeNull] IAlfredSubsystem subsystem)
         {
             // Ensure the thing is actually there
@@ -146,22 +207,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         }
 
         /// <summary>
-        ///     Gets or sets the console.
+        ///     Starts the main update pump that runs the Multifunction Displays.
         /// </summary>
-        /// <value>
-        ///     The console.
-        /// </value>
-        [NotNull]
-        public IConsole Console { get; }
-
-        /// <summary>
-        ///     Gets the manager for application.
-        /// </summary>
-        /// <value>
-        ///     The application manager.
-        /// </value>
-        [NotNull]
-        public ApplicationManager ApplicationManager { get; }
+        public void Start()
+        {
+            _updatePump.Start();
+        }
 
         /// <summary>
         ///     Updates the workspace's contents.
@@ -191,17 +242,23 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             _lastUpdateTime = now;
         }
 
-        [NotNull, ItemNotNull]
-        private readonly ObservableList<MultifunctionDisplay> _mfds;
+        /// <summary>
+        ///     Gets or sets the console.
+        /// </summary>
+        /// <value>
+        ///     The console.
+        /// </value>
+        [NotNull]
+        public IConsole Console { get; }
 
         /// <summary>
-        /// The name's observable backing store. 
+        ///     Gets the manager for application.
         /// </summary>
+        /// <value>
+        ///     The application manager.
+        /// </value>
         [NotNull]
-        private readonly Observable<string> _name;
-
-        [NotNull]
-        private readonly DispatcherUpdatePump _updatePump;
+        public ApplicationManager ApplicationManager { get; }
 
         /// <summary>
         /// Gets the multifunction displays (MFDs). 
@@ -223,32 +280,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             get { return _name; }
             set { _name.Value = value; }
         }
-
-        /// <summary>
-        ///     Gets the container.
-        /// </summary>
-        /// <value>
-        ///     The container.
-        /// </value>
-        [NotNull]
-        public IAlfredContainer Container { get; }
-
-        /// <summary>
-        ///     The selected multifunction display.
-        /// </summary>
-        [NotNull]
-        private readonly Observable<MultifunctionDisplay> _selectedMFD;
-
-        /// <summary>
-        ///     Manager for faultIndicator indicators.
-        /// </summary>
-        [NotNull]
-        private readonly FaultManager _faultManager;
-
-        [NotNull]
-        private readonly InstantiationMonitor _instantiationMonitor;
-
-        private DateTime _lastUpdateTime;
 
         /// <summary>
         ///     Gets or sets the selected multifunction display.
@@ -298,37 +329,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
 
                 return Console;
             }
-        }
-
-        /// <summary>
-        ///     Creates and returns a new multifunction display (MFD). This display is added to the
-        ///     displays collection.
-        /// </summary>
-        /// <param name="name"> The name of the display. </param>
-        /// <returns>
-        ///     A new display.
-        /// </returns>
-        [NotNull]
-        public MultifunctionDisplay AddNewMultifunctionDisplay([NotNull] string name)
-        {
-            Contract.Requires(name != null);
-            Contract.Requires(name.HasText());
-            Contract.Ensures(Contract.Result<MultifunctionDisplay>() != null);
-            Contract.Ensures(Contract.Result<MultifunctionDisplay>().Name == name);
-
-            var item = new MultifunctionDisplay(Container, this, name);
-
-            _mfds.Add(item);
-
-            return item;
-        }
-
-        /// <summary>
-        ///     Starts the main update pump that runs the Multifunction Displays.
-        /// </summary>
-        public void Start()
-        {
-            _updatePump.Start();
         }
     }
 }
