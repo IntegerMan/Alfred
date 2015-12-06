@@ -61,15 +61,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// </summary>
         [NotNull]
         private readonly FaultManager _faultManager;
-
-        /// <summary>
-        ///     Gets the container.
-        /// </summary>
-        /// <value>
-        ///     The container.
-        /// </value>
-        [NotNull]
-        public IAlfredContainer Container { get; }
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:Workspace"/> class intended for design-time consumption.
         /// </summary>
@@ -241,6 +232,15 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
 
             _lastUpdateTime = now;
         }
+
+        /// <summary>
+        ///     Gets the container.
+        /// </summary>
+        /// <value>
+        ///     The container.
+        /// </value>
+        [NotNull]
+        public IAlfredContainer Container { get; }
 
         /// <summary>
         ///     Gets or sets the console.
