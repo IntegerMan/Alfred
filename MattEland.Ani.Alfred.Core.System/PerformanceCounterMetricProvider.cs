@@ -11,7 +11,11 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 
+using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common;
 using MattEland.Common.Annotations;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
@@ -20,7 +24,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
     /// </summary>
     public sealed class CounterMetricProvider : MetricProviderBase, IDisposable
     {
-        [NotNull]
+        [CanBeNull]
         private readonly PerformanceCounter _counter;
 
         /// <summary>
@@ -40,11 +44,22 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 
             : base(instance ?? counterName)
         {
-            _counter = new PerformanceCounter(categoryName, counterName, instance, true);
+            try
+            {
+                _counter = new PerformanceCounter(categoryName, counterName, instance, true);
 
-            /* Tell the performance counter to start getting values. These tend to always return 
+                /* Tell the performance counter to start getting values. These tend to always return 
                0.0 as the first value and then provide accurate data after that */
-            _counter.NextValue();
+                _counter.NextValue();
+            }
+            catch (Exception ex)
+            {
+                var exTitle = string.Format("Error Creating Counter '{0}'", counterName);
+
+                ex.BuildDetailsMessage().Log(exTitle,
+                    LogLevel.Error,
+                    CommonProvider.Container as IAlfredContainer);
+            }
         }
 
         /// <summary>
@@ -58,7 +73,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// </exception>
         public override float NextValue()
         {
-            return _counter.NextValue();
+            return _counter?.NextValue() ?? 0;
         }
 
         /// <summary>
@@ -67,7 +82,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// </summary>
         public void Dispose()
         {
-            _counter.Dispose();
+            _counter?.Dispose();
         }
     }
 

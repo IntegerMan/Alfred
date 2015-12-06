@@ -13,6 +13,11 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
+using MattEland.Ani.Alfred.Core.Console;
+using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common;
+using MattEland.Common.Providers;
+
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
     /// <summary>
@@ -61,7 +66,8 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         {
             var cpuCategory = new PerformanceCounterCategory(categoryName);
 
-            return cpuCategory.GetInstanceNames();
+            IEnumerable<string> names = cpuCategory.GetInstanceNames();
+            return names;
         }
     }
 }

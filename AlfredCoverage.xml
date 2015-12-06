@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Root CoveredStatements="3495" TotalStatements="4201" CoveragePercent="83" ReportType="NDependXML" DotCoverVersion="3.2">
-  <Assembly Name="MattEland.Ani.Alfred.Tests" CoveredStatements="2900" TotalStatements="2952" CoveragePercent="98">
+<Root CoveredStatements="3480" TotalStatements="4201" CoveragePercent="83" ReportType="NDependXML" DotCoverVersion="3.2">
+  <Assembly Name="MattEland.Ani.Alfred.Tests" CoveredStatements="2892" TotalStatements="2952" CoveragePercent="98">
     <Namespace Name="MattEland.Ani.Alfred.Tests" CoveredStatements="249" TotalStatements="261" CoveragePercent="95">
       <Type Name="AlfredTestBase" CoveredStatements="100" TotalStatements="100" CoveragePercent="100">
         <Type Name="&lt;&gt;c__DisplayClass17_0" CoveredStatements="1" TotalStatements="1" CoveragePercent="100">
@@ -525,7 +525,7 @@
         <Method Name="PageShouldHaveCorrectId()" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="24" />
       </Type>
     </Namespace>
-    <Namespace Name="MattEland.Ani.Alfred.Tests.Presentation" CoveredStatements="120" TotalStatements="122" CoveragePercent="98">
+    <Namespace Name="MattEland.Ani.Alfred.Tests.Presentation" CoveredStatements="112" TotalStatements="122" CoveragePercent="92">
       <Type Name="ConverterTestsBase&lt;TConverter&gt;" CoveredStatements="23" TotalStatements="23" CoveragePercent="100">
         <Method Name="Convert(Object)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="114" />
         <Method Name="get_Converter()" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="55" />
@@ -557,8 +557,8 @@
         <Method Name="WhenInvertedFalseReturnsVisible()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="136" />
         <Method Name="WhenInvertedTrueReturnsCollapsed()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="115" />
       </Type>
-      <Type Name="XamlCommandTests" CoveredStatements="14" TotalStatements="14" CoveragePercent="100">
-        <Method Name="ContainerCommandShouldBeXamlCommand()" CoveredStatements="11" TotalStatements="11" CoveragePercent="100" FirstStatementLine="51" />
+      <Type Name="XamlCommandTests" CoveredStatements="6" TotalStatements="14" CoveragePercent="43">
+        <Method Name="ContainerCommandShouldBeXamlCommand()" CoveredStatements="3" TotalStatements="11" CoveragePercent="27" FirstStatementLine="51" />
         <Method Name="SetUp()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="39" />
       </Type>
     </Namespace>
@@ -807,17 +807,17 @@
       </Type>
     </Namespace>
   </Assembly>
-  <Assembly Name="MattEland.Ani.Alfred.WPF" CoveredStatements="28" TotalStatements="127" CoveragePercent="22">
-    <Namespace Name="MattEland.Ani.Alfred.WPF" CoveredStatements="18" TotalStatements="61" CoveragePercent="30">
+  <Assembly Name="MattEland.Ani.Alfred.WPF" CoveredStatements="21" TotalStatements="127" CoveragePercent="17">
+    <Namespace Name="MattEland.Ani.Alfred.WPF" CoveredStatements="11" TotalStatements="61" CoveragePercent="18">
       <Type Name="App" CoveredStatements="0" TotalStatements="21" CoveragePercent="0">
         <Method Name="InitializeComponent()" CoveredStatements="0" TotalStatements="8" CoveragePercent="0" FirstStatementLine="49" />
         <Method Name="OnUnhandledException(Object,DispatcherUnhandledExceptionEventArgs)" CoveredStatements="0" TotalStatements="13" CoveragePercent="0" FirstStatementLine="26" />
       </Type>
-      <Type Name="MainWindow" CoveredStatements="18" TotalStatements="40" CoveragePercent="45">
+      <Type Name="MainWindow" CoveredStatements="11" TotalStatements="40" CoveragePercent="28">
         <Method Name=".ctor()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="37" />
-        <Method Name=".ctor(IAlfredContainer,Boolean)" CoveredStatements="10" TotalStatements="10" CoveragePercent="100" FirstStatementLine="46" />
-        <Method Name="Dispose()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="131" />
-        <Method Name="get_Application()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="90" />
+        <Method Name=".ctor(IAlfredContainer,Boolean)" CoveredStatements="7" TotalStatements="10" CoveragePercent="70" FirstStatementLine="46" />
+        <Method Name="Dispose()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="131" />
+        <Method Name="get_Application()" CoveredStatements="0" TotalStatements="1" CoveragePercent="0" FirstStatementLine="90" />
         <Method Name="get_Container()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="81" />
         <Method Name="HandlePageNavigationCommand(ShellCommand)" CoveredStatements="0" TotalStatements="4" CoveragePercent="0" FirstStatementLine="141" />
         <Method Name="HandleWebPageRequested(String)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="152" />

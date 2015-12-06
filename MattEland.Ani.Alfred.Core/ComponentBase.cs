@@ -28,7 +28,7 @@ namespace MattEland.Ani.Alfred.Core
     ///     An <see langword="abstract"/> class containing most common shared functionality between
     ///     Subsystems and Modules
     /// </summary>
-    public abstract class ComponentBase : NotifyChangedBase, IPropertyProvider, IHasContainer<IAlfredContainer>
+    public abstract class ComponentBase : NotifyChangedBase, IPropertyProvider, IHasContainer<IAlfredContainer>, IErrorContainer
     {
 
         [CanBeNull]
@@ -202,6 +202,48 @@ namespace MattEland.Ani.Alfred.Core
             get { return AlfredInstance?.RegistrationProvider; }
         }
 
+        private Exception _lastError;
+
+        /// <summary>
+        ///     Gets or sets the last error encountered by this component.
+        /// </summary>
+        /// <value>
+        ///     The last error encountered.
+        /// </value>
+        [CanBeNull]
+        public Exception LastError
+        {
+            get { return _lastError; }
+            set
+            {
+                if (Equals(value, _lastError)) return;
+                _lastError = value;
+                LastErrorTime = value == null ? DateTime.MinValue : DateTime.Now;
+                OnPropertyChanged(nameof(LastError));
+                OnPropertyChanged(nameof(LastErrorTime));
+                OnPropertyChanged(nameof(HasError));
+            }
+        }
+
+        /// <summary>
+        ///     Gets the time of the last error.
+        /// </summary>
+        /// <value>
+        ///     The last error time.
+        /// </value>
+        public DateTime LastErrorTime { get; private set; }
+
+        /// <summary>
+        ///     Gets a value indicating whether or not an unacknowledged error has been encountered.
+        /// </summary>
+        /// <value>
+        ///     true if this instance has an unacknowledge error, false if not.
+        /// </value>
+        public bool HasError
+        {
+            get { return LastError != null; }
+        }
+
         /// <summary>
         ///     Allows components to define controls
         /// </summary>
@@ -303,8 +345,7 @@ namespace MattEland.Ani.Alfred.Core
 
         /// <summary>
         ///     A notification method that is invoked when initialization for Alfred is complete so the UI can
-        ///     be fully enabled or
-        ///     adjusted
+        ///     be fully enabled or adjusted
         /// </summary>
         public virtual void OnInitializationCompleted()
         {
@@ -451,6 +492,13 @@ namespace MattEland.Ani.Alfred.Core
             return true;
         }
 
+        /// <summary>
+        ///     Acknowledges the <see cref="LastError"/> error and clears out the exception.
+        /// </summary>
+        public virtual void AcknowledgeError()
+        {
+            LastError = null;
+        }
     }
 
 }

@@ -187,6 +187,45 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         }
 
         /// <summary>
+        ///     Updates the component
+        /// </summary>
+        protected override void UpdateProtected()
+        {
+            var lastEx = LastError;
+            var lastExTime = LastErrorTime;
+
+            foreach (var sys in SystemModules)
+            {
+                if (!sys.HasError) continue;
+                if (sys.LastErrorTime <= lastExTime) continue;
+
+                lastEx = sys.LastError;
+                lastExTime = sys.LastErrorTime;
+            }
+
+            // Update the aggregate last error to the latest one
+            if (lastEx != null && lastEx != LastError)
+            {
+                LastError = lastEx;
+            }
+        }
+
+        /// <summary>
+        ///     Acknowledges the <see cref="M:LastError"/> error and clears out the exception.
+        /// </summary>
+        public override void AcknowledgeError()
+        {
+            // Clear out child errors
+            foreach (var sys in SystemModules)
+            {
+                sys.AcknowledgeError();
+            }
+
+            // Acknowledge the error
+            base.AcknowledgeError();
+        }
+
+        /// <summary>
         ///     Processes an Alfred Command. If the <paramref name="command" /> is handled,
         ///     <paramref name="result" /> should be modified accordingly and the method should
         ///     return true. Returning <see langword="false" /> will not stop the message from being

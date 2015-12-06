@@ -6,12 +6,12 @@ using MattEland.Common.Annotations;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
+using System.Linq;
 
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Speech;
-using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
+using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Ani.Alfred.PresentationAvalon.Commands;
 using MattEland.Ani.Alfred.PresentationCommon.Commands;
 using MattEland.Common;
@@ -24,8 +24,16 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
     [PublicAPI]
     public sealed class Workspace
     {
+
+        private const int HighInstantiationCountThreshhold = 1;
+
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Object"/> class intended for design-time consumption.
+        /// The default workspace name. 
+        /// </summary>
+        [NotNull]
+        private const string DefaultWorkspaceName = "Alfred MFD Prototype";
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="T:Workspace"/> class intended for design-time consumption.
         /// </summary>
         [UsedImplicitly]
         public Workspace() : this(new AlfredContainer())
@@ -74,6 +82,20 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
 
             // Add a faultIndicator indicator manager
             _faultManager = new FaultManager();
+            _instantiationMonitor = InstantiationMonitor.Instance;
+
+            RegisterFaultIndicators();
+
+            // Build the main update pump
+            _updatePump = new DispatcherUpdatePump(TimeSpan.FromSeconds(0.1), Update);
+
+        }
+
+        private void RegisterFaultIndicators()
+        {
+            // Alert when too many items are being instantiated
+            _faultManager.Register(new FaultIndicatorModel("HI-INST",
+                GetHighInstantiationIndicatorStatus));
 
             // Watch for Alfred's status
             _faultManager.Register(new FaultIndicatorModel("ALFRED",
@@ -82,13 +104,29 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
                                                                ? FaultIndicatorStatus.Online
                                                                : FaultIndicatorStatus.Available));
 
-            // Alert when too many items are being instantiated
-            _instantiationMonitor = InstantiationMonitor.Instance;
-            _faultManager.Register(new FaultIndicatorModel("HI-INST",
-                                                           GetHighInstantiationIndicatorStatus));
+            // Add subsystems to the display
+            foreach (var subsystem in AlfredApplication.Subsystems)
+            {
+                _faultManager.Register(new FaultIndicatorModel(subsystem.Id.ToUpper(),
+                                                               () => GetSubsystemStatus(subsystem)));
+            }
+        }
 
-            // Build the main update pump
-            _updatePump = new DispatcherUpdatePump(TimeSpan.FromSeconds(0.1), Update);
+        private FaultIndicatorStatus GetSubsystemStatus([CanBeNull] IAlfredSubsystem subsystem)
+        {
+            // Ensure the thing is actually there
+            if (subsystem == null) return FaultIndicatorStatus.Missing;
+
+            // Get a status based on the subsystem
+            return subsystem.IsOnline
+                       // If we're online, return based on if there was an error or not
+                       ? (subsystem.HasError
+                              ? FaultIndicatorStatus.Fault
+                              : FaultIndicatorStatus.Online)
+                       // If we're offline but the app is online, display available, otherwise inactive
+                       : (AlfredApplication.IsOnline
+                              ? FaultIndicatorStatus.Available
+                              : FaultIndicatorStatus.Inactive);
         }
 
         /// <summary>
@@ -130,6 +168,10 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// </summary>
         private void Update()
         {
+            Contract.Requires(_faultManager != null);
+            Contract.Requires(_instantiationMonitor != null);
+            Contract.Requires(_mfds.All((mfd) => mfd != null));
+
             // Update each MFD
             foreach (var mfd in _mfds)
             {
@@ -148,14 +190,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
 
             _lastUpdateTime = now;
         }
-
-        /// <summary>
-        /// The default workspace name. 
-        /// </summary>
-        [NotNull]
-        private const string DefaultWorkspaceName = "Alfred MFD Prototype";
-
-        private const int HighInstantiationCountThreshhold = 5;
 
         [NotNull, ItemNotNull]
         private readonly ObservableList<MultifunctionDisplay> _mfds;

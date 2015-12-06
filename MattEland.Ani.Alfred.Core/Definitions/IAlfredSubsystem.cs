@@ -16,7 +16,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
     /// <summary>
     ///     A subsystem of Alfred
     /// </summary>
-    public interface IAlfredSubsystem : IAlfredComponent, IAlfredCommandRecipient
+    public interface IAlfredSubsystem : IAlfredComponent, IAlfredCommandRecipient, IErrorContainer
     {
         /// <summary>
         ///     Gets the pages.

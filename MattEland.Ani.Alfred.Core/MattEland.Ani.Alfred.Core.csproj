@@ -107,6 +107,7 @@
     <Compile Include="Definitions\AlfredContainer.cs" />
     <Compile Include="Definitions\AlfredSearchResult.cs" />
     <Compile Include="Definitions\IAlfredContainer.cs" />
+    <Compile Include="Definitions\IErrorContainer.cs" />
     <Compile Include="Definitions\IMessageBoxProvider.cs" />
     <Compile Include="Definitions\ISearchController.cs" />
     <Compile Include="Definitions\MessageBoxType.cs" />

@@ -32,7 +32,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         private readonly ObservableList<FaultIndicatorModel> _faultIndicators;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// Initializes a new instance of the <see cref="T:FaultManager"/> class.
         /// </summary>
         public FaultManager()
         {
@@ -40,6 +40,17 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
 
             _faultIndicators = new ObservableList<FaultIndicatorModel>();
         }
+
+        /// <summary>
+        ///     Contains code contract invariants that describe facts about this class that will be true
+        ///     after any public method in this class is called.
+        /// </summary>
+        [ContractInvariantMethod]
+        private void ClassInvariants()
+        {
+            Contract.Invariant(_faultIndicators != null);
+        }
+
 
         /// <summary>
         ///     The faultIndicator indicators collection.

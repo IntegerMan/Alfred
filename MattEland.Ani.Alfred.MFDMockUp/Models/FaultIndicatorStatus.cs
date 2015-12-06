@@ -34,6 +34,11 @@
         /// <summary>
         ///     Represents that a system is online and functioning properly.
         /// </summary>
-        Online
+        Online,
+
+        /// <summary>
+        ///     Represents that a system was expected but is missing instead.
+        /// </summary>
+        Missing
     }
 }

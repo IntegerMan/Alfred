@@ -14,6 +14,7 @@ using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
 
+using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Common.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
@@ -190,16 +191,29 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// </summary>
         private void BuildCounters()
         {
-            var cpuInstanceNames = MetricProvider.GetCategoryInstanceNames(ProcessorCategoryName);
-
-            // Add counters for each CPU instance we're using
-            foreach (var instance in cpuInstanceNames)
+            try
             {
-                var provider = MetricProvider.Build(ProcessorCategoryName,
-                                                    ProcessorUsageCounterName,
-                                                    instance);
-                _processorCounters.Add(provider);
+                var cpuInstanceNames = MetricProvider.GetCategoryInstanceNames(ProcessorCategoryName);
+
+
+                // Add counters for each CPU instance we're using
+                foreach (var instance in cpuInstanceNames)
+                {
+                    var provider = MetricProvider.Build(ProcessorCategoryName,
+                                                        ProcessorUsageCounterName,
+                                                        instance);
+                    _processorCounters.Add(provider);
+                }
             }
+            catch (InvalidOperationException ex)
+            {
+                var exTitle = "Could Not Build Performance Counters";
+
+                ex.BuildDetailsMessage().Log(exTitle, LogLevel.Error, Container);
+
+                LastError = ex;
+            }
+
         }
 
         /// <summary>
