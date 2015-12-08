@@ -9,12 +9,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Controls
     /// <summary>
     /// Interaction logic for FaultIndicatorControl.xaml
     /// </summary>
-    public sealed partial class FaultIndicatorControl : UserControl
+    public sealed partial class FaultIndicatorControlOld : UserControl
     {
         /// <summary>
         ///     Initializes a new instance of the FaultIndicatorControl class.
         /// </summary>
-        public FaultIndicatorControl()
+        public FaultIndicatorControlOld()
         {
             InitializeComponent();
 

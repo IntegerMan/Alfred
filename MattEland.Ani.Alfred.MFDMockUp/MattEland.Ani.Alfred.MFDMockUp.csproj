@@ -171,9 +171,7 @@
     <Compile Include="Controls\AirlineButton.xaml.cs">
       <DependentUpon>AirlineButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\FaultIndicatorControl.xaml.cs">
-      <DependentUpon>FaultIndicatorControl.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Controls\FaultIndicatorControl.cs" />
     <Compile Include="Controls\MFDButton.cs" />
     <Compile Include="Controls\MFDButtonLabel.cs" />
     <Compile Include="Controls\MFDButtonLabelStripControl.xaml.cs">
@@ -257,7 +255,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\FaultIndicatorControl.xaml">
+    <Page Include="Themes\FaultIndicatorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

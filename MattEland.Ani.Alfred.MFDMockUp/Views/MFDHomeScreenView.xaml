@@ -52,7 +52,8 @@
 
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="vm:FaultIndicatorViewModel">
-                    <controls:FaultIndicatorControl Margin="1" />
+                    <controls:FaultIndicatorControl Margin="1"
+                                                    Status="{Binding Status}" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
 
