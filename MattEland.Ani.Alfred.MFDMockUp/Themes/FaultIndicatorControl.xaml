@@ -6,20 +6,6 @@
                     xmlns:viewModels="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels"
                     mc:Ignorable="d">
 
-    <SolidColorBrush x:Key="IndicatorBackgroundBrush"
-                     Color="#13171C" />
-    <SolidColorBrush x:Key="IndicatorBorderBrush"
-                     Color="#212528" />
-    <SolidColorBrush x:Key="IndicatorLitWarn"
-                     Color="#FFE0A510" />
-    <SolidColorBrush x:Key="IndicatorLitFault"
-                     Color="#FFD44434" />
-    <SolidColorBrush x:Key="IndicatorLitOnline"
-                     Color="#FFB9E970" />
-    <SolidColorBrush x:Key="IndicatorUnlit"
-                     Color="#FF615A50" />
-    <SolidColorBrush x:Key="IndicatorUnlitAvailable"
-                     Color="#65707A" />
 
     <Style x:Key="IndicatorButtonLabelStyle"
            TargetType="TextBlock">

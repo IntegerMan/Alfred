@@ -8,36 +8,90 @@
     <assisticant:ViewSelector x:Key="AssisticantTemplateSelector" />
 
     <!--  Brushes  -->
-    <Brush x:Key="AppBackgroundBrush">#2D2D30</Brush>
-    <Brush x:Key="AppForegroundBrush">#EFEEF3</Brush>
-    <Brush x:Key="DisabledTextBrush">#FF838383</Brush>
-    <Brush x:Key="BlackSemiTransparentBrush">#C8000000</Brush>
+    <Brush x:Key="AppBackgroundBrush">
+        #2D2D30
+    </Brush>
+    <Brush x:Key="AppForegroundBrush">
+        #EFEEF3
+    </Brush>
+    <Brush x:Key="DisabledTextBrush">
+        #FF838383
+    </Brush>
+    <Brush x:Key="BlackSemiTransparentBrush">
+        #C8000000
+    </Brush>
+    <SolidColorBrush x:Key="IndicatorBackgroundBrush"
+                     Color="#13171C" />
+    <SolidColorBrush x:Key="IndicatorBorderBrush"
+                     Color="#212528" />
+    <SolidColorBrush x:Key="IndicatorLitWarn"
+                     Color="#FFE0A510" />
+    <SolidColorBrush x:Key="IndicatorLitFault"
+                     Color="#FFD44434" />
+    <SolidColorBrush x:Key="IndicatorLitOnline"
+                     Color="#FFB9E970" />
+    <SolidColorBrush x:Key="IndicatorUnlit"
+                     Color="#FF615A50" />
+    <SolidColorBrush x:Key="IndicatorUnlitAvailable"
+                     Color="#65707A" />
 
     <!--  Thicknesses  -->
-    <Thickness x:Key="TinyMargin">2</Thickness>
-    <Thickness x:Key="HalfMargin">4</Thickness>
-    <Thickness x:Key="StandardMargin">8</Thickness>
-    <Thickness x:Key="DoubleMargin">16</Thickness>
+    <Thickness x:Key="TinyMargin">
+        2
+    </Thickness>
+    <Thickness x:Key="HalfMargin">
+        4
+    </Thickness>
+    <Thickness x:Key="StandardMargin">
+        8
+    </Thickness>
+    <Thickness x:Key="DoubleMargin">
+        16
+    </Thickness>
 
-    <Thickness x:Key="ScreenMargin">18</Thickness>
-    <Thickness x:Key="TopMargin">0, 18, 0, 8</Thickness>
-    <Thickness x:Key="BottomMargin">0, 8, 0, 18</Thickness>
+    <Thickness x:Key="ScreenMargin">
+        18
+    </Thickness>
+    <Thickness x:Key="TopMargin">
+        0, 18, 0, 8
+    </Thickness>
+    <Thickness x:Key="BottomMargin">
+        0, 8, 0, 18
+    </Thickness>
 
-    <Thickness x:Key="SpaceLeft">8,0,0,0</Thickness>
-    <Thickness x:Key="SpaceRight">0,0,8,0</Thickness>
-    <Thickness x:Key="SpaceLeftAndRight">8,0</Thickness>
-    <Thickness x:Key="SpaceAbove">0,8,0,0</Thickness>
-    <Thickness x:Key="SpaceBelow">0,0,0,8</Thickness>
+    <Thickness x:Key="SpaceLeft">
+        8,0,0,0
+    </Thickness>
+    <Thickness x:Key="SpaceRight">
+        0,0,8,0
+    </Thickness>
+    <Thickness x:Key="SpaceLeftAndRight">
+        8,0
+    </Thickness>
+    <Thickness x:Key="SpaceAbove">
+        0,8,0,0
+    </Thickness>
+    <Thickness x:Key="SpaceBelow">
+        0,0,0,8
+    </Thickness>
 
-    <Thickness x:Key="HalfSpaceAbove">0,4,0,0</Thickness>
-    <Thickness x:Key="DoubleSpaceAbove">0,16,0,0</Thickness>
+    <Thickness x:Key="HalfSpaceAbove">
+        0,4,0,0
+    </Thickness>
+    <Thickness x:Key="DoubleSpaceAbove">
+        0,16,0,0
+    </Thickness>
 
     <!--  Font Family  -->
-    <FontFamily x:Key="ConsoleFontFamily">Terminus, Lucida Console</FontFamily>
+    <FontFamily x:Key="ConsoleFontFamily">
+        Terminus, Lucida Console
+    </FontFamily>
 
     <!--  Converters  -->
-    <converters:VisibilityConverter x:Key="ShowIfTrue" Invert="False" />
-    <converters:VisibilityConverter x:Key="ShowIfFalse" Invert="True" />
+    <converters:VisibilityConverter x:Key="ShowIfTrue"
+                                    Invert="False" />
+    <converters:VisibilityConverter x:Key="ShowIfFalse"
+                                    Invert="True" />
     <converters:HideIfNoTextConverter x:Key="HideIfNoText" />
     <converters:BooleanToBrushConverter x:Key="BrushFromBoolean"
                                         FalseBrush="{StaticResource MFDScreenRedBrush}"

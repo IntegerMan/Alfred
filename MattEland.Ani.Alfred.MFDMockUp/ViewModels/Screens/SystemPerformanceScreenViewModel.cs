@@ -148,6 +148,20 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         }
 
         /// <summary>
+        ///     Gets the error text representing the last error associated with this module.
+        /// </summary>
+        /// <value>
+        ///     The error text.
+        /// </value>
+        public string ErrorText
+        {
+            get
+            {
+                return _model.Subsystem.LastError?.Message;
+            }
+        }
+
+        /// <summary>
         ///     Process the screen state and outputs any resulting information to the processorResult.
         /// </summary>
         /// <param name="processor"> The processor. </param>

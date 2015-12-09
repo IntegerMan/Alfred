@@ -42,7 +42,6 @@
                        Text="Standby"
                        Visibility="{Binding Path=ShowStandbyLabel,
                                             Converter={StaticResource ShowIfTrue}}" />
-
             <!--  Log Entries  -->
             <ItemsControl Margin="{StaticResource SpaceLeftAndRight}"
                           Background="Transparent"
@@ -63,6 +62,12 @@
                 </ItemsControl.ItemsPanel>
 
             </ItemsControl>
+
+            <TextBlock Text="{Binding Path=ErrorText}"
+                       VerticalAlignment="Bottom"
+                       TextWrapping="WrapWithOverflow"
+                       Style="{StaticResource MFDViewSmallCenterTextStyle}"
+                       Foreground="{StaticResource IndicatorLitFault}" />
         </Grid>
 
     </DockPanel>
