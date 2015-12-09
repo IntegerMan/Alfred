@@ -71,6 +71,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         {
             get
             {
+                Contract.Ensures(_currentWidgets.Count > 0);
+
                 if (!_currentWidgets.Any()) InitializePerformanceCounterWidgets();
 
                 // Always return the observable collection

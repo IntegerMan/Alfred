@@ -202,6 +202,8 @@ namespace MattEland.Ani.Alfred.Core
             get { return AlfredInstance?.RegistrationProvider; }
         }
 
+        private Exception _lastError;
+
         /// <summary>
         ///     Gets or sets the last error encountered by this component.
         /// </summary>
@@ -211,24 +213,25 @@ namespace MattEland.Ani.Alfred.Core
         [CanBeNull]
         public Exception LastError
         {
-            get { return LastErrorInstance?.Exception; }
+            get { return _lastError; }
+            set
+            {
+                if (Equals(value, _lastError)) return;
+                _lastError = value;
+                LastErrorTime = value == null ? DateTime.MinValue : DateTime.Now;
+                OnPropertyChanged(nameof(LastError));
+                OnPropertyChanged(nameof(LastErrorTime));
+                OnPropertyChanged(nameof(HasError));
+            }
         }
 
         /// <summary>
-        ///     Gets the time of the last error in UTC time.
+        ///     Gets the time of the last error.
         /// </summary>
         /// <value>
         ///     The last error time.
         /// </value>
-        public DateTime LastErrorTimeUtc
-        {
-            get
-            {
-                if (LastErrorInstance == null) return DateTime.MinValue;
-
-                return LastErrorInstance.TimeEncounteredUtc;
-            }
-        }
+        public DateTime LastErrorTime { get; private set; }
 
         /// <summary>
         ///     Gets a value indicating whether or not an unacknowledged error has been encountered.
@@ -239,30 +242,6 @@ namespace MattEland.Ani.Alfred.Core
         public bool HasError
         {
             get { return LastError != null; }
-        }
-
-        [CanBeNull]
-        private ErrorInstance _lastErrorInstance;
-
-        /// <summary>
-        ///     Gets or sets the last error instance encountered.
-        /// </summary>
-        /// <value>
-        ///     The last error instance.
-        /// </value>
-        [CanBeNull]
-        public ErrorInstance LastErrorInstance
-        {
-            get { return _lastErrorInstance; }
-            set
-            {
-                if (Equals(value, _lastErrorInstance)) return;
-                _lastErrorInstance = value;
-                OnPropertyChanged(nameof(LastErrorInstance));
-                OnPropertyChanged(nameof(LastError));
-                OnPropertyChanged(nameof(LastErrorTimeUtc));
-                OnPropertyChanged(nameof(HasError));
-            }
         }
 
         /// <summary>
@@ -518,7 +497,7 @@ namespace MattEland.Ani.Alfred.Core
         /// </summary>
         public virtual void AcknowledgeError()
         {
-            LastErrorInstance = null;
+            LastError = null;
         }
     }
 

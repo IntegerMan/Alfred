@@ -191,41 +191,27 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// </summary>
         private void BuildCounters()
         {
-            IEnumerable<string> cpuInstanceNames = null;
-
             try
             {
-                // Grab categories
-                cpuInstanceNames = MetricProvider.GetCategoryInstanceNames(ProcessorCategoryName);
-            }
-            catch (InvalidOperationException ex)
-            {
-                var exTitle = "Perf. Counter Catalog Failure";
-
-                LastErrorInstance = Container.HandleException(ex, "CPUMON-01", exTitle);
-            }
+                var cpuInstanceNames = MetricProvider.GetCategoryInstanceNames(ProcessorCategoryName);
 
 
-            // Can't go on without instances, so let's skedaddle
-            if (cpuInstanceNames == null) return;
-
-            // Add counters for each CPU instance we're using
-            foreach (var instance in cpuInstanceNames)
-            {
-                try
+                // Add counters for each CPU instance we're using
+                foreach (var instance in cpuInstanceNames)
                 {
-                    // Build out the counter. Bad stuff can happen here.
                     var provider = MetricProvider.Build(ProcessorCategoryName,
                                                         ProcessorUsageCounterName,
                                                         instance);
                     _processorCounters.Add(provider);
                 }
-                catch (Exception ex)
-                {
-                    var exTitle = "Perf. Counter Creation Failure";
+            }
+            catch (InvalidOperationException ex)
+            {
+                var exTitle = "Could Not Build Performance Counters";
 
-                    LastErrorInstance = Container.HandleException(ex, "CPUMON-02", exTitle);
-                }
+                ex.BuildDetailsMessage().Log(exTitle, LogLevel.Error, Container);
+
+                LastError = ex;
             }
 
         }

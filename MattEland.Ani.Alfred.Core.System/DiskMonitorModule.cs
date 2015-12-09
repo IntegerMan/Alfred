@@ -27,13 +27,13 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         private const string DiskReadCounterName = "% Disk Read Time";
         private const string DiskWriteCounterName = "% Disk Write Time";
 
-        [CanBeNull]
+        [NotNull]
         private readonly MetricProviderBase _diskReadCounter;
 
         [NotNull]
         private readonly ProgressBarWidget _diskReadWidget;
 
-        [CanBeNull]
+        [NotNull]
         private readonly MetricProviderBase _diskWriteCounter;
 
         [NotNull]
@@ -47,29 +47,8 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         internal DiskMonitorModule([NotNull] IAlfredContainer container,
                                  [NotNull] IMetricProviderFactory factory) : base(container, factory)
         {
-            try
-            {
-                _diskReadCounter = MetricProvider.Build(DiskCategoryName,
-                                                        DiskReadCounterName,
-                                                        TotalInstanceName);
-            }
-            catch (InvalidOperationException ioex)
-            {
-                var instance = container.HandleException(ioex, "DSKMON-01", "Disk Read Counter Creation Failure");
-                LastErrorInstance = instance;
-            }
-
-            try
-            {
-                _diskWriteCounter = MetricProvider.Build(DiskCategoryName,
-                                                         DiskWriteCounterName,
-                                                         TotalInstanceName);
-            }
-            catch (InvalidOperationException ioex)
-            {
-                var instance = container.HandleException(ioex, "DSKMON-02", "Disk Write Counter Creation Failure");
-                LastErrorInstance = instance;
-            }
+            _diskReadCounter = MetricProvider.Build(DiskCategoryName, DiskReadCounterName, TotalInstanceName);
+            _diskWriteCounter = MetricProvider.Build(DiskCategoryName, DiskWriteCounterName, TotalInstanceName);
 
             _diskReadWidget = CreatePercentWidget(BuildWidgetParameters(@"progDiskTotalRead"));
             _diskReadWidget.Text = Resources.DiskReadLabel;
@@ -97,10 +76,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <value>The read utilization.</value>
         internal float ReadUtilization
         {
-            get
-            {
-                return _diskReadCounter?.NextValue() ?? -1;
-            }
+            get { return _diskReadCounter.NextValue(); }
         }
 
         /// <summary>
@@ -109,7 +85,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <value>The write utilization.</value>
         internal float WriteUtilization
         {
-            get { return _diskWriteCounter?.NextValue() ?? -1; }
+            get { return _diskWriteCounter.NextValue(); }
         }
 
         /// <summary>
