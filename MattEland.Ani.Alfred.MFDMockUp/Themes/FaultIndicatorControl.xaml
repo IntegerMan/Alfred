@@ -54,13 +54,7 @@
                                            Text="{Binding IndicatorLabel}"
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center"
-                                           Foreground="{StaticResource IndicatorUnlit}">
-                                    <!-- TODO: Come up with an outer shadow Effect
-                    <TextBlock.Effect>
-                        <DropShadowEffect />
-                    </TextBlock.Effect>
-                                    -->
-                                </TextBlock>
+                                           Foreground="{StaticResource IndicatorUnlit}" />
 
                             </Grid>
                         </Border>
