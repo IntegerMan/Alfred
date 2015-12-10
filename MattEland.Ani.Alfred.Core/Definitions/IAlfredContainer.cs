@@ -86,6 +86,41 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// </value>
         [CanBeNull]
         IAlfred Alfred { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the error manager.
+        /// </summary>
+        /// <value>
+        ///     The error manager.
+        /// </value>
+        [NotNull]
+        ErrorManager ErrorManager { get; set; }
+
+        /// <summary>
+        ///     Handles an encountered exception.
+        /// </summary>
+        /// <param name="exception"> The exception. </param>
+        /// <param name="errorCode"> The error code. </param>
+        /// <param name="additionalMessage"> An additional message. </param>
+        /// <returns>
+        ///     An ErrorInstance.
+        /// </returns>
+        [NotNull]
+        ErrorInstance HandleException([NotNull] Exception exception,
+            [CanBeNull] string errorCode,
+            [CanBeNull] string additionalMessage);
+
+        /// <summary>
+        ///     Handles an encountered exception.
+        /// </summary>
+        /// <param name="exception"> The exception. </param>
+        /// <param name="additionalMessage"> An additional message. </param>
+        /// <returns>
+        ///     An ErrorInstance.
+        /// </returns>
+        [NotNull]
+        ErrorInstance HandleException([NotNull] Exception exception,
+            [CanBeNull] string errorCode);
     }
 }
 

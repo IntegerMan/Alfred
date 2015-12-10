@@ -41,8 +41,16 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
                                    [NotNull] IMetricProviderFactory factory)
             : base(container, factory)
         {
-            _usedBytesCounter = MetricProvider.Build(MemoryCategoryName,
-                                                        MemoryUtilizationBytesCounterName);
+            try
+            {
+                _usedBytesCounter = MetricProvider.Build(MemoryCategoryName,
+                                                         MemoryUtilizationBytesCounterName);
+            }
+            catch (InvalidOperationException ioex)
+            {
+                var instance = container.HandleException(ioex, "MEMMON-01", "Bytes counter creation failure");
+                LastErrorInstance = instance;
+            }
 
             _widget = new ProgressBarWidget(BuildWidgetParameters(@"progMemoryUsed"))
             {
