@@ -191,22 +191,22 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// </summary>
         protected override void UpdateProtected()
         {
-            var lastEx = LastErrorInstance;
-            var lastExTime = LastErrorTimeUtc;
+            var lastEx = LastError;
+            var lastExTime = LastErrorTime;
 
             foreach (var sys in SystemModules)
             {
                 if (!sys.HasError) continue;
-                if (sys.LastErrorTimeUtc <= lastExTime) continue;
+                if (sys.LastErrorTime <= lastExTime) continue;
 
-                lastEx = sys.LastErrorInstance;
-                lastExTime = sys.LastErrorTimeUtc;
+                lastEx = sys.LastError;
+                lastExTime = sys.LastErrorTime;
             }
 
             // Update the aggregate last error to the latest one
-            if (lastEx != null && lastEx != LastErrorInstance)
+            if (lastEx != null && lastEx != LastError)
             {
-                LastErrorInstance = lastEx;
+                LastError = lastEx;
             }
         }
 
