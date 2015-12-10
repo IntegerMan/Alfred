@@ -98,5 +98,6 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             get
             { return _metricProvider; }
         }
+
     }
 }

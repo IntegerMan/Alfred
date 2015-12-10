@@ -6,6 +6,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Diagnostics.Contracts;
+using System.Text;
+
+using MattEland.Ani.Alfred.Core;
+using MattEland.Common;
+
 namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>
@@ -38,7 +43,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <summary>
         /// Initializes a new instance of the <see cref="AlfredContainer"/> class.
         /// </summary>
-        public AlfredContainer()
+        public AlfredContainer() : this(null)
         {
 
         }
@@ -49,7 +54,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <param name="parent">The parent container.</param>
         public AlfredContainer(IObjectContainer parent) : base(parent)
         {
-
+            ErrorManager = new ErrorManager(this);
         }
 
         #endregion
@@ -84,6 +89,47 @@ namespace MattEland.Ani.Alfred.Core.Definitions
                     value.RegisterAsProvidedInstance(typeof(IAlfred), this);
                 }
             }
+        }
+
+        /// <summary>
+        ///     Gets or sets the error manager.
+        /// </summary>
+        /// <value>
+        ///     The error manager.
+        /// </value>
+        public ErrorManager ErrorManager { get; set; }
+
+        /// <summary>
+        ///     Handles an encountered exception.
+        /// </summary>
+        /// <param name="ex"> The exception. </param>
+        /// <param name="errorCodeId"> The error code to associate this exception with, if any. </param>
+        /// <returns>
+        ///     An ErrorInstance.
+        /// </returns>
+        public ErrorInstance HandleException(Exception ex, string errorCodeId)
+        {
+            return HandleException(ex, errorCodeId, null);
+        }
+
+        /// <summary>
+        ///     Handles an encountered exception.
+        /// </summary>
+        /// <param name="ex"> The exception. </param>
+        /// <param name="errorCodeId"> The error code to associate this exception with, if any. </param>
+        /// <param name="additionalMessage"> An additional message. </param>
+        /// <returns>
+        ///     An ErrorInstance.
+        /// </returns>
+        public ErrorInstance HandleException(Exception ex, string errorCodeId, string additionalMessage)
+        {
+            if (ex == null) throw new ArgumentNullException(nameof(ex));
+
+            var instance = ErrorManager.RegisterError(ex, DateTime.UtcNow, errorCodeId);
+
+            instance.Details.Log(additionalMessage, LogLevel.Error, this);
+
+            return instance;
         }
 
         /// <summary>

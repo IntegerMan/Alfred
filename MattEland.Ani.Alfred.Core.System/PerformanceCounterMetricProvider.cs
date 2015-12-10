@@ -44,22 +44,11 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 
             : base(instance ?? counterName)
         {
-            try
-            {
-                _counter = new PerformanceCounter(categoryName, counterName, instance, true);
+            _counter = new PerformanceCounter(categoryName, counterName, instance, true);
 
-                /* Tell the performance counter to start getting values. These tend to always return 
-               0.0 as the first value and then provide accurate data after that */
-                _counter.NextValue();
-            }
-            catch (Exception ex)
-            {
-                var exTitle = string.Format("Error Creating Counter '{0}'", counterName);
-
-                ex.BuildDetailsMessage().Log(exTitle,
-                    LogLevel.Error,
-                    CommonProvider.Container as IAlfredContainer);
-            }
+            /* Tell the performance counter to start getting values. These tend to always return 
+            0.0 as the first value and then provide accurate data after that */
+            _counter.NextValue();
         }
 
         /// <summary>
