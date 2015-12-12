@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+
+using Assisticant.Fields;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common.Annotations;
@@ -26,12 +29,17 @@ namespace MattEland.Ani.Alfred.Core
             if (container == null) throw new ArgumentNullException(nameof(container));
 
             Container = container;
+            _errorCodes = new Dictionary<string, ErrorCode>();
+            _activeErrorCodes = new Observable<string>();
         }
 
         private int _nextUnknownErrorCodeId = 1;
 
         [NotNull, ItemNotNull]
-        private readonly IDictionary<string, ErrorCode> _errorCodes = new Dictionary<string, ErrorCode>();
+        private readonly IDictionary<string, ErrorCode> _errorCodes;
+
+        [NotNull]
+        private readonly Observable<string> _activeErrorCodes;
 
         /// <summary>
         ///     Searches for the first error code for the specified error instance.
@@ -159,7 +167,36 @@ namespace MattEland.Ani.Alfred.Core
             // Add the error to its error code
             code.AddError(instance);
 
+            UpdateActiveErrorCodes();
+
             return instance;
+        }
+
+        /// <summary>
+        ///     Updates the active error codes.
+        /// </summary>
+        private void UpdateActiveErrorCodes()
+        {
+            var sb = new StringBuilder();
+
+            var activeCodes = _errorCodes.Values.Where(e => e.HasUnacknowledgedErrors);
+            var isFirst = true;
+
+            foreach (var source in activeCodes)
+            {
+
+                if (isFirst)
+                {
+                    isFirst = false;
+                    sb.Append(source.Identifier);
+                }
+                else
+                {
+                    sb.AppendFormat(", {0}", source.Identifier);
+                }
+            }
+
+            ActiveErrorCodes = sb.ToString();
         }
 
         /// <summary>
@@ -169,5 +206,17 @@ namespace MattEland.Ani.Alfred.Core
         ///     The container.
         /// </value>
         public IAlfredContainer Container { get; }
+
+        /// <summary>
+        ///     Gets or sets the active error codes string.
+        /// </summary>
+        /// <value>
+        ///     The active error codes.
+        /// </value>
+        public string ActiveErrorCodes
+        {
+            get { return _activeErrorCodes.Value; }
+            set { _activeErrorCodes.Value = value; }
+        }
     }
 }

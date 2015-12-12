@@ -100,6 +100,7 @@
     <None Include="Alfred.pfx" />
     <None Include="AlfredAppTestCertificate.snk" />
     <None Include="AlfredCore.cd" />
+    <None Include="packages.config" />
     <None Include="Widgets\Widgets.cd" />
   </ItemGroup>
   <ItemGroup>
@@ -204,6 +205,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Assisticant, Version=2.3.0.0, Culture=neutral, PublicKeyToken=19e83a8289e31a8f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Assisticant.1.1.6.0\lib\portable-net4+sl5+netcore45+wpa81+wp8\Assisticant.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Runtime">
       <HintPath>..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\Facades\System.Runtime.dll</HintPath>
     </Reference>

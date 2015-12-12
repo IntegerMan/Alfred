@@ -2,9 +2,7 @@
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Common.Providers;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Diagnostics.Contracts;
 namespace MattEland.Ani.Alfred.Core.Definitions
 {
@@ -231,7 +229,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         [NotNull]
         public IAlfredCommand BuildCommand([CanBeNull] Action action = null)
         {
-            IAlfredCommand command = Provide<IAlfredCommand>(action, this);
+            var command = Provide<IAlfredCommand>(action, this);
 
             return command;
         }
