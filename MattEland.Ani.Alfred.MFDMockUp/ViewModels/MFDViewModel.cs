@@ -20,6 +20,10 @@ using MattEland.Ani.Alfred.PresentationCommon.Helpers;
 using System.Linq;
 using System.Windows.Media.Media3D;
 
+using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.Core.Definitions;
+using MattEland.Common.Providers;
+
 namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
 {
     /// <summary>
@@ -27,7 +31,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
     /// </summary>
     [PublicAPI]
     [ViewModelFor(typeof(MultifunctionDisplay))]
-    public sealed class MFDViewModel
+    public sealed class MFDViewModel : IHasContainer<IAlfredContainer>
     {
         /// <summary>
         ///     The MFD model backing store.
@@ -45,11 +49,18 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         /// Creates a new instance of this class for design-time purposes.
         /// </summary>
         [UsedImplicitly]
-        public MFDViewModel()
+        public MFDViewModel() : this(new AlfredContainer())
         {
             var dataProvider = DesignDataProvider.Instance;
             _locator = dataProvider.ViewModelLocator;
             _model = dataProvider.MultifunctionDisplay;
+        }
+
+        private MFDViewModel([NotNull] IAlfredContainer container)
+        {
+            if (container == null) throw new ArgumentNullException(nameof(container));
+
+            Container = container;
         }
 
         /// <summary>
@@ -58,10 +69,23 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         /// <param name="locator"> The view model locator. </param>
         /// <param name="mfd"> The multifunction display. </param>
         public MFDViewModel([NotNull] ViewModelLocator locator, [NotNull] MultifunctionDisplay mfd)
+            : this(locator.Container)
         {
+            if (locator == null) throw new ArgumentNullException(nameof(locator));
+            if (mfd == null) throw new ArgumentNullException(nameof(mfd));
+
             _model = mfd;
             _locator = locator;
         }
+
+        /// <summary>
+        ///     Gets the container.
+        /// </summary>
+        /// <value>
+        ///     The container.
+        /// </value>
+        [NotNull]
+        public IAlfredContainer Container { get; }
 
         /// <summary>
         ///     Gets the bottom buttons.
@@ -253,6 +277,22 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         {
             get { return _model.MasterMode; }
         }
+
+        /// <summary>
+        ///     Gets the error text.
+        /// </summary>
+        /// <value>
+        ///     The error text.
+        /// </value>
+        public String ErrorText
+        {
+            get
+            {
+                return Container.ErrorManager.ActiveErrorCodes;
+            }
+        }
+
+
 
     }
 

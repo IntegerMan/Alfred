@@ -29,6 +29,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
     ///     A ViewModel for the system performance screen. This class cannot be inherited.
     /// </summary>
     [ViewModelFor(typeof(SystemPerformanceScreenModel))]
+    [UsedImplicitly]
     public sealed class SystemPerformanceScreenViewModel : ScreenViewModel
     {
         /// <summary>

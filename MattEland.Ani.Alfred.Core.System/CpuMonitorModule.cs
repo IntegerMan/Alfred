@@ -209,9 +209,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
             {
                 var exTitle = "Could Not Build Performance Counters";
 
-                ex.BuildDetailsMessage().Log(exTitle, LogLevel.Error, Container);
-
-                LastError = ex;
+                LastErrorInstance = Container.HandleException(ex, "CPUMON-02", exTitle);
             }
 
         }

@@ -111,6 +111,22 @@
                                            Foreground="{StaticResource AppForegroundBrush}" />
                             </Border>
 
+                            <Border Margin="32,32,32,52"
+                                    BorderBrush="{StaticResource IndicatorLitFault}"
+                                    BorderThickness="1"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Bottom"
+                                    Visibility="{Binding Path=ErrorText,
+                                                         Converter={StaticResource HideIfNoText}}"
+                                    Background="{StaticResource MFDScreenBackgroundBrush}">
+
+                                <TextBlock Text="{Binding Path=ErrorText}"
+                                           Margin="{StaticResource HalfMargin}"
+                                           Style="{StaticResource MFDViewSmallCenterTextStyle}"
+                                           Foreground="{StaticResource IndicatorLitFault}" />
+
+                            </Border>
+
                             <!--  Sensor of Interest brackets  -->
                             <controls:SensorOfInterestIndicator x:Name="soiIndicator"
                                                                 IsSensorOfInterest="{Binding Path=IsSensorOfInterest}"

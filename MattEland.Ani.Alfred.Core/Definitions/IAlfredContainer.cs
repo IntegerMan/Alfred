@@ -93,6 +93,35 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <value>
         ///     The error manager.
         /// </value>
+        [NotNull]
         ErrorManager ErrorManager { get; }
+
+        /// <summary>
+        ///     Handles an encountered exception.
+        /// </summary>
+        /// <param name="exception"> The exception. </param>
+        /// <param name="errorCode"> The error code. </param>
+        /// <param name="additionalMessage"> An additional message. </param>
+        /// <returns>
+        ///     An ErrorInstance.
+        /// </returns>
+        [NotNull]
+        ErrorInstance HandleException([NotNull] Exception exception,
+            [CanBeNull] string errorCode,
+            [CanBeNull] string additionalMessage);
+
+        /// <summary>
+        ///     Handles an encountered exception.
+        /// </summary>
+        ///
+        /// <param name="exception"> The exception. </param>
+        /// <param name="errorCode"> The error code. </param>
+        /// <returns>
+        ///     An ErrorInstance.
+        /// </returns>
+        [NotNull]
+        ErrorInstance HandleException([NotNull] Exception exception,
+            [CanBeNull] string errorCode);
+
     }
 }

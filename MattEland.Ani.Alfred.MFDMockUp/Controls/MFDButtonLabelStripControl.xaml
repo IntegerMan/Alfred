@@ -17,8 +17,8 @@
                BasedOn="{StaticResource {x:Type local:MFDButtonLabel}}"
                TargetType="local:MFDButtonLabel">
             <Setter Property="HorizontalAlignment" Value="Center" />
-            <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
     </UserControl.Resources>
 
@@ -32,7 +32,8 @@
 
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <layout:DynamicPanel LayoutType="{Binding Path=LayoutType, ElementName=labelStripControl}" />
+                    <layout:DynamicPanel LayoutType="{Binding Path=LayoutType,
+                                                              ElementName=labelStripControl}" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
 

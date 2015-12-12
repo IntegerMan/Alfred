@@ -242,5 +242,39 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// </value>
         public ErrorManager ErrorManager { get; }
 
+
+        /// <summary>
+        ///     Handles an encountered exception.
+        /// </summary>
+        /// <param name="ex"> The exception. </param>
+        /// <param name="errorCodeId"> The error code to associate this exception with, if any. </param>
+        /// <returns>
+        ///     An ErrorInstance.
+        /// </returns>
+        public ErrorInstance HandleException(Exception ex, string errorCodeId)
+        {
+            return HandleException(ex, errorCodeId, null);
+        }
+
+        /// <summary>
+        ///     Handles an encountered exception.
+        /// </summary>
+        /// <param name="ex"> The exception. </param>
+        /// <param name="errorCodeId"> The error code to associate this exception with, if any. </param>
+        /// <param name="additionalMessage"> An additional message. </param>
+        /// <returns>
+        ///     An ErrorInstance.
+        /// </returns>
+        public ErrorInstance HandleException(Exception ex, string errorCodeId, string additionalMessage)
+        {
+            if (ex == null) throw new ArgumentNullException(nameof(ex));
+
+            var instance = ErrorManager.RegisterError(ex, DateTime.UtcNow, errorCodeId);
+
+            instance.Details.Log(additionalMessage, LogLevel.Error, this);
+
+            return instance;
+        }
+
     }
 }
