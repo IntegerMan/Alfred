@@ -52,27 +52,42 @@ namespace MattEland.Ani.Alfred.Core
         ///     The found error code for instance.
         /// </returns>
         [NotNull]
-        private ErrorCode FindErrorCodeForInstance([NotNull] ErrorInstance instance)
+        private ErrorCode FindErrorCodeForInstance([NotNull] ErrorInstance instance, string codeId)
         {
             if (instance == null) throw new ArgumentNullException(nameof(instance));
 
             // TODO: Support a rules-based engine here
 
-            // When we see a code that wants this error, return that code
-            foreach (var code in ErrorCodes.Where(code => code.ShouldInclude(instance)))
+            if (!string.IsNullOrWhiteSpace(codeId))
             {
-                return code;
+                // Ensure the code doesn't already exist
+                var key = codeId.ToUpperInvariant();
+                if (_errorCodes.ContainsKey(key))
+                {
+                    return _errorCodes[key];
+                }
+            }
+            else
+            {
+
+                // When we see a code that wants this error, return that code
+                foreach (var code in ErrorCodes.Where(code => code.ShouldInclude(instance)))
+                {
+                    return code;
+                }
+
+                // This is now officially a new unknown error code
+                codeId = "UNKN-" + (_nextUnknownErrorCodeId++).ToString("00");
             }
 
             // No match, build a new error code
-            var codeId = "UNKN-" + _nextUnknownErrorCodeId++;
-            var newCode = new ErrorCode(this.Container)
+            var newCode = new ErrorCode(Container)
             {
                 Identifier = codeId
             };
 
             // Add the new code to the collection and return it
-            _errorCodes.Add(codeId, newCode);
+            _errorCodes.Add(codeId.ToUpperInvariant(), newCode);
 
             return newCode;
         }
@@ -153,15 +168,16 @@ namespace MattEland.Ani.Alfred.Core
 
             if (!string.IsNullOrWhiteSpace(errorCodeId))
             {
-                if (_errorCodes.ContainsKey(errorCodeId.ToUpperInvariant()))
+                var key = errorCodeId.ToUpperInvariant();
+                if (_errorCodes.ContainsKey(key))
                 {
-                    code = _errorCodes[errorCodeId];
+                    code = _errorCodes[key];
                 }
             }
 
             if (code == null)
             {
-                code = FindErrorCodeForInstance(instance);
+                code = FindErrorCodeForInstance(instance, errorCodeId);
             }
 
             // Add the error to its error code
