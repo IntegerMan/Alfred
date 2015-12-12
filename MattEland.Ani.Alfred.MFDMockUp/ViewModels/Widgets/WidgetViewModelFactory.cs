@@ -57,7 +57,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Widgets
         /// <returns>
         ///     A view model of the specified type if the assumption was correct or null otherwise.
         /// </returns>
-        private static TViewModel TryCreateViewModel<TModel, TViewModel>(IWidget widget) where TViewModel : WidgetViewModel
+        private static TViewModel TryCreateViewModel<TModel, TViewModel>(IWidget widget) 
+            where TViewModel : WidgetViewModel
         {
             if (widget is TModel)
             {

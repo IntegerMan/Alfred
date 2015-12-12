@@ -191,27 +191,40 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// </summary>
         private void BuildCounters()
         {
+            IEnumerable<string> cpuInstanceNames = null;
+
             try
             {
-                var cpuInstanceNames = MetricProvider.GetCategoryInstanceNames(ProcessorCategoryName);
-
-
-                // Add counters for each CPU instance we're using
-                foreach (var instance in cpuInstanceNames)
-                {
-                    var provider = MetricProvider.Build(ProcessorCategoryName,
-                                                        ProcessorUsageCounterName,
-                                                        instance);
-                    _processorCounters.Add(provider);
-                }
+                cpuInstanceNames = MetricProvider.GetCategoryInstanceNames(ProcessorCategoryName);
             }
             catch (InvalidOperationException ex)
             {
-                var exTitle = "Could Not Build Performance Counters";
+                var exTitle = "Performance Counter Enumeration Failure";
 
-                LastErrorInstance = Container.HandleException(ex, "CPUMON-02", exTitle);
+                LastErrorInstance = Container.HandleException(ex, "CPUMON-01", exTitle);
             }
 
+            // Add counters for each CPU instance we're using
+            if (cpuInstanceNames != null)
+            {
+                foreach (var instance in cpuInstanceNames)
+                {
+                    try
+                    {
+                        var provider = MetricProvider.Build(ProcessorCategoryName,
+                                                            ProcessorUsageCounterName,
+                                                            instance);
+                        _processorCounters.Add(provider);
+                    }
+                    catch (InvalidOperationException ex)
+                    {
+                        var exTitle = "Performance Counter Instantiation Failure";
+
+                        LastErrorInstance = Container.HandleException(ex, "CPUMON-02", exTitle);
+                    }
+
+                }
+            }
         }
 
         /// <summary>
@@ -240,7 +253,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <param name="widget"> The display widget. </param>
         /// <param name="counter"> The performance counter. </param>
         /// <param name="label"> The label to add before the counter value. </param>
-        private static void UpdateCpuWidget(
+        private void UpdateCpuWidget(
             [NotNull] ProgressBarWidget widget,
             [CanBeNull] MetricProviderBase counter,
             [CanBeNull] string label)

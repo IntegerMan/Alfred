@@ -26,7 +26,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         private const string MemoryCategoryName = "Memory";
         private const string MemoryUtilizationBytesCounterName = "% Committed Bytes in Use";
 
-        [NotNull]
+        [CanBeNull]
         private readonly MetricProviderBase _usedBytesCounter;
 
         [NotNull]
@@ -41,8 +41,17 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
                                    [NotNull] IMetricProviderFactory factory)
             : base(container, factory)
         {
-            _usedBytesCounter = MetricProvider.Build(MemoryCategoryName,
-                                                        MemoryUtilizationBytesCounterName);
+            try
+            {
+                _usedBytesCounter = MetricProvider.Build(MemoryCategoryName,
+                                                         MemoryUtilizationBytesCounterName);
+            }
+            catch (InvalidOperationException ex)
+            {
+                LastErrorInstance = Container.HandleException(ex,
+                                                              "MEMMON-01",
+                                                              "Used Bytes Instantiation Failure");
+            }
 
             _widget = new ProgressBarWidget(BuildWidgetParameters(@"progMemoryUsed"))
             {
@@ -73,7 +82,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <value>The memory utilization percentage.</value>
         internal float MemoryUtilization
         {
-            get { return _usedBytesCounter.NextValue(); }
+            get { return _usedBytesCounter?.NextValue() ?? 0; }
         }
 
         /// <summary>

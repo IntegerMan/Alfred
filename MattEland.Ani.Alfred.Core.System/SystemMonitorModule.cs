@@ -46,7 +46,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <returns>
         /// The value returned from the <paramref name="counter"/>
         /// </returns>
-        protected static float GetNextCounterValueSafe([CanBeNull] MetricProviderBase counter)
+        protected float GetNextCounterValueSafe([CanBeNull] MetricProviderBase counter)
         {
             return GetNextCounterValueSafe(counter, 0);
         }
@@ -60,26 +60,40 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
         /// <returns>
         /// The value returned from the <paramref name="counter"/>
         /// </returns>
-        protected static float GetNextCounterValueSafe([CanBeNull] MetricProviderBase counter, float defaultValue)
+        protected float GetNextCounterValueSafe([CanBeNull] MetricProviderBase counter, float defaultValue)
         {
             try
             {
                 return counter?.NextValue() ?? 0;
             }
-            catch (Win32Exception)
+            catch (Win32Exception ex)
             {
+                LastErrorInstance = Container.HandleException(ex,
+                                                              "PRFVAL-01",
+                                                              "Win32 error reading value");
+
                 return defaultValue;
             }
-            catch (PlatformNotSupportedException)
+            catch (PlatformNotSupportedException ex)
             {
+                LastErrorInstance = Container.HandleException(ex,
+                                                              "PRFVAL-02",
+                                                              "Platform error reading value");
                 return defaultValue;
             }
-            catch (UnauthorizedAccessException)
+            catch (UnauthorizedAccessException ex)
             {
+                LastErrorInstance = Container.HandleException(ex,
+                                                              "PRFVAL-03",
+                                                              "Unathorized access reading value");
                 return defaultValue;
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException ex)
             {
+                LastErrorInstance = Container.HandleException(ex,
+                                                              "PRFVAL-04",
+                                                              "Invalid operation reading value");
+
                 return defaultValue;
             }
         }
