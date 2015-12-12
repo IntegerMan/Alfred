@@ -123,6 +123,8 @@
                                 <TextBlock Text="{Binding Path=ErrorText}"
                                            Margin="{StaticResource HalfMargin}"
                                            Style="{StaticResource MFDViewSmallCenterTextStyle}"
+                                           TextWrapping="Wrap"
+                                           TextTrimming="None"
                                            Foreground="{StaticResource IndicatorLitFault}" />
 
                             </Border>
