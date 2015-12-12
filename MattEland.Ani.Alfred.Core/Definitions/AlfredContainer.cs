@@ -38,7 +38,7 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <summary>
         /// Initializes a new instance of the <see cref="AlfredContainer"/> class.
         /// </summary>
-        public AlfredContainer()
+        public AlfredContainer() : this(null)
         {
 
         }
@@ -49,8 +49,9 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <param name="parent">The parent container.</param>
         public AlfredContainer(IObjectContainer parent) : base(parent)
         {
-
+            this.ErrorManager = new ErrorManager(this);
         }
+
 
         #endregion
 
@@ -234,6 +235,14 @@ namespace MattEland.Ani.Alfred.Core.Definitions
 
             return command;
         }
+
+        /// <summary>
+        ///     Gets the error manager.
+        /// </summary>
+        /// <value>
+        ///     The error manager.
+        /// </value>
+        public ErrorManager ErrorManager { get; }
 
     }
 }

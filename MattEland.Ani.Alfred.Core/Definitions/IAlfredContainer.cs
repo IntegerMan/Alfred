@@ -86,6 +86,13 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// </value>
         [CanBeNull]
         IAlfred Alfred { get; set; }
+
+        /// <summary>
+        ///     Gets the error manager.
+        /// </summary>
+        /// <value>
+        ///     The error manager.
+        /// </value>
+        ErrorManager ErrorManager { get; }
     }
 }
-

@@ -142,6 +142,9 @@
     <Compile Include="Definitions\LayoutType.cs" />
     <Compile Include="Definitions\ShellCommand.cs" />
     <Compile Include="Definitions\UserStatementResponse.cs" />
+    <Compile Include="ErrorCode.cs" />
+    <Compile Include="ErrorInstance.cs" />
+    <Compile Include="ErrorManager.cs" />
     <Compile Include="Modules\AlertVisibilityCalculator.cs" />
     <Compile Include="Modules\AlfredPagesListModule.cs" />
     <Compile Include="Definitions\IAlfredComponent.cs" />
