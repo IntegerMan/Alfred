@@ -48,6 +48,7 @@ namespace MattEland.Ani.Alfred.Core
         ///     Thrown when <paramref name="instance"/> is <lang keyword="null" />.
         /// </exception>
         /// <param name="instance"> The error instance. </param>
+        /// <param name="codeId"> The error code identifier. </param>
         /// <returns>
         ///     The found error code for instance.
         /// </returns>
@@ -128,8 +129,10 @@ namespace MattEland.Ani.Alfred.Core
         ///     An ErrorInstance.
         /// </returns>
         [NotNull]
-        private static ErrorInstance BuildErrorInstance(Exception ex, DateTime timeEncounteredUtc)
+        private static ErrorInstance BuildErrorInstance([NotNull] Exception ex, DateTime timeEncounteredUtc)
         {
+            if (ex == null) throw new ArgumentNullException(nameof(ex));
+
             var instance = new ErrorInstance(ex, timeEncounteredUtc);
             return instance;
         }
@@ -160,8 +163,10 @@ namespace MattEland.Ani.Alfred.Core
         ///     An ErrorInstance.
         /// </returns>
         [NotNull]
-        public ErrorInstance RegisterError(Exception ex, DateTime timeEncounteredUtc, string errorCodeId)
+        public ErrorInstance RegisterError([NotNull] Exception ex, DateTime timeEncounteredUtc, string errorCodeId)
         {
+            if (ex == null) throw new ArgumentNullException(nameof(ex));
+
             var instance = BuildErrorInstance(ex, timeEncounteredUtc);
 
             ErrorCode code = null;
@@ -198,17 +203,17 @@ namespace MattEland.Ani.Alfred.Core
             var activeCodes = _errorCodes.Values.Where(e => e.HasUnacknowledgedErrors);
             var isFirst = true;
 
-            foreach (var source in activeCodes)
+            foreach (var source in activeCodes.OrderBy(e => e.Identifier))
             {
 
                 if (isFirst)
                 {
+                    sb.Append(source?.Identifier);
                     isFirst = false;
-                    sb.Append(source.Identifier);
                 }
                 else
                 {
-                    sb.AppendFormat(", {0}", source.Identifier);
+                    sb.AppendFormat(", {0}", source?.Identifier);
                 }
             }
 
