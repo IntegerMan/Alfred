@@ -23,7 +23,7 @@ namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
     /// <summary>
     ///     A factory that builds CounterMetricProviders
     /// </summary>
-    public class CounterMetricProviderFactory : IMetricProviderFactory
+    public sealed class CounterMetricProviderFactory : IMetricProviderFactory
     {
         /// <summary>
         ///     Builds a metric provider for the specified type.
