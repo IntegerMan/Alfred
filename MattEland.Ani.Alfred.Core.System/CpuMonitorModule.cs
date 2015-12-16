@@ -14,13 +14,11 @@ using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
 
-using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Common.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Common;
-using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {

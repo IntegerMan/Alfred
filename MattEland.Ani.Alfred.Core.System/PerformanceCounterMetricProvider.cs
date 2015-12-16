@@ -11,11 +11,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 
-using MattEland.Ani.Alfred.Core.Console;
-using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Common;
 using MattEland.Common.Annotations;
-using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Modules.SysMonitor
 {
