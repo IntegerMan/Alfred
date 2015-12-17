@@ -8,8 +8,6 @@
 
 using MattEland.Common.Annotations;
 
-using MattEland.Common.Providers;
-
 namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>

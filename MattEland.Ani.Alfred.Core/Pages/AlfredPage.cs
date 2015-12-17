@@ -12,7 +12,6 @@ using System;
 using MattEland.Common.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Pages
 {

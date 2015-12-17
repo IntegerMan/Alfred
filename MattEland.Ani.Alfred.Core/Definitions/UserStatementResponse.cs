@@ -7,8 +7,6 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
-
 using MattEland.Common.Annotations;
 
 namespace MattEland.Ani.Alfred.Core.Definitions

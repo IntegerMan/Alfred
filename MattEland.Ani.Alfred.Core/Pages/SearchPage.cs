@@ -7,14 +7,13 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 
 using MattEland.Common.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Modules;
-using MattEland.Common.Providers;
+
 using System.Linq;
 
 namespace MattEland.Ani.Alfred.Core.Pages

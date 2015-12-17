@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using MattEland.Common.Annotations;
 
 using MattEland.Common.Providers;
-using System;
+
 namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>

@@ -9,14 +9,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 using MattEland.Common.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Common.Definitions.Search;
-using MattEland.Common.Providers;
 using MattEland.Presentation.Logical.Widgets;
 
 namespace MattEland.Ani.Alfred.Core.Modules

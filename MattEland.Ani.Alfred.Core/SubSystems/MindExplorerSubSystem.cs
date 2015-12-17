@@ -15,7 +15,7 @@ using MattEland.Common.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Pages;
-using MattEland.Common.Providers;
+
 using System.Diagnostics.Contracts;
 
 using MattEland.Common.Definitions.Search;

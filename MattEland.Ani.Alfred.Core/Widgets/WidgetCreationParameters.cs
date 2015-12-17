@@ -7,13 +7,8 @@
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
 
-using System.Globalization;
-
 using MattEland.Common.Annotations;
-
-using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Common.Providers;
-using MattEland.Ani.Alfred.Core.Definitions;
 
 namespace MattEland.Ani.Alfred.Core.Widgets
 {

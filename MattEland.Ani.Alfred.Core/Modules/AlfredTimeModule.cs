@@ -15,7 +15,6 @@ using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Common;
-using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.Core.Modules
 {

@@ -13,9 +13,7 @@ using System.Linq;
 using MattEland.Common.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Widgets;
 using MattEland.Common;
-using MattEland.Common.Providers;
 using MattEland.Presentation.Logical.Widgets;
 
 namespace MattEland.Ani.Alfred.Core.Modules
@@ -125,8 +123,10 @@ namespace MattEland.Ani.Alfred.Core.Modules
         ///     Registers many widgets to the module.
         /// </summary>
         /// <param name="widgets"> The widgets. </param>
-        public void Register(params IWidget[] widgets)
+        public void Register([NotNull] params IWidget[] widgets)
         {
+            if (widgets == null) throw new ArgumentNullException(nameof(widgets));
+
             foreach (var widget in widgets.Where(widget => widget != null))
             {
                 Register(widget);

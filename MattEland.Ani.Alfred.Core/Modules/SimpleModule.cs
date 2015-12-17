@@ -5,7 +5,6 @@ using MattEland.Common.Annotations;
 
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Common;
-using MattEland.Common.Providers;
 using MattEland.Presentation.Logical.Widgets;
 
 namespace MattEland.Ani.Alfred.Core.Modules

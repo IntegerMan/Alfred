@@ -11,8 +11,6 @@ using System;
 using System.Diagnostics;
 
 using MattEland.Common.Annotations;
-
-using MattEland.Common.Providers;
 using MattEland.Ani.Alfred.Core.Definitions;
 
 namespace MattEland.Ani.Alfred.Core.Console
