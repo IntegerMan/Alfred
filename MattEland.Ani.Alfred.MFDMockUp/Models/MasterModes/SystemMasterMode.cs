@@ -28,6 +28,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
             SystemButton = new NavigationButtonModel(screens.HomeScreen, this);
             AlfredButton = new NavigationButtonModel(screens.AlfredScreen, this);
             LogButton = new NavigationButtonModel(screens.LogScreen, this);
+            BuiltInTestsButton = new NavigationButtonModel(screens.BuiltInTestsScreen, this);
             PerformanceButton = new NavigationButtonModel(screens.PerformanceScreen, this);
 
             InitializeButtonCollections();
@@ -45,7 +46,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
                              AlfredButton,
                              PerformanceButton,
                              LogButton,
-                             BuildEmptyButton()
+                             BuiltInTestsButton
                          };
         }
 
@@ -95,6 +96,19 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.MasterModes
         /// </value>
         [NotNull]
         public ButtonModel LogButton
+        {
+            [DebuggerStepThrough]
+            get;
+        }
+
+        /// <summary>
+        ///     Gets the built in tests button.
+        /// </summary>
+        /// <value>
+        ///     The built in tests button.
+        /// </value>
+        [NotNull]
+        public ButtonModel BuiltInTestsButton
         {
             [DebuggerStepThrough]
             get;

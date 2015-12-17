@@ -23,7 +23,8 @@
         </ResourceDictionary>
 
     </UserControl.Resources>
-    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+    <StackPanel HorizontalAlignment="Center"
+                VerticalAlignment="Center">
 
         <!--  Module Title  -->
         <TextBlock Margin="32,0"

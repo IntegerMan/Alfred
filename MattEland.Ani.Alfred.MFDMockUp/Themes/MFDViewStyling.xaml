@@ -1,7 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:screens="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens"
-                    xmlns:views="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.Views">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Brush x:Key="MFDViewBackgroundBrush">
         #060105
@@ -61,33 +59,5 @@
            TargetType="TextBlock">
         <Setter Property="FontSize" Value="6pt" />
     </Style>
-
-    <!--  View Mappings  -->
-    <!--  TODO: Move into a separate ResourceDictionary  -->
-
-    <DataTemplate DataType="{x:Type screens:BootupScreenViewModel}">
-        <!-- <views:MFDBootupScreenView /> -->
-        <views:StandbyScreenView />
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type screens:HomeScreenViewModel}">
-        <views:MFDHomeScreenView />
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type screens:AlfredScreenViewModel}">
-        <views:AlfredScreenView />
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type screens:LogScreenViewModel}">
-        <views:LogScreenView />
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type screens:SystemPerformanceScreenViewModel}">
-        <views:SystemPerformanceScreenView />
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type screens:NotImplementedScreenViewModel}">
-        <views:NotImplementedScreenView />
-    </DataTemplate>
 
 </ResourceDictionary>

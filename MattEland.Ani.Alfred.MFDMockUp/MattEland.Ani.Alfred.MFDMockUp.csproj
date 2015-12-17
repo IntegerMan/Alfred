@@ -205,6 +205,7 @@
     <Compile Include="Models\Buttons\ButtonProvider.cs" />
     <Compile Include="Models\Buttons\ButtonStripDock.cs" />
     <Compile Include="Models\Buttons\ButtonStripModel.cs" />
+    <Compile Include="Models\Screens\BuiltInTestsScreenModel.cs" />
     <Compile Include="Models\Screens\HomeScreenModel.cs" />
     <Compile Include="Models\MFDProcessor.cs" />
     <Compile Include="Models\MFDProcessorResult.cs" />
@@ -224,6 +225,7 @@
     <Compile Include="ViewModels\MFDViewModel.cs" />
     <Compile Include="ViewModels\Screens\BootupScreenViewModel.cs" />
     <Compile Include="ViewModels\Screens\AlfredScreenViewModel.cs" />
+    <Compile Include="ViewModels\Screens\BuiltInTestsScreenViewModel.cs" />
     <Compile Include="ViewModels\Screens\HomeScreenViewModel.cs" />
     <Compile Include="ViewModels\Buttons\SeparatorViewModel.cs" />
     <Compile Include="ViewModels\LogEntryViewModel.cs" />
@@ -235,6 +237,9 @@
     <Compile Include="ViewModels\Widgets\ProgressBarWidgetViewModel.cs" />
     <Compile Include="ViewModels\Widgets\WidgetViewModel.cs" />
     <Compile Include="ViewModels\Widgets\WidgetViewModelFactory.cs" />
+    <Compile Include="Views\BuiltInTestsView.xaml.cs">
+      <DependentUpon>BuiltInTestsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\NotImplementedScreenView.xaml.cs">
       <DependentUpon>NotImplementedScreenView.xaml</DependentUpon>
     </Compile>
@@ -291,6 +296,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Themes\Screens.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Themes\SensorOfInterestIndicator.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -300,6 +309,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Themes\Widgets.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\BuiltInTestsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

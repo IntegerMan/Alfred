@@ -52,6 +52,9 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
                         return new SystemPerformanceScreenModel(perfSys);
                     }),
 
+                [typeof(BuiltInTestsScreenModel)] =
+                    new Lazy<ScreenModel>(() => new BuiltInTestsScreenModel()),
+
                 [typeof(LogScreenModel)] =
                     new Lazy<ScreenModel>(() => new LogScreenModel(workspace.LoggingConsole, mfd))
             };
@@ -134,6 +137,22 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             {
                 return GetScreen(typeof(NotImplementedScreenModel));
             }
+        }
+
+        /// <summary>
+        ///     Gets the built in tests screen.
+        /// </summary>
+        /// <value>
+        ///     The built in tests screen.
+        /// </value>
+        [NotNull]
+        public ScreenModel BuiltInTestsScreen
+        {
+            get
+            {
+                return GetScreen(typeof(BuiltInTestsScreenModel));
+            }
+
         }
 
         /// <summary>

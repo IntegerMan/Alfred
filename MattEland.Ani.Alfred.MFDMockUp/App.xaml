@@ -23,6 +23,7 @@
                 <ResourceDictionary Source="Themes/SensorOfInterestIndicator.xaml" />
                 <ResourceDictionary Source="Themes/StatusLabel.xaml" />
                 <ResourceDictionary Source="Themes/FaultIndicatorControl.xaml" />
+                <ResourceDictionary Source="Themes/Screens.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <vm:ViewModelLocator x:Key="ViewModelLocatorDataSource"

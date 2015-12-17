@@ -21,7 +21,8 @@
 
     <Window.Resources>
 
-        <DataTemplate x:Key="InteractiveMFDDataTemplate" DataType="vm:MFDViewModel">
+        <DataTemplate x:Key="InteractiveMFDDataTemplate"
+                      DataType="vm:MFDViewModel">
             <controls:MFDControl Margin="{StaticResource TinyMargin}" />
         </DataTemplate>
 
