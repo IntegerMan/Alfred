@@ -2,36 +2,50 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
-using System.Linq;
 
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.MFDMockUp.Models;
 using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
 using MattEland.Ani.Alfred.MFDMockUp.Models.Screens;
 using MattEland.Common.Annotations;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
 {
     /// <summary>
     ///     An abstract ViewModel for screen-related view models.
     /// </summary>
-    public abstract class ScreenViewModel : IHasDisplay
+    public abstract class ScreenViewModel : IHasDisplay, IHasContainer<IAlfredContainer>
     {
         [NotNull]
         private readonly ScreenModel _screenModel;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// Initializes a new instance of the <see cref="T:ScreenViewModel"/> class.
         /// </summary>
         protected ScreenViewModel([NotNull] ScreenModel screenModel)
         {
             Contract.Requires(screenModel != null);
+
             Contract.Ensures(_screenModel != null);
+            Contract.Ensures(Container != null);
+
+            Container = screenModel.Container;
 
             _screenModel = screenModel;
 
             // Register with instantiation monitor
             InstantiationMonitor.Instance.NotifyItemCreated(this);
         }
+
+        /// <summary>
+        ///     Gets the container.
+        /// </summary>
+        /// <value>
+        ///     The container.
+        /// </value>
+        [NotNull]
+        public IAlfredContainer Container { get; }
 
         /// <summary>
         ///     Gets the screen model associated with this view model.

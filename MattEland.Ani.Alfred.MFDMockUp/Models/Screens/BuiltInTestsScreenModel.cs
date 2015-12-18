@@ -6,6 +6,12 @@
 // 
 // Last Modified by: Matt Eland
 // ---------------------------------------------------------
+
+using System;
+using System.Diagnostics;
+
+using MattEland.Common.Annotations;
+
 namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
 {
     /// <summary>
@@ -13,12 +19,17 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
     /// </summary>
     public sealed class BuiltInTestsScreenModel : ScreenModel
     {
+        [NotNull]
+        private readonly FaultManager _faultManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BuiltInTestsScreenModel"/> class.
         /// </summary>
-        public BuiltInTestsScreenModel() : base("BIT")
+        public BuiltInTestsScreenModel([NotNull] FaultManager manager) : base("BIT")
         {
+            if (manager == null) throw new ArgumentNullException(nameof(manager));
+
+            _faultManager = manager;
         }
 
         /// <summary>
@@ -30,5 +41,20 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         {
             //- No Action Needed
         }
+
+        /// <summary>
+        ///     Gets the fault manager.
+        /// </summary>
+        /// <value>
+        ///     The fault manager.
+        /// </value>
+        [NotNull]
+        public FaultManager FaultManager
+        {
+            [DebuggerStepThrough]
+            get
+            { return _faultManager; }
+        }
+
     }
 }

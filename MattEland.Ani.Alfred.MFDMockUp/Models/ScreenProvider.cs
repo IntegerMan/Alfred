@@ -53,7 +53,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
                     }),
 
                 [typeof(BuiltInTestsScreenModel)] =
-                    new Lazy<ScreenModel>(() => new BuiltInTestsScreenModel()),
+                    new Lazy<ScreenModel>(() => new BuiltInTestsScreenModel(workspace.FaultManager)),
 
                 [typeof(LogScreenModel)] =
                     new Lazy<ScreenModel>(() => new LogScreenModel(workspace.LoggingConsole, mfd))

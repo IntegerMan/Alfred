@@ -12,17 +12,20 @@ using System.Diagnostics.Contracts;
 
 using Assisticant.Fields;
 
+using MattEland.Ani.Alfred.Core;
+using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
 using MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens;
 using MattEland.Common;
 using MattEland.Common.Annotations;
+using MattEland.Common.Providers;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
 {
     /// <summary>
     ///     A model for a multifunction display screen.
     /// </summary>
-    public abstract class ScreenModel
+    public abstract class ScreenModel : IHasContainer<IAlfredContainer>
     {
 
         /// <summary>
@@ -35,17 +38,20 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
         private readonly IDictionary<object, ScreenViewModel> _viewModels;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// Initializes a new instance of the <see cref="T:ScreenModel"/> class.
         /// </summary>
         protected ScreenModel(string buttonText)
         {
             Contract.Requires(buttonText.HasText());
+
             Contract.Ensures(_buttonText != null);
             Contract.Ensures(_buttonText.Value == buttonText);
             Contract.Ensures(_viewModels != null);
+            Contract.Ensures(Container != null);
 
             _buttonText = new Observable<string>(buttonText);
             _viewModels = new Dictionary<object, ScreenViewModel>();
+            Container = AlfredContainerHelper.ProvideContainer();
 
             // Register with instantiation monitor
             InstantiationMonitor.Instance.NotifyItemCreated(this);
@@ -158,5 +164,13 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models.Screens
 
             return new ModeSwitchButtonModel("MODE");
         }
+
+        /// <summary>
+        ///     Gets the container.
+        /// </summary>
+        /// <value>
+        ///     The container.
+        /// </value>
+        public IAlfredContainer Container { get; }
     }
 }

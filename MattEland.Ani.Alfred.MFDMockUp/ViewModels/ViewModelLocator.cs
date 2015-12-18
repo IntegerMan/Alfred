@@ -6,9 +6,11 @@ using System.Reflection;
 
 using Assisticant;
 
+using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.MFDMockUp.Models;
 using MattEland.Ani.Alfred.MFDMockUp.Models.Buttons;
+using MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens;
 using MattEland.Common;
 using MattEland.Common.Annotations;
 using MattEland.Ani.Alfred.PresentationCommon.Helpers;
@@ -51,7 +53,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         public ViewModelLocator([CanBeNull] IAlfredContainer container)
         {
             //- Lazy Initialize container
-            Container = container ?? new AlfredContainer(CommonProvider.Container);
+            Container = container ?? AlfredContainerHelper.ProvideContainer();
 
             // Set up mappings for automatic creation of view models.
             _modelToViewModelMapping = new Dictionary<Type, Type>();
