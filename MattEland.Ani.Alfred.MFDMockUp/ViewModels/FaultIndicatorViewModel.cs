@@ -207,6 +207,18 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
             get { return _model.Status; }
         }
 
+        /// <summary>
+        ///     Gets the model this view model is based on.
+        /// </summary>
+        /// <value>
+        ///     The model.
+        /// </value>
+        [NotNull]
+        public FaultIndicatorModel Model
+        {
+            get { return _model; }
+        }
+
     }
 
 }

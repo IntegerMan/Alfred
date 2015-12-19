@@ -284,7 +284,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
         /// <value>
         ///     The error text.
         /// </value>
-        public String ErrorText
+        public string ErrorText
         {
             get
             {
