@@ -14,11 +14,9 @@ using System.Linq;
 
 using Assisticant.Fields;
 
-using MattEland.Ani.Alfred.Core.Definitions;
 using MattEland.Ani.Alfred.MFDMockUp.Models;
 using MattEland.Ani.Alfred.MFDMockUp.Models.Screens;
 using MattEland.Ani.Alfred.PresentationCommon.Helpers;
-using MattEland.Common;
 using MattEland.Common.Annotations;
 
 namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
@@ -41,6 +39,10 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         [NotNull]
         private readonly Observable<int> _pageSize;
 
+        private readonly TimeSpan _indicatorUpdateFrequency;
+
+        private DateTime _lastIndicatorUpdate;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="T:BuiltInTestsScreenViewModel"/> class.
         /// </summary>
@@ -53,6 +55,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
             _activeFaultViewModels = new Dictionary<FaultIndicatorModel, FaultIndicatorViewModel>();
             _pageSize = new Observable<int>();
             _activeFaults = Container.ProvideCollection<FaultIndicatorViewModel>();
+            _indicatorUpdateFrequency = TimeSpan.FromSeconds(1.0);
         }
 
         /// <summary>
@@ -92,11 +95,18 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         /// <param name="processorResult"> The processor result. </param>
         protected override void ProcessScreenState(MFDProcessor processor, MFDProcessorResult processorResult)
         {
-            UpdateActiveIndicators();
+            // Only poll new incidators every so often
+            if (_lastIndicatorUpdate == DateTime.MinValue ||
+                _lastIndicatorUpdate - DateTime.Now > _indicatorUpdateFrequency)
+            {
+                // Update the indicators
+                UpdateActiveIndicators();
 
-            var provider = processor.MFD.ButtonProvider;
+                // This probably only needs to happen once, but it's not too expensive to do every refresh
+                var provider = processor.MFD.ButtonProvider;
+                PageSize = provider.LeftButtons.Buttons.Count() + provider.RightButtons.Buttons.Count();
+            }
 
-            PageSize = provider.LeftButtons.Buttons.Count() + provider.RightButtons.Buttons.Count();
         }
 
         /// <summary>
@@ -126,6 +136,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
             var modelsToAdd = activeModels.Where(m => !oldModels.Contains(m));
             var modelsToRemove = oldModels.Where(m => !activeModels.Contains(m));
 
+            // Add new indicators
             foreach (var model in modelsToAdd)
             {
                 Debug.Assert(model != null);
@@ -135,12 +146,16 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
                 _activeFaultViewModels[model] = vm;
             }
 
+            // Remove prior indicators that are no longer active
             foreach (var model in modelsToRemove)
             {
                 var vm = _activeFaultViewModels[model];
                 _activeFaults.Remove(vm);
                 _activeFaultViewModels.Remove(model);
             }
+
+            _lastIndicatorUpdate = DateTime.Now;
         }
+
     }
 }
