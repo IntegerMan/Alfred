@@ -2,8 +2,12 @@
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Common.Providers;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Diagnostics.Contracts;
+
+using Assisticant.Collections;
+
 namespace MattEland.Ani.Alfred.Core.Definitions
 {
     /// <summary>
@@ -47,11 +51,31 @@ namespace MattEland.Ani.Alfred.Core.Definitions
         /// <param name="parent">The parent container.</param>
         public AlfredContainer(IObjectContainer parent) : base(parent)
         {
-            this.ErrorManager = new ErrorManager(this);
+            ErrorManager = new ErrorManager(this);
         }
 
-
         #endregion
+
+        /// <summary>
+        ///     Provides a collection of the specified type of <see langword="object" /> .
+        /// </summary>
+        /// <remarks>
+        ///     <para>
+        ///         This functions by calling <see ref="Provide"/> on the ICollection&lt;gt; generic type.
+        ///     </para>
+        ///     <para>
+        ///         It's highly advised to provide a new instance via <see ref="Provide" /> (as opposed
+        ///         to using <see ref="RegisterProvidedInstance"/>) on ICollection&lt;gt;
+        ///     </para>
+        /// </remarks>
+        /// <typeparam name="TCollectionItem"> The type of items the collection supports. </typeparam>
+        /// <returns>
+        ///     The new collection. This will not be <see langword="null" /> .
+        /// </returns>
+        public ICollection<TCollectionItem> ProvideCollection<TCollectionItem>()
+        {
+            return new ObservableList<TCollectionItem>();
+        }
 
         /// <summary>
         /// Gets the Alfred instance.
