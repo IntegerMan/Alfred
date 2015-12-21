@@ -36,12 +36,16 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
 
         [NotNull]
         private readonly BuiltInTestsScreenModel _model;
+
+        private DateTime _lastIndicatorUpdate;
+
         [NotNull]
         private readonly Observable<int> _pageSize;
 
         private readonly TimeSpan _indicatorUpdateFrequency;
 
-        private DateTime _lastIndicatorUpdate;
+        [NotNull]
+        private readonly Computed<bool> _isNoItemsLabelVisible;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:BuiltInTestsScreenViewModel"/> class.
@@ -56,6 +60,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
             _pageSize = new Observable<int>();
             _activeFaults = Container.ProvideCollection<FaultIndicatorViewModel>();
             _indicatorUpdateFrequency = TimeSpan.FromSeconds(1.0);
+            _isNoItemsLabelVisible = new Computed<bool>(() => _activeFaults.Any());
         }
 
         /// <summary>
@@ -155,6 +160,17 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
             }
 
             _lastIndicatorUpdate = DateTime.Now;
+        }
+
+        /// <summary>
+        ///     Gets a value indicating whether or not the no items label should be visible.
+        /// </summary>
+        /// <value>
+        ///     true if the label should be visible, false if not.
+        /// </value>
+        public bool IsNoItemsLabelVisible
+        {
+            get { return _isNoItemsLabelVisible; }
         }
 
     }

@@ -4,14 +4,50 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:screens="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens"
+             xmlns:viewModels="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.ViewModels"
+             xmlns:controls="clr-namespace:MattEland.Ani.Alfred.MFDMockUp.Controls"
              Style="{StaticResource MFDViewStyle}"
-             d:DataContext="{d:DesignInstance screens:AlfredScreenViewModel}"
+             d:DataContext="{d:DesignInstance screens:BuiltInTestsScreenViewModel}"
              d:DesignHeight="256"
              d:DesignWidth="256"
              mc:Ignorable="d">
     <Grid>
-        <TextBlock Text="Reserved for BIT Screen"
+        <ItemsControl ItemsSource="{Binding Path=FaultsOnCurrentPage}"
+                      Visibility="{Binding Path=IsNoItemsLabelVisible,
+                                           Converter={StaticResource ShowIfFalse}}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid d:DataContext="{d:DesignInstance viewModels:FaultIndicatorViewModel}"
+                          Width="128"
+                          Height="51.2">
+                        <StackPanel Orientation="Vertical"
+                                    Margin="{StaticResource TinyMargin}">
+
+                            <!--  Basic Indicator  -->
+                            <controls:FaultIndicatorControl DataContext="{Binding}"
+                                                            HorizontalAlignment="Stretch" />
+
+                            <!--  Indicator Status Message  -->
+                            <TextBlock Text="{Binding Path=Message}"
+                                       Style="{StaticResource MFDViewSmallTextStyle}"
+                                       Foreground="{StaticResource MFDScreenInfoBrush}"
+                                       Margin="{StaticResource HalfSpaceAbove}"
+                                       TextWrapping="Wrap"
+                                       TextTrimming="CharacterEllipsis" />
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Vertical" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+        <TextBlock Text="No Active Faults or Warnings"
                    Style="{StaticResource MFDViewCenterTextStyle}"
-                   VerticalAlignment="Center" />
+                   VerticalAlignment="Center"
+                   Visibility="{Binding Path=IsNoItemsLabelVisible,
+                                        Converter={StaticResource ShowIfTrue}}" />
     </Grid>
 </UserControl>

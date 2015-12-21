@@ -185,6 +185,7 @@
     </Compile>
     <Compile Include="Models\Buttons\ModeSwitchButtonModel.cs" />
     <Compile Include="Models\DesignDataProvider.cs" />
+    <Compile Include="Models\FaultIndicatorStatusUpdate.cs" />
     <Compile Include="Models\InstantiationMonitor.cs" />
     <Compile Include="Models\MasterModes\BootupMasterMode.cs" />
     <Compile Include="Models\Buttons\ActionButtonModel.cs" />

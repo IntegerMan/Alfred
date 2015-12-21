@@ -22,9 +22,10 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// <param name="indicatorLabel"> The indicator label. </param>
         /// <param name="statusFunction"> The status calculation function. </param>
         public FaultIndicatorModel([NotNull] string indicatorLabel,
-            [CanBeNull] Func<FaultIndicatorStatus> statusFunction)
+            [CanBeNull] Func<FaultIndicatorStatusUpdate> statusFunction)
         {
             Contract.Requires(indicatorLabel != null);
+
             Contract.Ensures(_status != null);
             Contract.Ensures(IndicatorLabel != null);
 
@@ -34,6 +35,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             // Validate the sanitized string fits within the allowable parameters
             const int MinCharacters = 1;
             const int MaxCharacters = 8;
+
             if (indicatorLabel.Length < MinCharacters || indicatorLabel.Length > MaxCharacters)
             {
                 var message = string.Format("Indicators must be between {0} and {1} characters long without spacing.",
@@ -46,7 +48,10 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             IndicatorLabel = indicatorLabel;
 
             _statusFunction = statusFunction;
+
+            //- Set up observable fields
             _status = new Observable<FaultIndicatorStatus>(FaultIndicatorStatus.Inactive);
+            _message = new Observable<string>();
         }
 
         /// <summary>
@@ -62,13 +67,19 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         ///     The is active monitoring function.
         /// </summary>
         [CanBeNull]
-        private readonly Func<FaultIndicatorStatus> _statusFunction;
+        private readonly Func<FaultIndicatorStatusUpdate> _statusFunction;
 
         /// <summary>
         ///     The current status of the indicator.
         /// </summary>
         [NotNull]
         private readonly Observable<FaultIndicatorStatus> _status;
+
+        /// <summary>
+        ///     The current status message.
+        /// </summary>
+        [NotNull]
+        private readonly Observable<string> _message;
 
         /// <summary>
         ///     Gets or sets a value indicating whether this indicator is active.
@@ -83,6 +94,18 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         }
 
         /// <summary>
+        ///     Gets the message.
+        /// </summary>
+        /// <value>
+        ///     The message.
+        /// </value>
+        public string Message
+        {
+            get { return _message; }
+            set { _message.Value = value; }
+        }
+
+        /// <summary>
         ///     Updates the <see cref="Status"/> status of the indicator based on the function provided
         ///     at instance creation.
         /// </summary>
@@ -92,8 +115,12 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
 
             if (func != null)
             {
-                Status = func();
+                var update = func();
+
+                Status = update.Status;
+                Message = update.Message;
             }
         }
     }
+
 }

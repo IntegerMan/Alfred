@@ -219,6 +219,17 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels
             get { return _model; }
         }
 
+        /// <summary>
+        ///     Gets a short message describing a fault or warning.
+        /// </summary>
+        /// <value>
+        ///     The message.
+        /// </value>
+        public string Message
+        {
+            get { return _model.Message; }
+        }
+
     }
 
 }

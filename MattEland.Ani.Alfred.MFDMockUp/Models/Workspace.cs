@@ -124,14 +124,11 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         {
             // Alert when too many items are being instantiated
             _faultManager.Register(new FaultIndicatorModel("HI-INST",
-                GetHighInstantiationIndicatorStatus));
+                GetHighInstantiationStatus));
 
             // Watch for Alfred's status
             _faultManager.Register(new FaultIndicatorModel("ALFRED",
-                                                           () =>
-                                                           AlfredApplication.IsOnline
-                                                               ? FaultIndicatorStatus.Online
-                                                               : FaultIndicatorStatus.Available));
+                                                           GetAlfredStatus));
 
             // Add subsystems to the display
             foreach (var subsystem in AlfredApplication.Subsystems)
@@ -164,21 +161,35 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             return item;
         }
 
-        private FaultIndicatorStatus GetSubsystemStatus([CanBeNull] IAlfredSubsystem subsystem)
+        private FaultIndicatorStatusUpdate GetSubsystemStatus([CanBeNull] IAlfredSubsystem subsystem)
         {
             // Ensure the thing is actually there
-            if (subsystem == null) return FaultIndicatorStatus.Missing;
+            if (subsystem == null) { return new FaultIndicatorStatusUpdate(FaultIndicatorStatus.Missing); }
 
             // Get a status based on the subsystem
-            return subsystem.IsOnline
-                       // If we're online, return based on if there was an error or not
-                       ? (subsystem.HasError
-                              ? FaultIndicatorStatus.Fault
-                              : FaultIndicatorStatus.Online)
-                       // If we're offline but the app is online, display available, otherwise inactive
-                       : (AlfredApplication.IsOnline
-                              ? FaultIndicatorStatus.Available
-                              : FaultIndicatorStatus.Inactive);
+            var status = subsystem.IsOnline
+
+                           //? Should this ever include warnings?
+
+                           // If we're online, return based on if there was an error or not
+                           ? (subsystem.HasError
+                                  ? FaultIndicatorStatus.Fault
+                                  : FaultIndicatorStatus.Online)
+
+                           // If we're offline but the app is online, display available, otherwise inactive
+                           : (AlfredApplication.IsOnline
+                                  ? FaultIndicatorStatus.Available
+                                  : FaultIndicatorStatus.Inactive);
+
+            // Build out a message to use if there is an error present
+            var message = string.Empty;
+            if (subsystem.HasError)
+            {
+                message = subsystem.LastError?.Message;
+            }
+
+            //- Build out and return the update
+            return new FaultIndicatorStatusUpdate(status, message);
         }
 
         /// <summary>
@@ -187,14 +198,34 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// <returns>
         ///     The high instantiation indicator status.
         /// </returns>
-        private FaultIndicatorStatus GetHighInstantiationIndicatorStatus()
+        private FaultIndicatorStatusUpdate GetHighInstantiationStatus()
         {
             var newItems = _instantiationMonitor.NewItemsLastMeasurement;
 
-            return newItems >= HighInstantiationCountThreshhold
-                ? FaultIndicatorStatus.Warning
-                : FaultIndicatorStatus.Inactive;
+            // Early exit if we're within tolerances
+            if (newItems < HighInstantiationCountThreshhold)
+            {
+                return new FaultIndicatorStatusUpdate(FaultIndicatorStatus.Inactive);
+            }
 
+            // Build out an indicator
+            var message = string.Format("{0} instantiations since last update", newItems);
+            return new FaultIndicatorStatusUpdate(FaultIndicatorStatus.Warning, message);
+        }
+
+        /// <summary>
+        ///     Gets the Alfred system's status.
+        /// </summary>
+        /// <returns>
+        ///     The Alfred system's status.
+        /// </returns>
+        private FaultIndicatorStatusUpdate GetAlfredStatus()
+        {
+            var status = AlfredApplication.IsOnline
+                ? FaultIndicatorStatus.Online
+                : FaultIndicatorStatus.Available;
+
+            return new FaultIndicatorStatusUpdate(status);
         }
 
         /// <summary>
