@@ -66,6 +66,23 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// <summary>
         ///     Registers a new fault indicator.
         /// </summary>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when one or more required arguments are <lang keyword="null" />.
+        /// </exception>
+        /// <param name="provider"> The provider. </param>
+        public void Register([NotNull] FaultIndicatorProvider provider)
+        {
+            Contract.Requires(provider != null);
+
+            if (provider == null) throw new ArgumentNullException(nameof(provider));
+
+            Register(provider.Indicator);
+
+        }
+
+        /// <summary>
+        ///     Registers a new fault indicator.
+        /// </summary>
         /// <param name="indicator"> The indicator. </param>
         public void Register([NotNull] FaultIndicatorModel indicator)
         {

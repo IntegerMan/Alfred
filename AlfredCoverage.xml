@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Root CoveredStatements="8133" TotalStatements="12398" CoveragePercent="66" ReportType="NDependXML" DotCoverVersion="3.2">
+<Root CoveredStatements="8105" TotalStatements="12401" CoveragePercent="65" ReportType="NDependXML" DotCoverVersion="3.2">
   <Assembly Name="MattEland.Ani.Alfred.Chat" CoveredStatements="470" TotalStatements="592" CoveragePercent="79">
     <Namespace Name="MattEland.Ani.Alfred.Chat" CoveredStatements="470" TotalStatements="592" CoveragePercent="79">
       <Type Name="AimlExplorerNode" CoveredStatements="37" TotalStatements="44" CoveragePercent="84">
@@ -618,7 +618,7 @@
       </Type>
     </Namespace>
   </Assembly>
-  <Assembly Name="MattEland.Ani.Alfred.Core" CoveredStatements="2202" TotalStatements="2809" CoveragePercent="78">
+  <Assembly Name="MattEland.Ani.Alfred.Core" CoveredStatements="2205" TotalStatements="2812" CoveragePercent="78">
     <Namespace Name="MattEland.Ani.Alfred.Core" CoveredStatements="776" TotalStatements="959" CoveragePercent="81">
       <Type Name="AlfredApplication" CoveredStatements="121" TotalStatements="130" CoveragePercent="93">
         <Type Name="&lt;get_Components&gt;d__46" CoveredStatements="10" TotalStatements="10" CoveragePercent="100">
@@ -909,26 +909,27 @@
         <Method Name="Log(String,String,LogLevel)" CoveredStatements="6" TotalStatements="11" CoveragePercent="55" FirstStatementLine="113" />
       </Type>
     </Namespace>
-    <Namespace Name="MattEland.Ani.Alfred.Core.Definitions" CoveredStatements="175" TotalStatements="315" CoveragePercent="56">
-      <Type Name="AlfredContainer" CoveredStatements="60" TotalStatements="77" CoveragePercent="78">
-        <Method Name=".ctor()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="39" />
-        <Method Name=".ctor(IObjectContainer)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="48" />
-        <Method Name="BuildCommand(Action)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="231" />
-        <Method Name="get_Alfred()" CoveredStatements="4" TotalStatements="7" CoveragePercent="57" FirstStatementLine="66" />
-        <Method Name="get_ChatProvider()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="113" />
-        <Method Name="get_CommandRouter()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="190" />
-        <Method Name="get_Console()" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="128" />
-        <Method Name="get_ErrorManager()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="243" />
-        <Method Name="get_Locale()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="157" />
-        <Method Name="get_SearchController()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="211" />
-        <Method Name="get_Shell()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="98" />
-        <Method Name="HandleException(Exception,String)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="255" />
-        <Method Name="HandleException(Exception,String,String)" CoveredStatements="6" TotalStatements="7" CoveragePercent="86" FirstStatementLine="269" />
-        <Method Name="set_Alfred(IAlfred)" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="76" />
-        <Method Name="set_CommandRouter(IAlfredCommandRecipient)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="194" />
-        <Method Name="set_Console(IConsole)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="138" />
-        <Method Name="set_Locale(CultureInfo)" CoveredStatements="0" TotalStatements="7" CoveragePercent="0" FirstStatementLine="164" />
-        <Method Name="set_SearchController(ISearchController)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="215" />
+    <Namespace Name="MattEland.Ani.Alfred.Core.Definitions" CoveredStatements="178" TotalStatements="318" CoveragePercent="56">
+      <Type Name="AlfredContainer" CoveredStatements="63" TotalStatements="80" CoveragePercent="79">
+        <Method Name=".ctor()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="43" />
+        <Method Name=".ctor(IObjectContainer)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="52" />
+        <Method Name="BuildCommand(Action)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="255" />
+        <Method Name="get_Alfred()" CoveredStatements="4" TotalStatements="7" CoveragePercent="57" FirstStatementLine="90" />
+        <Method Name="get_ChatProvider()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="137" />
+        <Method Name="get_CommandRouter()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="214" />
+        <Method Name="get_Console()" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="152" />
+        <Method Name="get_ErrorManager()" CoveredStatements="1" TotalStatements="1" CoveragePercent="100" FirstStatementLine="267" />
+        <Method Name="get_Locale()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="181" />
+        <Method Name="get_SearchController()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="235" />
+        <Method Name="get_Shell()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="122" />
+        <Method Name="HandleException(Exception,String)" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="279" />
+        <Method Name="HandleException(Exception,String,String)" CoveredStatements="6" TotalStatements="7" CoveragePercent="86" FirstStatementLine="293" />
+        <Method Name="ProvideCollection&lt;TCollectionItem&gt;()" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="76" />
+        <Method Name="set_Alfred(IAlfred)" CoveredStatements="7" TotalStatements="7" CoveragePercent="100" FirstStatementLine="100" />
+        <Method Name="set_CommandRouter(IAlfredCommandRecipient)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="218" />
+        <Method Name="set_Console(IConsole)" CoveredStatements="4" TotalStatements="4" CoveragePercent="100" FirstStatementLine="162" />
+        <Method Name="set_Locale(CultureInfo)" CoveredStatements="0" TotalStatements="7" CoveragePercent="0" FirstStatementLine="188" />
+        <Method Name="set_SearchController(ISearchController)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="239" />
       </Type>
       <Type Name="AlfredProperty" CoveredStatements="16" TotalStatements="27" CoveragePercent="59">
         <Method Name=".ctor(String,Object,Boolean)" CoveredStatements="7" TotalStatements="9" CoveragePercent="78" FirstStatementLine="20" />
@@ -1576,7 +1577,7 @@
       </Type>
     </Namespace>
   </Assembly>
-  <Assembly Name="MattEland.Ani.Alfred.PresentationAvalon" CoveredStatements="279" TotalStatements="648" CoveragePercent="43">
+  <Assembly Name="MattEland.Ani.Alfred.PresentationAvalon" CoveredStatements="248" TotalStatements="648" CoveragePercent="38">
     <Namespace Name="MattEland.Ani.Alfred.PresentationAvalon.Commands" CoveredStatements="36" TotalStatements="56" CoveragePercent="64">
       <Type Name="ApplicationManager" CoveredStatements="33" TotalStatements="50" CoveragePercent="66">
         <Method Name=".ctor(IAlfredContainer,ApplicationManagerOptions,IUserInterfaceDirector)" CoveredStatements="3" TotalStatements="3" CoveragePercent="100" FirstStatementLine="52" />
@@ -1700,15 +1701,15 @@
         <Method Name="ConvertBack(Object,Type,Object,CultureInfo)" CoveredStatements="2" TotalStatements="2" CoveragePercent="100" FirstStatementLine="68" />
       </Type>
     </Namespace>
-    <Namespace Name="MattEland.Ani.Alfred.PresentationAvalon.Helpers" CoveredStatements="64" TotalStatements="164" CoveragePercent="39">
+    <Namespace Name="MattEland.Ani.Alfred.PresentationAvalon.Helpers" CoveredStatements="33" TotalStatements="164" CoveragePercent="20">
       <Type Name="AvalonMessageBoxProvider" CoveredStatements="0" TotalStatements="11" CoveragePercent="0">
         <Method Name="Show(String,String,MessageBoxType)" CoveredStatements="0" TotalStatements="11" CoveragePercent="0" FirstStatementLine="32" />
       </Type>
-      <Type Name="SafeObservableCollection&lt;T&gt;" CoveredStatements="31" TotalStatements="76" CoveragePercent="41">
-        <Method Name=".ctor()" CoveredStatements="5" TotalStatements="5" CoveragePercent="100" FirstStatementLine="30" />
+      <Type Name="SafeObservableCollection&lt;T&gt;" CoveredStatements="0" TotalStatements="76" CoveragePercent="0">
+        <Method Name=".ctor()" CoveredStatements="0" TotalStatements="5" CoveragePercent="0" FirstStatementLine="30" />
         <Method Name="AddItems(IEnumerable&lt;T&gt;)" CoveredStatements="0" TotalStatements="14" CoveragePercent="0" FirstStatementLine="58" />
         <Method Name="NotifyChanges()" CoveredStatements="0" TotalStatements="5" CoveragePercent="0" FirstStatementLine="76" />
-        <Method Name="OnCollectionChanged(NotifyCollectionChangedEventArgs)" CoveredStatements="26" TotalStatements="32" CoveragePercent="81" FirstStatementLine="119" />
+        <Method Name="OnCollectionChanged(NotifyCollectionChangedEventArgs)" CoveredStatements="0" TotalStatements="32" CoveragePercent="0" FirstStatementLine="119" />
         <Method Name="RemoveItems(IList&lt;T&gt;)" CoveredStatements="0" TotalStatements="14" CoveragePercent="0" FirstStatementLine="89" />
         <Method Name="ResumeCollectionChangeNotification()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="102" />
         <Method Name="SuspendCollectionChangeNotification()" CoveredStatements="0" TotalStatements="3" CoveragePercent="0" FirstStatementLine="110" />

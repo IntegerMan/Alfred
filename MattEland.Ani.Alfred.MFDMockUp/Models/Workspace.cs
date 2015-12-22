@@ -11,7 +11,6 @@ using System.Linq;
 using MattEland.Ani.Alfred.Core;
 using MattEland.Ani.Alfred.Core.Console;
 using MattEland.Ani.Alfred.Core.Definitions;
-using MattEland.Ani.Alfred.Core.Modules.SysMonitor;
 using MattEland.Ani.Alfred.PresentationAvalon.Commands;
 using MattEland.Ani.Alfred.PresentationCommon.Commands;
 using MattEland.Common;
@@ -24,8 +23,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
     [PublicAPI]
     public sealed class Workspace
     {
-
-        private const int HighInstantiationCountThreshhold = 1;
 
         /// <summary>
         /// The default workspace name. 
@@ -61,6 +58,10 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         /// </summary>
         [NotNull]
         private readonly FaultManager _faultManager;
+
+        [NotNull]
+        private HighInstantiationIndicatorProvider _highInstantiationIndicatorProvider;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:Workspace"/> class intended for design-time consumption.
         /// </summary>
@@ -113,6 +114,8 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             _faultManager = new FaultManager();
             _instantiationMonitor = InstantiationMonitor.Instance;
 
+            _highInstantiationIndicatorProvider = new HighInstantiationIndicatorProvider();
+
             RegisterFaultIndicators();
 
             // Build the main update pump
@@ -123,8 +126,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
         private void RegisterFaultIndicators()
         {
             // Alert when too many items are being instantiated
-            _faultManager.Register(new FaultIndicatorModel("HI-INST",
-                GetHighInstantiationStatus));
+            _faultManager.Register(_highInstantiationIndicatorProvider);
 
             // Watch for Alfred's status
             _faultManager.Register(new FaultIndicatorModel("ALFRED",
@@ -190,27 +192,6 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
 
             //- Build out and return the update
             return new FaultIndicatorStatusUpdate(status, message);
-        }
-
-        /// <summary>
-        ///     Calculates and returns the high instantiation indicator's status.
-        /// </summary>
-        /// <returns>
-        ///     The high instantiation indicator status.
-        /// </returns>
-        private FaultIndicatorStatusUpdate GetHighInstantiationStatus()
-        {
-            var newItems = _instantiationMonitor.NewItemsLastMeasurement;
-
-            // Early exit if we're within tolerances
-            if (newItems < HighInstantiationCountThreshhold)
-            {
-                return new FaultIndicatorStatusUpdate(FaultIndicatorStatus.Inactive);
-            }
-
-            // Build out an indicator
-            var message = string.Format("{0} instantiations since last update", newItems);
-            return new FaultIndicatorStatusUpdate(FaultIndicatorStatus.Warning, message);
         }
 
         /// <summary>
@@ -362,4 +343,5 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Models
             }
         }
     }
+
 }
