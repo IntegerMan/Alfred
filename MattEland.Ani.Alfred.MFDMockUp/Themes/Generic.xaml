@@ -58,6 +58,9 @@
     <Thickness x:Key="BottomMargin">
         0, 8, 0, 18
     </Thickness>
+    <Thickness x:Key="TopAndBottomMargin">
+        0, 18
+    </Thickness>
 
     <Thickness x:Key="SpaceLeft">
         8,0,0,0

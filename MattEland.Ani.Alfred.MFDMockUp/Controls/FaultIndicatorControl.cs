@@ -50,5 +50,27 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Controls
             get { return (FaultIndicatorStatus)GetValue(StatusProperty); }
             set { SetValue(StatusProperty, value); }
         }
+
+        /// <summary>
+        ///     Defines the <see cref="Label"/> dependency property.
+        /// </summary>
+        /// <remarks>
+        ///		Defaults to null
+        /// </remarks>
+        [NotNull]
+        public static readonly DependencyProperty LabelProperty = DependencyProperty.Register("Label",
+                                                                         typeof(string),
+                                                                         typeof(FaultIndicatorControl),
+                                                                         new PropertyMetadata(string.Empty));
+
+        /// <summary>
+        ///     Gets or sets the Label property using <see cref="LabelProperty"/>.
+        /// </summary>
+        /// <value>The Name.</value>
+        public string Label
+        {
+            get { return (string)GetValue(LabelProperty); }
+            set { SetValue(LabelProperty, value); }
+        }
     }
 }

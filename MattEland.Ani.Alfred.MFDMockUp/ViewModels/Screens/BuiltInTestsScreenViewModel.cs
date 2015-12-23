@@ -102,7 +102,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.ViewModels.Screens
         {
             // Only poll new incidators every so often
             if (_lastIndicatorUpdate == DateTime.MinValue ||
-                _lastIndicatorUpdate - DateTime.Now > _indicatorUpdateFrequency)
+                DateTime.Now - _lastIndicatorUpdate > _indicatorUpdateFrequency)
             {
                 // Update the indicators
                 UpdateActiveIndicators();

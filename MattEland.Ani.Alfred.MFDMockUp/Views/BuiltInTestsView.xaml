@@ -13,6 +13,7 @@
              mc:Ignorable="d">
     <Grid>
         <ItemsControl ItemsSource="{Binding Path=FaultsOnCurrentPage}"
+                      Margin="{StaticResource TopAndBottomMargin}"
                       Visibility="{Binding Path=IsNoItemsLabelVisible,
                                            Converter={StaticResource ShowIfFalse}}">
             <ItemsControl.ItemTemplate>
@@ -24,7 +25,8 @@
                                     Margin="{StaticResource TinyMargin}">
 
                             <!--  Basic Indicator  -->
-                            <controls:FaultIndicatorControl DataContext="{Binding}"
+                            <controls:FaultIndicatorControl Status="{Binding Path=Status}"
+                                                            Label="{Binding Path=IndicatorLabel}"
                                                             HorizontalAlignment="Stretch" />
 
                             <!--  Indicator Status Message  -->

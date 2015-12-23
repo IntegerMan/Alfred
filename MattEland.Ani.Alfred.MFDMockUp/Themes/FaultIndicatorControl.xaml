@@ -37,7 +37,7 @@
                                 <!--  Label with indicator text  -->
                                 <TextBlock x:Name="lblIndicator"
                                            Style="{StaticResource IndicatorButtonLabelStyle}"
-                                           Text="{Binding IndicatorLabel}"
+                                           Text="{TemplateBinding Label}"
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center"
                                            Foreground="{StaticResource IndicatorUnlit}" />

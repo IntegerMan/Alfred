@@ -7,7 +7,7 @@ namespace MattEland.Ani.Alfred.MFDMockUp.Views
     /// <summary>
     /// Interaction logic for BuiltInTestsView.xaml
     /// </summary>
-    public partial class BuiltInTestsView : UserControl
+    public sealed partial class BuiltInTestsView : UserControl
     {
         /// <summary>
         ///     Initializes a new instance of the BuiltInTestsView class.
