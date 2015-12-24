@@ -108,6 +108,7 @@
                                                                 Converter={StaticResource HideIfNoText}}"
                                            Text="{Binding Path=ScreenIdentificationText}"
                                            Style="{StaticResource MFDViewCenterTextStyle}"
+                                           Background="{StaticResource MFDScreenBackgroundBrush}"
                                            Foreground="{StaticResource AppForegroundBrush}" />
                             </Border>
 
